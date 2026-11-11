@@ -24,17 +24,41 @@ started="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 db_user="${POSTGRES_USER:-rc}"
 db_name="${POSTGRES_DB:-rc}"
 
+# compose has no default secrets (server review SRV-06); use throwaway ones for the drill.
+rand() { od -An -N16 -tx1 /dev/urandom | tr -d ' \n'; }
+export RC_DB_PASSWORD="${RC_DB_PASSWORD:-drill-$(rand)}"
+export RC_AUTH_SECRET="${RC_AUTH_SECRET:-drill-$(rand)}"
+
 fail() {
   echo "  FAIL $*" >&2
   exit 1
 }
 
+# The compose api runs in server mode (SRV-01), so every call carries the drill session.
+sid=""
+csrf=""
+
 api_json() { # path -> body on stdout
-  curl -fsS --max-time 15 "$base$1" || fail "GET $1 failed"
+  curl -fsS --max-time 15 -H "Cookie: sid=$sid" "$base$1" || fail "GET $1 failed"
 }
 
 echo "--- bringing the stack up"
 docker compose up -d --wait --wait-timeout 300 api >/dev/null
+
+echo "--- creating the drill account"
+email="drill-$(rand | head -c 8)@example.org"
+password="Drill-pass-$(rand | head -c 12)"
+cred="{\"email\":\"$email\",\"password\":\"$password\"}"
+curl -fsS --max-time 15 -o /dev/null -H 'Content-Type: application/json' -d "$cred" \
+  "$base/api/v1/auth/signup" || fail "signup failed"
+jar="$(mktemp)"
+login="$(curl -fsS --max-time 15 -c "$jar" -H 'Content-Type: application/json' -d "$cred" \
+  "$base/api/v1/auth/login")" || fail "login failed"
+sid="$(awk '$6=="sid"{print $7}' "$jar")"
+csrf="$(printf '%s' "$login" | python3 -I -c 'import json,sys; print(json.load(sys.stdin)["csrf_token"])')"
+rm -f "$jar"
+[ -n "$sid" ] && [ -n "$csrf" ] || fail "login returned no session or CSRF token"
+echo "  OK   drill account $email"
 
 echo "--- picking a lesson to use as the marker"
 lesson="$(api_json /api/v1/progress/next | python3 -I -c '
@@ -49,7 +73,7 @@ echo "  OK   marker lesson: $lesson"
 
 echo "--- marking it done through the API"
 curl -fsS --max-time 15 -X POST "$base/api/v1/progress/done" \
-  -H 'Content-Type: application/json' \
+  -H 'Content-Type: application/json' -H "Cookie: sid=$sid" -H "X-CSRF-Token: $csrf" \
   -d "{\"lesson_id\":\"$lesson\",\"note\":\"restore drill $started\"}" >/dev/null ||
   fail "POST /api/v1/progress/done failed"
 
