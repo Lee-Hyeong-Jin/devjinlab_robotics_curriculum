@@ -161,6 +161,42 @@ FK 로 오차가 $10^{-9}$ 이하인지 검증하라. (2) 수치 IK 의 초기�
 2. $\det J = 0$ 인 자세에서 말단은 어느 방향으로 움직일 수 없는가? 직관적으로 설명하라.
 3. 수치 IK 가 해석적 IK 보다 유리한 경우와 불리한 경우를 각각 하나씩 들어라.
 
+## 확인 퀴즈
+
+`rc quiz m2-inverse-kinematics` 로 풀 수 있다. 오답은 복습 카드가 된다.
+
+```quiz
+activity: m2-inverse-kinematics-quiz
+questions:
+  - id: q1
+    type: single
+    prompt: '2-link 평면 팔에서 elbow-up 해와 elbow-down 해가 하나로 합쳐지는 목표 위치는?'
+    choices:
+      - '기저 원점'
+      - '작업 영역의 경계($r = L_1 + L_2$ 또는 $r = |L_1 - L_2|$)'
+      - '첫 번째 링크 끝'
+      - '어디서도 합쳐지지 않는다'
+    answer: 1
+    explanation: '$\theta_2 = \operatorname{atan2}(\pm\sqrt{1-\cos^2\theta_2},\ \cos\theta_2)$ 에서 두 해는 $\sin\theta_2 = 0$ 일 때, 즉 $\theta_2 = 0$ 또는 $\pi$ 일 때 같아진다. 이는 팔을 완전히 펴거나 접은 자세이고 작업 영역의 경계이자 특이점이다.'
+    concept: { front: '2-link IK 의 두 해가 합쳐지는 곳', back: '작업 영역 경계($\theta_2 = 0$ 또는 $\pi$) — 특이점이기도 하다' }
+  - id: q2
+    type: multiple
+    prompt: '$\det J = L_1 L_2 \sin\theta_2$ 인 2-link 팔에 대해 옳은 설명을 모두 고르시오.'
+    choices:
+      - '$\theta_2 = 0$ 과 $\theta_2 = \pi$ 에서 특이점이다'
+      - '특이 자세에서는 말단을 어떤 방향으로도 움직일 수 없다'
+      - '특이점 근처에서 수치 IK 가 아주 큰 관절 속도를 요구한다'
+      - '감쇠 최소 제곱(damped least squares)으로 특이점 근처를 완화할 수 있다'
+    answer: [0, 2, 3]
+    explanation: '$\sin\theta_2 = 0$ 인 $\theta_2 = 0, \pi$ 에서 $\det J = 0$ 이다. 특이 자세에서 잃는 것은 **특정 한 방향**의 운동(완전히 편 팔은 반지름 방향으로 더 나아갈 수 없다)이고, 접선 방향으로는 여전히 움직일 수 있다. 그 근처에서 $J^{-1}$ 이 커져 관절 속도가 폭발하므로 감쇠 최소 제곱을 쓴다.'
+  - id: q3
+    type: truefalse
+    prompt: '수치 IK(뉴턴–랩슨)는 해석적 IK 와 달리 목표에 대한 모든 해를 한 번에 찾아 준다.'
+    answer: false
+    explanation: '거꾸로다. 해석적 방법이 모든 해를 한 번에 주고, 수치 방법은 초기값 근처의 해 하나만 찾으며 수렴도 보장되지 않는다. 대신 닫힌 식이 없는 일반적인 팔에도 쓸 수 있다는 것이 수치 방법의 장점이다.'
+    concept: { front: '해석적 IK vs 수치 IK', back: '해석적: 빠르고 모든 해, 특정 구조만. 수치: 일반적인 팔에 가능, 초기값 근처 해 하나뿐' }
+```
+
 ## 이 단계 공부법
 
 1. **영상:** Modern Robotics 강의 영상 5장 중 자코비안 소개 부분과 6장 "Inverse Kinematics"

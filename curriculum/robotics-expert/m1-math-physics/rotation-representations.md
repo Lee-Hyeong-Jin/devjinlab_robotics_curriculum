@@ -139,6 +139,37 @@ print(np.allclose(a.as_matrix(), b.as_matrix()))  # True: 다른 각도, 같은 
 2. ZYX 오일러 각에서 짐벌 락은 어떤 각도에서, 왜 발생하는가?
 3. 쿼터니언 $q$ 와 $-q$ 가 같은 회전이라는 사실이 보간이나 비교에서 어떤 문제를 일으킬 수 있는가?
 
+## 확인 퀴즈
+
+`rc quiz m1-rotation-representations` 로 풀 수 있다. 오답은 복습 카드가 된다.
+
+```quiz
+activity: m1-rotation-representations-quiz
+questions:
+  - id: q1
+    type: single
+    prompt: 'ZYX 오일러 각(요–피치–롤)에서 짐벌 락(gimbal lock)이 생기는 조건은?'
+    choices:
+      - '요가 $0^\circ$ 일 때'
+      - '피치가 $\pm 90^\circ$ 일 때'
+      - '롤이 $180^\circ$ 를 넘을 때'
+      - '세 각이 모두 같을 때'
+    answer: 1
+    explanation: '피치가 $\pm 90^\circ$ 가 되면 첫 번째(요)와 세 번째(롤) 회전축이 겹쳐 자유도 하나가 사라진다. 이 근처에서는 각도 값이 급격히 튀고 보간이 깨진다.'
+    concept: { front: 'ZYX 오일러 각의 짐벌 락 조건', back: '피치 $\pm 90^\circ$ — 요축과 롤축이 겹쳐 자유도 하나를 잃는다' }
+  - id: q2
+    type: truefalse
+    prompt: '단위 쿼터니언 $q$ 와 $-q$ 는 서로 다른 회전을 나타낸다.'
+    answer: false
+    explanation: '쿼터니언은 회전을 이중으로 덮는다(double cover). $q$ 와 $-q$ 는 같은 회전이므로, 두 자세를 비교하거나 SLERP 로 보간하기 전에 부호를 맞춰야 한다.'
+    concept: { front: '쿼터니언의 이중 덮개', back: '$q$ 와 $-q$ 는 같은 회전 — 비교·보간 전에 부호를 맞춘다' }
+  - id: q3
+    type: short
+    prompt: '$\operatorname{tr}(R) = 3$ 인 회전 행렬의 회전각은 몇 도인가? (숫자만)'
+    answer: ['0', '0도', '0deg']
+    explanation: '$\operatorname{tr}(R) = 1 + 2\cos\theta = 3$ 이면 $\cos\theta = 1$, 즉 $\theta = 0^\circ$ 다. 대각합이 3인 회전 행렬은 항등 행렬이고 아무것도 회전하지 않는다.'
+```
+
 ## 이 단계 공부법
 
 1. **영상:** Modern Robotics 강의 영상 3장 중 회전 행렬·각속도·지수 좌표 부분을 본다(위키의 Videos 페이지에서 챕터별로 찾을 수 있다).

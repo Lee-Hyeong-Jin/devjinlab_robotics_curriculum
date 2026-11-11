@@ -139,6 +139,42 @@ print(np.allclose(inv_se2(T_wr) @ T_wr, np.eye(3)))  # True
 2. 같은 변환 $T$ 를 현재 자세 $T_{sb}$ 의 왼쪽에 곱할 때와 오른쪽에 곱할 때 의미가 어떻게 다른가?
 3. 방향 벡터를 동차 좌표로 쓸 때 마지막 성분을 0 으로 두는 이유는 무엇인가?
 
+## 확인 퀴즈
+
+`rc quiz m1-coordinate-transforms` 로 풀 수 있다. 오답은 복습 카드가 된다.
+
+```quiz
+activity: m1-coordinate-transforms-quiz
+questions:
+  - id: q1
+    type: single
+    prompt: '$T_{ab}\,T_{bc}$ 는 무엇인가?'
+    choices:
+      - '$T_{ac}$'
+      - '$T_{ca}$'
+      - '$T_{ba}$'
+      - '정의되지 않는다'
+    answer: 0
+    explanation: '아래첨자가 상쇄되도록 곱하면 된다: $T_{ab}T_{bc} = T_{ac}$. 이 규칙만 지키면 합성 순서를 헷갈릴 일이 거의 없다.'
+    concept: { front: '변환 합성 규칙', back: '$T_{ab}T_{bc} = T_{ac}$ — 안쪽 아래첨자가 상쇄된다' }
+  - id: q2
+    type: single
+    prompt: '속도나 축 방향 같은 **방향 벡터**를 동차 좌표로 쓸 때 마지막 성분은?'
+    choices:
+      - '1 — 점과 똑같이 쓴다'
+      - '0 — 평행 이동의 영향을 받지 않아야 한다'
+      - '벡터의 크기'
+      - '좌표계 번호'
+    answer: 1
+    explanation: '마지막 성분이 0이면 $T$ 를 곱해도 위치 성분 $\mathbf{p}$ 가 더해지지 않고 회전만 적용된다. 방향은 좌표계 원점을 옮겨도 바뀌지 않아야 하므로 0을 쓴다.'
+    concept: { front: '동차 좌표의 마지막 성분', back: '점은 1, 방향 벡터는 0(평행 이동을 받지 않음)' }
+  - id: q3
+    type: truefalse
+    prompt: '$T_{ab}$ 의 역변환 $T_{ba}$ 의 위치 성분은 $-\mathbf{p}_{ab}$ 다.'
+    answer: false
+    explanation: '$T_{ba}$ 의 위치 성분은 $-R_{ab}^T\mathbf{p}_{ab}$ 다. 원점을 옮기기 전에 좌표계가 함께 회전하므로 평행 이동 벡터도 회전의 전치를 거쳐야 한다.'
+```
+
 ## 이 단계 공부법
 
 1. **영상:** Cyrill Stachniss 의 "Homogeneous Coordinates" 강의로 동차 좌표의 직관을 잡고, 이어서 Modern Robotics 강의 영상 3장의 동차 변환 행렬 부분을 본다.

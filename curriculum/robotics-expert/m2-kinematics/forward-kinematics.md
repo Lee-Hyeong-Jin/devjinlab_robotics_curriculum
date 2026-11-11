@@ -135,6 +135,37 @@ $\phi$ 로 도달할 수 있음을 확인하라.
 2. $L_1 = L_2$ 인 2-link 팔은 기저 원점에 도달할 수 있는가? 그때 $\theta_2$ 는 얼마인가?
 3. 링크 변환을 곱하는 순서를 거꾸로($T_{n-1,n}\cdots T_{01}$) 하면 왜 틀린 결과가 나오는가?
 
+## 확인 퀴즈
+
+`rc quiz m2-forward-kinematics` 로 풀 수 있다. 오답은 복습 카드가 된다.
+
+```quiz
+activity: m2-forward-kinematics-quiz
+questions:
+  - id: q1
+    type: truefalse
+    prompt: '정기구학(forward kinematics)의 해는 관절 값이 주어지면 항상 하나로 정해진다.'
+    answer: true
+    explanation: 'FK 는 관절 공간 → 작업 공간으로 가는 함수이고, 링크 변환의 곱은 유일하게 계산된다. 반대로 역기구학은 같은 말단 자세를 만드는 관절 조합이 여러 개(elbow-up/down 등) 있을 수 있다.'
+    concept: { front: 'FK 해의 개수', back: '항상 유일 — 변환 곱이 함수이기 때문. IK 는 여러 개일 수 있다' }
+  - id: q2
+    type: single
+    prompt: '$L_1 = L_2 = 1$ 인 2-link 평면 팔이 기저 원점에 도달할 때 $\theta_2$ 는?'
+    choices:
+      - '$0$'
+      - '$\pi/2$'
+      - '$\pi$ (완전히 접음)'
+      - '도달할 수 없다'
+    answer: 2
+    explanation: '작업 영역은 $|L_1 - L_2| \le r \le L_1 + L_2$ 인 고리다. $L_1 = L_2$ 면 안쪽 반지름이 0이므로 원점에 닿을 수 있고, 그때 두 링크가 완전히 겹치도록 접혀야 하므로 $\theta_2 = \pi$ 다.'
+  - id: q3
+    type: short
+    prompt: '$L_1 = 2$, $L_2 = 1$ 인 2-link 평면 팔이 도달할 수 있는 말단 거리 $r$ 의 최댓값은? (숫자만)'
+    answer: ['3', '3.0']
+    explanation: '$r \le L_1 + L_2 = 3$ 이다(두 링크를 일직선으로 폈을 때). 최솟값은 $|L_1 - L_2| = 1$ 이므로 작업 영역은 반지름 1과 3 사이의 고리다.'
+    concept: { front: '2-link 평면 팔의 작업 영역', back: '$|L_1 - L_2| \le r \le L_1 + L_2$ 인 고리(annulus)' }
+```
+
 ## 이 단계 공부법
 
 1. **영상:** Modern Robotics 강의 영상 4장 "Forward Kinematics" (PoE 공식) 를 본다.

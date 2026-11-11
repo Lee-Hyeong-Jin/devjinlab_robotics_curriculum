@@ -135,6 +135,42 @@ print((T01 @ T12)[:3, 3].round(4))  # 말단 위치 → 다음 레슨(정기구�
 2. 두 관절 축이 평행할 때와 서로 수직으로 교차할 때 $a_i$, $\alpha_i$ 는 어떤 값이 되는가?
 3. Craig 교재의 DH 테이블을 표준 DH 공식에 그대로 넣으면 왜 틀린 결과가 나오는가?
 
+## 확인 퀴즈
+
+`rc quiz m2-dh-parameters` 로 풀 수 있다. 오답은 복습 카드가 된다.
+
+```quiz
+activity: m2-dh-parameters-quiz
+questions:
+  - id: q1
+    type: single
+    prompt: '표준 DH 에서 **회전 관절(revolute joint)** 의 변수가 되는 파라미터는?'
+    choices:
+      - '$\theta_i$ (관절 각)'
+      - '$d_i$ (링크 오프셋)'
+      - '$a_i$ (링크 길이)'
+      - '$\alpha_i$ (링크 비틀림)'
+    answer: 0
+    explanation: '회전 관절은 $z_{i-1}$ 축 둘레로 돌므로 $\theta_i$ 가 변수이고 나머지 셋은 링크 구조가 정하는 상수다. 직동 관절(prismatic)이면 $d_i$ 가 변수가 된다.'
+    concept: { front: 'DH 파라미터 중 관절 변수', back: '회전 관절은 $\theta_i$, 직동 관절은 $d_i$ — 나머지 셋은 구조 상수' }
+  - id: q2
+    type: single
+    prompt: '두 관절 축 $z_{i-1}$ 과 $z_i$ 가 서로 평행할 때 링크 비틀림 $\alpha_i$ 는?'
+    choices:
+      - '$0$ (또는 $180^\circ$)'
+      - '$90^\circ$ 로 고정'
+      - '관절 각과 같다'
+      - '정의할 수 없다'
+    answer: 0
+    explanation: '$\alpha_i$ 는 공통 수선 둘레로 $z_{i-1}$ 에서 $z_i$ 까지 재는 각도다. 두 축이 평행하면 비틀림이 없으므로 $0$(같은 방향) 또는 $180^\circ$(반대 방향)다. 두 축이 수직으로 교차하면 $a_i = 0$, $\alpha_i = \pm 90^\circ$ 가 된다.'
+  - id: q3
+    type: truefalse
+    prompt: 'Craig 교재의 DH 테이블을 표준 DH 공식에 그대로 넣어도 같은 결과가 나온다.'
+    answer: false
+    explanation: 'Craig 는 좌표계를 관절 $i$ 축에 붙이는 수정(modified) DH 규약을 쓴다. 파라미터 첨자($a_{i-1}, \alpha_{i-1}$)와 변환을 곱하는 순서가 달라서, 두 규약을 섞으면 틀린 변환이 나온다. 데이터시트나 코드를 볼 때 어느 규약인지 먼저 확인해야 한다.'
+    concept: { front: '표준 DH vs 수정(Craig) DH', back: '좌표계를 붙이는 위치·파라미터 첨자·곱 순서가 다르다 — 섞어 쓰면 틀린다' }
+```
+
 ## 이 단계 공부법
 
 1. **교재(주):** Spong 등 *Robot Modeling and Control* 3장 또는 Craig 3장 중 하나를 골라 DH 좌표계 배치 절차를 읽는다. 두 책의 규약이 다르므로 **한 권만** 기준으로 삼는다(이 레슨은 표준 DH = Spong 방식).

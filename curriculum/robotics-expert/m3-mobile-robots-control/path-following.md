@@ -143,6 +143,42 @@ print("최종 도달 오차 [m]:", round(float(np.hypot(*final[:2])), 4))  # 0.0
 2. Pure Pursuit 에서 전방 주시 거리를 너무 작게, 또 너무 크게 잡으면 각각 어떤 현상이 나타나는가?
 3. 웨이포인트 수용 반경이 0 에 가까우면 왜 로봇이 목표 주변을 맴돌 수 있는가?
 
+## 확인 퀴즈
+
+`rc quiz m3-path-following` 로 풀 수 있다. 오답은 복습 카드가 된다.
+
+```quiz
+activity: m3-path-following-quiz
+questions:
+  - id: q1
+    type: single
+    prompt: 'Pure Pursuit 에서 전방 주시 거리 $L_d$ 를 너무 **작게** 잡으면 어떤 현상이 나타나는가?'
+    choices:
+      - '경로를 부드럽게 따라가지만 모서리를 크게 잘라먹는다'
+      - '경로에 바짝 붙지만 좌우로 진동한다'
+      - '로봇이 경로를 완전히 무시한다'
+      - '횡방향 오차가 항상 0이 된다'
+    answer: 1
+    explanation: '$\kappa = 2\sin\alpha / L_d$ 에서 $L_d$ 가 작으면 같은 각도 오차에도 곡률이 커진다. 경로에는 바짝 붙지만 과하게 조향해 좌우로 진동한다. 반대로 $L_d$ 가 크면 부드럽지만 모서리를 잘라먹는다. 그래서 속도에 비례해 $L_d$ 를 키우는 것이 실전 규칙이다.'
+    concept: { front: 'Pure Pursuit 의 $L_d$ 트레이드오프', back: '작으면 경로에 밀착하지만 진동, 크면 부드럽지만 모서리를 자른다' }
+  - id: q2
+    type: truefalse
+    prompt: '웨이포인트 수용 반경 $\varepsilon$ 을 0에 가깝게 잡으면 추종 정확도가 높아지므로 항상 유리하다.'
+    answer: false
+    explanation: '비홀로노믹 로봇은 점을 정확히 통과하기 어렵다. $\varepsilon$ 이 너무 작으면 그 점에 "도달"하지 못해 다음 점으로 넘어가지 못하고 목표 주변을 맴돈다. 수용 반경은 로봇의 회전 반경과 제어 주기를 고려해 정해야 한다.'
+    concept: { front: '수용 반경이 너무 작을 때', back: '도달 판정이 안 되어 목표 주변을 맴돈다 — 회전 반경을 고려해 정한다' }
+  - id: q3
+    type: single
+    prompt: 'go-to-goal 제어에서 방향 오차 $\alpha$ 를 $(-\pi, \pi]$ 로 감지 않으면?'
+    choices:
+      - '로봇이 가까운 쪽이 아니라 먼 쪽으로 돌 수 있다'
+      - '거리 오차 $\rho$ 가 음수가 된다'
+      - '선속도 상한이 무시된다'
+      - '아무 문제도 없다'
+    answer: 0
+    explanation: '$\operatorname{atan2}$ 결과에서 $\theta$ 를 뺀 값은 $\pm 2\pi$ 범위로 벗어날 수 있다. 감지 않으면 $\omega = k_\alpha \alpha$ 가 짧은 회전 방향 대신 먼 방향을 가리켜 로봇이 크게 돌아간다. M3 의 PID 레슨에서 본 각도 감기와 같은 처리다.'
+```
+
 ## 이 단계 공부법
 
 1. **교재(주):** Corke *Robotics, Vision and Control* 3판 4장에서 점으로 이동, 선 추종,
