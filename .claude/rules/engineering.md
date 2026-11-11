@@ -14,6 +14,7 @@
 - `progress` 는 `content` 를 모른다(레슨·활동은 문자열 ID 로만 참조). `content` 는 `progress` 를 모른다. 둘을 잇는 것은 `learn` 뿐이다.
 - `cli.py` 만 typer·터미널 I/O 를 안다. 나머지 모듈은 값을 반환하고 예외를 던진다.
 - `sm2`, `graph`, `stats`, `guide`, `report` 는 순수 함수로 작성하고 단위 테스트가 필수다.
+- `api/` 는 코어 라이브러리 함수만 호출하고 규칙을 중복 구현하지 않는다. `web/` 은 코어를 import 하지 않고 API 만 쓴다(설계 docs/platform-design.md §6).
 
 ## 코드 품질 (Python)
 - Python 은 `uv run` 으로 실행한다(`uv run pytest -q --cov`, `uv run ruff check .`, `uv run mypy`). 의존성은 `uv add`, 락파일(uv.lock)을 함께 커밋한다.
@@ -22,7 +23,7 @@
 - 공개 API(모듈 최상위 함수·클래스, CLI 커맨드)에는 docstring(목적, 인자, 반환, 예외)을 쓴다. 내부 구현은 이름으로 설명하고 주석은 "왜"만 적는다.
 - 오류 처리: 예외는 도메인 예외 타입으로 던지고, CLI 경계에서만 사용자 메시지로 바꾼다. 빈 `except:` 와 예외 삼키기 금지. 실패는 비정상 종료 코드로 드러낸다.
 - 로깅: `logging` 모듈을 쓰고 `print` 는 CLI 출력에만 쓴다. 로그에 개인 데이터(학습 메모, 경로의 사용자명 등)를 남기지 않는다.
-- 서버 모드(`api/`, `web/`, Phase 2): 구조화 JSON 로깅 + 요청 ID 상관관계, `/healthz`·`/readyz` 엔드포인트, Prometheus 메트릭을 제공한다.
+- 서버 모드(`api/`, `web/`, Phase 2): structlog JSON 로깅 + `request_id` 상관관계(응답 헤더와 동일), `/healthz`(생존)·`/readyz`(DB 연결·콘텐츠 색인)·`/version`, Prometheus `/metrics` 를 제공한다. 세부는 docs/architecture/operations.md.
 - 입력 검증: 파일·YAML·CLI 인자 등 외부 입력은 경계에서 pydantic 모델로 검증한다. 경로는 저장소/콘텐츠 루트 밖으로 벗어나지 못하게 정규화·검사한다.
 - 의존성 추가는 최소화한다. **Apache-2.0 과 호환되는 라이선스만 허용**하고 copyleft(GPL·AGPL·LGPL 등)는 금지한다. 추가 시 라이선스와 유지 상태를 PR 설명에 적는다.
 
@@ -49,7 +50,7 @@
 - [ ] 외부 네트워크 호출(AI 튜터 등)은 명시적 설정으로만 켜지고, 키 없이도 나머지 기능이 동작한다.
 - [ ] 파일 쓰기는 저장소/콘텐츠/리포트 루트 안으로 제한되고, 덮어쓰기 전에 대상이 확인된다.
 - [ ] 오류 메시지가 내부 경로·스택을 사용자에게 그대로 노출하지 않는다(디버그 모드 제외).
-- [ ] 서버 모드(`api/`, `web/`): CSRF 방어, 보안 헤더(CSP, HSTS)를 적용했다. 릴리스마다 OWASP ASVS Level 2 체크리스트(V2 인증·V3 세션·V4 접근제어 우선)를 점검한다.
+- [ ] 서버 모드(`api/`, `web/`): CSRF 방어, 보안 헤더(CSP, HSTS)를 적용했다. 릴리스마다 OWASP ASVS Level 2 체크리스트(`docs/ops/asvs-l2-checklist.md`, V2 인증·V3 세션·V4 접근제어 우선)를 점검한다.
 
 ## 라이선스와 콘텐츠
 - 코드는 Apache-2.0, `curriculum/` 콘텐츠 기여는 CC BY 4.0 이다. 외부 자료는 본문을 복제하지 않고 링크만 건다.
@@ -60,3 +61,11 @@
 - 릴리스는 PRD §14 를 따른다: SemVer 2.0.0, Git 태그 + GitHub Release. Docker 이미지 태그는 Phase 2 서버 모드부터, axe 접근성 CI 는 `web/` 이 생기는 Phase 2 부터 적용한다.
 - 용어: 문서에서는 "진행도"(PRD 정식 용어)를 쓴다. 코드 식별자와 CLI 출력의 "진도"/`progress` 는 허용한다.
 - 기여 절차는 CONTRIBUTING.md, 취약점 신고는 SECURITY.md 를 따른다.
+
+## 에이전트 운영 규칙 (멀티 세션, 토큰 절약)
+- 메시지는 완료·차단·결정 요청 때만 보낸다. 확인·감사·중간 보고는 보내지 않고, 10줄 이내 핵심만 쓴다.
+- 큰 파일은 grep/sed 로 필요한 절만 읽고, 같은 파일을 반복해서 읽지 않는다. Glob/Grep 으로 범위를 좁힌다.
+- 검증 출력은 마지막 3~5줄만, diff 는 `--stat` 만 보고에 붙인다.
+- 끝나면 보고하고 대기한다. 다른 세션 상태를 폴링하지 않는다.
+- 세션 안에서 서브에이전트를 만들지 않는다(워크플로 스킬을 사용자가 명시 실행하는 경우 제외).
+- 문서 수정은 묶어서 한 커밋으로 낸다.
