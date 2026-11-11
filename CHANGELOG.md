@@ -23,6 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prerequisite roadmap with done / in-progress / locked states and next-lesson recommendation.
 - Offline static study site (MkDocs Material): dashboard, roadmap, module and lesson pages,
   resource library.
+- HTTP API (`rc api serve`, optional extra `api`): FastAPI app under `/api/v1` for courses,
+  modules, lessons, resources, progress (status, next, start, stop, log, done), weekly and
+  module reports, and progress export; `/healthz`, `/readyz`, `/version`; RFC 9457
+  problem+json errors, `X-Request-ID`, JSON logs, and an OpenAPI snapshot test.
 - Engineering scaffolding: Apache-2.0 license for code, CC BY 4.0 for curriculum content,
   contribution guide, Code of Conduct, security policy, issue and PR templates, Dependabot,
   GitHub Actions CI and release workflows, strict mypy, coverage gate, pre-commit hooks,

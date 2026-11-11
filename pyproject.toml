@@ -32,6 +32,12 @@ dependencies = [
     "pymdown-extensions>=13.0",
 ]
 
+[project.optional-dependencies]
+api = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+]
+
 [project.scripts]
 rc = "robotics_curriculum.cli:app"
 
@@ -45,6 +51,8 @@ postgres = [
 [dependency-groups]
 dev = [
     "alembic>=1.13",
+    "robotics-curriculum[api]",
+    "httpx>=0.27",
     "mypy>=2.4.1",
     "pre-commit>=4.7.0",
     "psycopg[binary]>=3.2",

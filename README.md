@@ -71,6 +71,12 @@ pg_store, mode="merge")` copies existing SQLite or `rc progress export` data int
 Tests start a throwaway `postgres:16.13` container via Docker (or use `RC_TEST_DATABASE_URL`)
 and skip the PostgreSQL cases with a reason when neither is available (`uv run pytest -rs`).
 
+HTTP API (FastAPI, `/api/v1`; extra `api` — `uv sync` installs it in dev, `pip install 'robotics-curriculum[api]'` otherwise):
+
+```bash
+uv run rc api serve --host 127.0.0.1 --port 8000   # docs at /docs, schema at /openapi.json; env RC_API_HOST/PORT/LOG_LEVEL
+```
+
 ## Lint / format
 
 ```bash
