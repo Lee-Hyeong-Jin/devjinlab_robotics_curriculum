@@ -144,6 +144,42 @@ Foxglove 에서 열어 `/turtle1/pose` 의 x, y 를 Plot 패널로 그려라.
 2. URDF 의 fixed joint 와 revolute joint 는 tf 로 각각 어떻게 발행되는가?
 3. RViz 에 LaserScan 이 안 보일 때 확인할 순서를 CLI·rqt·RViz 도구로 세 단계 이상 써라.
 
+## 확인 퀴즈
+
+`rc quiz m8-tf2-urdf-visualization` 로 풀 수 있다. 오답은 복습 카드가 된다.
+
+```quiz
+activity: m8-tf2-urdf-visualization-quiz
+questions:
+  - id: q1
+    type: single
+    prompt: 'REP 105 표준 트리에서 `map → odom` 변환을 발행하는 쪽은?'
+    choices:
+      - '오도메트리(바퀴 인코더 적분)'
+      - '위치 추정(SLAM·AMCL)'
+      - '`robot_state_publisher`'
+      - 'static transform publisher'
+    answer: 1
+    explanation: '`odom → base_link` 는 오도메트리가 발행하며 연속적이지만 흘러간다. 그 흘러감을 보정하는 `map → odom` 은 SLAM·AMCL 같은 위치 추정이 발행하고, 보정 순간 점프할 수 있다. 한 변환은 반드시 한 노드만 발행해야 한다.'
+    concept: { front: '`map → odom` 과 `odom → base_link` 의 발행자', back: 'odom→base_link = 오도메트리(연속, 드리프트), map→odom = 위치 추정(점프 가능)' }
+  - id: q2
+    type: single
+    prompt: 'URDF 의 fixed joint 와 revolute joint 는 tf 로 각각 어떻게 발행되는가?'
+    choices:
+      - '둘 다 `robot_state_publisher` 가 관절 상태를 받아 발행한다'
+      - 'fixed 는 static 변환으로 한 번, revolute 는 `/joint_states` 를 받아 계속 갱신된다'
+      - 'fixed 는 발행되지 않고, revolute 만 발행된다'
+      - '둘 다 사용자가 직접 발행해야 한다'
+    answer: 1
+    explanation: '`robot_state_publisher` 는 URDF 를 읽어 고정 관절을 static 변환으로 한 번 발행하고(`/tf_static`), 움직이는 관절은 `/joint_states` 의 각도를 받아 `/tf` 로 계속 갱신한다. 센서 장착 위치 같은 고정 변환이 전자에 해당한다.'
+    concept: { front: 'fixed vs revolute joint 의 tf 발행', back: 'fixed = `/tf_static` 한 번, revolute = `/joint_states` 기반으로 `/tf` 계속 갱신' }
+  - id: q3
+    type: truefalse
+    prompt: '두 노드가 같은 `odom → base_link` 변환을 동시에 발행해도 tf2 가 평균을 내므로 문제가 없다.'
+    answer: false
+    explanation: 'tf2 는 평균을 내지 않고 들어온 값을 순서대로 버퍼에 쌓는다. 서로 다른 두 값이 번갈아 들어오면 조회 결과가 오가며 RViz 에서 로봇이 떨린다. 한 변환은 한 노드만 발행한다는 규칙을 지켜야 한다(`ros2 run tf2_tools view_frames` 로 확인).'
+```
+
 ## 이 단계 공부법
 
 1. **공식 자습서(먼저):** *Intermediate* 의 tf2 시리즈(Introducing tf2 → static broadcaster →

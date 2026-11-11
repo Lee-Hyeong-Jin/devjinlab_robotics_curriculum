@@ -135,6 +135,42 @@ diff_controller:
 2. 바퀴 반지름 값이 실제보다 10% 크게 설정되어 있다면 `/odom` 에는 어떤 오차가 생기는가?
 3. 처음 보는 저장소에서 소스 코드보다 launch 와 YAML 을 먼저 읽는 것이 효율적인 이유를 설명하라.
 
+## 확인 퀴즈
+
+`rc quiz m8-reference-robot-code` 로 풀 수 있다. 오답은 복습 카드가 된다.
+
+```quiz
+activity: m8-reference-robot-code-quiz
+questions:
+  - id: q1
+    type: single
+    prompt: '`<robot>_description` 패키지를 하드웨어 bringup 과 시뮬레이션이 함께 쓰는 이유는?'
+    choices:
+      - '패키지 수를 줄이기 위해'
+      - '로봇의 기하·프레임 정의를 한 곳에 두어 실물과 시뮬레이션의 tf 트리가 어긋나지 않게 하려고'
+      - '시뮬레이터가 URDF 만 읽을 수 있기 때문'
+      - 'URDF 는 빌드 시간에 생성되기 때문'
+    answer: 1
+    explanation: 'URDF 가 프레임 이름, 링크 길이, 센서 장착 위치를 정의한다. 실물과 시뮬레이션이 같은 description 을 쓰면 같은 tf 트리가 만들어져, 시뮬레이션에서 검증한 코드가 실물에서도 같은 프레임을 가정할 수 있다. 사본을 두면 둘이 조용히 어긋난다.'
+    concept: { front: 'description 패키지를 공유하는 이유', back: '기하·프레임 정의의 단일 출처 — 실물과 시뮬레이션의 tf 트리가 일치한다' }
+  - id: q2
+    type: single
+    prompt: '설정된 바퀴 반지름이 실제보다 10% 크면 `/odom` 에 어떤 오차가 생기는가?'
+    choices:
+      - '회전 각도만 10% 작아진다'
+      - '이동 거리가 실제보다 약 10% 크게 적분된다'
+      - '오차가 생기지 않는다(엔코더가 보정한다)'
+      - '위치는 맞고 속도만 틀리다'
+    answer: 1
+    explanation: '$v = r(\omega_R + \omega_L)/2$ 에서 $r$ 이 10% 크면 같은 엔코더 값에 대해 선속도와 적분 거리가 약 10% 과대 추정된다(1 m 를 갔는데 1.1 m 로 기록). M3 의 오도메트리 식에 들어가는 $r$, $L$ 이 config YAML 에 있으니 실측과 맞추는 것이 중요하다.'
+    concept: { front: '바퀴 반지름 설정 오차의 영향', back: '$v = r(\omega_R+\omega_L)/2$ — $r$ 이 10% 크면 이동 거리가 약 10% 과대 추정' }
+  - id: q3
+    type: truefalse
+    prompt: '처음 보는 로봇 저장소는 C++/Python 소스부터 읽는 것이 전체 구조를 파악하는 가장 빠른 길이다.'
+    answer: false
+    explanation: '대부분의 로봇 패키지는 코드보다 launch 와 YAML 이 많다. README → bringup launch → config YAML → description 순으로 읽으면 어떤 노드가 어떤 설정으로 뜨는지, tf 트리가 어떻게 생길지 먼저 보인다. 소스는 그 가설을 확인할 때 필요한 노드만 읽으면 된다.'
+```
+
 ## 이 단계 공부법
 
 1. **저장소 먼저:** Andino README 와 패키지 목록을 읽고, 본문 표를 직접 채워 본다.
