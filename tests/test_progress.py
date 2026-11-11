@@ -292,3 +292,15 @@ def test_cli_progress_export_import_round_trip(tmp_path: Path) -> None:
     result = rc(dst, "progress", "import", str(out))
     assert result.exit_code == 1
     assert "--replace" in result.stderr
+
+
+def test_export_can_be_limited_to_one_user(tmp_path: Path) -> None:
+    with SqliteProgressStore.in_dir(tmp_path) as store:
+        store.save_lesson(LessonProgress(user_id=1, lesson_id=VECTORS))
+        store.save_lesson(LessonProgress(user_id=2, lesson_id=ROTATION))
+        service = ProgressService(store, ProgressService.load_curriculum(CURRICULUM))
+        everyone = service.export()
+        assert sorted(p.user_id for p in everyone.lesson_progress) == [1, 2]
+        only_two = service.export(user_id=2)
+        assert [(p.user_id, p.lesson_id) for p in only_two.lesson_progress] == [(2, ROTATION)]
+        assert service.export(user_id=3).lesson_progress == []

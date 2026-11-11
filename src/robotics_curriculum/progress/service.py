@@ -289,19 +289,19 @@ class ProgressService:
 
     # -- export / import (FR-10.2) --------------------------------------------
 
-    def export(self) -> ProgressExport:
-        """Every user's progress and sessions."""
+    def export(self, *, user_id: int | None = None) -> ProgressExport:
+        """Progress of every user (``user_id=None``, the CLI default) or of one user."""
         return ProgressExport(
             schema_version=SCHEMA_VERSION,
             exported_at=self.clock(),
-            lesson_progress=self.store.list_lessons(None),
-            sessions=self.store.list_sessions(None),
-            cards=self.store.list_cards(None),
-            card_states=self.store.list_card_states(None),
-            reviews=self.store.list_reviews(None),
-            quiz_attempts=self.store.list_quiz_attempts(None),
-            quiz_runs=self.store.list_quiz_runs(None),
-            activity_progress=self.store.list_activities(None),
+            lesson_progress=self.store.list_lessons(user_id),
+            sessions=self.store.list_sessions(user_id),
+            cards=self.store.list_cards(user_id),
+            card_states=self.store.list_card_states(user_id),
+            reviews=self.store.list_reviews(user_id),
+            quiz_attempts=self.store.list_quiz_attempts(user_id),
+            quiz_runs=self.store.list_quiz_runs(user_id),
+            activity_progress=self.store.list_activities(user_id),
         )
 
     def import_(self, data: ProgressExport, *, replace: bool = False) -> tuple[int, int]:
