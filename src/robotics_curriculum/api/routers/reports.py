@@ -6,10 +6,10 @@ from __future__ import annotations
 
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Header, HTTPException, Query
+from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from fastapi.responses import PlainTextResponse
 
-from robotics_curriculum.api.deps import Index, Progress, State
+from robotics_curriculum.api.deps import Index, Progress, State, get_principal
 from robotics_curriculum.api.problems import problem_responses
 from robotics_curriculum.api.schemas import ModuleReportSummary, Report, WeeklySummary
 from robotics_curriculum.report import (
@@ -26,7 +26,12 @@ _RESPONSES: dict[int | str, dict[str, Any]] = {
     **problem_responses(404, 422, 503),
 }
 
-router = APIRouter(prefix="/api/v1/reports", tags=["reports"], responses=_RESPONSES)
+router = APIRouter(
+    dependencies=[Depends(get_principal)],
+    prefix="/api/v1/reports",
+    tags=["reports"],
+    responses=_RESPONSES,
+)
 
 AcceptHeader = Annotated[str | None, Header(include_in_schema=False)]
 

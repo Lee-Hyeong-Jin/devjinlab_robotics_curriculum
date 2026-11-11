@@ -6,9 +6,8 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
 from robotics_curriculum import __version__
-from robotics_curriculum.api.deps import State
+from robotics_curriculum.api.deps import State, open_progress_store
 from robotics_curriculum.api.schemas import Check, Health, Readiness, Version
-from robotics_curriculum.progress import SqliteProgressStore
 
 router = APIRouter(tags=["system"])
 
@@ -31,7 +30,9 @@ def readyz(state: State) -> Readiness | JSONResponse:
     else:
         content = Check(ok=True, detail=f"{state.index.lesson_count} lessons")
     try:
-        SqliteProgressStore.in_dir(state.settings.data_dir).close()
+        open_progress_store(state.settings).close()
+        if state.auth is not None and not state.auth.store.schema_ready():
+            raise RuntimeError("auth tables missing (run alembic upgrade head)")
         database = Check(ok=True)
     except Exception as exc:  # any failure to open the store means "not ready"
         database = Check(ok=False, detail=str(exc))

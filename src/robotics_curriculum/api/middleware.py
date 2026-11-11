@@ -74,3 +74,51 @@ class RequestContextMiddleware:
                 },
             )
             request_id_var.reset(token)
+
+
+_DOCS_PATHS = ("/docs", "/redoc", "/openapi.json")
+# The API serves JSON only: nothing may be framed, scripted or embedded.
+_API_CSP = "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'"
+_DOCS_CSP = (
+    "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+    "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: "
+    "https://fastapi.tiangolo.com; frame-ancestors 'none'"
+)
+_NO_STORE_PREFIXES = ("/api/v1/auth", "/api/v1/me", "/api/v1/admin")
+
+
+class SecurityHeadersMiddleware:
+    """CSP, nosniff, no framing, no referrer, locked-down features, HSTS in server mode,
+    and ``Cache-Control: no-store`` on account endpoints (ASVS V14.4, AC-AUTH.8)."""
+
+    def __init__(self, app: ASGIApp, *, hsts: bool = False) -> None:
+        self.app = app
+        self.hsts = hsts
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+        path: str = scope["path"]
+
+        async def send_with_headers(message: Message) -> None:
+            if message["type"] == "http.response.start":
+                headers = MutableHeaders(scope=message)
+                docs = path.startswith(_DOCS_PATHS)
+                headers.setdefault("Content-Security-Policy", _DOCS_CSP if docs else _API_CSP)
+                headers.setdefault("X-Content-Type-Options", "nosniff")
+                headers.setdefault("X-Frame-Options", "DENY")
+                headers.setdefault("Referrer-Policy", "no-referrer")
+                headers.setdefault(
+                    "Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=()"
+                )
+                headers.setdefault("Cross-Origin-Opener-Policy", "same-origin")
+                if self.hsts:
+                    headers.setdefault(
+                        "Strict-Transport-Security", "max-age=31536000; includeSubDomains"
+                    )
+                if path.startswith(_NO_STORE_PREFIXES):
+                    headers["Cache-Control"] = "no-store"
+            await send(message)
+
+        await self.app(scope, receive, send_with_headers)

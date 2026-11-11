@@ -32,7 +32,18 @@ ROOT = Path(__file__).resolve().parents[1]
 VECTORS = "m1-vectors-matrices"
 DH = "m2-dh-parameters"
 T0 = datetime(2026, 11, 11, 9, 0, tzinfo=UTC)
-TABLES = {"meta", "lesson_progress", "sessions", "alembic_version"}
+TABLES = {
+    "meta",
+    "alembic_version",
+    "lesson_progress",
+    "sessions",
+    "cards",
+    "card_state",
+    "reviews",
+    "quiz_attempts",
+    "quiz_runs",
+    "activity_progress",
+}
 
 
 @pytest.fixture
@@ -260,3 +271,15 @@ def test_transfer_json_export_into_server_account(tmp_path: Path) -> None:
         assert dest.list_lessons(1) == []
         [session] = dest.list_sessions(42)
         assert session.user_id == 42
+
+
+def test_open_store_shares_one_pool_per_url(clean_postgres_url: str) -> None:
+    first = open_store(url=clean_postgres_url)
+    second = open_store(url=clean_postgres_url.replace("postgresql+psycopg://", "postgresql://"))
+    assert isinstance(first, PostgresProgressStore) and isinstance(second, PostgresProgressStore)
+    assert first.engine is second.engine is pg.shared_engine(clean_postgres_url)
+    first.save_lesson(LessonProgress(lesson_id=VECTORS))
+    first.close()  # does not dispose the shared pool
+    assert second.get_lesson(VECTORS) is not None
+    second.close()
+    pg.dispose_shared_engines()

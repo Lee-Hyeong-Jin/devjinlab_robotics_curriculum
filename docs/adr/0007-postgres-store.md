@@ -55,7 +55,9 @@ A 를 택한다(아키텍트와 합의, 설계 커밋 d795872).
 - 데이터 이전: `factory.transfer(source, dest, mode=empty|replace|merge, user_id=None)`. 원본은 다른
   스토어(로컬 SQLite) 또는 JSON 내보내기. merge 는 레슨을 `(user_id, lesson_id)` 로 upsert 하고
   `(user_id, lesson_id, started_at)` 이 같은 세션은 건너뛴다(AC-DB.3 중복 방지). `user_id` 를 주면 모든
-  레코드를 그 서버 계정으로 옮긴다.
+  레코드를 그 서버 계정으로 옮긴다. CLI: `rc progress transfer [--to URL] [--from export.json]
+  [--mode merge|replace|empty] [--user-id N]`(기본 merge, 목적지 기본값 `RC_DATABASE_URL`, 원본 기본값
+  로컬 SQLite). 출력·오류 메시지의 URL 비밀번호는 `***` 로 가린다.
 - 테스트: 계약 테스트(`tests/test_progress_store_contract.py`)를 SQLite·PostgreSQL 에 파라미터화.
   PostgreSQL 은 `RC_TEST_DATABASE_URL`(CI 서비스 컨테이너) 또는 testcontainers(`postgres:16.13`),
   Docker 가 없으면 이유를 출력하고 skip. 마이그레이션 왕복·한 단계 down/up·autogenerate 차이 0 검사.
@@ -71,5 +73,5 @@ A 를 택한다(아키텍트와 합의, 설계 커밋 d795872).
   계약 테스트로 보완). Docker 없는 환경에서는 PostgreSQL 테스트가 skip 되므로 CI 에 Postgres 서비스가
   필요하다.
 - 후속 작업: `service.open_service()`·CLI 가 `factory.open_store()` 를 쓰도록 연결(service.py 담당),
-  `rc progress transfer` 같은 CLI 명령, CI 에 Postgres 서비스 + `RC_TEST_DATABASE_URL`(DevOps),
-  Alembic 0002(진도 v2, P1-2 머지 후).
+  Alembic 0002(진도 v2, P1-2 머지 후; `transfer` 도 v2 테이블을 옮기도록 확장).
+  CI Postgres 서비스 + `RC_TEST_DATABASE_URL` 은 DevOps 가 반영(worktree-devops da7c2ab).

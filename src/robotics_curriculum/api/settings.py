@@ -7,6 +7,13 @@
 | ``RC_API_HOST``       | ``127.0.0.1``            |
 | ``RC_API_PORT``       | ``8000``                 |
 | ``RC_API_LOG_LEVEL``  | ``info``                 |
+| ``RC_AUTH_MODE``      | ``local`` (no login, user 1) or ``server`` (accounts, sessions, PATs) |
+| ``RC_DATABASE_URL``   | unset: SQLite in the data dir; ``postgresql://...`` for server mode |
+| ``RC_AUTH_COOKIE_SECURE`` | ``1`` (``0`` only for plain-HTTP development) |
+
+Auth policy variables (``RC_AUTH_*``, ``RC_SMTP_*``) are read by
+:meth:`robotics_curriculum.auth.service.AuthConfig.from_env` and
+:meth:`robotics_curriculum.auth.mailer.SmtpConfig.from_env`.
 """
 
 from __future__ import annotations
@@ -19,6 +26,7 @@ from pathlib import Path
 from robotics_curriculum.progress import default_curriculum_dir, default_data_dir
 
 LOG_LEVELS = ("critical", "error", "warning", "info", "debug")
+AUTH_MODES = ("local", "server")
 
 
 class SettingsError(ValueError):
@@ -32,6 +40,13 @@ class Settings:
     host: str = "127.0.0.1"
     port: int = 8000
     log_level: str = "info"
+    auth_mode: str = "local"
+    database_url: str | None = None
+    cookie_secure: bool = True
+
+    @property
+    def server_mode(self) -> bool:
+        return self.auth_mode == "server"
 
     @classmethod
     def from_env(cls, env: Mapping[str, str] | None = None) -> Settings:
@@ -40,9 +55,15 @@ class Settings:
         curriculum = env.get("RC_CURRICULUM_DIR")
         data = env.get("RC_DATA_DIR")
         port = env.get("RC_API_PORT")
+        mode = (env.get("RC_AUTH_MODE") or "local").lower()
+        if mode not in AUTH_MODES:
+            raise SettingsError(f"invalid RC_AUTH_MODE '{mode}' (use local or server)")
         base = cls(
             curriculum_dir=Path(curriculum) if curriculum else default_curriculum_dir(),
             data_dir=Path(data) if data else default_data_dir(),
+            auth_mode=mode,
+            database_url=(env.get("RC_DATABASE_URL") or "").strip() or None,
+            cookie_secure=env.get("RC_AUTH_COOKIE_SECURE", "1") != "0",
         )
         return base.with_overrides(
             host=env.get("RC_API_HOST") or None,

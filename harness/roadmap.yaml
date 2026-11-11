@@ -81,7 +81,7 @@ milestones:
 
     - id: P1-2
       title: 퀴즈·플래시카드·간격 반복 (FR-4 P0)
-      status: todo
+      status: done
       depends_on: [P1-1, P1-5]
       goal: 레슨 Markdown 의 quiz 블록을 검증·채점하고, 틀린 문항과 핵심 개념을 카드로 만들어 SM-2 로 복습 일정을 계산한다(PRD 부록 C.1).
       acceptance:
@@ -95,7 +95,7 @@ milestones:
         - AC-4.8a LESSON_TEMPLATE.md 에 퀴즈 블록 예시, CONTENT_MODEL.md 에 퀴즈 스키마가 있다(백엔드 개발자)
         - AC-4.8b 기초 M1 레슨 2개 이상에 실제 퀴즈가 있고 `rc validate` 와 `rc quiz` 가 통과한다(커리큘럼 저자)
         - AC-4.9 코어 라이브러리 라인·분기 커버리지 80% 이상(fail_under=80), mypy strict 통과
-      note:
+      note: quiz blocks, SM-2, rc quiz/review, progress v2 + alembic 0002 (d518e15, a581230); AC-4.8b content pending
 
     - id: P1-3
       title: 로드맵·선수지식 그래프·다음 레슨 추천 (FR-2)
@@ -163,7 +163,7 @@ milestones:
 
     - id: P2-2
       title: 인증·권한 (로컬 계정 Argon2id + OIDC, RBAC, 사용자별 진행도)
-      status: todo
+      status: in_progress
       depends_on: [P2-1, P2-3]
       goal: 로컬 계정(Argon2id 해시)과 OIDC 로그인을 지원하고, learner/author/admin 역할로 API 접근을 제어하며, 진행도를 사용자별로 분리한다(PRD 부록 C.3, 설계 §8 → docs/architecture/auth.md).
       acceptance:
@@ -176,11 +176,11 @@ milestones:
         - AC-AUTH.7 세션/토큰 방식과 만료·갱신·로그아웃 무효화 정책이 ADR 에 기록되고 구현과 일치한다
         - AC-AUTH.8 OWASP ASVS L2 V2·V3·V4 체크리스트 파일이 있고 CSRF 방어와 보안 헤더(CSP, HSTS)가 테스트로 확인된다
         - AC-AUTH.9 메일 어댑터(인터페이스 + SMTP 구현 + fake mailer)로 재설정 흐름이 테스트되고, 메일 미설정 시 재설정이 비활성으로 안내된다
-      note:
+      note: local accounts, sessions, CSRF, PAT, RBAC, audit merged (0c05661); OIDC, alembic 0003, PG auth tests pending
 
     - id: P2-3
       title: PostgreSQL 저장소·마이그레이션 (ProgressStore 구현, Alembic)
-      status: in_progress
+      status: done
       depends_on: [P2-1]
       goal: 기존 ProgressStore 인터페이스의 PostgreSQL 구현과 Alembic 마이그레이션을 추가하고, SQLite 구현과 같은 계약 테스트를 통과시킨다(PRD 부록 C.4, 설계 §4.5).
       acceptance:
@@ -188,7 +188,7 @@ milestones:
         - AC-DB.2 스키마 변경은 Alembic 으로만 하고, 빈 DB → head, head → 한 단계 down → up 왕복이 CI 에서 통과하며 마이그레이션 없는 모델 변경은 테스트가 실패시킨다
         - AC-DB.3 `rc progress export` JSON 을 서버 계정으로 가져올 수 있고 레슨 ID 기준으로 병합·중복 방지된다(왕복 테스트)
         - 모든 학습 데이터 테이블에 user_id 가 있고 인덱스가 정의되어 있다(AC-AUTH.5 의 전제)
-      note: store+alembic merged (bf94408); transfer CLI, factory wiring, 0002 pending
+      note: store, alembic 0001, transfer CLI, factory wiring (55d5cf1); 0002/0003 follow P1-2 and P2-2
 
     - id: P2-4
       title: 웹 프론트엔드 (로그인, 대시보드, 로드맵, 레슨, 자료실, 관리자)
@@ -207,7 +207,7 @@ milestones:
 
     - id: P2-5
       title: 운영 (Docker Compose api/db/web, 헬스체크, 구조화 로깅, 메트릭, 백업)
-      status: todo
+      status: in_progress
       depends_on: [P2-3, P2-4]
       goal: docker compose 하나로 api, db, web 을 띄우고 헬스체크, JSON 구조화 로깅, Prometheus 메트릭, 부하 기준, DB 백업·복구 절차를 갖춘다(PRD 부록 C.5, 설계 §9 → docs/architecture/operations.md).
       acceptance:
@@ -215,7 +215,7 @@ milestones:
         - AC-OPS.2 deploy/ 의 Compose(api + web + postgres + reverse proxy)로 신규 설치가 문서 기준 30분 이내, 비밀은 .env 주입과 .env.example 제공, 이미지 linux/amd64·arm64. `docker compose up` 후 전 서비스 healthy 를 CI 스모크 테스트가 확인한다
         - AC-OPS.3 부하 테스트(k6 또는 locust)가 읽기 p95 300ms, 쓰기 p95 1초, 동시 500명·레슨 1,000개 시나리오를 통과하고 스크립트와 결과가 docs/ 에 있다
         - AC-OPS.4 백업·복구 절차(RPO 24시간, RTO 4시간)와 복구 리허설 기록 1회가 있고, 관리 행위 감사 로그와 보존 기간 설정이 테스트된다
-      note:
+      note: api+db compose, migrate, smoke merged (69b87cf); web service, metrics, backup pending
 
     - id: P2-6
       title: i18n·접근성 (ko/en, WCAG 2.1 AA)
