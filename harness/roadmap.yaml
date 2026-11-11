@@ -192,7 +192,7 @@ milestones:
 
     - id: P2-4
       title: 웹 프론트엔드 (로그인, 대시보드, 로드맵, 레슨, 자료실, 관리자)
-      status: todo
+      status: in_progress
       depends_on: [P2-1, P2-2]
       goal: API 를 사용하는 웹 프론트엔드로 로그인, 대시보드, 로드맵, 레슨 뷰어(수식·코드), 자료실, 관리자 화면을 제공한다. 디자인은 docs/platform-design.md 를 따른다.
       acceptance:
@@ -203,7 +203,7 @@ milestones:
         - AC-WEB.5 자료실(모듈·레슨별 목록, 종류 필터, 외부 링크는 새 탭). 퀴즈·복습 UI 는 P1-2 API 노출 후 추가
         - AC-WEB.6 프론트엔드 lint·타입 검사·테스트가 CI 와 check.sh(node 스택)에서 실행되고 주요 화면 LCP 2.5초 이내
         - AC-WEB.7 프레임워크 선택(설계 §1.2 비교표 기준)이 ADR 에 기록되고 화면 구조는 docs/platform-design.md 의 7페이지 구조를 따른다
-      note:
+      note: web v1 merged (522ad20): dashboard, roadmap, module, lesson, resources, i18n, a11y; v2: login, profile, admin, quiz, review, search, report
 
     - id: P2-5
       title: 운영 (Docker Compose api/db/web, 헬스체크, 구조화 로깅, 메트릭, 백업)
