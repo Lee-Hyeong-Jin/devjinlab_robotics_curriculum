@@ -27,11 +27,11 @@ Milestone format (harness/roadmap.yaml):
 import json
 import os
 import re
+import subprocess
 import sys
 
-def _root() -> str:
-    import subprocess
 
+def _root() -> str:
     try:
         return subprocess.check_output(["git", "rev-parse", "--show-toplevel"], text=True).strip()
     except Exception:
