@@ -39,6 +39,32 @@
 
 훅 변경 후에는 `/hooks` 를 한 번 열거나 세션을 재시작해야 반영된다.
 
+### 워크트리 세션 주의
+
+병렬 세션은 각자 `.claude/worktrees/<name>/` 워크트리에서 일한다. 훅이 워크트리에서 어떻게 해석되는지 알아야 "훅이 조용히 꺼진" 상태나 "막혀서 아무것도 못 하는" 상태를 피할 수 있다.
+
+**스크립트 해석 순서.** 각 훅 명령은 ① 현재 cwd 기준 `scripts/harness/<스크립트>`, ② 없으면 `$CLAUDE_PROJECT_DIR/scripts/harness/<스크립트>`, ③ 둘 다 없으면 `exit 0`(아무 것도 안 함) 순으로 찾는다. 스크립트가 실행되면 내부에서 `git rev-parse --show-toplevel` 로 루트를 다시 잡으므로 이후 동작은 워크트리 기준이다.
+
+**실측 결과 (2026-11-11, 새 `git worktree add --detach` 워크트리에서 settings.json 의 훅 명령을 페이로드와 함께 직접 실행).**
+
+| 시나리오 | SessionStart | PreToolUse 가드 | PostToolUse 포맷 | Stop 게이트 |
+|---|---|---|---|---|
+| A. cwd = 워크트리 루트 | 상태 주입 | 위험 명령 deny | ruff 포맷 적용 | 실패 시 block |
+| B. cwd = 워크트리 하위(`src/`), `CLAUDE_PROJECT_DIR` = 같은 워크트리 | 정상 | 정상 | 정상 | 정상 |
+| C. cwd = 워크트리 하위, `CLAUDE_PROJECT_DIR` 에 스크립트 없음 | **무동작** | **무동작(가드 꺼짐)** | **무동작** | **무동작(게이트 꺼짐)** |
+| D. 저장소 밖 cwd | 무동작 | 무동작 | 무동작 | 무동작 |
+
+모든 경우 종료 코드는 0 이라 세션이 막히지는 않는다(fail-open). 대신 C 는 경고 없이 가드와 게이트가 꺼진다. 메인 체크아웃(`main`, 초기 커밋만 있음)에는 `scripts/harness/` 와 `.claude/settings.json` 이 없으므로, 메인 체크아웃에서 시작한 세션이 워크트리로 옮긴 뒤 하위 디렉터리로 `cd` 하면 C 가 된다.
+
+**규칙.**
+- 세션은 해당 워크트리 루트에서 시작하고, Bash 에서 하위 디렉터리로 `cd` 하지 말고 경로를 인자로 넘긴다(`uv run pytest tests/test_x.py`).
+- 세션은 시작할 때 읽은 훅 설정을 캐시한다. `integration` 을 머지해 `.claude/settings.json` 이나 `scripts/harness/` 가 바뀌었으면 `/hooks` 를 열어 다시 읽히거나 세션을 재시작한다. 오래된 훅 명령이 사라진 스크립트 경로를 가리켜 Bash 가 계속 막힌 사례가 있었다(platform-dev-agent-harness 세션).
+- 훅이 Bash 를 막는데 원인이 훅 자체라면 우회하지 말고 사용자에게 `/hooks` 재로드나 세션 재시작을 요청한다. 다른 세션에 대신 실행을 부탁하지 않는다.
+- 가드 차단 문구는 명령 문자열 전체에 정규식으로 걸린다. 테스트 페이로드나 heredoc 안의 문자열도 차단되므로, 그런 텍스트는 Write 도구로 파일에 쓴다.
+- 새 워크트리에서 훅을 점검하려면: 훅 명령을 `.claude/settings.json` 에서 꺼내 워크트리 루트와 하위 디렉터리 각각에서 이벤트별 JSON 페이로드를 stdin 으로 넣어 실행하고, 가드는 deny JSON, Stop 은 실패 코드에 대해 `"decision": "block"` 을 내는지 확인한다.
+
+**미해결(사용자 결정 필요).** C 의 fail-open 은 훅 명령이 cwd 대신 `git rev-parse --show-toplevel` 로 스크립트를 찾으면 없어진다. `.claude/settings.json` 변경이라 사용자 승인 후 반영한다.
+
 ## 권한
 
 `.claude/settings.json` 의 permissions: 읽기·검색, 읽기 전용 git, uv/ruff/pytest/npm 스크립트, 하네스 스크립트는 allow. `.env`, `~/.ssh`, `~/.aws` 읽기와 sudo·강제 push·reset --hard 는 deny. push·rebase·docker 는 ask. 개인 취향은 `.claude/settings.local.json`(gitignore 됨)에 둔다.
@@ -61,5 +87,5 @@
 ## 현재 전제
 
 - 스택: Phase 1 은 Python 단일(uv + ruff + pytest), 콘텐츠는 Markdown + YAML, CLI + 정적 사이트. Node 경로는 감지 로직에 남아 있지만 기본 가정은 Python.
-- `pyproject.toml` 은 아직 없다(P0-1 마일스톤에서 생성). 그때까지 check.sh 는 "no build stack detected" 를 출력하고 Stop 게이트는 비활성이다.
+- `pyproject.toml` 이 있으므로 check.sh 는 Python 스택(ruff, ruff format, mypy, pytest+커버리지)을 검사하고 Stop 게이트가 활성이다.
 - 로드맵 마일스톤 내용은 docs/PRD.md(0.1 Draft) 기반 초안이며 설계 세션 결과에 따라 바뀐다. 구조만 확정.

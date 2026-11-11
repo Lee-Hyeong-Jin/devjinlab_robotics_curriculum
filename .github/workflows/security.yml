@@ -1,0 +1,67 @@
+# Security scanning: static analysis (CodeQL) and dependency vulnerability detection (pip-audit).
+# Division of labour with .github/dependabot.yml: dependabot *updates* dependencies on a schedule,
+# this workflow *detects* known vulnerabilities and fails the build. ci.yml stays the quality gate.
+name: Security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "17 3 * * 1" # weekly, Monday 03:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  codeql:
+    name: CodeQL (python)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: github/codeql-action/init@v4
+        with:
+          languages: python
+          build-mode: none
+          queries: security-and-quality
+
+      - uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:python"
+
+  pip-audit:
+    name: pip-audit (dependencies)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
+      - name: Export locked runtime dependencies
+        run: |
+          uv export --locked --format requirements-txt --no-dev --no-emit-project --no-hashes -o runtime.txt
+          uv export --locked --format requirements-txt --only-dev --no-emit-project --no-hashes -o dev.txt
+
+      # Blocking. pip-audit has no severity filter, so any known vulnerability in a runtime
+      # dependency fails the job (a superset of "high or above"). A justified exception is added
+      # as `--ignore-vuln <ID>` here with a comment and a CHANGELOG Security entry.
+      - name: Audit runtime dependencies
+        run: uvx pip-audit --requirement runtime.txt --no-deps --disable-pip --strict --desc
+
+      # Non-blocking: dev tools never ship in the package or the container image.
+      - name: Audit dev dependencies (informational)
+        continue-on-error: true
+        run: uvx pip-audit --requirement dev.txt --no-deps --disable-pip --desc
