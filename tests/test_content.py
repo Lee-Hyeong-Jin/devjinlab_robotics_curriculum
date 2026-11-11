@@ -14,7 +14,8 @@ from robotics_curriculum.content import (
 )
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-SAMPLE_COURSE = REPO_ROOT / "curriculum" / "robotics-basics"
+FIXTURE_CURRICULUM = Path(__file__).resolve().parent / "fixtures" / "curriculum"
+SAMPLE_COURSE = FIXTURE_CURRICULUM / "sample-course"
 
 runner = CliRunner()
 
@@ -63,7 +64,7 @@ def write_course(root: Path, lessons: dict[str, str]) -> Path:
 
 def test_sample_content_loads_and_validates() -> None:
     course = load_course(SAMPLE_COURSE)
-    assert course.id == "robotics-basics"
+    assert course.id == "sample-course"
     assert [m.id for m in course.modules] == ["m1-math-physics", "m2-kinematics"]
     assert [lesson.id for lesson in course.iter_lessons()] == [
         "m1-vectors-matrices",
@@ -78,8 +79,16 @@ def test_sample_content_loads_and_validates() -> None:
 
 
 def test_load_courses_from_parent_directory() -> None:
+    courses = load_courses(FIXTURE_CURRICULUM)
+    assert [c.id for c in courses] == ["sample-course"]
+
+
+def test_live_curriculum_validates() -> None:
     courses = load_courses(REPO_ROOT / "curriculum")
-    assert [c.id for c in courses] == ["robotics-basics"]
+    assert courses
+    assert any(len(c.modules) >= 1 for c in courses)
+    for course in courses:
+        assert validate_course(course) == []
 
 
 def test_missing_required_field_is_reported_with_path(tmp_path: Path) -> None:
