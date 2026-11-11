@@ -521,7 +521,7 @@ P2-1 1차 범위 합의(API 개발자, 2026-11-11): 이번에 구현하는 것�
 | AC-DB.2 | 스키마 변경은 Alembic 마이그레이션으로만 한다. 빈 DB → 최신, 최신 → 한 단계 다운 → 업 왕복이 CI에서 통과한다. 마이그레이션 없는 모델 변경은 테스트가 실패시킨다. | CI 잡, autogenerate diff 검사 |
 | AC-DB.3 | 로컬 모드 JSON 내보내기(`rc progress export`)를 서버 계정으로 가져올 수 있고, 레슨 ID 기준으로 병합·중복 방지된다. 사용자가 쓸 수 있는 명령(`rc progress transfer` 또는 동급)이 Phase 2 완료 전에 있어야 한다(라이브러리 함수만으로는 US-DB.2 미충족). | 왕복 테스트 + CLI 테스트 |
 
-PM 검토(2026-11-11, bf94408): AC-DB.1~3의 코드·테스트는 충족. **조건부**로 남는 것 둘. (1) CI(`.github/workflows/ci.yml`)에 PostgreSQL 서비스 컨테이너나 `RC_TEST_DATABASE_URL`이 없어 Postgres 테스트가 건너뛰어지므로 AC-DB.1·AC-DB.2의 "CI에서 통과"가 아직 성립하지 않는다(DevOps 작업). (2) `rc progress transfer` CLI 미구현.
+PM 검토(2026-11-11, bf94408 + CI da7c2ab): AC-DB.1·AC-DB.2 **충족**. CI `check` 잡에 `postgres:16.13` 서비스와 `RC_TEST_DATABASE_URL`이 들어가 Postgres 테스트가 건너뛰어지지 않음을 integration에서 확인했다. AC-DB.3은 **조건부**: 전송 로직·테스트는 충족이나 사용자가 쓸 `rc progress transfer` CLI가 아직 없다.
 
 ### C.5 P2-5 운영: 관측성·배포·백업·부하
 
