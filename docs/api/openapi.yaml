@@ -268,19 +268,19 @@ paths:
       tags: [progress]
       summary: 타이머 시작 (rc start; 열린 세션 있으면 409)
       requestBody: { required: true, content: { application/json: { schema: { type: object, required: [lesson_id], properties: { lesson_id: { type: string } } } } } }
-      responses: { "201": { description: 세션 생성, content: { application/json: { schema: { $ref: "#/components/schemas/Session" } } } }, "409": { $ref: "#/components/responses/Problem" } }
+      responses: { "201": { description: 세션 생성, content: { application/json: { schema: { $ref: "#/components/schemas/StudySession" } } } }, "409": { $ref: "#/components/responses/Problem" } }
   /api/v1/progress/stop:
     post:
       tags: [progress]
       summary: 타이머 종료 (rc stop)
       requestBody: { content: { application/json: { schema: { type: object, properties: { note: { type: string }, discard: { type: boolean, default: false } } } } } }
-      responses: { "200": { description: 종료된 세션, content: { application/json: { schema: { $ref: "#/components/schemas/Session" } } } }, "409": { $ref: "#/components/responses/Problem" } }
+      responses: { "200": { description: 종료된 세션, content: { application/json: { schema: { $ref: "#/components/schemas/StudySession" } } } }, "409": { $ref: "#/components/responses/Problem" } }
   /api/v1/progress/log:
     post:
       tags: [progress]
       summary: 수동 시간 기록 (rc log)
       requestBody: { required: true, content: { application/json: { schema: { type: object, required: [lesson_id, minutes], properties: { lesson_id: { type: string }, minutes: { type: integer, minimum: 1, maximum: 1440 }, on: { type: string, format: date }, note: { type: string } } } } } }
-      responses: { "201": { description: 기록됨, content: { application/json: { schema: { $ref: "#/components/schemas/Session" } } } } }
+      responses: { "201": { description: 기록됨, content: { application/json: { schema: { $ref: "#/components/schemas/StudySession" } } } } }
   /api/v1/progress/done:
     post:
       tags: [progress]
@@ -292,7 +292,7 @@ paths:
       tags: [progress]
       summary: 학습 세션 목록
       parameters: [{ name: lesson_id, in: query, schema: { type: string } }, { $ref: "#/components/parameters/Cursor" }, { $ref: "#/components/parameters/Limit" }]
-      responses: { "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/SessionPage" } } } } }
+      responses: { "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/StudySessionPage" } } } } }
 
   # ---------- quiz ----------
   /api/v1/quiz/runs:
@@ -557,12 +557,17 @@ components:
         understanding: { type: integer, minimum: 1, maximum: 5 }
         note: { type: string }
         activities: { type: array, items: { type: object, properties: { activity_id: { type: string }, status: { $ref: "#/components/schemas/LessonStatus" } } } }
+    StudySession:
+      type: object
+      description: API 응답용 학습 세션. user_id 는 인증 컨텍스트에서 정해지므로 노출하지 않고, 경과 시간을 seconds 로 계산해 준다.
+      properties: { id: { type: integer }, lesson_id: { type: string }, started_at: { type: string, format: date-time }, ended_at: { type: string, format: date-time }, note: { type: string }, source: { type: string, enum: [timer, manual] }, seconds: { type: integer } }
+    StudySessionPage:
+      type: object
+      properties: { items: { type: array, items: { $ref: "#/components/schemas/StudySession" } }, next_cursor: { type: string } }
     Session:
       type: object
-      properties: { id: { type: integer }, lesson_id: { type: string }, started_at: { type: string, format: date-time }, ended_at: { type: string, format: date-time }, note: { type: string }, source: { type: string, enum: [timer, manual] }, seconds: { type: integer } }
-    SessionPage:
-      type: object
-      properties: { items: { type: array, items: { $ref: "#/components/schemas/Session" } }, next_cursor: { type: string } }
+      description: 코어 progress 모델 그대로의 세션 (내보내기 전용). user_id 포함, seconds 없음.
+      properties: { id: { type: integer }, user_id: { type: integer }, lesson_id: { type: string }, started_at: { type: string, format: date-time }, ended_at: { type: string, format: date-time }, note: { type: string }, source: { type: string, enum: [timer, manual] } }
     Status:
       type: object
       description: P2-1 초기 구현은 open_session 과 lessons 만 반환하며, 나머지 대시보드 필드(current, stages, week, streak_days, due_cards, recent)는 가산적으로 추가된다.
@@ -573,7 +578,7 @@ components:
         week: { type: object, properties: { minutes: { type: integer }, goal_minutes: { type: integer }, sessions: { type: integer } } }
         streak_days: { type: integer }
         due_cards: { type: integer }
-        open_session: { $ref: "#/components/schemas/Session" }
+        open_session: { $ref: "#/components/schemas/StudySession" }
         recent: { type: array, items: { type: object, properties: { at: { type: string, format: date-time }, kind: { type: string }, text: { type: string } } } }
     LessonState:
       type: object
