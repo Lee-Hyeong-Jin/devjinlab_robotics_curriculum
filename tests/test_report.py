@@ -115,8 +115,8 @@ def test_weekly_report_markdown(seeded: ProgressService) -> None:
     assert "- 학습 시간: 3h 45m" in text
     assert "- 세션: 4회 (학습한 날 3일)" in text
     assert "- 완료한 레슨: 2개" in text
-    assert "| 벡터·행렬 (`m1-vectors-matrices`) | 1h 45m | 4/5 |" in text
-    assert "| M1 수학·물리 기초 (`m1-math-physics`) | 3h 15m |" in text
+    assert "| 벡터와 행렬 (`m1-vectors-matrices`) | 1h 45m | 4/5 |" in text
+    assert "| M1 수학·물리 (`m1-math-physics`) | 3h 15m |" in text
     assert "- DH 파라미터 (`m2-dh-parameters`): 11일째 진행 중" in text
     assert "- 11-10 `m1-vectors-matrices`: 행렬 곱 연습" in text
     assert "1. DH 파라미터 (`m2-dh-parameters`): 진행 중" in text
@@ -140,13 +140,13 @@ def test_empty_week_still_renders(tmp_path: Path) -> None:
     assert "이번 주 학습 기록이 없습니다." in text
     assert "이번 주 완료한 레슨이 없습니다." in text
     assert "## 막힌 지점\n\n없음" in text
-    assert "1. 벡터·행렬 (`m1-vectors-matrices`): 시작 전" in text
+    assert "1. 벡터와 행렬 (`m1-vectors-matrices`): 시작 전" in text
 
 
 def test_module_report(seeded: ProgressService) -> None:
     text = render_module(build_module_report(seeded, "m1-math-physics"))
     assert "- 진도: 2/2 레슨 (100%)" in text
-    assert "| 회전 표현 (오일러 각 / 쿼터니언) (`m1-rotation-representations`) | 완료" in text
+    assert "| 회전 표현 (`m1-rotation-representations`) | 완료" in text
     assert "- 4점: 1개" in text and "- 2점: 1개" in text
 
 
