@@ -1,9 +1,16 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
 
 import { cx } from '@/lib/cx'
-import { THEME_STORAGE_KEY, applyTheme, readStoredTheme, type Theme } from '@/lib/theme'
+import {
+  THEME_EVENT,
+  THEME_STORAGE_KEY,
+  applyTheme,
+  readStoredTheme,
+  subscribeToTheme,
+  type Theme,
+} from '@/lib/theme'
 
 const ORDER: Theme[] = ['system', 'light', 'dark']
 
@@ -15,24 +22,28 @@ export interface ThemeToggleProps {
 /**
  * Theme switch: writes `<html data-theme>` and `localStorage`, defaulting to the
  * system setting (frontend.md §3).
+ *
+ * `localStorage` is an external store, so it is read with
+ * `useSyncExternalStore` — that keeps the server render (`system`) and the
+ * client in step without a state-setting effect, and picks up a change made in
+ * another tab.
  */
 export function ThemeToggle({ labels, groupLabel }: ThemeToggleProps) {
-  const [theme, setTheme] = useState<Theme>('system')
-  const [ready, setReady] = useState(false)
-
-  useEffect(() => {
-    setTheme(readStoredTheme())
-    setReady(true)
-  }, [])
+  const theme = useSyncExternalStore(
+    subscribeToTheme,
+    readStoredTheme,
+    // The server has no storage; it always renders the system default.
+    () => 'system' as Theme,
+  )
 
   function choose(next: Theme) {
-    setTheme(next)
     applyTheme(next)
     try {
       window.localStorage.setItem(THEME_STORAGE_KEY, next)
     } catch {
       // Private mode or blocked storage: the choice still applies for this page.
     }
+    window.dispatchEvent(new Event(THEME_EVENT))
   }
 
   return (
@@ -45,11 +56,11 @@ export function ThemeToggle({ labels, groupLabel }: ThemeToggleProps) {
         <button
           key={option}
           type="button"
-          aria-pressed={ready ? theme === option : undefined}
+          aria-pressed={theme === option}
           onClick={() => choose(option)}
           className={cx(
             'rounded-md px-2 py-1 text-xs font-medium transition-colors',
-            ready && theme === option ? 'bg-surface text-primary' : 'text-muted hover:text-primary',
+            theme === option ? 'bg-surface text-primary' : 'text-muted hover:text-primary',
           )}
         >
           {labels[option]}

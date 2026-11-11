@@ -1,10 +1,7 @@
-import { dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
-
-import { FlatCompat } from '@eslint/eslintrc'
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals'
+import nextTypescript from 'eslint-config-next/typescript'
 import prettier from 'eslint-config-prettier'
-
-const compat = new FlatCompat({ baseDirectory: dirname(fileURLToPath(import.meta.url)) })
+import jsxA11y from 'eslint-plugin-jsx-a11y'
 
 const config = [
   {
@@ -18,10 +15,16 @@ const config = [
       'src/lib/api/schema.d.ts',
     ],
   },
-  ...compat.extends('next/core-web-vitals', 'next/typescript', 'plugin:jsx-a11y/recommended'),
+  // eslint-config-next ships native flat configs from v16; they must not be
+  // wrapped in FlatCompat, which cannot serialize them.
+  ...nextCoreWebVitals,
+  ...nextTypescript,
   prettier,
   {
     rules: {
+      // eslint-config-next already registers the jsx-a11y plugin, so take its
+      // recommended rules rather than the config (which would redefine it).
+      ...jsxA11y.flatConfigs.recommended.rules,
       // Design tokens only: no raw hex colours in class names or styles (frontend.md §3).
       'no-restricted-syntax': [
         'error',

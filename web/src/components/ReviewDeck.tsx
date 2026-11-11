@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
-import { useActionState, useEffect, useState } from 'react'
+import { useActionState, useState } from 'react'
 
 import { rateCard, type ReviewState } from '@/lib/actions/quiz'
 import type { Rating, ReviewCard } from '@/lib/api/types'
@@ -31,19 +31,20 @@ const TONE: Record<Rating, string> = {
  */
 export function ReviewDeck({ cards }: { cards: ReviewCard[] }) {
   const t = useTranslations('review')
-  const [index, setIndex] = useState(0)
-  const [revealed, setRevealed] = useState(false)
+  const [rated, setRated] = useState<string[]>([])
+  const [revealedId, setRevealedId] = useState<string | null>(null)
   const [state, formAction, pending] = useActionState(rateCard, EMPTY)
 
-  // A saved rating moves the deck on; a failure keeps the card in place.
-  useEffect(() => {
-    if (state.result) {
-      setIndex((current) => current + 1)
-      setRevealed(false)
-    }
-  }, [state.result])
+  // A saved rating drops its card from the deck; a failure leaves it in place.
+  // Adjusted during render rather than in an effect, so there is no second pass.
+  const justRated = state.result?.card_id
+  if (justRated && !rated.includes(justRated)) {
+    setRated([...rated, justRated])
+  }
 
-  const card = cards[index]
+  const remaining = cards.filter((entry) => !rated.includes(entry.card_id))
+  const card = remaining[0]
+  const revealed = !!card && revealedId === card.card_id
 
   if (!card) {
     return (
@@ -61,7 +62,7 @@ export function ReviewDeck({ cards }: { cards: ReviewCard[] }) {
   return (
     <div className="mx-auto max-w-xl">
       <p className="text-muted mb-3 text-sm" role="status">
-        {t('due', { count: cards.length - index })}
+        {t('due', { count: remaining.length })}
       </p>
 
       {state.error ? <FormMessage tone="error">{state.error}</FormMessage> : null}
@@ -121,7 +122,7 @@ export function ReviewDeck({ cards }: { cards: ReviewCard[] }) {
           ) : (
             <button
               type="button"
-              onClick={() => setRevealed(true)}
+              onClick={() => setRevealedId(card.card_id)}
               className="bg-accent-solid text-on-accent rounded-lg border border-transparent px-4 py-2 text-sm font-medium"
             >
               {t('reveal')}
