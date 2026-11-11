@@ -190,7 +190,7 @@ research_notes/        개인 노트 (Markdown)
 reports/               생성된 리포트 (Markdown)
 labs/                  Webots 월드·컨트롤러 템플릿·판정 스크립트
 labs/_lib/judge.py     판정 공용 헬퍼 (위치 오차, 도달 시간, 충돌, 로그 파싱)
-src/rc/   (Python)     CLI 패키지: 콘텐츠 로더/검증기, SQLite 진도 저장, SM-2, 리포트 생성, Webots 러너, 정적 사이트 빌더
+src/robotics_curriculum/  (Python) 패키지(CLI 명령명은 `rc`): 콘텐츠 로더/검증기, SQLite 진도 저장, SM-2, 리포트 생성, Webots 러너, 정적 사이트 빌더
 site/                  `rc build` 결과물 (정적 HTML, MkDocs 기반) — .gitignore 대상
 tests/                 pytest
 frontend/, backend/    Phase 2 예정 (웹 UI, API 서버). Phase 1에서는 만들지 않음.
