@@ -6,17 +6,23 @@ PostgreSQL runs in a real container (see ``conftest.py``); without Docker those 
 from __future__ import annotations
 
 from collections.abc import Iterator
-from datetime import UTC, datetime, timedelta, timezone
+from datetime import UTC, date, datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
 
 from robotics_curriculum.progress import (
     SCHEMA_VERSION,
+    ActivityProgress,
+    Card,
+    CardState,
     LessonProgress,
     LessonStatus,
     ProgressService,
     ProgressStore,
+    QuizAttempt,
+    QuizRun,
+    Review,
     Session,
     SqliteProgressStore,
 )
@@ -205,3 +211,124 @@ def test_service_flow_runs_on_every_backend(store: ProgressStore) -> None:
     assert len(exported.sessions) == 2
     count = service.import_(exported, replace=True)
     assert count == (1, 2)
+
+
+# -- schema v2: cards, SM-2 state, reviews, quiz records (P1-2) --------------------------------
+
+
+def _card(card_id: str = "c1", user_id: int = 1) -> Card:
+    return Card(
+        id=card_id,
+        user_id=user_id,
+        lesson_id=VECTORS,
+        question_id="q1",
+        front="앞면",
+        back="뒷면",
+        source="quiz",
+        created_at=T0,
+    )
+
+
+def test_card_round_trip_and_upsert(store: ProgressStore) -> None:
+    assert store.get_card("c1") is None
+    card = _card()
+    store.save_card(card)
+    assert store.get_card("c1") == card
+    suspended = card.model_copy(update={"suspended": True, "back": "고친 뒷면"})
+    store.save_card(suspended)
+    assert store.get_card("c1") == suspended
+    store.save_card(_card("c2"))
+    store.save_card(_card("c3", user_id=2))
+    assert [c.id for c in store.list_cards()] == ["c1", "c2"]
+    assert [c.user_id for c in store.list_cards(None)] == [1, 1, 2]
+    assert [c.id for c in store.list_cards(lesson_id=DH)] == []
+
+
+def test_card_state_round_trip(store: ProgressStore) -> None:
+    state = CardState(card_id="c1", due=date(2026, 11, 20))
+    store.save_card_state(state)
+    assert store.get_card_state("c1") == state
+    graded = state.model_copy(
+        update={"repetitions": 2, "interval_days": 6, "ease": 2.6, "due": date(2026, 11, 26)}
+    )
+    store.save_card_state(graded)
+    found = store.get_card_state("c1")
+    assert found is not None and found.due == date(2026, 11, 26) and found.ease == 2.6
+    store.save_card_state(CardState(card_id="c9", user_id=2, due=date(2026, 12, 1)))
+    assert [s.card_id for s in store.list_card_states()] == ["c1"]
+    assert len(store.list_card_states(None)) == 2
+
+
+def test_reviews_and_quiz_records_get_ids(store: ProgressStore) -> None:
+    review = store.add_review(
+        Review(
+            card_id="c1",
+            reviewed_at=T0,
+            rating="good",
+            interval_before=1,
+            interval_after=6,
+            ease_after=2.6,
+        )
+    )
+    assert review.id is not None
+    attempt = store.add_quiz_attempt(
+        QuizAttempt(lesson_id=VECTORS, question_id="q1", answered_at=T0, answer="42", correct=True)
+    )
+    run = store.add_quiz_run(
+        QuizRun(
+            lesson_id=VECTORS,
+            started_at=T0,
+            finished_at=T0 + timedelta(minutes=5),
+            correct=4,
+            total=5,
+        )
+    )
+    assert attempt.id is not None and run.id is not None
+    assert store.list_reviews() == [review]
+    assert store.list_reviews(card_id="other") == []
+    assert store.list_quiz_attempts() == [attempt]
+    assert store.list_quiz_runs(lesson_id=VECTORS) == [run]
+    assert store.list_quiz_runs(lesson_id=DH) == []
+    second = store.add_review(review.model_copy(update={"id": None}))
+    assert second.id is not None and second.id > review.id
+
+
+def test_activity_progress_round_trip(store: ProgressStore) -> None:
+    activity = ActivityProgress(
+        activity_id="a1", lesson_id=VECTORS, status=LessonStatus.IN_PROGRESS, updated_at=T0
+    )
+    store.save_activity(activity)
+    assert store.list_activities() == [activity]
+    store.save_activity(activity.model_copy(update={"status": LessonStatus.DONE}))
+    [stored] = store.list_activities()
+    assert stored.status is LessonStatus.DONE
+    store.save_activity(activity.model_copy(update={"user_id": 2, "activity_id": "a2"}))
+    assert len(store.list_activities(None)) == 2
+
+
+def test_v2_rows_count_towards_is_empty_and_clear(store: ProgressStore) -> None:
+    store.save_card(_card())
+    assert not store.is_empty()
+    store.clear()
+    assert store.is_empty() and store.list_cards(None) == []
+
+
+def test_delete_user_removes_only_that_user(store: ProgressStore) -> None:
+    for user in (1, 2):
+        store.save_lesson(LessonProgress(user_id=user, lesson_id=VECTORS))
+        store.save_lesson(LessonProgress(user_id=user, lesson_id=DH))
+        store.add_session(Session(user_id=user, lesson_id=VECTORS, started_at=T0))
+        store.save_card(_card(f"c{user}", user_id=user))
+        store.save_card_state(CardState(card_id=f"c{user}", user_id=user, due=date(2026, 11, 20)))
+        store.save_activity(
+            ActivityProgress(user_id=user, activity_id=f"a{user}", lesson_id=VECTORS, updated_at=T0)
+        )
+    assert store.delete_user(1) == (2, 1)
+    assert store.list_lessons(1) == [] and store.list_sessions(1) == []
+    assert store.list_cards(1) == [] and store.list_card_states(1) == []
+    assert store.list_activities(1) == []
+    assert [p.lesson_id for p in store.list_lessons(2)] == [VECTORS, DH]
+    assert [c.id for c in store.list_cards(2)] == ["c2"]
+    assert store.delete_user(99) == (0, 0)  # unknown user
+    assert store.delete_user(2) == (2, 1)
+    assert store.is_empty()

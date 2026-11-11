@@ -158,3 +158,17 @@ activity_progress = Table(
         "status IN ('not_started', 'in_progress', 'done')", name="activity_progress_status"
     ),
 )
+
+
+# Every learning-data table, children before parents (safe delete order). Mirrors
+# ``store.TABLES``; ``meta`` is schema bookkeeping and is not listed.
+ALL_TABLES = (
+    reviews,
+    card_state,
+    cards,
+    quiz_attempts,
+    quiz_runs,
+    activity_progress,
+    sessions,
+    lesson_progress,
+)
