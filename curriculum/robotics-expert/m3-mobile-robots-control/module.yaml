@@ -1,0 +1,8 @@
+id: m3-mobile-robots-control
+title: M3 이동 로봇·제어
+summary: 차동 구동 로봇의 기구학 모델, PID 피드백 제어, 목표점 도달과 경로 추종 제어기를 다룬다.
+level: 기초
+lessons:
+  - differential-drive
+  - pid-control
+  - path-following

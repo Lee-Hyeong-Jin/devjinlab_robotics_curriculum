@@ -1,6 +1,8 @@
 id: m1-math-physics
 title: M1 수학·물리 기초
 summary: 벡터·행렬, 회전 표현, 좌표 변환 등 로봇을 기술하는 데 필요한 수학 도구.
+level: 기초
 lessons:
   - vectors-matrices
   - rotation-representations
+  - coordinate-transforms

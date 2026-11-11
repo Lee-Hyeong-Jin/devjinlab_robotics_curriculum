@@ -9,4 +9,4 @@ organized as Course (Track) > Module > Lesson > Activity.
 
 Courses:
 
-- `robotics-basics/` — 로보틱스 기초 (PRD 부록 A). Modules M1~M2 are stubbed; M3~M5 to follow.
+- `robotics-expert/` — 로보틱스 전문가 코스 (기초→중급→고급). 기초 단계 M1~M3 written; later stages to follow.
