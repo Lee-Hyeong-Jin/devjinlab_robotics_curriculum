@@ -11,7 +11,7 @@ import logging
 import os
 import secrets
 import sys
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from datetime import UTC, datetime
 from typing import Any
 
@@ -41,7 +41,7 @@ from robotics_curriculum.api.routers import (
     reports,
     review,
 )
-from robotics_curriculum.api.settings import Settings
+from robotics_curriculum.api.settings import ALLOW_REMOTE_LOCAL_ENV, Settings, is_loopback
 from robotics_curriculum.auth.mailer import Mailer, SmtpConfig, SmtpMailer
 from robotics_curriculum.auth.oidc import OidcClient, OidcProvider, parse_providers
 from robotics_curriculum.auth.service import AuthConfig, AuthError, AuthService
@@ -72,6 +72,33 @@ def load_content(state: AppState) -> None:
 
 
 _FROM_ENV: Any = object()
+
+
+class UnsafeConfiguration(RuntimeError):
+    """The settings would serve an unauthenticated or unreliable API. Refuse to build."""
+
+
+def check_exposure(settings: Settings, env: Mapping[str, str] | None = None) -> None:
+    """Refuse local mode (no login, every request is admin) on a non-loopback bind.
+
+    The same guard as ``rc api serve``, here as well so that building the app directly
+    (``uvicorn robotics_curriculum.api.app:...``) cannot bypass it (SRV-11).
+    ``RC_API_ALLOW_REMOTE_LOCAL=1`` opts out when the port is reachable only from the host.
+    """
+    env = os.environ if env is None else env
+    if settings.server_mode or is_loopback(settings.host):
+        return
+    if env.get(ALLOW_REMOTE_LOCAL_ENV) == "1":
+        logger.warning(
+            "serving local mode (no authentication) on a non-loopback address",
+            extra={"host": settings.host},
+        )
+        return
+    raise UnsafeConfiguration(
+        f"refusing to serve local mode (no login, admin access for everyone) on "
+        f"{settings.host}: bind to 127.0.0.1, set RC_AUTH_MODE=server, or set "
+        f"{ALLOW_REMOTE_LOCAL_ENV}=1 if the port is only reachable from this machine"
+    )
 
 
 def build_auth(
@@ -131,6 +158,7 @@ def create_app(
     mailer: Mailer | None = _FROM_ENV,
     oidc_providers: dict[str, OidcProvider] | None = None,
     oidc_http: httpx.Client | None = None,
+    auth_secret: str | None = None,
 ) -> FastAPI:
     """Build the API app. ``settings`` defaults to :meth:`Settings.from_env`.
 
@@ -138,6 +166,7 @@ def create_app(
     (``RC_AUTH_MODE=server``): every ``/api/v1`` call needs a session or a PAT.
     """
     settings = settings or Settings.from_env()
+    check_exposure(settings)
     state = AppState(settings=settings, clock=clock)
     load_content(state)
     if settings.server_mode:
@@ -145,9 +174,14 @@ def create_app(
         providers = oidc_providers if oidc_providers is not None else parse_providers(os.environ)
         http = oidc_http or httpx.Client(follow_redirects=False)
         state.oidc = {pid: OidcClient(p, http, clock) for pid, p in providers.items()}
-        secret = os.environ.get("RC_AUTH_SECRET", "")
+        secret = auth_secret if auth_secret is not None else os.environ.get("RC_AUTH_SECRET", "")
         if not secret and state.oidc:
-            logger.warning("RC_AUTH_SECRET is unset: OIDC logins only work on this one process")
+            # Without a shared key an OIDC callback that lands on another worker or replica
+            # cannot be opened, so refuse rather than fail intermittently (SRV-15).
+            raise UnsafeConfiguration(
+                "RC_AUTH_SECRET must be set when OIDC providers are configured: it signs the "
+                "in-flight login cookie and must be identical on every worker and replica"
+            )
         state.flow_key = secret.encode() if secret else secrets.token_bytes(32)
 
     app = FastAPI(

@@ -46,9 +46,20 @@ S256만 쓰므로 범위가 작고, 가짜 IdP로 끝까지 테스트하기 쉽�
 - GitHub: 제공자 `"type": "github"`(엔드포인트·범위 `read:user user:email` 기본값 자동). id_token 이
   없으므로 코드 교환 후 `/user`·`/user/emails` 를 읽고, **인증된(verified) 기본 이메일**만 쓴다.
   subject 는 GitHub 숫자 id(로그인명 변경에 안전).
+- `id_token` 의 `aud` 가 여러 개면 `azp` 가 우리 `client_id` 와 같아야 한다(OIDC Core 3.1.3.7,
+  다른 클라이언트용 토큰 거부). `azp` 가 없으면 거부한다.
+- 제공자가 설정돼 있는데 `RC_AUTH_SECRET` 이 없으면 기동을 거부한다. 프로세스별 임의 키는
+  워커·레플리카가 둘 이상일 때 콜백을 간헐적으로 깨뜨린다.
 - 역할 매핑: 제공자별 `role_claim`(예: `groups`)과 `role_map`(`{"rc-admins": "admin"}`). 로그인마다
   매핑된 최고 역할로 **올리기만** 하고 내리지는 않는다(강등은 관리자 결정, 마지막 관리자 보호와
   충돌 방지). 변경은 `user.role.changed`(reason `idp:<provider>`)로 감사한다.
+
+메일 발송 실패(SMTP 중단, DNS, TLS)는 가입·재설정 요청을 실패시키지 않는다. 토큰은 폐기하고
+로그와 감사 로그(`auth.mail.failed`)에 남긴 뒤 평소와 같은 201/202 를 돌려준다. 계정은 만들어졌는데
+500 이 나가면 사용자가 재시도해 409 를 만나는 상황이 생기기 때문이다(ASVS V7.4.1).
+
+바인드 가드(로그인 없는 local 모드는 루프백에만)는 `create_app` 에 둔다. CLI 에만 두면
+`uvicorn ...:create_app` 으로 띄울 때 보호가 사라진다.
 
 ## 결과
 

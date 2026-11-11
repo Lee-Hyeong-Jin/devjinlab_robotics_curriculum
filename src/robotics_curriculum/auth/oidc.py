@@ -358,6 +358,15 @@ class OidcClient:
             raise OidcError("invalid id_token: issued in the future")
         if not hmac.compare_digest(str(claims.get("nonce", "")), nonce):
             raise OidcError("id_token nonce mismatch")
+        # OIDC Core 3.1.3.7 (3)-(5): with several audiences the token must name us as the
+        # authorized party; a token minted for another client is not ours to accept (SRV-14).
+        audience = claims.get("aud")
+        if isinstance(audience, list) and len(audience) > 1:
+            azp = claims.get("azp")
+            if azp is None:
+                raise OidcError("invalid id_token: multiple aud values without azp")
+            if not hmac.compare_digest(str(azp), self.provider.client_id):
+                raise OidcError("invalid id_token: azp is another client")
         email = claims.get("email")
         return Claims(
             subject=str(claims["sub"]),

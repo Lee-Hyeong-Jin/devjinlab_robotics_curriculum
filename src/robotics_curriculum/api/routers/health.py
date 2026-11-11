@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from hmac import compare_digest
 
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse, Response
@@ -64,9 +65,21 @@ def version() -> Version:
     responses={200: {"content": {CONTENT_TYPE_LATEST: {"schema": {"type": "string"}}}}},
 )
 def metrics(request: Request, state: State) -> Response:
-    """Prometheus text format. Unauthenticated: expose to the internal network only
-    (block at the reverse proxy). ``RC_API_METRICS=0`` turns it off (404)."""
+    """Prometheus text format: request counts, latency, in-flight requests, DB pools.
+
+    Open by default and meant for the internal network: block ``/metrics`` at the reverse
+    proxy, or set ``RC_API_METRICS_TOKEN`` to require ``Authorization: Bearer <token>``
+    (SRV-16). ``RC_API_METRICS=0`` turns the endpoint off (404).
+    """
     if not state.settings.metrics:
         raise HTTPException(404, "metrics are disabled (RC_API_METRICS=0)")
+    expected = state.settings.metrics_token
+    if expected:
+        header = request.headers.get("authorization", "")
+        scheme, _, given = header.partition(" ")
+        if scheme.lower() != "bearer" or not compare_digest(given.strip(), expected):
+            raise HTTPException(
+                401, "metrics token required", headers={"WWW-Authenticate": 'Bearer realm="rc"'}
+            )
     body = generate_latest(request.app.state.metrics.registry)
     return Response(body, media_type=CONTENT_TYPE_LATEST)

@@ -83,6 +83,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+- Second server review round: a mail server failure no longer turns sign-up or a reset request
+  into a 500 (the undeliverable token is discarded and the failure audited); the local-mode bind
+  guard moved into the app factory, so running the app with uvicorn directly cannot bypass it;
+  `id_token`s with several audiences need an `azp` naming this client; OIDC now requires
+  `RC_AUTH_SECRET` instead of falling back to a per-process key; `/metrics` can require a bearer
+  token via `RC_API_METRICS_TOKEN`; `rc api promote-admin` refuses an unverified address unless
+  `--force` is given.
 - Server review fixes (`docs/reviews/2026-11-11-server-review.md`): the compose stack and the api
   image run in server mode with required secrets and no default database password; local mode
   refuses non-loopback binds; the bootstrap admin is promoted only after email verification
