@@ -1,22 +1,33 @@
 # 링크 생존 점검 (LINK_CHECK)
 
-- 점검일: 2026-11-11
+- 점검일: 2026-11-11 (2차: M9 포함 50개 레슨)
 - 대상: `curriculum/robotics-expert/**` 레슨 frontmatter `resources[].url` (중복 제거)
 - 방법: Python `urllib` 로 HEAD 요청, 실패하면 GET 으로 재시도. 타임아웃 10초, 기본 User-Agent.
-- 결과: 109개 중 103개 200 OK, 6개 확인 필요
-- 교체: `github.imc.re` 미러(m4-sensor-models)와 `awesome.ecosyste.ms` 목록 페이지(m10-testing-ci-deployment, 402)를 GitHub 원본 저장소 URL 로 바꿨다.
-- 교체: Nav2 옛 setup_guides 경로(m5-odometry-sensor-fusion, 404)와 FH Aachen 자습서(m5-graph-slam-slam-toolbox, 403)를 Nav2 `docs.nav2.org/rolling/` 공식 문서로 바꿨다(리서처 제안, `research_notes/로보틱스 학습 자료 조사/link_fixes.md`).
+- 결과: 109개 중 104개 200 OK, 5개 확인 필요
+
+## 교체한 링크
+
+| 레슨 | 옛 URL (상태) | 새 URL |
+|---|---|---|
+| m4-sensor-models | `github.imc.re` 미러 (403) | GitHub 원본 저장소 |
+| m10-testing-ci-deployment | `awesome.ecosyste.ms` 목록 페이지 (402) | GitHub 원본 저장소 |
+| m5-odometry-sensor-fusion | Nav2 옛 `setup_guides/` 경로 (404) | `docs.nav2.org/rolling/` 공식 후속 페이지 + robot_localization 공식 문서 추가 |
+| m5-graph-slam-slam-toolbox | FH Aachen 여름학교 자습서 (403, 브라우저에서도 차단) | Nav2 공식 튜토리얼 "Navigating While Mapping" |
+| m9-sim-to-real-domain-randomization | NVIDIA Isaac Lab 하위 페이지 (404) | 같은 코스의 상위 랜딩 페이지 |
+
+Nav2 와 Isaac Lab 대체 URL 은 리서처 세션(robotics-learning-research)이 제안했고 `research_notes/로보틱스 학습 자료 조사/link_fixes.md` 에 근거가 있다.
 
 ## 확인 필요
 
 | url | 상태 | 레슨 |
 |---|---|---|
-| <https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-lab/latest/an-introduction-to-robot-learning-and-isaac-lab/index.html> | 404 (깨짐 — 대체 자료 요청 중) | m9-sim-to-real-domain-randomization |
 | <https://mathworks.com/videos/tech-talks/controls> | 403 (봇 차단 추정 — 브라우저 수동 확인 필요) | m3-pid-control, m4-filtering-basics |
 | <https://www.packtpub.com/en-US/product/mastering-ros-2-for-robotics-programming-9781836209003> | 403 (봇 차단 추정 — 브라우저 수동 확인 필요) | m8-reference-robot-code |
 | <https://www.packtpub.com/en-ro/product/ros-2-from-scratch-9781835881415> | 403 (봇 차단 추정 — 브라우저 수동 확인 필요) | m8-nodes-topics-launch |
 | <https://www.udemy.com/course/ros2-for-beginners/> | 403 (봇 차단 추정 — 브라우저 수동 확인 필요) | m8-nodes-topics-launch |
 | <https://www.udemy.com/course/ros2-moveit2/> | 403 (봇 차단 추정 — 브라우저 수동 확인 필요) | m7-moveit2-reading |
+
+유료 강의·도서 판매 페이지(Udemy, Packt)와 MathWorks 는 자동 요청을 거부하는 것으로 보인다. 브라우저로 열어 살아 있는지 사람이 확인해야 한다.
 
 ## 전체 목록
 
@@ -39,7 +50,7 @@
 | <https://docs.nav2.org/rolling/configuration_and_development/first_time_robot_setup_guide/odom/setup_robot_localization/> | 200 | m5-odometry-sensor-fusion |
 | <https://docs.nav2.org/rolling/index.html> | 200 | m10-system-architecture-requirements, m6-costmap-global-planning, m6-local-planning-dwa-mppi, m6-nav2-architecture-behavior-trees, m6-path-smoothing-trajectory |
 | <https://docs.nav2.org/rolling/tutorials/general_tutorials/navigation2_with_slam/navigation2_with_slam/> | 200 | m5-graph-slam-slam-toolbox |
-| <https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-lab/latest/an-introduction-to-robot-learning-and-isaac-lab/index.html> | 404 | m9-sim-to-real-domain-randomization |
+| <https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-lab/latest/index.html> | 200 | m9-sim-to-real-domain-randomization |
 | <https://docs.nvidia.com/learning/physical-ai/sim-to-real-so-101/latest/index.html> | 200 | m9-datasets-benchmarks-evaluation, m9-sim-to-real-domain-randomization |
 | <https://docs.ros.org/en/jazzy/Tutorials.html> | 200 | m8-nodes-topics-launch, m8-ros2-concepts-distros, m8-tf2-urdf-visualization |
 | <https://docs.ros.org/en/jazzy/p/pinocchio/doc/d-practical-exercises/4-dyn.html> | 200 | m7-manipulator-dynamics-torque-control |
