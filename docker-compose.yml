@@ -1,12 +1,12 @@
 # Phase 1: the rc CLI. Phase 2 adds services step by step (harness/roadmap.yaml P2-5).
-# Usage: docker compose run --rm cli validate
+# Usage: export RC_DB_PASSWORD=... RC_AUTH_SECRET=...   # required (RUNBOOK §8)
+#        docker compose run --rm cli validate
 #        docker compose up -d db      # PostgreSQL for server mode (P2-3, docs/adr/0007)
-#        export RC_DATABASE_URL=postgresql://rc:rc-dev-only@localhost:5432/rc
-#        uv run alembic upgrade head
 #        docker compose up -d --wait api   # db -> migrate -> api (bash scripts/smoke.sh)
 # `web` and the reverse proxy follow with P2-4 (docs/architecture/operations.md).
-# The db password below is a development default; production compose (P2-5) uses
-# POSTGRES_PASSWORD_FILE with a Docker secret instead (docs/architecture/operations.md).
+# Secrets have no defaults: compose refuses to start until they are set (server review SRV-06).
+# The api runs in server mode (accounts, sessions; SRV-01) on a read-only root filesystem with
+# no Linux capabilities (SRV-09). Production can swap the env values for Docker secrets.
 services:
   # One-shot tool, not part of `up`: docker compose run --rm cli validate
   cli:
@@ -22,11 +22,13 @@ services:
     environment:
       POSTGRES_DB: rc
       POSTGRES_USER: rc
-      POSTGRES_PASSWORD: ${RC_DB_PASSWORD:-rc-dev-only}
+      POSTGRES_PASSWORD: ${RC_DB_PASSWORD:?set RC_DB_PASSWORD (see docs/operations/RUNBOOK.md §8)}
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
       - dbdata:/var/lib/postgresql/data
+    security_opt:
+      - no-new-privileges:true
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U rc -d rc"]
       interval: 10s
@@ -42,7 +44,13 @@ services:
     entrypoint: ["alembic"]
     command: ["upgrade", "head"]
     environment:
-      RC_DATABASE_URL: postgresql://rc:${RC_DB_PASSWORD:-rc-dev-only}@db:5432/rc
+      RC_DATABASE_URL: postgresql://rc:${RC_DB_PASSWORD:?set RC_DB_PASSWORD (see docs/operations/RUNBOOK.md §8)}@db:5432/rc
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
     depends_on:
       db:
         condition: service_healthy
@@ -54,12 +62,29 @@ services:
       target: api
     image: robotics-curriculum-api:local
     environment:
-      RC_DATABASE_URL: postgresql://rc:${RC_DB_PASSWORD:-rc-dev-only}@db:5432/rc
+      RC_AUTH_MODE: server
+      RC_DATABASE_URL: postgresql://rc:${RC_DB_PASSWORD:?set RC_DB_PASSWORD (see docs/operations/RUNBOOK.md §8)}@db:5432/rc
+      RC_AUTH_SECRET: ${RC_AUTH_SECRET:?set RC_AUTH_SECRET (see docs/operations/RUNBOOK.md §8)}
+      RC_AUTH_ADMIN_EMAIL: ${RC_AUTH_ADMIN_EMAIL:-}
+      RC_AUTH_COOKIE_SECURE: ${RC_AUTH_COOKIE_SECURE:-1}
+      RC_PUBLIC_URL: ${RC_PUBLIC_URL:-http://localhost:3000}
+      RC_OIDC_PROVIDERS: ${RC_OIDC_PROVIDERS:-}
+      RC_SMTP_HOST: ${RC_SMTP_HOST:-}
+      RC_SMTP_PORT: ${RC_SMTP_PORT:-587}
+      RC_SMTP_USER: ${RC_SMTP_USER:-}
+      RC_SMTP_PASSWORD: ${RC_SMTP_PASSWORD:-}
+      RC_SMTP_FROM: ${RC_SMTP_FROM:-}
       RC_API_LOG_LEVEL: ${RC_API_LOG_LEVEL:-info}
     ports:
       - "127.0.0.1:8000:8000"
     volumes:
       - rc-data:/data
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -89,9 +114,11 @@ services:
     environment:
       POSTGRES_USER: rc
       POSTGRES_DB: rc
-      PGPASSWORD: ${RC_DB_PASSWORD:-rc-dev-only}
+      PGPASSWORD: ${RC_DB_PASSWORD:?set RC_DB_PASSWORD (see docs/operations/RUNBOOK.md §8)}
     volumes:
       - ./backups:/backups
+    security_opt:
+      - no-new-privileges:true
     depends_on:
       db:
         condition: service_healthy

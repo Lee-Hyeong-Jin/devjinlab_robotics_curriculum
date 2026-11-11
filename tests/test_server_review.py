@@ -84,7 +84,6 @@ def test_srv01_local_mode_grants_admin_without_credentials(tmp_path: Path) -> No
     assert write.status_code == 201, write.text
 
 
-@_open("SRV-01: docker-compose runs the API in local (no-auth) mode")
 def test_srv01_compose_api_runs_in_server_mode() -> None:
     env = _compose_service("api").get("environment", {})
     assert env.get("RC_AUTH_MODE") == "server", (
@@ -162,3 +161,22 @@ def test_srv05_readyz_does_not_leak_filesystem_paths(tmp_path: Path) -> None:
     courses = client.get("/api/v1/courses").text
     for text, where in ((body, "/readyz"), (courses, "GET /api/v1/courses")):
         assert str(tmp_path) not in text, f"{where} exposes a server path: {text[:200]}"
+
+
+# -- SRV-06 / SRV-09: compose secrets and container hardening --------------------------
+
+
+def test_srv06_compose_has_no_default_secrets() -> None:
+    text = COMPOSE.read_text(encoding="utf-8")
+    assert "rc-dev-only" not in text
+    assert "${RC_DB_PASSWORD:?" in text and "${RC_AUTH_SECRET:?" in text
+
+
+def test_srv09_api_container_is_hardened() -> None:
+    for name in ("api", "migrate"):
+        service = _compose_service(name)
+        assert service.get("read_only") is True, name
+        assert service.get("cap_drop") == ["ALL"], name
+        assert "no-new-privileges:true" in service.get("security_opt", []), name
+    dockerfile = (ROOT / "Dockerfile").read_text(encoding="utf-8")
+    assert "HEALTHCHECK" in dockerfile and "RC_AUTH_MODE=server" in dockerfile
