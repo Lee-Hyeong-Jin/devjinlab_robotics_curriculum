@@ -17,8 +17,11 @@ import type { GetPath, GetResponse, Problem } from './types'
 
 /** Header set by `src/middleware.ts` so a 401 can redirect back to the current page. */
 export const CURRENT_PATH_HEADER = 'x-current-path'
-/** Cookie holding the double-submit CSRF token (frontend.md §1). */
-export const CSRF_COOKIE = 'csrf'
+/**
+ * Cookie holding the double-submit CSRF token. The name is the API's
+ * (`deps.CSRF_COOKIE`); it is readable by JS on purpose, unlike `sid`.
+ */
+export const CSRF_COOKIE = 'csrf_token'
 /** Header carrying the double-submit CSRF token on mutations. */
 export const CSRF_HEADER = 'X-CSRF-Token'
 

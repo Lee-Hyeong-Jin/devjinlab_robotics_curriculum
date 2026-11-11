@@ -3,9 +3,7 @@ import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 
 import { Card } from '@/components/Card'
-import { AuthForm } from '@/components/form/AuthForm'
-import { Field } from '@/components/form/Field'
-import { SubmitButton } from '@/components/form/SubmitButton'
+import { ActionForm } from '@/components/form/ActionForm'
 import { PageHeader } from '@/components/PageHeader'
 import { verifyEmail } from '@/lib/actions/auth'
 
@@ -25,20 +23,19 @@ export default async function VerifyEmailPage({ searchParams }: Props) {
     <div className="mx-auto max-w-md">
       <PageHeader title={t('title')} subtitle={t('subtitle')} />
       <Card>
-        <AuthForm action={verifyEmail}>
-          {(state) => (
-            <>
-              <Field
-                label={t('token')}
-                name="token"
-                defaultValue={params.token ?? ''}
-                required
-                error={state.fields?.token}
-              />
-              <SubmitButton pendingLabel={t('submitting')}>{t('submit')}</SubmitButton>
-            </>
-          )}
-        </AuthForm>
+        <ActionForm
+          action={verifyEmail}
+          submitLabel={t('submit')}
+          pendingLabel={t('submitting')}
+          fields={[
+            {
+              name: 'token',
+              label: t('token'),
+              defaultValue: params.token ?? '',
+              required: true,
+            },
+          ]}
+        />
         <p className="border-border-default mt-5 border-t pt-4 text-sm">
           <Link href="/login" className="text-accent underline underline-offset-2">
             {t('toLogin')}

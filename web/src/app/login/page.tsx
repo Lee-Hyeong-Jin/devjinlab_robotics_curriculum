@@ -4,9 +4,7 @@ import { redirect } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 
 import { Card } from '@/components/Card'
-import { AuthForm } from '@/components/form/AuthForm'
-import { Field } from '@/components/form/Field'
-import { SubmitButton } from '@/components/form/SubmitButton'
+import { ActionForm } from '@/components/form/ActionForm'
 import { PageHeader } from '@/components/PageHeader'
 import { login } from '@/lib/actions/auth'
 import { getMe } from '@/lib/auth'
@@ -34,38 +32,30 @@ export default async function LoginPage({ searchParams }: Props) {
     <div className="mx-auto max-w-md">
       <PageHeader title={t('title')} subtitle={t('subtitle')} />
       <Card>
-        <AuthForm action={login} notice={notice}>
-          {(state) => (
-            <>
-              <input type="hidden" name="next" value={next} />
-              <Field
-                label={t('email')}
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                error={state.fields?.email}
-              />
-              <Field
-                label={t('password')}
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                error={state.fields?.password}
-              />
-              <label className="text-primary flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  name="remember"
-                  className="border-border-default size-4 rounded"
-                />
-                {t('remember')}
-              </label>
-              <SubmitButton pendingLabel={t('submitting')}>{t('submit')}</SubmitButton>
-            </>
-          )}
-        </AuthForm>
+        <ActionForm
+          action={login}
+          hidden={{ next }}
+          notice={notice}
+          submitLabel={t('submit')}
+          pendingLabel={t('submitting')}
+          fields={[
+            {
+              name: 'email',
+              label: t('email'),
+              kind: 'email',
+              autoComplete: 'email',
+              required: true,
+            },
+            {
+              name: 'password',
+              label: t('password'),
+              kind: 'password',
+              autoComplete: 'current-password',
+              required: true,
+            },
+            { name: 'remember', label: t('remember'), kind: 'checkbox' },
+          ]}
+        />
         <div className="border-border-default mt-5 flex flex-col gap-2 border-t pt-4 text-sm">
           <Link href="/password/forgot" className="text-accent underline underline-offset-2">
             {t('forgot')}
