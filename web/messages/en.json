@@ -74,11 +74,11 @@
     "studied": "Study time",
     "understanding": "Understanding",
     "note": "Note",
-    "writeActionsPending": "Use the CLI (`rc study`, `rc done`) for the timer and completion. Web write actions land in the next step.",
     "onThisPage": "On this page",
     "empty": "This lesson has no body.",
     "difficulty": "Difficulty {level}/5",
-    "prerequisites": "Prerequisites"
+    "prerequisites": "Prerequisites",
+    "writeActionsPending": "Use the CLI (`rc study`, `rc done`) for the timer and completion. Web write actions land in the next step."
   },
   "resources": {
     "title": "Resources",
@@ -329,5 +329,37 @@
     "disabled": "Disabled",
     "pending_deletion": "Pending deletion",
     "deleted": "Deleted"
+  },
+  "study": {
+    "title": "Study log",
+    "timer": "Timer",
+    "start": "Start studying",
+    "starting": "Starting…",
+    "started": "The timer is running.",
+    "startFailed": "Could not start the timer.",
+    "stop": "Stop studying",
+    "stopping": "Stopping…",
+    "stopped": "Your study time is recorded.",
+    "stopFailed": "Could not stop the timer.",
+    "running": "Running",
+    "runningSince": "running since {at}",
+    "logTitle": "Enter time manually",
+    "minutes": "Minutes",
+    "minutesInvalid": "Enter between 1 and 1440 minutes.",
+    "log": "Record",
+    "logging": "Recording…",
+    "logged": "Recorded {minutes} minutes.",
+    "logFailed": "Could not record the time.",
+    "doneTitle": "Mark complete",
+    "understanding": "Understanding (1-5)",
+    "understandingInvalid": "Pick a value from 1 to 5.",
+    "note": "Note",
+    "noteHint": "Optional.",
+    "markDone": "Mark complete",
+    "markingDone": "Working…",
+    "done": "Marked complete.",
+    "doneWithUnlocked": "Marked complete. {count} lessons unlocked: {ids}",
+    "doneFailed": "Could not mark it complete.",
+    "alreadyDone": "You have already completed this lesson."
   }
 }
