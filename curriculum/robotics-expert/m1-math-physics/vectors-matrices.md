@@ -127,6 +127,42 @@ print(np.dot(u, v), np.cross(u, v))  # 0, [0 0 1]
 2. 행렬 $A$ 의 첫 번째 열은 기하학적으로 무엇을 의미하는가?
 3. 회전 행렬의 역행렬을 전치로 계산할 수 있는 이유는 무엇이며, 일반 행렬에서는 왜 안 되는가?
 
+## 확인 퀴즈
+
+`rc quiz m1-vectors-matrices` 로 풀 수 있다. 오답은 복습 카드가 된다.
+
+```quiz
+activity: m1-vectors-matrices-quiz
+questions:
+  - id: q1
+    type: single
+    prompt: '두 벡터의 내적이 음수라면 두 벡터 사이 각도 $\theta$ 에 대해 무엇을 알 수 있는가?'
+    choices:
+      - '$\theta = 0^\circ$ 이다'
+      - '$\theta < 90^\circ$ 이다'
+      - '$\theta > 90^\circ$ 이다'
+      - '두 벡터 중 하나가 영벡터다'
+    answer: 2
+    explanation: '$\mathbf{a}\cdot\mathbf{b} = |\mathbf{a}||\mathbf{b}|\cos\theta$ 에서 크기는 항상 양수이므로 부호는 $\cos\theta$ 가 결정한다. 내적이 음수면 $\cos\theta < 0$, 즉 사잇각이 둔각($90^\circ$ 초과)이다.'
+    concept: { front: '내적의 부호가 알려 주는 것', back: '양수면 예각, 0이면 직교, 음수면 둔각(사잇각 $90^\circ$ 초과)' }
+  - id: q2
+    type: multiple
+    prompt: '회전 행렬 $R$ 에 대해 **항상** 성립하는 것을 모두 고르시오.'
+    choices:
+      - '$R^T R = I$'
+      - '$\det R = 0$'
+      - '$R^{-1} = R^T$'
+      - '$R$ 의 두 열이 서로 평행하다'
+    answer: [0, 2]
+    explanation: '회전 행렬은 직교 행렬이므로 $R^TR = I$ 이고, 따라서 역행렬이 전치와 같다($R^{-1} = R^T$). $\det R = 1$ 이므로 0이 아니고, 열들은 서로 직교하는 단위 벡터이므로 평행할 수 없다.'
+    concept: { front: '회전 행렬의 성질', back: '$R^TR = I$, $R^{-1} = R^T$, $\det R = 1$, 열은 직교하는 단위 벡터' }
+  - id: q3
+    type: truefalse
+    prompt: '행렬 곱 $AB$ 는 벡터에 먼저 $A$ 를 적용한 뒤 $B$ 를 적용하는 변환이다.'
+    answer: false
+    explanation: '$(AB)\mathbf{x} = A(B\mathbf{x})$ 이므로 오른쪽에 있는 $B$ 가 먼저 적용된다. 순서가 바뀌면 결과가 달라지는 것이 "먼저 회전하고 이동" 과 "먼저 이동하고 회전" 이 다른 이유다.'
+```
+
 ## 이 단계 공부법
 
 1. **영상(약 1.5시간):** 3Blue1Brown *Essence of Linear Algebra* 에서 벡터, 선형 결합, 선형 변환, 행렬 곱, 3차원 변환, 외적 편을 먼저 본다. 계산보다 "행렬 = 공간 변환" 직관을 잡는 것이 목표다.
