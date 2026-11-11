@@ -91,7 +91,7 @@ CMD ["api", "serve"]
 # web/next.config.ts turns on `output: 'standalone'` when NEXT_OUTPUT=standalone, which puts the
 # server, its package.json and only the node_modules it imports into .next/standalone;
 # .next/static ships beside it.
-FROM node:22-bookworm-slim AS web-build
+FROM node:25-bookworm-slim AS web-build
 
 ENV NEXT_TELEMETRY_DISABLED=1 \
     NEXT_OUTPUT=standalone
@@ -107,7 +107,7 @@ RUN npm run build
 
 # ---- web: server mode frontend (P2-5, docs/architecture/operations.md) ----
 # Build with: docker build --target web -t robotics-curriculum-web:local .
-FROM node:22-bookworm-slim AS web
+FROM node:25-bookworm-slim AS web
 
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
