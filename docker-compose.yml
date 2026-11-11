@@ -97,6 +97,35 @@ services:
         condition: service_healthy
     restart: "no"
 
+  # Frontend (P2-4/P2-5). Appended after `backup` on purpose: the api/db block is being
+  # hardened in another branch, and keeping the web block at the end keeps the merge clean.
+  # Server-rendered Next.js, so it needs the api reachable, not a build-time URL.
+  web:
+    build:
+      context: .
+      target: web
+    image: robotics-curriculum-web:local
+    environment:
+      # Inside the compose network the api answers on its service name.
+      RC_API_BASE_URL: http://api:8000
+      RC_DEFAULT_COURSE_ID: ${RC_DEFAULT_COURSE_ID:-robotics-expert}
+      RC_API_TIMEOUT_MS: ${RC_API_TIMEOUT_MS:-10000}
+      PORT: "3000"
+      HOSTNAME: 0.0.0.0
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    # The image's own HEALTHCHECK probes http://127.0.0.1:3000/ with node's fetch.
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    # Not read_only yet: Next writes its fetch cache under .next/cache at runtime and that
+    # has not been proven with a writable tmpfs here. Turn it on once scripts/smoke.sh
+    # exercises the web service (it does not yet).
+
 volumes:
   rc-data:
   dbdata:

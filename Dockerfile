@@ -79,3 +79,47 @@ USER rc
 # with alembic. No curl or wget in the image, so health checks use python (see compose).
 ENTRYPOINT ["rc"]
 CMD ["api", "serve"]
+
+# ---- web-build: the Next.js frontend, compiled to a self-contained server bundle ----
+# `output: 'standalone'` in web/next.config.ts puts the server, its package.json and only the
+# node_modules it actually imports into .next/standalone; .next/static ships beside it.
+FROM node:22-bookworm-slim AS web-build
+
+ENV NEXT_TELEMETRY_DISABLED=1
+
+WORKDIR /app/web
+
+# Dependencies first so this layer is cached until the lockfile changes.
+COPY web/package.json web/package-lock.json ./
+RUN npm ci
+
+COPY web ./
+RUN npm run build
+
+# ---- web: server mode frontend (P2-5, docs/architecture/operations.md) ----
+# Build with: docker build --target web -t robotics-curriculum-web:local .
+FROM node:22-bookworm-slim AS web
+
+ENV NODE_ENV=production \
+    NEXT_TELEMETRY_DISABLED=1 \
+    PORT=3000 \
+    HOSTNAME=0.0.0.0
+
+WORKDIR /app
+
+# The standalone bundle carries its own node_modules; .next/static and public/ do not travel
+# with it. `web/public` does not exist yet, so nothing is copied for it.
+COPY --from=web-build --chown=node:node /app/web/.next/standalone ./
+COPY --from=web-build --chown=node:node /app/web/.next/static ./.next/static
+
+EXPOSE 3000
+
+# node:* images ship an unprivileged `node` user (uid 1000).
+USER node
+
+# No curl or wget in the image; node's own fetch is the probe. The api it talks to is set by
+# RC_API_BASE_URL (compose points it at http://api:8000).
+HEALTHCHECK --interval=10s --timeout=5s --retries=5 --start-period=15s \
+    CMD node -e "fetch('http://127.0.0.1:'+(process.env.PORT||3000)+'/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+
+CMD ["node", "server.js"]
