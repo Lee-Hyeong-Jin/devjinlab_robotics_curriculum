@@ -90,7 +90,8 @@ def test_not_ready_when_curriculum_missing(tmp_path: Path) -> None:
     assert ready.json()["checks"]["content"]["ok"] is False
     assert ready.json()["checks"]["database"]["ok"] is True
     body = assert_problem(client.get("/api/v1/courses"), 503)
-    assert "curriculum not loaded" in body["detail"]
+    assert body["detail"] == "curriculum failed to load (see server log)"
+    assert str(tmp_path) not in ready.text + body["detail"]  # no server paths
 
 
 def test_not_ready_when_store_cannot_open(tmp_path: Path) -> None:
@@ -590,6 +591,7 @@ def test_rc_api_serve_runs_uvicorn(monkeypatch: pytest.MonkeyPatch, tmp_path: Pa
     calls: list[dict[str, Any]] = []
     monkeypatch.setattr(uvicorn, "run", lambda app, **kw: calls.append({"app": app, **kw}))
     monkeypatch.setattr("robotics_curriculum.api.log.configure_logging", lambda level: None)
+    monkeypatch.setenv("RC_API_ALLOW_REMOTE_LOCAL", "1")  # local mode on 0.0.0.0 needs opt-in
     result = CliRunner().invoke(
         cli_app,
         [

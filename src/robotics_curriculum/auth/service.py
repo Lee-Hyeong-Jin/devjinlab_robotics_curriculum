@@ -36,6 +36,7 @@ from robotics_curriculum.auth.oidc import Claims
 from robotics_curriculum.auth.store import AuthStore
 
 PAT_PREFIX = "rcp_"
+RESET_KEY_PREFIX = "reset:"
 
 
 # -- errors ------------------------------------------------------------------------------
@@ -95,6 +96,7 @@ class AuthConfig:
     bootstrap_admin_email: str | None = None
     reset_window: timedelta = timedelta(minutes=15)
     max_resets_per_window: int = 3
+    max_resets_per_ip: int = 10
     public_url: str = "http://localhost:3000"
     api_base_url: str | None = None
     pepper: str = ""
@@ -189,6 +191,11 @@ class AuthService:
             request_id=ctx.request_id,
             **kwargs,
         )
+
+    def record(self, ctx: Context, action: str, actor: int | None, **kwargs: Any) -> None:
+        """Append an audit entry for events decided outside the service (denials, admin
+        reads)."""
+        self._audit(ctx, action, actor, **kwargs)
 
     # -- accounts ---------------------------------------------------------------------
 
@@ -509,22 +516,30 @@ class AuthService:
         """Mails a reset link if the account exists. Same answer either way (no enumeration)."""
         if self.mailer is None:
             raise Unavailable("password reset is disabled: mail is not configured on this server")
-        user = self.store.get_user_by_email(email.strip().lower())
-        if user is None or not user.is_active:
-            return
+        email = email.strip().lower()
         now = self.clock()
-        recent = self.store.count_one_time(
-            user.id, TokenKind.RESET_PASSWORD, now - self.config.reset_window
+        # Throttle per requested address and per IP whether or not the account exists, so a
+        # 429 reveals nothing (SRV-03). Requests are kept in login_attempts under a "reset:"
+        # key with success=True, which the login throttle (failures only) ignores.
+        key = RESET_KEY_PREFIX + email
+        by_email, by_ip = self.store.count_attempts(
+            key, ctx.ip, now - self.config.reset_window, prefix=RESET_KEY_PREFIX
         )
-        if recent >= self.config.max_resets_per_window:
-            # Same 202 for the caller; no more mail to the victim's inbox (SRV-03).
+        if by_email >= self.config.max_resets_per_window or by_ip >= self.config.max_resets_per_ip:
             self._audit(
                 ctx,
                 "auth.password.reset_throttled",
                 None,
-                target_type="user",
-                target_id=str(user.id),
+                target_type="email",
+                detail={"by_email": by_email, "by_ip": by_ip},
             )
+            retry = str(int(self.config.reset_window.total_seconds()))
+            raise Throttled(
+                "too many reset requests; try again later", headers={"Retry-After": retry}
+            )
+        self.store.record_login(key, ctx.ip, True, now)
+        user = self.store.get_user_by_email(email)
+        if user is None or not user.is_active:
             return
         # Only the newest reset link is valid (SRV-04).
         self.store.expire_one_time(user.id, TokenKind.RESET_PASSWORD, now)
@@ -543,6 +558,7 @@ class AuthService:
         )
         user = self.store.get_user(user_id) if user_id is not None else None
         if user is None or not user.is_active:
+            self._audit(ctx, "auth.password.reset_invalid", None)  # SRV-07
             raise Invalid("invalid or expired token")
         self._set_password(user, new, ctx)
         self.store.expire_one_time(user.id, TokenKind.RESET_PASSWORD, self.clock())
@@ -561,7 +577,18 @@ class AuthService:
         if self.erase_learning_data is not None:
             self.erase_learning_data(user.id)
         self.store.erase_user(user.id, self.clock())
-        self._audit(ctx, "account.deleted", user.id, target_type="user", target_id=str(user.id))
+        # SRV-08: drop the user's id and IPs from earlier entries now; the deletion itself is
+        # recorded without actor or IP, against the (already anonymized) user row.
+        self.store.anonymize_actor(user.id)
+        self.store.audit(
+            "account.deleted",
+            self.clock(),
+            actor_user_id=None,
+            actor_ip=None,
+            target_type="user",
+            target_id=str(user.id),
+            request_id=ctx.request_id,
+        )
 
     def record_export(self, user: User, ctx: Context) -> None:
         self._audit(ctx, "data.exported", user.id, target_type="user", target_id=str(user.id))

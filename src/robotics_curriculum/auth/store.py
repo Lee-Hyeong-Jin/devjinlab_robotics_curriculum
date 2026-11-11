@@ -122,7 +122,9 @@ class AuthStore(Protocol):
         self, user_id: int, kind: TokenKind, token_hash: str, now: datetime, expires_at: datetime
     ) -> None: ...
     def consume_one_time(self, token_hash: str, kind: TokenKind, now: datetime) -> int | None: ...
-    def count_one_time(self, user_id: int, kind: TokenKind, since: datetime) -> int: ...
+    def count_attempts(
+        self, email: str, ip: str | None, since: datetime, *, prefix: str
+    ) -> tuple[int, int]: ...
     def expire_one_time(self, user_id: int, kind: TokenKind, now: datetime) -> int: ...
 
     # login throttling
@@ -146,6 +148,7 @@ class AuthStore(Protocol):
         self, limit: int, before_id: int | None = None, actor_user_id: int | None = None
     ) -> list[AuditEntry]: ...
     def anonymize_audit(self, before: datetime) -> int: ...
+    def anonymize_actor(self, user_id: int) -> int: ...
 
     # external identities (OIDC)
     def identity(self, provider: str, subject: str) -> Identity | None: ...
@@ -549,20 +552,29 @@ class SqlAuthStore:
             )
         return row
 
-    def count_one_time(self, user_id: int, kind: TokenKind, since: datetime) -> int:
-        """Tokens of ``kind`` issued to the user since ``since`` (mail throttling)."""
+    def count_attempts(
+        self, email: str, ip: str | None, since: datetime, *, prefix: str
+    ) -> tuple[int, int]:
+        """All attempts (any outcome) since ``since`` under key ``email``, and from ``ip``
+        under keys starting with ``prefix`` (used for non-login throttles)."""
+        base = select(func.count()).select_from(login_attempts)
+        recent = login_attempts.c.at >= since
         with self._tx() as conn:
-            return int(
+            by_email = conn.execute(
+                base.where(recent, login_attempts.c.email == email.lower())
+            ).scalar_one()
+            by_ip = (
                 conn.execute(
-                    select(func.count())
-                    .select_from(one_time_tokens)
-                    .where(
-                        one_time_tokens.c.user_id == user_id,
-                        one_time_tokens.c.kind == kind.value,
-                        one_time_tokens.c.created_at >= since,
+                    base.where(
+                        recent,
+                        login_attempts.c.ip == ip,
+                        login_attempts.c.email.startswith(prefix, autoescape=True),
                     )
                 ).scalar_one()
+                if ip
+                else 0
             )
+        return int(by_email), int(by_ip)
 
     def expire_one_time(self, user_id: int, kind: TokenKind, now: datetime) -> int:
         """Invalidate every unused token of ``kind`` for the user."""
@@ -652,6 +664,15 @@ class SqlAuthStore:
             )
             for r in rows
         ]
+
+    def anonymize_actor(self, user_id: int) -> int:
+        """Remove one user's id and IPs from every audit entry they made (account deletion)."""
+        with self._tx() as conn:
+            return conn.execute(
+                update(audit_log)
+                .where(audit_log.c.actor_user_id == user_id)
+                .values(actor_user_id=None, actor_ip=None)
+            ).rowcount
 
     def anonymize_audit(self, before: datetime) -> int:
         """Drop personal identifiers (actor id, IP) from entries older than ``before``."""

@@ -2180,7 +2180,7 @@ paths:
       tags:
       - admin
       summary: List Audit
-      description: Audit log, newest first.
+      description: Audit log, newest first (reading it is itself audited).
       operationId: list_audit_api_v1_admin_audit_get
       parameters:
       - name: limit

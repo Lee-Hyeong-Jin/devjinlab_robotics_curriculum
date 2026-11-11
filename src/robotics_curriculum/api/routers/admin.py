@@ -35,16 +35,23 @@ def _cursor(value: str | None) -> int | None:
 
 
 @router.get("/users", response_model=UserPage)
-def list_users(auth: Auth, limit: Limit = 50, cursor: str | None = None) -> UserPage:
+def list_users(
+    principal: AdminPrincipal, auth: Auth, ctx: Ctx, limit: Limit = 50, cursor: str | None = None
+) -> UserPage:
     """Users by id, cursor-paginated."""
     users = auth.list_users(limit, _cursor(cursor) or 0)
+    auth.record(ctx, "admin.users.viewed", principal.user.id, detail={"count": len(users)})
     nxt = str(users[-1].id) if len(users) == limit else None
     return UserPage(items=[AdminUser.of(u) for u in users], next_cursor=nxt)
 
 
 @router.get("/users/{user_id}", response_model=AdminUser)
-def get_user(user_id: int, auth: Auth) -> AdminUser:
-    return AdminUser.of(auth.get_user(user_id))
+def get_user(user_id: int, principal: AdminPrincipal, auth: Auth, ctx: Ctx) -> AdminUser:
+    user = auth.get_user(user_id)
+    auth.record(
+        ctx, "admin.user.viewed", principal.user.id, target_type="user", target_id=str(user_id)
+    )
+    return AdminUser.of(user)
 
 
 @router.patch("/users/{user_id}", response_model=AdminUser)
@@ -65,13 +72,16 @@ def revoke_user_sessions(user_id: int, principal: AdminPrincipal, auth: Auth, ct
 
 @router.get("/audit", response_model=AuditPage)
 def list_audit(
+    principal: AdminPrincipal,
     auth: Auth,
+    ctx: Ctx,
     limit: Limit = 50,
     cursor: str | None = None,
     actor_user_id: int | None = None,
 ) -> AuditPage:
-    """Audit log, newest first."""
+    """Audit log, newest first (reading it is itself audited)."""
     entries = auth.list_audit(limit, _cursor(cursor), actor_user_id)
+    auth.record(ctx, "admin.audit.viewed", principal.user.id)
     nxt = str(entries[-1].id) if len(entries) == limit else None
     return AuditPage(
         items=[AuditEntry.model_validate(e.model_dump()) for e in entries], next_cursor=nxt
