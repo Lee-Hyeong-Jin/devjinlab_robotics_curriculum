@@ -184,7 +184,10 @@ site/
 
 ### 2.4 Figma
 
-Figma 파일은 위 네 화면(대시보드·로드맵·레슨·자료실)을 데스크톱 1440 기준으로 옮긴다. 페이지 구성 `00 Cover · 01 Tokens · 02 Components(모듈 카드, 레슨 행, 공부법 스텝, 자료 행, 진행률 바) · 03 Dashboard · 04 Roadmap · 05 Lesson · 06 Resources`. 링크: (Figma MCP 인증 후 기입)
+Figma 파일은 위 네 화면(대시보드·로드맵·레슨·자료실)을 데스크톱 1440 기준으로 옮긴다. 페이지 구성 `00 Cover · 01 Tokens · 02 Components(모듈 카드, 레슨 행, 공부법 스텝, 자료 행, 진행률 바) · 03 Dashboard · 04 Roadmap · 05 Lesson · 06 Resources`.
+
+- 대상 파일: https://www.figma.com/design/BVk1OeYnq1gFHz4etJi1oN/ (파일 키 `BVk1OeYnq1gFHz4etJi1oN`, 2026-11-11 사용자 제공, 현재 제목 "Untitled" → "로보틱스 전문가 코스 플랫폼"으로 변경 예정)
+- 작업 상태: Figma MCP 인증 대기. 인증 후 위 페이지 구성대로 프레임을 만들고 이 항목을 갱신한다.
 
 ---
 
@@ -564,4 +567,4 @@ flowchart TD
 | 2 | `resources/*.yaml` 6개 파일(foundations, ros2, simulators, hardware, korean, ai_robot_learning) | 리서치 세션이 §3.5 스키마로 생성 중 (`worktree-research`) | 리서치 세션 |
 | 3 | 활동 단위 진도(`activity_progress`) 도입 시점 | 레슨 단위로 시작, 퀴즈·연습문제 상태가 필요해지면 추가 | P1-1 |
 | 4 | 모듈 10개와 단계 배정 | PRD v0.4 부록 A로 확정(§2.1). 자료 조사 세션 제안이 오면 PRD와 함께 갱신 | 오케스트레이터 |
-| 5 | Figma 파일 링크 | Figma MCP 인증·세션 재시작 후 §2.4 기준으로 작성 | 이 세션 |
+| 5 | Figma 화면 디자인 | 파일은 §2.4에 기록됨. Figma MCP 인증·세션 재시작 후 프레임 작성 | 이 세션 |
