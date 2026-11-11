@@ -38,14 +38,14 @@ milestones:
 
     - id: P0-3
       title: 로보틱스 전문가 코스 기초 단계 콘텐츠 (부록 A 기초 모듈)
-      status: todo
+      status: done
       depends_on: [P0-2]
       goal: curriculum/robotics-expert/ 에 기초 단계(level 기초) 모듈 M1~M3(수학·물리 기초, 운동학, 이동 로봇·제어)을 레슨 10개 내외로 작성하고, 각 레슨에 "이 단계 공부법" 절과 resources 를 넣는다.
       acceptance:
         - curriculum/ 에 코스 1개(robotics-expert), 기초 모듈 3개, 레슨 9개 이상이 있고 `rc validate` 가 통과한다
         - 모든 레슨에 선수지식이 선언되어 있고 그래프가 DAG 이다
         - 모든 레슨에 resources 1개 이상과 "이 단계 공부법" 절이 있다
-      note:
+      note: robotics-expert 기초 모듈 3개, 레슨 9개 (46339ae)
 
     - id: P0-4
       title: 주간 리포트 CLI (FR-7)
