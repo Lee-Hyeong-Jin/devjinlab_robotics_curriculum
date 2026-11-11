@@ -180,6 +180,7 @@ Report     (kind: weekly|module, period, path)
 
 - 콘텐츠(Track~Resource)는 **파일이 원본**이고 DB는 색인 캐시다. `rc reindex` 또는 각 명령 실행 시 변경된 파일만 재색인한다.
 - 학습 데이터(Progress~Report)는 **SQLite가 원본**이며 JSON으로 내보낼 수 있다.
+- `LabRun.metrics_json`의 내부 포맷(metrics.json v1)과 `labs/_lib/judge.py` 인터페이스(JudgeContext / JudgeResult / Check) 초안은 `docs/platform-design.md` 6절에 있다. Webots 연동 범위는 사용자 결정 대기 상태이므로, 범위 확정 후에 그 초안을 본 절에 정식 반영한다.
 
 ## 9. 시스템 아키텍처 및 기술 스택 제안
 
