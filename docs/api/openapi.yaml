@@ -528,7 +528,7 @@ components:
             objectives: { type: array, items: { type: string } }
             activities: { type: array, items: { $ref: "#/components/schemas/Activity" } }
             resources: { type: array, items: { $ref: "#/components/schemas/ResourceRef" } }
-            study_method_html: { type: string, description: "본문 '## 이 단계 공부법' 절만 렌더링" }
+            study_method: { type: string, description: "본문 '## 이 단계 공부법' 절의 Markdown 원문 (렌더링은 클라이언트)" }
             body: { type: string, description: 본문 전체 Markdown (KaTeX 수식 포함; 렌더링은 클라이언트) }
             content_format: { type: string, const: markdown }
             prev_lesson_id: { type: string }
