@@ -30,9 +30,9 @@ resources:
     kind: article
     note: Compose 개발 컨테이너 + Turtlesim 예제. ros:humble 이미지를 ros:jazzy 로 바꿔 쓴다.
   - title: 2b-t/docker-for-robotics (best-practices guide)
-    url: https://awesome.ecosyste.ms/projects/github.com%2F2b-t%2Fdocker-for-robotics
+    url: https://github.com/2b-t/docker-for-robotics
     kind: other
-    note: 로보틱스용 Docker 모범 사례(GUI, Linux·WSL2). URL 은 ecosyste.ms 목록 페이지.
+    note: 로보틱스용 Docker 모범 사례(GUI, Linux·WSL2). GitHub 저장소 README.
   - title: "Foxglove docs: connecting to ROS 2 data"
     url: https://docs.foxglove.dev/docs/connecting-to-data/frameworks/ros2
     kind: article
@@ -166,6 +166,6 @@ ros2 bag record -s mcap -o "$(date +%F)_$(git rev-parse --short HEAD)_square" /o
 ## 참고 자료
 
 - Docker, "Introduction to ROS 2 Development with Docker" — <https://docs.docker.com/guides/ros2/>
-- 2b-t, docker-for-robotics — <https://awesome.ecosyste.ms/projects/github.com%2F2b-t%2Fdocker-for-robotics>
+- 2b-t, docker-for-robotics — <https://github.com/2b-t/docker-for-robotics>
 - Foxglove, "Connecting to ROS 2 data" — <https://docs.foxglove.dev/docs/connecting-to-data/frameworks/ros2>
 - Automatic Addison, ROS 2 Tutorials — <https://automaticaddison.com/tutorials>
