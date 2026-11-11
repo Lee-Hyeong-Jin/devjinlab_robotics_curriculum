@@ -10,6 +10,7 @@
 | ``RC_AUTH_MODE``      | ``local`` (no login, user 1) or ``server`` (accounts, sessions, PATs) |
 | ``RC_DATABASE_URL``   | unset: SQLite in the data dir; ``postgresql://...`` for server mode |
 | ``RC_AUTH_COOKIE_SECURE`` | ``1`` (``0`` only for plain-HTTP development) |
+| ``RC_API_METRICS``    | ``1``: serve Prometheus ``/metrics`` (``0`` = 404) |
 
 Auth policy variables (``RC_AUTH_*``, ``RC_SMTP_*``) are read by
 :meth:`robotics_curriculum.auth.service.AuthConfig.from_env` and
@@ -43,6 +44,7 @@ class Settings:
     auth_mode: str = "local"
     database_url: str | None = None
     cookie_secure: bool = True
+    metrics: bool = True
 
     @property
     def server_mode(self) -> bool:
@@ -64,6 +66,7 @@ class Settings:
             auth_mode=mode,
             database_url=(env.get("RC_DATABASE_URL") or "").strip() or None,
             cookie_secure=env.get("RC_AUTH_COOKIE_SECURE", "1") != "0",
+            metrics=env.get("RC_API_METRICS", "1") != "0",
         )
         return base.with_overrides(
             host=env.get("RC_API_HOST") or None,

@@ -85,6 +85,28 @@
         }
       }
     },
+    "/metrics": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "summary": "Metrics",
+        "description": "Prometheus text format. Unauthenticated: expose to the internal network only\n(block at the reverse proxy). ``RC_API_METRICS=0`` turns it off (404).",
+        "operationId": "metrics_metrics_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/plain; version=1.0.0; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/courses": {
       "get": {
         "tags": [

@@ -455,7 +455,7 @@ def test_openapi_errors_are_problem_json(client: TestClient) -> None:
     assert all(
         p.startswith("/api/v1/")
         for p in spec["paths"]
-        if p not in {"/healthz", "/readyz", "/version"}
+        if p not in {"/healthz", "/readyz", "/version", "/metrics"}
     )
 
 
@@ -522,3 +522,56 @@ def test_rc_api_serve_rejects_bad_port_and_missing_extra(monkeypatch: pytest.Mon
     result = runner.invoke(cli_app, ["api", "serve"])
     assert result.exit_code == 1
     assert "'api' extra" in result.output
+
+
+# -- metrics (P2-5, AC-OPS.1) ------------------------------------------------------------
+
+
+def _sample(text: str, name: str, **labels: str) -> float:
+    for line in text.splitlines():
+        if line.startswith(f"{name}{{") and all(f'{k}="{v}"' in line for k, v in labels.items()):
+            return float(line.rsplit(" ", 1)[1])
+    raise AssertionError(f"{name} {labels} not found")
+
+
+def test_metrics_count_requests_by_route(client: TestClient) -> None:
+    client.get(f"/api/v1/lessons/{VECTORS}")
+    client.get("/api/v1/lessons/nope")
+    client.get("/api/v1/nowhere")
+    r = client.get("/metrics")
+    assert r.status_code == 200
+    assert r.headers["content-type"].startswith("text/plain")
+    text = r.text
+    route = "/api/v1/lessons/{lesson_id}"
+    assert _sample(text, "http_requests_total", route=route, status="200") == 1
+    assert _sample(text, "http_requests_total", route=route, status="404") == 1
+    assert _sample(text, "http_requests_total", route="unmatched", status="404") == 1
+    assert _sample(text, "http_request_duration_seconds_count", route=route) == 2
+    assert "http_requests_in_progress" in text
+    assert "/api/v1/lessons/nope" not in text  # raw paths never become labels
+
+
+def test_metrics_can_be_disabled(tmp_path: Path) -> None:
+    settings = Settings(curriculum_dir=CURRICULUM, data_dir=tmp_path, metrics=False)
+    assert_problem(TestClient(create_app(settings)).get("/metrics"), 404)
+    assert Settings.from_env({"RC_API_METRICS": "0"}).metrics is False
+
+
+def test_metrics_report_auth_pool(tmp_path: Path) -> None:
+    from robotics_curriculum.api.metrics import PoolCollector
+
+    settings = Settings(curriculum_dir=CURRICULUM, data_dir=tmp_path, auth_mode="server")
+    client = TestClient(create_app(settings, mailer=None), base_url="https://testserver")
+    client.get("/readyz")
+    text = client.get("/metrics").text
+    assert 'rc_db_pool_connections{pool="auth",state="checked_out"}' in text
+
+    class Pool:
+        def checkedout(self) -> int:
+            return 3
+
+        def size(self) -> str:  # non-int values are skipped
+            return "n/a"
+
+    families = list(PoolCollector(lambda: {"x": Pool(), "y": object()}).collect())
+    assert [s.value for s in families[0].samples] == [3]

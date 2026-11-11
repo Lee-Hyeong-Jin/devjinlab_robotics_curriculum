@@ -37,6 +37,7 @@ api = [
     "fastapi>=0.115",
     "uvicorn[standard]>=0.30",
     "argon2-cffi>=23.1",
+    "prometheus-client>=0.20",
     "sqlalchemy>=2.0",
 ]
 
