@@ -166,7 +166,7 @@
 | FR-10.5 | 서버 | P0 (Phase 2) | 역할 기반 권한: `learner`(자기 진도만), `author`(콘텐츠 작성·검증·게시), `admin`(사용자·역할·설정·백업). | 모든 API 엔드포인트에 권한 검사가 있고 테스트로 검증된다. |
 | FR-10.6 | 서버 | P0 (Phase 2) | 사용자별 진도·복습·노트·리포트 분리. 다른 사용자의 데이터는 admin도 집계 외에는 열람하지 않는다. | 모든 학습 데이터 쿼리에 `user_id` 조건. 교차 접근 테스트. |
 | FR-10.7 | 서버 | P0 (Phase 2) | 개인정보: 사용자가 자기 데이터 전체를 내보내고(JSON) 계정을 삭제할 수 있다. 삭제 시 학습 데이터는 즉시 삭제 또는 익명화, 감사 로그는 보존 기간 뒤 삭제. | 삭제 후 해당 사용자 데이터가 조회되지 않는다. 처리 기한·보존 기간을 설정으로 둔다. |
-| FR-10.8 | 서버 | P1 (Phase 2) | 세션 관리: 서버 측 세션 또는 짧은 수명의 토큰 + 갱신, 로그아웃 시 무효화, 기기별 세션 목록. | 토큰 탈취 시 피해 범위가 한정된다. |
+| FR-10.8 | 서버 | P1 (Phase 2) | 세션 관리: 브라우저는 서버 측 세션(불투명 쿠키, 14일 슬라이딩), 프로그램 클라이언트는 개인 액세스 토큰. 로그아웃 시 즉시 무효화, 기기별 세션 목록·개별 종료. | 토큰 탈취 시 피해 범위가 한정되고 즉시 폐기된다. |
 | FR-10.9 | 서버 | P2 | 그룹/코호트: admin이 학습자를 그룹으로 묶고 그룹 단위 진도 집계를 본다. | 집계만 제공하고 개인 상세는 본인만. |
 
 ## 7. 비기능 요구사항
@@ -209,9 +209,12 @@ Review     (card_id, reviewed_at, rating, next_due, interval, ease)
 Note       (lesson_id, path, updated_at)   ← research_notes/ 파일을 색인
 Report     (kind: weekly|module, period, path)
 
-User       (id, email, password_hash: Argon2id | null, oidc_issuer+subject | null, role: learner|author|admin,
-            created_at, deleted_at)                                   ← 서버 모드(Phase 2). 로컬 모드는 고정 user_id 1개
-AuditLog   (id, actor_user_id, action, target, at, ip)                 ← 서버 모드, 관리 행위·인증 이벤트 기록
+User       (id, email, password_hash: Argon2id | null, role: learner|author|admin, created_at, deleted_at)
+                                                                        ← 서버 모드(Phase 2). 로컬 모드는 고정 user_id 1개
+Identity   (user_id, provider: local|oidc:<issuer>, subject)  1:N       ← 로컬 계정 + Google + GitHub 등 동시 연결
+Session    (id, user_id, created_at, last_seen_at, expires_at, device)  ← 브라우저 서버 세션(불투명 쿠키)
+PAT        (id, user_id, token_hash, scopes, expires_at)                ← 프로그램 클라이언트용 개인 액세스 토큰
+AuditLog   (id, actor_user_id, action, target, at, ip)                  ← 서버 모드, 관리 행위·인증 이벤트 기록
 ```
 
 - 확정 스키마와 검증 규칙은 `docs/curriculum/CONTENT_MODEL.md`를 따른다. 자료 읽기 상태(ReadState)와 구조화 학습 단계(StudyStep)는 Phase 2 제안(FR-6.6)이라 모델에 넣지 않는다.
@@ -250,7 +253,15 @@ docs/                     PRD, 콘텐츠 모델, 운영·기여·보안 문서
 | 화면 | 정적 사이트(읽기) + CLI(쓰기) | 웹 프론트엔드가 API를 호출 |
 | 배포 | `uv tool install` 또는 `pipx` | Docker Compose; Kubernetes 매니페스트는 Phase 3 검토 |
 
-주요 CLI 명령: `rc validate`, `rc build`, `rc status`, `rc next`, `rc show <lesson>`, `rc resources <lesson>|--module|--all`, `rc start|stop|log`, `rc done`, `rc quiz`, `rc review`, `rc note`, `rc report weekly|module`, `rc search`, `rc progress export|import`.
+설계 문서(`docs/platform-design.md` v0.4, 커밋 1113f66; `docs/architecture/auth.md`, `docs/architecture/operations.md`, `docs/api/openapi.yaml`)에서 확정한 결정으로, PRD는 이를 따른다.
+
+- **저장소 추상화**: `src/robotics_curriculum/progress/store.py`의 `ProgressStore`(typing.Protocol). 구현체 `SqliteProgressStore`(로컬), `PostgresProgressStore`(서버, SQLAlchemy Core 2.x + asyncpg, Alembic downgrade 필수), `RemoteProgressStore`(`rc` 서버 모드 HTTP 클라이언트). 로컬 SQLite 마이그레이션 번호와 Alembic 리비전은 1:1 대응.
+- **세션 방식**: 브라우저는 서버 측 세션 + 불투명 쿠키(HttpOnly, Secure, SameSite=Lax, 14일 슬라이딩, PostgreSQL 저장, Redis 교체 가능). 프로그램 클라이언트(`rc login`, 외부 도구)는 범위·만료가 있는 개인 액세스 토큰(해시 저장). JWT는 서비스 간 통신이 생길 때만.
+- **API 경로**: `/api/v1` 접두사. `/healthz`, `/readyz`, `/version`은 접두사 없음. 오류는 RFC 9457 problem+json(type, title, status, detail, instance, request_id). 목록은 커서 페이지네이션.
+- **서버 콘텐츠 색인**: 시작·reload·배포 시 재색인, 불변 스냅샷을 원자적으로 교체, 검증 실패 시 이전 색인 유지 + 422. 레슨 1,000개 60초 목표.
+- **web/ 프레임워크**: Phase 2 착수 시 설계 §1.2 비교표 기준으로 결정(사용자 결정, 권고안 Next.js). 그 전에는 OpenAPI 계약과 화면 설계만 확정.
+
+주요 CLI 명령: `rc validate`, `rc build`, `rc status`, `rc next`, `rc roadmap`, `rc show <lesson>`, `rc resources <lesson>|--module|--all`, `rc start|stop|log`, `rc done`, `rc quiz`, `rc review`, `rc note`, `rc report weekly|module`, `rc search`, `rc progress export|import`.
 
 | 선택 | 이유 |
 |---|---|
@@ -444,7 +455,7 @@ questions:
 | AC-API.3 | 라우터는 코어 라이브러리 함수만 호출한다. 저장소·로더를 직접 다루지 않으며, CLI와 API가 같은 입력에 같은 결과를 낸다. | 코드 리뷰 체크리스트, CLI/API 동치 테스트 1건 이상 |
 | AC-API.4 | 서버는 무상태다. `/healthz`(프로세스 생존)와 `/readyz`, JSON 구조화 로그, 요청 ID(응답 헤더·로그 동일)를 최소 구현한다. Prometheus 메트릭과 OpenTelemetry는 P2-5(C.5 AC-OPS.1). | 테스트 |
 | AC-API.5 | (P2-3으로 이동 → C.4 AC-DB.1~3) | — |
-| AC-API.6 | 콘텐츠 재색인 엔드포인트(또는 시작 시 색인)와 색인 실패 시 이전 색인 유지. 레슨 1,000개 기준 색인 60초 이내. **조건부**: Phase 1에는 색인 캐시가 없으므로 아키텍트가 설계 문서 Phase 2 절에 "서버 색인" 설계를 확정한 뒤 적용. | 대용량 픽스처 |
+| AC-API.6 | 콘텐츠 재색인(시작·reload·배포 시)과 불변 스냅샷 원자 교체, 검증 실패 시 이전 색인 유지 + 422. 레슨 1,000개 기준 60초 이내. 설계 §1.1 확정(1113f66)으로 조건 해제. P2-1 1차 범위에서는 미룸. | 대용량 픽스처 |
 | AC-API.7 | 프레임워크 선택과 버전 정책(`/api/v1`, 호환성 깨짐은 `/api/v2`)이 ADR에 기록되어 있다. | ADR |
 | AC-API.8 | (P2-5로 이동 → C.5 AC-OPS.3) | — |
 
