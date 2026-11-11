@@ -4,6 +4,7 @@ info:
   version: 0.1.0-draft
   summary: 로보틱스 전문가 코스 플랫폼 — 서버 모드 REST API (P2-1 초안)
   description: |
+    경로는 `/api/v1` 접두사를 포함한 전체 경로로 적는다(FastAPI 생성 스펙과 1:1 diff). 헬스체크 3개만 접두사가 없다.
     설계 문서 `docs/platform-design.md` §1.1·§8, `docs/architecture/auth.md` 기준의 초안이다.
     구현(`api/`, FastAPI)이 생성하는 `/openapi.json`과 이 파일의 diff를 CI 계약 테스트로 검사한다.
     규약:
@@ -15,7 +16,7 @@ info:
   license:
     name: Apache-2.0
 servers:
-  - url: /api/v1
+  - url: /
 tags:
   - { name: system, description: 헬스체크·버전 (접두사 없음) }
   - { name: auth, description: 로그인·가입·OIDC·토큰 }
@@ -34,7 +35,6 @@ security:
 paths:
   # ---------- system (no /api/v1 prefix) ----------
   /healthz:
-    servers: [{ url: / }]
     get:
       tags: [system]
       summary: liveness
@@ -42,7 +42,6 @@ paths:
       responses:
         "200": { description: OK, content: { application/json: { schema: { type: object, properties: { status: { type: string, const: ok } } } } } }
   /readyz:
-    servers: [{ url: / }]
     get:
       tags: [system]
       summary: readiness (DB · 마이그레이션 head · 콘텐츠 로드)
@@ -51,7 +50,6 @@ paths:
         "200": { description: 준비됨, content: { application/json: { schema: { $ref: "#/components/schemas/Readiness" } } } }
         "503": { description: 준비 안 됨, content: { application/json: { schema: { $ref: "#/components/schemas/Readiness" } } } }
   /version:
-    servers: [{ url: / }]
     get:
       tags: [system]
       summary: 빌드 정보
@@ -60,7 +58,7 @@ paths:
         "200": { description: OK, content: { application/json: { schema: { type: object, properties: { version: { type: string }, git_sha: { type: string }, content_sha: { type: string } } } } } }
 
   # ---------- auth ----------
-  /auth/signup:
+  /api/v1/auth/signup:
     post:
       tags: [auth]
       summary: 로컬 계정 생성 (인증 메일 발송)
@@ -71,7 +69,7 @@ paths:
         "409": { $ref: "#/components/responses/Problem" }
         "422": { $ref: "#/components/responses/Problem" }
         "429": { $ref: "#/components/responses/Problem" }
-  /auth/login:
+  /api/v1/auth/login:
     post:
       tags: [auth]
       summary: 이메일+비밀번호 로그인 → 세션 쿠키
@@ -82,19 +80,19 @@ paths:
         "401": { $ref: "#/components/responses/Problem" }
         "423": { description: 계정 잠김, content: { application/problem+json: { schema: { $ref: "#/components/schemas/Problem" } } } }
         "429": { $ref: "#/components/responses/Problem" }
-  /auth/logout:
+  /api/v1/auth/logout:
     post:
       tags: [auth]
       summary: 현재 세션 폐기
       responses: { "204": { description: 로그아웃됨 } }
-  /auth/oidc/{provider}/start:
+  /api/v1/auth/oidc/{provider}/start:
     get:
       tags: [auth]
       summary: OIDC 로그인 시작 (302 → IdP)
       security: []
       parameters: [{ $ref: "#/components/parameters/Provider" }]
       responses: { "302": { description: IdP authorize 로 리다이렉트 }, "404": { $ref: "#/components/responses/Problem" } }
-  /auth/oidc/{provider}/callback:
+  /api/v1/auth/oidc/{provider}/callback:
     get:
       tags: [auth]
       summary: OIDC 콜백 (코드 교환, 세션 생성, 302 → /dashboard)
@@ -104,21 +102,21 @@ paths:
         - { name: code, in: query, required: true, schema: { type: string } }
         - { name: state, in: query, required: true, schema: { type: string } }
       responses: { "302": { description: 앱으로 리다이렉트 }, "400": { $ref: "#/components/responses/Problem" } }
-  /auth/verify-email:
+  /api/v1/auth/verify-email:
     post:
       tags: [auth]
       summary: 이메일 인증 토큰 사용
       security: []
       requestBody: { required: true, content: { application/json: { schema: { type: object, required: [token], properties: { token: { type: string } } } } } }
       responses: { "204": { description: 인증됨 }, "400": { $ref: "#/components/responses/Problem" } }
-  /auth/password/forgot:
+  /api/v1/auth/password/forgot:
     post:
       tags: [auth]
       summary: 비밀번호 재설정 메일 (존재 여부와 무관하게 202)
       security: []
       requestBody: { required: true, content: { application/json: { schema: { type: object, required: [email], properties: { email: { type: string, format: email } } } } } }
       responses: { "202": { description: 접수됨 }, "429": { $ref: "#/components/responses/Problem" } }
-  /auth/password/reset:
+  /api/v1/auth/password/reset:
     post:
       tags: [auth]
       summary: 토큰으로 비밀번호 재설정 (모든 세션 무효화)
@@ -127,7 +125,7 @@ paths:
       responses: { "204": { description: 변경됨 }, "400": { $ref: "#/components/responses/Problem" } }
 
   # ---------- me ----------
-  /me:
+  /api/v1/me:
     get:
       tags: [me]
       summary: 현재 사용자
@@ -141,35 +139,35 @@ paths:
       tags: [me]
       summary: 계정 삭제 (즉시 또는 설정된 유예 기간)
       responses: { "202": { description: 삭제 접수 } }
-  /me/password:
+  /api/v1/me/password:
     put:
       tags: [me]
       summary: 비밀번호 변경 (현재 비밀번호 필요)
       requestBody: { required: true, content: { application/json: { schema: { type: object, required: [current_password, new_password], properties: { current_password: { type: string }, new_password: { type: string, minLength: 12 } } } } } }
       responses: { "204": { description: 변경됨 }, "401": { $ref: "#/components/responses/Problem" } }
-  /me/identities:
+  /api/v1/me/identities:
     get:
       tags: [me]
       summary: 연결된 계정 목록
       responses: { "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Identity" } } } } } }
-  /me/identities/{identity_id}:
+  /api/v1/me/identities/{identity_id}:
     delete:
       tags: [me]
       summary: 연결 해제 (마지막 로그인 수단이면 409)
       parameters: [{ name: identity_id, in: path, required: true, schema: { type: integer } }]
       responses: { "204": { description: 해제됨 }, "409": { $ref: "#/components/responses/Problem" } }
-  /me/sessions:
+  /api/v1/me/sessions:
     get:
       tags: [me]
       summary: 기기별 로그인 세션 목록 (FR-10.8)
       responses: { "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/AuthSession" } } } } } }
-  /me/sessions/{session_id}:
+  /api/v1/me/sessions/{session_id}:
     delete:
       tags: [me]
       summary: 특정 세션 폐기
       parameters: [{ name: session_id, in: path, required: true, schema: { type: string } }]
       responses: { "204": { description: 폐기됨 } }
-  /me/tokens:
+  /api/v1/me/tokens:
     get:
       tags: [me]
       summary: PAT 목록
@@ -179,49 +177,49 @@ paths:
       summary: PAT 발급 (평문 토큰은 이 응답에서만 1회 노출)
       requestBody: { required: true, content: { application/json: { schema: { type: object, required: [name, scopes], properties: { name: { type: string }, scopes: { type: array, items: { type: string, enum: [read:progress, write:progress, admin] } }, expires_at: { type: string, format: date-time } } } } } }
       responses: { "201": { description: 발급됨, content: { application/json: { schema: { allOf: [{ $ref: "#/components/schemas/ApiToken" }, { type: object, properties: { token: { type: string } } }] } } } } }
-  /me/tokens/{token_id}:
+  /api/v1/me/tokens/{token_id}:
     delete:
       tags: [me]
       summary: PAT 폐기
       parameters: [{ name: token_id, in: path, required: true, schema: { type: integer } }]
       responses: { "204": { description: 폐기됨 } }
-  /me/export:
+  /api/v1/me/export:
     get:
       tags: [me]
       summary: 내 학습 데이터 내보내기 (`ProgressExport`, rc progress export 와 동일 스키마)
       responses: { "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/ProgressExport" } } } } }
 
   # ---------- content ----------
-  /courses:
+  /api/v1/courses:
     get:
       tags: [content]
       summary: 코스 목록 (현재 1개)
       responses: { "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/CourseSummary" } } } } } }
-  /courses/{course_id}:
+  /api/v1/courses/{course_id}:
     get:
       tags: [content]
       summary: 코스 상세 (단계별 모듈 목록)
       parameters: [{ $ref: "#/components/parameters/CourseId" }]
       responses: { "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Course" } } } }, "404": { $ref: "#/components/responses/Problem" } }
-  /modules/{module_id}:
+  /api/v1/modules/{module_id}:
     get:
       tags: [content]
       summary: 모듈 상세 (레슨 목록)
       parameters: [{ $ref: "#/components/parameters/ModuleId" }]
       responses: { "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Module" } } } }, "404": { $ref: "#/components/responses/Problem" } }
-  /lessons/{lesson_id}:
+  /api/v1/lessons/{lesson_id}:
     get:
       tags: [content]
       summary: 레슨 상세 (메타, 목표, 활동, 자료, 본문 HTML, "이 단계 공부법" 절)
       parameters: [{ $ref: "#/components/parameters/LessonId" }]
       responses: { "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Lesson" } } } }, "404": { $ref: "#/components/responses/Problem" } }
-  /lessons/{lesson_id}/quiz:
+  /api/v1/lessons/{lesson_id}/quiz:
     get:
       tags: [content]
       summary: 레슨 퀴즈 문항 (정답·해설 제외)
       parameters: [{ $ref: "#/components/parameters/LessonId" }]
       responses: { "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/QuizPublic" } } } }, "404": { $ref: "#/components/responses/Problem" } }
-  /resources:
+  /api/v1/resources:
     get:
       tags: [content]
       summary: 자료 목록 (rc resources --all; 모든 레슨 resources[] 합집합, 제목 기준 중복 제거)
@@ -230,12 +228,12 @@ paths:
         - { name: lesson_id, in: query, schema: { type: string } }
         - { name: kind, in: query, schema: { $ref: "#/components/schemas/ResourceKind" } }
       responses: { "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/ResourceRef" } } } } } }
-  /roadmap:
+  /api/v1/roadmap:
     get:
       tags: [content]
       summary: 단계별 모듈·레슨 상태 트리 (rc roadmap; 진도 반영)
       responses: { "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Roadmap" } } } } }
-  /search:
+  /api/v1/search:
     get:
       tags: [content]
       summary: 레슨·자료 검색
@@ -243,74 +241,74 @@ paths:
       responses: { "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/SearchHit" } } } } } }
 
   # ---------- progress ----------
-  /progress/status:
+  /api/v1/progress/status:
     get:
       tags: [progress]
       summary: 대시보드 (rc status) — 현재 단계·모듈·다음 레슨, 단계별 진행률, 주간 시간, 연속일, 복습 수
       responses: { "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Status" } } } } }
-  /progress/next:
+  /api/v1/progress/next:
     get:
       tags: [progress]
       summary: 추천 레슨 (rc next)
-      parameters: [{ name: n, in: query, schema: { type: integer, minimum: 1, maximum: 10, default: 1 } }]
+      parameters: [{ name: n, in: query, schema: { type: integer, minimum: 1, maximum: 10, default: 3 } }, { name: course, in: query, schema: { type: string }, description: 코스 id 필터 }]
       responses: { "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/NextLesson" } } } } } }
-  /progress/lessons:
+  /api/v1/progress/lessons:
     get:
       tags: [progress]
       summary: 내 레슨 진도 전체
       responses: { "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/LessonProgress" } } } } } }
-  /progress/lessons/{lesson_id}:
+  /api/v1/progress/lessons/{lesson_id}:
     get:
       tags: [progress]
       summary: 레슨 진도
       parameters: [{ $ref: "#/components/parameters/LessonId" }]
       responses: { "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/LessonProgress" } } } } }
-  /progress/start:
+  /api/v1/progress/start:
     post:
       tags: [progress]
       summary: 타이머 시작 (rc start; 열린 세션 있으면 409)
       requestBody: { required: true, content: { application/json: { schema: { type: object, required: [lesson_id], properties: { lesson_id: { type: string } } } } } }
-      responses: { "201": { description: 세션 생성, content: { application/json: { schema: { $ref: "#/components/schemas/StudySession" } } } }, "409": { $ref: "#/components/responses/Problem" } }
-  /progress/stop:
+      responses: { "201": { description: 세션 생성, content: { application/json: { schema: { $ref: "#/components/schemas/Session" } } } }, "409": { $ref: "#/components/responses/Problem" } }
+  /api/v1/progress/stop:
     post:
       tags: [progress]
       summary: 타이머 종료 (rc stop)
       requestBody: { content: { application/json: { schema: { type: object, properties: { note: { type: string }, discard: { type: boolean, default: false } } } } } }
-      responses: { "200": { description: 종료된 세션, content: { application/json: { schema: { $ref: "#/components/schemas/StudySession" } } } }, "404": { $ref: "#/components/responses/Problem" } }
-  /progress/log:
+      responses: { "200": { description: 종료된 세션, content: { application/json: { schema: { $ref: "#/components/schemas/Session" } } } }, "409": { $ref: "#/components/responses/Problem" } }
+  /api/v1/progress/log:
     post:
       tags: [progress]
       summary: 수동 시간 기록 (rc log)
       requestBody: { required: true, content: { application/json: { schema: { type: object, required: [lesson_id, minutes], properties: { lesson_id: { type: string }, minutes: { type: integer, minimum: 1, maximum: 1440 }, on: { type: string, format: date }, note: { type: string } } } } } }
-      responses: { "201": { description: 기록됨, content: { application/json: { schema: { $ref: "#/components/schemas/StudySession" } } } } }
-  /progress/done:
+      responses: { "201": { description: 기록됨, content: { application/json: { schema: { $ref: "#/components/schemas/Session" } } } } }
+  /api/v1/progress/done:
     post:
       tags: [progress]
       summary: 레슨(또는 활동) 완료 (rc done)
       requestBody: { required: true, content: { application/json: { schema: { type: object, required: [lesson_id], properties: { lesson_id: { type: string }, activity_id: { type: string, description: 생략하면 레슨 완료 }, understanding: { type: integer, minimum: 1, maximum: 5 }, note: { type: string }, undo: { type: boolean, default: false } } } } } }
       responses: { "200": { description: 갱신된 진도 + 해금 레슨, content: { application/json: { schema: { $ref: "#/components/schemas/DoneResult" } } } } }
-  /progress/sessions:
+  /api/v1/progress/sessions:
     get:
       tags: [progress]
       summary: 학습 세션 목록
       parameters: [{ name: lesson_id, in: query, schema: { type: string } }, { $ref: "#/components/parameters/Cursor" }, { $ref: "#/components/parameters/Limit" }]
-      responses: { "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/StudySessionPage" } } } } }
+      responses: { "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/SessionPage" } } } } }
 
   # ---------- quiz ----------
-  /quiz/runs:
+  /api/v1/quiz/runs:
     post:
       tags: [quiz]
       summary: 퀴즈 실행 시작 (rc quiz) — 문항 순서 고정
       requestBody: { required: true, content: { application/json: { schema: { type: object, required: [lesson_id], properties: { lesson_id: { type: string }, retry_wrong: { type: boolean, default: false } } } } } }
       responses: { "201": { description: 실행 생성, content: { application/json: { schema: { $ref: "#/components/schemas/QuizRun" } } } } }
-  /quiz/runs/{run_id}/answers:
+  /api/v1/quiz/runs/{run_id}/answers:
     post:
       tags: [quiz]
       summary: 문항 답 제출 → 즉시 채점·해설
       parameters: [{ name: run_id, in: path, required: true, schema: { type: integer } }]
       requestBody: { required: true, content: { application/json: { schema: { type: object, required: [question_id, answer], properties: { question_id: { type: string }, answer: { description: 문항 type 에 맞는 값 } } } } } }
       responses: { "200": { description: 채점 결과, content: { application/json: { schema: { $ref: "#/components/schemas/QuizAnswerResult" } } } } }
-  /quiz/runs/{run_id}/finish:
+  /api/v1/quiz/runs/{run_id}/finish:
     post:
       tags: [quiz]
       summary: 실행 종료 (점수 확정, 카드 생성, 활동 done)
@@ -318,26 +316,26 @@ paths:
       responses: { "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/QuizRun" } } } } }
 
   # ---------- review ----------
-  /review/due:
+  /api/v1/review/due:
     get:
       tags: [review]
       summary: 오늘 복습할 카드 (rc review)
       parameters: [{ $ref: "#/components/parameters/Limit" }, { name: lesson_id, in: query, schema: { type: string } }]
       responses: { "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Card" } } } } } }
-  /review/{card_id}:
+  /api/v1/review/{card_id}:
     post:
       tags: [review]
       summary: 카드 평가 (again|hard|good|easy) → SM-2 다음 일정
       parameters: [{ name: card_id, in: path, required: true, schema: { type: string } }]
       requestBody: { required: true, content: { application/json: { schema: { type: object, required: [rating], properties: { rating: { $ref: "#/components/schemas/Rating" } } } } } }
       responses: { "200": { description: 갱신된 상태, content: { application/json: { schema: { $ref: "#/components/schemas/CardState" } } } } }
-  /cards:
+  /api/v1/cards:
     get:
       tags: [review]
       summary: 내 카드 목록
       parameters: [{ name: lesson_id, in: query, schema: { type: string } }, { $ref: "#/components/parameters/Cursor" }, { $ref: "#/components/parameters/Limit" }]
       responses: { "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/CardPage" } } } } }
-  /cards/{card_id}:
+  /api/v1/cards/{card_id}:
     patch:
       tags: [review]
       summary: 카드 일시 중지/재개
@@ -346,13 +344,13 @@ paths:
       responses: { "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Card" } } } } }
 
   # ---------- reports ----------
-  /reports/weekly:
+  /api/v1/reports/weekly:
     get:
       tags: [reports]
       summary: 주간 리포트 (rc report weekly)
       parameters: [{ name: week, in: query, schema: { type: string, pattern: "^\\d{4}-W\\d{2}$" }, description: 생략 시 이번 주 }]
       responses: { "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Report" } }, text/markdown: { schema: { type: string } } } } }
-  /reports/modules/{module_id}:
+  /api/v1/reports/modules/{module_id}:
     get:
       tags: [reports]
       summary: 모듈 리포트 (rc report module)
@@ -360,13 +358,13 @@ paths:
       responses: { "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Report" } }, text/markdown: { schema: { type: string } } } } }
 
   # ---------- admin ----------
-  /admin/users:
+  /api/v1/admin/users:
     get:
       tags: [admin]
       summary: 사용자 목록·검색 (admin)
       parameters: [{ name: q, in: query, schema: { type: string } }, { name: role, in: query, schema: { $ref: "#/components/schemas/Role" } }, { name: status, in: query, schema: { $ref: "#/components/schemas/UserStatus" } }, { $ref: "#/components/parameters/Cursor" }, { $ref: "#/components/parameters/Limit" }]
       responses: { "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/UserPage" } } } }, "403": { $ref: "#/components/responses/Problem" } }
-  /admin/users/{user_id}:
+  /api/v1/admin/users/{user_id}:
     get:
       tags: [admin]
       summary: 사용자 상세 (학습 데이터는 집계만)
@@ -378,30 +376,30 @@ paths:
       parameters: [{ $ref: "#/components/parameters/UserId" }]
       requestBody: { required: true, content: { application/json: { schema: { type: object, properties: { role: { $ref: "#/components/schemas/Role" }, status: { type: string, enum: [active, disabled] } } } } } }
       responses: { "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/AdminUser" } } } }, "409": { $ref: "#/components/responses/Problem" } }
-  /admin/users/{user_id}/sessions:
+  /api/v1/admin/users/{user_id}/sessions:
     delete:
       tags: [admin]
       summary: 사용자 세션 전체 강제 종료
       parameters: [{ $ref: "#/components/parameters/UserId" }]
       responses: { "204": { description: 종료됨 } }
-  /admin/invitations:
+  /api/v1/admin/invitations:
     post:
       tags: [admin]
       summary: 초대 메일 발송
       requestBody: { required: true, content: { application/json: { schema: { type: object, required: [email], properties: { email: { type: string, format: email }, role: { $ref: "#/components/schemas/Role" } } } } } }
       responses: { "202": { description: 접수됨 } }
-  /admin/audit:
+  /api/v1/admin/audit:
     get:
       tags: [admin]
       summary: 감사 로그
       parameters: [{ name: action, in: query, schema: { type: string } }, { name: actor_user_id, in: query, schema: { type: integer } }, { name: since, in: query, schema: { type: string, format: date-time } }, { $ref: "#/components/parameters/Cursor" }, { $ref: "#/components/parameters/Limit" }]
       responses: { "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/AuditPage" } } } } }
-  /admin/content:
+  /api/v1/admin/content:
     get:
       tags: [admin]
       summary: 콘텐츠 상태 (코스·모듈·레슨 수, 마지막 검증 결과, 콘텐츠 SHA)
       responses: { "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/ContentStatus" } } } } }
-  /admin/content/reload:
+  /api/v1/admin/content/reload:
     post:
       tags: [admin]
       summary: 콘텐츠 재로드·검증 (author 이상)
@@ -434,7 +432,7 @@ components:
         detail: { type: string }
         instance: { type: string }
         request_id: { type: string }
-        errors: { type: array, description: 422 검증 오류 목록, items: { type: object, properties: { loc: { type: array, items: { type: string } }, msg: { type: string }, type: { type: string } } } }
+        errors: { type: array, description: 422 검증 오류 목록, items: { type: object, properties: { loc: { type: array, items: { oneOf: [{ type: string }, { type: integer }] } }, msg: { type: string }, type: { type: string } } } }
     Readiness:
       type: object
       properties:
@@ -531,7 +529,8 @@ components:
             activities: { type: array, items: { $ref: "#/components/schemas/Activity" } }
             resources: { type: array, items: { $ref: "#/components/schemas/ResourceRef" } }
             study_method_html: { type: string, description: "본문 '## 이 단계 공부법' 절만 렌더링" }
-            body_html: { type: string, description: 본문 전체 (KaTeX 수식은 클라이언트 렌더링) }
+            body: { type: string, description: 본문 전체 Markdown (KaTeX 수식 포함; 렌더링은 클라이언트) }
+            content_format: { type: string, const: markdown }
             prev_lesson_id: { type: string }
             next_lesson_id: { type: string }
     QuizPublic:
@@ -558,28 +557,33 @@ components:
         understanding: { type: integer, minimum: 1, maximum: 5 }
         note: { type: string }
         activities: { type: array, items: { type: object, properties: { activity_id: { type: string }, status: { $ref: "#/components/schemas/LessonStatus" } } } }
-    StudySession:
+    Session:
       type: object
       properties: { id: { type: integer }, lesson_id: { type: string }, started_at: { type: string, format: date-time }, ended_at: { type: string, format: date-time }, note: { type: string }, source: { type: string, enum: [timer, manual] }, seconds: { type: integer } }
-    StudySessionPage:
+    SessionPage:
       type: object
-      properties: { items: { type: array, items: { $ref: "#/components/schemas/StudySession" } }, next_cursor: { type: string } }
+      properties: { items: { type: array, items: { $ref: "#/components/schemas/Session" } }, next_cursor: { type: string } }
     Status:
       type: object
+      description: P2-1 초기 구현은 open_session 과 lessons 만 반환하며, 나머지 대시보드 필드(current, stages, week, streak_days, due_cards, recent)는 가산적으로 추가된다.
       properties:
+        lessons: { type: array, items: { $ref: "#/components/schemas/LessonState" } }
         current: { type: object, properties: { level: { $ref: "#/components/schemas/Level" }, module_id: { type: string }, module_title: { type: string }, lessons_done: { type: integer }, lessons_total: { type: integer }, next_lesson_id: { type: string }, next_lesson_title: { type: string } } }
         stages: { type: array, items: { type: object, properties: { level: { $ref: "#/components/schemas/Level" }, progress: { type: number }, modules: { type: array, items: { type: object, properties: { id: { type: string }, title: { type: string }, progress: { type: number }, state: { $ref: "#/components/schemas/LockState" } } } } } } }
         week: { type: object, properties: { minutes: { type: integer }, goal_minutes: { type: integer }, sessions: { type: integer } } }
         streak_days: { type: integer }
         due_cards: { type: integer }
-        open_session: { $ref: "#/components/schemas/StudySession" }
+        open_session: { $ref: "#/components/schemas/Session" }
         recent: { type: array, items: { type: object, properties: { at: { type: string, format: date-time }, kind: { type: string }, text: { type: string } } } }
+    LessonState:
+      type: object
+      properties: { lesson_id: { type: string }, status: { $ref: "#/components/schemas/LessonStatus" }, state: { $ref: "#/components/schemas/LockState" }, total_seconds: { type: integer } }
     NextLesson:
       type: object
       properties: { lesson: { $ref: "#/components/schemas/LessonSummary" }, reason: { type: string }, remaining_activities: { type: array, items: { type: string } }, study_method_first_line: { type: string } }
     DoneResult:
       type: object
-      properties: { progress: { $ref: "#/components/schemas/LessonProgress" }, unlocked_lesson_ids: { type: array, items: { type: string } }, cards_created: { type: integer } }
+      properties: { progress: { $ref: "#/components/schemas/LessonProgress" }, unlocked_lesson_ids: { type: array, items: { type: string } }, cards_created: { type: integer, description: P1-2(카드) 이후 추가 } }
 
     QuizRun:
       type: object
@@ -600,7 +604,15 @@ components:
 
     Report:
       type: object
-      properties: { kind: { type: string, enum: [weekly, module] }, period: { type: string }, generated_at: { type: string, format: date-time }, markdown: { type: string }, summary: { type: object, additionalProperties: true } }
+      properties: { kind: { type: string, enum: [weekly, module] }, period: { type: string }, generated_at: { type: string, format: date-time }, markdown: { type: string }, summary: { oneOf: [{ $ref: "#/components/schemas/WeeklySummary" }, { $ref: "#/components/schemas/ModuleReportSummary" }] } }
+    WeeklySummary:
+      type: object
+      description: report/weekly.py 의 주간 요약 (minutes, sessions, lessons_done, quiz_accuracy, reviews, streak_days …)
+      additionalProperties: true
+    ModuleReportSummary:
+      type: object
+      description: report/module.py 의 모듈 요약 (lessons, understanding_distribution …)
+      additionalProperties: true
 
     ProgressExport:
       type: object
@@ -610,7 +622,7 @@ components:
         schema_version: { type: integer }
         exported_at: { type: string, format: date-time }
         lesson_progress: { type: array, items: { $ref: "#/components/schemas/LessonProgress" } }
-        sessions: { type: array, items: { $ref: "#/components/schemas/StudySession" } }
+        sessions: { type: array, items: { $ref: "#/components/schemas/Session" } }
         activity_progress: { type: array, items: { type: object } }
         quiz_runs: { type: array, items: { $ref: "#/components/schemas/QuizRun" } }
         cards: { type: array, items: { $ref: "#/components/schemas/Card" } }
