@@ -237,7 +237,9 @@ src/robotics_curriculum/  코어 라이브러리 (Python): 콘텐츠 로더/검�
                           SM-2, 리포트 생성, 정적 사이트 빌더, CLI `rc`. 두 모드가 공유하는 유일한 비즈니스 로직 위치.
 site/                     `rc build` 결과물 (정적 HTML, MkDocs 기반) — .gitignore 대상
 tests/                    pytest (코어·CLI·API)
-api/                      Phase 2: FastAPI 서버. 인증(로컬 계정 + OIDC), 역할 권한, REST(OpenAPI 스키마 공개), 헬스체크·메트릭
+src/robotics_curriculum/api/  Phase 2: FastAPI 서버(app, routers, schemas, problems, log, middleware, settings).
+                          인증(로컬 계정 + OIDC), 역할 권한, REST(OpenAPI 스키마 공개), 헬스체크·메트릭.
+                          구현(P2-1, e82f641)이 코어 패키지 안에 두었으므로 별도 최상위 `api/`는 두지 않는다.
 web/                      Phase 2: 웹 프론트엔드 (Next.js App Router, 결정 10). 로드맵·레슨·공부법·자료·대시보드·복습 UI
 deploy/                   Phase 2: Docker Compose(api + web + postgres + reverse proxy), 환경 변수 예시, 백업 스크립트
 docs/                     PRD, 콘텐츠 모델, 운영·기여·보안 문서
@@ -517,7 +519,9 @@ P2-1 1차 범위 합의(API 개발자, 2026-11-11): 이번에 구현하는 것�
 |---|---|---|
 | AC-DB.1 | 코어의 저장소 추상화가 SQLite(로컬)와 PostgreSQL(서버)을 모두 지원하고, 같은 테스트 스위트가 두 백엔드에서 통과한다. | 백엔드 파라미터화 테스트(CI에 Postgres 서비스 컨테이너) |
 | AC-DB.2 | 스키마 변경은 Alembic 마이그레이션으로만 한다. 빈 DB → 최신, 최신 → 한 단계 다운 → 업 왕복이 CI에서 통과한다. 마이그레이션 없는 모델 변경은 테스트가 실패시킨다. | CI 잡, autogenerate diff 검사 |
-| AC-DB.3 | 로컬 모드 JSON 내보내기(`rc progress export`)를 서버 계정으로 가져올 수 있고, 레슨 ID 기준으로 병합·중복 방지된다. | 왕복 테스트 |
+| AC-DB.3 | 로컬 모드 JSON 내보내기(`rc progress export`)를 서버 계정으로 가져올 수 있고, 레슨 ID 기준으로 병합·중복 방지된다. 사용자가 쓸 수 있는 명령(`rc progress transfer` 또는 동급)이 Phase 2 완료 전에 있어야 한다(라이브러리 함수만으로는 US-DB.2 미충족). | 왕복 테스트 + CLI 테스트 |
+
+PM 검토(2026-11-11, bf94408): AC-DB.1~3의 코드·테스트는 충족. **조건부**로 남는 것 둘. (1) CI(`.github/workflows/ci.yml`)에 PostgreSQL 서비스 컨테이너나 `RC_TEST_DATABASE_URL`이 없어 Postgres 테스트가 건너뛰어지므로 AC-DB.1·AC-DB.2의 "CI에서 통과"가 아직 성립하지 않는다(DevOps 작업). (2) `rc progress transfer` CLI 미구현.
 
 ### C.5 P2-5 운영: 관측성·배포·백업·부하
 
