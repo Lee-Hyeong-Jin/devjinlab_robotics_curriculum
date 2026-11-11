@@ -26,7 +26,17 @@ from robotics_curriculum.api.problems import (
     install_problem_handlers,
     problem_response,
 )
-from robotics_curriculum.api.routers import admin, auth, content, health, me, progress, reports
+from robotics_curriculum.api.routers import (
+    admin,
+    auth,
+    content,
+    health,
+    me,
+    progress,
+    quiz,
+    reports,
+    review,
+)
 from robotics_curriculum.api.settings import Settings
 from robotics_curriculum.auth.mailer import Mailer, SmtpConfig, SmtpMailer
 from robotics_curriculum.auth.service import AuthConfig, AuthError, AuthService
@@ -126,7 +136,7 @@ def create_app(
     app.add_middleware(RequestContextMiddleware)
     install_problem_handlers(app)
     app.add_exception_handler(AuthError, _auth_error)
-    for module in (health, content, progress, reports, auth, me, admin):
+    for module in (health, content, progress, quiz, review, reports, auth, me, admin):
         app.include_router(module.router)
 
     def openapi() -> dict[str, Any]:
