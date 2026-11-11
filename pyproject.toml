@@ -38,15 +38,14 @@ api = [
     "uvicorn[standard]>=0.30",
 ]
 
-[project.scripts]
-rc = "robotics_curriculum.cli:app"
-
-[project.optional-dependencies]
 postgres = [
     "alembic>=1.13",
     "psycopg[binary]>=3.2",
     "sqlalchemy>=2.0",
 ]
+
+[project.scripts]
+rc = "robotics_curriculum.cli:app"
 
 [dependency-groups]
 dev = [
