@@ -32,7 +32,7 @@ ROOT = Path(__file__).resolve().parents[1]
 VECTORS = "m1-vectors-matrices"
 DH = "m2-dh-parameters"
 T0 = datetime(2026, 11, 11, 9, 0, tzinfo=UTC)
-TABLES = {
+PROGRESS_TABLES = {
     "meta",
     "alembic_version",
     "lesson_progress",
@@ -44,11 +44,30 @@ TABLES = {
     "quiz_runs",
     "activity_progress",
 }
+AUTH_TABLES = {
+    "users",
+    "identities",
+    "sessions_auth",
+    "api_tokens",
+    "one_time_tokens",
+    "login_attempts",
+    "audit_log",
+}
+TABLES = PROGRESS_TABLES | AUTH_TABLES
 
 
 @pytest.fixture
 def engine(clean_postgres_url: str) -> Engine:
     return create_engine(normalize_url(clean_postgres_url))
+
+
+def _mentions(entry: object, tables: set[str]) -> bool:
+    """Whether an autogenerate diff entry concerns one of ``tables``.
+
+    Substring match on the entry's repr, so an index named after its table (for example the
+    functional index ``users_email_lower``) is attributed to that table too.
+    """
+    return any(name in repr(entry) for name in tables)
 
 
 def _tables(engine: Engine) -> set[str]:
@@ -172,7 +191,8 @@ def test_models_match_migrations(engine: Engine) -> None:
     pg.upgrade(engine)
     with engine.connect() as conn:
         diff = compare_metadata(MigrationContext.configure(conn), pg.metadata)
-    assert diff == []
+    # auth tables belong to robotics_curriculum.auth.schema, not to this metadata
+    assert [entry for entry in diff if not _mentions(entry, AUTH_TABLES)] == []
     engine.dispose()
 
 
@@ -283,3 +303,18 @@ def test_open_store_shares_one_pool_per_url(clean_postgres_url: str) -> None:
     assert second.get_lesson(VECTORS) is not None
     second.close()
     pg.dispose_shared_engines()
+
+
+def test_auth_migration_matches_auth_schema(engine: Engine) -> None:
+    """Alembic 0003 must stay in step with robotics_curriculum.auth.schema (P2-2 owns that file)."""
+    from alembic.autogenerate import compare_metadata
+    from alembic.migration import MigrationContext
+
+    from robotics_curriculum.auth.schema import auth_metadata
+
+    pg.upgrade(engine)
+    with engine.connect() as conn:
+        diff = compare_metadata(MigrationContext.configure(conn), auth_metadata)
+    # The progress tables show up as "extra" here: auth_metadata does not describe them.
+    assert [entry for entry in diff if _mentions(entry, set(auth_metadata.tables))] == []
+    engine.dispose()
