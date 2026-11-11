@@ -163,7 +163,7 @@ milestones:
 
     - id: P2-2
       title: 인증·권한 (로컬 계정 Argon2id + OIDC, RBAC, 사용자별 진행도)
-      status: in_progress
+      status: done
       depends_on: [P2-1, P2-3]
       goal: 로컬 계정(Argon2id 해시)과 OIDC 로그인을 지원하고, learner/author/admin 역할로 API 접근을 제어하며, 진행도를 사용자별로 분리한다(PRD 부록 C.3, 설계 §8 → docs/architecture/auth.md).
       acceptance:
@@ -176,7 +176,7 @@ milestones:
         - AC-AUTH.7 세션/토큰 방식과 만료·갱신·로그아웃 무효화 정책이 ADR 에 기록되고 구현과 일치한다
         - AC-AUTH.8 OWASP ASVS L2 V2·V3·V4 체크리스트 파일이 있고 CSRF 방어와 보안 헤더(CSP, HSTS)가 테스트로 확인된다
         - AC-AUTH.9 메일 어댑터(인터페이스 + SMTP 구현 + fake mailer)로 재설정 흐름이 테스트되고, 메일 미설정 시 재설정이 비활성으로 안내된다
-      note: local accounts, sessions, CSRF, PAT, RBAC, audit merged (0c05661); OIDC, alembic 0003, PG auth tests pending
+      note: local accounts, sessions, CSRF, PAT, RBAC, audit, OIDC+PKCE, alembic 0003 (46f1398, 66a7dfb); follow-ups: GitHub OAuth2 adapter, IdP role mapping, server security review findings
 
     - id: P2-3
       title: PostgreSQL 저장소·마이그레이션 (ProgressStore 구현, Alembic)
