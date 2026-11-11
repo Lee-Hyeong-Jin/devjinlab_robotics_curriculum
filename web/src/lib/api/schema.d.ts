@@ -11,30 +11,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** liveness */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @constant */
-                            status?: "ok";
-                        };
-                    };
-                };
-            };
-        };
+        /**
+         * Healthz
+         * @description Liveness: the process answers.
+         */
+        get: operations["healthz_healthz_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -50,36 +31,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** readiness (DB · 마이그레이션 head · 콘텐츠 로드) */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 준비됨 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Readiness"];
-                    };
-                };
-                /** @description 준비 안 됨 */
-                503: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Readiness"];
-                    };
-                };
-            };
-        };
+        /**
+         * Readyz
+         * @description Readiness: the curriculum is indexed and the progress store opens.
+         */
+        get: operations["readyz_readyz_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -95,31 +51,421 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 빌드 정보 */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            version?: string;
-                            git_sha?: string;
-                            content_sha?: string;
-                        };
-                    };
-                };
-            };
+        /**
+         * Version
+         * @description The installed package version.
+         */
+        get: operations["version_version_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/metrics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
+        /**
+         * Metrics
+         * @description Prometheus text format. Unauthenticated: expose to the internal network only
+         *     (block at the reverse proxy). ``RC_API_METRICS=0`` turns it off (404).
+         */
+        get: operations["metrics_metrics_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/courses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Courses
+         * @description Every course in the curriculum.
+         */
+        get: operations["list_courses_api_v1_courses_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/courses/{course_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Course
+         * @description One course with its modules grouped by level (consecutive modules of one level).
+         */
+        get: operations["get_course_api_v1_courses__course_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/modules/{module_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Module
+         * @description One module with its lessons in teaching order.
+         */
+        get: operations["get_module_api_v1_modules__module_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lessons/{lesson_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Lesson
+         * @description Lesson metadata, Markdown body, resources, and the study-method section.
+         */
+        get: operations["get_lesson_api_v1_lessons__lesson_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/resources": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Resources
+         * @description Resources of every lesson in teaching order, merged by (title, url).
+         */
+        get: operations["list_resources_api_v1_resources_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/progress/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Status
+         * @description Every lesson's progress in teaching order, the running timer, and the dashboard numbers.
+         *
+         *     The dashboard part (``stages``, ``week``, ``streak_days``, ``due_cards``) is the same
+         *     aggregate the static site and ``rc status`` show, and covers every course even when
+         *     ``course`` narrows the lesson list.
+         */
+        get: operations["get_status_api_v1_progress_status_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/progress/next": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Next
+         * @description Lessons whose prerequisites are done: in-progress first, then teaching order.
+         */
+        get: operations["get_next_api_v1_progress_next_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/progress/lessons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Lesson Progress
+         * @description Progress of every lesson in teaching order (``not_started`` when never touched).
+         */
+        get: operations["list_lesson_progress_api_v1_progress_lessons_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/progress/lessons/{lesson_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Lesson Progress
+         * @description Progress of one lesson.
+         */
+        get: operations["get_lesson_progress_api_v1_progress_lessons__lesson_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/progress/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Start
+         * @description Start a study timer (one at a time; 409 if one is running).
+         */
+        post: operations["start_api_v1_progress_start_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/progress/stop": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Stop
+         * @description Stop the running timer and add its time; ``discard`` drops it (409 if none runs).
+         */
+        post: operations["stop_api_v1_progress_stop_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/progress/log": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Log
+         * @description Record study time manually: a session of ``minutes`` ending now.
+         */
+        post: operations["log_api_v1_progress_log_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/progress/done": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Done
+         * @description Mark a lesson done (stops its running timer); lists the lessons it unlocked.
+         */
+        post: operations["done_api_v1_progress_done_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/lessons/{lesson_id}/quiz": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Lesson Quiz
+         * @description A lesson's quiz questions in order, without answers or explanations.
+         */
+        get: operations["get_lesson_quiz_api_v1_lessons__lesson_id__quiz_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/quiz/runs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Submit Run
+         * @description Grade a whole attempt, store it, and return the feedback and any cards it created.
+         *
+         *     Recording is one transaction: the run, one attempt per question, flashcards for wrong
+         *     answers and for questions carrying a ``concept``, and the quiz activity marked done.
+         */
+        post: operations["submit_run_api_v1_quiz_runs_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/review/due": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Due
+         * @description Cards due today (earliest due first), optionally limited to one lesson.
+         */
+        get: operations["get_due_api_v1_review_due_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/review/{card_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Rate
+         * @description Rate a card (again / hard / good / easy) and get its next review date.
+         */
+        post: operations["rate_api_v1_review__card_id__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reports/weekly": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Weekly
+         * @description Weekly report (``rc report weekly``): time, completions, stuck points, next lessons.
+         *
+         *     Weeks run Monday to Sunday in the server's local timezone.
+         */
+        get: operations["weekly_api_v1_reports_weekly_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/reports/modules/{module_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Module
+         * @description Per-module report (``rc report module``): lesson table, understanding distribution.
+         */
+        get: operations["module_api_v1_reports_modules__module_id__get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -137,34 +483,11 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 로컬 계정 생성 (인증 메일 발송) */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["SignupRequest"];
-                };
-            };
-            responses: {
-                /** @description 생성됨 */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["User"];
-                    };
-                };
-                409: components["responses"]["Problem"];
-                422: components["responses"]["Problem"];
-                429: components["responses"]["Problem"];
-            };
-        };
+        /**
+         * Signup
+         * @description Create a local account (role learner) and mail an email-verification link.
+         */
+        post: operations["signup_api_v1_auth_signup_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -180,40 +503,11 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 이메일+비밀번호 로그인 → 세션 쿠키 */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["LoginRequest"];
-                };
-            };
-            responses: {
-                /** @description 로그인됨 (Set-Cookie sid) */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                401: components["responses"]["Problem"];
-                /** @description 계정 잠김 */
-                423: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/problem+json": components["schemas"]["Problem"];
-                    };
-                };
-                429: components["responses"]["Problem"];
-            };
-        };
+        /**
+         * Login
+         * @description Start a browser session. Five failures in 15 minutes lock the account temporarily.
+         */
+        post: operations["login_api_v1_auth_login_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -229,104 +523,11 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 현재 세션 폐기 */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 로그아웃됨 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/oidc/{provider}/start": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** OIDC 로그인 시작 (302 → IdP) */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description 설정된 OIDC 제공자 id (google */
-                    provider: components["parameters"]["Provider"];
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description IdP authorize 로 리다이렉트 */
-                302: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                404: components["responses"]["Problem"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/auth/oidc/{provider}/callback": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** OIDC 콜백 (코드 교환, 세션 생성, 302 → /dashboard) */
-        get: {
-            parameters: {
-                query: {
-                    code: string;
-                    state: string;
-                };
-                header?: never;
-                path: {
-                    /** @description 설정된 OIDC 제공자 id (google */
-                    provider: components["parameters"]["Provider"];
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 앱으로 리다이렉트 */
-                302: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                400: components["responses"]["Problem"];
-            };
-        };
-        put?: never;
-        post?: never;
+        /**
+         * Logout
+         * @description End this browser session (needs the CSRF header).
+         */
+        post: operations["logout_api_v1_auth_logout_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -342,32 +543,11 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 이메일 인증 토큰 사용 */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        token: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description 인증됨 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                400: components["responses"]["Problem"];
-            };
-        };
+        /**
+         * Verify Email
+         * @description Confirm the email address with the mailed one-time token (valid 24 hours).
+         */
+        post: operations["verify_email_api_v1_auth_verify_email_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -383,33 +563,13 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 비밀번호 재설정 메일 (존재 여부와 무관하게 202) */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        /** Format: email */
-                        email: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description 접수됨 */
-                202: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                429: components["responses"]["Problem"];
-            };
-        };
+        /**
+         * Forgot Password
+         * @description Mail a reset link (valid 30 minutes, single use) if the account exists.
+         *
+         *     The answer is the same whether or not the email is registered.
+         */
+        post: operations["forgot_password_api_v1_auth_password_forgot_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -425,33 +585,53 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** 토큰으로 비밀번호 재설정 (모든 세션 무효화) */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        token: string;
-                        new_password: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description 변경됨 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                400: components["responses"]["Problem"];
-            };
+        /**
+         * Reset Password
+         * @description Set a new password with a reset token; every session of the account is ended.
+         */
+        post: operations["reset_password_api_v1_auth_password_reset_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/oidc/{provider}/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
+        /**
+         * Oidc Start
+         * @description Start an OIDC login (Authorization Code + PKCE). With an active browser session the
+         *     provider identity is linked to that account instead.
+         */
+        get: operations["oidc_start_api_v1_auth_oidc__provider__start_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/oidc/{provider}/callback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Oidc Callback
+         * @description Finish the OIDC login: check state, exchange the code with the PKCE verifier, verify
+         *     the id_token (signature, issuer, audience, expiry, nonce), then sign in or link.
+         */
+        get: operations["oidc_callback_api_v1_auth_oidc__provider__callback_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -465,76 +645,25 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 현재 사용자 */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["User"];
-                    };
-                };
-                401: components["responses"]["Problem"];
-            };
-        };
+        /**
+         * Get Me
+         * @description The signed-in user.
+         */
+        get: operations["get_me_api_v1_me_get"];
         put?: never;
         post?: never;
-        /** 계정 삭제 (즉시 또는 설정된 유예 기간) */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 삭제 접수 */
-                202: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
+        /**
+         * Delete Me
+         * @description Delete the account: learning data is removed now, the user row is anonymized.
+         */
+        delete: operations["delete_me_api_v1_me_delete"];
         options?: never;
         head?: never;
-        /** 프로필 수정 */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": components["schemas"]["UserUpdate"];
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["User"];
-                    };
-                };
-            };
-        };
+        /**
+         * Update Me
+         * @description Change display name, locale or timezone.
+         */
+        patch: operations["update_me_api_v1_me_patch"];
         trace?: never;
     };
     "/api/v1/me/password": {
@@ -545,108 +674,13 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        /** 비밀번호 변경 (현재 비밀번호 필요) */
-        put: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        current_password: string;
-                        new_password: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description 변경됨 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                401: components["responses"]["Problem"];
-            };
-        };
+        /**
+         * Change Password
+         * @description Change the password; every other session of the account is ended.
+         */
+        put: operations["change_password_api_v1_me_password_put"];
         post?: never;
         delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/me/identities": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 연결된 계정 목록 */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Identity"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/me/identities/{identity_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** 연결 해제 (마지막 로그인 수단이면 409) */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    identity_id: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 해제됨 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-                409: components["responses"]["Problem"];
-            };
-        };
         options?: never;
         head?: never;
         patch?: never;
@@ -659,27 +693,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 기기별 로그인 세션 목록 (FR-10.8) */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["AuthSession"][];
-                    };
-                };
-            };
-        };
+        /**
+         * List Sessions
+         * @description Active browser sessions (devices) of the account.
+         */
+        get: operations["list_sessions_api_v1_me_sessions_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -698,27 +716,11 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** 특정 세션 폐기 */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    session_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 폐기됨 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
+        /**
+         * Revoke Session
+         * @description End one of the account's sessions (e.g. a lost device).
+         */
+        delete: operations["revoke_session_api_v1_me_sessions__session_id__delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -731,60 +733,17 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** PAT 목록 */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ApiToken"][];
-                    };
-                };
-            };
-        };
+        /**
+         * List Tokens
+         * @description Active personal access tokens (secrets are never shown again).
+         */
+        get: operations["list_tokens_api_v1_me_tokens_get"];
         put?: never;
-        /** PAT 발급 (평문 토큰은 이 응답에서만 1회 노출) */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        name: string;
-                        scopes: ("read:progress" | "write:progress" | "admin")[];
-                        /** Format: date-time */
-                        expires_at?: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description 발급됨 */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ApiToken"] & {
-                            token?: string;
-                        };
-                    };
-                };
-            };
-        };
+        /**
+         * Create Token
+         * @description Issue a personal access token for programs (``Authorization: Bearer <token>``).
+         */
+        post: operations["create_token_api_v1_me_tokens_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -801,27 +760,11 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** PAT 폐기 */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    token_id: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 폐기됨 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
+        /**
+         * Revoke Token
+         * @description Revoke a personal access token.
+         */
+        delete: operations["revoke_token_api_v1_me_tokens__token_id__delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -834,27 +777,12 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 내 학습 데이터 내보내기 (`ProgressExport`, rc progress export 와 동일 스키마) */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ProgressExport"];
-                    };
-                };
-            };
-        };
+        /**
+         * Export
+         * @description The caller's progress and sessions: the JSON format of ``rc progress export``, so it
+         *     loads into local mode with ``rc progress import``.
+         */
+        get: operations["export_api_v1_me_export_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -863,34 +791,18 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/courses": {
+    "/api/v1/me/identities": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** 코스 목록 (현재 1개) */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["CourseSummary"][];
-                    };
-                };
-            };
-        };
+        /**
+         * List Identities
+         * @description External logins (OIDC providers) linked to the account.
+         */
+        get: operations["list_identities_api_v1_me_identities_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -899,901 +811,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/courses/{course_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 코스 상세 (단계별 모듈 목록) */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    course_id: components["parameters"]["CourseId"];
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Course"];
-                    };
-                };
-                404: components["responses"]["Problem"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/modules/{module_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 모듈 상세 (레슨 목록) */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    module_id: components["parameters"]["ModuleId"];
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Module"];
-                    };
-                };
-                404: components["responses"]["Problem"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/lessons/{lesson_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 레슨 상세 (메타, 목표, 활동, 자료, 본문 HTML, "이 단계 공부법" 절) */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    lesson_id: components["parameters"]["LessonId"];
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Lesson"];
-                    };
-                };
-                404: components["responses"]["Problem"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/lessons/{lesson_id}/quiz": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 레슨 퀴즈 문항 (정답·해설 제외) */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    lesson_id: components["parameters"]["LessonId"];
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["QuizPublic"];
-                    };
-                };
-                404: components["responses"]["Problem"];
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/resources": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 자료 목록 (rc resources --all; 모든 레슨 resources[] 합집합, 제목 기준 중복 제거) */
-        get: {
-            parameters: {
-                query?: {
-                    module_id?: string;
-                    lesson_id?: string;
-                    kind?: components["schemas"]["ResourceKind"];
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ResourceRef"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/roadmap": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 단계별 모듈·레슨 상태 트리 (rc roadmap; 진도 반영) */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Roadmap"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/search": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 레슨·자료 검색 */
-        get: {
-            parameters: {
-                query: {
-                    q: string;
-                    limit?: components["parameters"]["Limit"];
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["SearchHit"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/progress/status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 대시보드 (rc status) — 현재 단계·모듈·다음 레슨, 단계별 진행률, 주간 시간, 연속일, 복습 수 */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Status"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/progress/next": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 추천 레슨 (rc next) */
-        get: {
-            parameters: {
-                query?: {
-                    n?: number;
-                    /** @description 코스 id 필터 */
-                    course?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["NextLesson"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/progress/lessons": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 내 레슨 진도 전체 */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["LessonProgress"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/progress/lessons/{lesson_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 레슨 진도 */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    lesson_id: components["parameters"]["LessonId"];
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["LessonProgress"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/progress/start": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** 타이머 시작 (rc start; 열린 세션 있으면 409) */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        lesson_id: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description 세션 생성 */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["StudySession"];
-                    };
-                };
-                409: components["responses"]["Problem"];
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/progress/stop": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** 타이머 종료 (rc stop) */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: {
-                content: {
-                    "application/json": {
-                        note?: string;
-                        /** @default false */
-                        discard?: boolean;
-                    };
-                };
-            };
-            responses: {
-                /** @description 종료된 세션 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["StudySession"];
-                    };
-                };
-                409: components["responses"]["Problem"];
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/progress/log": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** 수동 시간 기록 (rc log) */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        lesson_id: string;
-                        minutes: number;
-                        /** Format: date */
-                        on?: string;
-                        note?: string;
-                    };
-                };
-            };
-            responses: {
-                /** @description 기록됨 */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["StudySession"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/progress/done": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** 레슨(또는 활동) 완료 (rc done) */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        lesson_id: string;
-                        /** @description 생략하면 레슨 완료 */
-                        activity_id?: string;
-                        understanding?: number;
-                        note?: string;
-                        /** @default false */
-                        undo?: boolean;
-                    };
-                };
-            };
-            responses: {
-                /** @description 갱신된 진도 + 해금 레슨 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["DoneResult"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/progress/sessions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 학습 세션 목록 */
-        get: {
-            parameters: {
-                query?: {
-                    lesson_id?: string;
-                    cursor?: components["parameters"]["Cursor"];
-                    limit?: components["parameters"]["Limit"];
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["StudySessionPage"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/quiz/runs": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** 퀴즈 실행 시작 (rc quiz) — 문항 순서 고정 */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        lesson_id: string;
-                        /** @default false */
-                        retry_wrong?: boolean;
-                    };
-                };
-            };
-            responses: {
-                /** @description 실행 생성 */
-                201: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["QuizRun"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/quiz/runs/{run_id}/answers": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** 문항 답 제출 → 즉시 채점·해설 */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    run_id: number;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        question_id: string;
-                        /** @description 문항 type 에 맞는 값 */
-                        answer: unknown;
-                    };
-                };
-            };
-            responses: {
-                /** @description 채점 결과 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["QuizAnswerResult"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/quiz/runs/{run_id}/finish": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** 실행 종료 (점수 확정, 카드 생성, 활동 done) */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    run_id: number;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["QuizRun"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/review/due": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 오늘 복습할 카드 (rc review) */
-        get: {
-            parameters: {
-                query?: {
-                    limit?: components["parameters"]["Limit"];
-                    lesson_id?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Card"][];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/review/{card_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** 카드 평가 (again|hard|good|easy) → SM-2 다음 일정 */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    card_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        rating: components["schemas"]["Rating"];
-                    };
-                };
-            };
-            responses: {
-                /** @description 갱신된 상태 */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["CardState"];
-                    };
-                };
-            };
-        };
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/cards": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 내 카드 목록 */
-        get: {
-            parameters: {
-                query?: {
-                    lesson_id?: string;
-                    cursor?: components["parameters"]["Cursor"];
-                    limit?: components["parameters"]["Limit"];
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["CardPage"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/cards/{card_id}": {
+    "/api/v1/me/identities/{identity_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1803,114 +821,11 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /** 카드 일시 중지/재개 */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    card_id: string;
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        suspended?: boolean;
-                    };
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Card"];
-                    };
-                };
-            };
-        };
-        trace?: never;
-    };
-    "/api/v1/reports/weekly": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 주간 리포트 (rc report weekly) */
-        get: {
-            parameters: {
-                query?: {
-                    /** @description 생략 시 이번 주 */
-                    week?: string;
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Report"];
-                        "text/markdown": string;
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/reports/modules/{module_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 모듈 리포트 (rc report module) */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    module_id: components["parameters"]["ModuleId"];
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["Report"];
-                        "text/markdown": string;
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
+        /**
+         * Unlink Identity
+         * @description Unlink an external login (refused when it is the account's only way to sign in).
+         */
+        delete: operations["unlink_identity_api_v1_me_identities__identity_id__delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1923,34 +838,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 사용자 목록·검색 (admin) */
-        get: {
-            parameters: {
-                query?: {
-                    q?: string;
-                    role?: components["schemas"]["Role"];
-                    status?: components["schemas"]["UserStatus"];
-                    cursor?: components["parameters"]["Cursor"];
-                    limit?: components["parameters"]["Limit"];
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["UserPage"];
-                    };
-                };
-                403: components["responses"]["Problem"];
-            };
-        };
+        /**
+         * List Users
+         * @description Users by id, cursor-paginated.
+         */
+        get: operations["list_users_api_v1_admin_users_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1966,66 +858,19 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 사용자 상세 (학습 데이터는 집계만) */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    user_id: components["parameters"]["UserId"];
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["AdminUser"];
-                    };
-                };
-            };
-        };
+        /** Get User */
+        get: operations["get_user_api_v1_admin_users__user_id__get"];
         put?: never;
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
-        /** 역할·상태 변경 (감사 로그 기록; 마지막 admin 강등 금지 → 409) */
-        patch: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    user_id: components["parameters"]["UserId"];
-                };
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        role?: components["schemas"]["Role"];
-                        /** @enum {string} */
-                        status?: "active" | "disabled";
-                    };
-                };
-            };
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["AdminUser"];
-                    };
-                };
-                409: components["responses"]["Problem"];
-            };
-        };
+        /**
+         * Update User
+         * @description Change role or status. The last admin cannot be demoted or disabled, and admins
+         *     cannot remove their own admin access. Disabling ends the user's sessions and tokens.
+         */
+        patch: operations["update_user_api_v1_admin_users__user_id__patch"];
         trace?: never;
     };
     "/api/v1/admin/users/{user_id}/sessions": {
@@ -2038,69 +883,11 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** 사용자 세션 전체 강제 종료 */
-        delete: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    user_id: components["parameters"]["UserId"];
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description 종료됨 */
-                204: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/invitations": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** 초대 메일 발송 */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody: {
-                content: {
-                    "application/json": {
-                        /** Format: email */
-                        email: string;
-                        role?: components["schemas"]["Role"];
-                    };
-                };
-            };
-            responses: {
-                /** @description 접수됨 */
-                202: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
-            };
-        };
-        delete?: never;
+        /**
+         * Revoke User Sessions
+         * @description Force-logout: end every browser session of the user.
+         */
+        delete: operations["revoke_user_sessions_api_v1_admin_users__user_id__sessions_delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -2113,116 +900,13 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** 감사 로그 */
-        get: {
-            parameters: {
-                query?: {
-                    action?: string;
-                    actor_user_id?: number;
-                    since?: string;
-                    cursor?: components["parameters"]["Cursor"];
-                    limit?: components["parameters"]["Limit"];
-                };
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["AuditPage"];
-                    };
-                };
-            };
-        };
+        /**
+         * List Audit
+         * @description Audit log, newest first.
+         */
+        get: operations["list_audit_api_v1_admin_audit_get"];
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/content": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** 콘텐츠 상태 (코스·모듈·레슨 수, 마지막 검증 결과, 콘텐츠 SHA) */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ContentStatus"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/content/reload": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** 콘텐츠 재로드·검증 (author 이상) */
-        post: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description OK */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ContentStatus"];
-                    };
-                };
-                /** @description 검증 실패 */
-                422: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/problem+json": components["schemas"]["Problem"];
-                    };
-                };
-            };
-        };
         delete?: never;
         options?: never;
         head?: never;
@@ -2233,425 +917,1327 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * Activity
+         * @description One unit of learner work inside a lesson.
+         */
+        Activity: {
+            /**
+             * Id
+             * @description lowercase slug, e.g. m1-vectors
+             */
+            id: string;
+            kind: components["schemas"]["ActivityKind"];
+            /** Title */
+            title: string;
+            /** Estimated Minutes */
+            estimated_minutes?: number | null;
+        };
+        /**
+         * ActivityKind
+         * @enum {string}
+         */
+        ActivityKind: "reading" | "quiz" | "exercise";
+        /**
+         * ActivityProgress
+         * @description Per-activity state (platform-design §4.1); Phase 1 only records quiz activities.
+         */
+        ActivityProgress: {
+            /**
+             * User Id
+             * @default 1
+             */
+            user_id: number;
+            /** Activity Id */
+            activity_id: string;
+            /** Lesson Id */
+            lesson_id: string;
+            /** @default not_started */
+            status: components["schemas"]["LessonStatus"];
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** AdminUser */
+        AdminUser: {
+            /** Id */
+            id: number;
+            /** Email */
+            email: string;
+            /** Email Verified */
+            email_verified: boolean;
+            /** Display Name */
+            display_name: string | null;
+            /** Locale */
+            locale: string | null;
+            /** Timezone */
+            timezone: string | null;
+            role: components["schemas"]["Role"];
+            status: components["schemas"]["UserStatus"];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Has Password */
+            has_password: boolean;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** AdminUserUpdate */
+        AdminUserUpdate: {
+            role?: components["schemas"]["Role"] | null;
+            /** @description active or disabled */
+            status?: components["schemas"]["UserStatus"] | null;
+        };
+        /** ApiToken */
+        ApiToken: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /**
+             * Prefix
+             * @description First characters of the token, for recognition.
+             */
+            prefix: string;
+            /** Scopes */
+            scopes: components["schemas"]["Scope"][];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Expires At */
+            expires_at: string | null;
+            /** Last Used At */
+            last_used_at: string | null;
+        };
+        /** ApiTokenCreate */
+        ApiTokenCreate: {
+            /** Name */
+            name: string;
+            /** Scopes */
+            scopes: components["schemas"]["Scope"][];
+            /**
+             * Expires In Days
+             * @description null = no expiry
+             * @default 90
+             */
+            expires_in_days: number | null;
+        };
+        /** ApiTokenCreated */
+        ApiTokenCreated: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            /**
+             * Prefix
+             * @description First characters of the token, for recognition.
+             */
+            prefix: string;
+            /** Scopes */
+            scopes: components["schemas"]["Scope"][];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Expires At */
+            expires_at: string | null;
+            /** Last Used At */
+            last_used_at: string | null;
+            /**
+             * Token
+             * @description The secret. Shown only in this response.
+             */
+            token: string;
+        };
+        /** AuditEntry */
+        AuditEntry: {
+            /** Id */
+            id: number;
+            /**
+             * At
+             * Format: date-time
+             */
+            at: string;
+            /** Actor User Id */
+            actor_user_id: number | null;
+            /** Actor Ip */
+            actor_ip: string | null;
+            /** Action */
+            action: string;
+            /** Target Type */
+            target_type: string | null;
+            /** Target Id */
+            target_id: string | null;
+            /** Detail */
+            detail: {
+                [key: string]: unknown;
+            };
+            /** Request Id */
+            request_id: string | null;
+        };
+        /** AuditPage */
+        AuditPage: {
+            /** Items */
+            items: components["schemas"]["AuditEntry"][];
+            /** Next Cursor */
+            next_cursor: string | null;
+        };
+        /** AuthSession */
+        AuthSession: {
+            /** Id */
+            id: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Last Seen At
+             * Format: date-time
+             */
+            last_seen_at: string;
+            /**
+             * Expires At
+             * Format: date-time
+             */
+            expires_at: string;
+            /** Ip */
+            ip: string | null;
+            /** User Agent */
+            user_agent: string | null;
+            /** Current */
+            current: boolean;
+        };
+        /**
+         * Card
+         * @description A flashcard made from a quiz question (FR-4.2); id is ``<lesson>-<source>-<qid>``.
+         */
+        Card: {
+            /** Id */
+            id: string;
+            /**
+             * User Id
+             * @default 1
+             */
+            user_id: number;
+            /** Lesson Id */
+            lesson_id: string;
+            /** Question Id */
+            question_id: string;
+            /** Front */
+            front: string;
+            /** Back */
+            back: string;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "quiz" | "concept";
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Suspended
+             * @default false
+             */
+            suspended: boolean;
+        };
+        /**
+         * CardState
+         * @description SM-2 scheduling state of one card for one user (FR-4.3).
+         */
+        CardState: {
+            /** Card Id */
+            card_id: string;
+            /**
+             * User Id
+             * @default 1
+             */
+            user_id: number;
+            /**
+             * Repetitions
+             * @default 0
+             */
+            repetitions: number;
+            /**
+             * Interval Days
+             * @default 0
+             */
+            interval_days: number;
+            /**
+             * Ease
+             * @default 2.5
+             */
+            ease: number;
+            /**
+             * Due
+             * Format: date
+             */
+            due: string;
+        };
+        /** Check */
+        Check: {
+            /** Ok */
+            ok: boolean;
+            /** Detail */
+            detail?: string | null;
+        };
+        /** Course */
+        Course: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            /** Tags */
+            tags: string[];
+            /** Module Count */
+            module_count: number;
+            /** Lesson Count */
+            lesson_count: number;
+            /**
+             * Stages
+             * @description Modules grouped by level, in course order.
+             */
+            stages: components["schemas"]["Stage"][];
+        };
+        /** CourseSummary */
+        CourseSummary: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            /** Tags */
+            tags: string[];
+            /** Module Count */
+            module_count: number;
+            /** Lesson Count */
+            lesson_count: number;
+        };
+        /** DeleteAccount */
+        DeleteAccount: {
+            /** Password */
+            password?: string | null;
+        };
+        /** DoneRequest */
+        DoneRequest: {
+            /** Lesson Id */
+            lesson_id: string;
+            /**
+             * Understanding
+             * @description Self-rated, 1-5.
+             */
+            understanding?: number | null;
+            /** Note */
+            note?: string | null;
+        };
+        /** DoneResult */
+        DoneResult: {
+            progress: components["schemas"]["LessonProgress"];
+            /**
+             * Unlocked Lesson Ids
+             * @description Lessons this completion unlocked.
+             */
+            unlocked_lesson_ids: string[];
+        };
+        /** ForgotRequest */
+        ForgotRequest: {
+            /** Email */
+            email: string;
+        };
+        /** Health */
+        Health: {
+            /**
+             * Status
+             * @default ok
+             * @constant
+             */
+            status: "ok";
+        };
+        /**
+         * Identity
+         * @description A linked external login (OIDC provider).
+         */
+        Identity: {
+            /** Id */
+            id: number;
+            /** Provider */
+            provider: string;
+            /** Email */
+            email: string | null;
+            /**
+             * Linked At
+             * Format: date-time
+             */
+            linked_at: string;
+        };
+        /** Lesson */
+        Lesson: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            /** Course Id */
+            course_id: string;
+            /** Module Id */
+            module_id: string;
+            /** Difficulty */
+            difficulty: number;
+            /** Estimated Minutes */
+            estimated_minutes: number;
+            /**
+             * Prerequisites
+             * @description Lesson ids.
+             */
+            prerequisites: string[];
+            /** Tags */
+            tags: string[];
+            /** Objectives */
+            objectives: string[];
+            /** Activities */
+            activities: components["schemas"]["Activity"][];
+            /** Resources */
+            resources: components["schemas"]["Resource"][];
+            /**
+             * Content Format
+             * @description Format of `body` and `study_method`.
+             * @default markdown
+             * @constant
+             */
+            content_format: "markdown";
+            /**
+             * Body
+             * @description Markdown body without front matter.
+             */
+            body: string;
+            /**
+             * Study Method
+             * @description Markdown of the "## 이 단계 공부법" section, if the lesson has one.
+             */
+            study_method: string | null;
+            /**
+             * Prev Lesson Id
+             * @description Previous lesson in course order.
+             */
+            prev_lesson_id: string | null;
+            /**
+             * Next Lesson Id
+             * @description Next lesson in course order.
+             */
+            next_lesson_id: string | null;
+        };
+        /**
+         * LessonProgress
+         * @description Per-lesson state for one user.
+         */
+        LessonProgress: {
+            /**
+             * User Id
+             * @default 1
+             */
+            user_id: number;
+            /** Lesson Id */
+            lesson_id: string;
+            /** @default not_started */
+            status: components["schemas"]["LessonStatus"];
+            /** Started At */
+            started_at?: string | null;
+            /** Completed At */
+            completed_at?: string | null;
+            /**
+             * Total Seconds
+             * @default 0
+             */
+            total_seconds: number;
+            /**
+             * Understanding
+             * @description FR-3.2, 1-5
+             */
+            understanding?: number | null;
+            /** Note */
+            note?: string | null;
+        };
+        /**
+         * LessonState
+         * @description One lesson in teaching order with its progress (a row of ``rc status``).
+         */
+        LessonState: {
+            lesson: components["schemas"]["LessonSummary"];
+            status: components["schemas"]["LessonStatus"];
+            /**
+             * Locked
+             * @description Some prerequisite is not done yet.
+             */
+            locked: boolean;
+            /** Total Seconds */
+            total_seconds: number;
+            /** Started At */
+            started_at: string | null;
+            /** Completed At */
+            completed_at: string | null;
+            /** Understanding */
+            understanding: number | null;
+            /** Note */
+            note: string | null;
+        };
+        /**
+         * LessonStatus
+         * @enum {string}
+         */
+        LessonStatus: "not_started" | "in_progress" | "done";
+        /** LessonSummary */
+        LessonSummary: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            /** Course Id */
+            course_id: string;
+            /** Module Id */
+            module_id: string;
+            /** Difficulty */
+            difficulty: number;
+            /** Estimated Minutes */
+            estimated_minutes: number;
+            /**
+             * Prerequisites
+             * @description Lesson ids.
+             */
+            prerequisites: string[];
+            /** Tags */
+            tags: string[];
+        };
+        /** LogRequest */
+        LogRequest: {
+            /** Lesson Id */
+            lesson_id: string;
+            /**
+             * Minutes
+             * @description Study time ending now.
+             */
+            minutes: number;
+            /** Note */
+            note?: string | null;
+        };
+        /** LoginRequest */
+        LoginRequest: {
+            /** Email */
+            email: string;
+            /** Password */
+            password: string;
+            /**
+             * Remember
+             * @description Accepted for the frontend contract; sessions always last 14 days.
+             * @default false
+             */
+            remember: boolean;
+        };
+        /** LoginResult */
+        LoginResult: {
+            user: components["schemas"]["User"];
+            /**
+             * Csrf Token
+             * @description Send as X-CSRF-Token on state-changing requests (also set as a cookie).
+             */
+            csrf_token: string;
+        };
+        /** Module */
+        Module: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            /** Level */
+            level: ("기초" | "중급" | "고급") | null;
+            /** Course Id */
+            course_id: string;
+            /** Lesson Count */
+            lesson_count: number;
+            /**
+             * Estimated Minutes
+             * @description Sum over the module's lessons.
+             */
+            estimated_minutes: number;
+            /** Lessons */
+            lessons: components["schemas"]["LessonSummary"][];
+        };
+        /** ModuleReportSummary */
+        ModuleReportSummary: {
+            /** Course Title */
+            course_title: string;
+            /** Module Id */
+            module_id: string;
+            /** Module Title */
+            module_title: string;
+            /** Done Count */
+            done_count: number;
+            /** Lesson Count */
+            lesson_count: number;
+            /** Total Seconds */
+            total_seconds: number;
+            /** Lessons */
+            lessons: components["schemas"]["LessonState"][];
+        };
+        /** ModuleSummary */
+        ModuleSummary: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            /** Level */
+            level: ("기초" | "중급" | "고급") | null;
+            /** Course Id */
+            course_id: string;
+            /** Lesson Count */
+            lesson_count: number;
+            /**
+             * Estimated Minutes
+             * @description Sum over the module's lessons.
+             */
+            estimated_minutes: number;
+        };
+        /** NextLesson */
+        NextLesson: {
+            lesson: components["schemas"]["LessonSummary"];
+            status: components["schemas"]["LessonStatus"];
+            /**
+             * Reason
+             * @description Why it is recommended.
+             */
+            reason: string;
+        };
+        /** PasswordChange */
+        PasswordChange: {
+            /** Current Password */
+            current_password: string;
+            /** New Password */
+            new_password: string;
+        };
+        /**
+         * ProgressExport
+         * @description JSON document produced by ``rc progress export`` (FR-10.2).
+         *
+         *     Lists added in schema version 2 default to empty, so a version-1 export still imports.
+         *
+         *     The validators enforce the invariants the database also enforces, so an edited or
+         *     hand-written file fails with a readable message instead of a sqlite error mid-import.
+         */
+        ProgressExport: {
+            /** Schema Version */
+            schema_version: number;
+            /**
+             * Exported At
+             * Format: date-time
+             */
+            exported_at: string;
+            /** Lesson Progress */
+            lesson_progress?: components["schemas"]["LessonProgress"][];
+            /** Sessions */
+            sessions?: components["schemas"]["Session"][];
+            /** Cards */
+            cards?: components["schemas"]["Card"][];
+            /** Card States */
+            card_states?: components["schemas"]["CardState"][];
+            /** Reviews */
+            reviews?: components["schemas"]["Review"][];
+            /** Quiz Attempts */
+            quiz_attempts?: components["schemas"]["QuizAttempt"][];
+            /** Quiz Runs */
+            quiz_runs?: components["schemas"]["robotics_curriculum__progress__models__QuizRun"][];
+            /** Activity Progress */
+            activity_progress?: components["schemas"]["ActivityProgress"][];
+        };
+        /**
+         * QuizAnswerResult
+         * @description Per-question feedback, returned only once the answer was submitted.
+         */
+        QuizAnswerResult: {
+            /** Question Id */
+            question_id: string;
+            /** Given */
+            given: string;
+            /** Correct */
+            correct: boolean;
+            /** Correct Answer */
+            correct_answer: string;
+            /** Explanation */
+            explanation: string;
+        };
+        /**
+         * QuizAttempt
+         * @description One answered question of a quiz run.
+         */
+        QuizAttempt: {
+            /** Id */
+            id?: number | null;
+            /**
+             * User Id
+             * @default 1
+             */
+            user_id: number;
+            /** Lesson Id */
+            lesson_id: string;
+            /** Question Id */
+            question_id: string;
+            /**
+             * Answered At
+             * Format: date-time
+             */
+            answered_at: string;
+            /** Answer */
+            answer: string;
+            /** Correct */
+            correct: boolean;
+        };
+        /**
+         * QuizPublic
+         * @description A lesson's quiz without answers (``GET /lessons/{id}/quiz``).
+         */
+        QuizPublic: {
+            /** Lesson Id */
+            lesson_id: string;
+            /**
+             * Activity Id
+             * @description The `kind: quiz` activity it belongs to.
+             */
+            activity_id: string | null;
+            /** Questions */
+            questions: components["schemas"]["QuizQuestionPublic"][];
+        };
+        /**
+         * QuizQuestionPublic
+         * @description A question as a learner may see it before answering: no answer, no explanation.
+         */
+        QuizQuestionPublic: {
+            /** Id */
+            id: string;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "single" | "multiple" | "truefalse" | "short";
+            /** Prompt */
+            prompt: string;
+            /**
+             * Choices
+             * @description Empty for short / true-false.
+             */
+            choices?: string[];
+        };
+        /**
+         * QuizSubmission
+         * @description One finished attempt at a lesson's quiz (``POST /quiz/runs``).
+         */
+        QuizSubmission: {
+            /** Lesson Id */
+            lesson_id: string;
+            /**
+             * Answers
+             * @description Question id -> answer, in the CLI notation: `2`, `1,3`, `o`/`x`, free text.
+             */
+            answers: {
+                [key: string]: string;
+            };
+            /**
+             * Partial
+             * @description Allow leaving questions out instead of failing with 422.
+             * @default false
+             */
+            partial: boolean;
+        };
+        /**
+         * RateRequest
+         * @description How well the learner recalled a card.
+         */
+        RateRequest: {
+            /**
+             * Rating
+             * @enum {string}
+             */
+            rating: "again" | "hard" | "good" | "easy";
+        };
+        /** Readiness */
+        Readiness: {
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "ready" | "not_ready";
+            /**
+             * Checks
+             * @description `content` and `database`.
+             */
+            checks: {
+                [key: string]: components["schemas"]["Check"];
+            };
+        };
+        /** Report */
+        Report: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "weekly" | "module";
+            /**
+             * Period
+             * @description ISO week (weekly) or module id (module).
+             */
+            period: string;
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /**
+             * Markdown
+             * @description The same Markdown as `rc report weekly|module`.
+             */
+            markdown: string;
+            /** Summary */
+            summary: components["schemas"]["WeeklySummary"] | components["schemas"]["ModuleReportSummary"];
+        };
+        /** ReportLesson */
+        ReportLesson: {
+            /** Lesson Id */
+            lesson_id: string;
+            /** Title */
+            title: string;
+            /** Seconds This Week */
+            seconds_this_week: number;
+            /** Understanding */
+            understanding: number | null;
+            /** Detail */
+            detail: string;
+        };
+        /** ReportModuleTime */
+        ReportModuleTime: {
+            /** Module Id */
+            module_id: string;
+            /** Title */
+            title: string;
+            /** Seconds */
+            seconds: number;
+        };
+        /** ReportNote */
+        ReportNote: {
+            /**
+             * Day
+             * Format: date
+             */
+            day: string;
+            /** Lesson Id */
+            lesson_id: string;
+            /** Text */
+            text: string;
+        };
+        /** ResetRequest */
+        ResetRequest: {
+            /** Token */
+            token: string;
+            /** Password */
+            password: string;
+        };
+        /**
+         * Resource
+         * @description A study resource as written in lesson front matter.
+         */
+        Resource: {
+            /** Title */
+            title: string;
+            /** Url */
+            url?: string | null;
+            kind?: components["schemas"]["ResourceKind"] | null;
+            /** Note */
+            note?: string | null;
+        };
+        /**
+         * ResourceKind
+         * @enum {string}
+         */
+        ResourceKind: "book" | "course" | "video" | "article" | "other";
+        /** ResourceRef */
+        ResourceRef: {
+            /** Title */
+            title: string;
+            /** Url */
+            url?: string | null;
+            kind?: components["schemas"]["ResourceKind"] | null;
+            /** Note */
+            note?: string | null;
+            /**
+             * Lesson Ids
+             * @description Lessons that list this resource.
+             */
+            lesson_ids: string[];
+        };
+        /**
+         * Review
+         * @description One answer given during ``rc review``.
+         */
+        Review: {
+            /** Id */
+            id?: number | null;
+            /** Card Id */
+            card_id: string;
+            /**
+             * User Id
+             * @default 1
+             */
+            user_id: number;
+            /**
+             * Reviewed At
+             * Format: date-time
+             */
+            reviewed_at: string;
+            /**
+             * Rating
+             * @enum {string}
+             */
+            rating: "again" | "hard" | "good" | "easy";
+            /** Interval Before */
+            interval_before: number;
+            /** Interval After */
+            interval_after: number;
+            /** Ease After */
+            ease_after: number;
+        };
+        /**
+         * ReviewCard
+         * @description A card that is due, with its current SM-2 schedule.
+         */
+        ReviewCard: {
+            /** Card Id */
+            card_id: string;
+            /** Lesson Id */
+            lesson_id: string;
+            /** Question Id */
+            question_id: string;
+            /** Front */
+            front: string;
+            /** Back */
+            back: string;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "quiz" | "concept";
+            /**
+             * Due
+             * Format: date
+             */
+            due: string;
+            /** Interval Days */
+            interval_days: number;
+        };
+        /**
+         * ReviewResult
+         * @description The card's new schedule after a rating.
+         */
+        ReviewResult: {
+            /** Card Id */
+            card_id: string;
+            /** Repetitions */
+            repetitions: number;
+            /** Interval Days */
+            interval_days: number;
+            /** Ease */
+            ease: number;
+            /**
+             * Due
+             * Format: date
+             */
+            due: string;
+            /**
+             * Due Tomorrow
+             * @description Cards scheduled for the next day.
+             */
+            due_tomorrow: number;
+        };
+        /**
+         * Role
+         * @enum {string}
+         */
+        Role: "learner" | "author" | "admin";
+        /**
+         * Scope
+         * @description PAT scopes (ADR 0009).
+         * @enum {string}
+         */
+        Scope: "read:progress" | "write:progress" | "admin";
+        /**
+         * Session
+         * @description One study session: a timer run (``rc start``/``rc stop``) or a manual log.
+         */
+        Session: {
+            /** Id */
+            id?: number | null;
+            /**
+             * User Id
+             * @default 1
+             */
+            user_id: number;
+            /** Lesson Id */
+            lesson_id: string;
+            /**
+             * Started At
+             * Format: date-time
+             */
+            started_at: string;
+            /** Ended At */
+            ended_at?: string | null;
+            /** Note */
+            note?: string | null;
+            /**
+             * Source
+             * @default timer
+             * @enum {string}
+             */
+            source: "timer" | "manual";
+        };
+        /** SignupRequest */
+        SignupRequest: {
+            /** Email */
+            email: string;
+            /** Password */
+            password: string;
+            /** Display Name */
+            display_name?: string | null;
+        };
+        /** Stage */
+        Stage: {
+            /**
+             * Level
+             * @description null for modules without a level.
+             */
+            level: ("기초" | "중급" | "고급") | null;
+            /** Modules */
+            modules: components["schemas"]["ModuleSummary"][];
+        };
+        /**
+         * StageStat
+         * @description One level (기초 / 중급 / 고급) with its lesson counts.
+         */
+        StageStat: {
+            /** Level */
+            level: string;
+            /**
+             * Progress
+             * @description Percent of the level's lessons done.
+             */
+            progress: number;
+            /** Lessons Done */
+            lessons_done: number;
+            /** Lessons Total */
+            lessons_total: number;
+            /** Module Ids */
+            module_ids: string[];
+        };
+        /** StartRequest */
+        StartRequest: {
+            /** Lesson Id */
+            lesson_id: string;
+        };
+        /** Status */
+        Status: {
+            /** @description The running timer, if any. */
+            open_session: components["schemas"]["StudySession"] | null;
+            /**
+             * Lessons
+             * @description Every lesson in teaching order.
+             */
+            lessons: components["schemas"]["LessonState"][];
+            /**
+             * Stages
+             * @description Progress per level.
+             */
+            stages?: components["schemas"]["StageStat"][];
+            /** @description This week's study time. */
+            week?: components["schemas"]["WeekStat"] | null;
+            /**
+             * Streak Days
+             * @description Consecutive days with study activity.
+             * @default 0
+             */
+            streak_days: number;
+            /**
+             * Due Cards
+             * @description Flashcards due today.
+             * @default 0
+             */
+            due_cards: number;
+        };
+        /** StopRequest */
+        StopRequest: {
+            /** Note */
+            note?: string | null;
+            /**
+             * Discard
+             * @description Delete the running session instead.
+             * @default false
+             */
+            discard: boolean;
+        };
+        /** StudySession */
+        StudySession: {
+            /** Id */
+            id: number | null;
+            /** Lesson Id */
+            lesson_id: string;
+            /**
+             * Started At
+             * Format: date-time
+             */
+            started_at: string;
+            /** Ended At */
+            ended_at: string | null;
+            /** Note */
+            note: string | null;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "timer" | "manual";
+            /**
+             * Seconds
+             * @description Elapsed seconds (0 while running or when discarded).
+             */
+            seconds: number;
+        };
+        /** TokenRequest */
+        TokenRequest: {
+            /** Token */
+            token: string;
+        };
+        /** User */
+        User: {
+            /** Id */
+            id: number;
+            /** Email */
+            email: string;
+            /** Email Verified */
+            email_verified: boolean;
+            /** Display Name */
+            display_name: string | null;
+            /** Locale */
+            locale: string | null;
+            /** Timezone */
+            timezone: string | null;
+            role: components["schemas"]["Role"];
+            status: components["schemas"]["UserStatus"];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** UserPage */
+        UserPage: {
+            /** Items */
+            items: components["schemas"]["AdminUser"][];
+            /**
+             * Next Cursor
+             * @description Pass as `cursor` for the next page.
+             */
+            next_cursor: string | null;
+        };
+        /**
+         * UserStatus
+         * @enum {string}
+         */
+        UserStatus: "active" | "disabled" | "pending_deletion" | "deleted";
+        /** UserUpdate */
+        UserUpdate: {
+            /** Display Name */
+            display_name?: string | null;
+            /** Locale */
+            locale?: ("ko" | "en") | null;
+            /** Timezone */
+            timezone?: string | null;
+        };
+        /** Version */
+        Version: {
+            /** Version */
+            version: string;
+        };
+        /**
+         * WeekStat
+         * @description Study time of the current week (Monday onwards, caller's timezone).
+         */
+        WeekStat: {
+            /**
+             * Start
+             * Format: date
+             */
+            start: string;
+            /** Minutes */
+            minutes: number;
+            /** Sessions */
+            sessions: number;
+        };
+        /** WeeklySummary */
+        WeeklySummary: {
+            /**
+             * Start
+             * Format: date
+             */
+            start: string;
+            /**
+             * End
+             * Format: date
+             */
+            end: string;
+            /**
+             * As Of
+             * Format: date
+             */
+            as_of: string;
+            /** Total Seconds */
+            total_seconds: number;
+            /** Session Count */
+            session_count: number;
+            /** Active Days */
+            active_days: number;
+            /** Completed */
+            completed: components["schemas"]["ReportLesson"][];
+            /** In Progress */
+            in_progress: components["schemas"]["ReportLesson"][];
+            /** Module Time */
+            module_time: components["schemas"]["ReportModuleTime"][];
+            /** Stuck */
+            stuck: components["schemas"]["ReportLesson"][];
+            /** Next Lessons */
+            next_lessons: components["schemas"]["ReportLesson"][];
+            /** Notes */
+            notes: components["schemas"]["ReportNote"][];
+        };
+        /**
+         * QuizRun
+         * @description The stored result of one quiz attempt.
+         */
+        robotics_curriculum__api__schemas__QuizRun: {
+            /** Lesson Id */
+            lesson_id: string;
+            /** Correct */
+            correct: number;
+            /** Total */
+            total: number;
+            /** Percent */
+            percent: number;
+            /** Seconds */
+            seconds: number;
+            /** Answers */
+            answers: components["schemas"]["QuizAnswerResult"][];
+            /**
+             * New Card Ids
+             * @description Flashcards this attempt created.
+             */
+            new_card_ids: string[];
+        };
+        /**
+         * QuizRun
+         * @description A completed ``rc quiz`` session: score and timing (AC-4.2).
+         */
+        robotics_curriculum__progress__models__QuizRun: {
+            /** Id */
+            id?: number | null;
+            /**
+             * User Id
+             * @default 1
+             */
+            user_id: number;
+            /** Lesson Id */
+            lesson_id: string;
+            /** Activity Id */
+            activity_id?: string | null;
+            /**
+             * Started At
+             * Format: date-time
+             */
+            started_at: string;
+            /**
+             * Finished At
+             * Format: date-time
+             */
+            finished_at: string;
+            /** Correct */
+            correct: number;
+            /** Total */
+            total: number;
+        };
+        /** FieldError */
+        FieldError: {
+            /**
+             * Loc
+             * @description Where the bad value is, e.g. ['body', 'minutes'].
+             */
+            loc: (string | number)[];
+            /** Msg */
+            msg: string;
+            /** Type */
+            type: string;
+        };
+        /**
+         * Problem
+         * @description RFC 9457 problem details. ``type`` is ``about:blank`` and ``title`` the HTTP phrase.
+         */
         Problem: {
             /**
-             * Format: uri
+             * Type
              * @default about:blank
              */
             type: string;
+            /** Title */
             title: string;
+            /** Status */
             status: number;
-            detail?: string;
-            instance?: string;
-            request_id?: string;
-            /** @description 422 검증 오류 목록 */
-            errors?: {
-                loc?: (string | number)[];
-                msg?: string;
-                type?: string;
-            }[];
-        };
-        Readiness: {
-            /** @enum {string} */
-            status?: "ready" | "not_ready";
-            checks?: {
-                [key: string]: {
-                    ok?: boolean;
-                    detail?: string;
-                };
-            };
-        };
-        /** @enum {string} */
-        Role: "learner" | "author" | "admin";
-        /** @enum {string} */
-        UserStatus: "active" | "disabled" | "pending_deletion" | "deleted";
-        /** @enum {string} */
-        Level: "기초" | "중급" | "고급";
-        /** @enum {string} */
-        LessonStatus: "not_started" | "in_progress" | "done";
-        /** @enum {string} */
-        LockState: "done" | "in_progress" | "available" | "locked";
-        /** @enum {string} */
-        ResourceKind: "book" | "course" | "video" | "article" | "other";
-        /** @enum {string} */
-        ActivityKind: "reading" | "quiz" | "exercise";
-        /** @enum {string} */
-        Rating: "again" | "hard" | "good" | "easy";
-        SignupRequest: {
-            /** Format: email */
-            email: string;
-            password: string;
-            display_name: string;
             /**
-             * @default ko
-             * @enum {string}
+             * Detail
+             * @default null
              */
-            locale: "ko" | "en";
-        };
-        LoginRequest: {
-            /** Format: email */
-            email: string;
-            password: string;
-            /** @default false */
-            remember: boolean;
-        };
-        User: {
-            id: number;
-            /** Format: email */
-            email: string;
-            email_verified?: boolean;
-            display_name: string;
-            role: components["schemas"]["Role"];
-            status: components["schemas"]["UserStatus"];
-            locale?: string;
-            timezone?: string;
-            /** Format: date-time */
-            created_at: string;
-        };
-        UserUpdate: {
-            display_name?: string;
-            /** @enum {string} */
-            locale?: "ko" | "en";
-            timezone?: string;
-        };
-        AdminUser: components["schemas"]["User"] & {
-            /** Format: date-time */
-            last_login_at?: string;
-            identities?: components["schemas"]["Identity"][];
-            /** @description 개인 상세 없이 집계만 */
-            aggregate?: {
-                lessons_done?: number;
-                minutes_total?: number;
-            };
-        };
-        Identity: {
-            id?: number;
-            provider?: string;
-            email?: string;
-            /** Format: date-time */
-            linked_at?: string;
-        };
-        AuthSession: {
-            id?: string;
-            /** Format: date-time */
-            created_at?: string;
-            /** Format: date-time */
-            last_seen_at?: string;
-            ip?: string;
-            user_agent?: string;
-            current?: boolean;
-        };
-        ApiToken: {
-            id?: number;
-            name?: string;
-            scopes?: string[];
-            /** Format: date-time */
-            expires_at?: string;
-            /** Format: date-time */
-            last_used_at?: string;
-            /** Format: date-time */
-            created_at?: string;
-        };
-        CourseSummary: {
-            id?: string;
-            title?: string;
-            summary?: string;
-            tags?: string[];
-            module_count?: number;
-            lesson_count?: number;
-        };
-        Course: components["schemas"]["CourseSummary"] & {
-            stages?: {
-                level?: components["schemas"]["Level"];
-                modules?: components["schemas"]["ModuleSummary"][];
-            }[];
-        };
-        ModuleSummary: {
-            id?: string;
-            title?: string;
-            summary?: string;
-            level?: components["schemas"]["Level"];
-            lesson_count?: number;
-            estimated_minutes?: number;
-        };
-        Module: components["schemas"]["ModuleSummary"] & {
-            lessons?: components["schemas"]["LessonSummary"][];
-        };
-        LessonSummary: {
-            id?: string;
-            title?: string;
-            summary?: string;
-            module_id?: string;
-            difficulty?: number;
-            estimated_minutes?: number;
-            prerequisites?: string[];
-            tags?: string[];
-        };
-        Activity: {
-            id?: string;
-            kind?: components["schemas"]["ActivityKind"];
-            title?: string;
-            estimated_minutes?: number;
-        };
-        ResourceRef: {
-            title: string;
-            /** Format: uri */
-            url?: string;
-            kind?: components["schemas"]["ResourceKind"];
-            note?: string;
-            lesson_ids?: string[];
-        };
-        Lesson: components["schemas"]["LessonSummary"] & {
-            objectives?: string[];
-            activities?: components["schemas"]["Activity"][];
-            resources?: components["schemas"]["ResourceRef"][];
-            /** @description 본문 '## 이 단계 공부법' 절의 Markdown 원문 (렌더링은 클라이언트) */
-            study_method?: string;
-            /** @description 본문 전체 Markdown (KaTeX 수식 포함; 렌더링은 클라이언트) */
-            body?: string;
-            /** @constant */
-            content_format?: "markdown";
-            prev_lesson_id?: string;
-            next_lesson_id?: string;
-        };
-        QuizPublic: {
-            activity_id?: string;
-            questions?: {
-                id?: string;
-                /** @enum {string} */
-                type?: "single" | "multiple" | "truefalse" | "short";
-                prompt?: string;
-                choices?: string[];
-                tags?: string[];
-            }[];
-        };
-        Roadmap: {
-            stages?: {
-                level?: components["schemas"]["Level"];
-                progress?: number;
-                modules?: {
-                    id?: string;
-                    title?: string;
-                    progress?: number;
-                    state?: components["schemas"]["LockState"];
-                    lessons?: {
-                        id?: string;
-                        title?: string;
-                        state?: components["schemas"]["LockState"];
-                    }[];
-                }[];
-            }[];
-        };
-        SearchHit: {
-            /** @enum {string} */
-            kind?: "lesson" | "resource";
-            id?: string;
-            title?: string;
-            snippet?: string;
-        };
-        LessonProgress: {
-            lesson_id?: string;
-            status?: components["schemas"]["LessonStatus"];
-            /** Format: date-time */
-            started_at?: string;
-            /** Format: date-time */
-            completed_at?: string;
-            total_seconds?: number;
-            understanding?: number;
-            note?: string;
-            activities?: {
-                activity_id?: string;
-                status?: components["schemas"]["LessonStatus"];
-            }[];
-        };
-        /** @description API 응답용 학습 세션. user_id 는 인증 컨텍스트에서 정해지므로 노출하지 않고, 경과 시간을 seconds 로 계산해 준다. */
-        StudySession: {
-            id?: number;
-            lesson_id?: string;
-            /** Format: date-time */
-            started_at?: string;
-            /** Format: date-time */
-            ended_at?: string;
-            note?: string;
-            /** @enum {string} */
-            source?: "timer" | "manual";
-            seconds?: number;
-        };
-        StudySessionPage: {
-            items?: components["schemas"]["StudySession"][];
-            next_cursor?: string;
-        };
-        /** @description 코어 progress 모델 그대로의 세션 (내보내기 전용). user_id 포함, seconds 없음. */
-        Session: {
-            id?: number;
-            user_id?: number;
-            lesson_id?: string;
-            /** Format: date-time */
-            started_at?: string;
-            /** Format: date-time */
-            ended_at?: string;
-            note?: string;
-            /** @enum {string} */
-            source?: "timer" | "manual";
-        };
-        /** @description 필드는 단계적으로 채워진다(가산적, 기존 필드 변경 없음). P2-1 = open_session, lessons. P2-1 후속(P2-2와 함께) = current, stages, week, streak_days, recent. P1-2 머지 후 = due_cards. */
-        Status: {
-            lessons?: components["schemas"]["LessonState"][];
-            current?: {
-                level?: components["schemas"]["Level"];
-                module_id?: string;
-                module_title?: string;
-                lessons_done?: number;
-                lessons_total?: number;
-                next_lesson_id?: string;
-                next_lesson_title?: string;
-            };
-            stages?: {
-                level?: components["schemas"]["Level"];
-                progress?: number;
-                modules?: {
-                    id?: string;
-                    title?: string;
-                    progress?: number;
-                    state?: components["schemas"]["LockState"];
-                }[];
-            }[];
-            week?: {
-                minutes?: number;
-                goal_minutes?: number;
-                sessions?: number;
-            };
-            streak_days?: number;
-            due_cards?: number;
-            open_session?: components["schemas"]["StudySession"];
-            recent?: {
-                /** Format: date-time */
-                at?: string;
-                kind?: string;
-                text?: string;
-            }[];
-        };
-        LessonState: {
-            lesson_id?: string;
-            status?: components["schemas"]["LessonStatus"];
-            state?: components["schemas"]["LockState"];
-            total_seconds?: number;
-        };
-        NextLesson: {
-            lesson?: components["schemas"]["LessonSummary"];
-            reason?: string;
-            remaining_activities?: string[];
-            study_method_first_line?: string;
-        };
-        DoneResult: {
-            progress?: components["schemas"]["LessonProgress"];
-            unlocked_lesson_ids?: string[];
-            /** @description P1-2(카드) 이후 추가 */
-            cards_created?: number;
-        };
-        QuizRun: {
-            id?: number;
-            lesson_id?: string;
-            activity_id?: string;
-            /** Format: date-time */
-            started_at?: string;
-            /** Format: date-time */
-            finished_at?: string;
-            correct?: number;
-            total?: number;
-            seconds?: number;
-            question_ids?: string[];
-        };
-        QuizAnswerResult: {
-            question_id?: string;
-            correct?: boolean;
-            /** @description 문항 type 에 맞는 값 */
-            correct_answer?: unknown;
-            explanation?: string;
-            card_created?: boolean;
-        };
-        Card: {
-            id?: string;
-            lesson_id?: string;
-            front?: string;
-            back?: string;
-            /** @enum {string} */
-            source?: "quiz" | "concept";
-            suspended?: boolean;
-            state?: components["schemas"]["CardState"];
-        };
-        CardState: {
-            card_id?: string;
-            repetitions?: number;
-            interval_days?: number;
-            ease?: number;
-            /** Format: date-time */
-            due?: string;
-        };
-        CardPage: {
-            items?: components["schemas"]["Card"][];
-            next_cursor?: string;
-        };
-        Report: {
-            /** @enum {string} */
-            kind?: "weekly" | "module";
-            period?: string;
-            /** Format: date-time */
-            generated_at?: string;
-            markdown?: string;
-            summary?: components["schemas"]["WeeklySummary"] | components["schemas"]["ModuleReportSummary"];
-        };
-        /** @description report/weekly.py 의 주간 요약 (minutes, sessions, lessons_done, quiz_accuracy, reviews, streak_days …) */
-        WeeklySummary: {
+            detail: string | null;
+            /**
+             * Instance
+             * @description The request path.
+             * @default null
+             */
+            instance: string | null;
+            /**
+             * Request Id
+             * @description Same as the X-Request-ID header.
+             * @default null
+             */
+            request_id: string | null;
+            /**
+             * Errors
+             * @description Only on 422.
+             * @default null
+             */
+            errors: components["schemas"]["FieldError"][] | null;
+        } & {
             [key: string]: unknown;
-        };
-        /** @description report/module.py 의 모듈 요약 (lessons, understanding_distribution …) */
-        ModuleReportSummary: {
-            [key: string]: unknown;
-        };
-        /** @description rc progress export 와 동일 (progress/models.py ProgressExport) */
-        ProgressExport: {
-            schema_version: number;
-            /** Format: date-time */
-            exported_at: string;
-            lesson_progress: components["schemas"]["LessonProgress"][];
-            sessions: components["schemas"]["Session"][];
-            activity_progress?: Record<string, never>[];
-            quiz_runs?: components["schemas"]["QuizRun"][];
-            cards?: components["schemas"]["Card"][];
-            reviews?: Record<string, never>[];
-        };
-        UserPage: {
-            items?: components["schemas"]["AdminUser"][];
-            next_cursor?: string;
-            total?: number;
-        };
-        AuditEntry: {
-            id?: number;
-            /** Format: date-time */
-            at?: string;
-            actor_user_id?: number;
-            actor_ip?: string;
-            action?: string;
-            target_type?: string;
-            target_id?: string;
-            detail?: {
-                [key: string]: unknown;
-            };
-            request_id?: string;
-        };
-        AuditPage: {
-            items?: components["schemas"]["AuditEntry"][];
-            next_cursor?: string;
-        };
-        ContentStatus: {
-            course_count?: number;
-            module_count?: number;
-            lesson_count?: number;
-            content_sha?: string;
-            /** Format: date-time */
-            validated_at?: string;
-            errors?: string[];
         };
     };
     responses: {
@@ -2680,4 +2266,2786 @@ export interface components {
     pathItems: never;
 }
 export type $defs = Record<string, never>;
-export type operations = Record<string, never>;
+export interface operations {
+    healthz_healthz_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Health"];
+                };
+            };
+        };
+    };
+    readyz_readyz_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Readiness"];
+                };
+            };
+            /** @description Not ready */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Readiness"];
+                };
+            };
+        };
+    };
+    version_version_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Version"];
+                };
+            };
+        };
+    };
+    metrics_metrics_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain; version=1.0.0; charset=utf-8": string;
+                };
+            };
+        };
+    };
+    list_courses_api_v1_courses_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CourseSummary"][];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    get_course_api_v1_courses__course_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                course_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Course"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    get_module_api_v1_modules__module_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                module_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Module"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    get_lesson_api_v1_lessons__lesson_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lesson_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Lesson"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    list_resources_api_v1_resources_get: {
+        parameters: {
+            query?: {
+                /** @description Only this module. */
+                module_id?: string | null;
+                /** @description Only this lesson. */
+                lesson_id?: string | null;
+                /** @description Only this kind. */
+                kind?: components["schemas"]["ResourceKind"] | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResourceRef"][];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    get_status_api_v1_progress_status_get: {
+        parameters: {
+            query?: {
+                /** @description Only this course id. */
+                course?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Status"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    get_next_api_v1_progress_next_get: {
+        parameters: {
+            query?: {
+                /** @description Only this course id. */
+                course?: string | null;
+                /** @description How many to return. */
+                n?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NextLesson"][];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    list_lesson_progress_api_v1_progress_lessons_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LessonProgress"][];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    get_lesson_progress_api_v1_progress_lessons__lesson_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lesson_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LessonProgress"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    start_api_v1_progress_start_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StartRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StudySession"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    stop_api_v1_progress_stop_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["StopRequest"] | null;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StudySession"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    log_api_v1_progress_log_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LogRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StudySession"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    done_api_v1_progress_done_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DoneRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DoneResult"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    get_lesson_quiz_api_v1_lessons__lesson_id__quiz_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lesson_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QuizPublic"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    submit_run_api_v1_quiz_runs_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["QuizSubmission"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["robotics_curriculum__api__schemas__QuizRun"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    get_due_api_v1_review_due_get: {
+        parameters: {
+            query?: {
+                /** @description Only this lesson. */
+                lesson_id?: string | null;
+                /** @description At most this many cards. */
+                limit?: number | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewCard"][];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    rate_api_v1_review__card_id__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                card_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewResult"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    weekly_api_v1_reports_weekly_get: {
+        parameters: {
+            query?: {
+                /** @description ISO week YYYY-Www [default: this week]. */
+                week?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Report"];
+                    "text/markdown": string;
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    module_api_v1_reports_modules__module_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                module_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Report"];
+                    "text/markdown": string;
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    signup_api_v1_auth_signup_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SignupRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["User"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    login_api_v1_auth_login_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoginRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoginResult"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    logout_api_v1_auth_logout_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    verify_email_api_v1_auth_verify_email_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TokenRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    forgot_password_api_v1_auth_password_forgot_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ForgotRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    reset_password_api_v1_auth_password_reset_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResetRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    oidc_start_api_v1_auth_oidc__provider__start_get: {
+        parameters: {
+            query?: {
+                /** @description App path to land on afterwards. */
+                return_to?: string | null;
+            };
+            header?: never;
+            path: {
+                provider: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Redirect to the provider's login page */
+            302: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Bad Gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    oidc_callback_api_v1_auth_oidc__provider__callback_get: {
+        parameters: {
+            query?: {
+                code?: string | null;
+                state?: string | null;
+                error?: string | null;
+            };
+            header?: never;
+            path: {
+                provider: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Signed in; redirect into the app */
+            302: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    get_me_api_v1_me_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["User"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    delete_me_api_v1_me_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["DeleteAccount"] | null;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    update_me_api_v1_me_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["User"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    change_password_api_v1_me_password_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PasswordChange"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    list_sessions_api_v1_me_sessions_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthSession"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    revoke_session_api_v1_me_sessions__session_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                session_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    list_tokens_api_v1_me_tokens_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiToken"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    create_token_api_v1_me_tokens_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ApiTokenCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiTokenCreated"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    revoke_token_api_v1_me_tokens__token_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    export_api_v1_me_export_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProgressExport"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    list_identities_api_v1_me_identities_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Identity"][];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    unlink_identity_api_v1_me_identities__identity_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                identity_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    list_users_api_v1_admin_users_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserPage"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    get_user_api_v1_admin_users__user_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminUser"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    update_user_api_v1_admin_users__user_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdminUserUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminUser"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    revoke_user_sessions_api_v1_admin_users__user_id__sessions_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    list_audit_api_v1_admin_audit_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                cursor?: string | null;
+                actor_user_id?: number | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuditPage"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+}

@@ -59,6 +59,14 @@ const namespaces = new Set(
 const messageKeys = new Set(
   [...allSource.matchAll(/\bt[A-Za-z]*\(\s*'([\w.]+)'/g)].map((match) => match[1] ?? ''),
 )
+/** Keys called with an argument object: `t('key', { … })`. */
+const keysCalledWithArgs = new Set(
+  [...allSource.matchAll(/\bt[A-Za-z]*\(\s*'([\w.]+)'\s*,/g)].map((match) => match[1] ?? ''),
+)
+/** Keys called with no second argument anywhere: `t('key')`. */
+const keysCalledBare = new Set(
+  [...allSource.matchAll(/\bt[A-Za-z]*\(\s*'([\w.]+)'\s*\)/g)].map((match) => match[1] ?? ''),
+)
 
 describe('message catalogues', () => {
   it('ships one catalogue per declared locale', () => {
@@ -97,6 +105,24 @@ describe('message catalogues', () => {
       return true
     })
     expect(unused).toEqual([])
+  })
+
+  it('passes an argument for every message that takes a placeholder', () => {
+    // next-intl raises FORMATTING_ERROR at render time when a placeholder has no
+    // value, and the page still renders, so neither tsc nor an E2E run catches it.
+    const missingArgs: string[] = []
+    const needlessPlaceholder: string[] = []
+    for (const [path, names] of placeholders(ko)) {
+      const leaf = path.slice(path.lastIndexOf('.') + 1)
+      const called = messageKeys.has(path) || messageKeys.has(leaf)
+      if (!called) continue
+      const withArgs = keysCalledWithArgs.has(path) || keysCalledWithArgs.has(leaf)
+      const bare = keysCalledBare.has(path) || keysCalledBare.has(leaf)
+      if (names.length > 0 && bare && !withArgs) missingArgs.push(`${path} needs {${names}}`)
+      if (names.length === 0 && withArgs && !bare) needlessPlaceholder.push(path)
+    }
+    expect(missingArgs).toEqual([])
+    expect(needlessPlaceholder).toEqual([])
   })
 
   it('never leaves a message empty', () => {

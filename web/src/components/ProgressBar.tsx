@@ -9,7 +9,7 @@ import { cx } from '@/lib/cx'
  */
 export interface ProgressBarProps {
   /** 0–1. */
-  value: number | undefined
+  value: number | null | undefined
   /** Accessible name — required, since the bar carries meaning. */
   label: string
   /** Show the percentage as text beside the bar. */

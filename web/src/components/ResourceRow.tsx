@@ -1,4 +1,4 @@
-import type { ResourceKind } from '@/lib/api/types'
+import type { Maybe, ResourceKind } from '@/lib/api/types'
 import { hostnameOf } from '@/lib/format'
 
 import { Chip, type ChipTone } from './Chip'
@@ -14,11 +14,11 @@ const KIND_TONE: Record<ResourceKind, ChipTone> = {
 /** Figma `10-70`. A resource in the lesson sidebar or the resources table. */
 export interface ResourceRowProps {
   title: string
-  url?: string
-  kind?: ResourceKind
-  kindLabel?: string
+  url?: Maybe<string>
+  kind?: Maybe<ResourceKind>
+  kindLabel?: Maybe<string>
   /** The "범위 메모" — which part of the book or course applies. */
-  note?: string
+  note?: Maybe<string>
   externalLabel: string
 }
 

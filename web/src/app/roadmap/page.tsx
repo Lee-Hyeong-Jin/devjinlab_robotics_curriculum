@@ -9,8 +9,9 @@ import { PageHeader } from '@/components/PageHeader'
 import { ProgressBar } from '@/components/ProgressBar'
 import { StatusDot } from '@/components/StatusDot'
 import { getRoadmap } from '@/lib/api/queries'
-import type { LockState } from '@/lib/api/types'
 import { formatPercent } from '@/lib/format'
+import type { LockState } from '@/lib/progress'
+import { doneCount } from '@/lib/progress'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('roadmap')
@@ -25,15 +26,14 @@ interface TableRow {
   progress: number
 }
 
-/** Roadmap — `GET /roadmap`: stage → module cards plus a text alternative table (AC-A11Y.3). */
+/** Roadmap — stage → module cards plus a text alternative table (AC-WEB.3, AC-A11Y.3). */
 export default async function RoadmapPage() {
   const [t, tState, locale] = await Promise.all([
     getTranslations('roadmap'),
     getTranslations('state'),
     getLocale(),
   ])
-  const roadmap = await getRoadmap()
-  const stages = roadmap?.stages ?? []
+  const stages = await getRoadmap()
 
   if (stages.length === 0) {
     return (
@@ -45,12 +45,12 @@ export default async function RoadmapPage() {
   }
 
   const rows: TableRow[] = stages.flatMap((stage) =>
-    (stage.modules ?? []).map((module) => ({
-      moduleId: module.id ?? '',
-      title: module.title ?? module.id ?? '',
-      level: stage.level ?? '',
-      state: module.state ?? 'available',
-      progress: module.progress ?? 0,
+    stage.modules.map((module) => ({
+      moduleId: module.id,
+      title: module.title,
+      level: stage.level,
+      state: module.state,
+      progress: module.progress,
     })),
   )
 
@@ -75,39 +75,38 @@ export default async function RoadmapPage() {
 
       <div className="flex flex-col gap-8">
         {stages.map((stage, index) => (
-          <section key={stage.level ?? index} aria-labelledby={`stage-${index}`}>
+          <section key={stage.level || index} aria-labelledby={`stage-${index}`}>
             <div className="mb-3 flex flex-wrap items-center gap-4">
               <h2 id={`stage-${index}`} className="text-primary text-lg font-bold">
-                {t('stage', { level: stage.level ?? '' })}
+                {t('stage', { level: stage.level })}
               </h2>
+              <span className="text-muted text-sm">
+                {t('stageLessons', { done: stage.lessonsDone, total: stage.lessonsTotal })}
+              </span>
               <ProgressBar
                 className="max-w-xs flex-1"
                 value={stage.progress}
-                label={`${stage.level ?? ''} ${t('colProgress')}`}
+                label={`${stage.level} ${t('colProgress')}`}
                 showValue
               />
             </div>
             <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {(stage.modules ?? []).map((module, moduleIndex) => {
-                const lessons = module.lessons ?? []
-                const done = lessons.filter((lesson) => lesson.state === 'done').length
-                return (
-                  <li key={module.id ?? moduleIndex}>
-                    <ModuleCard
-                      id={module.id ?? ''}
-                      title={module.title ?? module.id ?? ''}
-                      state={module.state ?? 'available'}
-                      progress={module.progress}
-                      lessonsTotal={lessons.length}
-                      lessonsDone={done}
-                      level={stage.level}
-                      stateLabel={tState(module.state ?? 'available')}
-                      lessonsLabel={t('lessonCount', { count: lessons.length })}
-                      progressLabel={t('colProgress')}
-                    />
-                  </li>
-                )
-              })}
+              {stage.modules.map((module) => (
+                <li key={module.id}>
+                  <ModuleCard
+                    id={module.id}
+                    title={module.title}
+                    state={module.state}
+                    progress={module.progress}
+                    lessonsTotal={module.lessons.length}
+                    lessonsDone={doneCount(module.lessons.map((lesson) => lesson.state))}
+                    level={stage.level}
+                    stateLabel={tState(module.state)}
+                    lessonsLabel={t('lessonCount', { count: module.lessons.length })}
+                    progressLabel={t('colProgress')}
+                  />
+                </li>
+              ))}
             </ul>
           </section>
         ))}

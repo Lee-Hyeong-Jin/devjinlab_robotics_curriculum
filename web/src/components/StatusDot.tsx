@@ -1,4 +1,4 @@
-import type { LockState } from '@/lib/api/types'
+import type { LockState } from '@/lib/progress'
 import { cx } from '@/lib/cx'
 
 /** Figma `10-2`/`10-3`/`10-4`/`10-5`. */

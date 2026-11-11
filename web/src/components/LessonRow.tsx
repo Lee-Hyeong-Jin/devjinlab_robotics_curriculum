@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import type { LockState } from '@/lib/api/types'
+import type { LockState } from '@/lib/progress'
 import { cx } from '@/lib/cx'
 
 import { StatusDot } from './StatusDot'
@@ -13,7 +13,7 @@ export interface LessonRowProps {
   state: LockState
   stateLabel: string
   /** e.g. "예상 40분". */
-  meta?: string
+  meta?: string | null
   /** Mark the row the reader is currently on (lesson sidebar). */
   current?: boolean
 }
@@ -42,7 +42,7 @@ export function LessonRow({
   const base = 'flex items-center gap-3 rounded-lg px-3 py-2.5 text-left'
   if (locked) {
     return (
-      <li className={cx(base, 'opacity-60')} data-locked="true">
+      <li className={cx(base, 'bg-subtle')} data-locked="true">
         {inner}
       </li>
     )

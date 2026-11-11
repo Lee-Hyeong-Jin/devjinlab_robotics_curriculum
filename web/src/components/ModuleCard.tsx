@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import type { LockState } from '@/lib/api/types'
+import type { LockState } from '@/lib/progress'
 import { formatPercent } from '@/lib/format'
 
 import { Card } from './Card'
@@ -14,11 +14,11 @@ export interface ModuleCardProps {
   title: string
   state: LockState
   /** 0–1. */
-  progress: number | undefined
+  progress: number | null | undefined
   lessonsTotal: number
   lessonsDone: number
   /** Stage chip, e.g. "기초". */
-  level?: string
+  level?: string | null
   stateLabel: string
   lessonsLabel: string
   progressLabel: string
@@ -59,11 +59,9 @@ export function ModuleCard({
   )
 
   if (locked) {
-    return (
-      <Card className="opacity-70" aria-disabled="true">
-        {body}
-      </Card>
-    )
+    // No opacity dimming: it would take the text under the 4.5:1 contrast floor.
+    // The 🔒 label and the subtle surface carry the state instead.
+    return <Card className="bg-subtle border-state-locked">{body}</Card>
   }
   return (
     <Card className="hover:border-border-accent focus-within:border-border-accent transition-colors">

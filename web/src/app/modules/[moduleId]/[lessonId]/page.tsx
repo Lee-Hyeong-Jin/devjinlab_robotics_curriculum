@@ -11,7 +11,7 @@ import { PageHeader } from '@/components/PageHeader'
 import { ResourceRow } from '@/components/ResourceRow'
 import { isNotFound } from '@/lib/api/errors'
 import { getLesson, getLessonProgress, getModule } from '@/lib/api/queries'
-import type { ActivityKind, Lesson, Module, ResourceKind } from '@/lib/api/types'
+import type { Lesson, Module } from '@/lib/api/types'
 import { formatMinutes, formatSeconds } from '@/lib/format'
 import { renderMarkdown } from '@/lib/markdown/render'
 import { lockStateFromStatus } from '@/lib/progress'
@@ -63,7 +63,7 @@ export default async function LessonPage({ params }: Params) {
   ])
 
   const body = renderMarkdown(lesson.body)
-  const studyMethod = renderMarkdown(lesson.study_method)
+  const studyMethod = renderMarkdown(lesson.study_method ?? undefined)
   const siblings = mod?.lessons ?? []
   const sectionHeadings = body.headings.filter((heading) => heading.depth === 2)
 
@@ -171,10 +171,8 @@ export default async function LessonPage({ params }: Params) {
                 </div>
                 {progress.understanding ? (
                   <div className="flex justify-between gap-2">
-                    <dt className="text-muted">
-                      {t('understanding', { score: progress.understanding })}
-                    </dt>
-                    <dd className="text-primary tabular-nums">{progress.understanding}</dd>
+                    <dt className="text-muted">{t('understanding')}</dt>
+                    <dd className="text-primary tabular-nums">{`${progress.understanding}/5`}</dd>
                   </div>
                 ) : null}
                 {progress.note ? (
@@ -215,7 +213,7 @@ export default async function LessonPage({ params }: Params) {
               <ul className="flex flex-col gap-2">
                 {lesson.activities.map((activity, index) => (
                   <li key={activity.id ?? index} className="flex flex-wrap items-center gap-2">
-                    {activity.kind ? <Chip>{tActivity(activity.kind as ActivityKind)}</Chip> : null}
+                    {activity.kind ? <Chip>{tActivity(activity.kind)}</Chip> : null}
                     <span className="text-primary min-w-0 flex-1 text-sm">{activity.title}</span>
                     {activity.estimated_minutes ? (
                       <span className="text-muted text-xs">
@@ -240,7 +238,7 @@ export default async function LessonPage({ params }: Params) {
                     title={resource.title}
                     url={resource.url}
                     kind={resource.kind}
-                    kindLabel={resource.kind ? tKind(resource.kind as ResourceKind) : undefined}
+                    kindLabel={resource.kind ? tKind(resource.kind) : undefined}
                     note={resource.note}
                     externalLabel={t('resources')}
                   />

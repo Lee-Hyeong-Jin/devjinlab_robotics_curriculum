@@ -11,9 +11,9 @@ import { ProgressBar } from '@/components/ProgressBar'
 import { ResourceRow } from '@/components/ResourceRow'
 import { getLessonProgressList, getModule, getResources } from '@/lib/api/queries'
 import { isNotFound } from '@/lib/api/errors'
-import type { LessonProgress, LockState, Module, ResourceKind } from '@/lib/api/types'
+import type { LessonProgress, Module } from '@/lib/api/types'
 import { formatMinutes, formatPercent } from '@/lib/format'
-import { doneCount, lockStateFromStatus, ratio } from '@/lib/progress'
+import { doneCount, lockStateFromStatus, ratio, type LockState } from '@/lib/progress'
 
 interface Params {
   params: Promise<{ moduleId: string }>
@@ -133,7 +133,7 @@ export default async function ModulePage({ params }: Params) {
                   title={resource.title}
                   url={resource.url}
                   kind={resource.kind}
-                  kindLabel={resource.kind ? tKind(resource.kind as ResourceKind) : undefined}
+                  kindLabel={resource.kind ? tKind(resource.kind) : undefined}
                   note={resource.note}
                   externalLabel={t('resources')}
                 />

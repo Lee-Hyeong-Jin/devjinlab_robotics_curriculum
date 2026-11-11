@@ -9,10 +9,9 @@ import { PageHeader } from '@/components/PageHeader'
 import { ProgressBar } from '@/components/ProgressBar'
 import { StageProgress } from '@/components/StageProgress'
 import { StatTile } from '@/components/StatTile'
-import { getRoadmap, getStatus } from '@/lib/api/queries'
-import type { LockState } from '@/lib/api/types'
-import { average, doneCount } from '@/lib/progress'
+import { getNextLessons, getRoadmap, getStatus } from '@/lib/api/queries'
 import { formatDateTime, formatMinutes, formatPercent } from '@/lib/format'
+import { courseProgress, lessonLockState, type LockState } from '@/lib/progress'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('dashboard')
@@ -20,12 +19,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * Dashboard — `GET /progress/status` (frontend.md §2).
+ * Dashboard — `GET /progress/status` plus `GET /progress/next` (frontend.md §2).
  *
- * `Status` is filled in additively by the backend: P2-1 ships `open_session` and
- * `lessons`; `current`, `stages`, `week`, `streak_days` and `recent` arrive with
- * P2-2; `due_cards` after P1-2. Fields that are not there yet render as a
- * skeleton rather than blocking the screen.
+ * Covers AC-WEB.3: course, stage and module progress, weekly study time, the
+ * study streak, cards due today and the next-lesson recommendation.
  */
 export default async function DashboardPage() {
   const [t, tState, locale] = await Promise.all([
@@ -33,29 +30,28 @@ export default async function DashboardPage() {
     getTranslations('state'),
     getLocale(),
   ])
-  const [status, roadmap] = await Promise.all([getStatus(), getRoadmap()])
+  const [status, stages, next] = await Promise.all([getStatus(), getRoadmap(), getNextLessons()])
 
-  if (!status && !roadmap) {
+  if (!status && stages.length === 0) {
     return (
       <>
         <PageHeader title={t('title')} subtitle={t('subtitle')} />
-        <EmptyState title={t('title')} body={t('pending')} />
+        <EmptyState title={t('title')} body={t('unavailable')} />
       </>
     )
   }
 
-  const stateLabel = (state: LockState) => tState(state)
-  // `stages` comes from the status payload once P2-2 lands; until then the
-  // roadmap (which this app can compose from content + progress) stands in.
-  const stages = status?.stages ?? roadmap?.stages ?? []
   const lessons = status?.lessons ?? []
-  const courseProgress =
-    lessons.length > 0
-      ? doneCount(lessons.map((lesson) => lesson.state ?? 'available')) / lessons.length
-      : average(stages.map((stage) => stage.progress ?? 0))
-  const current = status?.current
+  const progress = courseProgress(lessons)
   const week = status?.week
   const openSession = status?.open_session
+  const recommended = next?.[0]
+  const currentStage = stages.find((stage) =>
+    stage.modules.some((module) => module.state === 'in_progress'),
+  )
+  const currentModule = currentStage?.modules.find((module) => module.state === 'in_progress')
+  const stateLabel = (state: LockState) => tState(state)
+  const lessonsLabel = (done: number, total: number) => t('moduleLessons', { done, total })
 
   return (
     <>
@@ -64,38 +60,27 @@ export default async function DashboardPage() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatTile
           label={t('courseProgress')}
-          value={formatPercent(courseProgress, locale)}
+          value={formatPercent(progress, locale)}
           hint={
             <ProgressBar
               className="mt-2"
-              value={courseProgress}
-              label={`${t('courseProgress')} ${formatPercent(courseProgress, locale)}`}
+              value={progress}
+              label={`${t('courseProgress')} ${formatPercent(progress, locale)}`}
             />
           }
         />
         <StatTile
           label={t('weeklyMinutes')}
           value={formatMinutes(week?.minutes, locale)}
-          hint={
-            week?.goal_minutes
-              ? t('weeklyGoal', { goal: formatMinutes(week.goal_minutes, locale) })
-              : undefined
-          }
-          pending={week === undefined}
+          hint={week ? t('weeklySessions', { count: week.sessions }) : undefined}
+          pending={!week}
           pendingLabel={t('pending')}
         />
-        <StatTile
-          label={t('streak')}
-          value={t('streakDays', { days: status?.streak_days ?? 0 })}
-          pending={status?.streak_days === undefined}
-          pendingLabel={t('pending')}
-        />
+        <StatTile label={t('streak')} value={t('streakDays', { days: status?.streak_days ?? 0 })} />
         <StatTile
           label={t('dueCards')}
           value={t('dueCardsValue', { count: status?.due_cards ?? 0 })}
           hint={t('dueCardsCli')}
-          pending={status?.due_cards === undefined}
-          pendingLabel={t('pending')}
         />
       </div>
 
@@ -105,38 +90,37 @@ export default async function DashboardPage() {
             <h2 id="current-heading" className="text-primary mb-3 font-semibold">
               {t('current')}
             </h2>
-            {current ? (
+            {currentModule ? (
               <div className="flex flex-col gap-3">
                 <div className="flex flex-wrap items-center gap-2">
-                  {current.level ? <Chip tone="accent">{current.level}</Chip> : null}
-                  <span className="text-primary font-medium">
-                    {current.module_title ?? current.module_id}
-                  </span>
+                  {currentStage ? <Chip tone="accent">{currentStage.level}</Chip> : null}
+                  <span className="text-primary font-medium">{currentModule.title}</span>
                 </div>
-                <p className="text-muted text-sm">
-                  {t('moduleLessons', {
-                    done: current.lessons_done ?? 0,
-                    total: current.lessons_total ?? 0,
-                  })}
-                </p>
-                {current.next_lesson_id ? (
-                  <div className="border-border-default mt-1 flex flex-wrap items-center gap-3 border-t pt-3">
-                    <span className="text-muted text-xs">{t('nextLesson')}</span>
-                    <span className="text-primary text-sm font-medium">
-                      {current.next_lesson_title ?? current.next_lesson_id}
-                    </span>
-                    <ButtonLink
-                      className="ml-auto"
-                      href={`/modules/${current.module_id ?? ''}/${current.next_lesson_id}`}
-                    >
-                      {t('openLesson')}
-                    </ButtonLink>
-                  </div>
-                ) : null}
+                <ProgressBar
+                  className="max-w-sm"
+                  value={currentModule.progress}
+                  label={`${currentModule.title} ${t('courseProgress')}`}
+                  showValue
+                />
               </div>
             ) : (
               <p className="text-muted text-sm">{t('noCurrent')}</p>
             )}
+
+            {recommended ? (
+              <div className="border-border-default mt-4 flex flex-wrap items-center gap-3 border-t pt-4">
+                <div className="min-w-0 flex-1">
+                  <p className="text-muted text-xs">{t('nextLesson')}</p>
+                  <p className="text-primary text-sm font-medium">{recommended.lesson.title}</p>
+                  <p className="text-muted text-xs">{recommended.reason}</p>
+                </div>
+                <ButtonLink
+                  href={`/modules/${recommended.lesson.module_id}/${recommended.lesson.id}`}
+                >
+                  {t('openLesson')}
+                </ButtonLink>
+              </div>
+            ) : null}
           </Card>
 
           {stages.length > 0 ? (
@@ -145,6 +129,7 @@ export default async function DashboardPage() {
               stages={stages}
               stateLabel={stateLabel}
               progressLabel={t('courseProgress')}
+              lessonsLabel={lessonsLabel}
             />
           ) : null}
         </div>
@@ -166,18 +151,32 @@ export default async function DashboardPage() {
             <h2 id="recent-heading" className="text-primary mb-3 font-semibold">
               {t('recent')}
             </h2>
-            {status?.recent && status.recent.length > 0 ? (
-              <ul className="flex flex-col gap-3">
-                {status.recent.map((entry, index) => (
-                  <li key={`${entry.at ?? index}`} className="flex flex-col">
-                    <span className="text-primary text-sm">{entry.text}</span>
-                    <span className="text-muted text-xs">{formatDateTime(entry.at, locale)}</span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-muted text-sm">{t('noRecent')}</p>
-            )}
+            {(() => {
+              const recent = lessons
+                .filter((lesson) => lesson.completed_at || lesson.started_at)
+                .sort((a, b) =>
+                  (b.completed_at ?? b.started_at ?? '').localeCompare(
+                    a.completed_at ?? a.started_at ?? '',
+                  ),
+                )
+                .slice(0, 5)
+              if (recent.length === 0) {
+                return <p className="text-muted text-sm">{t('noRecent')}</p>
+              }
+              return (
+                <ul className="flex flex-col gap-3">
+                  {recent.map((entry) => (
+                    <li key={entry.lesson.id} className="flex flex-col">
+                      <span className="text-primary text-sm">{entry.lesson.title}</span>
+                      <span className="text-muted text-xs">
+                        {tState(lessonLockState(entry))} ·{' '}
+                        {formatDateTime(entry.completed_at ?? entry.started_at, locale)}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )
+            })()}
           </Card>
         </div>
       </div>
