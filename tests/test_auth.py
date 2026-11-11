@@ -26,7 +26,6 @@ from robotics_curriculum.auth.crypto import PasswordPolicyError, Passwords, chec
 from robotics_curriculum.auth.mailer import FakeMailer, Mail, SmtpConfig, SmtpMailer
 from robotics_curriculum.auth.service import AuthConfig, AuthService, Context
 from robotics_curriculum.auth.store import SqlAuthStore
-from robotics_curriculum.progress import SqliteProgressStore
 
 ROOT = Path(__file__).resolve().parents[1]
 CURRICULUM = ROOT / "tests" / "fixtures" / "curriculum"
@@ -54,13 +53,6 @@ def fast_argon2(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         crypto, "_HASHER", PasswordHasher(time_cost=1, memory_cost=8, parallelism=1)
     )
-
-
-def _delete_user(self: SqliteProgressStore, user_id: int) -> None:
-    """Stand-in for ProgressStore.delete_user (requested from the progress owners)."""
-    with self.transaction():
-        self._conn.execute("DELETE FROM sessions WHERE user_id = ?", (user_id,))
-        self._conn.execute("DELETE FROM lesson_progress WHERE user_id = ?", (user_id,))
 
 
 @pytest.fixture
@@ -682,10 +674,7 @@ def test_password_reset_disabled_without_mail(settings: Settings) -> None:
 # -- account deletion / audit retention (AC-AUTH.6) ---
 
 
-def test_delete_account_erases_learning_data(
-    app: FastAPI, settings: Settings, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    monkeypatch.setattr(SqliteProgressStore, "delete_user", _delete_user, raising=False)
+def test_delete_account_erases_learning_data(app: FastAPI, settings: Settings) -> None:
     user(app, ADMIN)  # keeps a second admin out of the way
     c = user(app, "learner@example.org")
     learner_id = c.get("/api/v1/me").json()["id"]
@@ -715,10 +704,6 @@ def test_delete_account_erases_learning_data(
 def test_delete_account_guards(app: FastAPI) -> None:
     admin = user(app, ADMIN)
     assert_problem(admin.request("DELETE", "/api/v1/me", json={"password": PASSWORD}), 409)
-    learner = user(app, "learner@example.org")
-    r = learner.request("DELETE", "/api/v1/me", json={"password": PASSWORD})
-    assert "cannot delete" in assert_problem(r, 503)["detail"]  # store lacks delete_user
-    assert learner.get("/api/v1/me").status_code == 200
 
 
 def test_audit_retention_anonymizes(app: FastAPI, clock: Clock) -> None:

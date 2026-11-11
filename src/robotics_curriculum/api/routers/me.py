@@ -106,16 +106,10 @@ def export(
     """The caller's progress and sessions: the JSON format of ``rc progress export``, so it
     loads into local mode with ``rc progress import``."""
     with progress.open() as service:
-        data = service.export()
-    user_id = principal.user.id
+        data = service.export(user_id=principal.user.id)
     if state.auth is not None:
         state.auth.record_export(principal.user, ctx)
-    return data.model_copy(
-        update={
-            "lesson_progress": [p for p in data.lesson_progress if p.user_id == user_id],
-            "sessions": [s for s in data.sessions if s.user_id == user_id],
-        }
-    )
+    return data
 
 
 @router.delete("", status_code=status.HTTP_204_NO_CONTENT, responses=problem_responses(409))

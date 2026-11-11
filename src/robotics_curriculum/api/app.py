@@ -29,7 +29,7 @@ from robotics_curriculum.api.problems import (
 from robotics_curriculum.api.routers import admin, auth, content, health, me, progress, reports
 from robotics_curriculum.api.settings import Settings
 from robotics_curriculum.auth.mailer import Mailer, SmtpConfig, SmtpMailer
-from robotics_curriculum.auth.service import AuthConfig, AuthError, AuthService, Unavailable
+from robotics_curriculum.auth.service import AuthConfig, AuthError, AuthService
 from robotics_curriculum.auth.store import SqlAuthStore
 from robotics_curriculum.progress import ProgressError, ProgressService
 
@@ -77,10 +77,7 @@ def build_auth(
     def erase_learning_data(user_id: int) -> None:
         store = open_progress_store(settings)
         try:
-            delete_user = getattr(store, "delete_user", None)
-            if delete_user is None:
-                raise Unavailable("this progress store cannot delete a user's data yet")
-            delete_user(user_id)
+            store.delete_user(user_id)
         finally:
             store.close()
 
