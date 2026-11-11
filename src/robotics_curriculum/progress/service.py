@@ -15,6 +15,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from robotics_curriculum.content import Course, Lesson, LoadError, Module, load_courses
+from robotics_curriculum.progress.factory import open_store
 from robotics_curriculum.progress.models import (
     DEFAULT_USER,
     LessonProgress,
@@ -22,7 +23,7 @@ from robotics_curriculum.progress.models import (
     ProgressExport,
     Session,
 )
-from robotics_curriculum.progress.store import SCHEMA_VERSION, ProgressStore, SqliteProgressStore
+from robotics_curriculum.progress.store import SCHEMA_VERSION, ProgressStore
 
 DATA_DIR_ENV = "RC_DATA_DIR"
 DATA_DIR_NAME = ".rc"
@@ -324,5 +325,5 @@ def open_service(
 ) -> ProgressService:
     """Build a service over the SQLite store in ``data_dir`` and the given curriculum."""
     courses = ProgressService.load_curriculum(curriculum_dir or default_curriculum_dir())
-    store = SqliteProgressStore.in_dir(data_dir or default_data_dir())
+    store = open_store(data_dir or default_data_dir())  # $RC_DATABASE_URL may pick PostgreSQL
     return ProgressService(store, courses, clock=clock)

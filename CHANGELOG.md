@@ -27,6 +27,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   modules, lessons, resources, progress (status, next, start, stop, log, done), weekly and
   module reports, and progress export; `/healthz`, `/readyz`, `/version`; RFC 9457
   problem+json errors, `X-Request-ID`, JSON logs, and an OpenAPI snapshot test.
+- PostgreSQL progress store for server mode (optional extra `postgres`: SQLAlchemy 2 Core +
+  psycopg 3) with Alembic migrations, backend selection via `RC_DATABASE_URL` (unset keeps the
+  local SQLite file), `rc progress transfer` to move local SQLite or JSON-export data into
+  PostgreSQL (merge without duplicates, `--user-id` to assign a server account), and a `db`
+  service (PostgreSQL 16) in the Compose file.
 - Engineering scaffolding: Apache-2.0 license for code, CC BY 4.0 for curriculum content,
   contribution guide, Code of Conduct, security policy, issue and PR templates, Dependabot,
   GitHub Actions CI and release workflows, strict mypy, coverage gate, pre-commit hooks,
@@ -52,8 +57,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.github/workflows/security.yml`: CodeQL (Python, security-and-quality) and pip-audit of the
   locked runtime dependencies on every PR, on pushes to `main`, and weekly. Any known
   vulnerability in a runtime dependency fails the job.
-- PostgreSQL progress store for server mode (optional extra `postgres`: SQLAlchemy 2 Core +
-  psycopg 3) with Alembic migrations, backend selection via `RC_DATABASE_URL` (unset keeps the
-  local SQLite file), `rc progress transfer` to move local SQLite or JSON-export data into
-  PostgreSQL (merge without duplicates, `--user-id` to assign a server account), and a `db`
-  service (PostgreSQL 16) in the Compose file.
