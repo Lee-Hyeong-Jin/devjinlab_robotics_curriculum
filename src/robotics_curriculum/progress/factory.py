@@ -18,7 +18,6 @@ from enum import StrEnum
 from pathlib import Path
 
 from robotics_curriculum.progress.models import ProgressExport
-from robotics_curriculum.progress.service import default_data_dir
 from robotics_curriculum.progress.store import ProgressStore, SqliteProgressStore
 
 DATABASE_URL_ENV = "RC_DATABASE_URL"
@@ -35,7 +34,13 @@ def open_store(data_dir: Path | None = None, url: str | None = None) -> Progress
     """Open the configured store. ``url`` overrides ``$RC_DATABASE_URL``."""
     url = url if url is not None else database_url()
     if not url:
-        return SqliteProgressStore.in_dir(data_dir or default_data_dir())
+        if data_dir is None:
+            # Imported here: service.open_service() calls this module, so a top-level import
+            # of service would be circular.
+            from robotics_curriculum.progress.service import default_data_dir
+
+            data_dir = default_data_dir()
+        return SqliteProgressStore.in_dir(data_dir)
     if url.startswith(_SQLITE_PREFIX):
         return SqliteProgressStore(url[len(_SQLITE_PREFIX) :])
     if url.startswith(("postgresql://", "postgres://", "postgresql+")):
