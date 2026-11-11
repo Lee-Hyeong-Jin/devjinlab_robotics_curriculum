@@ -23,11 +23,11 @@ class PasswordPolicyError(ValueError):
 class Passwords:
     """Argon2id hashing with an optional server-side pepper appended to the password."""
 
-    def __init__(self, pepper: str = "", hasher: PasswordHasher = _HASHER) -> None:
+    def __init__(self, pepper: str = "", hasher: PasswordHasher | None = None) -> None:
         self._pepper = pepper
-        self._hasher = hasher
+        self._hasher = hasher or _HASHER
         # Verified against when the account does not exist, so both paths cost the same.
-        self._dummy = hasher.hash(secrets.token_urlsafe(16))
+        self._dummy = self._hasher.hash(secrets.token_urlsafe(16))
 
     def hash(self, password: str) -> str:
         return self._hasher.hash(password + self._pepper)
