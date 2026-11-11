@@ -13,10 +13,13 @@ from robotics_curriculum.cli import app
 from robotics_curriculum.progress import (
     DB_FILENAME,
     SCHEMA_VERSION,
+    Card,
+    CardState,
     LessonProgress,
     LessonStatus,
     ProgressError,
     ProgressService,
+    Session,
     SqliteProgressStore,
     parse_duration,
 )
@@ -304,3 +307,31 @@ def test_export_can_be_limited_to_one_user(tmp_path: Path) -> None:
         only_two = service.export(user_id=2)
         assert [(p.user_id, p.lesson_id) for p in only_two.lesson_progress] == [(2, ROTATION)]
         assert service.export(user_id=3).lesson_progress == []
+
+
+def test_delete_user_removes_only_that_user(tmp_path: Path) -> None:
+    with SqliteProgressStore.in_dir(tmp_path) as store:
+        store.save_lesson(LessonProgress(user_id=1, lesson_id=VECTORS))
+        store.save_lesson(LessonProgress(user_id=2, lesson_id=ROTATION))
+        store.add_session(Session(user_id=2, lesson_id=ROTATION, started_at=T0, ended_at=T0))
+        store.save_card(
+            Card(
+                id="c1",
+                user_id=2,
+                lesson_id=ROTATION,
+                question_id="q1",
+                front="f",
+                back="b",
+                source="quiz",
+                created_at=T0,
+            )
+        )
+        store.save_card_state(CardState(card_id="c1", user_id=2, due=T0.date()))
+        assert store.delete_user(2) == (1, 1)
+        assert [p.user_id for p in store.list_lessons(None)] == [1]
+        assert store.list_sessions(None) == []
+        assert store.list_cards(None) == [] and store.list_card_states(None) == []
+        assert store.delete_user(99) == (0, 0)  # unknown user
+        service = ProgressService(store, ProgressService.load_curriculum(CURRICULUM))
+        assert service.delete_user_data() == (1, 0)  # defaults to its own user
+        assert store.is_empty()

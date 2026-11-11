@@ -242,6 +242,10 @@ class ProgressStore(Protocol):
 
     def list_activities(self, user_id: int | None = DEFAULT_USER) -> list[ActivityProgress]: ...
 
+    def delete_user(self, user_id: int) -> tuple[int, int]:
+        """Delete every row of one user; returns the (lesson rows, sessions) removed."""
+        ...
+
     def is_empty(self) -> bool: ...
 
     def clear(self) -> None: ...
@@ -701,6 +705,25 @@ class SqliteProgressStore:
         return [self._activity(row) for row in rows]
 
     # -- bulk ------------------------------------------------------------------
+
+    def delete_user(self, user_id: int) -> tuple[int, int]:
+        """Delete every row of ``user_id`` in one transaction (GDPR-style erasure).
+
+        Returns the number of ``lesson_progress`` rows and ``sessions`` removed. Rows of other
+        users are untouched; an unknown user yields ``(0, 0)``.
+        """
+        with self.transaction():
+            counts = tuple(
+                int(
+                    self._conn.execute(
+                        f"SELECT count(*) FROM {table} WHERE user_id = ?", (user_id,)
+                    ).fetchone()[0]
+                )
+                for table in ("lesson_progress", "sessions")
+            )
+            for table in TABLES:
+                self._conn.execute(f"DELETE FROM {table} WHERE user_id = ?", (user_id,))
+        return counts[0], counts[1]
 
     def is_empty(self) -> bool:
         return not any(

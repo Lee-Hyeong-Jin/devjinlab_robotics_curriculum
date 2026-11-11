@@ -304,6 +304,14 @@ class ProgressService:
             activity_progress=self.store.list_activities(user_id),
         )
 
+    def delete_user_data(self, user_id: int | None = None) -> tuple[int, int]:
+        """Erase one user's progress (default: this service's user).
+
+        Returns the (lesson rows, sessions) removed. Used by the account-deletion path of the
+        server; the CLI has no command for it.
+        """
+        return self.store.delete_user(self.user_id if user_id is None else user_id)
+
     def import_(self, data: ProgressExport, *, replace: bool = False) -> tuple[int, int]:
         """Load an export. Without ``replace`` the store must be empty. Returns row counts."""
         if data.schema_version > SCHEMA_VERSION:
