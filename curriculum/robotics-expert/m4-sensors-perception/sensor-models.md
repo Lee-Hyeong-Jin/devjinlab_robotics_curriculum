@@ -41,7 +41,7 @@ resources:
     kind: course
     note: 17강 58분. 센서·모터드라이버·Serial/CAN/EtherCAT (한국어, 유료 29,700원, 선택).
   - title: awesome-2d-lidars
-    url: https://github.imc.re/kaiaai/awesome-2d-lidars
+    url: https://github.com/kaiaai/awesome-2d-lidars
     kind: article
     note: ROS 지원 2D LiDAR 목록(LD19·RPLIDAR A1). 실제 사양표 읽기 연습용.
 ---
@@ -174,5 +174,5 @@ print(f"p(z=2.01 | 2.10) = {likelihood(2.01, 2.1):.2e}")
 - Roger Labbe, *Kalman and Bayesian Filters in Python*, Ch. 1–3 —
   <https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python>
 - 인프런, 현직자가 알려주는 로보틱스 시스템 완전 해부 — <https://www.inflearn.com/course/a-complete-breakdown>
-- awesome-2d-lidars — <https://github.imc.re/kaiaai/awesome-2d-lidars>
+- awesome-2d-lidars — <https://github.com/kaiaai/awesome-2d-lidars>
 - Sebastian Thrun, Wolfram Burgard, Dieter Fox, *Probabilistic Robotics*, 6장 Robot Perception (심화).
