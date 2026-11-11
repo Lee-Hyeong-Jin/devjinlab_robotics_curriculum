@@ -15,7 +15,7 @@
 milestones:
     - id: P0-1
       title: 프로젝트 골격 (Python, uv, ruff, pytest, rc CLI 진입점)
-      status: todo
+      status: done
       depends_on: []
       goal: pyproject.toml 기반 Python 프로젝트 골격과 `rc` CLI 진입점을 만들고, 하네스 검증 게이트가 실제로 돌게 한다.
       acceptance:
@@ -23,7 +23,7 @@ milestones:
         - `bash scripts/harness/check.sh` 가 ALL CHECKS PASSED 를 출력한다
         - `uv run rc --help` 가 동작하고 validate/report 서브커맨드 자리가 있다
         - README.md 에 설치/실행/테스트 명령이 있고 CLAUDE.md Commands 섹션이 채워져 있다
-      note:
+      note: M0 skeleton merged into integration (95c1da5)
 
     - id: P0-2
       title: 콘텐츠 스키마·로더·검증 CLI (FR-1)
