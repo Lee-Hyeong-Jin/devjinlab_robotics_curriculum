@@ -159,6 +159,7 @@ def app(tmp_path: Path, idp: FakeIdP, clock: Clock) -> FastAPI:
         auth_config=AuthConfig(public_url=PUBLIC),
         oidc_providers={"univ": PROVIDER},
         oidc_http=httpx.Client(transport=httpx.MockTransport(idp.handler)),
+        auth_secret="test-flow-key",
     )
 
 
@@ -258,7 +259,16 @@ def test_unverified_email_cannot_sign_up(app: FastAPI, idp: FakeIdP) -> None:
 
 @pytest.mark.parametrize(
     "tamper",
-    ["nonce", "audience", "issuer", "foreign_key", "hs256", "expired"],
+    [
+        "nonce",
+        "audience",
+        "issuer",
+        "foreign_key",
+        "hs256",
+        "expired",
+        "multi_aud_no_azp",
+        "multi_aud_other_azp",
+    ],
 )
 def test_bad_id_tokens_are_rejected(app: FastAPI, idp: FakeIdP, tamper: str) -> None:
     overrides: dict[str, Any] = {
@@ -268,6 +278,9 @@ def test_bad_id_tokens_are_rejected(app: FastAPI, idp: FakeIdP, tamper: str) -> 
         "foreign_key": {"key": _new_key()},
         "hs256": {"alg": "HS256"},
         "expired": {"exp": int((T0 - timedelta(hours=1)).timestamp())},
+        # OIDC Core 3.1.3.7 (3)-(5): several audiences need an azp naming us (SRV-14).
+        "multi_aud_no_azp": {"aud": [CLIENT_ID, "other-client"]},
+        "multi_aud_other_azp": {"aud": [CLIENT_ID, "other-client"], "azp": "other-client"},
     }[tamper]
     _, r = oidc_login(app, idp, token_overrides=overrides)
     assert r.status_code == 400, (tamper, r.text)
@@ -379,3 +392,11 @@ def test_parse_providers() -> None:
     for bad in ("{", "{}", '[{"id": "x"}]'):
         with pytest.raises(ValueError):
             parse_providers({"RC_OIDC_PROVIDERS": bad})
+
+
+def test_multiple_audiences_with_our_azp_are_accepted(app: FastAPI, idp: FakeIdP) -> None:
+    """The legitimate multi-audience case: azp names this client (SRV-14)."""
+    _, r = oidc_login(
+        app, idp, token_overrides={"aud": [CLIENT_ID, "other-client"], "azp": CLIENT_ID}
+    )
+    assert r.status_code == 302, r.text

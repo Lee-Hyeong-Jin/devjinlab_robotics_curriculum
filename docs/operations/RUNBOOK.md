@@ -31,6 +31,12 @@ export RC_AUTH_SECRET="$(python3 -c 'import secrets; print(secrets.token_urlsafe
 API 는 서버 모드(계정·세션 필수)로 뜬다. 첫 관리자는 `RC_AUTH_ADMIN_EMAIL` 로 가입 후 메일의
 인증 링크를 누르면 승격된다(관리자가 아직 없을 때만). 메일이 없으면 가입 후
 `docker compose run --rm api api promote-admin you@example.org` 로 승격한다(감사 로그에 기록).
+이 명령은 이메일 인증을 마친 계정만 승격한다. 메일 서버가 없어 인증 링크를 받을 수 없는
+환경에서는 주소 소유를 확인한 뒤 `--force` 를 붙인다.
+
+서버는 `rc api serve` 로 띄운다. `uvicorn ...:create_app` 처럼 직접 띄워도 앱 팩토리가 같은
+가드를 적용하지만(로그인 없는 local 모드를 루프백이 아닌 주소에 바인드하면 기동 거부),
+`rc api serve` 가 설정 오류를 사람이 읽을 수 있는 메시지로 보여 준다.
 
 ```bash
 docker compose up -d --wait api     # db -> migrate -> api, 전부 healthy 될 때까지 대기
@@ -59,6 +65,11 @@ docker compose run --rm cli validate   # 콘텐츠 검증 같은 일회성 작�
 | 요청 처리 준비 | `curl -fsS localhost:8000/readyz` | `{"status":"ready", ...}`, DB·콘텐츠 색인 각각 `ok: true` |
 | 버전 | `curl -fsS localhost:8000/version` | 배포한 버전 |
 | 메트릭 | `curl -fsS localhost:8000/metrics` | Prometheus 텍스트. `RC_API_METRICS=0` 이면 404 |
+
+`/metrics` 는 기본적으로 인증이 없다(내부망 전용). 셋 중 하나로 보호한다: ① 리버스 프록시에서
+`/metrics` 를 외부에 노출하지 않는다(권장, compose 는 8000 을 `127.0.0.1` 에만 공개), ②
+`RC_API_METRICS_TOKEN` 을 설정해 `Authorization: Bearer <토큰>` 을 요구한다(Prometheus
+`authorization` 설정과 맞춘다), ③ `RC_API_METRICS=0` 으로 끈다.
 | DB | `docker compose exec db pg_isready -U rc -d rc` | `accepting connections` |
 
 `/readyz` 가 503 이면 본문의 `checks` 를 본다: `database` 실패는 DB 가 내려갔거나
@@ -145,7 +156,7 @@ curl -fsS localhost:8000/version                     # 4. 확인
 |---|---|---|
 | `RC_DATABASE_URL` | compose 가 `postgresql://rc:***@db:5432/rc` 주입 | 미설정이면 로컬 SQLite |
 | `RC_DB_PASSWORD` | **없음(필수)** | compose 의 DB 비밀번호. 미설정 시 compose 가 기동을 거부 |
-| `RC_AUTH_SECRET` | **없음(필수)** | OIDC 진행 쿠키 서명 키. 모든 레플리카에서 같은 값 |
+| `RC_AUTH_SECRET` | **없음(필수)** | OIDC 진행 쿠키 서명 키. 모든 워커·레플리카에서 같은 값. OIDC 제공자가 설정돼 있는데 이 값이 없으면 기동을 거부한다 |
 | `RC_AUTH_MODE` | 이미지·compose 에서 `server` | `local` 은 로그인 없이 모든 요청이 관리자 user 1 — 루프백 바인드에서만 허용 |
 | `RC_API_ALLOW_REMOTE_LOCAL` | 미설정 | `1` 이면 local 모드를 루프백이 아닌 주소에 바인드하는 것을 허용(포트가 외부에 안 열린 경우만) |
 | `RC_AUTH_ADMIN_EMAIL` | 비어 있음 | 이메일 인증을 마친 이 주소의 계정을 첫 관리자로 승격(관리자가 없을 때만) |
@@ -158,6 +169,7 @@ curl -fsS localhost:8000/version                     # 4. 확인
 | `RC_API_HOST` / `RC_API_PORT` | `0.0.0.0` / `8000` | 바인딩 |
 | `RC_API_LOG_LEVEL` | `info` | 로그 수준 |
 | `RC_API_METRICS` | `1` | `0` 이면 `/metrics` 404 |
+| `RC_API_METRICS_TOKEN` | 비어 있음 | 설정하면 `/metrics` 가 해당 베어러 토큰을 요구(미설정 시 무인증) |
 
 비밀은 환경 변수 또는 Docker secret 으로 주입하고 저장소에 커밋하지 않는다. `.env` 는 읽지도
 커밋하지도 않는다(`.env.example` 만 둔다).

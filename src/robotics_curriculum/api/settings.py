@@ -11,6 +11,7 @@
 | ``RC_DATABASE_URL``   | unset: SQLite in the data dir; ``postgresql://...`` for server mode |
 | ``RC_AUTH_COOKIE_SECURE`` | ``1`` (``0`` only for plain-HTTP development) |
 | ``RC_API_METRICS``    | ``1``: serve Prometheus ``/metrics`` (``0`` = 404) |
+| ``RC_API_METRICS_TOKEN`` | unset: ``/metrics`` is open; set = require that bearer token |
 
 Auth policy variables (``RC_AUTH_*``, ``RC_SMTP_*``) are read by
 :meth:`robotics_curriculum.auth.service.AuthConfig.from_env` and
@@ -19,6 +20,7 @@ Auth policy variables (``RC_AUTH_*``, ``RC_SMTP_*``) are read by
 
 from __future__ import annotations
 
+import ipaddress
 import os
 from collections.abc import Mapping
 from dataclasses import dataclass, replace
@@ -28,6 +30,17 @@ from robotics_curriculum.progress import default_curriculum_dir, default_data_di
 
 LOG_LEVELS = ("critical", "error", "warning", "info", "debug")
 AUTH_MODES = ("local", "server")
+ALLOW_REMOTE_LOCAL_ENV = "RC_API_ALLOW_REMOTE_LOCAL"
+
+
+def is_loopback(host: str) -> bool:
+    """``True`` for ``localhost`` and any loopback IP literal."""
+    if host == "localhost":
+        return True
+    try:
+        return ipaddress.ip_address(host).is_loopback
+    except ValueError:
+        return False
 
 
 class SettingsError(ValueError):
@@ -45,6 +58,7 @@ class Settings:
     database_url: str | None = None
     cookie_secure: bool = True
     metrics: bool = True
+    metrics_token: str | None = None
 
     @property
     def server_mode(self) -> bool:
@@ -67,6 +81,7 @@ class Settings:
             database_url=(env.get("RC_DATABASE_URL") or "").strip() or None,
             cookie_secure=env.get("RC_AUTH_COOKIE_SECURE", "1") != "0",
             metrics=env.get("RC_API_METRICS", "1") != "0",
+            metrics_token=(env.get("RC_API_METRICS_TOKEN") or "").strip() or None,
         )
         return base.with_overrides(
             host=env.get("RC_API_HOST") or None,

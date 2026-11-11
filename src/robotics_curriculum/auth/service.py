@@ -7,6 +7,7 @@ security-relevant event is written to the audit log. Policy values live in
 
 from __future__ import annotations
 
+import logging
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
@@ -34,6 +35,8 @@ from robotics_curriculum.auth.models import (
 )
 from robotics_curriculum.auth.oidc import Claims
 from robotics_curriculum.auth.store import AuthStore
+
+logger = logging.getLogger("robotics_curriculum.api")
 
 PAT_PREFIX = "rcp_"
 RESET_KEY_PREFIX = "reset:"
@@ -225,7 +228,7 @@ class AuthService:
             target_id=str(user.id),
             detail={"role": role.value, "method": "password"},
         )
-        self._send_token(user, TokenKind.VERIFY_EMAIL, self.config.verify_ttl)
+        self._send_token(user, TokenKind.VERIFY_EMAIL, self.config.verify_ttl, ctx)
         return user
 
     def _maybe_bootstrap_admin(self, user: User, ctx: Context) -> User:
@@ -249,13 +252,22 @@ class AuthService:
         )
         return promoted
 
-    def promote_admin(self, email: str, ctx: Context) -> User:
-        """Operator command (``rc api promote-admin``): make an existing account admin."""
+    def promote_admin(self, email: str, ctx: Context, *, force: bool = False) -> User:
+        """Operator command (``rc api promote-admin``): make an existing account admin.
+
+        Refuses an unverified address unless ``force``: the mailbox has not been proven, so
+        whoever typed it may not own it (same rule as the bootstrap promotion).
+        """
         user = self.store.get_user_by_email(email.strip().lower())
         if user is None or not user.is_active:
             raise NotFound(f"no active account for {email}")
         if user.role is Role.ADMIN:
             return user
+        if user.email_verified_at is None and not force:
+            raise Conflict(
+                f"{user.email} has not verified its email address; let the owner confirm the "
+                f"link first, or pass --force if the address is known to be theirs"
+            )
         promoted = self.store.update_user(user.id, self.clock(), role=Role.ADMIN)
         self._audit(
             ctx,
@@ -267,7 +279,10 @@ class AuthService:
         )
         return promoted
 
-    def _send_token(self, user: User, kind: TokenKind, ttl: timedelta) -> bool:
+    def _send_token(self, user: User, kind: TokenKind, ttl: timedelta, ctx: Context) -> bool:
+        """Mail a one-time link. A delivery failure is logged and audited, never raised:
+        the account action itself succeeded and must not look like a server error (SRV-10).
+        """
         if self.mailer is None:
             return False
         token = new_token()
@@ -283,7 +298,21 @@ class AuthService:
             f"{self.config.public_url}/{path}?token={token}\n\n"
             f"이 링크는 {minutes}분 동안 한 번만 쓸 수 있습니다. 요청하지 않았다면 무시하세요.\n"
         )
-        self.mailer.send(Mail(to=user.email, subject=subject, body=body))
+        try:
+            self.mailer.send(Mail(to=user.email, subject=subject, body=body))
+        except Exception:  # SMTP down, DNS, TLS, timeout: never surfaced to the caller
+            # The link cannot arrive, so drop the token instead of leaving it valid.
+            self.store.expire_one_time(user.id, kind, now)
+            logger.exception("mail delivery failed", extra={"kind": kind.value})
+            self._audit(
+                ctx,
+                "auth.mail.failed",
+                None,
+                target_type="user",
+                target_id=str(user.id),
+                detail={"kind": kind.value},
+            )
+            return False
         return True
 
     def verify_email(self, token: str, ctx: Context) -> User:
@@ -543,7 +572,7 @@ class AuthService:
             return
         # Only the newest reset link is valid (SRV-04).
         self.store.expire_one_time(user.id, TokenKind.RESET_PASSWORD, now)
-        self._send_token(user, TokenKind.RESET_PASSWORD, self.config.reset_ttl)
+        self._send_token(user, TokenKind.RESET_PASSWORD, self.config.reset_ttl, ctx)
         self._audit(
             ctx,
             "auth.password.reset_requested",

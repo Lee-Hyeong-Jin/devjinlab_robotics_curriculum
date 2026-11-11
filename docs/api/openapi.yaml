@@ -98,8 +98,11 @@ paths:
       - system
       summary: Metrics
       description: |-
-        Prometheus text format. Unauthenticated: expose to the internal network only
-        (block at the reverse proxy). ``RC_API_METRICS=0`` turns it off (404).
+        Prometheus text format: request counts, latency, in-flight requests, DB pools.
+
+        Open by default and meant for the internal network: block ``/metrics`` at the reverse
+        proxy, or set ``RC_API_METRICS_TOKEN`` to require ``Authorization: Bearer <token>``
+        (SRV-16). ``RC_API_METRICS=0`` turns the endpoint off (404).
       operationId: metrics_metrics_get
       responses:
         '200':

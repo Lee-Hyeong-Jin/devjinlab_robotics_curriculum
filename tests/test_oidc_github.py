@@ -75,6 +75,7 @@ def _gh_app(tmp_path: Path, gh: FakeGitHub, clock: Clock) -> FastAPI:
         auth_config=AuthConfig(public_url=PUBLIC),
         oidc_providers={"github": GITHUB},
         oidc_http=httpx.Client(transport=httpx.MockTransport(gh.handler)),
+        auth_secret="test-flow-key",
     )
 
 
@@ -159,6 +160,7 @@ def _mapped_app(tmp_path: Path, idp: FakeIdP, clock: Clock) -> FastAPI:
         auth_config=AuthConfig(public_url=PUBLIC),
         oidc_providers={"univ": MAPPED},
         oidc_http=httpx.Client(transport=httpx.MockTransport(idp.handler)),
+        auth_secret="test-flow-key",
     )
 
 
