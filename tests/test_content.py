@@ -73,8 +73,7 @@ def test_sample_content_loads_and_validates() -> None:
     dh = course.modules[1].lessons[0]
     assert dh.prerequisites == ["m1-vectors-matrices"]
     assert dh.body.lstrip().startswith("# DH 파라미터")
-    lab = next(a for a in dh.activities if a.kind is ActivityKind.LAB)
-    assert lab.lab_id == "m2-dh-two-link"
+    assert [a.kind for a in dh.activities] == [ActivityKind.READING, ActivityKind.EXERCISE]
     assert validate_course(course) == []
 
 
@@ -101,7 +100,7 @@ def test_unknown_front_matter_key_is_an_error(tmp_path: Path) -> None:
     assert any("dificulty" in e.message for e in excinfo.value.errors)
 
 
-def test_lab_activity_requires_lab_id(tmp_path: Path) -> None:
+def test_lab_activity_kind_is_rejected(tmp_path: Path) -> None:
     text = lesson_md("a").replace(
         "tags: []",
         "tags: []\nactivities:\n  - id: a-lab\n    kind: lab\n    title: Lab\n",
@@ -109,7 +108,23 @@ def test_lab_activity_requires_lab_id(tmp_path: Path) -> None:
     course = write_course(tmp_path, {"a": text})
     with pytest.raises(LoadError) as excinfo:
         load_course(course)
-    assert any("lab_id" in e.message for e in excinfo.value.errors)
+    assert any("kind" in e.message for e in excinfo.value.errors)
+
+
+def test_lesson_resources_parse(tmp_path: Path) -> None:
+    text = lesson_md("a").replace(
+        "tags: []",
+        "tags: []\nresources:\n"
+        "  - title: Modern Robotics\n    url: https://example.org/mr\n"
+        "    kind: book\n    note: Ch. 3\n"
+        "  - title: Just a title\n",
+    )
+    course = write_course(tmp_path, {"a": text})
+    lesson = load_course(course).modules[0].lessons[0]
+    assert [r.title for r in lesson.resources] == ["Modern Robotics", "Just a title"]
+    first, second = lesson.resources
+    assert first.kind == "book" and first.url == "https://example.org/mr" and first.note == "Ch. 3"
+    assert second.kind is None and second.url is None
 
 
 def test_dangling_prerequisite_is_an_error(tmp_path: Path) -> None:

@@ -7,9 +7,9 @@ their front matter / YAML schema. See ``docs/curriculum/CONTENT_MODEL.md``.
 
 from enum import StrEnum
 from pathlib import Path
-from typing import Annotated, Self
+from typing import Annotated
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field
 
 ID_PATTERN = r"^[a-z0-9][a-z0-9-]*$"
 Id = Annotated[str, Field(pattern=ID_PATTERN, description="lowercase slug, e.g. m1-vectors")]
@@ -24,7 +24,6 @@ class ContentModel(BaseModel):
 class ActivityKind(StrEnum):
     READING = "reading"
     QUIZ = "quiz"
-    LAB = "lab"
     EXERCISE = "exercise"
 
 
@@ -35,15 +34,23 @@ class Activity(ContentModel):
     kind: ActivityKind
     title: str = Field(min_length=1)
     estimated_minutes: int | None = Field(default=None, ge=1)
-    lab_id: Id | None = Field(default=None, description="required when kind == lab")
 
-    @model_validator(mode="after")
-    def _lab_requires_lab_id(self) -> Self:
-        if self.kind is ActivityKind.LAB and self.lab_id is None:
-            raise ValueError("activity of kind 'lab' requires 'lab_id'")
-        if self.kind is not ActivityKind.LAB and self.lab_id is not None:
-            raise ValueError("'lab_id' is only allowed when kind == 'lab'")
-        return self
+
+class ResourceKind(StrEnum):
+    BOOK = "book"
+    COURSE = "course"
+    VIDEO = "video"
+    ARTICLE = "article"
+    OTHER = "other"
+
+
+class Resource(ContentModel):
+    """An external learning resource (book, course, video, ...) for a lesson."""
+
+    title: str = Field(min_length=1)
+    url: str | None = None
+    kind: ResourceKind | None = None
+    note: str | None = None
 
 
 class Lesson(ContentModel):
@@ -58,6 +65,7 @@ class Lesson(ContentModel):
     estimated_minutes: int = Field(ge=1)
     tags: list[str] = Field(default_factory=list)
     activities: list[Activity] = Field(default_factory=list)
+    resources: list[Resource] = Field(default_factory=list)
 
     # Filled by the loader, not by front matter.
     body: str = Field(default="", exclude=True)

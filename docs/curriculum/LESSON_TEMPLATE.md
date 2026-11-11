@@ -29,12 +29,11 @@ activities:
     kind: exercise
     title: 손으로 / 코드로 풀어 보기
     estimated_minutes: 20
-  # 실습이 있을 때만:
-  # - id: m1-example-topic-lab
-  #   kind: lab
-  #   title: Webots 실습
-  #   lab_id: m1-example-lab      # labs/<lab_id>/ 를 가리킴
-  #   estimated_minutes: 30
+resources:                      # 선택. 단계별 학습 자료 (title만 필수)
+  - title: Modern Robotics
+    url: https://example.org/modern-robotics
+    kind: book                  # book | course | video | article | other
+    note: Ch. 3
 ---
 
 # 레슨 제목
@@ -54,7 +53,7 @@ activities:
 
 ## 연습
 
-`activities`의 exercise/lab에 대응하는 과제 설명.
+`activities`의 exercise에 대응하는 과제 설명.
 
 ## 더 읽을거리
 

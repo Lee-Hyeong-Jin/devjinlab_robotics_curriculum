@@ -19,11 +19,6 @@ activities:
     kind: exercise
     title: 2-link 매니퓰레이터 DH 테이블 작성
     estimated_minutes: 20
-  - id: m2-dh-parameters-lab
-    kind: lab
-    title: DH 테이블을 코드로 변환해 Webots 모델과 비교
-    lab_id: m2-dh-two-link
-    estimated_minutes: 30
 ---
 
 # DH 파라미터

@@ -54,6 +54,7 @@ curriculum/
 | `estimated_minutes` | int ≥ 1 | O | 예상 소요 시간(분) |
 | `tags` | list[str] | - | 기본 `[]` |
 | `activities` | list[Activity] | - | 아래 참조. 기본 `[]` |
+| `resources` | list[Resource] | - | 단계별 학습 자료(교재·강의·영상 등). 아래 참조. 기본 `[]` |
 
 front matter에 정의되지 않은 키가 있으면 에러다(오타 방지). `body`, `path`는 예약어.
 
@@ -62,12 +63,21 @@ front matter에 정의되지 않은 키가 있으면 에러다(오타 방지). `
 | 필드 | 타입 | 필수 | 설명 |
 |---|---|---|---|
 | `id` | slug | O | 코스 전체에서 유일. 관례: `<lesson-id>-<kind>` |
-| `kind` | `reading` \| `quiz` \| `lab` \| `exercise` | O | 활동 종류 |
+| `kind` | `reading` \| `quiz` \| `exercise` | O | 활동 종류 |
 | `title` | str | O | 표시 이름 |
 | `estimated_minutes` | int ≥ 1 | - | 활동 단위 예상 시간 |
-| `lab_id` | slug | `kind: lab`일 때만 | `labs/<lab_id>/`의 실습을 가리킴. 다른 kind에서는 금지 |
 
-> PRD FR-1.3의 `project`, `external`은 아직 미지원. 필요해지면 `ActivityKind`에 추가한다.
+> 시뮬레이터 실습(`lab`)은 지원하지 않는다. PRD FR-1.3의 `project`, `external`은 아직 미지원.
+> 필요해지면 `ActivityKind`에 추가한다.
+
+### Resource
+
+| 필드 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `title` | str | O | 자료 이름 |
+| `url` | str | - | 링크 |
+| `kind` | `book` \| `course` \| `video` \| `article` \| `other` | - | 자료 종류 |
+| `note` | str | - | 범위·메모 (예: `Ch. 3`) |
 
 ## 검증 규칙 (`rc validate [PATH]`)
 
@@ -78,11 +88,10 @@ front matter에 정의되지 않은 키가 있으면 에러다(오타 방지). `
 |---|---|---|
 | 1 | `course.yaml` / `module.yaml` / front matter가 스키마를 만족 (필수 필드, 타입, 범위, 모르는 키 없음) | loader |
 | 2 | 목록(`modules`, `lessons`)에 적힌 항목이 실제로 존재하고, 디스크의 항목이 목록에 모두 있음 | loader |
-| 3 | `lab` 활동에는 `lab_id`가 있고, 다른 kind에는 없음 | model |
-| 4 | 코스 내 모든 ID(코스·모듈·레슨·활동)가 유일 | validate |
-| 5 | `prerequisites`의 각 항목이 존재하는 레슨 ID이며 자기 자신이 아님 | validate |
-| 6 | 선수지식 그래프에 순환이 없음 (DAG) | validate |
-| 7 | 코스에 모듈이 1개 이상, 모듈에 레슨이 1개 이상 | validate |
+| 3 | 코스 내 모든 ID(코스·모듈·레슨·활동)가 유일 | validate |
+| 4 | `prerequisites`의 각 항목이 존재하는 레슨 ID이며 자기 자신이 아님 | validate |
+| 5 | 선수지식 그래프에 순환이 없음 (DAG) | validate |
+| 6 | 코스에 모듈이 1개 이상, 모듈에 레슨이 1개 이상 | validate |
 
 성공 시 `OK: N lessons in M modules`.
 
