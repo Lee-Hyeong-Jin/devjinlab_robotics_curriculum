@@ -76,7 +76,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "h=scripts/harness/session_start.sh; [ -f \"$h\" ] || h=\"$CLAUDE_PROJECT_DIR/scripts/harness/session_start.sh\"; [ -f \"$h\" ] && bash \"$h\" || exit 0",
+            "command": "r=\"$(git rev-parse --show-toplevel 2>/dev/null || echo \"${CLAUDE_PROJECT_DIR:-$PWD}\")\"; h=\"$r/scripts/harness/session_start.sh\"; [ -f \"$h\" ] && bash \"$h\" || exit 0",
             "timeout": 15,
             "statusMessage": "Loading harness status"
           }
@@ -89,7 +89,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "h=scripts/harness/guard_bash.py; [ -f \"$h\" ] || h=\"$CLAUDE_PROJECT_DIR/scripts/harness/guard_bash.py\"; [ -f \"$h\" ] && python3 -I \"$h\" || exit 0",
+            "command": "r=\"$(git rev-parse --show-toplevel 2>/dev/null || echo \"${CLAUDE_PROJECT_DIR:-$PWD}\")\"; h=\"$r/scripts/harness/guard_bash.py\"; if [ -f \"$h\" ]; then python3 -I \"$h\"; elif [ -d \"$r/harness\" ]; then printf '%s' \"{\\\"hookSpecificOutput\\\": {\\\"hookEventName\\\": \\\"PreToolUse\\\", \\\"permissionDecision\\\": \\\"deny\\\", \\\"permissionDecisionReason\\\": \\\"harness guard script missing: scripts/harness/guard_bash.py is absent in this repository although harness/ exists, so destructive commands cannot be checked. Restore the script, or reload hooks with /hooks if you just merged.\\\"}}\"; else exit 0; fi",
             "timeout": 10,
             "onFailure": "continue"
           }
@@ -102,7 +102,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "h=scripts/harness/format_file.sh; [ -f \"$h\" ] || h=\"$CLAUDE_PROJECT_DIR/scripts/harness/format_file.sh\"; [ -f \"$h\" ] && bash \"$h\" || exit 0",
+            "command": "r=\"$(git rev-parse --show-toplevel 2>/dev/null || echo \"${CLAUDE_PROJECT_DIR:-$PWD}\")\"; h=\"$r/scripts/harness/format_file.sh\"; [ -f \"$h\" ] && bash \"$h\" || exit 0",
             "timeout": 60,
             "statusMessage": "Formatting"
           }
@@ -114,7 +114,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "h=scripts/harness/stop_gate.sh; [ -f \"$h\" ] || h=\"$CLAUDE_PROJECT_DIR/scripts/harness/stop_gate.sh\"; [ -f \"$h\" ] && bash \"$h\" || exit 0",
+            "command": "r=\"$(git rev-parse --show-toplevel 2>/dev/null || echo \"${CLAUDE_PROJECT_DIR:-$PWD}\")\"; h=\"$r/scripts/harness/stop_gate.sh\"; if [ -f \"$h\" ]; then bash \"$h\"; elif [ -d \"$r/harness\" ]; then echo \"harness: scripts/harness/stop_gate.sh missing, verification gate skipped (run bash scripts/harness/check.sh manually)\" >&2; exit 0; else exit 0; fi",
             "timeout": 240,
             "statusMessage": "Verification gate (check.sh --quick)"
           }
@@ -124,6 +124,9 @@
   },
   "worktree": {
     "baseRef": "head",
-    "symlinkDirectories": [".venv", "node_modules"]
+    "symlinkDirectories": [
+      ".venv",
+      "node_modules"
+    ]
   }
 }

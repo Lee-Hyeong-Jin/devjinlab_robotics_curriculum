@@ -207,7 +207,7 @@ milestones:
 
     - id: P2-5
       title: 운영 (Docker Compose api/db/web, 헬스체크, 구조화 로깅, 메트릭, 백업)
-      status: todo
+      status: in_progress
       depends_on: [P2-3, P2-4]
       goal: docker compose 하나로 api, db, web 을 띄우고 헬스체크, JSON 구조화 로깅, Prometheus 메트릭, 부하 기준, DB 백업·복구 절차를 갖춘다(PRD 부록 C.5, 설계 §9 → docs/architecture/operations.md).
       acceptance:
@@ -215,7 +215,7 @@ milestones:
         - AC-OPS.2 deploy/ 의 Compose(api + web + postgres + reverse proxy)로 신규 설치가 문서 기준 30분 이내, 비밀은 .env 주입과 .env.example 제공, 이미지 linux/amd64·arm64. `docker compose up` 후 전 서비스 healthy 를 CI 스모크 테스트가 확인한다
         - AC-OPS.3 부하 테스트(k6 또는 locust)가 읽기 p95 300ms, 쓰기 p95 1초, 동시 500명·레슨 1,000개 시나리오를 통과하고 스크립트와 결과가 docs/ 에 있다
         - AC-OPS.4 백업·복구 절차(RPO 24시간, RTO 4시간)와 복구 리허설 기록 1회가 있고, 관리 행위 감사 로그와 보존 기간 설정이 테스트된다
-      note:
+      note: api+db compose, migrate, smoke merged (69b87cf); web service, metrics, backup pending
 
     - id: P2-6
       title: i18n·접근성 (ko/en, WCAG 2.1 AA)
