@@ -62,7 +62,8 @@
     "estimated": "예상 {minutes}",
     "difficulty": "난이도 {level}/5",
     "empty": "이 모듈에는 아직 레슨이 없습니다.",
-    "backToRoadmap": "로드맵으로"
+    "backToRoadmap": "로드맵으로",
+    "report": "모듈 리포트"
   },
   "lesson": {
     "studyMethod": "이 단계 공부법",
@@ -441,6 +442,15 @@
     "dayCount": "{count}일",
     "body": "리포트 본문",
     "empty": "이번 주 기록이 없습니다.",
-    "unavailable": "리포트를 불러올 수 없습니다."
+    "unavailable": "리포트를 불러올 수 없습니다.",
+    "moduleTitle": "{module} 리포트",
+    "moduleSubtitle": "이 모듈의 레슨별 진행도와 이해도입니다.",
+    "course": "코스",
+    "completedLessons": "완료한 레슨",
+    "ofLessons": "{total}개 중 {done}개",
+    "backToModule": "모듈로 돌아가기",
+    "moduleReports": "모듈 리포트",
+    "moduleReportsHint": "모듈을 고르면 레슨별 진행도와 이해도를 봅니다.",
+    "noModules": "모듈을 불러올 수 없습니다."
   }
 }

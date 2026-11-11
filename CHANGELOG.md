@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Web: external-login buttons on the login and sign-up screens, and a "connect" button per
   unlinked provider in the profile's external-logins section. Nothing is shown when the
   deployment has no provider configured.
+- Web: a module report screen (`/reports/modules/{module_id}`), linked from the weekly report
+  and from the module overview.
+- Web: quiz explanations are rendered with the lesson Markdown pipeline (KaTeX, code, GFM and
+  the same sanitiser) instead of being printed as their Markdown source.
 
 ### Fixed
 

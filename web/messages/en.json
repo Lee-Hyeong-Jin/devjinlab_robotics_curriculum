@@ -62,7 +62,8 @@
     "estimated": "about {minutes}",
     "difficulty": "Difficulty {level}/5",
     "empty": "This module has no lessons yet.",
-    "backToRoadmap": "Back to roadmap"
+    "backToRoadmap": "Back to roadmap",
+    "report": "Module report"
   },
   "lesson": {
     "studyMethod": "How to study this stage",
@@ -441,6 +442,15 @@
     "dayCount": "{count}",
     "body": "Report",
     "empty": "Nothing recorded this week.",
-    "unavailable": "The report could not be loaded."
+    "unavailable": "The report could not be loaded.",
+    "moduleTitle": "{module} report",
+    "moduleSubtitle": "Per-lesson progress and understanding for this module.",
+    "course": "Course",
+    "completedLessons": "Lessons completed",
+    "ofLessons": "{done} of {total}",
+    "backToModule": "Back to the module",
+    "moduleReports": "Module reports",
+    "moduleReportsHint": "Pick a module to see its per-lesson progress and understanding.",
+    "noModules": "Modules could not be loaded."
   }
 }

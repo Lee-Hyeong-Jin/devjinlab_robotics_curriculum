@@ -119,3 +119,10 @@ export function getDueCards(): Promise<ReviewCard[] | null> {
 export function getWeeklyReport(): Promise<Report | null> {
   return apiGetOrNull('/api/v1/reports/weekly')
 }
+
+/** `GET /api/v1/reports/modules/{module_id}` — one module's report (`rc report module`). */
+export function getModuleReport(moduleId: string): Promise<Report> {
+  return apiGet(
+    `/api/v1/reports/modules/${encodeURIComponent(moduleId)}` as '/api/v1/reports/modules/{module_id}',
+  )
+}
