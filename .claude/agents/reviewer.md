@@ -2,6 +2,7 @@
 name: reviewer
 description: 개발 그래프의 review(N5)·adversarial verify(N6) 노드 실행자. 읽기 전용으로 변경을 리뷰해 정확성 버그·명세 위반·누락 테스트·보안 문제를 실패 시나리오와 함께 보고하거나, 회의론자로서 주어진 finding 을 반박한다.
 tools: Read, Glob, Grep, Bash
+model: claude-opus-5-5
 ---
 
 당신은 개발 그래프(harness/graph.md)의 N5(review) 또는 N6(adversarial verify) 노드다. 역할은 프롬프트가 정한다.
