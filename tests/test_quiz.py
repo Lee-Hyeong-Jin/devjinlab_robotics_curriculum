@@ -1,5 +1,6 @@
 """P1-2 quizzes: block parsing/validation (AC-4.1), grading, `rc quiz` (AC-4.2, AC-4.3)."""
 
+import json
 from collections.abc import Iterator
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -449,4 +450,11 @@ def test_progress_export_import_round_trip_keeps_quiz_data(tmp_path: Path) -> No
     file.write_text(text, encoding="utf-8")
     assert rc(tmp_path, "progress", "import", str(file), "--replace").exit_code == 0
     again = rc(tmp_path, "progress", "export")
-    assert again.output.split('"exported_at"')[1:] == text.split('"exported_at"')[1:]
+
+    def payload(dump: str) -> dict[str, object]:
+        """The export without ``exported_at``, which differs by design on every run."""
+        data = dict(json.loads(dump))
+        data.pop("exported_at")
+        return data
+
+    assert payload(again.output) == payload(text)

@@ -20,6 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Local progress tracking in SQLite (`.rc/progress.db`) behind a store interface, with JSON
   export and import.
 - Weekly and per-module Markdown reports.
+- Message catalogues for Korean and English (`src/robotics_curriculum/i18n/locales/*.yaml`,
+  ADR 0011): the CLI picks a language with `--lang` or `RC_LANG`, `rc site build --lang`
+  translates the site chrome, and the API localizes problem titles from `Accept-Language`.
+  Lesson content stays in the language it was written in. A few CLI lines that were English
+  regardless of locale (the unlock list, the prerequisite warning) are now Korean by default.
 - Quizzes and spaced repetition (P1-2): ` ```quiz ` blocks in lesson bodies (single, multiple,
   true/false, short answer) validated by `rc validate`; `rc quiz <lesson>` grades in the
   terminal and turns wrong answers and `concept` questions into flashcards; `rc review`

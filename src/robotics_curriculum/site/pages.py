@@ -21,8 +21,10 @@ from robotics_curriculum.content.quiz_block import (
     parse_quiz,
 )
 from robotics_curriculum.content.validate import is_http_url
+from robotics_curriculum.i18n import DEFAULT_LANG, Translator, resolve_lang, translator
 from robotics_curriculum.progress import LessonProgress, LessonStatus, LessonSummary, Session
 from robotics_curriculum.site.stats import (
+    NO_STAGE,
     Ratio,
     activity_days,
     format_minutes,
@@ -41,25 +43,43 @@ STUDY_HEADING = "이 단계 공부법"
 STUDY_ANCHOR = "study-method"
 RESOURCES_ANCHOR = "resources"
 
-# state key -> (symbol, Korean label)
-STATES: dict[str, tuple[str, str]] = {
-    "done": ("■", "완료"),
-    "in_progress": ("▣", "진행 중"),
-    "not_started": ("□", "시작 전"),
-    "locked": ("▨", "잠김"),
+# state key -> symbol; the words come from the message catalogue
+STATE_SYMBOLS: dict[str, str] = {
+    "done": "■",
+    "in_progress": "▣",
+    "not_started": "□",
+    "locked": "▨",
 }
 
-KIND_LABELS: dict[ResourceKind | None, str] = {
-    ResourceKind.BOOK: "교재",
-    ResourceKind.COURSE: "강의",
-    ResourceKind.VIDEO: "영상",
-    ResourceKind.ARTICLE: "글",
-    ResourceKind.OTHER: "기타",
-    None: "기타",
-}
-KIND_ORDER = ["교재", "강의", "영상", "글", "기타"]
+# resource kinds in display order; ``None`` shares the "other" label
+KIND_KEYS: tuple[tuple[ResourceKind | None, str], ...] = (
+    (ResourceKind.BOOK, "book"),
+    (ResourceKind.COURSE, "course"),
+    (ResourceKind.VIDEO, "video"),
+    (ResourceKind.ARTICLE, "article"),
+    (ResourceKind.OTHER, "other"),
+    (None, "other"),
+)
 
-ACTIVITY_LABELS = {"reading": "읽기", "quiz": "퀴즈", "exercise": "실습"}
+
+def state_label(state: str, t: Translator) -> str:
+    return t(f"site.state.{state}")
+
+
+def kind_label(kind: ResourceKind | None, t: Translator) -> str:
+    """Display name of a resource kind (``교재`` / ``Books``)."""
+    key = next((name for k, name in KIND_KEYS if k == kind), "other")
+    return t(f"resource.kind.{key}")
+
+
+def activity_label(kind: str, t: Translator) -> str:
+    label = t(f"site.activity.{kind}")
+    return kind if label == f"site.activity.{kind}" else label
+
+
+def stage_text(stage: str, t: Translator) -> str:
+    """Stage names come from the content (기초 / 중급 / 고급); only the fallback is translated."""
+    return t("site.stage_unassigned") if stage == NO_STAGE else stage
 
 
 # -- small Markdown helpers ----------------------------------------------------
@@ -94,9 +114,9 @@ def state_of(summary: LessonSummary) -> str:
     return "locked" if summary.locked else "not_started"
 
 
-def badge(state: str) -> str:
-    symbol, label = STATES[state]
-    return f'<span class="rc-status rc-{state}">{symbol} {label}</span>'
+def badge(state: str, t: Translator) -> str:
+    label = html.escape(state_label(state, t))
+    return f'<span class="rc-status rc-{state}">{STATE_SYMBOLS[state]} {label}</span>'
 
 
 def bar(r: Ratio) -> str:
@@ -112,8 +132,10 @@ def difficulty_dots(level: int) -> str:
     return "●" * level + "○" * (5 - level)
 
 
-def legend() -> str:
-    return " · ".join(f"{sym} {label}" for sym, label in STATES.values())
+def legend(t: Translator) -> str:
+    return " · ".join(
+        f"{symbol} {md_text(state_label(state, t))}" for state, symbol in STATE_SYMBOLS.items()
+    )
 
 
 # -- body processing -----------------------------------------------------------
@@ -172,10 +194,13 @@ class SiteModel:
     sessions: list[Session]
     now: datetime
     due_today: int = 0
+    lang: str = DEFAULT_LANG
+    t: Translator = field(init=False)
     by_lesson: dict[str, LessonSummary] = field(init=False)
     module_keys: dict[int, str] = field(init=False)
 
     def __post_init__(self) -> None:
+        self.t = translator(resolve_lang(self.lang))
         self.by_lesson = {s.lesson.id: s for s in self.summaries}
         counts: dict[str, int] = {}
         for course in self.courses:
@@ -189,7 +214,9 @@ class SiteModel:
 
     @property
     def title(self) -> str:
-        return self.courses[0].title if len(self.courses) == 1 else "로보틱스 커리큘럼"
+        if len(self.courses) == 1:
+            return self.courses[0].title
+        return self.t("site.title_fallback")
 
     def modules(self) -> list[Module]:
         return [m for c in self.courses for m in c.modules]
@@ -240,45 +267,62 @@ def current_lesson(model: SiteModel) -> LessonSummary | None:
 def render_dashboard(model: SiteModel) -> str:
     page = INDEX_PAGE
     now = model.now
+    t = model.t
+    # `site.built` is the one catalogue entry rendered as HTML (it carries a <code> tag).
     out = [
         f"# {md_text(model.title)}",
         "",
-        f'<p class="rc-built">빌드: {now:%Y-%m-%d %H:%M} · 진도를 반영하려면 '
-        "<code>rc site build</code> 를 다시 실행하세요.</p>",
+        f'<p class="rc-built">{t("site.built", at=f"{now:%Y-%m-%d %H:%M}")}</p>',
         "",
-        "## 현재 위치",
+        f"## {md_text(t('site.heading.position'))}",
         "",
     ]
     current = current_lesson(model)
     if current is None:
-        out.append("모든 레슨을 완료했습니다. 수고하셨습니다!")
+        out.append(md_text(t("site.dashboard.all_done")))
     else:
         module_ratio = ratio(model.module_summaries(current.module))
+        progress = t(
+            "site.dashboard.module_progress", done=module_ratio.done, total=module_ratio.total
+        )
+        stage = md_text(stage_text(stage_of(current.module), t))
+        guide = link(
+            page,
+            model.lesson_page(current.lesson),
+            t("site.dashboard.study_guide_link"),
+            STUDY_ANCHOR,
+        )
         out += [
-            f"- **단계**: {stage_of(current.module)}",
-            f"- **모듈**: {module_link(model, page, current.module)} "
-            f"({module_ratio.done}/{module_ratio.total} 레슨 완료)",
-            f"- **다음 레슨**: {lesson_link(model, page, current.lesson)} "
-            f"{badge(state_of(current))} · ⏱ {format_minutes(current.lesson.estimated_minutes)}",
-            f"- {link(page, model.lesson_page(current.lesson), '공부법 보기', STUDY_ANCHOR)}"
-            f" · 시작: `rc start {current.lesson.id}`",
+            f"- **{md_text(t('site.label.stage'))}**: {stage}",
+            f"- **{md_text(t('site.label.module'))}**: "
+            f"{module_link(model, page, current.module)} {md_text(progress)}",
+            f"- **{md_text(t('site.label.next_lesson'))}**: "
+            f"{lesson_link(model, page, current.lesson)} "
+            f"{badge(state_of(current), t)} · ⏱ {format_minutes(current.lesson.estimated_minutes)}",
+            f"- {guide} · {t('site.dashboard.start_hint', lesson_id=current.lesson.id)}",
         ]
-    out += ["", "## 한눈에 보기", "", _cards(model), "", "## 단계별 진행률", ""]
+    out += [
+        "",
+        f"## {md_text(t('site.heading.overview'))}",
+        "",
+        _cards(model),
+        "",
+        f"## {md_text(t('site.heading.stage_progress'))}",
+        "",
+    ]
     out.append(_stage_table(model, page))
-    out += ["", "## 다음 레슨", ""]
+    out += ["", f"## {md_text(t('site.heading.next_lessons'))}", ""]
     if model.next_lessons:
         for summary in model.next_lessons[:5]:
             lesson = summary.lesson
             out.append(
-                f"1. {lesson_link(model, page, lesson)} {badge(state_of(summary))} · "
-                f"{summary.module.title} · ⏱ {format_minutes(lesson.estimated_minutes)}"
+                f"1. {lesson_link(model, page, lesson)} {badge(state_of(summary), t)} · "
+                f"{md_text(summary.module.title)} · ⏱ {format_minutes(lesson.estimated_minutes)}"
             )
     else:
-        out.append("지금 시작할 수 있는 레슨이 없습니다.")
-    out += ["", "## 최근 활동", ""]
-    out += _recent_activity(model, page) or [
-        "아직 기록된 학습이 없습니다. `rc start <레슨>` 으로 시작하세요."
-    ]
+        out.append(md_text(t("site.dashboard.nothing_available")))
+    out += ["", f"## {md_text(t('site.heading.recent'))}", ""]
+    out += _recent_activity(model, page) or [t("site.dashboard.no_activity")]
     return "\n".join(out) + "\n"
 
 
@@ -286,15 +330,28 @@ def _cards(model: SiteModel) -> str:
     week = week_stats(model.sessions, model.now)
     days = activity_days(model.sessions, model.progress_rows(), model.now)
     total = ratio(model.summaries)
+    t = model.t
     cards = [
         (
-            "이번 주 학습 시간",
+            t("site.card.week_time"),
             format_seconds(week.seconds),
-            f"{week.sessions}회 세션 · {week.start:%m/%d}~",
+            t("site.card.week_time_sub", sessions=week.sessions, start=f"{week.start:%m/%d}"),
         ),
-        ("연속 학습", f"{streak(days, model.now.date())}일", "하루 한 번 이상 학습한 날"),
-        ("완료한 레슨", f"{total.done} / {total.total}", f"전체 {total.percent}%"),
-        ("오늘 복습", f"{model.due_today}장", "due 카드 · rc review"),
+        (
+            t("site.card.streak"),
+            t("site.card.streak_value", days=streak(days, model.now.date())),
+            t("site.card.streak_sub"),
+        ),
+        (
+            t("site.card.lessons_done"),
+            f"{total.done} / {total.total}",
+            t("site.card.lessons_done_sub", percent=total.percent),
+        ),
+        (
+            t("site.card.due"),
+            t("site.card.due_value", count=model.due_today),
+            t("site.card.due_sub"),
+        ),
     ]
     parts = ['<div class="rc-cards">']
     for title, value, sub in cards:
@@ -308,18 +365,26 @@ def _cards(model: SiteModel) -> str:
 
 
 def _stage_table(model: SiteModel, page: str) -> str:
-    rows = ["| 단계 | 진행률 | 모듈 |", "|---|---|---|"]
+    t = model.t
+    header = (
+        f"| {md_text(t('site.label.stage'))} | {md_text(t('site.label.progress'))} "
+        f"| {md_text(t('site.label.modules'))} |"
+    )
+    rows = [header, "|---|---|---|"]
     for stage in model.stages():
         summaries = model.stage_summaries(stage)
         modules = [m for m in model.modules() if stage_of(m) == stage]
         if not modules:
-            rows.append(f"| {stage} | — | 아직 준비 중인 단계입니다 |")
+            rows.append(
+                f"| {md_text(stage_text(stage, t))} | — | "
+                f"{md_text(t('site.dashboard.stage_empty'))} |"
+            )
             continue
         module_cells = " · ".join(
             f"{module_link(model, page, m)} {ratio(model.module_summaries(m)).percent}%"
             for m in modules
         )
-        rows.append(f"| **{stage}** | {bar(ratio(summaries))} | {module_cells} |")
+        rows.append(f"| **{md_text(stage)}** | {bar(ratio(summaries))} | {module_cells} |")
     return "\n".join(rows)
 
 
@@ -329,25 +394,44 @@ def _recent_activity(model: SiteModel, page: str, limit: int = 5) -> list[str]:
         summary = model.by_lesson.get(session.lesson_id)
         if summary is None:
             continue
-        kind = "타이머" if session.source == "timer" else "기록"
+        t = model.t
+        kind = t(
+            "site.recent.kind_timer" if session.source == "timer" else "site.recent.kind_manual"
+        )
         length = (
-            "진행 중" if session.is_open else format_seconds(session.elapsed_seconds(model.now))
+            t("site.recent.session_open")
+            if session.is_open
+            else format_seconds(session.elapsed_seconds(model.now))
         )
         events.append(
             (
                 session.started_at,
-                f"{lesson_link(model, page, summary.lesson)} 학습 {length} ({kind})",
+                t(
+                    "site.recent.session",
+                    lesson=lesson_link(model, page, summary.lesson),
+                    length=md_text(length),
+                    kind=md_text(kind),
+                ),
             )
         )
     for summary in model.summaries:
         done_at = summary.progress.completed_at
         if summary.status is LessonStatus.DONE and done_at is not None:
             extra = (
-                f" (이해도 {summary.progress.understanding})"
+                model.t("site.recent.done_understanding", value=summary.progress.understanding)
                 if summary.progress.understanding
                 else ""
             )
-            events.append((done_at, f"{lesson_link(model, page, summary.lesson)} 완료{extra}"))
+            events.append(
+                (
+                    done_at,
+                    model.t(
+                        "site.recent.done",
+                        lesson=lesson_link(model, page, summary.lesson),
+                        extra=md_text(extra),
+                    ),
+                )
+            )
     events.sort(key=lambda e: e[0], reverse=True)
     return [f"- {_local(when, model.now):%m/%d} · {text}" for when, text in events[:limit]]
 
@@ -357,13 +441,19 @@ def _recent_activity(model: SiteModel, page: str, limit: int = 5) -> list[str]:
 
 def render_roadmap(model: SiteModel) -> str:
     page = ROADMAP_PAGE
-    out = ["# 로드맵", "", f"단계별 모듈과 레슨. 범례: {legend()}", ""]
+    t = model.t
+    out = [
+        f"# {md_text(t('site.heading.roadmap_page'))}",
+        "",
+        t("site.roadmap.intro", legend=legend(t)),
+        "",
+    ]
     for stage in model.stages():
         summaries = model.stage_summaries(stage)
         modules = [m for m in model.modules() if stage_of(m) == stage]
-        out += [f"## {stage}", ""]
+        out += [f"## {md_text(stage_text(stage, t))}", ""]
         if not modules:
-            out += ["아직 준비 중인 단계입니다.", ""]
+            out += [md_text(t("site.roadmap.stage_empty")), ""]
             continue
         out += [bar(ratio(summaries)), ""]
         for module in modules:
@@ -385,9 +475,9 @@ def render_roadmap(model: SiteModel) -> str:
                         for p in lesson.prerequisites
                         if p in model.by_lesson
                     )
-                    prereq = f" · 선수: {names}"
+                    prereq = t("site.roadmap.prereq", names=names)
                 out.append(
-                    f"- {badge(state_of(summary))} {lesson_link(model, page, lesson)} · "
+                    f"- {badge(state_of(summary), t)} {lesson_link(model, page, lesson)} · "
                     f"⏱ {format_minutes(lesson.estimated_minutes)}{prereq}"
                 )
             out.append("")
@@ -401,37 +491,58 @@ def render_module(model: SiteModel, module: Module) -> str:
     page = model.module_page(module)
     summaries = model.module_summaries(module)
     total_minutes = sum(s.lesson.estimated_minutes for s in summaries)
+    t = model.t
+    meta = t(
+        "site.module.meta",
+        stage_label=md_text(t("site.label.stage")),
+        stage=md_text(stage_text(stage_of(module), t)),
+        lessons_label=md_text(t("site.label.lessons")),
+        count=len(summaries),
+        time_label=md_text(t("site.label.estimated_time")),
+        time=format_minutes(total_minutes),
+        back=link(page, ROADMAP_PAGE, t("site.module.back_to_roadmap")),
+    )
+    headers = " | ".join(
+        md_text(t(key))
+        for key in (
+            "site.label.index",
+            "site.label.lessons",
+            "site.label.state",
+            "site.label.estimated_time",
+            "site.label.difficulty",
+            "site.label.prerequisites",
+        )
+    )
     out = [
         f"# {md_text(module.title)}",
         "",
-        f"**단계**: {stage_of(module)} · **레슨** {len(summaries)}개 · "
-        f"**예상 시간** {format_minutes(total_minutes)} · {link(page, ROADMAP_PAGE, '로드맵으로')}",
+        meta,
         "",
         md_text(module.summary),
         "",
         bar(ratio(summaries)),
         "",
-        "## 레슨",
+        f"## {md_text(t('site.heading.lessons'))}",
         "",
-        "| # | 레슨 | 상태 | 예상 시간 | 난이도 | 선수 레슨 |",
+        f"| {headers} |",
         "|---|---|---|---|---|---|",
     ]
     for number, summary in enumerate(summaries, 1):
         lesson = summary.lesson
         prereqs = ", ".join(
             f"{lesson_link(model, page, model.by_lesson[p].lesson)} "
-            f"({STATES[state_of(model.by_lesson[p])][1]})"
+            f"({md_text(state_label(state_of(model.by_lesson[p]), t))})"
             for p in lesson.prerequisites
             if p in model.by_lesson
         )
         out.append(
-            f"| {number} | {lesson_link(model, page, lesson)} | {badge(state_of(summary))} | "
+            f"| {number} | {lesson_link(model, page, lesson)} | {badge(state_of(summary), t)} | "
             f"{format_minutes(lesson.estimated_minutes)} | {difficulty_dots(lesson.difficulty)} | "
-            f"{prereqs or '없음'} |"
+            f"{prereqs or md_text(t('site.label.none'))} |"
         )
     resources = _collect_resources(summaries)
     if resources:
-        out += ["", "## 이 모듈의 학습 자료", ""]
+        out += ["", f"## {md_text(t('site.heading.module_resources'))}", ""]
         out += _resource_groups(model, page, resources, show_lessons=True)
     return "\n".join(out) + "\n"
 
@@ -443,20 +554,23 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
     lesson = summary.lesson
     page = model.lesson_page(lesson)
     progress = summary.progress
+    t = model.t
     out = [
         f"# {md_text(lesson.title)}",
         "",
-        f'<p class="rc-meta">{stage_of(summary.module)} · '
+        f'<p class="rc-meta">{html.escape(stage_text(stage_of(summary.module), t))} · '
         f"{html.escape(summary.module.title)} · ⏱ {format_minutes(lesson.estimated_minutes)} · "
-        f"난이도 {difficulty_dots(lesson.difficulty)} ({lesson.difficulty}/5) · "
-        f"{badge(state_of(summary))}</p>",
+        f"{html.escape(t('site.label.difficulty'))} {difficulty_dots(lesson.difficulty)} "
+        f"({lesson.difficulty}/5) · "
+        f"{badge(state_of(summary), t)}</p>",
         "",
         f"> {md_text(lesson.summary)}",
         "",
-        f"[{STUDY_HEADING}](#{STUDY_ANCHOR}) · [학습 자료](#{RESOURCES_ANCHOR}) · "
+        f"[{md_text(t('site.heading.study_guide'))}](#{STUDY_ANCHOR}) · "
+        f"[{md_text(t('site.heading.resources'))}](#{RESOURCES_ANCHOR}) · "
         f"{module_link(model, page, summary.module)}",
         "",
-        "**학습 목표**",
+        f"**{md_text(t('site.label.objectives'))}**",
         "",
         *[f"- {md_text(objective)}" for objective in lesson.objectives],
         "",
@@ -468,17 +582,25 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
             if other is None:
                 items.append(f"`{prereq}`")
             else:
-                items.append(f"{lesson_link(model, page, other.lesson)} {badge(state_of(other))}")
-        out.append("**선수 레슨**: " + " · ".join(items))
+                items.append(
+                    f"{lesson_link(model, page, other.lesson)} {badge(state_of(other), t)}"
+                )
+        prereq_label = md_text(t("site.label.prerequisites"))
+        out.append(f"**{prereq_label}**: " + " · ".join(items))
     else:
-        out.append("**선수 레슨**: 없음")
+        out.append(f"**{md_text(t('site.label.prerequisites'))}**: {md_text(t('site.label.none'))}")
     if summary.locked and summary.status is not LessonStatus.DONE:
-        out += ["", '!!! warning "잠김"', "    선수 레슨을 먼저 완료하면 이 레슨이 열립니다."]
+        out += [
+            "",
+            f'!!! warning "{md_text(t("site.lesson.locked_title"))}"',
+            f"    {md_text(t('site.lesson.locked_body'))}",
+        ]
     out.append("")
     if lesson.tags:
-        out += ["**태그**: " + " ".join(f"`{md_text(tag)}`" for tag in lesson.tags), ""]
+        tags = " ".join(f"`{md_text(tag)}`" for tag in lesson.tags)
+        out += [f"**{md_text(t('site.label.tags'))}**: " + tags, ""]
     if lesson.activities:
-        out += ["**활동**", ""]
+        out += [f"**{md_text(t('site.label.activities'))}**", ""]
         for activity in lesson.activities:
             minutes = (
                 f" · {format_minutes(activity.estimated_minutes)}"
@@ -486,43 +608,43 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
                 else ""
             )
             out.append(
-                f"- {ACTIVITY_LABELS.get(activity.kind, activity.kind)}: "
-                f"{md_text(activity.title)}{minutes}"
+                f"- {md_text(activity_label(activity.kind, t))}: {md_text(activity.title)}{minutes}"
             )
         out.append("")
-    record = _progress_line(progress, model.now)
+    record = _progress_line(progress, model.now, t)
     if record:
-        out += [f"**내 기록**: {record}", ""]
+        out += [f"**{md_text(t('site.label.my_record'))}**: {md_text(record)}", ""]
     out += ["---", ""]
 
-    body, study = split_study_section(render_quiz_blocks(strip_leading_h1(lesson.body), lesson))
+    body, study = split_study_section(render_quiz_blocks(strip_leading_h1(lesson.body), lesson, t))
     out += [body.strip("\n"), ""]
 
-    out += [f"## {STUDY_HEADING} {{#{STUDY_ANCHOR}}}", ""]
+    out += [f"## {md_text(t('site.heading.study_guide'))} {{#{STUDY_ANCHOR}}}", ""]
     if study:
-        out += ['!!! tip "이렇게 공부하세요"', "", indent(study), ""]
+        out += [f'!!! tip "{md_text(t("site.lesson.study_tip"))}"', "", indent(study), ""]
     else:
         out += [
-            '!!! note "공부법이 아직 작성되지 않았습니다"',
+            f'!!! note "{md_text(t("site.lesson.study_missing"))}"',
             "",
-            "    학습 목표를 확인하고 본문을 읽은 뒤, 아래 학습 자료로 보충하세요.",
+            f"    {md_text(t('site.lesson.study_missing_body'))}",
             "",
         ]
-    out += [f"## 학습 자료 {{#{RESOURCES_ANCHOR}}}", ""]
+    out += [f"## {md_text(t('site.heading.resources'))} {{#{RESOURCES_ANCHOR}}}", ""]
     if lesson.resources:
         out += _resource_groups(model, page, [(r, [lesson]) for r in lesson.resources])
     else:
-        out.append("등록된 자료가 없습니다.")
+        out.append(md_text(t("site.lesson.no_resources")))
     return "\n".join(out) + "\n"
 
 
-def render_quiz_blocks(body: str, lesson: Lesson) -> str:
+def render_quiz_blocks(body: str, lesson: Lesson, t: Translator | None = None) -> str:
     """Replace each ```` ```quiz ```` fence with a question list; answers fold into ``<details>``.
 
     Questions and choices stay visible; the correct answer and explanation go into a
     collapsible ``???`` admonition (pymdownx.details renders it as ``<details>``). A block
     that does not parse is shown as a plain YAML code block instead.
     """
+    t = t or translator(DEFAULT_LANG)
     try:
         quiz = parse_quiz(lesson)
     except QuizParseError:
@@ -534,10 +656,11 @@ def render_quiz_blocks(body: str, lesson: Lesson) -> str:
         nonlocal number
         if index >= len(blocks):
             return _code_block(raw)
-        out = [f'!!! question "확인 퀴즈 ({len(blocks[index].questions)}문항)"', ""]
+        heading = md_text(t("site.heading.quiz", count=len(blocks[index].questions)))
+        out = [f'!!! question "{heading}"', ""]
         for question in blocks[index].questions:
             number += 1
-            out += indent(_render_question(question, number)).splitlines() + [""]
+            out += indent(_render_question(question, number, t)).splitlines() + [""]
         return "\n".join(out)
 
     return _replace_fences(body, render)
@@ -550,16 +673,18 @@ def _code_block(raw: str, language: str = "yaml") -> str:
     return f"{fence}{language}\n{raw}\n{fence}"
 
 
-def _render_question(question: QuizQuestion, number: int) -> str:
+def _render_question(question: QuizQuestion, number: int, t: Translator) -> str:
     # Quiz text comes from lesson front matter, so it is escaped like any other content.
-    lines = [f"**{number}.** ({question.type_label}) {md_text(question.prompt)}", ""]
+    kind = md_text(t(f"quiz.kind.{question.type}"))
+    lines = [f"**{number}.** ({kind}) {md_text(question.prompt)}", ""]
     if question.choices:
         lines += [f"{i + 1}. {md_text(choice)}" for i, choice in enumerate(question.choices)]
         lines.append("")
+    answer = t("site.lesson.answer_label", answer=md_text(question.answer_text()))
     lines += [
-        '??? note "정답·해설"',
+        f'??? note "{md_text(t("site.heading.answer"))}"',
         "",
-        f"    **정답:** {md_text(question.answer_text())}",
+        f"    {answer}",
         "",
         f"    {md_text(question.explanation)}",
     ]
@@ -590,16 +715,18 @@ def _replace_fences(body: str, render: Callable[[int, str], str]) -> str:
     return "\n".join(out)
 
 
-def _progress_line(progress: LessonProgress, now: datetime) -> str:
+def _progress_line(progress: LessonProgress, now: datetime, t: Translator) -> str:
     parts = []
     if progress.total_seconds:
-        parts.append(f"누적 학습 {format_seconds(progress.total_seconds)}")
+        parts.append(t("site.record.total", time=format_seconds(progress.total_seconds)))
     if progress.started_at:
-        parts.append(f"시작 {_local(progress.started_at, now):%Y-%m-%d}")
+        parts.append(t("site.record.started", date=f"{_local(progress.started_at, now):%Y-%m-%d}"))
     if progress.completed_at and progress.status is LessonStatus.DONE:
-        parts.append(f"완료 {_local(progress.completed_at, now):%Y-%m-%d}")
+        parts.append(
+            t("site.record.completed", date=f"{_local(progress.completed_at, now):%Y-%m-%d}")
+        )
     if progress.understanding:
-        parts.append(f"이해도 {progress.understanding}/5")
+        parts.append(t("site.record.understanding", value=progress.understanding))
     return " · ".join(parts)
 
 
@@ -626,14 +753,17 @@ def _resource_groups(
     show_lessons: bool = False,
     heading: str = "###",
 ) -> list[str]:
-    groups: dict[str, list[tuple[Resource, list[Lesson]]]] = {k: [] for k in KIND_ORDER}
+    t = model.t
+    labels = [kind_label(kind, t) for kind, _ in KIND_KEYS]
+    order = list(dict.fromkeys(labels))  # unique, in display order
+    groups: dict[str, list[tuple[Resource, list[Lesson]]]] = {label: [] for label in order}
     for item in resources:
-        groups[KIND_LABELS[item[0].kind]].append(item)
+        groups[kind_label(item[0].kind, t)].append(item)
     out: list[str] = []
-    for label in KIND_ORDER:
+    for label in order:
         if not groups[label]:
             continue
-        out += [f"{heading} {label}", ""]
+        out += [f"{heading} {md_text(label)}", ""]
         for resource, lessons in groups[label]:
             # Only http(s) survives: a `javascript:` url must never become a link.
             safe_url = resource.url if resource.url and is_http_url(resource.url) else None
@@ -644,7 +774,10 @@ def _resource_groups(
             if resource.note:
                 line += f" — {md_text(resource.note)}"
             if show_lessons:
-                line += " · 레슨: " + ", ".join(lesson_link(model, page, x) for x in lessons)
+                line += t(
+                    "site.resources.lessons_suffix",
+                    lessons=", ".join(lesson_link(model, page, x) for x in lessons),
+                )
             out.append(line)
         out.append("")
     return out
@@ -653,15 +786,15 @@ def _resource_groups(
 def render_resources(model: SiteModel) -> str:
     page = RESOURCES_PAGE
     resources = _collect_resources(model.summaries)
+    t = model.t
     out = [
-        "# 자료실",
+        f"# {md_text(t('site.heading.resources_page'))}",
         "",
-        f"코스 전체 학습 자료 {len(resources)}개를 유형별로 모았습니다. "
-        "각 자료 옆의 레슨 링크에서 언제 어떻게 쓰는지 확인하세요.",
+        md_text(t("site.resources.intro", count=len(resources))),
         "",
     ]
     if not resources:
-        out.append("등록된 자료가 없습니다.")
+        out.append(md_text(t("site.resources.empty")))
     else:
         out += _resource_groups(model, page, resources, show_lessons=True, heading="##")
     return "\n".join(out) + "\n"

@@ -10,8 +10,9 @@ import uuid
 from starlette.datastructures import Headers, MutableHeaders
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
-from robotics_curriculum.api.log import LOGGER_NAME, request_id_var
+from robotics_curriculum.api.log import LOGGER_NAME, lang_var, request_id_var
 from robotics_curriculum.api.problems import problem_response
+from robotics_curriculum.i18n import resolve_lang
 
 REQUEST_ID_HEADER = "X-Request-ID"
 _VALID_ID = re.compile(r"^[A-Za-z0-9._-]{1,128}$")
@@ -43,6 +44,8 @@ class RequestContextMiddleware:
             return
         request_id = _request_id(scope)
         token = request_id_var.set(request_id)
+        accept_language = Headers(scope=scope).get("accept-language")
+        lang_token = lang_var.set(resolve_lang(accept_language=accept_language))
         status = 500
         started = False
         begin = time.perf_counter()
@@ -74,6 +77,7 @@ class RequestContextMiddleware:
                 },
             )
             request_id_var.reset(token)
+            lang_var.reset(lang_token)
 
 
 _DOCS_PATHS = ("/docs", "/redoc", "/openapi.json")

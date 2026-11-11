@@ -6441,7 +6441,7 @@
       },
       "Problem": {
         "additionalProperties": true,
-        "description": "RFC 9457 problem details. ``type`` is ``about:blank`` and ``title`` the HTTP phrase.",
+        "description": "RFC 9457 problem details. ``type`` is ``about:blank`` and ``title`` is localized.",
         "properties": {
           "type": {
             "default": "about:blank",
