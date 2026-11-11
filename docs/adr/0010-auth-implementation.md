@@ -43,7 +43,12 @@ S256만 쓰므로 범위가 작고, 가짜 IdP로 끝까지 테스트하기 쉽�
   같은 이메일의 기존 계정이 있으면 자동 연결하지 않고 409("비밀번호로 로그인 후 다시 시도") —
   PRD의 "같은 이메일 계정과 연결"은 이 두 단계로 충족한다. 그 외에는 비밀번호 없는 새 계정.
 - `return_to`는 `/`로 시작하는 상대 경로만 허용(open redirect 방지), 성공 시 `RC_PUBLIC_URL`로 302.
-- GitHub(비 OIDC OAuth2)와 IdP 그룹→역할 매핑(`OIDC_ROLE_CLAIM_MAP`)은 후속.
+- GitHub: 제공자 `"type": "github"`(엔드포인트·범위 `read:user user:email` 기본값 자동). id_token 이
+  없으므로 코드 교환 후 `/user`·`/user/emails` 를 읽고, **인증된(verified) 기본 이메일**만 쓴다.
+  subject 는 GitHub 숫자 id(로그인명 변경에 안전).
+- 역할 매핑: 제공자별 `role_claim`(예: `groups`)과 `role_map`(`{"rc-admins": "admin"}`). 로그인마다
+  매핑된 최고 역할로 **올리기만** 하고 내리지는 않는다(강등은 관리자 결정, 마지막 관리자 보호와
+  충돌 방지). 변경은 `user.role.changed`(reason `idp:<provider>`)로 감사한다.
 
 ## 결과
 
@@ -51,5 +56,5 @@ S256만 쓰므로 범위가 작고, 가짜 IdP로 끝까지 테스트하기 쉽�
   학습 데이터 조회는 인증 컨텍스트의 `user_id`로만 묶인다(라우터·코어 서비스 두 겹).
 - 감수하는 것: 인증 요청마다 세션 조회 1회(+분당 1회 갱신), 로그인 실패마다 행 1개 기록
   (`login_attempts` 정리 작업은 P2-5 운영 작업으로).
-- 후속: GitHub OAuth2 어댑터·OIDC 역할 매핑, 메일 인증 전 기능 제한(공개 기능이 생길 때), MFA(Phase 3), HIBP 유출 비밀번호
+- 후속: 메일 인증 전 기능 제한(공개 기능이 생길 때), MFA(Phase 3), HIBP 유출 비밀번호
   검사(선택), `login_attempts`·만료 세션 정리 잡, 초대(`invite` 토큰 종류만 선반영).

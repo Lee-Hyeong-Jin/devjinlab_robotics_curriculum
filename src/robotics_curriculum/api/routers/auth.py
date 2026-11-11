@@ -242,13 +242,17 @@ def oidc_callback(
     if error or not code:
         raise HTTPException(400, f"the provider refused the login: {error or 'no code'}")
     try:
-        id_token = client.exchange(
-            code, verifier=flow.verifier, redirect_uri=_redirect_uri(request, auth, provider)
+        claims = client.login(
+            code,
+            verifier=flow.verifier,
+            redirect_uri=_redirect_uri(request, auth, provider),
+            nonce=flow.nonce,
         )
-        claims = client.verify(id_token, nonce=flow.nonce)
     except OidcError as exc:
         raise HTTPException(400, f"login failed: {exc}") from None
-    result = auth.oidc_login(provider, claims, ctx, current=current)
+    result = auth.oidc_login(
+        provider, claims, ctx, current=current, mapped_role=client.mapped_role(claims)
+    )
     response = RedirectResponse(
         auth.config.public_url.rstrip("/") + flow.return_to, status_code=302
     )

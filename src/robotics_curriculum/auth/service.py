@@ -681,7 +681,13 @@ class AuthService:
     # -- external identities (OIDC) ----------------------------------------------------
 
     def oidc_login(
-        self, provider: str, claims: Claims, ctx: Context, *, current: Principal | None = None
+        self,
+        provider: str,
+        claims: Claims,
+        ctx: Context,
+        *,
+        current: Principal | None = None,
+        mapped_role: str | None = None,
     ) -> LoginResult:
         """Log in (or sign up / link) with verified OIDC claims.
 
@@ -741,6 +747,18 @@ class AuthService:
                 detail={"role": role.value, "method": f"oidc:{provider}"},
             )
             user = self._maybe_bootstrap_admin(user, ctx)  # the IdP verified the email
+        if mapped_role is not None and not user.role.includes(Role(mapped_role)):
+            # IdP group mapping only raises a role; demotion stays an admin decision.
+            before = user.role
+            user = self.store.update_user(user.id, now, role=Role(mapped_role))
+            self._audit(
+                ctx,
+                "user.role.changed",
+                None,
+                target_type="user",
+                target_id=str(user.id),
+                detail={"from": before.value, "to": mapped_role, "reason": f"idp:{provider}"},
+            )
         result = self._new_session(user, ctx)
         self._audit(
             ctx,

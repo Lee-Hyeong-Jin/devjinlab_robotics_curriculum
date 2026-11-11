@@ -49,7 +49,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   learner/author/admin, per-user progress, password reset and email verification by mail,
   account export and deletion, admin user management and an audit log; security headers.
 - OIDC login (Authorization Code + PKCE) for providers listed in `RC_OIDC_PROVIDERS`, with
-  account linking and `/api/v1/me/identities`.
+  account linking and `/api/v1/me/identities`; GitHub login (`"type": "github"`) and IdP group
+  to role mapping (`role_claim`, `role_map`; raises roles only).
+- `GET /api/v1/roadmap` (level → module → lesson states and progress) and `GET /api/v1/search`
+  (lessons and resources).
 - Prometheus metrics at `/metrics` (request counts, latency histogram, in-flight requests,
   database pool usage); `RC_API_METRICS=0` turns it off.
 - `docs/api/openapi.yaml` is generated from the served API (plus `x-planned` routes) and a test

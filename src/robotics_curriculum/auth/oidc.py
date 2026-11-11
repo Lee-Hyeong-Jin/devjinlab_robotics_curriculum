@@ -40,17 +40,37 @@ class OidcError(Exception):
     """The provider answered unexpectedly or a token failed verification."""
 
 
+GITHUB_DEFAULTS: dict[str, str] = {
+    "issuer": "https://github.com",
+    "authorization_endpoint": "https://github.com/login/oauth/authorize",
+    "token_endpoint": "https://github.com/login/oauth/access_token",
+    "api_base_url": "https://api.github.com",
+    "scopes": "read:user user:email",
+}
+ROLE_ORDER = ("learner", "author", "admin")
+
+
 @dataclass(frozen=True, slots=True)
 class OidcProvider:
+    """``type`` is ``oidc`` (id_token) or ``github`` (OAuth2 + REST user API, no id_token).
+
+    ``role_claim`` / ``role_map``: map values of a claim (e.g. ``groups``) to roles; a login
+    can raise the user's role to the highest mapped one, never lower it.
+    """
+
     id: str
     issuer: str
     client_id: str
     client_secret: str | None = field(default=None, repr=False)
     name: str | None = None
+    type: str = "oidc"
     scopes: str = "openid email profile"
     authorization_endpoint: str | None = None
     token_endpoint: str | None = None
     jwks_uri: str | None = None
+    api_base_url: str | None = None
+    role_claim: str | None = None
+    role_map: dict[str, str] = field(default_factory=dict)
 
 
 def parse_providers(env: Mapping[str, str]) -> dict[str, OidcProvider]:
@@ -66,8 +86,18 @@ def parse_providers(env: Mapping[str, str]) -> dict[str, OidcProvider]:
         raise ValueError("RC_OIDC_PROVIDERS must be a JSON list")
     providers: dict[str, OidcProvider] = {}
     for item in items:
-        if not isinstance(item, dict) or not {"id", "issuer", "client_id"} <= item.keys():
+        if not isinstance(item, dict):
+            raise ValueError("each OIDC provider must be a JSON object")
+        kind = item.get("type", "oidc")
+        if kind == "github":
+            item = {**GITHUB_DEFAULTS, **item}
+        elif kind != "oidc":
+            raise ValueError(f"unknown provider type {kind!r} (use oidc or github)")
+        if not {"id", "issuer", "client_id"} <= item.keys():
             raise ValueError("each OIDC provider needs id, issuer and client_id")
+        role_map = item.get("role_map") or {}
+        if not isinstance(role_map, dict) or not set(role_map.values()) <= set(ROLE_ORDER):
+            raise ValueError(f"role_map values must be one of {', '.join(ROLE_ORDER)}")
         secret = item.get("client_secret")
         if secret_env := item.get("client_secret_env"):
             secret = env.get(secret_env) or secret
@@ -155,9 +185,9 @@ class OidcClient:
         self._config: dict[str, Any] | None = None
         self._jwks: dict[str, Any] | None = None
 
-    def _get_json(self, url: str) -> dict[str, Any]:
+    def _get_json(self, url: str, headers: dict[str, str] | None = None) -> dict[str, Any]:
         try:
-            response = self.http.get(url, timeout=10)
+            response = self.http.get(url, headers=headers, timeout=10)
             response.raise_for_status()
             data = response.json()
         except (httpx.HTTPError, ValueError) as exc:
@@ -168,6 +198,12 @@ class OidcClient:
 
     def config(self) -> dict[str, Any]:
         p = self.provider
+        if p.type == "github" and p.authorization_endpoint and p.token_endpoint:
+            return {
+                "issuer": p.issuer,
+                "authorization_endpoint": p.authorization_endpoint,
+                "token_endpoint": p.token_endpoint,
+            }
         if p.authorization_endpoint and p.token_endpoint and p.jwks_uri:
             return {
                 "issuer": p.issuer,
@@ -200,8 +236,57 @@ class OidcClient:
         )
         return f"{self.config()['authorization_endpoint']}?{query}"
 
-    def exchange(self, code: str, *, verifier: str, redirect_uri: str) -> str:
-        """Trade the code for tokens; returns the raw ``id_token``."""
+    def login(self, code: str, *, verifier: str, redirect_uri: str, nonce: str) -> Claims:
+        """Code -> verified claims: the id_token for OIDC, the REST user API for GitHub."""
+        if self.provider.type == "github":
+            payload = self._token_request(code, verifier=verifier, redirect_uri=redirect_uri)
+            return self._github_claims(payload)
+        id_token = self.exchange(code, verifier=verifier, redirect_uri=redirect_uri)
+        return self.verify(id_token, nonce=nonce)
+
+    def mapped_role(self, claims: Claims) -> str | None:
+        """Highest role mapped from the ``role_claim`` values, or ``None``."""
+        p = self.provider
+        if not p.role_claim or not p.role_map:
+            return None
+        value = claims.raw.get(p.role_claim)
+        values = [value] if isinstance(value, str) else value if isinstance(value, list) else []
+        roles = [p.role_map[v] for v in values if isinstance(v, str) and v in p.role_map]
+        return max(roles, key=ROLE_ORDER.index) if roles else None
+
+    def _github_claims(self, payload: dict[str, Any]) -> Claims:
+        """GitHub has no id_token: read /user and the verified primary email from the API."""
+        token = payload.get("access_token")
+        if not isinstance(token, str):
+            raise OidcError("token response has no access_token")
+        base = (self.provider.api_base_url or GITHUB_DEFAULTS["api_base_url"]).rstrip("/")
+        headers = {"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json"}
+        user = self._get_json(f"{base}/user", headers=headers)
+        try:
+            response = self.http.get(f"{base}/user/emails", headers=headers, timeout=10)
+            response.raise_for_status()
+            emails = response.json()
+        except (httpx.HTTPError, ValueError) as exc:
+            raise OidcError(f"cannot read GitHub emails: {exc}") from None
+        verified = [
+            e
+            for e in (emails if isinstance(emails, list) else [])
+            if isinstance(e, dict) and e.get("verified") is True and e.get("email")
+        ]
+        verified.sort(key=lambda e: e.get("primary") is not True)
+        email = str(verified[0]["email"]).lower() if verified else None
+        if "id" not in user:
+            raise OidcError("GitHub user response has no id")
+        name = user.get("name") or user.get("login")
+        return Claims(
+            subject=str(user["id"]),
+            email=email,
+            email_verified=email is not None,
+            name=name if isinstance(name, str) else None,
+            raw={k: user.get(k) for k in ("id", "login", "name")},
+        )
+
+    def _token_request(self, code: str, *, verifier: str, redirect_uri: str) -> dict[str, Any]:
         data = {
             "grant_type": "authorization_code",
             "code": code,
@@ -209,20 +294,24 @@ class OidcClient:
             "code_verifier": verifier,
             "client_id": self.provider.client_id,
         }
-        auth: tuple[str, str] | None = None
-        if self.provider.client_secret:
-            auth = (self.provider.client_id, self.provider.client_secret)
+        headers = {"Accept": "application/json"}
+        url = self.config()["token_endpoint"]
         try:
-            response = (
-                self.http.post(self.config()["token_endpoint"], data=data, auth=auth, timeout=10)
-                if auth
-                else self.http.post(self.config()["token_endpoint"], data=data, timeout=10)
-            )
+            if self.provider.client_secret:
+                auth = (self.provider.client_id, self.provider.client_secret)
+                response = self.http.post(url, data=data, auth=auth, headers=headers, timeout=10)
+            else:
+                response = self.http.post(url, data=data, headers=headers, timeout=10)
             payload = response.json()
         except (httpx.HTTPError, ValueError) as exc:
             raise OidcError(f"token request failed: {exc}") from None
-        if response.status_code != 200 or not isinstance(payload, dict):
+        if response.status_code != 200 or not isinstance(payload, dict) or "error" in payload:
             raise OidcError(f"token endpoint returned {response.status_code}")
+        return payload
+
+    def exchange(self, code: str, *, verifier: str, redirect_uri: str) -> str:
+        """Trade the code for tokens; returns the raw ``id_token``."""
+        payload = self._token_request(code, verifier=verifier, redirect_uri=redirect_uri)
         id_token = payload.get("id_token")
         if not isinstance(id_token, str):
             raise OidcError("token response has no id_token")
