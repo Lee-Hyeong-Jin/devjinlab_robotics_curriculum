@@ -86,6 +86,17 @@ front matter에 정의되지 않은 키가 있으면 에러다(오타 방지). `
 
 성공 시 `OK: N lessons in M modules`.
 
+## 레슨 ID와 진도 데이터
+
+학습 진도(`rc start/stop/log/done`, `.rc/progress.db`)는 레슨 front matter의 `id` 문자열로
+저장된다 (콘텐츠 테이블에 대한 FK 없음). 따라서:
+
+- 레슨 `id`는 `curriculum/` 아래 **모든 코스를 통틀어** 유일해야 한다. 진도 명령은
+  여러 코스에 같은 레슨 ID가 있으면 에러로 거부한다.
+- 이미 학습 기록이 있는 레슨의 `id`를 바꾸면 기존 기록이 그 레슨과 끊긴다(파일 이름·
+  모듈 이동은 무관). 바꿔야 한다면 `rc progress export` → JSON의 `lesson_id` 수정 →
+  `rc progress import --replace`로 옮긴다.
+
 ## 파이썬 API
 
 ```python
