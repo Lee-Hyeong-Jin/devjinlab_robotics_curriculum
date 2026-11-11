@@ -1,0 +1,26 @@
+# Claude Code (per-user)
+.claude/settings.local.json
+.claude/worktrees/
+
+# Secrets / env
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Node
+node_modules/
+dist/
+.next/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
