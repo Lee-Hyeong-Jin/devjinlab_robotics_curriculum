@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Depends, Query
 
-from robotics_curriculum.api.deps import Index
+from robotics_curriculum.api.deps import Index, get_principal
 from robotics_curriculum.api.problems import problem_responses
 from robotics_curriculum.api.schemas import (
     Course,
@@ -23,7 +23,12 @@ from robotics_curriculum.content import Course as CourseModel
 from robotics_curriculum.content import ResourceKind
 from robotics_curriculum.content.sections import STUDY_GUIDE_HEADING, extract_section
 
-router = APIRouter(prefix="/api/v1", tags=["content"], responses=problem_responses(503))
+router = APIRouter(
+    dependencies=[Depends(get_principal)],
+    prefix="/api/v1",
+    tags=["content"],
+    responses=problem_responses(503),
+)
 
 
 def _summary(course: CourseModel) -> CourseSummary:
