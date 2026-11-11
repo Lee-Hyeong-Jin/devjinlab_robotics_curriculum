@@ -59,14 +59,14 @@ milestones:
 
     - id: P1-1
       title: 학습 진도 추적 저장소 (FR-3, FR-10)
-      status: todo
+      status: done
       depends_on: [P0-2]
       goal: Activity 단위 상태, 이해도, 메모, 세션 시간을 로컬 SQLite 에 저장·조회하고 JSON 으로 내보내기/가져오기한다.
       acceptance:
         - Progress/Session 모델에 user_id 가 있고 상태(not_started, in_progress, done) 변경이 저장 후 재조회로 확인된다
         - `rc progress export/import` 가 JSON 왕복에서 데이터를 보존한다(테스트)
         - 저장소 인터페이스와 SQLite 구현이 분리되어 있고 선택 이유가 ADR 에 있다
-      note:
+      note: progress store merged (65d587a)
 
     - id: P1-2
       title: 퀴즈·플래시카드·간격 반복 (FR-4 P0)
