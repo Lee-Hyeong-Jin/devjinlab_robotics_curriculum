@@ -36,6 +36,7 @@ from robotics_curriculum.auth.oidc import Claims
 from robotics_curriculum.auth.store import AuthStore
 
 PAT_PREFIX = "rcp_"
+RESET_KEY_PREFIX = "reset:"
 
 
 # -- errors ------------------------------------------------------------------------------
@@ -93,6 +94,9 @@ class AuthConfig:
     audit_retention: timedelta = timedelta(days=90)
     allow_signup: bool = True
     bootstrap_admin_email: str | None = None
+    reset_window: timedelta = timedelta(minutes=15)
+    max_resets_per_window: int = 3
+    max_resets_per_ip: int = 10
     public_url: str = "http://localhost:3000"
     api_base_url: str | None = None
     pepper: str = ""
@@ -188,6 +192,11 @@ class AuthService:
             **kwargs,
         )
 
+    def record(self, ctx: Context, action: str, actor: int | None, **kwargs: Any) -> None:
+        """Append an audit entry for events decided outside the service (denials, admin
+        reads)."""
+        self._audit(ctx, action, actor, **kwargs)
+
     # -- accounts ---------------------------------------------------------------------
 
     def signup(
@@ -202,7 +211,9 @@ class AuthService:
             raise Invalid(str(exc)) from None
         if self.store.get_user_by_email(email) is not None:
             raise Conflict("an account with this email already exists")
-        role = Role.ADMIN if email == self.config.bootstrap_admin_email else Role.LEARNER
+        # Everyone signs up as learner. The bootstrap admin is promoted only once the email is
+        # proven (verify_email) and only while no admin exists (SRV-02).
+        role = Role.LEARNER
         user = self.store.create_user(
             email, self.passwords.hash(password), role, self.clock(), display_name=display_name
         )
@@ -216,6 +227,45 @@ class AuthService:
         )
         self._send_token(user, TokenKind.VERIFY_EMAIL, self.config.verify_ttl)
         return user
+
+    def _maybe_bootstrap_admin(self, user: User, ctx: Context) -> User:
+        """Promote the ``RC_AUTH_ADMIN_EMAIL`` account after its email is verified, but only
+        while the server has no active admin (so the setting cannot be used later)."""
+        if (
+            user.email != self.config.bootstrap_admin_email
+            or user.email_verified_at is None
+            or user.role is Role.ADMIN
+            or self.store.count_users(role=Role.ADMIN, status=UserStatus.ACTIVE) > 0
+        ):
+            return user
+        promoted = self.store.update_user(user.id, self.clock(), role=Role.ADMIN)
+        self._audit(
+            ctx,
+            "user.role.changed",
+            None,
+            target_type="user",
+            target_id=str(user.id),
+            detail={"from": user.role.value, "to": "admin", "reason": "bootstrap"},
+        )
+        return promoted
+
+    def promote_admin(self, email: str, ctx: Context) -> User:
+        """Operator command (``rc api promote-admin``): make an existing account admin."""
+        user = self.store.get_user_by_email(email.strip().lower())
+        if user is None or not user.is_active:
+            raise NotFound(f"no active account for {email}")
+        if user.role is Role.ADMIN:
+            return user
+        promoted = self.store.update_user(user.id, self.clock(), role=Role.ADMIN)
+        self._audit(
+            ctx,
+            "user.role.changed",
+            None,
+            target_type="user",
+            target_id=str(user.id),
+            detail={"from": user.role.value, "to": "admin", "reason": "operator"},
+        )
+        return promoted
 
     def _send_token(self, user: User, kind: TokenKind, ttl: timedelta) -> bool:
         if self.mailer is None:
@@ -244,7 +294,7 @@ class AuthService:
             raise Invalid("invalid or expired token")
         user = self.store.update_user(user_id, self.clock(), email_verified_at=self.clock())
         self._audit(ctx, "user.email_verified", user_id, target_type="user", target_id=str(user_id))
-        return user
+        return self._maybe_bootstrap_admin(user, ctx)
 
     def update_profile(self, user: User, ctx: Context, **fields: str | None) -> User:
         allowed = {"display_name", "locale", "timezone"}
@@ -466,16 +516,41 @@ class AuthService:
         """Mails a reset link if the account exists. Same answer either way (no enumeration)."""
         if self.mailer is None:
             raise Unavailable("password reset is disabled: mail is not configured on this server")
-        user = self.store.get_user_by_email(email.strip().lower())
-        if user is not None and user.is_active:
-            self._send_token(user, TokenKind.RESET_PASSWORD, self.config.reset_ttl)
+        email = email.strip().lower()
+        now = self.clock()
+        # Throttle per requested address and per IP whether or not the account exists, so a
+        # 429 reveals nothing (SRV-03). Requests are kept in login_attempts under a "reset:"
+        # key with success=True, which the login throttle (failures only) ignores.
+        key = RESET_KEY_PREFIX + email
+        by_email, by_ip = self.store.count_attempts(
+            key, ctx.ip, now - self.config.reset_window, prefix=RESET_KEY_PREFIX
+        )
+        if by_email >= self.config.max_resets_per_window or by_ip >= self.config.max_resets_per_ip:
             self._audit(
                 ctx,
-                "auth.password.reset_requested",
+                "auth.password.reset_throttled",
                 None,
-                target_type="user",
-                target_id=str(user.id),
+                target_type="email",
+                detail={"by_email": by_email, "by_ip": by_ip},
             )
+            retry = str(int(self.config.reset_window.total_seconds()))
+            raise Throttled(
+                "too many reset requests; try again later", headers={"Retry-After": retry}
+            )
+        self.store.record_login(key, ctx.ip, True, now)
+        user = self.store.get_user_by_email(email)
+        if user is None or not user.is_active:
+            return
+        # Only the newest reset link is valid (SRV-04).
+        self.store.expire_one_time(user.id, TokenKind.RESET_PASSWORD, now)
+        self._send_token(user, TokenKind.RESET_PASSWORD, self.config.reset_ttl)
+        self._audit(
+            ctx,
+            "auth.password.reset_requested",
+            None,
+            target_type="user",
+            target_id=str(user.id),
+        )
 
     def reset_password(self, token: str, new: str, ctx: Context) -> None:
         user_id = self.store.consume_one_time(
@@ -483,8 +558,10 @@ class AuthService:
         )
         user = self.store.get_user(user_id) if user_id is not None else None
         if user is None or not user.is_active:
+            self._audit(ctx, "auth.password.reset_invalid", None)  # SRV-07
             raise Invalid("invalid or expired token")
         self._set_password(user, new, ctx)
+        self.store.expire_one_time(user.id, TokenKind.RESET_PASSWORD, self.clock())
         self.store.revoke_user_sessions(user.id, self.clock())
         self._audit(ctx, "auth.password.reset", user.id, target_type="user", target_id=str(user.id))
 
@@ -500,7 +577,18 @@ class AuthService:
         if self.erase_learning_data is not None:
             self.erase_learning_data(user.id)
         self.store.erase_user(user.id, self.clock())
-        self._audit(ctx, "account.deleted", user.id, target_type="user", target_id=str(user.id))
+        # SRV-08: drop the user's id and IPs from earlier entries now; the deletion itself is
+        # recorded without actor or IP, against the (already anonymized) user row.
+        self.store.anonymize_actor(user.id)
+        self.store.audit(
+            "account.deleted",
+            self.clock(),
+            actor_user_id=None,
+            actor_ip=None,
+            target_type="user",
+            target_id=str(user.id),
+            request_id=ctx.request_id,
+        )
 
     def record_export(self, user: User, ctx: Context) -> None:
         self._audit(ctx, "data.exported", user.id, target_type="user", target_id=str(user.id))
@@ -637,7 +725,7 @@ class AuthService:
                 )
             if not self.config.allow_signup:
                 raise Forbidden("sign-up is disabled on this server")
-            role = Role.ADMIN if claims.email == self.config.bootstrap_admin_email else Role.LEARNER
+            role = Role.LEARNER
             user = self.store.create_user(
                 claims.email, None, role, now, display_name=claims.name, email_verified_at=now
             )
@@ -652,6 +740,7 @@ class AuthService:
                 target_id=str(user.id),
                 detail={"role": role.value, "method": f"oidc:{provider}"},
             )
+            user = self._maybe_bootstrap_admin(user, ctx)  # the IdP verified the email
         result = self._new_session(user, ctx)
         self._audit(
             ctx,

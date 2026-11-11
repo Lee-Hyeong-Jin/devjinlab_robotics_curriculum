@@ -537,3 +537,90 @@ class ReviewResult(Schema):
             due=state.due,
             due_tomorrow=due_tomorrow,
         )
+
+
+# -- roadmap -----------------------------------------------------------------------------
+
+LockState = Literal["done", "in_progress", "available", "locked"]
+
+
+def lock_state(s: Summary) -> LockState:
+    """done / in_progress, else locked (a prerequisite is not done) or available."""
+    if s.status is LessonStatus.DONE:
+        return "done"
+    if s.status is LessonStatus.IN_PROGRESS:
+        return "in_progress"
+    return "locked" if s.locked else "available"
+
+
+class RoadmapLesson(Schema):
+    id: str
+    title: str
+    state: LockState
+
+
+class RoadmapModule(Schema):
+    id: str
+    title: str
+    progress: float = Field(ge=0, le=1, description="Done lessons / all lessons.")
+    state: LockState
+    lessons: list[RoadmapLesson]
+
+    @classmethod
+    def of(cls, module: content.Module, rows: list[Summary]) -> RoadmapModule:
+        states = [lock_state(s) for s in rows]
+        if states and all(st == "done" for st in states):
+            state: LockState = "done"
+        elif any(st in ("done", "in_progress") for st in states):
+            state = "in_progress"
+        elif states and all(st == "locked" for st in states):
+            state = "locked"
+        else:
+            state = "available"
+        done = sum(1 for st in states if st == "done")
+        return cls(
+            id=module.id,
+            title=module.title,
+            progress=done / len(states) if states else 0.0,
+            state=state,
+            lessons=[
+                RoadmapLesson(id=s.lesson.id, title=s.lesson.title, state=st)
+                for s, st in zip(rows, states, strict=True)
+            ],
+        )
+
+
+class RoadmapStage(Schema):
+    course_id: str
+    level: content.models.Level | None
+    progress: float = Field(ge=0, le=1, description="Mean of the module progress values.")
+    modules: list[RoadmapModule]
+
+
+class Roadmap(Schema):
+    stages: list[RoadmapStage] = Field(
+        description="Consecutive modules of one level, in course order (like `rc roadmap`)."
+    )
+
+    @classmethod
+    def of(cls, summaries: list[Summary]) -> Roadmap:
+        stages: list[RoadmapStage] = []
+        modules: dict[tuple[str, str], list[Summary]] = {}
+        order: list[tuple[content.Course, content.Module]] = []
+        for s in summaries:
+            key = (s.course.id, s.module.id)
+            if key not in modules:
+                modules[key] = []
+                order.append((s.course, s.module))
+            modules[key].append(s)
+        for course, module in order:
+            item = RoadmapModule.of(module, modules[(course.id, module.id)])
+            last = stages[-1] if stages else None
+            if last is None or last.course_id != course.id or last.level != module.level:
+                stages.append(
+                    RoadmapStage(course_id=course.id, level=module.level, progress=0.0, modules=[])
+                )
+            stages[-1].modules.append(item)
+        for stage in stages:
+            stage.progress = sum(m.progress for m in stage.modules) / len(stage.modules)
+        return cls(stages=stages)

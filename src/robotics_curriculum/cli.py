@@ -15,6 +15,7 @@ from pydantic import ValidationError
 from robotics_curriculum import __version__
 from robotics_curriculum.api.cli import api_app
 from robotics_curriculum.content import QuizParseError, check, parse_quiz
+from robotics_curriculum.i18n import LANG_ENV, Translator, get_translator
 from robotics_curriculum.learn.quiz import record_quiz_run, run_quiz, select_questions
 from robotics_curriculum.learn.review import (
     due_cards,
@@ -50,6 +51,7 @@ class _Options:
     data_dir: Path | None = None
     curriculum: Path | None = None
     verbose: bool = False
+    lang: str | None = None
 
 
 def _setup_logging(verbose: bool) -> None:
@@ -80,6 +82,14 @@ def main(
         bool,
         typer.Option("--verbose", "-v", help="Log what the command does to stderr."),
     ] = False,
+    lang: Annotated[
+        str | None,
+        typer.Option(
+            "--lang",
+            envvar=LANG_ENV,
+            help="Message language: ko or en [default: ko].",
+        ),
+    ] = None,
     curriculum: Annotated[
         Path | None,
         typer.Option(
@@ -91,11 +101,17 @@ def main(
 ) -> None:
     """Robotics curriculum tools."""
     _setup_logging(verbose)
-    ctx.obj = _Options(data_dir=data_dir, curriculum=curriculum, verbose=verbose)
+    ctx.obj = _Options(data_dir=data_dir, curriculum=curriculum, verbose=verbose, lang=lang)
 
 
-def _fail(message: str) -> typer.Exit:
-    typer.echo(f"error: {message}", err=True)
+def _t(ctx: typer.Context | None = None) -> Translator:
+    """The translator for this invocation (``--lang`` / ``RC_LANG`` / Korean)."""
+    lang = getattr(ctx.obj, "lang", None) if ctx is not None else None
+    return get_translator(lang)
+
+
+def _fail(message: str, ctx: typer.Context | None = None) -> typer.Exit:
+    typer.echo(_t(ctx)("cli.error_prefix", message=message), err=True)
     return typer.Exit(code=1)
 
 
@@ -139,13 +155,10 @@ def _table(headers: list[str], rows: list[list[str]]) -> str:
     return "\n".join(lines)
 
 
-_LABEL = {"done": "done", "in_progress": "in progress", "not_started": "not started"}
-
-
-def _status_label(summary: LessonSummary) -> str:
+def _status_label(summary: LessonSummary, t: Translator) -> str:
     if summary.status == "not_started" and summary.locked:
-        return "locked"
-    return _LABEL[summary.status.value]
+        return t("cli.state.locked")
+    return t(f"cli.state.{summary.status.value}")
 
 
 def _local_today(now: datetime) -> date:
@@ -157,26 +170,26 @@ def _prompt(text: str) -> str:
     return str(typer.prompt(text, default="", show_default=False, prompt_suffix=""))
 
 
-def _review_header(service: ProgressService, now: datetime) -> str:
-    """``오늘 복습 N장 · 최근 7일 퀴즈 정답률 X% (c/t)`` for ``rc status`` (AC-4.6)."""
+def _review_header(service: ProgressService, now: datetime, t: Translator) -> str:
+    """Cards due today and the 7-day quiz accuracy, for ``rc status`` (AC-4.6)."""
     today = _local_today(now)
     due = due_count(service.store, today=today, user_id=service.user_id)
     accuracy = recent_accuracy(
         service.store.list_quiz_attempts(service.user_id), since=now - timedelta(days=7)
     )
     if accuracy is None:
-        rate = "기록 없음"
+        rate = t("cli.no_record")
     else:
         correct, total = accuracy
         rate = f"{round(100 * correct / total)}% ({correct}/{total})"
-    return f"오늘 복습: {due}장 · 최근 7일 퀴즈 정답률: {rate}"
+    return t("cli.review_line", due=due, rate=rate)
 
 
-def _warn_locked(service: ProgressService, lesson_id: str) -> None:
+def _warn_locked(service: ProgressService, lesson_id: str, t: Translator) -> None:
     """Forced open of a locked lesson: warn on stderr but carry on."""
     missing = service.missing_prerequisites(lesson_id)
     if missing:
-        typer.echo(f"warning: prerequisites not done: {', '.join(missing)}", err=True)
+        typer.echo(t("cli.warn_prereq", ids=", ".join(missing)), err=True)
 
 
 @app.command()
@@ -212,15 +225,16 @@ def status(
     course: Annotated[str | None, typer.Option("--course", help="Only this course id.")] = None,
 ) -> None:
     """Show per-lesson progress, study time, and the running timer."""
+    t = _t(ctx)
     with _service(ctx) as service:
         summaries = service.status(course)
         running = service.current_session()
-        review_line = _review_header(service, service.clock())
+        review_line = _review_header(service, service.clock(), t)
     if running is None:
-        typer.echo("열린 타이머: 없음")
+        typer.echo(t("cli.timer.none"))
     else:
-        since = f"{running.started_at:%Y-%m-%d %H:%M} UTC"
-        typer.echo(f"열린 타이머: {running.lesson_id} (since {since})")
+        since = f"{running.started_at:%Y-%m-%d %H:%M}"
+        typer.echo(t("cli.timer.running", lesson_id=running.lesson_id, since=since))
     typer.echo(review_line)
     courses = {s.course.id: s.course for s in summaries}
     for course_obj in courses.values():
@@ -230,22 +244,37 @@ def status(
         pct = round(100 * n_done / len(rows)) if rows else 0
         typer.echo("")
         typer.echo(
-            f"{course_obj.title} ({course_obj.id})  {pct}%  "
-            f"({n_done}/{len(rows)} lessons, time {_fmt_seconds(total)})"
+            t(
+                "cli.status.course_line",
+                title=course_obj.title,
+                course_id=course_obj.id,
+                percent=pct,
+                done=n_done,
+                total=len(rows),
+                time=_fmt_seconds(total),
+            )
         )
         table_rows = [
             [
                 s.module.id,
                 s.lesson.id,
                 s.lesson.title,
-                _status_label(s),
+                _status_label(s, t),
                 _fmt_seconds(s.progress.total_seconds),
                 f"{s.lesson.estimated_minutes}m",
                 f"{s.progress.completed_at:%Y-%m-%d}" if s.progress.completed_at else "-",
             ]
             for s in rows
         ]
-        headers = ["module", "lesson", "title", "status", "time", "est", "completed"]
+        headers = [
+            t("cli.status.header_module"),
+            t("cli.status.header_lesson"),
+            t("cli.status.header_title"),
+            t("cli.status.header_state"),
+            t("cli.status.header_time"),
+            t("cli.status.header_estimate"),
+            t("cli.status.header_completed"),
+        ]
         typer.echo(_table(headers, table_rows))
 
 
@@ -255,11 +284,13 @@ def start(
     lesson_id: Annotated[str, typer.Argument(help="Lesson id, e.g. m1-vectors-matrices.")],
 ) -> None:
     """Start a study timer for a lesson (only one may run at a time)."""
+    t = _t(ctx)
     with _service(ctx) as service:
         session = service.start(lesson_id)
-        _warn_locked(service, lesson_id)
+        _warn_locked(service, lesson_id, t)
         title = service.lesson(lesson_id).title
-    typer.echo(f"started {lesson_id} ({title}) at {session.started_at:%Y-%m-%d %H:%M} UTC")
+    at = f"{session.started_at:%Y-%m-%d %H:%M}"
+    typer.echo(t("cli.start", lesson_id=lesson_id, title=title, at=at))
 
 
 @app.command()
@@ -271,12 +302,13 @@ def stop(
     ] = False,
 ) -> None:
     """Stop the running timer and add the elapsed time to its lesson."""
+    t = _t(ctx)
     with _service(ctx) as service:
         session, seconds = service.stop(note, discard=discard)
     if discard:
-        typer.echo(f"discarded session for {session.lesson_id}")
+        typer.echo(t("cli.stop_discarded", lesson_id=session.lesson_id))
     else:
-        typer.echo(f"stopped {session.lesson_id}: {_fmt_seconds(seconds)}")
+        typer.echo(t("cli.stop", lesson_id=session.lesson_id, time=_fmt_seconds(seconds)))
 
 
 @app.command()
@@ -287,11 +319,12 @@ def log(
     note: Annotated[str | None, typer.Option("--note", "-m", help="Session note.")] = None,
 ) -> None:
     """Record study time manually (a session ending now)."""
+    t = _t(ctx)
     with _service(ctx) as service:
         minutes = parse_duration(duration)
         service.log(lesson_id, minutes, note)
-        _warn_locked(service, lesson_id)
-    typer.echo(f"logged {_fmt_seconds(minutes * 60)} on {lesson_id}")
+        _warn_locked(service, lesson_id, t)
+    typer.echo(t("cli.logged", lesson_id=lesson_id, time=_fmt_seconds(minutes * 60)))
 
 
 @app.command()
@@ -305,14 +338,25 @@ def done(
     note: Annotated[str | None, typer.Option("--note", "-m", help="Free-form note.")] = None,
 ) -> None:
     """Mark a lesson done (stops its running timer, if any)."""
+    t = _t(ctx)
     with _service(ctx) as service:
         progress, unlocked = service.done(lesson_id, understanding=understanding, note=note)
-        _warn_locked(service, lesson_id)
+        _warn_locked(service, lesson_id, t)
         title = service.lesson(lesson_id).title
-    extra = f", 이해도 {progress.understanding}" if progress.understanding else ""
-    typer.echo(f"done {lesson_id} ({title}), time {_fmt_seconds(progress.total_seconds)}{extra}")
+    extra = (
+        t("cli.done_understanding", value=progress.understanding) if progress.understanding else ""
+    )
+    typer.echo(
+        t(
+            "cli.done_line",
+            lesson_id=lesson_id,
+            title=title,
+            time=_fmt_seconds(progress.total_seconds),
+            extra=extra,
+        )
+    )
     for lesson in unlocked:
-        typer.echo(f"  unlocked: {lesson.id} ({lesson.title})")
+        typer.echo(t("cli.unlocked", lesson_id=lesson.id, title=lesson.title))
 
 
 @app.command("next")
@@ -322,24 +366,33 @@ def next_(
     count: Annotated[int, typer.Option("-n", min=1, help="How many to show.")] = 3,
 ) -> None:
     """Recommend lessons whose prerequisites are done (in-progress first, then course order)."""
+    t = _t(ctx)
     with _service(ctx) as service:
         lessons = service.next_lessons(course, limit=count)
     if not lessons:
-        typer.echo("nothing to do: every available lesson is done")
+        typer.echo(t("cli.next.empty"))
         return
     rows = [
         [
             str(i),
             s.lesson.id,
             s.lesson.title,
-            _LABEL[s.status.value],
+            t(f"cli.state.{s.status.value}"),
             f"{s.lesson.estimated_minutes}m",
             str(s.lesson.difficulty),
         ]
         for i, s in enumerate(lessons, 1)
     ]
-    typer.echo(_table(["#", "lesson", "title", "status", "est", "difficulty"], rows))
-    typer.echo(f"\nstart: rc start {lessons[0].lesson.id}")
+    headers = [
+        t("cli.status.header_index"),
+        t("cli.status.header_lesson"),
+        t("cli.status.header_title"),
+        t("cli.status.header_state"),
+        t("cli.status.header_estimate"),
+        t("cli.status.header_difficulty"),
+    ]
+    typer.echo(_table(headers, rows))
+    typer.echo("\n" + t("cli.next.hint", lesson_id=lessons[0].lesson.id))
 
 
 @app.command()
@@ -354,6 +407,7 @@ def quiz(
     ] = False,
 ) -> None:
     """Take the lesson's quiz in the terminal; wrong answers become flashcards."""
+    t = _t(ctx)
     with _service(ctx) as service:
         lesson = service.lesson(lesson_id)
         try:
@@ -374,9 +428,11 @@ def quiz(
         except ValueError as exc:
             raise _fail(str(exc)) from None
         if not questions:
-            typer.echo("풀 문항이 없습니다 (마지막 시도에서 모두 정답)")
+            typer.echo(t("quiz.nothing_to_ask"))
             return
-        typer.echo(f"퀴즈: {lesson.title} ({lesson.id}) — {len(questions)}문항\n")
+        typer.echo(
+            t("quiz.intro", title=lesson.title, lesson_id=lesson.id, count=len(questions)) + "\n"
+        )
         try:
             result = run_quiz(
                 lesson,
@@ -385,16 +441,21 @@ def quiz(
                 prompt=_prompt,
                 echo=typer.echo,
                 clock=service.clock,
+                t=t,
             )
         except (typer.Abort, EOFError, KeyboardInterrupt):
-            typer.echo("\n중단: 결과를 저장하지 않았습니다", err=True)
+            typer.echo("\n" + t("quiz.aborted"), err=True)
             raise typer.Exit(code=1) from None
         recorded = record_quiz_run(service.store, lesson, result, user_id=service.user_id)
     cards = recorded.new_cards
     if cards:
-        detail = f"오답 {recorded.new_quiz_cards} + 개념 {recorded.new_concept_cards}"
-        typer.echo(f"새 카드 {len(cards)}장 ({detail}) → `rc review` 로 복습")
-    typer.echo(f"소요 {_fmt_seconds(recorded.run.seconds)} · 저장됨")
+        detail = t(
+            "quiz.new_cards_detail",
+            wrong=recorded.new_quiz_cards,
+            concept=recorded.new_concept_cards,
+        )
+        typer.echo(t("quiz.new_cards", count=len(cards), detail=detail))
+    typer.echo(t("quiz.elapsed", time=_fmt_seconds(recorded.run.seconds)))
 
 
 @app.command()
@@ -409,6 +470,7 @@ def review(
     ] = False,
 ) -> None:
     """Review due flashcards with SM-2 (1 again · 2 hard · 3 good · 4 easy)."""
+    t = _t(ctx)
     with _service(ctx) as service:
         now = service.clock()
         today = _local_today(now)
@@ -418,17 +480,23 @@ def review(
             service.store, today=today, user_id=service.user_id, lesson_id=lesson, limit=count
         )
         if not cards:
-            typer.echo("오늘 복습할 카드가 없습니다")
+            typer.echo(t("review.none_due"))
             return
         if dry_run:
             rows = [
                 [d.card.id, d.card.lesson_id, d.card.source, f"{d.state.due:%Y-%m-%d}"]
                 for d in cards
             ]
-            typer.echo(_table(["card", "lesson", "source", "due"], rows))
-            typer.echo(f"\n{len(cards)}장 due")
+            headers = [
+                t("review.header.card"),
+                t("review.header.lesson"),
+                t("review.header.source"),
+                t("review.header.due"),
+            ]
+            typer.echo(_table(headers, rows))
+            typer.echo("\n" + t("review.due_count", count=len(cards)))
             return
-        typer.echo(f"복습 {len(cards)}장\n")
+        typer.echo(t("review.session_intro", count=len(cards)) + "\n")
         try:
             run_review(
                 service.store,
@@ -438,9 +506,10 @@ def review(
                 now=now,
                 today=today,
                 user_id=service.user_id,
+                t=t,
             )
         except (typer.Abort, EOFError, KeyboardInterrupt):
-            typer.echo("\n중단: 답한 카드까지는 저장되었습니다", err=True)
+            typer.echo("\n" + t("review.aborted"), err=True)
             raise typer.Exit(code=1) from None
 
 

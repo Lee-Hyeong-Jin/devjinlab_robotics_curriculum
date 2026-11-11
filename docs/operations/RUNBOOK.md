@@ -20,6 +20,18 @@
 
 ## 2. 기동과 정지
 
+비밀값에는 기본값이 없다. 설정하지 않으면 compose 가 모든 명령(`cli` 포함)을 거부한다(§8):
+
+```bash
+export RC_DB_PASSWORD="$(python3 -c 'import secrets; print(secrets.token_urlsafe(24))')"
+export RC_AUTH_SECRET="$(python3 -c 'import secrets; print(secrets.token_urlsafe(32))')"
+# 운영에서는 같은 값을 .env(커밋 금지)나 Docker secret 으로 둔다.
+```
+
+API 는 서버 모드(계정·세션 필수)로 뜬다. 첫 관리자는 `RC_AUTH_ADMIN_EMAIL` 로 가입 후 메일의
+인증 링크를 누르면 승격된다(관리자가 아직 없을 때만). 메일이 없으면 가입 후
+`docker compose run --rm api api promote-admin you@example.org` 로 승격한다(감사 로그에 기록).
+
 ```bash
 docker compose up -d --wait api     # db -> migrate -> api, 전부 healthy 될 때까지 대기
 docker compose ps                   # 상태 확인
@@ -29,9 +41,15 @@ docker compose down -v              # 정지 + 데이터 삭제 (주의)
 docker compose run --rm cli validate   # 콘텐츠 검증 같은 일회성 작업
 ```
 
-스모크 점검: `bash scripts/smoke.sh` — 스택을 올려 `/healthz`, `/readyz`, `/version`,
-`/openapi.json`, `/api/v1/courses`, 요청 ID 에코, JSON 로그를 확인하고 내려놓는다.
-`KEEP_UP=1` 을 주면 띄운 상태로 남긴다. 같은 스크립트가 CI 의 `smoke` 잡에서 돈다.
+스모크 점검: `bash scripts/smoke.sh` — 이미지를 새로 빌드해 스택을 올리고 `/healthz`, `/readyz`,
+`/version`, `/openapi.json`, 자격 증명 없는 `/api/v1/courses` 401, 가입→로그인→세션으로
+`/api/v1/courses` 200, `/metrics`, 요청 ID 에코, JSON 로그를 확인하고 내려놓는다. 비밀값이 없으면
+일회용 임의 값을 만든다. `KEEP_UP=1` 을 주면 띄운 상태로 남긴다. 같은 스크립트가 CI 의 `smoke`
+잡에서 돈다.
+
+컨테이너 보안(서버 리뷰 SRV-09): `api`·`migrate` 는 읽기 전용 루트 파일시스템(`/tmp` 만 tmpfs,
+`/data` 볼륨), `cap_drop: [ALL]`, `no-new-privileges`, 비루트 uid 10001 로 돈다. 이미지에도
+`HEALTHCHECK` 가 있다.
 
 ## 3. 상태 점검
 
@@ -126,7 +144,15 @@ curl -fsS localhost:8000/version                     # 4. 확인
 | 변수 | 기본값 | 설명 |
 |---|---|---|
 | `RC_DATABASE_URL` | compose 가 `postgresql://rc:***@db:5432/rc` 주입 | 미설정이면 로컬 SQLite |
-| `RC_DB_PASSWORD` | `rc-dev-only` | compose 의 DB 비밀번호. **운영에서는 반드시 교체** |
+| `RC_DB_PASSWORD` | **없음(필수)** | compose 의 DB 비밀번호. 미설정 시 compose 가 기동을 거부 |
+| `RC_AUTH_SECRET` | **없음(필수)** | OIDC 진행 쿠키 서명 키. 모든 레플리카에서 같은 값 |
+| `RC_AUTH_MODE` | 이미지·compose 에서 `server` | `local` 은 로그인 없이 모든 요청이 관리자 user 1 — 루프백 바인드에서만 허용 |
+| `RC_API_ALLOW_REMOTE_LOCAL` | 미설정 | `1` 이면 local 모드를 루프백이 아닌 주소에 바인드하는 것을 허용(포트가 외부에 안 열린 경우만) |
+| `RC_AUTH_ADMIN_EMAIL` | 비어 있음 | 이메일 인증을 마친 이 주소의 계정을 첫 관리자로 승격(관리자가 없을 때만) |
+| `RC_PUBLIC_URL` | `http://localhost:3000` | 웹 주소(재설정 링크, OIDC 복귀) |
+| `RC_AUTH_COOKIE_SECURE` | `1` | 세션 쿠키 `Secure`. `0` 은 HTTP 개발 전용 |
+| `RC_SMTP_HOST` 외 `RC_SMTP_*` | 비어 있음 | 메일. 없으면 비밀번호 재설정 503 |
+| `RC_OIDC_PROVIDERS` | 비어 있음 | OIDC 제공자 JSON(ADR 0010) |
 | `RC_CURRICULUM_DIR` | 이미지의 `/app/curriculum` | 콘텐츠 경로 |
 | `RC_DATA_DIR` | `/data` | 로컬 모드 데이터 디렉터리 |
 | `RC_API_HOST` / `RC_API_PORT` | `0.0.0.0` / `8000` | 바인딩 |

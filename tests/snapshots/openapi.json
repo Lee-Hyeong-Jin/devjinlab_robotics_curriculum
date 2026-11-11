@@ -444,6 +444,78 @@
         }
       }
     },
+    "/api/v1/roadmap": {
+      "get": {
+        "tags": [
+          "content"
+        ],
+        "summary": "Get Roadmap",
+        "description": "Level -> module -> lesson tree with the caller's states (``rc roadmap``).\n\nLesson state: done, in_progress, locked (a prerequisite is not done) or available. Module\nstate: done if every lesson is done, in_progress if any is started or done, locked if every\nlesson is locked, else available. Progress values are fractions (0-1).",
+        "operationId": "get_roadmap_api_v1_roadmap_get",
+        "parameters": [
+          {
+            "name": "course",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Only this course.",
+              "title": "Course"
+            },
+            "description": "Only this course."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Roadmap"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/progress/status": {
       "get": {
         "tags": [
@@ -3462,7 +3534,7 @@
           "admin"
         ],
         "summary": "List Audit",
-        "description": "Audit log, newest first.",
+        "description": "Audit log, newest first (reading it is itself audited).",
         "operationId": "list_audit_api_v1_admin_audit_get",
         "parameters": [
           {
@@ -5916,6 +5988,147 @@
         "title": "ReviewResult",
         "description": "The card's new schedule after a rating."
       },
+      "Roadmap": {
+        "properties": {
+          "stages": {
+            "items": {
+              "$ref": "#/components/schemas/RoadmapStage"
+            },
+            "type": "array",
+            "title": "Stages",
+            "description": "Consecutive modules of one level, in course order (like `rc roadmap`)."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "stages"
+        ],
+        "title": "Roadmap"
+      },
+      "RoadmapLesson": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "done",
+              "in_progress",
+              "available",
+              "locked"
+            ],
+            "title": "State"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "state"
+        ],
+        "title": "RoadmapLesson"
+      },
+      "RoadmapModule": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "progress": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Progress",
+            "description": "Done lessons / all lessons."
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "done",
+              "in_progress",
+              "available",
+              "locked"
+            ],
+            "title": "State"
+          },
+          "lessons": {
+            "items": {
+              "$ref": "#/components/schemas/RoadmapLesson"
+            },
+            "type": "array",
+            "title": "Lessons"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "progress",
+          "state",
+          "lessons"
+        ],
+        "title": "RoadmapModule"
+      },
+      "RoadmapStage": {
+        "properties": {
+          "course_id": {
+            "type": "string",
+            "title": "Course Id"
+          },
+          "level": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "기초",
+                  "중급",
+                  "고급"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Level"
+          },
+          "progress": {
+            "type": "number",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Progress",
+            "description": "Mean of the module progress values."
+          },
+          "modules": {
+            "items": {
+              "$ref": "#/components/schemas/RoadmapModule"
+            },
+            "type": "array",
+            "title": "Modules"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "course_id",
+          "level",
+          "progress",
+          "modules"
+        ],
+        "title": "RoadmapStage"
+      },
       "Role": {
         "type": "string",
         "enum": [
@@ -6749,7 +6962,7 @@
       },
       "Problem": {
         "additionalProperties": true,
-        "description": "RFC 9457 problem details. ``type`` is ``about:blank`` and ``title`` the HTTP phrase.",
+        "description": "RFC 9457 problem details. ``type`` is ``about:blank`` and ``title`` is localized.",
         "properties": {
           "type": {
             "default": "about:blank",

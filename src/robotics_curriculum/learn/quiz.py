@@ -15,6 +15,7 @@ from datetime import datetime
 
 from robotics_curriculum.content import Lesson, LessonQuiz, QuizQuestion
 from robotics_curriculum.content.quiz_block import resolve_activity
+from robotics_curriculum.i18n import DEFAULT_LANG, Translator, translator
 from robotics_curriculum.learn.sm2 import Sm2State
 from robotics_curriculum.progress import (
     DEFAULT_USER,
@@ -30,6 +31,12 @@ from robotics_curriculum.progress import (
 Prompt = Callable[[str], str]
 Echo = Callable[[str], None]
 
+
+def _default_t() -> Translator:
+    """Korean, the source language; callers that know better pass their own translator."""
+    return translator(DEFAULT_LANG)
+
+
 _TRUE = {"o", "t", "true", "y", "yes", "참", "예", "맞다", "1"}
 _FALSE = {"x", "f", "false", "n", "no", "거짓", "아니오", "틀리다", "0"}
 _SEPARATORS = re.compile(r"[,\s]+")
@@ -44,26 +51,27 @@ def normalize_short(text: str) -> str:
     return " ".join(text.strip().lower().split())
 
 
-def parse_choice_indexes(text: str, count: int) -> set[int]:
+def parse_choice_indexes(text: str, count: int, t: Translator | None = None) -> set[int]:
     """``"1, 3"`` -> ``{0, 2}`` for a question with ``count`` choices."""
-    tokens = [t for t in _SEPARATORS.split(text.strip()) if t]
+    t = t or _default_t()
+    tokens = [token for token in _SEPARATORS.split(text.strip()) if token]
     if not tokens:
-        raise InvalidAnswer(f"번호를 입력하세요 (1-{count})")
+        raise InvalidAnswer(t("quiz.invalid.need_number", count=count))
     indexes: set[int] = set()
     for token in tokens:
         if not token.isdigit() or not 1 <= int(token) <= count:
-            raise InvalidAnswer(f"'{token}' 은(는) 1-{count} 사이의 번호가 아닙니다")
+            raise InvalidAnswer(t("quiz.invalid.not_in_range", token=token, count=count))
         indexes.add(int(token) - 1)
     return indexes
 
 
-def parse_truefalse(text: str) -> bool:
+def parse_truefalse(text: str, t: Translator | None = None) -> bool:
     value = text.strip().lower()
     if value in _TRUE:
         return True
     if value in _FALSE:
         return False
-    raise InvalidAnswer("O 또는 X 로 답하세요")
+    raise InvalidAnswer((t or _default_t())("quiz.invalid.truefalse"))
 
 
 @dataclass(frozen=True, slots=True)
@@ -73,27 +81,28 @@ class GradedAnswer:
     correct: bool
 
 
-def grade_answer(question: QuizQuestion, text: str) -> GradedAnswer:
+def grade_answer(question: QuizQuestion, text: str, t: Translator | None = None) -> GradedAnswer:
     """Grade ``text`` against ``question``; raises :class:`InvalidAnswer` if unparseable."""
+    t = t or _default_t()
     kind = question.type
     if kind == "single":
-        chosen = parse_choice_indexes(text, len(question.choices))
+        chosen = parse_choice_indexes(text, len(question.choices), t)
         if len(chosen) != 1:
-            raise InvalidAnswer("번호 하나만 고르세요")
+            raise InvalidAnswer(t("quiz.invalid.one_number"))
         correct = chosen == question.correct_indexes
         given = str(next(iter(chosen)) + 1)
     elif kind == "multiple":
-        chosen = parse_choice_indexes(text, len(question.choices))
+        chosen = parse_choice_indexes(text, len(question.choices), t)
         correct = chosen == question.correct_indexes
         given = ",".join(str(i + 1) for i in sorted(chosen))
     elif kind == "truefalse":
-        value = parse_truefalse(text)
+        value = parse_truefalse(text, t)
         correct = value is question.answer
         given = "O" if value else "X"
     else:  # short
         given = text.strip()
         if not given:
-            raise InvalidAnswer("답을 입력하세요")
+            raise InvalidAnswer(t("quiz.invalid.need_answer"))
         accepted = {normalize_short(a) for a in question.accepted_short}
         correct = normalize_short(given) in accepted
     return GradedAnswer(question, given, correct)
@@ -124,17 +133,22 @@ class QuizResult:
         return [g for g in self.graded if not g.correct]
 
 
-def format_question(question: QuizQuestion, number: int, total: int) -> str:
-    """Prompt text for one question: ``[2/4] (객관식) ...`` plus numbered choices."""
-    lines = [f"[{number}/{total}] ({question.type_label}) {question.prompt}"]
+def format_question(
+    question: QuizQuestion, number: int, total: int, t: Translator | None = None
+) -> str:
+    """Prompt text for one question: ``[2/4] (single choice) ...`` plus numbered choices."""
+    t = t or _default_t()
+    lines = [
+        t(
+            "quiz.question",
+            number=number,
+            total=total,
+            kind=t(f"quiz.kind.{question.type}"),
+            prompt=question.prompt,
+        )
+    ]
     lines += [f"  {i + 1}. {choice}" for i, choice in enumerate(question.choices)]
-    hint = {
-        "single": "번호",
-        "multiple": "번호 (쉼표로 여러 개)",
-        "truefalse": "O/X",
-        "short": "답",
-    }[question.type]
-    lines.append(f"> {hint}: ")
+    lines.append(f"> {t(f'quiz.hint.{question.type}')}: ")
     return "\n".join(lines)
 
 
@@ -146,31 +160,41 @@ def run_quiz(
     prompt: Prompt,
     echo: Echo,
     clock: Callable[[], datetime],
+    t: Translator | None = None,
 ) -> QuizResult:
     """Ask ``questions`` in order, grading each immediately. Nothing is persisted here.
 
     ``prompt`` may raise (EOF, interrupt) to abort; the partial result is then discarded by the
     caller because this function never returns it.
     """
+    t = t or _default_t()
     started = clock()
     result = QuizResult(lesson.id, quiz.activity_ids(lesson), started, started)
     for number, question in enumerate(questions, 1):
-        text = format_question(question, number, len(questions))
+        text = format_question(question, number, len(questions), t)
         while True:
             try:
-                graded = grade_answer(question, prompt(text))
+                graded = grade_answer(question, prompt(text), t)
                 break
             except InvalidAnswer as exc:
                 echo(f"  ! {exc}")
                 text = "> "
-        mark = "정답" if graded.correct else f"오답 (정답: {question.answer_text()})"
+        mark = (
+            t("quiz.correct") if graded.correct else t("quiz.wrong", answer=question.answer_text())
+        )
         echo(f"  {'✔' if graded.correct else '✘'} {mark}")
-        echo(f"  해설: {question.explanation}")
+        echo(t("quiz.explanation", text=question.explanation))
         echo("")
         result.graded.append(graded)
     result.finished_at = clock()
     echo(
-        f"결과 {result.correct_count}/{result.total} ({result.percent}%)  오답 {len(result.wrong)}"
+        t(
+            "quiz.score",
+            correct=result.correct_count,
+            total=result.total,
+            percent=result.percent,
+            wrong=len(result.wrong),
+        )
     )
     return result
 

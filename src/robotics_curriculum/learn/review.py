@@ -12,6 +12,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
 
+from robotics_curriculum.i18n import DEFAULT_LANG, Translator, translator
 from robotics_curriculum.learn.sm2 import Rating, Sm2State, parse_rating, schedule
 from robotics_curriculum.progress import (
     DEFAULT_USER,
@@ -26,7 +27,11 @@ Prompt = Callable[[str], str]
 Echo = Callable[[str], None]
 
 MAX_REQUEUE = 2
-RATING_MENU = "1 again · 2 hard · 3 good · 4 easy"
+
+
+def _default_t() -> Translator:
+    """Korean, the source language; callers that know better pass their own translator."""
+    return translator(DEFAULT_LANG)
 
 
 @dataclass(frozen=True, slots=True)
@@ -119,17 +124,23 @@ class ReviewSummary:
     requeued: int = 0
     due_tomorrow: int = 0
 
-    def line(self) -> str:
-        parts = " · ".join(f"{r.value} {self.counts[r]}" for r in Rating)
-        return f"완료 {self.reviewed}장  {parts}   내일 예정 {self.due_tomorrow}장"
+    def line(self, t: Translator | None = None) -> str:
+        t = t or _default_t()
+        ratings = " · ".join(f"{r.value} {self.counts[r]}" for r in Rating)
+        return t(
+            "review.summary",
+            reviewed=self.reviewed,
+            ratings=ratings,
+            tomorrow=self.due_tomorrow,
+        )
 
 
-def _ask_rating(prompt: Prompt, echo: Echo) -> Rating:
+def _ask_rating(prompt: Prompt, echo: Echo, t: Translator) -> Rating:
     while True:
-        rating = parse_rating(prompt(f"> {RATING_MENU}: "))
+        rating = parse_rating(prompt(f"> {t('review.rating_menu')}: "))
         if rating is not None:
             return rating
-        echo("  ! 1-4 또는 again/hard/good/easy 로 답하세요")
+        echo(t("review.rating_invalid"))
 
 
 def run_review(
@@ -141,12 +152,14 @@ def run_review(
     now: datetime,
     today: date,
     user_id: int = DEFAULT_USER,
+    t: Translator | None = None,
 ) -> ReviewSummary:
     """Show each due card (front, Enter, back, rating) and persist every first answer.
 
     A card answered *again* is queued once more at the end (up to ``MAX_REQUEUE`` passes);
     those extra showings are practice only and are not scheduled or logged.
     """
+    t = t or _default_t()
     summary = ReviewSummary()
     queue: list[tuple[DueCard, int]] = [(d, 0) for d in cards]
     total = len(cards)
@@ -154,22 +167,32 @@ def run_review(
     while queue:
         due, pass_no = queue.pop(0)
         shown += 1
-        label = f"[{shown}/{total}]" if pass_no == 0 else f"[다시 {pass_no}/{MAX_REQUEUE}]"
-        prompt(f"{label} {due.card.front}\n  ({due.card.lesson_id})\n> Enter 로 뒷면 보기 ")
-        echo(f"  답: {due.card.back}")
-        rating = _ask_rating(prompt, echo)
+        label = (
+            t("review.front", shown=shown, total=total)
+            if pass_no == 0
+            else t("review.front_again", pass_no=pass_no, max_pass=MAX_REQUEUE)
+        )
+        prompt(f"{label} {due.card.front}\n  ({due.card.lesson_id})\n{t('review.reveal')}")
+        echo(t("review.back", text=due.card.back))
+        rating = _ask_rating(prompt, echo, t)
         if pass_no == 0:
             state = apply_rating(store, due.card.id, rating, now=now, today=today, user_id=user_id)
             summary.reviewed += 1
             summary.counts[rating] += 1
-            echo(f"  다음 복습: {state.due:%Y-%m-%d} ({state.interval_days}일 뒤)")
+            echo(
+                t(
+                    "review.next_due",
+                    date=f"{state.due:%Y-%m-%d}",
+                    days=state.interval_days,
+                )
+            )
         if rating is Rating.AGAIN and pass_no < MAX_REQUEUE:
             queue.append((due, pass_no + 1))
             if pass_no == 0:
                 summary.requeued += 1
         echo("")
     summary.due_tomorrow = due_on(store, day=today + timedelta(days=1), user_id=user_id)
-    echo(summary.line())
+    echo(summary.line(t))
     return summary
 
 

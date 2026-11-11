@@ -23,6 +23,7 @@ uv sync
 
 ```bash
 uv run rc --help
+uv run rc --lang en status                    # messages in English (or RC_LANG=en); default is Korean
 uv run rc version
 uv run rc validate            # defaults to ./curriculum
 uv run rc show m1-vectors-matrices        # lesson summary (objectives, prerequisites) + body

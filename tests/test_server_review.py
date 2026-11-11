@@ -84,7 +84,6 @@ def test_srv01_local_mode_grants_admin_without_credentials(tmp_path: Path) -> No
     assert write.status_code == 201, write.text
 
 
-@_open("SRV-01: docker-compose runs the API in local (no-auth) mode")
 def test_srv01_compose_api_runs_in_server_mode() -> None:
     env = _compose_service("api").get("environment", {})
     assert env.get("RC_AUTH_MODE") == "server", (
@@ -96,7 +95,6 @@ def test_srv01_compose_api_runs_in_server_mode() -> None:
 # -- SRV-02: anyone can claim the bootstrap admin address ------------------------------
 
 
-@_open("SRV-02: signing up with RC_AUTH_ADMIN_EMAIL grants admin without owning the mailbox")
 def test_srv02_bootstrap_admin_requires_verified_owner(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -117,7 +115,6 @@ def test_srv02_bootstrap_admin_requires_verified_owner(
 # -- SRV-03 / SRV-04: password reset ---------------------------------------------------
 
 
-@_open("SRV-03: /auth/password/forgot has no rate limit")
 def test_srv03_forgot_password_is_rate_limited(tmp_path: Path) -> None:
     mailer = StubMailer()
     client = _client(tmp_path, mailer=mailer)
@@ -134,7 +131,6 @@ def test_srv03_forgot_password_is_rate_limited(tmp_path: Path) -> None:
     )
 
 
-@_open("SRV-04: issuing a reset token leaves earlier ones valid")
 def test_srv04_new_reset_token_invalidates_the_previous_one(tmp_path: Path) -> None:
     mailer = StubMailer()
     client = _client(tmp_path, mailer=mailer)
@@ -157,7 +153,6 @@ def test_srv04_new_reset_token_invalidates_the_previous_one(tmp_path: Path) -> N
 # -- SRV-05: error bodies name server paths --------------------------------------------
 
 
-@_open("SRV-05: /readyz and the 503 body include absolute filesystem paths")
 def test_srv05_readyz_does_not_leak_filesystem_paths(tmp_path: Path) -> None:
     client = _client(tmp_path, {"RC_CURRICULUM_DIR": str(tmp_path / "missing")}, server=False)
     ready = client.get("/readyz")
@@ -166,3 +161,22 @@ def test_srv05_readyz_does_not_leak_filesystem_paths(tmp_path: Path) -> None:
     courses = client.get("/api/v1/courses").text
     for text, where in ((body, "/readyz"), (courses, "GET /api/v1/courses")):
         assert str(tmp_path) not in text, f"{where} exposes a server path: {text[:200]}"
+
+
+# -- SRV-06 / SRV-09: compose secrets and container hardening --------------------------
+
+
+def test_srv06_compose_has_no_default_secrets() -> None:
+    text = COMPOSE.read_text(encoding="utf-8")
+    assert "rc-dev-only" not in text
+    assert "${RC_DB_PASSWORD:?" in text and "${RC_AUTH_SECRET:?" in text
+
+
+def test_srv09_api_container_is_hardened() -> None:
+    for name in ("api", "migrate"):
+        service = _compose_service(name)
+        assert service.get("read_only") is True, name
+        assert service.get("cap_drop") == ["ALL"], name
+        assert "no-new-privileges:true" in service.get("security_opt", []), name
+    dockerfile = (ROOT / "Dockerfile").read_text(encoding="utf-8")
+    assert "HEALTHCHECK" in dockerfile and "RC_AUTH_MODE=server" in dockerfile

@@ -86,9 +86,19 @@ def anon(app: FastAPI) -> TestClient:
     return client_for(app)
 
 
-def signup(app: FastAPI, email: str, password: str = PASSWORD) -> dict[str, Any]:
-    r = client_for(app).post("/api/v1/auth/signup", json={"email": email, "password": password})
+def signup(
+    app: FastAPI, email: str, password: str = PASSWORD, *, verify: bool = True
+) -> dict[str, Any]:
+    """Sign up and, like a real user, click the mailed verification link."""
+    c = client_for(app)
+    r = c.post("/api/v1/auth/signup", json={"email": email, "password": password})
     assert r.status_code == 201, r.text
+    mailer = app.state.rc.auth.mailer
+    if verify and isinstance(mailer, FakeMailer):
+        mail = next(m for m in reversed(mailer.outbox) if m.to == email.lower())
+        token = re.search(r"token=(\S+)", mail.body)
+        assert token
+        assert c.post("/api/v1/auth/verify-email", json={"token": token[1]}).status_code == 204
     return dict(r.json())
 
 
@@ -211,7 +221,7 @@ def test_pepper_and_rehash() -> None:
 
 
 def test_signup_verify_email_and_duplicates(app: FastAPI, mailer: FakeMailer) -> None:
-    created = signup(app, "Learner@Example.org")
+    created = signup(app, "Learner@Example.org", verify=False)
     assert created["email"] == "learner@example.org"
     assert created["role"] == "learner"
     assert created["email_verified"] is False
