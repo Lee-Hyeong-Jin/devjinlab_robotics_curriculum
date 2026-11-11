@@ -557,7 +557,7 @@ audit_log(id PK bigint, at, actor_user_id NULL, actor_ip, action, target_type, t
 classDiagram
   class ProgressStore { <<interface>> +get_progress(user_id, lesson_id) +upsert_progress(user_id, …) +start_session(user_id, …) +due_cards(user_id, now) +… }
   class SqliteProgressStore { 로컬 모드 · sqlite3 표준 라이브러리 · 파일 .rc/progress.db }
-  class PostgresProgressStore { 서버 모드 · SQLAlchemy Core 2.x + asyncpg · 커넥션 풀 }
+  class PostgresProgressStore { 서버 모드 · SQLAlchemy Core 2.x + psycopg 3 (동기 Protocol, FastAPI는 threadpool 호출; 필요 시 postgresql+psycopg 비동기 엔진) · 커넥션 풀 }
   class RemoteProgressStore { rc 서버 모드 · HTTP 클라이언트 (OpenAPI 생성) }
   ProgressStore <|.. SqliteProgressStore
   ProgressStore <|.. PostgresProgressStore
@@ -566,7 +566,7 @@ classDiagram
 
 | 결정 | 선택 | 근거 |
 |---|---|---|
-| PostgreSQL 접근 | **SQLAlchemy Core 2.x**(ORM 아님) + `asyncpg` 드라이버 | 테이블 정의를 한 곳(`progress/schema.py`)에 두고 Alembic이 같은 메타데이터로 마이그레이션을 만든다. 쿼리는 SQL에 가깝게 유지해 SQLite 구현과 대조가 쉽다 |
+| PostgreSQL 접근 | **SQLAlchemy Core 2.x**(ORM 아님) + **psycopg 3** 드라이버 (`ProgressStore` Protocol이 동기이므로; FastAPI는 threadpool에서 호출하고, 비동기가 필요해지면 같은 드라이버의 `postgresql+psycopg` 비동기 엔진으로 전환) | 테이블 정의를 한 곳(`progress/schema.py`)에 두고 Alembic이 같은 메타데이터로 마이그레이션을 만든다. 쿼리는 SQL에 가깝게 유지해 SQLite 구현과 대조가 쉽다 |
 | 마이그레이션 | 서버 모드는 **Alembic**(롤백 가능, `downgrade` 필수 작성). 로컬 SQLite는 현재 구현의 `MIGRATIONS` 딕셔너리(버전 번호 순 적용)를 유지하고, 두 이력의 스키마 버전 번호를 1:1로 맞춘다 | 로컬 모드에 Alembic 의존성을 더하지 않는다. 서버 리비전 `0001`은 SQLite 버전 1과 같은 테이블을 만든다 |
 | 테스트 | 같은 계약 테스트 스위트를 SQLite와 PostgreSQL(testcontainers) 양쪽에 돌린다 | 구현체 간 동작 차이를 CI에서 잡는다 |
 | 트랜잭션 | 저장소 메서드 단위. 복합 동작(레슨 완료 → 카드 생성)은 `service.py`가 한 트랜잭션으로 묶는다 | |
