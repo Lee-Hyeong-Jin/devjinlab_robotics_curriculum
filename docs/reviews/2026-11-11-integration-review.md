@@ -45,7 +45,9 @@ C.0 AC-SEC.1~6. `tests/test_security_review.py` 의 재현 테스트 12개는 st
 - QA-05: 순환 검사는 반복형 DFS. QA-06: 코스 간 id 중복 검사(규칙 7). QA-07: 디코딩·I/O 오류 수집.
   QA-08: 심링크를 해석한 경로가 콘텐츠 루트를 벗어나면 거부.
 - QA-09·QA-10: `ProgressExport` 모델이 DB 불변식(세션 id 유일, 사용자별 열린 세션 1개, 시간 순서,
-  done↔completed_at)을 검증하고, import 는 커리큘럼에 없는 레슨 id 를 `--allow-unknown` 없이는 거부한다.
+  `user_id ≥ 1`, 학습 시간 상한)을 검증하고, import 는 커리큘럼에 없는 레슨 id 를 `--allow-unknown`
+  없이는 거부한다. `status=done` 인데 `completed_at` 이 없는 행은 허용한다 — 저장소가 허용하고
+  렌더러가 처리하며, P2-3 의 전송 테스트가 그런 행을 쓴다.
 - QA-11: WAL + busy timeout(15s), `sqlite3.Error` → `StoreError` → CLI 에서 `error: ...`.
   QA-12: 학습 시간 상한 24시간. QA-15: `logging` 설정과 `rc -v`. QA-17: DB 파일 0600, 데이터 디렉터리 0700.
 - 미해결(low): QA-13(완료일 UTC 표시), QA-14(출력 파일 무확인 덮어쓰기), QA-16(i18n 하드코딩),

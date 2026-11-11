@@ -94,8 +94,8 @@ class ProgressExport(ProgressModel):
         if len(set(open_users)) != len(open_users):
             raise ValueError("a user has more than one running session")
         for row in self.lesson_progress:
-            if row.status is LessonStatus.DONE and row.completed_at is None:
-                raise ValueError(f"lesson '{row.lesson_id}' is done but has no completed_at")
+            # A done row without completed_at is accepted: the store allows it and the
+            # renderers handle it. Only an impossible ordering is rejected.
             if row.completed_at is not None and row.started_at is not None:
                 if row.completed_at < row.started_at:
                     raise ValueError(f"lesson '{row.lesson_id}' completed before it started")

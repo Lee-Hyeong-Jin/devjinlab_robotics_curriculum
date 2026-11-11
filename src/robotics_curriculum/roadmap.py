@@ -23,6 +23,7 @@ from robotics_curriculum.progress import (
     default_curriculum_dir,
     default_data_dir,
 )
+from robotics_curriculum.progress.factory import database_url, open_store
 from robotics_curriculum.progress.store import StoreError
 
 LEVELS: tuple[str, ...] = get_args(Level)
@@ -100,7 +101,11 @@ def roadmap(
     db = data_dir / DB_FILENAME
     try:
         courses = ProgressService.load_curriculum(Path(root))
-        store = SqliteProgressStore(db if db.exists() else ":memory:")
+        store = (
+            open_store(data_dir)
+            if database_url() or db.exists()
+            else SqliteProgressStore(":memory:")
+        )
         try:
             summaries = ProgressService(store, courses).status(course)
         finally:

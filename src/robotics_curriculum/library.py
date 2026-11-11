@@ -17,10 +17,10 @@ from robotics_curriculum.progress import (
     LessonStatus,
     ProgressError,
     ProgressService,
-    SqliteProgressStore,
     default_curriculum_dir,
     default_data_dir,
 )
+from robotics_curriculum.progress.factory import database_url, open_store
 from robotics_curriculum.progress.store import StoreError
 
 KIND_LABELS: dict[ResourceKind, str] = {
@@ -111,9 +111,9 @@ def resources(
 def _statuses(ctx: typer.Context, courses: list[Course]) -> dict[str, LessonStatus]:
     """Lesson statuses from the progress store, or ``{}`` if there is no store yet."""
     data_dir = Path(getattr(ctx.obj, "data_dir", None) or default_data_dir())
-    if not (data_dir / DB_FILENAME).exists():
+    if database_url() is None and not (data_dir / DB_FILENAME).exists():
         return {}
-    store = SqliteProgressStore.in_dir(data_dir)
+    store = open_store(data_dir)
     try:
         return {s.lesson.id: s.status for s in ProgressService(store, courses).status()}
     except (ProgressError, StoreError):

@@ -52,6 +52,39 @@ uv run rc site build --out /tmp/site  # other output dir; --src DIR keeps the ge
 uv run rc site build --serve          # live preview via `mkdocs serve` (http://127.0.0.1:8000)
 ```
 
+### PostgreSQL (server mode, optional)
+
+Local mode needs nothing beyond SQLite. To keep progress in PostgreSQL instead (Phase 2 server
+mode, `docs/adr/0007-postgres-store.md`), install the `postgres` extra (included in `uv sync`'s
+dev group; otherwise `pip install 'robotics-curriculum[postgres]'`) and set `RC_DATABASE_URL`:
+
+```bash
+docker compose up -d db                 # PostgreSQL 16 on 127.0.0.1:5432; password from RC_DB_PASSWORD (dev default rc-dev-only)
+export RC_DATABASE_URL=postgresql://rc:rc-dev-only@localhost:5432/rc
+uv run alembic upgrade head             # create / upgrade the schema (alembic downgrade base to undo)
+```
+
+`RC_DATABASE_URL` values: `postgresql://...` → PostgreSQL, `sqlite:///path/progress.db` → that
+SQLite file, unset → `.rc/progress.db`. Stores are opened through
+`robotics_curriculum.progress.factory.open_store()`.
+
+Move existing local progress to the server database (safe to re-run: lessons are upserted by
+lesson id, sessions already there are skipped):
+
+```bash
+uv run rc progress transfer --to postgresql://rc:...@host:5432/rc   # local .rc/progress.db -> server
+uv run rc progress transfer --from backup.json --user-id 42          # a JSON export into account 42 (--to defaults to $RC_DATABASE_URL)
+uv run rc progress transfer --mode replace                           # wipe the destination first (or --mode empty)
+```
+Tests start a throwaway `postgres:16.13` container via Docker (or use `RC_TEST_DATABASE_URL`)
+and skip the PostgreSQL cases with a reason when neither is available (`uv run pytest -rs`).
+
+HTTP API (FastAPI, `/api/v1`; extra `api` — `uv sync` installs it in dev, `pip install 'robotics-curriculum[api]'` otherwise):
+
+```bash
+uv run rc api serve --host 127.0.0.1 --port 8000   # docs at /docs, schema at /openapi.json; env RC_API_HOST/PORT/LOG_LEVEL
+```
+
 ## Lint / format
 
 ```bash
