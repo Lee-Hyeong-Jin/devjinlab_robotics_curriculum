@@ -81,14 +81,14 @@ milestones:
 
     - id: P1-3
       title: 로드맵·선수지식 그래프·다음 레슨 추천 (FR-2)
-      status: todo
+      status: done
       depends_on: [P1-1]
       goal: 트랙의 레슨을 선수지식 DAG 로 계산하고 완료/진행/잠김 상태와 다음 추천 레슨을 CLI 와 정적 사이트에서 보여준다.
       acceptance:
         - `rc next` 가 선수지식 충족 + 미완료 레슨 중 트랙 순서상 가장 앞선 것을 반환한다(테스트)
         - 잠김 레슨 강제 열기 시 경고가 표시된다
         - 그래프 출력(텍스트 또는 정적 HTML)에 완료/진행/잠김이 구분된다
-      note:
+      note: rc roadmap + locked warning (0dc7654)
 
     - id: P1-4
       title: 학습 자료·학습 방법 라이브러리 (FR-6)
