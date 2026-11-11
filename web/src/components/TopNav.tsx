@@ -28,6 +28,7 @@ export async function TopNav() {
             {t('nav.roadmap')}
           </NavTab>
           <NavTab href="/resources">{t('nav.resources')}</NavTab>
+          <NavTab href="/review">{t('nav.review')}</NavTab>
           <NavTab href="/search">{t('nav.search')}</NavTab>
         </div>
         <div className="ml-auto flex items-center gap-2">

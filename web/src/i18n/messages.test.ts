@@ -40,7 +40,14 @@ function placeholders(value: Catalogue, prefix = ''): Map<string, string[]> {
  */
 const DYNAMIC_NAMESPACES = new Set(['state', 'kind', 'activityKind', 'role', 'userStatus'])
 /** Keys inside these namespaces that a runtime value selects. */
-const DYNAMIC_KEYS = new Set(['search.lesson', 'search.resource'])
+const DYNAMIC_KEYS = new Set([
+  'search.lesson',
+  'search.resource',
+  'review.again',
+  'review.hard',
+  'review.good',
+  'review.easy',
+])
 
 const SOURCE_ROOT = join(process.cwd(), 'src')
 

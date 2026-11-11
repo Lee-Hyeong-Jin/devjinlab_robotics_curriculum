@@ -15,7 +15,8 @@
     "themeDark": "Dark",
     "themeSystem": "System",
     "language": "Language",
-    "search": "Search"
+    "search": "Search",
+    "review": "Review"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -373,5 +374,52 @@
     "unavailable": "Search is unavailable.",
     "lesson": "Lesson",
     "resource": "Resource"
+  },
+  "quiz": {
+    "title": "Quiz",
+    "subtitle": "Check what the lesson covered. Submitting grades it right away.",
+    "of": "{n} of {total}",
+    "submit": "Submit",
+    "submitting": "Grading…",
+    "graded": "You got {correct} of {total} right.",
+    "submitFailed": "Could not grade the quiz.",
+    "noAnswers": "Answer at least one question.",
+    "percent": "{percent}%",
+    "correct": "Correct",
+    "incorrect": "Wrong",
+    "yourAnswer": "Your answer",
+    "correctAnswer": "Correct answer",
+    "explanation": "Explanation",
+    "retry": "Try again",
+    "backToLesson": "Back to the lesson",
+    "true": "True",
+    "false": "False",
+    "shortAnswerLabel": "Answer",
+    "empty": "This lesson has no quiz.",
+    "unavailable": "The quiz could not be loaded.",
+    "multipleHint": "Pick every option that applies.",
+    "cardsCreated": "Wrong answers become review cards.",
+    "open": "Take the quiz",
+    "resultHeading": "Result"
+  },
+  "review": {
+    "title": "Review",
+    "subtitle": "Cards due today: front, flip, then rate.",
+    "due": "{count} cards due",
+    "none": "Nothing is due today.",
+    "unavailable": "Review cards could not be loaded.",
+    "front": "Front",
+    "back": "Back",
+    "reveal": "Flip",
+    "again": "Again",
+    "hard": "Hard",
+    "good": "Good",
+    "easy": "Easy",
+    "rate": "Rate",
+    "ratingInvalid": "That is not a valid rating.",
+    "rated": "Back in {days} days.",
+    "rateFailed": "Could not save the rating.",
+    "sourceQuiz": "Quiz",
+    "sourceConcept": "Concept"
   }
 }

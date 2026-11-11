@@ -15,7 +15,8 @@
     "themeDark": "다크",
     "themeSystem": "시스템",
     "language": "언어",
-    "search": "검색"
+    "search": "검색",
+    "review": "복습"
   },
   "dashboard": {
     "title": "대시보드",
@@ -373,5 +374,52 @@
     "unavailable": "검색을 사용할 수 없습니다.",
     "lesson": "레슨",
     "resource": "자료"
+  },
+  "quiz": {
+    "title": "퀴즈",
+    "subtitle": "레슨 내용을 확인합니다. 제출하면 바로 채점과 해설을 봅니다.",
+    "of": "{n} / {total}",
+    "submit": "제출",
+    "submitting": "채점 중…",
+    "graded": "{total}문제 중 {correct}문제를 맞혔습니다.",
+    "submitFailed": "채점하지 못했습니다.",
+    "noAnswers": "답을 하나 이상 선택하세요.",
+    "percent": "{percent}%",
+    "correct": "정답",
+    "incorrect": "오답",
+    "yourAnswer": "내 답",
+    "correctAnswer": "정답",
+    "explanation": "해설",
+    "retry": "다시 풀기",
+    "backToLesson": "레슨으로",
+    "true": "O (맞다)",
+    "false": "X (아니다)",
+    "shortAnswerLabel": "답",
+    "empty": "이 레슨에는 퀴즈가 없습니다.",
+    "unavailable": "퀴즈를 불러올 수 없습니다.",
+    "multipleHint": "해당하는 것을 모두 고르세요.",
+    "cardsCreated": "틀린 문제는 복습 카드로 만들어집니다.",
+    "open": "퀴즈 풀기",
+    "resultHeading": "채점 결과"
+  },
+  "review": {
+    "title": "오늘 복습",
+    "subtitle": "기한이 된 플래시카드를 앞면 → 뒤집기 → 평가 순으로 봅니다.",
+    "due": "기한 카드 {count}장",
+    "none": "오늘 복습할 카드가 없습니다.",
+    "unavailable": "복습 카드를 불러올 수 없습니다.",
+    "front": "앞면",
+    "back": "뒷면",
+    "reveal": "뒤집기",
+    "again": "다시",
+    "hard": "어려움",
+    "good": "보통",
+    "easy": "쉬움",
+    "rate": "평가",
+    "ratingInvalid": "평가 값이 올바르지 않습니다.",
+    "rated": "{days}일 뒤에 다시 나옵니다.",
+    "rateFailed": "평가를 저장하지 못했습니다.",
+    "sourceQuiz": "퀴즈",
+    "sourceConcept": "개념"
   }
 }

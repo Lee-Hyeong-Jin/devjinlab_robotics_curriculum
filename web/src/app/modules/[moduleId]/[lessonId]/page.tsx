@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getLocale, getTranslations } from 'next-intl/server'
 
+import { ButtonLink } from '@/components/Button'
 import { Card } from '@/components/Card'
 import { Chip } from '@/components/Chip'
 import { LessonRow } from '@/components/LessonRow'
@@ -50,11 +51,12 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
  */
 export default async function LessonPage({ params }: Params) {
   const { moduleId, lessonId } = await params
-  const [t, tState, tKind, tActivity, locale] = await Promise.all([
+  const [t, tState, tKind, tActivity, tQuiz, locale] = await Promise.all([
     getTranslations('lesson'),
     getTranslations('state'),
     getTranslations('kind'),
     getTranslations('activityKind'),
+    getTranslations('quiz'),
     getLocale(),
   ])
   const [lesson, progress, mod, status] = await Promise.all([
@@ -161,6 +163,15 @@ export default async function LessonPage({ params }: Params) {
         </div>
 
         <aside className="flex flex-col gap-6" aria-label={t('onThisPage')}>
+          <Card as="section" aria-labelledby="quiz-link-heading">
+            <h2 id="quiz-link-heading" className="text-primary mb-2 text-sm font-semibold">
+              {tQuiz('title')}
+            </h2>
+            <ButtonLink href={`/modules/${moduleId}/${lessonId}/quiz`} kind="secondary">
+              {tQuiz('open')}
+            </ButtonLink>
+          </Card>
+
           <StudyPanel
             moduleId={moduleId}
             lessonId={lessonId}
