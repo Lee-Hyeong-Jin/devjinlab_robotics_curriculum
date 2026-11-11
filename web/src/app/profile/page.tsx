@@ -8,7 +8,10 @@ import { DataTable, type Column } from '@/components/DataTable'
 import { ActionForm } from '@/components/form/ActionForm'
 import { RowAction } from '@/components/form/RowAction'
 import { PageHeader } from '@/components/PageHeader'
+import { ProviderButtons } from '@/components/ProviderButtons'
 import { apiGetOrNull } from '@/lib/api/client'
+import { getAuthProviders } from '@/lib/api/queries'
+import { unlinkedProviders } from '@/lib/auth-providers'
 import type { ApiToken, AuthSession, Identity, Scope } from '@/lib/api/types'
 import { requireUser } from '@/lib/auth'
 import {
@@ -41,11 +44,14 @@ export default async function ProfilePage() {
     getLocale(),
   ])
   const user = await requireUser('/profile')
-  const [sessions, identities, tokens] = await Promise.all([
+  const [sessions, identities, tokens, providers] = await Promise.all([
     apiGetOrNull('/api/v1/me/sessions'),
     apiGetOrNull('/api/v1/me/identities'),
     apiGetOrNull('/api/v1/me/tokens'),
+    getAuthProviders(),
   ])
+  // Offering a provider that is already linked would only produce a 409 from the API.
+  const connectable = unlinkedProviders(providers, identities ?? [])
 
   const sessionColumns: ReadonlyArray<Column<AuthSession>> = [
     {
@@ -310,6 +316,17 @@ export default async function ProfilePage() {
               rowKey={(row) => String(row.id)}
               empty={<p className="text-muted px-5 pb-5 text-sm">{t('noIdentities')}</p>}
             />
+            {connectable.length > 0 ? (
+              <div className="border-border-default border-t p-5">
+                <p className="text-muted mb-3 text-sm">{t('connectHint')}</p>
+                <ProviderButtons
+                  providers={connectable}
+                  returnTo="/profile"
+                  variant="connect"
+                  className="sm:max-w-xs"
+                />
+              </div>
+            ) : null}
           </Card>
 
           <Card as="section" aria-labelledby="tokens">

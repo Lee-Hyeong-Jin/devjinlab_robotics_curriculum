@@ -22,6 +22,7 @@ export function lessonSummary(over: Partial<LessonSummary> & { id: string }): Le
     estimated_minutes: 40,
     prerequisites: [],
     tags: [],
+    lang: 'ko',
     ...over,
   }
 }

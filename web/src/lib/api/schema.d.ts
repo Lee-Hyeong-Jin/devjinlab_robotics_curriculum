@@ -73,8 +73,11 @@ export interface paths {
         };
         /**
          * Metrics
-         * @description Prometheus text format. Unauthenticated: expose to the internal network only
-         *     (block at the reverse proxy). ``RC_API_METRICS=0`` turns it off (404).
+         * @description Prometheus text format: request counts, latency, in-flight requests, DB pools.
+         *
+         *     Open by default and meant for the internal network: block ``/metrics`` at the reverse
+         *     proxy, or set ``RC_API_METRICS_TOKEN`` to require ``Authorization: Bearer <token>``
+         *     (SRV-16). ``RC_API_METRICS=0`` turns the endpoint off (404).
          */
         get: operations["metrics_metrics_get"];
         put?: never;
@@ -155,6 +158,9 @@ export interface paths {
         /**
          * Get Lesson
          * @description Lesson metadata, Markdown body, resources, and the study-method section.
+         *
+         *     ``Accept-Language`` picks a translation (``<lesson>.<lang>.md``); a lesson without one
+         *     answers in the language it was written in, which ``lang`` in the response states.
          */
         get: operations["get_lesson_api_v1_lessons__lesson_id__get"];
         put?: never;
@@ -636,6 +642,30 @@ export interface paths {
          * @description Set a new password with a reset token; every session of the account is ended.
          */
         post: operations["reset_password_api_v1_auth_password_reset_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/providers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Providers
+         * @description External logins configured through ``RC_OIDC_PROVIDERS``, for the sign-in buttons.
+         *
+         *     Unauthenticated on purpose — the login screen is reached without a session. Secrets are
+         *     never included. Empty in local mode, or when no provider is configured, which the
+         *     frontend reads as "show no provider buttons".
+         */
+        get: operations["providers_api_v1_auth_providers_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1138,6 +1168,34 @@ export interface components {
             /** Next Cursor */
             next_cursor: string | null;
         };
+        /**
+         * AuthProvider
+         * @description A configured external login, as the sign-in screen needs it.
+         *
+         *     Public information only: the client secret and the role mapping never leave the server.
+         */
+        AuthProvider: {
+            /**
+             * Id
+             * @description Provider id from `RC_OIDC_PROVIDERS`, e.g. `google`.
+             */
+            id: string;
+            /**
+             * Name
+             * @description Label for the sign-in button.
+             */
+            name: string;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "oidc" | "github";
+            /**
+             * Start Url
+             * @description Where to send the browser to begin the login. Absolute, built from `RC_API_BASE_URL` when set — the same base as the OIDC redirect URI, so a deployment that can complete a login can also start one.
+             */
+            start_url: string;
+        };
         /** AuthSession */
         AuthSession: {
             /** Id */
@@ -1355,6 +1413,17 @@ export interface components {
             prerequisites: string[];
             /** Tags */
             tags: string[];
+            /**
+             * Lang
+             * @description Language of `title` and `summary`.
+             * @default ko
+             */
+            lang: string;
+            /**
+             * Available Languages
+             * @description Languages this lesson has text in.
+             */
+            available_languages?: string[];
             /** Objectives */
             objectives: string[];
             /** Activities */
@@ -1471,6 +1540,17 @@ export interface components {
             prerequisites: string[];
             /** Tags */
             tags: string[];
+            /**
+             * Lang
+             * @description Language of `title` and `summary`.
+             * @default ko
+             */
+            lang: string;
+            /**
+             * Available Languages
+             * @description Languages this lesson has text in.
+             */
+            available_languages?: string[];
         };
         /** LogRequest */
         LogRequest: {
@@ -3938,6 +4018,53 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    providers_api_v1_auth_providers_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthProvider"][];
+                };
             };
             /** @description Not Found */
             404: {

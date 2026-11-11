@@ -12,6 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `GET /api/v1/auth/providers`: the external logins configured through `RC_OIDC_PROVIDERS`
   (id, display name, type and the URL that starts the flow), so the sign-in screen can offer
   a button per provider. Unauthenticated, and it never returns client secrets or role maps.
+- Web: external-login buttons on the login and sign-up screens, and a "connect" button per
+  unlinked provider in the profile's external-logins section. Nothing is shown when the
+  deployment has no provider configured.
+
+### Fixed
+
+- Web: `src/lib/api/schema.d.ts` was generated from an older contract and no longer matched
+  `docs/api/openapi.yaml` (it still had `lang` optional on lessons). Regenerated.
 
 ## [0.2.0] - 2026-11-12
 

@@ -8,6 +8,7 @@ import { toStageViews, type RoadmapStageView } from '../roadmap'
 import { apiGet, apiGetOrNull } from './client'
 import { defaultCourseId } from './config'
 import type {
+  AuthProvider,
   Course,
   Lesson,
   LessonProgress,
@@ -20,6 +21,16 @@ import type {
   SearchHit,
   Status,
 } from './types'
+
+/**
+ * `GET /api/v1/auth/providers` — the configured external logins.
+ *
+ * Unauthenticated, and `null`/`[]` when the deployment has none, which the
+ * sign-in screens read as "show no provider buttons".
+ */
+export async function getAuthProviders(): Promise<AuthProvider[]> {
+  return (await apiGetOrNull('/api/v1/auth/providers', { redirectOnUnauthorized: false })) ?? []
+}
 
 /** `GET /api/v1/progress/status` — the dashboard payload. */
 export function getStatus(): Promise<Status | null> {

@@ -126,6 +126,11 @@
     "forbidden": "You do not have permission.",
     "forbiddenBody": "This screen needs a role your account does not have."
   },
+  "auth": {
+    "providersHeading": "or",
+    "continueWith": "Continue with {name}",
+    "connectWith": "Connect {name}"
+  },
   "login": {
     "title": "Sign in",
     "subtitle": "Sign in to carry your progress and reviews across devices.",
@@ -283,7 +288,8 @@
     "sessionsTableCaption": "Signed-in devices",
     "tokensTableCaption": "Personal access tokens",
     "identitiesTableCaption": "Linked external logins",
-    "onThisPage": "On this page"
+    "onThisPage": "On this page",
+    "connectHint": "Link another sign-in method to this account."
   },
   "role": {
     "learner": "Learner",
