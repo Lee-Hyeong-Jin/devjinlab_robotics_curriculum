@@ -29,23 +29,24 @@
 
 | 라우트 | 화면 | 주 API | 비고 |
 |---|---|---|---|
-| `/` | 대시보드 | `GET /progress/status` | 로그인 필수. 현재 단계·모듈·다음 레슨, 단계별 진행률, 주간 시간, 연속일, 복습 수, 최근 활동. **필드 가용 시점**: P2-1은 `open_session`·`lessons`만, `current`·`stages`·`week`·`streak_days`·`recent`는 P2-1 후속(P2-2와 함께), `due_cards`는 P1-2 머지 후. 없는 필드는 스켈레톤으로 두고 화면을 먼저 만든다 |
-| `/roadmap` | 로드맵 | `GET /roadmap` | 단계별 모듈 카드 + 선수지식 체인 |
+| `/` | 대시보드 | `GET /progress/status`, `GET /progress/next` | 구현됨. `Status` 는 `open_session`·`lessons`·`stages`·`week`·`streak_days`·`due_cards` 를 준다. `current`·`recent` 는 계약에 없어서 현재 모듈은 로드맵에서, 다음 레슨 추천은 `/progress/next` 에서, 최근 활동은 `lessons[]` 의 타임스탬프에서 만든다 |
+| `/roadmap` | 로드맵 | `GET /roadmap` | 구현됨. 단계별 모듈 카드 + 그래프의 텍스트 대안 표(AC-A11Y.3) |
 | `/modules/[moduleId]` | 모듈 개요 | `GET /modules/{module_id}`, `GET /progress/lessons` | 레슨 목록·상태, 모듈 자료 |
 | `/modules/[moduleId]/[lessonId]` | 레슨 | `GET /lessons/{lesson_id}`, `GET /progress/lessons/{lesson_id}` | 본문·공부법·자료·활동. 타이머·완료는 아래 동작 참조 |
 | `/modules/[moduleId]/[lessonId]/quiz` | 퀴즈 | `POST /quiz/runs` → `POST /quiz/runs/{id}/answers` → `POST /quiz/runs/{id}/finish` | 문항 하나씩, 즉시 채점·해설 |
 | `/review` | 복습 | `GET /review/due`, `POST /review/{card_id}` | 앞면 → 뒤집기 → again/hard/good/easy |
 | `/resources` | 자료실 | `GET /resources` | 유형·단계·주제 필터(클라이언트), 검색 |
-| `/search` | 검색 | `GET /search?q=` | 레슨·자료 통합 |
+| `/search` | 검색 | `GET /search?q=` | 구현됨. 2글자 이상, 질의는 URL 에 둔다 |
+| `/lessons/[lessonId]` | — | `GET /lessons/{lesson_id}` | 모듈을 모르는 링크(검색 결과, 선수지식 id, 복습 카드)를 정규 URL 로 리다이렉트한다 |
 | `/reports` | 리포트 | `GET /reports/weekly`, `GET /reports/modules/{module_id}` | Markdown 렌더 |
 | `/login` | 로그인 | `POST /auth/login`, `GET /auth/oidc/{provider}/start` | 비로그인 전용 |
 | `/signup` | 회원가입 | `POST /auth/signup` | 비로그인 전용 |
 | `/verify-email`, `/password/forgot`, `/password/reset` | 계정 | `POST /auth/verify-email`, `/auth/password/forgot`, `/auth/password/reset` | 토큰은 쿼리에서 |
-| `/profile` | 프로필 | `GET/PATCH /me`, `/me/password`, `/me/identities`, `/me/sessions`, `/me/tokens`, `/me/export`, `DELETE /me` | 좌측 하위 탭 |
+| `/profile` | 프로필 | `GET/PATCH /me`, `/me/password`, `/me/identities`, `/me/sessions`, `/me/tokens`, `/me/export` | 구현됨. 좌측 섹션 내비 + 앵커. `/me/export` 는 세션 쿠키가 이 오리진에 있어 브라우저가 API 를 직접 못 부르므로 라우트 핸들러 `/api/me/export` 가 중계한다 |
 | `/admin/users` | 사용자 관리 | `GET /admin/users`, `PATCH /admin/users/{id}`, `DELETE /admin/users/{id}/sessions`, `POST /admin/invitations` | admin 전용 |
-| `/admin/content` | 콘텐츠 | `GET /admin/content`, `POST /admin/content/reload` | reload는 author 이상 |
-| `/admin/audit` | 감사 로그 | `GET /admin/audit` | 커서 페이지네이션 |
-| `/admin/system` | 시스템 | `GET /readyz`, `GET /version` | 설정은 마스킹 값 |
+| `/admin/audit` | 감사 로그 | `GET /admin/audit` | 구현됨. 커서 페이지네이션 |
+| `/admin/content` | 콘텐츠 | `GET /admin/content`, `POST /admin/content/reload` | 계약에 아직 없음 |
+| `/admin/system` | 시스템 | `GET /readyz`, `GET /version` | 미구현. 설정은 마스킹 값 |
 
 ### 레슨 화면의 쓰기 동작
 
@@ -58,28 +59,43 @@
 
 ## 3. 디자인 토큰
 
-Figma 컬렉션 `Tokens`(22개, Light/Dark 모드)를 CSS 변수로 1:1 내보낸다. 이름은 Figma 경로의 `/`를 `-`로 바꾼다.
+Figma 컬렉션 `Tokens`(22개, Light/Dark 모드)를 CSS 변수로 내보낸다. 이름은 Figma 경로의 `/`를 `-`로 바꾼다.
+구현은 `web/src/app/globals.css` 이고, Tailwind 유틸(`bg-surface`, `text-muted` …)은 `@theme inline` 로 이 변수에 묶여 있다.
+
+> **대비 수정(2026-11-12).** 아래 값 중 4개는 Figma 원본과 다르다. Figma 값이 WCAG 2.1 AA 의 소형 텍스트 대비 4.5:1 을
+> 넘지 못해 axe-core 가 전 화면에서 실패했기 때문이다(AC-A11Y.1·AC-A11Y.2). 오케스트레이터가 이 값을 정본으로 승인했고,
+> **Figma `Tokens` 컬렉션을 이 값으로 고치는 것이 남은 작업**이다(ADR 0008 의 "Figma ↔ 코드 drift 는 리뷰 항목").
+>
+> | 토큰 | 모드 | Figma | 정본 | 대비 |
+> |---|---|---|---|---|
+> | `--text-muted` | Light | `#6B7280` | `#4B5563` | 4.39:1 → 6.9:1 (on `--bg-subtle`) |
+> | `--text-accent` | Light | `#0F9D8A` | `#0B7A6B` | 3.38:1 → 5.3:1 (on `--bg-surface`), 3.03:1 → 4.8:1 (on `--bg-accent-light`) |
+> | `--accent-primary` | Light | `#0F9D8A` | `#0B7A6B` | 흰 글자를 올린 채움: 3.38:1 → 5.3:1 |
+> | `--text-on-accent` | Dark | `#FFFFFF` | `#0F1115` | 밝은 다크 accent 위: 2.6:1 → 7.4:1 |
+>
+> 상태 점(`--status-*`)과 테두리(`--border-accent`)는 Figma 값 `#0F9D8A` 를 그대로 둔다 — 비텍스트 요소라 3:1 이면 충분하다.
+> 잠긴 카드·행은 `opacity` 로 흐리게 하지 않는다. 투명도를 곱하면 본문 대비가 3.4:1 까지 떨어진다. 대신 `--bg-subtle` 배경과 🔒 라벨로 표시한다.
 
 ```css
 :root {
   --bg-page: #F7F8FA;        --bg-surface: #FFFFFF;      --bg-subtle: #F3F4F6;
   --bg-accent-light: #E6F6F3; --bg-warning-light: #FEF3C7; --bg-success-light: #DCFCE7;
   --border-default: #E5E7EB;  --border-accent: #0F9D8A;
-  --text-primary: #1A1D21;    --text-muted: #6B7280;      --text-accent: #0F9D8A;
+  --text-primary: #1A1D21;    --text-muted: #4B5563;      --text-accent: #0B7A6B;
   --text-on-accent: #FFFFFF;  --text-warning: #B45309;    --text-success: #15803D;
-  --accent-primary: #0F9D8A;
+  --accent-primary: #0B7A6B;
   --status-done: #0F9D8A;     --status-in-progress: #F59E0B;
   --status-available: #9CA3AF; --status-locked: #D1D5DB;
   --status-success: #16A34A;  --status-danger: #DC2626;   --track-progress: #E5E7EB;
 }
-:root:not([data-theme="light"]) { @media (prefers-color-scheme: dark) { /* Dark 값 */ } }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { /* 아래 Dark 값과 동일 */ } }
 :root[data-theme="dark"] { --bg-page: #0F1115; --bg-surface: #171A1F; --bg-subtle: #22262D;
   --bg-accent-light: #113B36; --bg-warning-light: #3B2A0A; --bg-success-light: #0F2E1A;
   --border-default: #2A2F37; --border-accent: #2BB5A0; --text-primary: #E6E8EB;
   --text-muted: #9AA3AE; --text-accent: #2BB5A0; --text-warning: #FBBF24;
-  --text-success: #4ADE80; --accent-primary: #2BB5A0; --status-done: #2BB5A0;
-  --status-available: #6B7280; --status-locked: #3F454E; --status-success: #22C55E;
-  --status-danger: #EF4444; --track-progress: #2A2F37; }
+  --text-success: #4ADE80; --text-on-accent: #0F1115; --accent-primary: #2BB5A0;
+  --status-done: #2BB5A0; --status-available: #6B7280; --status-locked: #3F454E;
+  --status-success: #22C55E; --status-danger: #EF4444; --track-progress: #2A2F37; }
 ```
 
 - 글꼴: 본문 Noto Sans KR(또는 Pretendard), 레슨 ID·CLI 명령은 JetBrains Mono.
@@ -129,8 +145,12 @@ Figma 컬렉션 `Tokens`(22개, Light/Dark 모드)를 CSS 변수로 1:1 내보�
 
 API는 **Markdown 원문**을 준다(`GET /api/v1/lessons/{id}` → `body`, `study_method`, `content_format: "markdown"`). HTML 변환은 프론트엔드 책임이다.
 
-- 파이프라인은 서버 컴포넌트에서 `unified` + `remark-parse` → `remark-math` → `remark-gfm` → `rehype-katex` → `rehype-pretty-code` → `rehype-sanitize` → `rehype-react`. 결과를 RSC로 직렬화하므로 `dangerouslySetInnerHTML`을 쓰지 않는다.
-- `rehype-sanitize`는 KaTeX·코드 하이라이트가 쓰는 클래스와 속성을 허용 목록에 넣는다.
+- 파이프라인은 서버 컴포넌트에서 `unified` + `remark-parse` → `remark-math` → `remark-gfm` → `remark-rehype` → `rehype-katex` → `rehype-highlight` → 헤딩 레벨 이동 → `rehype-sanitize` → 헤딩 id 부여 → `rehype-react`. 결과를 RSC로 직렬화하므로 `dangerouslySetInnerHTML`을 쓰지 않는다. 구현은 `web/src/lib/markdown/`.
+- **KaTeX 는 MathML 모드**(`output: 'mathml'`)로 돌린다. 그래야 sanitize 스키마에 `style` 속성을 열어 줄 필요가 없고(인라인 스타일 0개), KaTeX CSS 도 클라이언트로 나가지 않는다.
+- **하이라이트는 `rehype-pretty-code`(인라인 style) 대신 `rehype-highlight`**(클래스)를 쓰고, `hljs-*` 클래스를 디자인 토큰으로 칠한다. 같은 이유로 sanitize 를 느슨하게 할 필요가 없다.
+- `rehype-sanitize`는 MathML 태그·속성과 `hljs-*`·`language-*` 클래스를 허용 목록에 넣는다. `style` 은 어디에도 허용하지 않는다.
+- **콘텐츠 헤딩은 한 단계 내린다**(본문 `#` → `<h2>`). 레슨 본문과 주간 리포트가 자체 `#` 제목을 갖고 있어서, 그대로 두면 페이지에 `<h1>` 이 둘이 되어 헤딩 계층(§6)이 깨진다.
+- 커리큘럼은 표시 수식을 한 줄(`$$x = y$$`)로 쓴다. 정적 사이트의 KaTeX auto-render 는 이를 display 로 보지만 `remark-math` 는 inline 으로 보므로, 파싱 전에 한 줄 `$$…$$` 를 블록으로 정규화해 두 렌더링을 맞춘다(AC-WEB.2).
 - Mermaid 코드 블록은 클라이언트 전용 컴포넌트로 동적 import(`next/dynamic`, `ssr: false`).
 - `study_method`는 같은 파이프라인으로 렌더해 레슨 상단 강조 카드에 넣는다(Figma `11-307`의 "이 단계 공부법").
 - 변환 결과는 레슨 ID + 콘텐츠 SHA로 캐시한다(콘텐츠는 재배포 때만 바뀐다).
@@ -152,12 +172,20 @@ API는 **Markdown 원문**을 준다(`GET /api/v1/lessons/{id}` → `body`, `stu
 | 읽기 API p95 | 300 ms | 서버 컴포넌트에서 병렬 fetch, 중복 호출 제거 |
 | 번들 | 초기 JS 200 KB 이하(gzip) | Mermaid·KaTeX 동적 import, 관리자 화면 라우트 분할 |
 
-## 8. 구현 순서 제안
+## 8. 구현 순서와 현재 상태
 
-1. 뼈대: 레이아웃(`<TopNav>`), 토큰 CSS, API 클라이언트 생성, 인증 미들웨어(401 리다이렉트).
-2. 읽기 화면: 대시보드 → 로드맵 → 모듈 → 레슨(본문·공부법·자료).
-3. 인증: 로그인·회원가입·이메일 인증·비밀번호 재설정·프로필.
-4. 쓰기: 타이머·완료·퀴즈·복습.
-5. 자료실·검색·리포트.
-6. 관리자: 사용자·콘텐츠·감사·시스템.
-7. 다크 모드·i18n 마감, axe·Lighthouse·부하 테스트.
+1. ~~뼈대: 레이아웃(`<TopNav>`), 토큰 CSS, API 클라이언트 생성, 인증 미들웨어(401 리다이렉트).~~ 완료
+2. ~~읽기 화면: 대시보드 → 로드맵 → 모듈 → 레슨(본문·공부법·자료).~~ 완료
+3. ~~인증: 로그인·회원가입·이메일 인증·비밀번호 재설정·프로필.~~ 완료
+4. ~~쓰기: 타이머·완료·퀴즈·복습.~~ 완료
+5. ~~자료실·검색·리포트.~~ 완료 (모듈 리포트 화면은 미구현)
+6. 관리자: ~~사용자·감사~~ 완료 / 콘텐츠·시스템 미구현
+7. 다크 모드·i18n ~~기본~~ 완료 / Lighthouse·부하 테스트 미실행
+
+남은 것: `/admin/content`·`/admin/system`, 모듈 리포트 화면, OIDC 로그인 버튼
+(설정된 제공자를 알려 주는 엔드포인트가 계약에 없다), 퀴즈 채점 결과의 해설
+Markdown 렌더(Server Action 이 React 트리를 반환해야 한다), Lighthouse·부하 테스트.
+
+테스트: Vitest 단위·컴포넌트와 Playwright 두 스펙. `e2e/smoke.spec.ts` 는 **local**
+모드 API 로(비로그인 화면 + axe), `e2e/journey.spec.ts` 는 **server** 모드 API 로
+(AC-WEB.1 전체 흐름) 돌려야 한다. 자세한 것은 `web/README.md`.
