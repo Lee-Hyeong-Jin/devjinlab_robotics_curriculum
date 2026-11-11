@@ -32,10 +32,10 @@ resources:
     url: https://www.youtube.com/watch?v=uHbRKvD8TWg
     kind: video
     note: 포즈 그래프 최소제곱과 정보 행렬. 심화로 Graph SLAM with Landmarks, Robust LS 강의.
-  - title: "FH Aachen ROS 2 summer school: SLAM Toolbox tutorial (Day 6)"
-    url: https://ros2.fh-aachen.de/summer_school/Day6/Tutorials/slam_toolbox.html
+  - title: "Nav2 tutorial: Navigating While Mapping (slam_toolbox)"
+    url: https://docs.nav2.org/rolling/tutorials/general_tutorials/navigation2_with_slam/navigation2_with_slam/
     kind: article
-    note: 독립적인 SLAM Toolbox 실습 안내. 이 레슨에서는 설정·토픽 구조만 읽는다.
+    note: 공식 slam_toolbox 실습. 이 레슨에서는 설정·토픽 구조만 읽는다.
   - title: "ROS2로 배우는 자율주행 로봇 센서 융합과 SLAM (최종명, 위키독스)"
     url: https://wikidocs.net/book/18464
     kind: book
@@ -155,7 +155,7 @@ slam_toolbox:
 
 **연습 과제(exercise):** (1) 루프 클로저 간선을 빼고 풀면 결과가 오도메트리와 같아짐을 확인하고
 이유를 설명하라. (2) 루프 클로저 측정을 일부러 1 m 틀리게 넣어 지도가 어떻게 망가지는지 보라.
-(3) FH Aachen 자습서를 읽고 SLAM Toolbox 가 구독·발행하는 토픽과 tf 를 그림으로 정리하라.
+(3) Nav2 "Navigating While Mapping" 튜토리얼을 읽고 SLAM Toolbox 가 구독·발행하는 토픽과 tf 를 그림으로 정리하라.
 
 ## 자가 점검 질문
 
@@ -167,15 +167,15 @@ slam_toolbox:
 
 1. **영상(먼저):** Stachniss "Introduction to SLAM" → "Graph-based SLAM" 순서로 본다.
 2. **본문 + 예제:** 예제를 실행하고 궤적을 그려 루프 클로저 전후를 비교한 뒤 연습 과제를 한다.
-3. **도구 읽기:** FH Aachen SLAM Toolbox 자습서와 최종명 위키독스 SLAM 장을 읽고 설정 파일을 본문과 대응시킨다.
+3. **도구 읽기:** Nav2 "Navigating While Mapping"(slam_toolbox) 튜토리얼과 최종명 위키독스 SLAM 장을 읽고 설정 파일을 본문과 대응시킨다.
 4. **심화(선택):** ROB 530 SLAM 과제와 Stachniss 의 Graph SLAM with Landmarks·Robust LS 강의로 넓힌다.
 
 ## 참고 자료
 
 - Cyrill Stachniss, "Introduction to SLAM" — <https://www.youtube.com/watch?v=0I30M6yTklo>
 - Cyrill Stachniss, "Graph-based SLAM" — <https://www.youtube.com/watch?v=uHbRKvD8TWg>
-- FH Aachen, ROS 2 summer school SLAM Toolbox tutorial —
-  <https://ros2.fh-aachen.de/summer_school/Day6/Tutorials/slam_toolbox.html>
+- Nav2 tutorial, "Navigating While Mapping" —
+  <https://docs.nav2.org/rolling/tutorials/general_tutorials/navigation2_with_slam/navigation2_with_slam/>
 - 최종명, 『ROS2로 배우는 자율주행 로봇 센서 융합과 SLAM』(위키독스) — <https://wikidocs.net/book/18464>
 - University of Michigan, ROB 530 Mobile Robotics — <https://github.com/UMich-CURLY-teaching/UMich-ROB-530-public>
 - Steve Macenski, Ivona Jambrecic, "SLAM Toolbox: SLAM for the dynamic world" (JOSS, 2021)
