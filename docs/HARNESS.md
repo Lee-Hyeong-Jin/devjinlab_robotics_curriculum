@@ -11,7 +11,7 @@
 | 상태 | `harness/roadmap.yaml` | 마일스톤 상태 저장소(todo / in_progress / done / blocked). 바깥 루프가 읽고 쓴다. |
 | 상태 도구 | `scripts/harness/roadmap.py` | `summary`, `next`, `get`, `set` 로 로드맵을 결정적으로 읽고 쓴다. |
 | 실행기 | `.claude/workflows/*.js` | 그래프를 실행하는 Workflow 스크립트. 루프·분기·팬아웃은 스크립트가(결정적으로), 각 노드의 내용은 에이전트가 담당. |
-| 노드 실행자 | `.claude/agents/*.md` | planner, implementer, verifier, reviewer, acceptance-tester, integrator + 도메인(curriculum-designer, robotics-sim-engineer, research-scout). |
+| 노드 실행자 | `.claude/agents/*.md` | planner, implementer, verifier, reviewer, acceptance-tester, integrator + 도메인(curriculum-designer, research-scout). |
 | 게이트 | `scripts/harness/check.sh` | 린트·타입·테스트. 스택(pyproject.toml / package.json)을 자동 감지. Phase 1 은 Python(uv + ruff + pytest). |
 | 훅 | `.claude/settings.json` → `scripts/harness/*.sh, *.py` | 세션 시작 컨텍스트, Bash 가드, 저장 후 포맷, 턴 종료 시 검증 게이트. |
 | 진입점 | `.claude/skills/*/SKILL.md` | `/platform-loop`, `/milestone`, `/verify-fix`, `/review-loop`, `/graph-status`, `/verify`, `/adr`, `/new-lesson`. |
