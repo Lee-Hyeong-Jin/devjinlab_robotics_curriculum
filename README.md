@@ -52,6 +52,25 @@ uv run rc site build --out /tmp/site  # other output dir; --src DIR keeps the ge
 uv run rc site build --serve          # live preview via `mkdocs serve` (http://127.0.0.1:8000)
 ```
 
+### PostgreSQL (server mode, optional)
+
+Local mode needs nothing beyond SQLite. To keep progress in PostgreSQL instead (Phase 2 server
+mode, `docs/adr/0007-postgres-store.md`), install the `postgres` extra (included in `uv sync`'s
+dev group; otherwise `pip install 'robotics-curriculum[postgres]'`) and set `RC_DATABASE_URL`:
+
+```bash
+docker compose up -d db                 # PostgreSQL 16 on 127.0.0.1:5432; password from RC_DB_PASSWORD (dev default rc-dev-only)
+export RC_DATABASE_URL=postgresql://rc:rc-dev-only@localhost:5432/rc
+uv run alembic upgrade head             # create / upgrade the schema (alembic downgrade base to undo)
+```
+
+`RC_DATABASE_URL` values: `postgresql://...` → PostgreSQL, `sqlite:///path/progress.db` → that
+SQLite file, unset → `.rc/progress.db`. Stores are opened through
+`robotics_curriculum.progress.factory.open_store()`; `factory.transfer(local_store_or_export,
+pg_store, mode="merge")` copies existing SQLite or `rc progress export` data into PostgreSQL.
+Tests start a throwaway `postgres:16.13` container via Docker (or use `RC_TEST_DATABASE_URL`)
+and skip the PostgreSQL cases with a reason when neither is available (`uv run pytest -rs`).
+
 HTTP API (FastAPI, `/api/v1`; extra `api` — `uv sync` installs it in dev, `pip install 'robotics-curriculum[api]'` otherwise):
 
 ```bash

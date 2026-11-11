@@ -26,8 +26,8 @@ Courses:
 | `m5-state-estimation-slam` | M5 상태 추정·SLAM | 중급 | 6 | 750분 (약 12.5시간) |
 | `m6-navigation-planning` | M6 내비게이션·경로 계획 | 중급 | 6 | 750분 (약 12.5시간) |
 | `m7-manipulation-motion-planning` | M7 매니퓰레이션·동작 계획 | 중급 | 6 | 710분 (약 11.8시간) |
-| M9 (작성 중) | M9 학습 기반 로보틱스 | 고급 | — | — |
+| `m9-learning-based-robotics` | M9 학습 기반 로보틱스 | 고급 | 7 | 860분 (약 14.3시간) |
 | `m10-system-integration-capstone` | M10 시스템 통합·캡스톤 프로젝트 | 고급 | 6 | 750분 (약 12.5시간) |
-| **합계 (M9 제외)** | | | **43** | **4,740분 (약 79시간)** |
+| **합계** | | | **50** | **5,600분 (약 93시간)** |
 
 Content in this directory is licensed under [CC BY 4.0](LICENSE) (Creative Commons Attribution 4.0 International); code elsewhere in the repository is Apache-2.0.

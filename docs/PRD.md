@@ -237,8 +237,10 @@ src/robotics_curriculum/  코어 라이브러리 (Python): 콘텐츠 로더/검�
                           SM-2, 리포트 생성, 정적 사이트 빌더, CLI `rc`. 두 모드가 공유하는 유일한 비즈니스 로직 위치.
 site/                     `rc build` 결과물 (정적 HTML, MkDocs 기반) — .gitignore 대상
 tests/                    pytest (코어·CLI·API)
-api/                      Phase 2: FastAPI 서버. 인증(로컬 계정 + OIDC), 역할 권한, REST(OpenAPI 스키마 공개), 헬스체크·메트릭
-web/                      Phase 2: 웹 프론트엔드 (Next.js 또는 동급 — Phase 2 착수 시 결정). 로드맵·레슨·공부법·자료·대시보드·복습 UI
+src/robotics_curriculum/api/  Phase 2: FastAPI 서버(app, routers, schemas, problems, log, middleware, settings).
+                          인증(로컬 계정 + OIDC), 역할 권한, REST(OpenAPI 스키마 공개), 헬스체크·메트릭.
+                          구현(P2-1, e82f641)이 코어 패키지 안에 두었으므로 별도 최상위 `api/`는 두지 않는다.
+web/                      Phase 2: 웹 프론트엔드 (Next.js App Router, 결정 10). 로드맵·레슨·공부법·자료·대시보드·복습 UI
 deploy/                   Phase 2: Docker Compose(api + web + postgres + reverse proxy), 환경 변수 예시, 백업 스크립트
 docs/                     PRD, 콘텐츠 모델, 운영·기여·보안 문서
 ```
@@ -259,7 +261,7 @@ docs/                     PRD, 콘텐츠 모델, 운영·기여·보안 문서
 - **세션 방식**: 브라우저는 서버 측 세션 + 불투명 쿠키(HttpOnly, Secure, SameSite=Lax, 14일 슬라이딩, PostgreSQL 저장, Redis 교체 가능). 프로그램 클라이언트(`rc login`, 외부 도구)는 범위·만료가 있는 개인 액세스 토큰(해시 저장). JWT는 서비스 간 통신이 생길 때만.
 - **API 경로**: `/api/v1` 접두사. `/healthz`, `/readyz`, `/version`은 접두사 없음. 오류는 RFC 9457 problem+json(type, title, status, detail, instance, request_id). 목록은 커서 페이지네이션.
 - **서버 콘텐츠 색인**: 시작·reload·배포 시 재색인, 불변 스냅샷을 원자적으로 교체, 검증 실패 시 이전 색인 유지 + 422. 레슨 1,000개 60초 목표.
-- **web/ 프레임워크**: Phase 2 착수 시 설계 §1.2 비교표 기준으로 결정(사용자 결정, 권고안 Next.js). 그 전에는 OpenAPI 계약과 화면 설계만 확정.
+- **web/ 프레임워크**: **Next.js(App Router)** 로 확정(결정 10, 설계 §1.2 비교표 근거). ADR로 기록한다.
 
 주요 CLI 명령: `rc validate`, `rc build`, `rc status`, `rc next`, `rc roadmap`, `rc show <lesson>`, `rc resources <lesson>|--module|--all`, `rc start|stop|log`, `rc done`, `rc quiz`, `rc review`, `rc note`, `rc report weekly|module`, `rc search`, `rc progress export|import`.
 
@@ -279,7 +281,7 @@ docs/                     PRD, 콘텐츠 모델, 운영·기여·보안 문서
 | 단계 | 범위 | 완료 기준 |
 |---|---|---|
 | **Phase 0: 콘텐츠 기반** | uv/ruff/pytest 프로젝트 골격, 콘텐츠 모델 확정(`CONTENT_MODEL.md`), 기초 모듈 M1~M3 레슨 15개(부록 A; 각 레슨에 `resources[]`와 공부법 절), 중급·고급은 `module.yaml`과 개요만, `rc validate`, `rc show`, `rc resources`, `rc report weekly` | `rc validate` 통과, 리포트 1건 생성, CI에서 pytest 통과 |
-| **Phase 1: MVP (P0 전부, CLI + 정적 사이트)** | `rc build` 정적 사이트(코스 로드맵 그래프, 단계별 모듈 목록, 레슨 페이지 + 공부법 절 + 자료 목록, 대시보드), 진도·타이머, 퀴즈, 플래시카드·SM-2 복습, 콘텐츠 범위는 **기초 M1~M4 전체**(Phase 0의 M1~M3에 M4 추가, 레슨 19개), 진도 JSON 내보내기 | 본인이 2주간 실제로 사용해 주간 리포트 2건 생성 |
+| **Phase 1: MVP (P0 전부, CLI + 정적 사이트)** | `rc build` 정적 사이트(코스 로드맵 그래프, 단계별 모듈 목록, 레슨 페이지 + 공부법 절 + 자료 목록, 대시보드), 진도·타이머, 퀴즈, 플래시카드·SM-2 복습, 콘텐츠 범위는 **기초 M1~M4 전체**(Phase 0의 M1~M3에 M4 추가, 레슨 19개), 진도 JSON 내보내기 | 본인이 2주간 실제로 사용해 주간 리포트 2건 생성. QA 리뷰(`docs/reviews/`) 기준 **high 이상 결함 0건**, 부록 C.0 AC-SEC.1~6 충족 |
 | **Phase 2: 멀티유저 웹 (v1.0)** | 서버 모드 구축: FastAPI API 서버(OpenAPI), 로컬 계정 + OIDC 인증, 역할 권한, PostgreSQL + Alembic, 웹 프론트엔드(로드맵·레슨·공부법·자료·대시보드·복습), 사용자별 데이터 분리·내보내기·삭제, Docker Compose 배포, 관측성·감사 로그, 7절 보안·성능 기준 충족. 콘텐츠: 모듈 안내, 노트 연동, 검색, 중급 M5~M8 레슨 작성. 필요성이 확인되면 FR-6.6 | 스터디 그룹 1팀(5명 이상)이 자체 호스팅 인스턴스에서 4주간 사용. ASVS L2 체크리스트·부하 테스트·접근성 검사 통과. 기초 단계를 공부법대로 완주하고 모듈 리포트 생성 |
 | **Phase 3: 운영·커뮤니티 (v1.x~v2)** | 배포 옵션 확장(Kubernetes 매니페스트, 관리형 DB 가이드), 플러그인 인터페이스(퀴즈 종류·리포트 템플릿·인증 제공자 확장), 콘텐츠 기여 워크플로(PR 템플릿, 미리보기 빌드, 리뷰 체크리스트), 콘텐츠 번역 병행, AI 튜터, FSRS, 그룹/코호트, 하이라이트, 연습문제 힌트. 고급 M9~M10 레슨 작성 | 외부 기여자의 콘텐츠 PR이 병합된 사례, 1.0 이후 시맨틱 버저닝 유지, 공개 보안 신고 채널 운영 |
 
@@ -326,13 +328,15 @@ v0.1의 열린 질문 5개에 대한 오케스트레이터 결정과, 그 뒤 �
 | 8 | 구현 기준 단순화 (오케스트레이터, v0.5) | 구현된 것은 구현이 기준, 사용자 요구는 "단순하게". 단계는 `module.yaml`의 `level` 필드(디렉터리 아님). 학습 방법·자료는 프런트매터 `resources[]` + 본문 "이 단계 공부법" 절 + `rc resources`/`rc show`. `study_steps[]`, 읽기 상태, `rc read`, 자료 카탈로그는 Phase 2 제안으로 강등 | FR-1, FR-6, 8절, 9절, 10절 |
 | 9 | 오픈소스·엔터프라이즈 (사용자 직접 지시, 2026-11-11) | **오픈소스 프로젝트로 가며 실제 엔터프라이즈급으로 개발한다.** 제품 목적·시뮬레이터 제외·콘텐츠 모델은 유지. Phase 1 CLI + 정적 사이트는 "코어 라이브러리 + 로컬 모드"로 존속. Phase 2에 멀티유저 서버 모드(API, 인증, 권한, PostgreSQL, 웹), 7절 비기능 요구사항을 엔터프라이즈 수준으로 상향, 14절 거버넌스 신설. 결정 5의 "웹은 Phase 2 이후"는 유지되며 범위만 확장 | 1절, 3.2절, 4절, FR-10, 7~10절, 12절, 14절 |
 
-남은 사용자 결정: AI 튜터 월 비용 상한(결정 4), 라이선스 최종 확정(14절, 기본값 Apache-2.0 / CC BY 4.0).
+| 10 | 웹 프레임워크·세션·라이선스 (오케스트레이터 담당자 권한, 2026-11-11) | `web/` = **Next.js(App Router)**. 세션 = **서버 세션 쿠키 + PAT**(설계 v0.4 (b) 확정). 라이선스 = **Apache-2.0(코드) / CC BY 4.0(콘텐츠)** 확정. Phase 1 완료 판정에 "QA high 결함 0" 조건 추가 | 9절, 10절, 14절, AC-WEB.7 |
+
+남은 사용자 결정: AI 튜터 월 비용 상한(결정 4).
 
 ## 14. 오픈소스 거버넌스
 
 | 항목 | 내용 |
 |---|---|
-| 라이선스 | 코드는 **Apache-2.0**, 커리큘럼 콘텐츠(`curriculum/`, 공부법, 퀴즈)는 **CC BY 4.0**. 외부 자료(`resources[]`)는 링크만 하고 원저작자 라이선스를 따른다. 기본값이며 사용자가 번복할 수 있다. 저장소 루트에 `LICENSE`, `curriculum/LICENSE`를 둔다. |
+| 라이선스 | 코드는 **Apache-2.0**, 커리큘럼 콘텐츠(`curriculum/`, 공부법, 퀴즈)는 **CC BY 4.0**. 외부 자료(`resources[]`)는 링크만 하고 원저작자 라이선스를 따른다. 결정 10으로 확정. 저장소 루트에 `LICENSE`, `curriculum/LICENSE`를 둔다. |
 | 기여 가이드 | `CONTRIBUTING.md`: 개발 환경 설정(uv), 브랜치 규칙, 커밋 메시지는 **Conventional Commits** + 모든 커밋에 **DCO `Signed-off-by`**(Developer Certificate of Origin) 필수, PR 템플릿, 코드·콘텐츠 리뷰 체크리스트, 콘텐츠 기여 시 `rc validate` 통과와 자료 출처 명시 의무. |
 | 행동 강령 | `CODE_OF_CONDUCT.md`: Contributor Covenant 2.1 채택, 신고 연락처와 처리 절차 명시. |
 | 보안 취약점 신고 | `SECURITY.md`: 비공개 신고 경로(GitHub Private Vulnerability Reporting 또는 보안 이메일), 접수 확인 3영업일·초기 평가 14일 목표, 조정된 공개(coordinated disclosure), 지원 버전 범위. 취약점 수정은 패치 릴리스와 보안 권고(GHSA)로 공개. |
@@ -515,7 +519,9 @@ P2-1 1차 범위 합의(API 개발자, 2026-11-11): 이번에 구현하는 것�
 |---|---|---|
 | AC-DB.1 | 코어의 저장소 추상화가 SQLite(로컬)와 PostgreSQL(서버)을 모두 지원하고, 같은 테스트 스위트가 두 백엔드에서 통과한다. | 백엔드 파라미터화 테스트(CI에 Postgres 서비스 컨테이너) |
 | AC-DB.2 | 스키마 변경은 Alembic 마이그레이션으로만 한다. 빈 DB → 최신, 최신 → 한 단계 다운 → 업 왕복이 CI에서 통과한다. 마이그레이션 없는 모델 변경은 테스트가 실패시킨다. | CI 잡, autogenerate diff 검사 |
-| AC-DB.3 | 로컬 모드 JSON 내보내기(`rc progress export`)를 서버 계정으로 가져올 수 있고, 레슨 ID 기준으로 병합·중복 방지된다. | 왕복 테스트 |
+| AC-DB.3 | 로컬 모드 JSON 내보내기(`rc progress export`)를 서버 계정으로 가져올 수 있고, 레슨 ID 기준으로 병합·중복 방지된다. 사용자가 쓸 수 있는 명령(`rc progress transfer` 또는 동급)이 Phase 2 완료 전에 있어야 한다(라이브러리 함수만으로는 US-DB.2 미충족). | 왕복 테스트 + CLI 테스트 |
+
+PM 검토(2026-11-11, bf94408): AC-DB.1~3의 코드·테스트는 충족. **조건부**로 남는 것 둘. (1) CI(`.github/workflows/ci.yml`)에 PostgreSQL 서비스 컨테이너나 `RC_TEST_DATABASE_URL`이 없어 Postgres 테스트가 건너뛰어지므로 AC-DB.1·AC-DB.2의 "CI에서 통과"가 아직 성립하지 않는다(DevOps 작업). (2) `rc progress transfer` CLI 미구현.
 
 ### C.5 P2-5 운영: 관측성·배포·백업·부하
 
@@ -553,7 +559,7 @@ P2-1 1차 범위 합의(API 개발자, 2026-11-11): 이번에 구현하는 것�
 | AC-WEB.4 | 관리자 화면은 admin 역할에서만 접근되고 learner·author 접근은 거부된다. 모든 화면은 API 권한 검사에 의존하며 프론트엔드 숨김만으로 보호하지 않는다. | E2E 또는 컴포넌트 테스트 + API 403 확인 |
 | AC-WEB.5 | 자료실: 모듈·레슨별 자료 목록과 종류 필터, 외부 링크는 새 탭. 퀴즈·복습 UI는 P1-2 API 노출 후 추가(그 전에는 "CLI에서 사용" 안내). | 컴포넌트 테스트 |
 | AC-WEB.6 | 프론트엔드 lint·타입 검사·테스트가 CI와 `check.sh`(node 스택)에서 실행된다. 주요 화면 LCP 2.5초 이내(7절). | CI, Lighthouse 또는 동급 |
-| AC-WEB.7 | 프레임워크 선택(사용자 결정, 설계 §1.2 비교표 기준)이 ADR에 기록되어 있다. 화면 구조는 `docs/platform-design.md`의 Figma 7페이지 구조를 따른다. | ADR, 설계 대조 |
+| AC-WEB.7 | 프레임워크 선택(Next.js App Router, 결정 10, 설계 §1.2 비교표 근거)이 ADR에 기록되어 있다. 화면 구조는 `docs/platform-design.md`의 Figma 7페이지 구조를 따른다. | ADR, 설계 대조 |
 
 범위 밖: i18n·접근성(P2-6), 하이라이트·AI 튜터(Phase 3), 콘텐츠 편집 UI(Git이 원본).
 

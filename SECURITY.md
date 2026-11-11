@@ -35,3 +35,15 @@ In scope: the `robotics_curriculum` package and `rc` CLI, the generated static s
 Dockerfile, and the CI workflows in this repository. Third-party dependencies are in scope only
 when this project uses them in a vulnerable way; report upstream bugs to their projects.
 Curriculum resources that link to an external page that has become malicious are also in scope.
+
+## Automated checks
+
+`.github/workflows/security.yml` runs on every pull request, on pushes to `main`, and weekly:
+
+- **CodeQL** static analysis (Python, `security-and-quality` queries).
+- **pip-audit** against the runtime dependencies exported from `uv.lock`. Because pip-audit has
+  no severity filter, *any* known vulnerability in a runtime dependency fails the build; dev-only
+  tooling is audited without blocking. Dependabot keeps dependencies updated separately.
+
+Locally: `uv export --locked --format requirements-txt --no-dev --no-emit-project --no-hashes -o
+runtime.txt && uvx pip-audit -r runtime.txt --no-deps --strict`.

@@ -24,8 +24,8 @@ activities:
     title: 랜덤화 범위와 강건성 실험
     estimated_minutes: 50
 resources:
-  - title: "An Introduction to Robot Learning and Isaac Lab (NVIDIA Physical AI Learning)"
-    url: https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-lab/latest/an-introduction-to-robot-learning-and-isaac-lab/index.html
+  - title: "Getting Started with Isaac Lab (NVIDIA Physical AI Learning)"
+    url: https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-lab/latest/index.html
     kind: course
     note: 무료 등록. 읽기 위주로. Isaac Lab 3.0 은 Newton 백엔드로 Isaac Sim 없이 실행되나 NVIDIA GPU(Turing+) 필요.
   - title: "MuJoCo Playground"
@@ -152,15 +152,15 @@ for name, params in [("공칭 시뮬", nominal), ("도메인 랜덤화", randomi
 
 ## 이 단계 공부법
 
-1. **문서(먼저):** NVIDIA "An Introduction to Robot Learning and Isaac Lab" 을 읽으며 과제·보상·랜덤화 설정이 어디에 있는지 표시한다.
+1. **문서(먼저):** NVIDIA "Getting Started with Isaac Lab" 의 로봇 러닝 입문 장을 읽으며 과제·보상·랜덤화 설정이 어디에 있는지 표시한다.
 2. **본문 + 예제:** 예제와 연습 과제 (1) 로 어떤 격차가 결정적인지 찾는 습관을 들인다.
 3. **코드 읽기:** unitree_rl_mjlab 의 속도 추종 과제에서 보상 항과 랜덤화 항목을 목록으로 뽑는다.
 4. **확장(선택, GPU 필요):** MuJoCo Playground CartpoleBalance 를 CPU 로, 이후 SO-101 sim-to-real 과정을 읽는다.
 
 ## 참고 자료
 
-- NVIDIA Physical AI Learning, "An Introduction to Robot Learning and Isaac Lab" —
-  <https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-lab/latest/an-introduction-to-robot-learning-and-isaac-lab/index.html>
+- NVIDIA Physical AI Learning, "Getting Started with Isaac Lab" —
+  <https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-lab/latest/index.html>
 - MuJoCo Playground — <https://playground.mujoco.org/>
 - Unitree Robotics, unitree_rl_mjlab — <https://github.com/unitreerobotics/unitree_rl_mjlab>
 - NVIDIA Physical AI Learning, "Sim-to-Real with SO-101" —
