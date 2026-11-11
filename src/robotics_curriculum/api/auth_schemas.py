@@ -189,3 +189,21 @@ class AuditEntry(Schema):
 class AuditPage(Schema):
     items: list[AuditEntry]
     next_cursor: str | None
+
+
+class Identity(Schema):
+    """A linked external login (OIDC provider)."""
+
+    id: int
+    provider: str
+    email: str | None
+    linked_at: datetime
+
+    @classmethod
+    def of(cls, identity: models.Identity) -> Identity:
+        return cls(
+            id=identity.id,
+            provider=identity.provider,
+            email=identity.email,
+            linked_at=identity.linked_at,
+        )

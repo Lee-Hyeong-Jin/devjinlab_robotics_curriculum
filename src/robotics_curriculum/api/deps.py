@@ -18,6 +18,7 @@ from fastapi import Depends, HTTPException, Request
 from robotics_curriculum.api.log import request_id_var
 from robotics_curriculum.api.settings import Settings
 from robotics_curriculum.auth.models import Role, Scope, User
+from robotics_curriculum.auth.oidc import OidcClient
 from robotics_curriculum.auth.service import AuthService, Context, Principal
 from robotics_curriculum.content import Course, Lesson, Module
 from robotics_curriculum.progress import (
@@ -101,6 +102,8 @@ class AppState:
     index: ContentIndex | None = None
     load_error: str | None = None
     auth: AuthService | None = None
+    oidc: dict[str, OidcClient] = field(default_factory=dict)
+    flow_key: bytes = b""
 
 
 def get_state(request: Request) -> AppState:

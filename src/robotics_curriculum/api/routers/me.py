@@ -15,6 +15,7 @@ from robotics_curriculum.api.auth_schemas import (
     ApiTokenCreated,
     AuthSession,
     DeleteAccount,
+    Identity,
     PasswordChange,
     User,
     UserUpdate,
@@ -124,3 +125,19 @@ def delete_me(
     auth.delete_account(principal, body.password if body else None, ctx)
     response.delete_cookie(SESSION_COOKIE, path="/")
     response.delete_cookie(CSRF_COOKIE, path="/")
+
+
+@router.get("/identities", response_model=list[Identity])
+def list_identities(principal: SessionPrincipal, auth: Auth) -> list[Identity]:
+    """External logins (OIDC providers) linked to the account."""
+    return [Identity.of(i) for i in auth.list_identities(principal.user)]
+
+
+@router.delete(
+    "/identities/{identity_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses=problem_responses(409),
+)
+def unlink_identity(identity_id: int, principal: SessionPrincipal, auth: Auth, ctx: Ctx) -> None:
+    """Unlink an external login (refused when it is the account's only way to sign in)."""
+    auth.unlink_identity(principal.user, identity_id, ctx)
