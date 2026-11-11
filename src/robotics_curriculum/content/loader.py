@@ -170,7 +170,12 @@ def load_module(module_dir: Path, errors: _Collector) -> Module | None:
         if lesson is not None:
             lessons.append(lesson)
     return Module(
-        id=meta.id, title=meta.title, summary=meta.summary, lessons=lessons, path=module_dir
+        id=meta.id,
+        title=meta.title,
+        summary=meta.summary,
+        level=meta.level,
+        lessons=lessons,
+        path=module_dir,
     )
 
 

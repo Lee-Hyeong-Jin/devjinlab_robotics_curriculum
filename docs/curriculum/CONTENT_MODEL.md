@@ -39,6 +39,7 @@ curriculum/
 | `id` | slug | O | 모듈 ID (`m1-math-physics`) |
 | `title` | str | O | 표시 이름 |
 | `summary` | str | O | 요약 |
+| `level` | `기초` \| `중급` \| `고급` | - | 모듈 수준. 기본 없음 |
 | `lessons` | list[str] | - | 레슨 파일 이름(확장자 제외), 순서대로 |
 
 ## 레슨 front matter (`<lesson>.md`)

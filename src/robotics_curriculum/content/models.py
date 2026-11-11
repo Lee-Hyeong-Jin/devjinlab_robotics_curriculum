@@ -7,12 +7,13 @@ their front matter / YAML schema. See ``docs/curriculum/CONTENT_MODEL.md``.
 
 from enum import StrEnum
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
 ID_PATTERN = r"^[a-z0-9][a-z0-9-]*$"
 Id = Annotated[str, Field(pattern=ID_PATTERN, description="lowercase slug, e.g. m1-vectors")]
+Level = Literal["기초", "중급", "고급"]
 
 
 class ContentModel(BaseModel):
@@ -78,6 +79,7 @@ class ModuleMeta(ContentModel):
     id: Id
     title: str = Field(min_length=1)
     summary: str = Field(min_length=1)
+    level: Level | None = None
     lessons: list[str] | None = Field(
         default=None,
         description="lesson file stems in teaching order; omit to use sorted file names",
@@ -88,6 +90,7 @@ class Module(ContentModel):
     id: Id
     title: str
     summary: str
+    level: Level | None = None
     lessons: list[Lesson] = Field(default_factory=list)
     path: Path | None = Field(default=None, exclude=True)
 

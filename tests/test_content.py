@@ -111,6 +111,21 @@ def test_lab_activity_kind_is_rejected(tmp_path: Path) -> None:
     assert any("kind" in e.message for e in excinfo.value.errors)
 
 
+def test_module_level_parses(tmp_path: Path) -> None:
+    course = write_course(tmp_path, {"a": lesson_md("a")})
+    module_yaml = course / "mod" / "module.yaml"
+    module_yaml.write_text(
+        module_yaml.read_text(encoding="utf-8") + "level: 중급\n", encoding="utf-8"
+    )
+    assert load_course(course).modules[0].level == "중급"
+
+    module_yaml.write_text(
+        module_yaml.read_text(encoding="utf-8").replace("중급", "전문가"), encoding="utf-8"
+    )
+    with pytest.raises(LoadError):
+        load_course(course)
+
+
 def test_lesson_resources_parse(tmp_path: Path) -> None:
     text = lesson_md("a").replace(
         "tags: []",
