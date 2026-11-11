@@ -296,6 +296,12 @@ class ProgressService:
             exported_at=self.clock(),
             lesson_progress=self.store.list_lessons(None),
             sessions=self.store.list_sessions(None),
+            cards=self.store.list_cards(None),
+            card_states=self.store.list_card_states(None),
+            reviews=self.store.list_reviews(None),
+            quiz_attempts=self.store.list_quiz_attempts(None),
+            quiz_runs=self.store.list_quiz_runs(None),
+            activity_progress=self.store.list_activities(None),
         )
 
     def import_(self, data: ProgressExport, *, replace: bool = False) -> tuple[int, int]:
@@ -313,6 +319,18 @@ class ProgressService:
                 self.store.save_lesson(progress)
             for session in data.sessions:
                 self.store.add_session(session)
+            for card in data.cards:
+                self.store.save_card(card)
+            for state in data.card_states:
+                self.store.save_card_state(state)
+            for review in data.reviews:
+                self.store.add_review(review)
+            for attempt in data.quiz_attempts:
+                self.store.add_quiz_attempt(attempt)
+            for run in data.quiz_runs:
+                self.store.add_quiz_run(run)
+            for activity in data.activity_progress:
+                self.store.save_activity(activity)
         return len(data.lesson_progress), len(data.sessions)
 
 
