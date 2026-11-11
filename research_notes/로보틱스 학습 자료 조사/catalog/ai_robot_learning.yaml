@@ -303,7 +303,7 @@ resources:
 - id: nvidia-intro-robot-learning-isaac-lab
   title: An Introduction to Robot Learning and Isaac Lab (NVIDIA)
   author: NVIDIA
-  url: https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-lab/latest/an-introduction-to-robot-learning-and-isaac-lab/index.html
+  url: https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-lab/latest/robot-learning-fundamentals/index.html
   type: course
   language: en
   cost:
