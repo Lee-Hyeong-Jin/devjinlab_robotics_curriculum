@@ -1,9 +1,0 @@
-id: robotics-basics
-title: 로보틱스 기초
-summary: >-
-  수학·물리 기초부터 운동학, 이동 로봇 제어, 센서, 시뮬레이션 툴체인까지
-  로보틱스 입문에 필요한 핵심을 다루는 첫 트랙 (PRD 부록 A).
-tags: [robotics, fundamentals]
-modules:
-  - m1-math-physics
-  - m2-kinematics

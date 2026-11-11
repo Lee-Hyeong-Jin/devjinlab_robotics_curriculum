@@ -1,0 +1,11 @@
+id: robotics-expert
+title: 로보틱스 전문가 코스
+summary: >-
+  기초→중급→고급의 단계적 경로로 로보틱스 전문가를 기르는 단일 코스.
+  기초 단계(M1–M3)에서 수학·물리, 로봇 운동학, 이동 로봇 제어를 익히고,
+  중급·고급 단계에서 센서·인식, 상태 추정, 계획, 학습 기반 로봇 제어로 확장한다.
+tags: [robotics, fundamentals]
+modules:
+  - m1-math-physics
+  - m2-kinematics
+  - m3-mobile-robots-control
