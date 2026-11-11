@@ -43,6 +43,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   server-side session cookies with CSRF protection, personal access tokens with scopes, roles
   learner/author/admin, per-user progress, password reset and email verification by mail,
   account export and deletion, admin user management and an audit log; security headers.
+- OIDC login (Authorization Code + PKCE) for providers listed in `RC_OIDC_PROVIDERS`, with
+  account linking and `/api/v1/me/identities`.
+- Prometheus metrics at `/metrics` (request counts, latency histogram, in-flight requests,
+  database pool usage); `RC_API_METRICS=0` turns it off.
+- `docs/api/openapi.yaml` is generated from the served API (plus `x-planned` routes) and a test
+  keeps them identical.
 - Engineering scaffolding: Apache-2.0 license for code, CC BY 4.0 for curriculum content,
   contribution guide, Code of Conduct, security policy, issue and PR templates, Dependabot,
   GitHub Actions CI and release workflows, strict mypy, coverage gate, pre-commit hooks,

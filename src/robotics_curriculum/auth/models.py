@@ -111,3 +111,14 @@ class OneTimeToken(AuthModel):
     kind: TokenKind
     expires_at: datetime
     used_at: datetime | None = None
+
+
+class Identity(AuthModel):
+    """An external login (OIDC provider + subject) linked to a user."""
+
+    id: int
+    user_id: int
+    provider: str
+    subject: str
+    email: str | None
+    linked_at: datetime

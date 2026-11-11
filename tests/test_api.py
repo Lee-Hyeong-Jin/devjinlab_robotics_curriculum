@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+import yaml
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from typer.testing import CliRunner
@@ -26,6 +27,7 @@ from robotics_curriculum.progress import ProgressError
 ROOT = Path(__file__).resolve().parents[1]
 CURRICULUM = ROOT / "tests" / "fixtures" / "curriculum"
 SNAPSHOT = ROOT / "tests" / "snapshots" / "openapi.json"
+DESIGN_DOC = ROOT / "docs" / "api" / "openapi.yaml"
 COURSE = "sample-course"
 VECTORS = "m1-vectors-matrices"
 ROTATION = "m1-rotation-representations"
@@ -435,11 +437,109 @@ def test_openapi_snapshot(client: TestClient) -> None:
     if os.environ.get("RC_UPDATE_SNAPSHOTS") == "1":
         SNAPSHOT.parent.mkdir(parents=True, exist_ok=True)
         SNAPSHOT.write_text(json.dumps(spec, indent=2, ensure_ascii=False) + "\n", "utf-8")
+        DESIGN_DOC.write_text(_design_doc(spec, yaml.safe_load(DESIGN_DOC.read_text("utf-8"))))
     assert SNAPSHOT.is_file(), "missing snapshot: run RC_UPDATE_SNAPSHOTS=1 uv run pytest"
     assert spec == json.loads(SNAPSHOT.read_text("utf-8")), (
         "OpenAPI changed. If intended, run RC_UPDATE_SNAPSHOTS=1 uv run pytest tests/test_api.py "
-        "and update docs/api/openapi.yaml with the architect."
+        "(regenerates the snapshot and docs/api/openapi.yaml) and review the diff."
     )
+
+
+# Paths and schemas the design keeps for later milestones (not served yet).
+PLANNED_PATHS = {
+    "/api/v1/roadmap",
+    "/api/v1/search",
+    "/api/v1/progress/sessions",
+    "/api/v1/cards",
+    "/api/v1/cards/{card_id}",
+    "/api/v1/admin/invitations",
+    "/api/v1/admin/content",
+    "/api/v1/admin/content/reload",
+}
+_SYSTEM = {"/healthz", "/readyz", "/version", "/metrics"}
+
+
+def _design_doc(spec: dict[str, Any], old: dict[str, Any]) -> str:
+    """docs/api/openapi.yaml = the implementation (paths, schemas) + the design's header
+    (description, tags, security schemes, shared parameters) + ``x-planned`` items."""
+
+    def full(path: str) -> str:
+        return path if path.startswith("/api/v1") or path in _SYSTEM else "/api/v1" + path
+
+    old_paths = {full(p): item for p, item in old.get("paths", {}).items()}
+    planned = old.get("x-planned", {})
+    planned_paths = {
+        p: item
+        for p, item in {**planned.get("paths", {}), **old_paths}.items()
+        if p in PLANNED_PATHS and p not in spec["paths"]
+    }
+    old_components = old.get("components", {})
+    old_schemas = {**planned.get("schemas", {}), **old_components.get("schemas", {})}
+    planned_schemas = {
+        name: schema
+        for name, schema in old_schemas.items()
+        if name not in spec["components"]["schemas"]
+        and name
+        in {
+            "CardPage",
+            "ContentStatus",
+            "Level",
+            "LockState",
+            "Roadmap",
+            "SearchHit",
+            "StudySessionPage",
+        }
+    }
+    doc = {
+        "openapi": spec["openapi"],
+        "info": {
+            **spec["info"],
+            "version": "1 (/api/v1)",
+            "description": old.get("info", {}).get("description", ""),
+        },
+        "servers": [{"url": "/"}],
+        "tags": old.get("tags", []),
+        "security": old.get("security", []),
+        "paths": spec["paths"],
+        "components": {
+            "securitySchemes": old_components.get("securitySchemes", {}),
+            "parameters": old_components.get("parameters", {}),
+            "responses": old_components.get("responses", {}),
+            "schemas": spec["components"]["schemas"],
+        },
+        "x-planned": {
+            "description": "Designed but not served yet; moves into paths when implemented.",
+            "paths": dict(sorted(planned_paths.items())),
+            "schemas": dict(sorted(planned_schemas.items())),
+        },
+    }
+    header = (
+        "# Generated from the implementation by tests/test_api.py::test_openapi_snapshot\n"
+        "# (RC_UPDATE_SNAPSHOTS=1). Edit the header fields or x-planned here; paths and\n"
+        "# components.schemas always come from the FastAPI app.\n"
+    )
+
+    class Dumper(yaml.SafeDumper):
+        pass
+
+    def text(dumper: yaml.SafeDumper, value: str) -> yaml.ScalarNode:
+        style = "|" if "\n" in value else None
+        return dumper.represent_scalar("tag:yaml.org,2002:str", value, style=style)
+
+    Dumper.add_representer(str, text)
+    body = yaml.dump(doc, Dumper=Dumper, sort_keys=False, allow_unicode=True, width=100)
+    return header + body
+
+
+def test_design_doc_matches_implementation(client: TestClient) -> None:
+    """The contract test of docs/platform-design.md §7: design == served API."""
+    spec = _spec(client)
+    doc = yaml.safe_load(DESIGN_DOC.read_text("utf-8"))
+    assert doc["paths"] == spec["paths"], (
+        "run RC_UPDATE_SNAPSHOTS=1 uv run pytest tests/test_api.py"
+    )
+    assert doc["components"]["schemas"] == spec["components"]["schemas"]
+    assert not set(doc["x-planned"]["paths"]) & set(spec["paths"])
 
 
 def test_openapi_errors_are_problem_json(client: TestClient) -> None:
@@ -455,7 +555,7 @@ def test_openapi_errors_are_problem_json(client: TestClient) -> None:
     assert all(
         p.startswith("/api/v1/")
         for p in spec["paths"]
-        if p not in {"/healthz", "/readyz", "/version"}
+        if p not in {"/healthz", "/readyz", "/version", "/metrics"}
     )
 
 
@@ -522,3 +622,56 @@ def test_rc_api_serve_rejects_bad_port_and_missing_extra(monkeypatch: pytest.Mon
     result = runner.invoke(cli_app, ["api", "serve"])
     assert result.exit_code == 1
     assert "'api' extra" in result.output
+
+
+# -- metrics (P2-5, AC-OPS.1) ------------------------------------------------------------
+
+
+def _sample(text: str, name: str, **labels: str) -> float:
+    for line in text.splitlines():
+        if line.startswith(f"{name}{{") and all(f'{k}="{v}"' in line for k, v in labels.items()):
+            return float(line.rsplit(" ", 1)[1])
+    raise AssertionError(f"{name} {labels} not found")
+
+
+def test_metrics_count_requests_by_route(client: TestClient) -> None:
+    client.get(f"/api/v1/lessons/{VECTORS}")
+    client.get("/api/v1/lessons/nope")
+    client.get("/api/v1/nowhere")
+    r = client.get("/metrics")
+    assert r.status_code == 200
+    assert r.headers["content-type"].startswith("text/plain")
+    text = r.text
+    route = "/api/v1/lessons/{lesson_id}"
+    assert _sample(text, "http_requests_total", route=route, status="200") == 1
+    assert _sample(text, "http_requests_total", route=route, status="404") == 1
+    assert _sample(text, "http_requests_total", route="unmatched", status="404") == 1
+    assert _sample(text, "http_request_duration_seconds_count", route=route) == 2
+    assert "http_requests_in_progress" in text
+    assert "/api/v1/lessons/nope" not in text  # raw paths never become labels
+
+
+def test_metrics_can_be_disabled(tmp_path: Path) -> None:
+    settings = Settings(curriculum_dir=CURRICULUM, data_dir=tmp_path, metrics=False)
+    assert_problem(TestClient(create_app(settings)).get("/metrics"), 404)
+    assert Settings.from_env({"RC_API_METRICS": "0"}).metrics is False
+
+
+def test_metrics_report_auth_pool(tmp_path: Path) -> None:
+    from robotics_curriculum.api.metrics import PoolCollector
+
+    settings = Settings(curriculum_dir=CURRICULUM, data_dir=tmp_path, auth_mode="server")
+    client = TestClient(create_app(settings, mailer=None), base_url="https://testserver")
+    client.get("/readyz")
+    text = client.get("/metrics").text
+    assert 'rc_db_pool_connections{pool="auth",state="checked_out"}' in text
+
+    class Pool:
+        def checkedout(self) -> int:
+            return 3
+
+        def size(self) -> str:  # non-int values are skipped
+            return "n/a"
+
+    families = list(PoolCollector(lambda: {"x": Pool(), "y": object()}).collect())
+    assert [s.value for s in families[0].samples] == [3]

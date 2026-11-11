@@ -32,6 +32,7 @@ from robotics_curriculum.auth.models import (
     ApiToken,
     AuditEntry,
     AuthSession,
+    Identity,
     Role,
     Scope,
     TokenKind,
@@ -143,6 +144,20 @@ class AuthStore(Protocol):
         self, limit: int, before_id: int | None = None, actor_user_id: int | None = None
     ) -> list[AuditEntry]: ...
     def anonymize_audit(self, before: datetime) -> int: ...
+
+    # external identities (OIDC)
+    def identity(self, provider: str, subject: str) -> Identity | None: ...
+    def link_identity(
+        self,
+        user_id: int,
+        provider: str,
+        subject: str,
+        email: str | None,
+        claims: dict[str, Any],
+        now: datetime,
+    ) -> Identity: ...
+    def list_identities(self, user_id: int) -> list[Identity]: ...
+    def unlink_identity(self, identity_id: int, user_id: int) -> bool: ...
 
     def schema_ready(self) -> bool: ...
     def close(self) -> None: ...
@@ -619,3 +634,79 @@ class SqlAuthStore:
                 )
                 .values(actor_user_id=None, actor_ip=None)
             ).rowcount
+
+    # -- external identities ------------------------------------------------------------
+
+    @staticmethod
+    def _identity(row: RowMapping) -> Identity:
+        return Identity(
+            id=row["id"],
+            user_id=row["user_id"],
+            provider=row["provider"],
+            subject=row["subject"],
+            email=row["email"],
+            linked_at=_req(row["linked_at"]),
+        )
+
+    def identity(self, provider: str, subject: str) -> Identity | None:
+        with self._tx() as conn:
+            row = (
+                conn.execute(
+                    select(identities).where(
+                        identities.c.provider == provider, identities.c.subject == subject
+                    )
+                )
+                .mappings()
+                .first()
+            )
+        return self._identity(row) if row else None
+
+    def link_identity(
+        self,
+        user_id: int,
+        provider: str,
+        subject: str,
+        email: str | None,
+        claims: dict[str, Any],
+        now: datetime,
+    ) -> Identity:
+        with self._tx() as conn:
+            row = (
+                conn.execute(
+                    insert(identities)
+                    .values(
+                        user_id=user_id,
+                        provider=provider,
+                        subject=subject,
+                        email=email,
+                        raw_claims_json=json.dumps(claims, ensure_ascii=False, default=str),
+                        linked_at=now,
+                    )
+                    .returning(*identities.c)
+                )
+                .mappings()
+                .one()
+            )
+        return self._identity(row)
+
+    def list_identities(self, user_id: int) -> list[Identity]:
+        with self._tx() as conn:
+            rows = (
+                conn.execute(
+                    select(identities)
+                    .where(identities.c.user_id == user_id)
+                    .order_by(identities.c.id)
+                )
+                .mappings()
+                .all()
+            )
+        return [self._identity(r) for r in rows]
+
+    def unlink_identity(self, identity_id: int, user_id: int) -> bool:
+        with self._tx() as conn:
+            result = conn.execute(
+                delete(identities).where(
+                    identities.c.id == identity_id, identities.c.user_id == user_id
+                )
+            )
+        return result.rowcount > 0

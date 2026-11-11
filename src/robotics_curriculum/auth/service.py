@@ -25,12 +25,14 @@ from robotics_curriculum.auth.models import (
     ApiToken,
     AuditEntry,
     AuthSession,
+    Identity,
     Role,
     Scope,
     TokenKind,
     User,
     UserStatus,
 )
+from robotics_curriculum.auth.oidc import Claims
 from robotics_curriculum.auth.store import AuthStore
 
 PAT_PREFIX = "rcp_"
@@ -92,6 +94,7 @@ class AuthConfig:
     allow_signup: bool = True
     bootstrap_admin_email: str | None = None
     public_url: str = "http://localhost:3000"
+    api_base_url: str | None = None
     pepper: str = ""
 
     @classmethod
@@ -109,6 +112,7 @@ class AuthConfig:
             allow_signup=env.get("RC_AUTH_ALLOW_SIGNUP", "1") != "0",
             bootstrap_admin_email=(env.get("RC_AUTH_ADMIN_EMAIL") or "").lower() or None,
             public_url=env.get("RC_PUBLIC_URL") or base.public_url,
+            api_base_url=env.get("RC_API_BASE_URL") or None,
             pepper=env.get("RC_AUTH_PEPPER", ""),
         )
 
@@ -585,3 +589,94 @@ class AuthService:
     def purge_audit(self) -> int:
         """Anonymize audit entries older than the retention period (AC-AUTH.6)."""
         return self.store.anonymize_audit(self.clock() - self.config.audit_retention)
+
+    # -- external identities (OIDC) ----------------------------------------------------
+
+    def oidc_login(
+        self, provider: str, claims: Claims, ctx: Context, *, current: Principal | None = None
+    ) -> LoginResult:
+        """Log in (or sign up / link) with verified OIDC claims.
+
+        1. A known (provider, subject) logs in its user.
+        2. A signed-in user starting the flow links the identity to their account.
+        3. A verified email that matches an existing account is *not* linked automatically
+           (account takeover risk): 409, log in with the password first, then link.
+        4. Otherwise a new password-less account is created (needs a verified email).
+        """
+        now = self.clock()
+        known = self.store.identity(provider, claims.subject)
+        if known is not None:
+            user = self.store.get_user(known.user_id)
+            if user is None or not user.is_active:
+                self._audit(
+                    ctx,
+                    "auth.login.failed",
+                    known.user_id,
+                    detail={"reason": "status", "method": f"oidc:{provider}"},
+                )
+                raise InvalidCredentials("this account is disabled")
+        elif current is not None and current.session is not None:
+            user = current.user
+            self.store.link_identity(
+                user.id, provider, claims.subject, claims.email, claims.raw, now
+            )
+            self._audit(
+                ctx,
+                "auth.identity.linked",
+                user.id,
+                target_type="identity",
+                target_id=f"{provider}:{claims.subject}",
+            )
+        else:
+            if not claims.email or not claims.email_verified:
+                raise Forbidden("the provider did not return a verified email address")
+            if self.store.get_user_by_email(claims.email) is not None:
+                raise Conflict(
+                    "an account with this email already exists: log in with your password, "
+                    "then start this login again to link it"
+                )
+            if not self.config.allow_signup:
+                raise Forbidden("sign-up is disabled on this server")
+            role = Role.ADMIN if claims.email == self.config.bootstrap_admin_email else Role.LEARNER
+            user = self.store.create_user(
+                claims.email, None, role, now, display_name=claims.name, email_verified_at=now
+            )
+            self.store.link_identity(
+                user.id, provider, claims.subject, claims.email, claims.raw, now
+            )
+            self._audit(
+                ctx,
+                "user.created",
+                user.id,
+                target_type="user",
+                target_id=str(user.id),
+                detail={"role": role.value, "method": f"oidc:{provider}"},
+            )
+        result = self._new_session(user, ctx)
+        self._audit(
+            ctx,
+            "auth.login.success",
+            user.id,
+            target_type="session",
+            target_id=str(result.session.id),
+            detail={"method": f"oidc:{provider}"},
+        )
+        return result
+
+    def list_identities(self, user: User) -> list[Identity]:
+        return self.store.list_identities(user.id)
+
+    def unlink_identity(self, user: User, identity_id: int, ctx: Context) -> None:
+        owned = self.store.list_identities(user.id)
+        if all(i.id != identity_id for i in owned):
+            raise NotFound(f"no linked identity {identity_id}")
+        if not user.has_password and len(owned) == 1:
+            raise Conflict("this is the only way to sign in; set a password first")
+        self.store.unlink_identity(identity_id, user.id)
+        self._audit(
+            ctx,
+            "auth.identity.unlinked",
+            user.id,
+            target_type="identity",
+            target_id=str(identity_id),
+        )

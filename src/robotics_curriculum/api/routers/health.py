@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, HTTPException, Request
+from fastapi.responses import JSONResponse, Response
+from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 
 from robotics_curriculum import __version__
 from robotics_curriculum.api.deps import State, open_progress_store
@@ -49,3 +50,17 @@ def readyz(state: State) -> Readiness | JSONResponse:
 def version() -> Version:
     """The installed package version."""
     return Version(version=__version__)
+
+
+@router.get(
+    "/metrics",
+    response_class=Response,
+    responses={200: {"content": {CONTENT_TYPE_LATEST: {"schema": {"type": "string"}}}}},
+)
+def metrics(request: Request, state: State) -> Response:
+    """Prometheus text format. Unauthenticated: expose to the internal network only
+    (block at the reverse proxy). ``RC_API_METRICS=0`` turns it off (404)."""
+    if not state.settings.metrics:
+        raise HTTPException(404, "metrics are disabled (RC_API_METRICS=0)")
+    body = generate_latest(request.app.state.metrics.registry)
+    return Response(body, media_type=CONTENT_TYPE_LATEST)

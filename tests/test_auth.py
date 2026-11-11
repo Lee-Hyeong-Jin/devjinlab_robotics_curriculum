@@ -743,9 +743,9 @@ def test_readyz_reports_missing_auth_tables(
     assert "alembic" in r.json()["checks"]["database"]["detail"]
 
 
-def test_oidc_is_a_placeholder(anon: TestClient) -> None:
-    assert_problem(anon.get("/api/v1/auth/oidc/google/start"), 501)
-    assert_problem(anon.get("/api/v1/auth/oidc/google/callback"), 501)
+def test_unconfigured_oidc_provider_is_404(anon: TestClient) -> None:
+    assert_problem(anon.get("/api/v1/auth/oidc/google/start"), 404)
+    assert_problem(anon.get("/api/v1/auth/oidc/google/callback"), 404)
 
 
 # -- config / mailer ---
