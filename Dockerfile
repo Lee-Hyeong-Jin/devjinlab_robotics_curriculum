@@ -88,11 +88,13 @@ ENTRYPOINT ["rc"]
 CMD ["api", "serve"]
 
 # ---- web-build: the Next.js frontend, compiled to a self-contained server bundle ----
-# `output: 'standalone'` in web/next.config.ts puts the server, its package.json and only the
-# node_modules it actually imports into .next/standalone; .next/static ships beside it.
+# web/next.config.ts turns on `output: 'standalone'` when NEXT_OUTPUT=standalone, which puts the
+# server, its package.json and only the node_modules it imports into .next/standalone;
+# .next/static ships beside it.
 FROM node:22-bookworm-slim AS web-build
 
-ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_TELEMETRY_DISABLED=1 \
+    NEXT_OUTPUT=standalone
 
 WORKDIR /app/web
 
