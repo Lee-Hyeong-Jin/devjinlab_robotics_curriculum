@@ -28,6 +28,8 @@ uv run rc log m1-vectors-matrices 1h30m       # manual time: 45, 45m, 1h30m
 uv run rc done m1-vectors-matrices -u 4 -m "memo"   # mark done, understanding 1-5
 uv run rc status                              # per-lesson table
 uv run rc progress export backup.json         # JSON backup; `rc progress import FILE [--replace]`
+uv run rc report weekly                       # -> reports/weekly/YYYY-Www.md; --week 2026-W46, --out PATH, --stdout
+uv run rc report module m1-math-physics       # per-module progress table (stdout; --out PATH)
 ```
 
 ## Lint / format
