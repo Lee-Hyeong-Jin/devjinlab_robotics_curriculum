@@ -20,6 +20,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Local progress tracking in SQLite (`.rc/progress.db`) behind a store interface, with JSON
   export and import.
 - Weekly and per-module Markdown reports.
+- Quizzes and spaced repetition (P1-2): ` ```quiz ` blocks in lesson bodies (single, multiple,
+  true/false, short answer) validated by `rc validate`; `rc quiz <lesson>` grades in the
+  terminal and turns wrong answers and `concept` questions into flashcards; `rc review`
+  schedules them with SM-2 (ADR 0005); progress schema v2 (cards, card_state, reviews,
+  quiz_attempts, quiz_runs, activity_progress) included in JSON export/import; quiz accuracy
+  and review counts in the weekly report and `rc status`; quiz questions on lesson pages with
+  answers folded into `<details>`.
 - Prerequisite roadmap with done / in-progress / locked states and next-lesson recommendation.
 - Offline static study site (MkDocs Material): dashboard, roadmap, module and lesson pages,
   resource library.

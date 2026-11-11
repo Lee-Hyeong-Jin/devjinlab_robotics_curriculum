@@ -4,7 +4,7 @@
 파일 이름(확장자 제외)을 `module.yaml`의 `lessons`에 추가하고 `uv run rc validate`로 확인한다.
 필드 설명은 `CONTENT_MODEL.md` 참조.
 
-```markdown
+````markdown
 ---
 id: m1-example-topic            # 코스 내 유일. 관례: <모듈 접두어>-<주제>
 title: 레슨 제목
@@ -55,7 +55,29 @@ resources:                      # 선택. 단계별 학습 자료 (title만 필�
 
 `activities`의 exercise에 대응하는 과제 설명.
 
+## 확인 퀴즈
+
+`activities`의 quiz 활동에 대응하는 문항. 형식은 CONTENT_MODEL.md "본문 안의 퀴즈 블록" 참조.
+`rc quiz m1-example-topic` 으로 풀고, 오답은 복습 카드가 된다.
+
+```quiz
+activity: m1-example-topic-quiz
+questions:
+  - id: q1
+    type: single                 # single | multiple | truefalse | short
+    prompt: "두 벡터의 내적이 0이면 두 벡터는?"
+    choices: ["평행하다", "직교한다", "같은 벡터다", "영벡터다"]
+    answer: 1                    # 0-based 인덱스
+    explanation: "내적이 0이면 사잇각이 90°이므로 직교한다."
+    concept: { front: "내적이 0인 두 벡터의 관계", back: "직교(사잇각 90°)" }   # 선택: 개념 카드
+  - id: q2
+    type: short
+    prompt: "3×3 회전행렬의 행렬식 값은?"
+    answer: ["1", "+1"]          # 허용 답 목록 (공백·대소문자 무시)
+    explanation: "회전행렬은 직교행렬이고 반사를 포함하지 않으므로 det = +1."
+```
+
 ## 더 읽을거리
 
 - 교재/논문/강의 링크
-```
+````
