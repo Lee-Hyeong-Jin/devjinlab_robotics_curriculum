@@ -1,9 +1,7 @@
-"""Reproductions for docs/reviews/2026-11-11-integration-review.md.
+"""Regression tests for the findings in docs/reviews/2026-11-11-integration-review.md.
 
-Every test asserts the *desired* behavior and is marked ``xfail(strict=True)`` while the
-defect is open, so the gate stays green today. When a fix lands the test XPASSes, strict
-mode turns that into a failure, and the fixer removes the marker: the test then becomes the
-regression test the engineering rules require. IDs (QA-xx) match the review table.
+Each test was written as a reproduction (strict xfail) while the defect was open and became
+a regression test when the fix landed. IDs (QA-xx) match the review table.
 """
 
 from __future__ import annotations
@@ -22,10 +20,6 @@ from robotics_curriculum.cli import app
 FIXTURE = Path(__file__).parent / "fixtures" / "curriculum"
 LESSON_ID = "m1-vectors-matrices"
 runner = CliRunner()
-
-
-def _open(reason: str) -> pytest.MarkDecorator:
-    return pytest.mark.xfail(strict=True, reason=f"open defect {reason}")
 
 
 def _rc(curriculum: Path, data: Path, *args: str) -> Result:
@@ -104,14 +98,12 @@ def hostile_curriculum(tmp_path: Path) -> Path:
     return root
 
 
-@_open("QA-01: lesson title/body HTML reaches the built site unescaped")
 def test_qa01_site_escapes_lesson_title_and_body(hostile_curriculum: Path, tmp_path: Path) -> None:
     result = _rc(hostile_curriculum, tmp_path / "d", "site", "build", "--out", str(tmp_path / "s"))
     assert result.exit_code == 0, result.output
     assert _live_payloads(tmp_path / "s") == []
 
 
-@_open("QA-02: site build skips validation, javascript: resource URL becomes a link")
 def test_qa02_site_build_rejects_javascript_resource_url(tmp_path: Path) -> None:
     root = tmp_path / "curriculum"
     shutil.copytree(FIXTURE, root)
@@ -133,7 +125,6 @@ def test_qa02_site_build_rejects_javascript_resource_url(tmp_path: Path) -> None
 # -- site: destructive output paths ------------------------------------------------
 
 
-@_open("QA-03: site build --out silently empties an existing directory")
 def test_qa03_site_build_out_keeps_unrelated_files(tmp_path: Path) -> None:
     out = tmp_path / "out"
     out.mkdir()
@@ -142,7 +133,6 @@ def test_qa03_site_build_out_keeps_unrelated_files(tmp_path: Path) -> None:
     assert (out / "important.txt").exists()
 
 
-@_open("QA-04: site build --src rmtree()s <src>/docs")
 def test_qa04_site_build_src_keeps_existing_docs(tmp_path: Path) -> None:
     docs = tmp_path / "proj" / "docs"
     docs.mkdir(parents=True)
@@ -155,7 +145,6 @@ def test_qa04_site_build_src_keeps_existing_docs(tmp_path: Path) -> None:
 # -- content loading / validation ---------------------------------------------------
 
 
-@_open("QA-05: recursive cycle check overflows the stack on a ~1000-lesson chain")
 def test_qa05_validate_long_prerequisite_chain(tmp_path: Path) -> None:
     n = 1100  # l00000 needs l00001 needs ... so DFS starts at the deep end
     lessons = {
@@ -166,7 +155,6 @@ def test_qa05_validate_long_prerequisite_chain(tmp_path: Path) -> None:
     assert result.exit_code == 0, repr(result.exception)
 
 
-@_open("QA-06: validate accepts a lesson id shared by two courses; progress then refuses")
 def test_qa06_validate_rejects_lesson_id_shared_across_courses(tmp_path: Path) -> None:
     _course(tmp_path / "cur", "c1", {"x": _lesson("dup", [])})
     _course(tmp_path / "cur", "c2", {"x": _lesson("dup", [])})
@@ -174,7 +162,6 @@ def test_qa06_validate_rejects_lesson_id_shared_across_courses(tmp_path: Path) -
     assert result.exit_code == 1
 
 
-@_open("QA-07: non-UTF-8 lesson file crashes validate with UnicodeDecodeError")
 def test_qa07_validate_reports_non_utf8_file(tmp_path: Path) -> None:
     root = tmp_path / "curriculum"
     shutil.copytree(FIXTURE, root)
@@ -184,7 +171,6 @@ def test_qa07_validate_reports_non_utf8_file(tmp_path: Path) -> None:
 
 
 @pytest.mark.skipif(os.name != "posix", reason="symlinks")
-@_open("QA-08: symlinked lesson outside the content root is loaded and published")
 def test_qa08_symlink_outside_root_is_rejected(tmp_path: Path) -> None:
     root = tmp_path / "curriculum"
     shutil.copytree(FIXTURE, root)
@@ -203,7 +189,6 @@ def test_qa08_symlink_outside_root_is_rejected(tmp_path: Path) -> None:
 _EXPORT = '{{"schema_version":1,"exported_at":"2026-11-11T00:00:00Z","lesson_progress":{lp},"sessions":{ss}}}'  # noqa: E501
 
 
-@_open("QA-09: import with two open sessions escapes as sqlite3.IntegrityError")
 def test_qa09_import_two_open_sessions_is_a_user_error(tmp_path: Path) -> None:
     sessions = (
         f'[{{"lesson_id":"{LESSON_ID}","started_at":"2026-11-11T00:00:00Z"}},'
@@ -215,7 +200,6 @@ def test_qa09_import_two_open_sessions_is_a_user_error(tmp_path: Path) -> None:
     assert _clean_user_error(result), repr(result.exception)
 
 
-@_open("QA-10: import accepts lesson ids that are not in the curriculum")
 def test_qa10_import_rejects_unknown_lesson_ids(tmp_path: Path) -> None:
     sessions = '[{"lesson_id":"ghost","started_at":"2026-11-11T00:00:00Z"}]'
     file = tmp_path / "x.json"
@@ -224,7 +208,6 @@ def test_qa10_import_rejects_unknown_lesson_ids(tmp_path: Path) -> None:
     assert _clean_user_error(result)
 
 
-@_open("QA-11: a locked database escapes as sqlite3.OperationalError after 5 s")
 def test_qa11_locked_database_is_a_user_error(tmp_path: Path) -> None:
     data = tmp_path / "d"
     assert _rc(FIXTURE, data, "status").exit_code == 0
@@ -238,7 +221,6 @@ def test_qa11_locked_database_is_a_user_error(tmp_path: Path) -> None:
     assert _clean_user_error(result), repr(result.exception)
 
 
-@_open("QA-12: an absurd duration escapes as OverflowError")
 def test_qa12_log_huge_duration_is_a_user_error(tmp_path: Path) -> None:
     result = _rc(FIXTURE, tmp_path / "d", "log", LESSON_ID, "99999999999999")
     assert _clean_user_error(result), repr(result.exception)

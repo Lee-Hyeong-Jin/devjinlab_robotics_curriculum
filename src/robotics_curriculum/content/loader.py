@@ -65,9 +65,42 @@ class _Collector:
             self.errors.append(ContentError(path, f"{prefix}{err['msg']}"))
 
 
-def _read_yaml(path: Path, errors: _Collector) -> dict[str, Any] | None:
+def read_text(path: Path, errors: _Collector) -> str | None:
+    """Read ``path`` as UTF-8, recording (instead of raising) decode and I/O errors."""
     try:
-        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+        return path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        errors.add(path, "not valid UTF-8 text")
+    except OSError as exc:
+        errors.add(path, f"cannot read file: {exc.strerror or exc}")
+    return None
+
+
+def _escapes_root(path: Path, root: Path) -> bool:
+    """True when ``path`` leaves ``root`` once symlinks are resolved (ASVS V12.3)."""
+    try:
+        resolved = path.resolve(strict=True)
+    except OSError:
+        return True
+    try:
+        return not resolved.is_relative_to(root.resolve())
+    except OSError:  # pragma: no cover - root itself unreadable
+        return True
+
+
+def _check_inside(path: Path, root: Path, errors: _Collector) -> bool:
+    if _escapes_root(path, root):
+        errors.add(path, f"path leaves the content root {root} (symlink or broken link)")
+        return False
+    return True
+
+
+def _read_yaml(path: Path, errors: _Collector) -> dict[str, Any] | None:
+    text = read_text(path, errors)
+    if text is None:
+        return None
+    try:
+        data = yaml.safe_load(text)
     except yaml.YAMLError as exc:
         errors.add(path, f"invalid YAML: {exc}")
         return None
@@ -98,10 +131,19 @@ def _parse_model[T: BaseModel](
         return None
 
 
-def load_lesson(path: Path, errors: _Collector | None = None) -> Lesson | None:
-    """Load one lesson file; on failure record errors and return ``None``."""
+def load_lesson(
+    path: Path, errors: _Collector | None = None, root: Path | None = None
+) -> Lesson | None:
+    """Load one lesson file; on failure record errors and return ``None``.
+
+    ``root`` (when given) is the content root the file must stay inside.
+    """
     errors = errors if errors is not None else _Collector()
-    text = path.read_text(encoding="utf-8")
+    if root is not None and not _check_inside(path, root, errors):
+        return None
+    text = read_text(path, errors)
+    if text is None:
+        return None
     front, body = split_front_matter(text)
     if front is None:
         errors.add(path, "missing YAML front matter (file must start with '---')")
@@ -151,8 +193,11 @@ def _ordered_children(
     return result
 
 
-def load_module(module_dir: Path, errors: _Collector) -> Module | None:
+def load_module(module_dir: Path, errors: _Collector, root: Path | None = None) -> Module | None:
+    root = root if root is not None else module_dir
     meta_path = module_dir / MODULE_FILE
+    if not _check_inside(meta_path, root, errors):
+        return None
     if not meta_path.is_file():
         errors.add(meta_path, "missing module.yaml")
         return None
@@ -166,7 +211,7 @@ def load_module(module_dir: Path, errors: _Collector) -> Module | None:
     found = {p.stem: p for p in module_dir.glob("*.md") if p.is_file()}
     lessons: list[Lesson] = []
     for lesson_path in _ordered_children(meta.lessons, found, meta_path, "lesson", errors):
-        lesson = load_lesson(lesson_path, errors)
+        lesson = load_lesson(lesson_path, errors, root)
         if lesson is not None:
             lessons.append(lesson)
     return Module(
@@ -194,6 +239,8 @@ def load_course(course_dir: Path) -> Course:
 
 def _load_course(course_dir: Path, errors: _Collector) -> Course | None:
     meta_path = course_dir / COURSE_FILE
+    if not _check_inside(meta_path, course_dir, errors):
+        return None
     if not meta_path.is_file():
         errors.add(meta_path, "missing course.yaml")
         return None
@@ -207,7 +254,7 @@ def _load_course(course_dir: Path, errors: _Collector) -> Course | None:
     found = {p.name: p for p in course_dir.iterdir() if _is_content_dir(p, MODULE_FILE)}
     modules: list[Module] = []
     for module_dir in _ordered_children(meta.modules, found, meta_path, "module", errors):
-        module = load_module(module_dir, errors)
+        module = load_module(module_dir, errors, course_dir)
         if module is not None:
             modules.append(module)
     return Course(

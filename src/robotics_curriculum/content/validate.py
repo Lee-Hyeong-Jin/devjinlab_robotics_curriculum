@@ -8,10 +8,12 @@ Rules:
 4. every course has at least one module, every module at least one lesson
 5. a resource ``url``, when present, is a well-formed http(s) URL (no network access)
 6. resource titles are unique within a lesson
+7. ids are unique across every course under the content root (progress needs that)
 """
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -94,42 +96,85 @@ def is_http_url(url: str) -> bool:
 
 
 def _find_cycles(lessons: dict[str, Lesson], fallback: Path) -> list[ContentError]:
-    """Report each prerequisite cycle once, as ``a -> b -> a``."""
+    """Report each prerequisite cycle once, as ``a -> b -> a``.
+
+    Iterative depth-first search: a chain of thousands of lessons must not exhaust the
+    interpreter's stack (a recursive version raised ``RecursionError`` past ~1000).
+    """
     errors: list[ContentError] = []
     white, grey, black = 0, 1, 2
     state = dict.fromkeys(lessons, white)
-    stack: list[str] = []
     reported: set[frozenset[str]] = set()
 
-    def visit(node: str) -> None:
-        state[node] = grey
-        stack.append(node)
-        for prereq in lessons[node].prerequisites:
-            if prereq not in lessons or prereq == node:
-                continue
-            if state[prereq] == white:
-                visit(prereq)
-            elif state[prereq] == grey:
-                cycle = stack[stack.index(prereq) :] + [prereq]
-                key = frozenset(cycle)
-                if key not in reported:
-                    reported.add(key)
-                    lesson_path = lessons[node].path
-                    path = lesson_path if lesson_path is not None else fallback
-                    errors.append(ContentError(path, f"prerequisite cycle: {' -> '.join(cycle)}"))
-        stack.pop()
-        state[node] = black
-
-    for lesson_id in lessons:
-        if state[lesson_id] == white:
-            visit(lesson_id)
+    for root in lessons:
+        if state[root] != white:
+            continue
+        stack: list[str] = []
+        # (node, iterator over its prerequisites); the node is grey while on the stack.
+        work: list[tuple[str, Iterator[str]]] = [(root, iter(lessons[root].prerequisites))]
+        state[root] = grey
+        stack.append(root)
+        while work:
+            node, prereqs = work[-1]
+            advanced = False
+            for prereq in prereqs:
+                if prereq not in lessons or prereq == node:
+                    continue
+                if state[prereq] == white:
+                    state[prereq] = grey
+                    stack.append(prereq)
+                    work.append((prereq, iter(lessons[prereq].prerequisites)))
+                    advanced = True
+                    break
+                if state[prereq] == grey:
+                    cycle = stack[stack.index(prereq) :] + [prereq]
+                    key = frozenset(cycle)
+                    if key not in reported:
+                        reported.add(key)
+                        lesson_path = lessons[node].path
+                        path = lesson_path if lesson_path is not None else fallback
+                        msg = f"prerequisite cycle: {' -> '.join(cycle)}"
+                        errors.append(ContentError(path, msg))
+            if not advanced:
+                state[node] = black
+                stack.pop()
+                work.pop()
     return errors
 
 
 def validate_courses(courses: list[Course]) -> list[ContentError]:
+    """Validate each course, then rule 7: ids are unique across *all* courses.
+
+    Progress rows are keyed by lesson id alone (``docs/curriculum/CONTENT_MODEL.md``), so a
+    collision between two courses would make every progress command fail.
+    """
     errors: list[ContentError] = []
     for course in courses:
         errors.extend(validate_course(course))
+    errors.extend(_check_global_ids(courses))
+    return errors
+
+
+def _check_global_ids(courses: list[Course]) -> list[ContentError]:
+    errors: list[ContentError] = []
+    owner: dict[str, tuple[str, Path]] = {}
+    for course in courses:
+        course_dir = course.path if course.path is not None else Path(".")
+        items: list[tuple[str, Path]] = [(course.id, course_dir / "course.yaml")]
+        for module in course.modules:
+            module_dir = module.path if module.path is not None else course_dir / module.id
+            items.append((module.id, module_dir / "module.yaml"))
+            for lesson in module.lessons:
+                path = lesson.path if lesson.path is not None else module_dir / f"{lesson.id}.md"
+                items.append((lesson.id, path))
+                items += [(activity.id, path) for activity in lesson.activities]
+        for id_, path in items:
+            previous = owner.get(id_)
+            if previous is None:
+                owner[id_] = (course.id, path)
+            elif previous[0] != course.id:
+                msg = f"id '{id_}' is also used in course '{previous[0]}' ({previous[1]})"
+                errors.append(ContentError(path, msg))
     return errors
 
 

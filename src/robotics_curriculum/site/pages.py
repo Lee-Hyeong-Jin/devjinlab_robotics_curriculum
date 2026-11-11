@@ -14,6 +14,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 
 from robotics_curriculum.content import Course, Lesson, Module, Resource, ResourceKind
+from robotics_curriculum.content.validate import is_http_url
 from robotics_curriculum.progress import LessonProgress, LessonStatus, LessonSummary, Session
 from robotics_curriculum.site.stats import (
     Ratio,
@@ -63,9 +64,20 @@ def esc_text(text: str) -> str:
     return text.replace("\\", "\\\\").replace("[", "\\[").replace("]", "\\]").replace("|", "\\|")
 
 
+def md_text(text: str) -> str:
+    """Escape content for a Markdown page: HTML first, then Markdown metacharacters.
+
+    Front matter is untrusted (it arrives through pull requests) and Python-Markdown
+    passes raw HTML through, so every content string embedded in a page goes through
+    here (AC-SEC.1). :func:`robotics_curriculum.site.sanitize.clean` is the second line
+    of defence, for raw HTML inside lesson bodies.
+    """
+    return esc_text(html.escape(text, quote=False))
+
+
 def link(from_page: str, to_page: str, text: str, anchor: str = "") -> str:
     rel = posixpath.relpath(to_page, posixpath.dirname(from_page) or ".")
-    return f"[{esc_text(text)}]({rel}{'#' + anchor if anchor else ''})"
+    return f"[{md_text(text)}]({rel}{'#' + anchor if anchor else ''})"
 
 
 def state_of(summary: LessonSummary) -> str:
@@ -82,8 +94,10 @@ def badge(state: str) -> str:
 
 
 def bar(r: Ratio) -> str:
+    """A progress bar. The width comes from a class, so no attribute carries CSS."""
+    step = 5 * round(r.percent / 5)
     return (
-        f'<span class="rc-bar" title="{r.percent}%"><span style="width:{r.percent}%">'
+        f'<span class="rc-bar" title="{r.percent}%"><span class="rc-fill rc-w-{step}">'
         f'</span></span> <span class="rc-pct">{r.percent}% ({r.done}/{r.total})</span>'
     )
 
@@ -220,7 +234,7 @@ def render_dashboard(model: SiteModel) -> str:
     page = INDEX_PAGE
     now = model.now
     out = [
-        f"# {model.title}",
+        f"# {md_text(model.title)}",
         "",
         f'<p class="rc-built">빌드: {now:%Y-%m-%d %H:%M} · 진도를 반영하려면 '
         "<code>rc site build</code> 를 다시 실행하세요.</p>",
@@ -350,7 +364,7 @@ def render_roadmap(model: SiteModel) -> str:
             out += [
                 f"### {module_link(model, page, module)}",
                 "",
-                f"{module.summary}",
+                f"{md_text(module.summary)}",
                 "",
                 bar(module_ratio),
                 "",
@@ -360,7 +374,7 @@ def render_roadmap(model: SiteModel) -> str:
                 prereq = ""
                 if lesson.prerequisites:
                     names = ", ".join(
-                        model.by_lesson[p].lesson.title
+                        md_text(model.by_lesson[p].lesson.title)
                         for p in lesson.prerequisites
                         if p in model.by_lesson
                     )
@@ -381,12 +395,12 @@ def render_module(model: SiteModel, module: Module) -> str:
     summaries = model.module_summaries(module)
     total_minutes = sum(s.lesson.estimated_minutes for s in summaries)
     out = [
-        f"# {module.title}",
+        f"# {md_text(module.title)}",
         "",
         f"**단계**: {stage_of(module)} · **레슨** {len(summaries)}개 · "
         f"**예상 시간** {format_minutes(total_minutes)} · {link(page, ROADMAP_PAGE, '로드맵으로')}",
         "",
-        module.summary,
+        md_text(module.summary),
         "",
         bar(ratio(summaries)),
         "",
@@ -423,21 +437,21 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
     page = model.lesson_page(lesson)
     progress = summary.progress
     out = [
-        f"# {lesson.title}",
+        f"# {md_text(lesson.title)}",
         "",
         f'<p class="rc-meta">{stage_of(summary.module)} · '
         f"{html.escape(summary.module.title)} · ⏱ {format_minutes(lesson.estimated_minutes)} · "
         f"난이도 {difficulty_dots(lesson.difficulty)} ({lesson.difficulty}/5) · "
         f"{badge(state_of(summary))}</p>",
         "",
-        f"> {lesson.summary}",
+        f"> {md_text(lesson.summary)}",
         "",
         f"[{STUDY_HEADING}](#{STUDY_ANCHOR}) · [학습 자료](#{RESOURCES_ANCHOR}) · "
         f"{module_link(model, page, summary.module)}",
         "",
         "**학습 목표**",
         "",
-        *[f"- {objective}" for objective in lesson.objectives],
+        *[f"- {md_text(objective)}" for objective in lesson.objectives],
         "",
     ]
     if lesson.prerequisites:
@@ -455,7 +469,7 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
         out += ["", '!!! warning "잠김"', "    선수 레슨을 먼저 완료하면 이 레슨이 열립니다."]
     out.append("")
     if lesson.tags:
-        out += ["**태그**: " + " ".join(f"`{tag}`" for tag in lesson.tags), ""]
+        out += ["**태그**: " + " ".join(f"`{md_text(tag)}`" for tag in lesson.tags), ""]
     if lesson.activities:
         out += ["**활동**", ""]
         for activity in lesson.activities:
@@ -465,7 +479,8 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
                 else ""
             )
             out.append(
-                f"- {ACTIVITY_LABELS.get(activity.kind, activity.kind)}: {activity.title}{minutes}"
+                f"- {ACTIVITY_LABELS.get(activity.kind, activity.kind)}: "
+                f"{md_text(activity.title)}{minutes}"
             )
         out.append("")
     record = _progress_line(progress, model.now)
@@ -539,14 +554,14 @@ def _resource_groups(
             continue
         out += [f"{heading} {label}", ""]
         for resource, lessons in groups[label]:
+            # Only http(s) survives: a `javascript:` url must never become a link.
+            safe_url = resource.url if resource.url and is_http_url(resource.url) else None
             title = (
-                f"[{esc_text(resource.title)}]({resource.url})"
-                if resource.url
-                else esc_text(resource.title)
+                f"[{md_text(resource.title)}]({safe_url})" if safe_url else md_text(resource.title)
             )
             line = f"- {title}"
             if resource.note:
-                line += f" — {resource.note}"
+                line += f" — {md_text(resource.note)}"
             if show_lessons:
                 line += " · 레슨: " + ", ".join(lesson_link(model, page, x) for x in lessons)
             out.append(line)
