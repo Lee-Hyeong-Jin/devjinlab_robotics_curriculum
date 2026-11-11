@@ -6,7 +6,7 @@ set -u
 input="$(cat)"
 active="$(printf '%s' "$input" | python3 -I -c 'import json,sys; print(str(json.load(sys.stdin).get("stop_hook_active", False)).lower())' 2>/dev/null)"
 [ "$active" = "true" ] && exit 0
-root="${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel 2>/dev/null || pwd)}"
+root="$(git rev-parse --show-toplevel 2>/dev/null || echo "${CLAUDE_PROJECT_DIR:-$PWD}")"
 cd "$root" || exit 0
 git rev-parse --is-inside-work-tree >/dev/null 2>&1 || exit 0
 # Only code-ish changes trigger the gate; docs/content edits do not.

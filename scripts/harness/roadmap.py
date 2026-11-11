@@ -29,7 +29,16 @@ import os
 import re
 import sys
 
-ROOT = os.environ.get("CLAUDE_PROJECT_DIR") or os.getcwd()
+def _root() -> str:
+    import subprocess
+
+    try:
+        return subprocess.check_output(["git", "rev-parse", "--show-toplevel"], text=True).strip()
+    except Exception:
+        return os.environ.get("CLAUDE_PROJECT_DIR") or os.getcwd()
+
+
+ROOT = _root()
 PATH = os.path.join(ROOT, "harness", "roadmap.yaml")
 STATUSES = ("todo", "in_progress", "done", "blocked")
 

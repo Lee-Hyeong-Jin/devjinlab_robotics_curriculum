@@ -50,7 +50,7 @@ many agents; only the user launches them.
 - `.claude/workflows/` — graph executors (`platform-loop` → `milestone` → inline loops
   implement/verify, review/fix, acceptance; `verify-fix` and `review-loop` standalone).
 - `.claude/agents/` — node executors: planner, implementer, verifier, reviewer, acceptance-tester,
-  integrator, plus curriculum-designer, robotics-sim-engineer, research-scout.
+  integrator, plus curriculum-designer, research-scout.
 - `.claude/rules/` — engineering rules (global) and content rules (`curriculum/**`).
 - Hooks (`.claude/settings.json`): SessionStart injects branch/roadmap status; PreToolUse guards
   destructive Bash; PostToolUse formats `.py` with ruff; Stop runs `check.sh --quick` when there
@@ -68,8 +68,8 @@ many agents; only the user launches them.
 
 ## Notes
 
-- `../my_first_webots_project` is a separate project used as a reference for Webots labs
-  (worlds/, controllers/, protos/). Read it, never modify it, and do not apply its layout here.
+- `../my_first_webots_project` is a separate, unrelated project. Do not read its layout or
+  commands into this repo. Simulator integration is out of scope for this platform.
 - `research_notes/` holds the user's research (written by other sessions); treat it as source
   material and cite paths rather than copying.
 - `harness/roadmap.yaml` milestone contents are placeholders derived from the PRD and will change

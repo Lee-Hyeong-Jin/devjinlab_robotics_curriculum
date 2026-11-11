@@ -4,7 +4,7 @@
 set -u
 f="$(python3 -I -c 'import json,sys; d=json.load(sys.stdin); print(d.get("tool_response",{}).get("filePath") or d.get("tool_input",{}).get("file_path",""))' 2>/dev/null)"
 [ -n "$f" ] && [ -f "$f" ] || exit 0
-root="${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel 2>/dev/null || pwd)}"
+root="$(git rev-parse --show-toplevel 2>/dev/null || echo "${CLAUDE_PROJECT_DIR:-$PWD}")"
 cd "$root" || exit 0
 have() { command -v "$1" >/dev/null 2>&1; }
 case "$f" in

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # SessionStart hook: inject a short project / graph status into context.
 set -u
-root="${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel 2>/dev/null || pwd)}"
+root="$(git rev-parse --show-toplevel 2>/dev/null || echo "${CLAUDE_PROJECT_DIR:-$PWD}")"
 cd "$root" || exit 0
 tmp="$(mktemp 2>/dev/null || echo "${TMPDIR:-/tmp}/claude_session_ctx.$$")"
 {

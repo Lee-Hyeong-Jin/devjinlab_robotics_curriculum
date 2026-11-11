@@ -8,7 +8,7 @@
 #   note:       integrate 노드(N9)가 한 줄 메모를 남긴다.
 #
 # [플레이스홀더] 아래 마일스톤 내용은 docs/PRD.md(0.1 Draft) 의 릴리스 계획 Phase 0~1 과
-# 부록 A 를 바탕으로 한 초안이다. 플랫폼 설계 세션과 Webots 기능 설계 세션의 결과에 따라
+# 부록 A 를 바탕으로 한 초안이다. 플랫폼 설계와 PRD 변경에 따라
 # 내용(goal/acceptance)은 바뀔 수 있다. 구조(id/title/status/depends_on/goal/acceptance/note)만 확정.
 # Phase 1 스택: Python 단일(uv + ruff + pytest), 콘텐츠는 Markdown + YAML, CLI + 정적 사이트.
 
@@ -31,20 +31,20 @@ milestones:
       depends_on: [P0-1]
       goal: Track > Module > Lesson > Activity 계층을 Markdown+YAML frontmatter 로 정의하고, 로더와 `rc validate` 를 만든다.
       acceptance:
-        - 레슨 필수 필드(id, title, prerequisites, estimated_minutes, objectives, tags)와 Activity 타입(reading, quiz, lab, project, external)이 코드와 docs/curriculum/CONTENT_MODEL.md 에 정의되어 있다
+        - 레슨 필수 필드(id, title, prerequisites, estimated_minutes, objectives, tags)와 Activity 타입(reading, quiz, exercise)이 코드와 docs/curriculum/CONTENT_MODEL.md 에 정의되어 있다
         - `rc validate` 가 누락 필드, 존재하지 않는 선수지식 ID, 순환 의존을 감지하면 비정상 종료 코드를 반환하며 각 경우에 테스트가 있다
         - docs/curriculum/LESSON_TEMPLATE.md 형식의 샘플 레슨이 로더로 읽힌다
       note: M1 content model merged (526c4d3)
 
     - id: P0-3
-      title: 첫 트랙 콘텐츠 "로보틱스 기초" (부록 A, 모듈 5개)
+      title: 로보틱스 전문가 코스 기초 단계 콘텐츠 (부록 A 기초 모듈)
       status: todo
       depends_on: [P0-2]
-      goal: curriculum/ 에 부록 A 의 모듈 M1~M5(수학·물리 기초, 운동학, 이동 로봇·제어, 센서·인식, 시뮬레이션·툴체인)를 레슨 10개 내외로 작성한다.
+      goal: curriculum/robotics-expert/ 에 기초 단계(level 기초) 모듈 M1~M3(수학·물리 기초, 운동학, 이동 로봇·제어)을 레슨 10개 내외로 작성하고, 각 레슨에 "이 단계 공부법" 절과 resources 를 넣는다.
       acceptance:
-        - curriculum/ 에 트랙 1개, 모듈 5개, 레슨 10개 이상이 있고 `rc validate` 가 통과한다
+        - curriculum/ 에 코스 1개(robotics-expert), 기초 모듈 3개, 레슨 9개 이상이 있고 `rc validate` 가 통과한다
         - 모든 레슨에 선수지식이 선언되어 있고 그래프가 DAG 이다
-        - 각 모듈에 최소 1개의 lab 또는 project Activity 가 있다
+        - 모든 레슨에 resources 1개 이상과 "이 단계 공부법" 절이 있다
       note:
 
     - id: P0-4
@@ -91,14 +91,14 @@ milestones:
       note:
 
     - id: P1-4
-      title: Webots 실습 가이드 연동 (FR-5.1, FR-5.2)
+      title: 학습 자료·학습 방법 라이브러리 (FR-6)
       status: todo
       depends_on: [P0-3]
-      goal: lab Activity 가 Webots 월드, 컨트롤러 템플릿, 판정 스크립트를 참조하고 한 줄 명령으로 월드를 열고 템플릿을 복사하게 한다.
+      goal: 레슨별 resources 와 "이 단계 공부법" 을 CLI 와 정적 사이트에서 보기 좋게 보여주고, research_notes/ 의 조사 결과를 자료 목록으로 연결한다.
       acceptance:
-        - lab Activity 스키마에 world/controller_template/judge 참조가 있고 `rc validate` 가 경로 존재를 검사한다
-        - `rc lab open <id>` 가 ../my_first_webots_project 구조를 재사용해 월드를 열고 템플릿을 복사한다(시뮬레이터 없이 테스트되는 fake 러너 포함)
-        - 자동 판정(FR-5.3)은 범위 밖임이 문서에 명시되어 있다
+        - `rc resources <lesson_id>` 가 레슨의 resources 를 종류별로 출력하고 테스트가 있다
+        - 정적 사이트 레슨 페이지에 "이 단계 공부법" 절과 자료 목록이 렌더링된다
+        - 자료 항목의 url 형식이 `rc validate` 에서 검사된다
       note:
 
     - id: P1-5

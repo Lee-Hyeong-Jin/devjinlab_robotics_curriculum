@@ -5,7 +5,7 @@
 #   (none)  : lint + type-check + tests
 # Exit 0 = all green, or no stack configured. Non-zero = something failed.
 set -u
-root="${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel 2>/dev/null || pwd)}"
+root="$(git rev-parse --show-toplevel 2>/dev/null || echo "${CLAUDE_PROJECT_DIR:-$PWD}")"
 cd "$root" || exit 1
 quick=0; [ "${1:-}" = "--quick" ] && quick=1
 status=0
