@@ -1,4 +1,5 @@
-"""Read-only curriculum content: courses, modules, lessons, resources."""
+"""Read-only curriculum content: courses, modules, lessons, resources, and the roadmap
+(the content tree with the caller's lesson states)."""
 
 from __future__ import annotations
 
@@ -6,7 +7,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query
 
-from robotics_curriculum.api.deps import Index, get_principal
+from robotics_curriculum.api.deps import Index, Progress, get_principal
 from robotics_curriculum.api.problems import problem_responses
 from robotics_curriculum.api.schemas import (
     Course,
@@ -17,6 +18,7 @@ from robotics_curriculum.api.schemas import (
     ModuleSummary,
     Resource,
     ResourceRef,
+    Roadmap,
     Stage,
 )
 from robotics_curriculum.content import Course as CourseModel
@@ -120,3 +122,22 @@ def list_resources(
                     if lesson.id not in merged[key].lesson_ids:
                         merged[key].lesson_ids.append(lesson.id)
     return list(merged.values())
+
+
+@router.get("/roadmap", response_model=Roadmap, responses=problem_responses(404))
+def get_roadmap(
+    index: Index,
+    progress: Progress,
+    course_id: Annotated[str | None, Query(alias="course", description="Only this course.")] = None,
+) -> Roadmap:
+    """Level -> module -> lesson tree with the caller's states (``rc roadmap``).
+
+    Lesson state: done, in_progress, locked (a prerequisite is not done) or available. Module
+    state: done if every lesson is done, in_progress if any is started or done, locked if every
+    lesson is locked, else available. Progress values are fractions (0-1).
+    """
+    if course_id is not None:
+        index.course(course_id)
+    with progress.open() as service:
+        summaries = service.status(course_id)
+    return Roadmap.of(summaries)
