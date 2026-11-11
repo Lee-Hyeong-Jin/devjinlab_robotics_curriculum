@@ -12,6 +12,7 @@ and raises a single :class:`LoadError` carrying :class:`ContentError` items.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -23,9 +24,11 @@ from robotics_curriculum.content.models import (
     Course,
     CourseMeta,
     Lesson,
+    LessonTranslation,
     Module,
     ModuleMeta,
 )
+from robotics_curriculum.i18n import DEFAULT_LANG, LANGS
 
 COURSE_FILE = "course.yaml"
 MODULE_FILE = "module.yaml"
@@ -193,6 +196,56 @@ def _ordered_children(
     return result
 
 
+_LANG_SUFFIX = re.compile(r"^(?P<stem>.+)\.(?P<lang>[a-z]{2}(?:-[a-z]{2})?)$")
+
+
+def split_lang_suffix(stem: str) -> tuple[str, str] | None:
+    """``"vectors.en"`` -> ``("vectors", "en")``; ``None`` when the stem carries no suffix."""
+    match = _LANG_SUFFIX.match(stem)
+    if match is None:
+        return None
+    return match["stem"], match["lang"]
+
+
+def load_translation(
+    path: Path, lang: str, errors: _Collector, root: Path | None = None
+) -> LessonTranslation | None:
+    """Load one ``<lesson>.<lang>.md`` file; on failure record errors and return ``None``."""
+    if root is not None and not _check_inside(path, root, errors):
+        return None
+    text = read_text(path, errors)
+    if text is None:
+        return None
+    front, body = split_front_matter(text)
+    if front is None:
+        errors.add(path, "missing YAML front matter (file must start with '---')")
+        return None
+    try:
+        data = yaml.safe_load(front)
+    except yaml.YAMLError as exc:
+        errors.add(path, f"invalid YAML front matter: {exc}")
+        return None
+    if not isinstance(data, dict):
+        errors.add(path, "front matter must be a YAML mapping")
+        return None
+    for reserved in ("body", "path"):
+        if reserved in data:
+            errors.add(path, f"'{reserved}' is a reserved key and may not appear in front matter")
+            return None
+    translation = _parse_model(LessonTranslation, data, path, errors)
+    if translation is None:
+        return None
+    if translation.lang is not None and translation.lang != lang:
+        errors.add(
+            path, f"front matter says lang '{translation.lang}' but the file name says '{lang}'"
+        )
+        return None
+    translation.lang = lang
+    translation.body = body
+    translation.path = path
+    return translation
+
+
 def load_module(module_dir: Path, errors: _Collector, root: Path | None = None) -> Module | None:
     root = root if root is not None else module_dir
     meta_path = module_dir / MODULE_FILE
@@ -208,12 +261,50 @@ def load_module(module_dir: Path, errors: _Collector, root: Path | None = None) 
     if meta is None:
         return None
 
-    found = {p.stem: p for p in module_dir.glob("*.md") if p.is_file()}
+    found: dict[str, Path] = {}
+    translation_files: dict[str, list[tuple[str, Path]]] = {}
+    for path in sorted(module_dir.glob("*.md")):
+        if not path.is_file():
+            continue
+        suffixed = split_lang_suffix(path.stem)
+        if suffixed is None:
+            found[path.stem] = path
+            continue
+        stem, lang = suffixed
+        if lang == DEFAULT_LANG:
+            errors.add(
+                path,
+                f"'{DEFAULT_LANG}' is the language lessons are written in; "
+                f"drop the suffix and use {stem}.md",
+            )
+            continue
+        if lang not in LANGS:
+            errors.add(
+                path, f"unsupported translation language '{lang}' (supported: {', '.join(LANGS)})"
+            )
+            continue
+        translation_files.setdefault(stem, []).append((lang, path))
+
     lessons: list[Lesson] = []
     for lesson_path in _ordered_children(meta.lessons, found, meta_path, "lesson", errors):
         lesson = load_lesson(lesson_path, errors, root)
-        if lesson is not None:
-            lessons.append(lesson)
+        if lesson is None:
+            continue
+        for lang, path in translation_files.pop(lesson_path.stem, []):
+            translation = load_translation(path, lang, errors, root)
+            if translation is None:
+                continue
+            if translation.id is not None and translation.id != lesson.id:
+                errors.add(
+                    path,
+                    f"translation id '{translation.id}' does not match lesson id '{lesson.id}'",
+                )
+                continue
+            lesson.translations[lang] = translation
+        lessons.append(lesson)
+    for stem, orphans in translation_files.items():
+        for _lang, path in orphans:
+            errors.add(path, f"translation has no lesson to translate ({stem}.md is missing)")
     return Module(
         id=meta.id,
         title=meta.title,

@@ -2,7 +2,30 @@
 
 from __future__ import annotations
 
+from robotics_curriculum.i18n import DEFAULT_LANG, translator
+
 STUDY_GUIDE_HEADING = "이 단계 공부법"
+
+
+def study_guide_headings(lang: str | None = None) -> list[str]:
+    """Headings that mark the study-guide section: the one for ``lang``, then the Korean one.
+
+    A translated body (``<lesson>.en.md``) writes the heading in its own language, so the
+    section is looked up by the catalogue entry of that language first.
+    """
+    headings = [STUDY_GUIDE_HEADING]
+    if lang and lang != DEFAULT_LANG:
+        headings.insert(0, translator(lang)("lesson.study_guide"))
+    return list(dict.fromkeys(headings))
+
+
+def extract_study_guide(body: str, lang: str | None = None) -> str | None:
+    """The "how to study this stage" section of ``body``, whatever language it is written in."""
+    for heading in study_guide_headings(lang):
+        section = extract_section(body, heading)
+        if section is not None:
+            return section
+    return None
 
 
 def extract_section(body: str, heading: str) -> str | None:

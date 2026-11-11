@@ -13,6 +13,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from robotics_curriculum import content
 from robotics_curriculum.content import Activity, ResourceKind
+from robotics_curriculum.i18n import DEFAULT_LANG
 from robotics_curriculum.learn import AnswerFeedback, CardView, QuestionView, SubmissionResult
 from robotics_curriculum.learn.stats import StageProgress, WeekStats
 from robotics_curriculum.progress import CardState, LessonProgress, LessonStatus, Session
@@ -59,20 +60,32 @@ class LessonSummary(Schema):
     prerequisites: list[str] = Field(description="Lesson ids.")
     tags: list[str]
 
+    lang: str = Field(default=DEFAULT_LANG, description="Language of `title` and `summary`.")
+    available_languages: list[str] = Field(
+        default_factory=list, description="Languages this lesson has text in."
+    )
+
     @classmethod
     def of(
-        cls, course: content.Course, module: content.Module, lesson: content.Lesson
+        cls,
+        course: content.Course,
+        module: content.Module,
+        lesson: content.Lesson,
+        lang: str | None = None,
     ) -> LessonSummary:
+        text = lesson.localized(lang)
         return cls(
             id=lesson.id,
-            title=lesson.title,
-            summary=lesson.summary,
+            title=text.title,
+            summary=text.summary,
             course_id=course.id,
             module_id=module.id,
             difficulty=lesson.difficulty,
             estimated_minutes=lesson.estimated_minutes,
             prerequisites=lesson.prerequisites,
-            tags=lesson.tags,
+            tags=text.tags,
+            lang=text.lang,
+            available_languages=lesson.languages(),
         )
 
 

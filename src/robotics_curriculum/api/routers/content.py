@@ -8,6 +8,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query
 
 from robotics_curriculum.api.deps import Index, Progress, get_principal
+from robotics_curriculum.api.log import lang_var
 from robotics_curriculum.api.problems import problem_responses
 from robotics_curriculum.api.schemas import (
     Course,
@@ -23,7 +24,7 @@ from robotics_curriculum.api.schemas import (
 )
 from robotics_curriculum.content import Course as CourseModel
 from robotics_curriculum.content import ResourceKind
-from robotics_curriculum.content.sections import STUDY_GUIDE_HEADING, extract_section
+from robotics_curriculum.content.sections import extract_study_guide
 
 router = APIRouter(
     dependencies=[Depends(get_principal)],
@@ -67,26 +68,32 @@ def get_module(module_id: str, index: Index) -> Module:
     """One module with its lessons in teaching order."""
     entry = index.module(module_id)
     course, module = entry.course, entry.module
+    lang = lang_var.get()
     return Module(
         **ModuleSummary.of(course, module).model_dump(),
-        lessons=[LessonSummary.of(course, module, les) for les in module.lessons],
+        lessons=[LessonSummary.of(course, module, les, lang) for les in module.lessons],
     )
 
 
 @router.get("/lessons/{lesson_id}", response_model=Lesson, responses=problem_responses(404))
 def get_lesson(lesson_id: str, index: Index) -> Lesson:
-    """Lesson metadata, Markdown body, resources, and the study-method section."""
+    """Lesson metadata, Markdown body, resources, and the study-method section.
+
+    ``Accept-Language`` picks a translation (``<lesson>.<lang>.md``); a lesson without one
+    answers in the language it was written in, which ``lang`` in the response states.
+    """
     entry = index.lesson(lesson_id)
     lesson = entry.lesson
+    text = lesson.localized(lang_var.get())
     order = [les.id for les in entry.course.iter_lessons()]
     pos = order.index(lesson.id)
     return Lesson(
-        **LessonSummary.of(entry.course, entry.module, lesson).model_dump(),
-        objectives=lesson.objectives,
+        **LessonSummary.of(entry.course, entry.module, lesson, lang_var.get()).model_dump(),
+        objectives=text.objectives,
         activities=lesson.activities,
         resources=[Resource.model_validate(r.model_dump()) for r in lesson.resources],
-        body=lesson.body,
-        study_method=extract_section(lesson.body, STUDY_GUIDE_HEADING),
+        body=text.body,
+        study_method=extract_study_guide(text.body, text.lang),
         prev_lesson_id=order[pos - 1] if pos > 0 else None,
         next_lesson_id=order[pos + 1] if pos + 1 < len(order) else None,
     )

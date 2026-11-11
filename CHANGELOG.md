@@ -20,6 +20,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Local progress tracking in SQLite (`.rc/progress.db`) behind a store interface, with JSON
   export and import.
 - Weekly and per-module Markdown reports.
+- Lesson translations as sibling files (`<lesson>.<lang>.md`, ADR 0012): text only, so the
+  prerequisite graph stays single-sourced. The loader, `rc validate`, the API
+  (`Accept-Language`, with `lang` and `available_languages` in the response) and
+  `rc site build --lang` use a translation when there is one and fall back to the language the
+  lesson was written in.
+- Accessibility checks for the generated site (document language, heading levels, table
+  headers, skip link, image alt text, contrast of the project's own colours); the
+  in-progress status colour was darkened to meet WCAG AA on white.
 - Message catalogues for Korean and English (`src/robotics_curriculum/i18n/locales/*.yaml`,
   ADR 0011): the CLI picks a language with `--lang` or `RC_LANG`, `rc site build --lang`
   translates the site chrome, and the API localizes problem titles from `Accept-Language`.

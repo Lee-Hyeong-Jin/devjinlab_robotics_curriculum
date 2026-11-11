@@ -13,13 +13,21 @@ from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from datetime import datetime
 
-from robotics_curriculum.content import Course, Lesson, Module, Resource, ResourceKind
+from robotics_curriculum.content import (
+    Course,
+    Lesson,
+    LocalizedLesson,
+    Module,
+    Resource,
+    ResourceKind,
+)
 from robotics_curriculum.content.quiz_block import (
     QUIZ_FENCE,
     QuizParseError,
     QuizQuestion,
     parse_quiz,
 )
+from robotics_curriculum.content.sections import study_guide_headings
 from robotics_curriculum.content.validate import is_http_url
 from robotics_curriculum.i18n import DEFAULT_LANG, Translator, resolve_lang, translator
 from robotics_curriculum.progress import LessonProgress, LessonStatus, LessonSummary, Session
@@ -141,12 +149,16 @@ def legend(t: Translator) -> str:
 # -- body processing -----------------------------------------------------------
 
 _FENCE = re.compile(r"^\s*(```|~~~)")
-_STUDY = re.compile(rf"^##\s+{STUDY_HEADING}\s*#*\s*$")
 _H1_OR_H2 = re.compile(r"^#{1,2}\s")
 
 
-def split_study_section(body: str) -> tuple[str, str | None]:
-    """Remove the ``## 이 단계 공부법`` section from ``body``; return (rest, section text)."""
+def split_study_section(body: str, lang: str | None = None) -> tuple[str, str | None]:
+    """Remove the study-guide section from ``body``; return (rest, section text).
+
+    The heading is looked up in ``lang`` first (a translated body writes it in its own
+    language) and then in the language lessons are written in.
+    """
+    headings = [h.strip().rstrip("#").strip() for h in study_guide_headings(lang)]
     lines = body.split("\n")
     in_fence = False
     start = end = None
@@ -156,7 +168,11 @@ def split_study_section(body: str) -> tuple[str, str | None]:
             continue
         if in_fence:
             continue
-        if start is None and _STUDY.match(line):
+        if (
+            start is None
+            and line.startswith("## ")
+            and line[3:].strip().rstrip("#").strip() in headings
+        ):
             start = index
         elif start is not None and _H1_OR_H2.match(line):
             end = index
@@ -237,12 +253,16 @@ class SiteModel:
     def stages(self) -> list[str]:
         return ordered_stages(stage_of(m) for m in self.modules())
 
+    def text(self, lesson: Lesson) -> LocalizedLesson:
+        """A lesson's title, summary, objectives and body in the site's language."""
+        return lesson.localized(self.lang)
+
     def progress_rows(self) -> list[LessonProgress]:
         return [s.progress for s in self.summaries]
 
 
 def lesson_link(model: SiteModel, page: str, lesson: Lesson, anchor: str = "") -> str:
-    return link(page, model.lesson_page(lesson), lesson.title, anchor)
+    return link(page, model.lesson_page(lesson), model.text(lesson).title, anchor)
 
 
 def module_link(model: SiteModel, page: str, module: Module) -> str:
@@ -471,7 +491,7 @@ def render_roadmap(model: SiteModel) -> str:
                 prereq = ""
                 if lesson.prerequisites:
                     names = ", ".join(
-                        md_text(model.by_lesson[p].lesson.title)
+                        md_text(model.text(model.by_lesson[p].lesson).title)
                         for p in lesson.prerequisites
                         if p in model.by_lesson
                     )
@@ -555,8 +575,9 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
     page = model.lesson_page(lesson)
     progress = summary.progress
     t = model.t
+    text = model.text(lesson)
     out = [
-        f"# {md_text(lesson.title)}",
+        f"# {md_text(text.title)}",
         "",
         f'<p class="rc-meta">{html.escape(stage_text(stage_of(summary.module), t))} · '
         f"{html.escape(summary.module.title)} · ⏱ {format_minutes(lesson.estimated_minutes)} · "
@@ -564,7 +585,7 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
         f"({lesson.difficulty}/5) · "
         f"{badge(state_of(summary), t)}</p>",
         "",
-        f"> {md_text(lesson.summary)}",
+        f"> {md_text(text.summary)}",
         "",
         f"[{md_text(t('site.heading.study_guide'))}](#{STUDY_ANCHOR}) · "
         f"[{md_text(t('site.heading.resources'))}](#{RESOURCES_ANCHOR}) · "
@@ -572,7 +593,7 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
         "",
         f"**{md_text(t('site.label.objectives'))}**",
         "",
-        *[f"- {md_text(objective)}" for objective in lesson.objectives],
+        *[f"- {md_text(objective)}" for objective in text.objectives],
         "",
     ]
     if lesson.prerequisites:
@@ -596,8 +617,8 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
             f"    {md_text(t('site.lesson.locked_body'))}",
         ]
     out.append("")
-    if lesson.tags:
-        tags = " ".join(f"`{md_text(tag)}`" for tag in lesson.tags)
+    if text.tags:
+        tags = " ".join(f"`{md_text(tag)}`" for tag in text.tags)
         out += [f"**{md_text(t('site.label.tags'))}**: " + tags, ""]
     if lesson.activities:
         out += [f"**{md_text(t('site.label.activities'))}**", ""]
@@ -616,7 +637,7 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
         out += [f"**{md_text(t('site.label.my_record'))}**: {md_text(record)}", ""]
     out += ["---", ""]
 
-    body, study = split_study_section(render_quiz_blocks(strip_leading_h1(lesson.body), lesson, t))
+    body, study = split_study_section(render_quiz_blocks(strip_leading_h1(text.body), lesson, t))
     out += [body.strip("\n"), ""]
 
     out += [f"## {md_text(t('site.heading.study_guide'))} {{#{STUDY_ANCHOR}}}", ""]

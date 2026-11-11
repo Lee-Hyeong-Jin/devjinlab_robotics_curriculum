@@ -47,7 +47,7 @@
   border: 1px solid currentColor;
 }
 .rc-done { color: #2e7d32; }
-.rc-in_progress { color: #ef6c00; }
+.rc-in_progress { color: #b35600; } /* 4.9:1 on white (WCAG AA) */
 .rc-not_started { color: var(--md-default-fg-color--light); }
 .rc-locked { color: var(--md-default-fg-color--lighter); }
 [data-md-color-scheme="slate"] .rc-done { color: #81c784; }

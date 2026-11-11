@@ -275,7 +275,7 @@
           "content"
         ],
         "summary": "Get Lesson",
-        "description": "Lesson metadata, Markdown body, resources, and the study-method section.",
+        "description": "Lesson metadata, Markdown body, resources, and the study-method section.\n\n``Accept-Language`` picks a translation (``<lesson>.<lang>.md``); a lesson without one\nanswers in the language it was written in, which ``lang`` in the response states.",
         "operationId": "get_lesson_api_v1_lessons__lesson_id__get",
         "parameters": [
           {
@@ -4617,6 +4617,20 @@
             "type": "array",
             "title": "Tags"
           },
+          "lang": {
+            "type": "string",
+            "title": "Lang",
+            "description": "Language of `title` and `summary`.",
+            "default": "ko"
+          },
+          "available_languages": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Available Languages",
+            "description": "Languages this lesson has text in."
+          },
           "objectives": {
             "items": {
               "type": "string"
@@ -4924,6 +4938,20 @@
             },
             "type": "array",
             "title": "Tags"
+          },
+          "lang": {
+            "type": "string",
+            "title": "Lang",
+            "description": "Language of `title` and `summary`.",
+            "default": "ko"
+          },
+          "available_languages": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Available Languages",
+            "description": "Languages this lesson has text in."
           }
         },
         "additionalProperties": false,

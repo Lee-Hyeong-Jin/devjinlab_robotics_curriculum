@@ -142,6 +142,77 @@ questions:
 복습 일정은 SM-2(`docs/adr/0005-sm2-spaced-repetition.md`), `rc review`.
 정적 사이트는 문항·선택지를 보여주고 정답·해설은 `<details>`로 접는다.
 
+## 레슨 번역 (`<lesson>.<lang>.md`)
+
+레슨 텍스트의 다른 언어 판은 **원문 옆의 형제 파일**로 둔다(ADR 0012). 파일 이름의 접미사가
+언어를 정한다. 원문 언어는 한국어이며 `ko` 접미사는 쓰지 않는다.
+
+```
+m1-math-physics/
+├── module.yaml
+├── vectors-matrices.md        # 원문 (ko)
+└── vectors-matrices.en.md     # 영어 번역
+```
+
+번역 파일은 **텍스트만** 담는다. 구조(선수지식·난이도·예상 시간·활동·자료)는 원문 파일에만 있고,
+번역이 커리큘럼 그래프를 바꿀 수 없다.
+
+| 필드 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `title` | str | O | 번역된 레슨 제목 |
+| `summary` | str | O | 번역된 요약 |
+| `objectives` | list[str] | - | 번역된 학습 목표. 생략하면 원문 상속 |
+| `tags` | list[str] | - | 생략하면 원문 상속 |
+| `id` | slug | - | 쓰면 원문 레슨 `id` 와 같아야 한다 |
+| `lang` | str | - | 쓰면 파일 이름 접미사와 같아야 한다 |
+
+그 밖의 키(`prerequisites`, `difficulty`, `estimated_minutes`, `activities`, `resources`, …)는
+오류다. 본문(front matter 아래)은 번역된 Markdown 이며, `## 이 단계 공부법` 절은 **그 언어의
+제목**으로 쓴다(영어는 `## How to study this stage`). 추출기는 요청 언어의 제목을 먼저 찾고
+없으면 한국어 제목으로 폴백한다.
+
+```markdown
+---
+id: m1-vectors-matrices
+lang: en
+title: Vectors and matrices
+summary: Vectors and matrices as robotics uses them.
+objectives:
+  - Explain the geometric meaning of the dot and cross products.
+---
+
+# Vectors and matrices
+
+...
+
+## How to study this stage
+
+1. **Videos:** ...
+```
+
+### 언어 선택과 폴백
+
+| 표면 | 언어를 고르는 방법 |
+|---|---|
+| 파이썬 API | `lesson.localized(lang)` → `LocalizedLesson`(`title`, `summary`, `objectives`, `tags`, `body`, `lang`, `translated`) |
+| HTTP API | 요청의 `Accept-Language`. 응답의 `lang` 이 실제로 쓰인 언어, `available_languages` 가 가진 언어 목록 |
+| 정적 사이트 | `rc site build --lang en` |
+| CLI | `rc --lang en ...` (UI 문자열; 레슨 본문 출력도 같은 언어의 번역이 있으면 쓴다) |
+
+번역이 없으면 원문(한국어)을 쓰고 `translated: false` 로 알린다. 즉 **번역은 선택**이며, 없다고
+해서 오류가 아니다.
+
+### 검증 (`rc validate`)
+
+| 규칙 | 메시지 예 |
+|---|---|
+| 지원하지 않는 언어 접미사 | `unsupported translation language 'fr'` |
+| `ko` 접미사 사용 | `'ko' is the language lessons are written in; drop the suffix` |
+| 원문 없는 번역 | `translation has no lesson to translate (vectors-matrices.md is missing)` |
+| `id` 불일치 | `translation id 'x' does not match lesson id 'y'` |
+| `lang` 과 파일 이름 불일치 | `front matter says lang 'ko' but the file name says 'en'` |
+| 본문이 빈 번역 | `'en' translation of 'm1-vectors-matrices' has an empty body` |
+
 ## 검증 규칙 (`rc validate [PATH]`)
 
 `PATH`는 코스 디렉터리이거나 코스 디렉터리들을 담은 상위 디렉터리(기본 `curriculum/`).
@@ -157,7 +228,8 @@ questions:
 | 6 | 코스에 모듈이 1개 이상, 모듈에 레슨이 1개 이상 | validate |
 | 7 | 자료 `url`이 있으면 `http(s)://호스트...` 형식 (네트워크 접속 없이 `urllib.parse`로 검사) | validate |
 | 8 | 한 레슨 안에서 자료 `title`이 유일 | validate |
-| 9 | 본문 ` ```quiz ` 블록이 파싱됨: YAML 오류, 모르는 `type`, `answer` 형태·범위, `explanation` 누락, 문항 `id` 중복, `activity` 참조 오류(없는 활동, quiz 활동이 둘 이상인데 생략)를 `lesson '<id>': quiz block N: question M: ...` 형식으로 보고 | validate |
+| 9 | 레슨 번역 파일(`<lesson>.<lang>.md`)이 텍스트를 담고 있고 id·언어가 일치 (위 "레슨 번역" 절) | loader/validate |
+| 10 | 본문 ` ```quiz ` 블록이 파싱됨: YAML 오류, 모르는 `type`, `answer` 형태·범위, `explanation` 누락, 문항 `id` 중복, `activity` 참조 오류(없는 활동, quiz 활동이 둘 이상인데 생략)를 `lesson '<id>': quiz block N: question M: ...` 형식으로 보고 | validate |
 
 성공 시 `OK: N lessons in M modules`.
 

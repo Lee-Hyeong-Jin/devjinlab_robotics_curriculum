@@ -214,7 +214,11 @@ paths:
       tags:
       - content
       summary: Get Lesson
-      description: Lesson metadata, Markdown body, resources, and the study-method section.
+      description: |-
+        Lesson metadata, Markdown body, resources, and the study-method section.
+
+        ``Accept-Language`` picks a translation (``<lesson>.<lang>.md``); a lesson without one
+        answers in the language it was written in, which ``lang`` in the response states.
       operationId: get_lesson_api_v1_lessons__lesson_id__get
       parameters:
       - name: lesson_id
@@ -3024,6 +3028,17 @@ components:
             type: string
           type: array
           title: Tags
+        lang:
+          type: string
+          title: Lang
+          description: Language of `title` and `summary`.
+          default: ko
+        available_languages:
+          items:
+            type: string
+          type: array
+          title: Available Languages
+          description: Languages this lesson has text in.
         objectives:
           items:
             type: string
@@ -3228,6 +3243,17 @@ components:
             type: string
           type: array
           title: Tags
+        lang:
+          type: string
+          title: Lang
+          description: Language of `title` and `summary`.
+          default: ko
+        available_languages:
+          items:
+            type: string
+          type: array
+          title: Available Languages
+          description: Languages this lesson has text in.
       additionalProperties: false
       type: object
       required:

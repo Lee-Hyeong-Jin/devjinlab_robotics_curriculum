@@ -55,6 +55,7 @@ def validate_course(course: Course) -> list[ContentError]:
                 claim(activity.id, lesson_path)
             errors.extend(_check_resources(lesson, lesson_path))
             errors.extend(_check_quiz(lesson, lesson_path))
+            errors.extend(_check_translations(lesson))
 
     # Rule 2: dangling / self prerequisites.
     for lesson in lessons.values():
@@ -94,6 +95,20 @@ def _check_quiz(lesson: Lesson, path: Path) -> list[ContentError]:
     except QuizParseError as exc:
         return [ContentError(path, f"lesson '{lesson.id}': {m}") for m in exc.messages]
     return []
+
+
+def _check_translations(lesson: Lesson) -> list[ContentError]:
+    """Rule 8: a translation must actually carry text."""
+    errors: list[ContentError] = []
+    for lang, translation in sorted(lesson.translations.items()):
+        path = translation.path if translation.path is not None else lesson.path
+        if path is None:  # pragma: no cover - a translation always comes from a file
+            continue
+        if not translation.body.strip():
+            errors.append(
+                ContentError(path, f"'{lang}' translation of '{lesson.id}' has an empty body")
+            )
+    return errors
 
 
 def is_http_url(url: str) -> bool:
