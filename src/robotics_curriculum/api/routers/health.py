@@ -2,15 +2,19 @@
 
 from __future__ import annotations
 
+import logging
+
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse, Response
 from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 
 from robotics_curriculum import __version__
 from robotics_curriculum.api.deps import State, open_progress_store
+from robotics_curriculum.api.log import LOGGER_NAME
 from robotics_curriculum.api.schemas import Check, Health, Readiness, Version
 
 router = APIRouter(tags=["system"])
+logger = logging.getLogger(LOGGER_NAME)
 
 
 @router.get("/healthz", response_model=Health)
@@ -26,17 +30,19 @@ def healthz() -> Health:
 )
 def readyz(state: State) -> Readiness | JSONResponse:
     """Readiness: the curriculum is indexed and the progress store opens."""
+    # Details stay in the server log: paths and driver errors are not for clients (SRV-05).
     if state.index is None:
-        content = Check(ok=False, detail=state.load_error)
+        content = Check(ok=False, detail="curriculum failed to load (see server log)")
     else:
         content = Check(ok=True, detail=f"{state.index.lesson_count} lessons")
     try:
         open_progress_store(state.settings).close()
-        if state.auth is not None and not state.auth.store.schema_ready():
-            raise RuntimeError("auth tables missing (run alembic upgrade head)")
         database = Check(ok=True)
-    except Exception as exc:  # any failure to open the store means "not ready"
-        database = Check(ok=False, detail=str(exc))
+    except Exception:  # any failure to open the store means "not ready"
+        logger.exception("readiness: progress store unavailable")
+        database = Check(ok=False, detail="progress store unavailable (see server log)")
+    if database.ok and state.auth is not None and not state.auth.store.schema_ready():
+        database = Check(ok=False, detail="auth tables missing (run alembic upgrade head)")
     ok = content.ok and database.ok
     body = Readiness(
         status="ready" if ok else "not_ready", checks={"content": content, "database": database}

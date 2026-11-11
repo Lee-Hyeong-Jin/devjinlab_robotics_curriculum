@@ -118,7 +118,8 @@ State = Annotated[AppState, Depends(get_state)]
 def get_index(state: State) -> ContentIndex:
     """The content index, or 503 when the curriculum failed to load."""
     if state.index is None:
-        raise HTTPException(503, f"curriculum not loaded: {state.load_error}")
+        # The load error (with paths) is in the server log only (SRV-05).
+        raise HTTPException(503, "curriculum failed to load (see server log)")
     return state.index
 
 
@@ -164,6 +165,29 @@ def _unauthorized(detail: str) -> HTTPException:
     return HTTPException(401, detail, headers={"WWW-Authenticate": 'Bearer realm="rc"'})
 
 
+def _deny(
+    state: AppState,
+    request: Request,
+    status: int,
+    detail: str,
+    reason: str,
+    user_id: int | None = None,
+) -> HTTPException:
+    """Audit a rejected request that carried credentials (SRV-07), then build the error."""
+    if state.auth is not None:
+        state.auth.record(
+            request_context(request),
+            "auth.denied",
+            user_id,
+            target_type="request",
+            target_id=f"{request.method} {request.url.path}",
+            detail={"reason": reason, "status": status},
+        )
+    if status == 401:
+        return _unauthorized(detail)
+    return HTTPException(status, detail)
+
+
 def optional_principal(request: Request, state: State) -> Principal | None:
     """The caller from ``Authorization: Bearer <PAT>`` or the session cookie, if valid."""
     if state.auth is None:
@@ -175,14 +199,16 @@ def optional_principal(request: Request, state: State) -> Principal | None:
             raise _unauthorized("unsupported Authorization header (use Bearer <token>)")
         principal = state.auth.authenticate_token(credentials.strip())
         if principal is None:
-            raise _unauthorized("invalid or expired token")
+            raise _deny(state, request, 401, "invalid or expired token", "bad_token")
         return principal
     cookie = request.cookies.get(SESSION_COOKIE)
     return state.auth.authenticate_session(cookie) if cookie else None
 
 
 def get_principal(
-    request: Request, principal: Annotated[Principal | None, Depends(optional_principal)]
+    request: Request,
+    state: State,
+    principal: Annotated[Principal | None, Depends(optional_principal)],
 ) -> Principal:
     """Authenticated caller (401 otherwise). Enforces CSRF on cookie-authenticated writes
     and the PAT scope for the method (reads need ``read:progress``, writes
@@ -192,32 +218,41 @@ def get_principal(
     if principal is LOCAL_PRINCIPAL:
         return principal
     unsafe = request.method not in SAFE_METHODS
+    uid = principal.user.id
     if unsafe and not AuthService.check_csrf(principal, request.headers.get(CSRF_HEADER)):
-        raise HTTPException(403, f"missing or invalid {CSRF_HEADER} header")
+        raise _deny(state, request, 403, f"missing or invalid {CSRF_HEADER} header", "csrf", uid)
     scope = Scope.WRITE_PROGRESS if unsafe else Scope.READ_PROGRESS
     if not principal.has_scope(scope):
-        raise HTTPException(403, f"token lacks the '{scope.value}' scope")
+        raise _deny(state, request, 403, f"token lacks the '{scope.value}' scope", "scope", uid)
     return principal
 
 
 CurrentPrincipal = Annotated[Principal, Depends(get_principal)]
 
 
-def require_session(principal: CurrentPrincipal) -> Principal:
+def require_session(request: Request, state: State, principal: CurrentPrincipal) -> Principal:
     """Account-management endpoints refuse personal access tokens."""
     if principal.via_token:
-        raise HTTPException(403, "this endpoint needs a browser session, not a token")
+        raise _deny(
+            state,
+            request,
+            403,
+            "this endpoint needs a browser session, not a token",
+            "token_not_allowed",
+            principal.user.id,
+        )
     return principal
 
 
 SessionPrincipal = Annotated[Principal, Depends(require_session)]
 
 
-def require_admin(principal: CurrentPrincipal) -> Principal:
+def require_admin(request: Request, state: State, principal: CurrentPrincipal) -> Principal:
+    uid = principal.user.id
     if principal.user.role is not Role.ADMIN:
-        raise HTTPException(403, "admin role required")
+        raise _deny(state, request, 403, "admin role required", "role", uid)
     if principal.via_token and not principal.has_scope(Scope.ADMIN):
-        raise HTTPException(403, "token lacks the 'admin' scope")
+        raise _deny(state, request, 403, "token lacks the 'admin' scope", "scope", uid)
     return principal
 
 

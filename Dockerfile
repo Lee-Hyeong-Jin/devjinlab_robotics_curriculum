@@ -66,6 +66,7 @@ ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONUNBUFFERED=1 \
     RC_DATA_DIR=/data \
     RC_CURRICULUM_DIR=/app/curriculum \
+    RC_AUTH_MODE=server \
     RC_API_HOST=0.0.0.0 \
     RC_API_PORT=8000
 
@@ -75,7 +76,13 @@ EXPOSE 8000
 
 USER rc
 
+# Server mode by default: every /api/v1 call needs a session or token (server review SRV-01).
+# Local mode on 0.0.0.0 is refused by `rc api serve` unless RC_API_ALLOW_REMOTE_LOCAL=1.
+# No curl or wget in the image, so the health check uses python.
+HEALTHCHECK --interval=10s --timeout=5s --start-period=10s --retries=5 \
+    CMD ["python", "-c", "import sys, urllib.request; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/readyz', timeout=3).status == 200 else 1)"]
+
 # `rc api serve` reads the RC_* variables above; the migrate service overrides the entrypoint
-# with alembic. No curl or wget in the image, so health checks use python (see compose).
+# with alembic.
 ENTRYPOINT ["rc"]
 CMD ["api", "serve"]

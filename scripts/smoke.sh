@@ -15,6 +15,11 @@ compose() { docker compose "$@"; }
 base="http://127.0.0.1:8000"
 keep="${KEEP_UP:-}"
 
+# compose has no default secrets (server review SRV-06); use throwaway ones for the smoke run.
+rand() { od -An -N16 -tx1 /dev/urandom | tr -d ' \n'; }
+export RC_DB_PASSWORD="${RC_DB_PASSWORD:-smoke-$(rand)}"
+export RC_AUTH_SECRET="${RC_AUTH_SECRET:-smoke-$(rand)}"
+
 cleanup() {
   rc=$?
   if [ -z "$keep" ]; then
@@ -38,8 +43,9 @@ fail() {
 }
 
 # `--wait` blocks until every started service is healthy (api) or has completed (migrate).
-echo "--- docker compose up -d --wait api"
-compose up -d --wait --wait-timeout 300 api
+# --build: the image tag is shared, so never test whatever image happens to be cached.
+echo "--- docker compose up -d --build --wait api"
+compose up -d --build --wait --wait-timeout 300 api
 
 echo "--- migrate ran to completion"
 state="$(compose ps --all --format '{{.Service}} {{.State}} {{.ExitCode}}' | awk '$1=="migrate"{print $2" "$3}')"
@@ -66,12 +72,35 @@ check /healthz 200 '"status"'
 check /readyz 200 '"status"'
 check /version 200 '"version"'
 
-echo "--- api endpoints"
+echo "--- api endpoints (server mode: authentication required)"
 check /openapi.json 200 '"openapi"'
-check /api/v1/courses 200 'robotics-expert'
+code="$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 "$base/api/v1/courses")"
+[ "$code" = "401" ] || fail "/api/v1/courses without credentials returned $code, expected 401 (server mode)"
+echo "  OK   /api/v1/courses -> 401 without credentials"
+
+echo "--- sign up, log in, read with the session"
+jar="$(mktemp)"
+email="smoke-$(rand | head -c 8)@example.org"
+password="smoke-pass-$(rand)"
+body="{\"email\":\"$email\",\"password\":\"$password\"}"
+code="$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 -H 'Content-Type: application/json' \
+  -d "$body" "$base/api/v1/auth/signup")"
+[ "$code" = "201" ] || fail "signup returned $code"
+code="$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 -c "$jar" -H 'Content-Type: application/json' \
+  -d "$body" "$base/api/v1/auth/login")"
+[ "$code" = "200" ] || fail "login returned $code"
+# The session cookie is Secure; curl keeps it for http://127.0.0.1 only via the jar file, so
+# send it explicitly.
+sid="$(awk '$6=="sid"{print $7}' "$jar")"
+rm -f "$jar"
+[ -n "$sid" ] || fail "login set no sid cookie"
+courses="$(curl -fsS --max-time 10 -H "Cookie: sid=$sid" "$base/api/v1/courses")" ||
+  fail "/api/v1/courses with a session failed"
+printf '%s' "$courses" | grep -q 'robotics-expert' || fail "/api/v1/courses body: ${courses:0:200}"
+echo "  OK   signup 201, login 200, /api/v1/courses with session 200"
 
 echo "--- metrics"
-# /metrics is optional until the api session's work lands, and RC_API_METRICS=0 turns it off.
+# RC_API_METRICS=0 turns /metrics off (404).
 mcode="$(curl -fsS -o /tmp/rc-smoke-metrics -w '%{http_code}' --max-time 10 "$base/metrics" 2>/dev/null || true)"
 case "$mcode" in
   200)
@@ -80,7 +109,7 @@ case "$mcode" in
     echo "  OK   /metrics -> 200 with http_requests_total"
     ;;
   404 | "")
-    echo "  SKIP /metrics not served (RC_API_METRICS=0 or not implemented yet)"
+    echo "  SKIP /metrics not served (RC_API_METRICS=0)"
     ;;
   *) fail "/metrics returned $mcode" ;;
 esac

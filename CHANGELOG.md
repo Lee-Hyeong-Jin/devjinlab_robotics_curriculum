@@ -75,6 +75,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+- Server review fixes (`docs/reviews/2026-11-11-server-review.md`): the compose stack and the api
+  image run in server mode with required secrets and no default database password; local mode
+  refuses non-loopback binds; the bootstrap admin is promoted only after email verification
+  (or with `rc api promote-admin`); password-reset requests are rate limited and only the newest
+  reset link works; error bodies no longer show server paths; denied requests and admin reads
+  are audited; account deletion anonymizes the user's audit entries; api containers run with a
+  read-only root, no capabilities and `no-new-privileges`.
 - `.github/workflows/security.yml`: CodeQL (Python, security-and-quality) and pip-audit of the
   locked runtime dependencies on every PR, on pushes to `main`, and weekly. Any known
   vulnerability in a runtime dependency fails the job.
