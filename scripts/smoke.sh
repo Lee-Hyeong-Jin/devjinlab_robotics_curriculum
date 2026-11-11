@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Server-mode smoke test (P2-5, AC-OPS.2): bring up db -> migrate -> api with compose and check
-# that the API answers. Run from the repository root:
+# Server-mode smoke test (P2-5, AC-OPS.2): bring up db -> migrate -> api -> web with compose and
+# check that the API and the frontend answer. Run from the repository root:
 #
 #   bash scripts/smoke.sh            # build, up, check, then tear down
 #   KEEP_UP=1 bash scripts/smoke.sh  # leave the stack running for manual poking
@@ -24,14 +24,14 @@ cleanup() {
   rc=$?
   if [ -z "$keep" ]; then
     echo "--- tearing down"
-    compose logs --no-color --tail 30 api migrate >"${SMOKE_LOG:-/tmp/rc-smoke-compose.log}" 2>&1 || true
+    compose logs --no-color --tail 30 api migrate web >"${SMOKE_LOG:-/tmp/rc-smoke-compose.log}" 2>&1 || true
     compose down --volumes --remove-orphans >/dev/null 2>&1 || true
   else
     echo "--- stack left running (KEEP_UP=1); stop it with: docker compose down -v"
   fi
   if [ "$rc" -ne 0 ]; then
     echo "SMOKE FAILED (exit $rc). Recent service logs:"
-    compose logs --no-color --tail 40 api migrate 2>&1 | sed 's/^/  /' || true
+    compose logs --no-color --tail 40 api migrate web 2>&1 | sed 's/^/  /' || true
   fi
   exit "$rc"
 }
@@ -121,6 +121,18 @@ got="$(curl -fsS -o /dev/null -D - --max-time 10 -H "X-Request-ID: $rid" "$base/
   tr -d '\r' | awk 'tolower($1)=="x-request-id:"{print $2}')"
 [ "$got" = "$rid" ] || fail "X-Request-ID not echoed (got '${got:-none}')"
 echo "  OK   X-Request-ID echoed"
+
+echo "--- docker compose up -d --build --wait web"
+compose up -d --build --wait --wait-timeout 300 web
+
+echo "--- web screens are served"
+web_base="http://127.0.0.1:3000"
+for path in / /roadmap /resources /login; do
+  body="$(curl -fsS --max-time 15 "$web_base$path")" || fail "web $path did not respond"
+  # #main is the skip-link target in the app shell: proof a page rendered, not just a 200.
+  printf '%s' "$body" | grep -q 'id="main"' || fail "web $path rendered no app shell: ${body:0:200}"
+  echo "  OK   web $path"
+done
 
 echo "--- logs are single-line JSON"
 compose logs --no-color --tail 50 api | sed 's/^api[^|]*| *//' | grep -c '^{.*}$' >/dev/null ||

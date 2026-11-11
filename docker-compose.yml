@@ -3,7 +3,8 @@
 #        docker compose run --rm cli validate
 #        docker compose up -d db      # PostgreSQL for server mode (P2-3, docs/adr/0007)
 #        docker compose up -d --wait api   # db -> migrate -> api (bash scripts/smoke.sh)
-# `web` and the reverse proxy follow with P2-4 (docs/architecture/operations.md).
+#        docker compose up -d --wait web   # the frontend on http://127.0.0.1:3000
+# The reverse proxy follows (docs/architecture/operations.md).
 # Secrets have no defaults: compose refuses to start until they are set (server review SRV-06).
 # The api runs in server mode (accounts, sessions; SRV-01) on a read-only root filesystem with
 # no Linux capabilities (SRV-09). Production can swap the env values for Docker secrets.
@@ -123,6 +124,38 @@ services:
       db:
         condition: service_healthy
     restart: "no"
+
+  # Frontend (P2-4/P2-5). Appended after `backup` on purpose: the api/db block is being
+  # hardened in another branch, and keeping the web block at the end keeps the merge clean.
+  # Server-rendered Next.js, so it needs the api reachable, not a build-time URL.
+  web:
+    build:
+      context: .
+      target: web
+    image: robotics-curriculum-web:local
+    environment:
+      # Inside the compose network the api answers on its service name.
+      RC_API_BASE_URL: http://api:8000
+      RC_DEFAULT_COURSE_ID: ${RC_DEFAULT_COURSE_ID:-robotics-expert}
+      RC_API_TIMEOUT_MS: ${RC_API_TIMEOUT_MS:-10000}
+      PORT: "3000"
+      HOSTNAME: 0.0.0.0
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+    # The image's own HEALTHCHECK probes http://127.0.0.1:3000/ with node's fetch.
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    # Same hardening as the api (SRV-09). Next needs its fetch cache writable, so that one
+    # path is a tmpfs; verified by running the image read-only.
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /app/.next/cache
 
 volumes:
   rc-data:
