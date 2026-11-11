@@ -6,7 +6,7 @@ objectives:
   - 행동 복제를 지도학습 문제로 정식화하고 시연 데이터로 정책을 회귀할 수 있다.
   - 분포 이동(covariate shift)으로 오차가 누적되는 이유를 설명하고 DAgger 의 데이터 집계 절차를 구현할 수 있다.
   - ACT 의 행동 청크와 Diffusion Policy 의 다봉(multimodal) 행동 표현이 각각 어떤 BC 의 약점을 다루는지 설명할 수 있다.
-prerequisites: [m9-reinforcement-learning-basics]
+prerequisites: [m9-reinforcement-learning-basics, m7-grasping-impedance-control]
 difficulty: 4
 estimated_minutes: 140
 tags: [imitation-learning, behavior-cloning, dagger, act, diffusion-policy, teleoperation]
