@@ -163,10 +163,10 @@ def build_weekly_report(
             )
 
     report.module_time = sorted(per_module.values(), key=lambda m: -m.seconds)
-    for s in service.next_lessons(limit=NEXT_COUNT):
-        state = "진행 중" if s.status is LessonStatus.IN_PROGRESS else "시작 전"
-        detail = f"{state}, 예상 {s.lesson.estimated_minutes}분"
-        report.next_lessons.append(LessonLine(s.lesson.id, s.lesson.title, detail=detail))
+    for nxt in service.next_lessons(limit=NEXT_COUNT):
+        state = "진행 중" if nxt.status is LessonStatus.IN_PROGRESS else "시작 전"
+        detail = f"{state}, 예상 {nxt.lesson.estimated_minutes}분"
+        report.next_lessons.append(LessonLine(nxt.lesson.id, nxt.lesson.title, detail=detail))
     report.notes.sort(key=lambda n: n.day)
     return report
 

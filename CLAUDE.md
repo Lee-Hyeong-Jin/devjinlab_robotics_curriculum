@@ -25,9 +25,15 @@ uv sync                                                # install deps (incl. dev
 uv run rc --help                                       # CLI entry point
 uv run rc validate                                     # validate ./curriculum
 uv run ruff check . && uv run ruff format --check .    # lint + format check
+uv run mypy                                            # strict type check of src/ (targets in [tool.mypy])
 uv run pytest                                          # full test suite
+uv run pytest --cov                                    # tests + coverage gate (fail_under in [tool.coverage.report])
 uv run pytest tests/test_cli.py::test_version_prints_package_version   # single test
-bash scripts/harness/check.sh [--quick]                # the verification gate (lint+format+tests; --quick skips tests)
+bash scripts/harness/check.sh [--quick]                # the verification gate (ruff+format+mypy+pytest/coverage; --quick skips tests)
+uv run pre-commit install                              # enable git hooks; `uv run pre-commit run --all-files` runs them all
+docker build -t robotics-curriculum:local .            # container image (non-root; default `rc --help`)
+docker compose run --rm cli validate                   # run any rc subcommand in the container
+uv build                                               # sdist + wheel into dist/ (release.yml does this on v* tags)
 python3 -I scripts/harness/roadmap.py summary|next|get <id>|set <id> <status> [note]   # roadmap state
 ```
 
@@ -55,6 +61,18 @@ many agents; only the user launches them.
 - Hooks (`.claude/settings.json`): SessionStart injects branch/roadmap status; PreToolUse guards
   destructive Bash; PostToolUse formats `.py` with ruff; Stop runs `check.sh --quick` when there
   are uncommitted code changes and blocks the turn on failure.
+
+## Engineering standards
+
+- Licenses: code Apache-2.0 (`LICENSE`, `NOTICE`); `curriculum/` content CC BY 4.0 (`curriculum/LICENSE`).
+- Type hints are required in `src/`; `mypy` runs in strict mode and must pass (CI, `check.sh`, pre-commit).
+- Coverage gate: line+branch coverage must stay at or above `fail_under` in `pyproject.toml` (80).
+- Commits follow Conventional Commits and carry a DCO `Signed-off-by:` line for external
+  contributions (`git commit -s`); see `CONTRIBUTING.md`.
+- CI (`.github/workflows/ci.yml`) mirrors `check.sh` plus `rc validate` and `rc site build`.
+- Security issues are reported privately per `SECURITY.md` (GitHub advisories, 90-day disclosure);
+  never discuss them in public issues or commit messages.
+- User-visible changes get a line under `## [Unreleased]` in `CHANGELOG.md`.
 
 ## Working rules
 

@@ -114,7 +114,8 @@ def _find_cycles(lessons: dict[str, Lesson], fallback: Path) -> list[ContentErro
                 key = frozenset(cycle)
                 if key not in reported:
                     reported.add(key)
-                    path = lessons[node].path if lessons[node].path is not None else fallback
+                    lesson_path = lessons[node].path
+                    path = lesson_path if lesson_path is not None else fallback
                     errors.append(ContentError(path, f"prerequisite cycle: {' -> '.join(cycle)}"))
         stack.pop()
         state[node] = black

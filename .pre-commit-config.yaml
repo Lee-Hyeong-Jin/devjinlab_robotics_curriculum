@@ -1,0 +1,38 @@
+# Install once: uv run pre-commit install
+# Run on demand: uv run pre-commit run --all-files
+# Vendored KaTeX assets are kept byte-identical to upstream.
+exclude: ^src/robotics_curriculum/site/assets/katex/
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: check-yaml
+        # roadmap.yaml is read by the purpose-built parser in scripts/harness/roadmap.py,
+        # which accepts unquoted backticks that strict YAML rejects.
+        exclude: ^harness/roadmap\.yaml$
+      - id: check-toml
+      - id: check-merge-conflict
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.4
+    hooks:
+      - id: ruff-check
+      - id: ruff-format
+
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy (strict, src/)
+        entry: uv run --quiet mypy
+        language: system
+        types: [python]
+        pass_filenames: false
+      - id: rc-validate
+        name: rc validate (curriculum)
+        entry: uv run --quiet rc validate
+        language: system
+        files: ^curriculum/
+        pass_filenames: false
