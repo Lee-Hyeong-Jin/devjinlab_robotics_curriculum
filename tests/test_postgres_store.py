@@ -77,6 +77,23 @@ def test_factory_defaults_to_sqlite_in_data_dir(
     store.close()
 
 
+def test_factory_without_data_dir_uses_rc_data_dir(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.delenv(DATABASE_URL_ENV, raising=False)
+    monkeypatch.setenv("RC_DATA_DIR", str(tmp_path / "rcdata"))
+    store = open_store()
+    assert isinstance(store, SqliteProgressStore)
+    assert store.path == tmp_path / "rcdata" / "progress.db"
+    store.close()
+
+
+def test_factory_imports_without_service_first() -> None:
+    """service.open_service() will import factory; factory must not import service eagerly."""
+    source = (ROOT / "src/robotics_curriculum/progress/factory.py").read_text()
+    assert "\nfrom robotics_curriculum.progress.service" not in source
+
+
 def test_factory_empty_env_means_sqlite(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv(DATABASE_URL_ENV, "  ")
     store = open_store(tmp_path)
