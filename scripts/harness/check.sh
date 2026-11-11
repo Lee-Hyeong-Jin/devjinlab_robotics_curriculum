@@ -16,7 +16,10 @@ run() { # run <label> <cmd...>
   if "$@"; then printf '  OK   %s\n' "$label"; else printf '  FAIL %s (exit %s)\n' "$label" "$?"; status=1; fi
 }
 have() { command -v "$1" >/dev/null 2>&1; }
+# Reads package.json in the current directory; the node branch cd's into $node_dir first.
 has_script() { python3 -I -c "import json,sys; sys.exit(0 if '$1' in json.load(open('package.json')).get('scripts',{}) else 1)" 2>/dev/null; }
+# The frontend lives in web/ (P2-4); a root package.json still wins if someone adds one.
+node_dir="."; [ -f package.json ] || { [ -f web/package.json ] && node_dir="web"; }
 
 stacks="$(bash "$root/scripts/harness/detect_stack.sh")"
 
@@ -37,12 +40,17 @@ for s in $stacks; do
       fi
       ;;
     node)
-      pm=npm; [ -f pnpm-lock.yaml ] && pm=pnpm; [ -f yarn.lock ] && pm=yarn
-      has_script lint      && run "$pm run lint"      $pm run --silent lint
-      has_script typecheck && run "$pm run typecheck" $pm run --silent typecheck
+      pm=npm
+      [ -f "$node_dir/pnpm-lock.yaml" ] && pm=pnpm
+      [ -f "$node_dir/yarn.lock" ] && pm=yarn
+      cd "$root/$node_dir" || exit 1
+      has_script lint && run "$pm run lint ($node_dir)" $pm run --silent lint
+      has_script typecheck && run "$pm run typecheck ($node_dir)" $pm run --silent typecheck
+      has_script format:check && run "$pm run format:check ($node_dir)" $pm run --silent format:check
       if [ "$quick" = 0 ] && has_script test; then
-        run "$pm run test" $pm run --silent test
+        run "$pm run test ($node_dir)" $pm run --silent test
       fi
+      cd "$root" || exit 1
       ;;
     none)
       echo "INFO no build stack detected (no pyproject.toml / package.json) - nothing to check"

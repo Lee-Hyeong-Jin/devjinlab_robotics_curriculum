@@ -66,8 +66,10 @@ jobs:
       - name: Validate curriculum
         run: uv run rc validate
 
+      # Into the runner's own temp dir: `rc site build` refuses a non-empty directory that no
+      # previous build marked with .rc-site, and /tmp is shared with whatever else runs here.
       - name: Build static site
-        run: uv run rc site build --out /tmp/site
+        run: uv run rc site build --out "$RUNNER_TEMP/site"
 
       - name: Upload coverage report
         if: always()
@@ -96,6 +98,66 @@ jobs:
           name: smoke-compose-logs
           path: /tmp/rc-smoke-compose.log
           if-no-files-found: ignore
+
+  # Frontend (P2-4, web/). Node 22 LTS is the baseline, 26 runs alongside it. Every step is
+  # skipped until web/package.json exists, so this job is green before the frontend lands.
+  web:
+    name: web (node${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ["22", "26"]
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Is there a frontend yet?
+        id: detect
+        run: |
+          if [ -f web/package.json ]; then
+            echo "present=true" >>"$GITHUB_OUTPUT"
+          else
+            echo "present=false" >>"$GITHUB_OUTPUT"
+            echo "web/package.json not present yet - skipping the frontend checks"
+          fi
+
+      - uses: actions/setup-node@v6
+        if: steps.detect.outputs.present == 'true'
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install
+        if: steps.detect.outputs.present == 'true'
+        working-directory: web
+        run: npm ci
+
+      - name: Lint
+        if: steps.detect.outputs.present == 'true'
+        working-directory: web
+        run: npm run lint
+
+      - name: Format check
+        if: steps.detect.outputs.present == 'true'
+        working-directory: web
+        run: npm run format:check
+
+      - name: Typecheck
+        if: steps.detect.outputs.present == 'true'
+        working-directory: web
+        run: npm run typecheck
+
+      - name: Test
+        if: steps.detect.outputs.present == 'true'
+        working-directory: web
+        run: npm run test
+
+      - name: Build
+        if: steps.detect.outputs.present == 'true'
+        working-directory: web
+        run: npm run build
 
   # Keeps the backup/restore tooling honest: back up, destroy the data, restore, verify
   # (P2-5 / AC-OPS.4). The release drill is run by hand and recorded in docs/ops/restore-drills.md;
