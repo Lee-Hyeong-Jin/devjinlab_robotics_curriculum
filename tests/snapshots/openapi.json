@@ -1270,6 +1270,145 @@
         ],
         "title": "ActivityKind"
       },
+      "ActivityProgress": {
+        "properties": {
+          "user_id": {
+            "type": "integer",
+            "title": "User Id",
+            "default": 1
+          },
+          "activity_id": {
+            "type": "string",
+            "title": "Activity Id"
+          },
+          "lesson_id": {
+            "type": "string",
+            "title": "Lesson Id"
+          },
+          "status": {
+            "$ref": "#/components/schemas/LessonStatus",
+            "default": "not_started"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "activity_id",
+          "lesson_id",
+          "updated_at"
+        ],
+        "title": "ActivityProgress",
+        "description": "Per-activity state (platform-design §4.1); Phase 1 only records quiz activities."
+      },
+      "Card": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "user_id": {
+            "type": "integer",
+            "title": "User Id",
+            "default": 1
+          },
+          "lesson_id": {
+            "type": "string",
+            "title": "Lesson Id"
+          },
+          "question_id": {
+            "type": "string",
+            "title": "Question Id"
+          },
+          "front": {
+            "type": "string",
+            "title": "Front"
+          },
+          "back": {
+            "type": "string",
+            "title": "Back"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "quiz",
+              "concept"
+            ],
+            "title": "Source"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "suspended": {
+            "type": "boolean",
+            "title": "Suspended",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "lesson_id",
+          "question_id",
+          "front",
+          "back",
+          "source",
+          "created_at"
+        ],
+        "title": "Card",
+        "description": "A flashcard made from a quiz question (FR-4.2); id is ``<lesson>-<source>-<qid>``."
+      },
+      "CardState": {
+        "properties": {
+          "card_id": {
+            "type": "string",
+            "title": "Card Id"
+          },
+          "user_id": {
+            "type": "integer",
+            "title": "User Id",
+            "default": 1
+          },
+          "repetitions": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Repetitions",
+            "default": 0
+          },
+          "interval_days": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Interval Days",
+            "default": 0
+          },
+          "ease": {
+            "type": "number",
+            "minimum": 1.3,
+            "title": "Ease",
+            "default": 2.5
+          },
+          "due": {
+            "type": "string",
+            "format": "date",
+            "title": "Due"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "card_id",
+          "due"
+        ],
+        "title": "CardState",
+        "description": "SM-2 scheduling state of one card for one user (FR-4.3)."
+      },
       "Check": {
         "properties": {
           "ok": {
@@ -2080,6 +2219,48 @@
             },
             "type": "array",
             "title": "Sessions"
+          },
+          "cards": {
+            "items": {
+              "$ref": "#/components/schemas/Card"
+            },
+            "type": "array",
+            "title": "Cards"
+          },
+          "card_states": {
+            "items": {
+              "$ref": "#/components/schemas/CardState"
+            },
+            "type": "array",
+            "title": "Card States"
+          },
+          "reviews": {
+            "items": {
+              "$ref": "#/components/schemas/Review"
+            },
+            "type": "array",
+            "title": "Reviews"
+          },
+          "quiz_attempts": {
+            "items": {
+              "$ref": "#/components/schemas/QuizAttempt"
+            },
+            "type": "array",
+            "title": "Quiz Attempts"
+          },
+          "quiz_runs": {
+            "items": {
+              "$ref": "#/components/schemas/QuizRun"
+            },
+            "type": "array",
+            "title": "Quiz Runs"
+          },
+          "activity_progress": {
+            "items": {
+              "$ref": "#/components/schemas/ActivityProgress"
+            },
+            "type": "array",
+            "title": "Activity Progress"
           }
         },
         "additionalProperties": false,
@@ -2089,7 +2270,125 @@
           "exported_at"
         ],
         "title": "ProgressExport",
-        "description": "JSON document produced by ``rc progress export`` (FR-10.2)."
+        "description": "JSON document produced by ``rc progress export`` (FR-10.2).\n\nLists added in schema version 2 default to empty, so a version-1 export still imports."
+      },
+      "QuizAttempt": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "user_id": {
+            "type": "integer",
+            "title": "User Id",
+            "default": 1
+          },
+          "lesson_id": {
+            "type": "string",
+            "title": "Lesson Id"
+          },
+          "question_id": {
+            "type": "string",
+            "title": "Question Id"
+          },
+          "answered_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Answered At"
+          },
+          "answer": {
+            "type": "string",
+            "title": "Answer"
+          },
+          "correct": {
+            "type": "boolean",
+            "title": "Correct"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "lesson_id",
+          "question_id",
+          "answered_at",
+          "answer",
+          "correct"
+        ],
+        "title": "QuizAttempt",
+        "description": "One answered question of a quiz run."
+      },
+      "QuizRun": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "user_id": {
+            "type": "integer",
+            "title": "User Id",
+            "default": 1
+          },
+          "lesson_id": {
+            "type": "string",
+            "title": "Lesson Id"
+          },
+          "activity_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Activity Id"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Started At"
+          },
+          "finished_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Finished At"
+          },
+          "correct": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Correct"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Total"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "lesson_id",
+          "started_at",
+          "finished_at",
+          "correct",
+          "total"
+        ],
+        "title": "QuizRun",
+        "description": "A completed ``rc quiz`` session: score and timing (AC-4.2)."
       },
       "Readiness": {
         "properties": {
@@ -2370,6 +2669,71 @@
           "lesson_ids"
         ],
         "title": "ResourceRef"
+      },
+      "Review": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "card_id": {
+            "type": "string",
+            "title": "Card Id"
+          },
+          "user_id": {
+            "type": "integer",
+            "title": "User Id",
+            "default": 1
+          },
+          "reviewed_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Reviewed At"
+          },
+          "rating": {
+            "type": "string",
+            "enum": [
+              "again",
+              "hard",
+              "good",
+              "easy"
+            ],
+            "title": "Rating"
+          },
+          "interval_before": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Interval Before"
+          },
+          "interval_after": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Interval After"
+          },
+          "ease_after": {
+            "type": "number",
+            "title": "Ease After"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "card_id",
+          "reviewed_at",
+          "rating",
+          "interval_before",
+          "interval_after",
+          "ease_after"
+        ],
+        "title": "Review",
+        "description": "One answer given during ``rc review``."
       },
       "Session": {
         "properties": {

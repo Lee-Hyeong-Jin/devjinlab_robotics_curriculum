@@ -26,6 +26,7 @@ from typing import Any, Self
 from sqlalchemy import (
     Connection,
     Engine,
+    Table,
     create_engine,
     delete,
     func,
@@ -39,11 +40,29 @@ from sqlalchemy.engine import RowMapping, make_url
 
 from robotics_curriculum.progress.models import (
     DEFAULT_USER,
+    ActivityProgress,
+    Card,
+    CardState,
     LessonProgress,
     LessonStatus,
+    QuizAttempt,
+    QuizRun,
+    Review,
     Session,
 )
-from robotics_curriculum.progress.schema import lesson_progress, meta_table, metadata, sessions
+from robotics_curriculum.progress.schema import (
+    ALL_TABLES,
+    activity_progress,
+    card_state,
+    cards,
+    lesson_progress,
+    meta_table,
+    metadata,
+    quiz_attempts,
+    quiz_runs,
+    reviews,
+    sessions,
+)
 from robotics_curriculum.progress.store import SCHEMA_VERSION
 
 __all__ = [
@@ -153,6 +172,10 @@ def _utc(value: datetime | None) -> datetime | None:
     if value.tzinfo is None:
         value = value.replace(tzinfo=UTC)
     return value.astimezone(UTC)
+
+
+def _card_row(row: RowMapping) -> dict[str, Any]:
+    return {**row, "created_at": _utc(row["created_at"])}
 
 
 def _lesson(row: RowMapping) -> LessonProgress:
@@ -278,6 +301,33 @@ class PostgresProgressStore:
         with self.engine.begin() as conn:
             yield conn
 
+    # -- small SQL helpers -----------------------------------------------------
+
+    def _upsert(self, table: Table, values: dict[str, Any], key: tuple[str, ...]) -> None:
+        stmt = pg_insert(table).values(**values)
+        updates = {k: stmt.excluded[k] for k in values if k not in key}
+        stmt = stmt.on_conflict_do_update(
+            index_elements=[table.c[name] for name in key], set_=updates
+        )
+        with self._connection() as conn:
+            conn.execute(stmt)
+
+    def _insert_returning_id(self, table: Table, values: dict[str, Any]) -> int:
+        """Insert a row whose id the database generates; an explicit id resyncs the sequence."""
+        explicit = values.get("id") is not None
+        if not explicit:
+            values = {k: v for k, v in values.items() if k != "id"}
+        with self._connection() as conn:
+            new_id = conn.execute(insert(table).values(**values).returning(table.c.id)).scalar_one()
+            if explicit:
+                conn.execute(
+                    text(
+                        f"SELECT setval(pg_get_serial_sequence('{table.name}', 'id'), "
+                        f"(SELECT MAX(id) FROM {table.name}))"
+                    )
+                )
+        return int(new_id)
+
     # -- lesson_progress -------------------------------------------------------
 
     def get_lesson(self, lesson_id: str, user_id: int = DEFAULT_USER) -> LessonProgress | None:
@@ -390,19 +440,162 @@ class PostgresProgressStore:
             rows = conn.execute(query).mappings().all()
         return [_session(row) for row in rows]
 
+    # -- schema v2: cards, SM-2 state, reviews, quiz records (P1-2) ------------
+
+    def get_card(self, card_id: str, user_id: int = DEFAULT_USER) -> Card | None:
+        with self._connection() as conn:
+            row = (
+                conn.execute(select(cards).where(cards.c.user_id == user_id, cards.c.id == card_id))
+                .mappings()
+                .one_or_none()
+            )
+        return None if row is None else Card(**_card_row(row))
+
+    def save_card(self, card: Card) -> None:
+        values = {
+            "user_id": card.user_id,
+            "id": card.id,
+            "lesson_id": card.lesson_id,
+            "question_id": card.question_id,
+            "front": card.front,
+            "back": card.back,
+            "source": card.source,
+            "created_at": _utc(card.created_at),
+            "suspended": card.suspended,
+        }
+        self._upsert(cards, values, ("user_id", "id"))
+
+    def list_cards(
+        self, user_id: int | None = DEFAULT_USER, lesson_id: str | None = None
+    ) -> list[Card]:
+        query = select(cards).order_by(cards.c.user_id, cards.c.id)
+        if user_id is not None:
+            query = query.where(cards.c.user_id == user_id)
+        if lesson_id is not None:
+            query = query.where(cards.c.lesson_id == lesson_id)
+        with self._connection() as conn:
+            rows = conn.execute(query).mappings().all()
+        return [Card(**_card_row(row)) for row in rows]
+
+    def get_card_state(self, card_id: str, user_id: int = DEFAULT_USER) -> CardState | None:
+        with self._connection() as conn:
+            row = (
+                conn.execute(
+                    select(card_state).where(
+                        card_state.c.user_id == user_id, card_state.c.card_id == card_id
+                    )
+                )
+                .mappings()
+                .one_or_none()
+            )
+        return None if row is None else CardState(**row)
+
+    def save_card_state(self, state: CardState) -> None:
+        self._upsert(card_state, dict(state), ("user_id", "card_id"))
+
+    def list_card_states(self, user_id: int | None = DEFAULT_USER) -> list[CardState]:
+        query = select(card_state).order_by(card_state.c.user_id, card_state.c.card_id)
+        if user_id is not None:
+            query = query.where(card_state.c.user_id == user_id)
+        with self._connection() as conn:
+            return [CardState(**row) for row in conn.execute(query).mappings().all()]
+
+    def add_review(self, review: Review) -> Review:
+        values = dict(review)
+        values["reviewed_at"] = _utc(review.reviewed_at)
+        return review.model_copy(update={"id": self._insert_returning_id(reviews, values)})
+
+    def list_reviews(
+        self, user_id: int | None = DEFAULT_USER, card_id: str | None = None
+    ) -> list[Review]:
+        query = select(reviews).order_by(reviews.c.id)
+        if user_id is not None:
+            query = query.where(reviews.c.user_id == user_id)
+        if card_id is not None:
+            query = query.where(reviews.c.card_id == card_id)
+        with self._connection() as conn:
+            rows = conn.execute(query).mappings().all()
+        return [Review(**{**row, "reviewed_at": _utc(row["reviewed_at"])}) for row in rows]
+
+    def add_quiz_attempt(self, attempt: QuizAttempt) -> QuizAttempt:
+        values = dict(attempt)
+        values["answered_at"] = _utc(attempt.answered_at)
+        return attempt.model_copy(update={"id": self._insert_returning_id(quiz_attempts, values)})
+
+    def list_quiz_attempts(
+        self, user_id: int | None = DEFAULT_USER, lesson_id: str | None = None
+    ) -> list[QuizAttempt]:
+        query = select(quiz_attempts).order_by(quiz_attempts.c.id)
+        if user_id is not None:
+            query = query.where(quiz_attempts.c.user_id == user_id)
+        if lesson_id is not None:
+            query = query.where(quiz_attempts.c.lesson_id == lesson_id)
+        with self._connection() as conn:
+            rows = conn.execute(query).mappings().all()
+        return [QuizAttempt(**{**row, "answered_at": _utc(row["answered_at"])}) for row in rows]
+
+    def add_quiz_run(self, run: QuizRun) -> QuizRun:
+        values = dict(run)
+        values["started_at"] = _utc(run.started_at)
+        values["finished_at"] = _utc(run.finished_at)
+        return run.model_copy(update={"id": self._insert_returning_id(quiz_runs, values)})
+
+    def list_quiz_runs(
+        self, user_id: int | None = DEFAULT_USER, lesson_id: str | None = None
+    ) -> list[QuizRun]:
+        query = select(quiz_runs).order_by(quiz_runs.c.id)
+        if user_id is not None:
+            query = query.where(quiz_runs.c.user_id == user_id)
+        if lesson_id is not None:
+            query = query.where(quiz_runs.c.lesson_id == lesson_id)
+        with self._connection() as conn:
+            rows = conn.execute(query).mappings().all()
+        return [
+            QuizRun(
+                **{
+                    **row,
+                    "started_at": _utc(row["started_at"]),
+                    "finished_at": _utc(row["finished_at"]),
+                }
+            )
+            for row in rows
+        ]
+
+    def save_activity(self, progress: ActivityProgress) -> None:
+        values = dict(progress)
+        values["status"] = progress.status.value
+        values["updated_at"] = _utc(progress.updated_at)
+        self._upsert(activity_progress, values, ("user_id", "activity_id"))
+
+    def list_activities(self, user_id: int | None = DEFAULT_USER) -> list[ActivityProgress]:
+        query = select(activity_progress).order_by(
+            activity_progress.c.user_id, activity_progress.c.activity_id
+        )
+        if user_id is not None:
+            query = query.where(activity_progress.c.user_id == user_id)
+        with self._connection() as conn:
+            rows = conn.execute(query).mappings().all()
+        return [
+            ActivityProgress(
+                **{
+                    **row,
+                    "status": LessonStatus(row["status"]),
+                    "updated_at": _utc(row["updated_at"]),
+                }
+            )
+            for row in rows
+        ]
+
     # -- bulk ------------------------------------------------------------------
 
     def is_empty(self) -> bool:
         with self._connection() as conn:
-            return not any(
-                conn.execute(select(table).limit(1)).first()
-                for table in (lesson_progress, sessions)
-            )
+            return not any(conn.execute(select(table).limit(1)).first() for table in ALL_TABLES)
 
     def clear(self) -> None:
         with self.transaction(), self._connection() as conn:
-            conn.execute(delete(sessions))
-            conn.execute(delete(lesson_progress))
+            for table in ALL_TABLES:
+                conn.execute(delete(table))
 
     def delete_user(self, user_id: int) -> tuple[int, int]:
         """Delete every row for one user (account deletion, FR-10.7).
@@ -417,4 +610,7 @@ class PostgresProgressStore:
             removed_lessons = conn.execute(
                 delete(lesson_progress).where(lesson_progress.c.user_id == user_id)
             ).rowcount
+            for table in ALL_TABLES:
+                if table is not sessions and table is not lesson_progress:
+                    conn.execute(delete(table).where(table.c.user_id == user_id))
         return removed_lessons, removed_sessions
