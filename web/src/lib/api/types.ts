@@ -55,6 +55,17 @@ export type DoneResult = Schemas['DoneResult']
 export type StudySession = Schemas['StudySession']
 export type Report = Schemas['Report']
 
+/**
+ * `Report.summary` is a union of the weekly and module shapes, and the
+ * discriminating `kind` lives on the report, not the summary — so narrowing
+ * needs a guard.
+ */
+export function isWeeklySummary(
+  summary: Report['summary'],
+): summary is Extract<Report['summary'], { session_count: number }> {
+  return 'session_count' in summary
+}
+
 /** A stage of the course: one level with its module summaries. */
 export type CourseStage = NonNullable<Course['stages']>[number]
 

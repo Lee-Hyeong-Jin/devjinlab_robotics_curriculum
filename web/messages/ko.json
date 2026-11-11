@@ -16,7 +16,8 @@
     "themeSystem": "시스템",
     "language": "언어",
     "search": "검색",
-    "review": "복습"
+    "review": "복습",
+    "reports": "리포트"
   },
   "dashboard": {
     "title": "대시보드",
@@ -421,5 +422,19 @@
     "rateFailed": "평가를 저장하지 못했습니다.",
     "sourceQuiz": "퀴즈",
     "sourceConcept": "개념"
+  },
+  "reports": {
+    "title": "주간 리포트",
+    "subtitle": "이번 주 학습 시간, 완료한 레슨, 복습 현황입니다.",
+    "generatedAt": "{at} 생성",
+    "period": "기간",
+    "studyTime": "학습 시간",
+    "sessions": "세션",
+    "sessionCount": "{count}회",
+    "activeDays": "학습한 날",
+    "dayCount": "{count}일",
+    "body": "리포트 본문",
+    "empty": "이번 주 기록이 없습니다.",
+    "unavailable": "리포트를 불러올 수 없습니다."
   }
 }

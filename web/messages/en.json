@@ -16,7 +16,8 @@
     "themeSystem": "System",
     "language": "Language",
     "search": "Search",
-    "review": "Review"
+    "review": "Review",
+    "reports": "Reports"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -421,5 +422,19 @@
     "rateFailed": "Could not save the rating.",
     "sourceQuiz": "Quiz",
     "sourceConcept": "Concept"
+  },
+  "reports": {
+    "title": "Weekly report",
+    "subtitle": "Study time, lessons finished and review activity this week.",
+    "generatedAt": "generated {at}",
+    "period": "Period",
+    "studyTime": "Study time",
+    "sessions": "Sessions",
+    "sessionCount": "{count}",
+    "activeDays": "Active days",
+    "dayCount": "{count}",
+    "body": "Report",
+    "empty": "Nothing recorded this week.",
+    "unavailable": "The report could not be loaded."
   }
 }
