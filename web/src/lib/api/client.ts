@@ -89,7 +89,15 @@ interface RawRequest extends RequestOptions {
   body?: unknown
 }
 
-async function request<T>({
+/** A response plus the cookies the API asked the browser to set. */
+export interface SendResult<T> {
+  data: T
+  /** Raw `Set-Cookie` values, for a Server Action to replay onto the browser. */
+  setCookie: string[]
+  status: number
+}
+
+async function send<T>({
   method,
   path,
   body,
@@ -97,7 +105,7 @@ async function request<T>({
   query,
   redirectOnUnauthorized = true,
   tags,
-}: RawRequest): Promise<T> {
+}: RawRequest): Promise<SendResult<T>> {
   const url = buildUrl(path, query)
   const init: RequestInit & { next?: { revalidate?: number; tags?: string[] } } = {
     method,
@@ -134,8 +142,14 @@ async function request<T>({
     )
   }
 
-  if (response.status === 204) return undefined as T
-  return (await response.json()) as T
+  const setCookie =
+    typeof response.headers.getSetCookie === 'function' ? response.headers.getSetCookie() : []
+  const data = response.status === 204 ? (undefined as T) : ((await response.json()) as T)
+  return { data, setCookie, status: response.status }
+}
+
+async function request<T>(options: RawRequest): Promise<T> {
+  return (await send<T>(options)).data
 }
 
 /** GET a contract path; the result type comes from the OpenAPI schema. */
@@ -167,6 +181,23 @@ export async function apiGetOrNull<P extends GetPath>(
 /** POST to a contract path. Sends the double-submit CSRF header automatically. */
 export function apiPost<T>(path: string, body?: unknown, options: RequestOptions = {}): Promise<T> {
   return request<T>({ method: 'POST', path, body, ...options })
+}
+
+/**
+ * POST and keep the response envelope, so a Server Action can replay the API's
+ * `Set-Cookie` (the `sid` session cookie) onto the browser.
+ */
+export function apiPostRaw<T>(
+  path: string,
+  body?: unknown,
+  options: RequestOptions = {},
+): Promise<SendResult<T>> {
+  return send<T>({ method: 'POST', path, body, ...options })
+}
+
+/** PUT to a contract path. */
+export function apiPut<T>(path: string, body?: unknown, options: RequestOptions = {}): Promise<T> {
+  return request<T>({ method: 'PUT', path, body, ...options })
 }
 
 /** PATCH a contract path. */

@@ -20,9 +20,15 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode
 }
 
-export function Button({ kind = 'primary', className, children, ...rest }: ButtonProps) {
+export function Button({
+  kind = 'primary',
+  type = 'button',
+  className,
+  children,
+  ...rest
+}: ButtonProps) {
   return (
-    <button type="button" className={cx(BASE, KIND_CLASS[kind], className)} {...rest}>
+    <button type={type} className={cx(BASE, KIND_CLASS[kind], className)} {...rest}>
       {children}
     </button>
   )
