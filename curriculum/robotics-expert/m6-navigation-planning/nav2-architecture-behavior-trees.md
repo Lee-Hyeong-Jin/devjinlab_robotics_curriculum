@@ -207,6 +207,47 @@ print("실행 순서:", " → ".join(log))
 2. PipelineSequence 와 RateController 를 함께 쓰면 "주행 중 1 Hz 재계획"이 어떻게 구현되는가?
 3. 로봇이 좁은 문 앞에서 계속 Spin 만 반복한다면 BT·비용 지도·컨트롤러 중 무엇부터 확인하겠는가?
 
+## 확인 퀴즈
+
+`rc quiz m6-nav2-architecture-behavior-trees` 로 풀 수 있다. 오답은 복습 카드가 된다.
+
+```quiz
+activity: m6-nav2-architecture-behavior-trees-quiz
+questions:
+  - id: q1
+    type: single
+    prompt: '`map → odom` tf 가 발행되지 않으면 Nav2 에서 무슨 일이 생기는가?'
+    choices:
+      - '전역 경로만 못 만들고 지역 주행은 정상이다'
+      - '비용 지도가 로봇 자세를 `map` 에 놓을 수 없어 갱신되지 않고, 계획·제어가 모두 멈춘다'
+      - '회복 동작(Spin)이 자동으로 성공한다'
+      - 'AMCL 이 대신 경로를 만든다'
+    answer: 1
+    explanation: '비용 지도는 센서 관측을 지도 프레임에 넣기 위해 tf 체인이 온전해야 한다. `map → odom` 이 끊기면 전역 비용 지도가 갱신되지 않고 플래너가 실패하며, BT 는 회복을 반복하다 중단된다. "tf 트리가 끊기면 내비게이션 전체가 멈춘다"가 핵심이다.'
+    concept: { front: 'tf 체인이 끊길 때의 Nav2', back: '비용 지도 갱신 불가 → 계획·제어 모두 실패. `view_frames` 로 트리를 먼저 확인' }
+  - id: q2
+    type: single
+    prompt: 'PipelineSequence 안에서 재계획 노드를 RateController 로 감싸면?'
+    choices:
+      - '재계획이 지정한 빈도(예: 1 Hz)로만 tick 되고, 그 사이에도 뒤쪽의 추종 노드는 계속 실행된다'
+      - '재계획이 매 tick 마다 실행된다'
+      - '추종이 멈추고 재계획만 반복된다'
+      - '재계획이 한 번만 실행된다'
+    answer: 0
+    explanation: 'RateController 는 자식의 tick 빈도를 제한하는 데코레이터이고, PipelineSequence 는 앞 자식이 RUNNING 이어도 뒤 자식을 계속 tick 한다. 둘을 합치면 "1 Hz 로 경로를 다시 계산하면서 그 사이에는 계속 추종"이 된다.'
+    concept: { front: '주행 중 1 Hz 재계획 구현', back: 'PipelineSequence + RateController(1 Hz)로 재계획 노드를 감싼다' }
+  - id: q3
+    type: single
+    prompt: '로봇이 좁은 문 앞에서 Spin 회복만 반복한다. 가장 먼저 확인할 것은?'
+    choices:
+      - 'BT XML 의 노드 순서'
+      - '비용 지도 — 팽창 반경·내접 반경 때문에 문이 통과 불가로 표시되는지'
+      - '컨트롤러의 속도 상한'
+      - 'DDS 구현 설정'
+    answer: 1
+    explanation: 'Spin 반복은 보통 "플래너가 경로를 못 찾는다"는 신호다. 문 너비가 팽창된 비용 때문에 막혀 있으면 어떤 플래너도 통과 경로를 못 만든다. RViz 에서 비용 지도를 띄워 문이 열려 있는지 보고, `inflation_radius`·`cost_scaling_factor`·로봇 풋프린트를 점검하는 것이 먼저다.'
+```
+
 ## 이 단계 공부법
 
 1. **문서(먼저):** Nav2 Navigation Concepts 에서 서버 구성도와 Behavior Trees 절을 읽는다.
