@@ -21,6 +21,7 @@ from robotics_curriculum.progress import (
     parse_duration,
 )
 from robotics_curriculum.report.cli import report_app
+from robotics_curriculum.roadmap import roadmap
 from robotics_curriculum.site.cli import site_app
 
 app = typer.Typer(help="Robotics curriculum tools.", no_args_is_help=True)
@@ -112,6 +113,13 @@ def _status_label(summary: LessonSummary) -> str:
     return _LABEL[summary.status.value]
 
 
+def _warn_locked(service: ProgressService, lesson_id: str) -> None:
+    """Forced open of a locked lesson: warn on stderr but carry on."""
+    missing = service.missing_prerequisites(lesson_id)
+    if missing:
+        typer.echo(f"warning: prerequisites not done: {', '.join(missing)}", err=True)
+
+
 @app.command()
 def version() -> None:
     """Print the installed version."""
@@ -188,6 +196,7 @@ def start(
     """Start a study timer for a lesson (only one may run at a time)."""
     with _service(ctx) as service:
         session = service.start(lesson_id)
+        _warn_locked(service, lesson_id)
         title = service.lesson(lesson_id).title
     typer.echo(f"started {lesson_id} ({title}) at {session.started_at:%Y-%m-%d %H:%M} UTC")
 
@@ -220,6 +229,7 @@ def log(
     with _service(ctx) as service:
         minutes = parse_duration(duration)
         service.log(lesson_id, minutes, note)
+        _warn_locked(service, lesson_id)
     typer.echo(f"logged {_fmt_seconds(minutes * 60)} on {lesson_id}")
 
 
@@ -236,6 +246,7 @@ def done(
     """Mark a lesson done (stops its running timer, if any)."""
     with _service(ctx) as service:
         progress, unlocked = service.done(lesson_id, understanding=understanding, note=note)
+        _warn_locked(service, lesson_id)
         title = service.lesson(lesson_id).title
     extra = f", 이해도 {progress.understanding}" if progress.understanding else ""
     typer.echo(f"done {lesson_id} ({title}), time {_fmt_seconds(progress.total_seconds)}{extra}")
@@ -310,6 +321,7 @@ def progress_import(
 
 app.command()(resources)
 app.command()(show)
+app.command()(roadmap)
 
 
 if __name__ == "__main__":

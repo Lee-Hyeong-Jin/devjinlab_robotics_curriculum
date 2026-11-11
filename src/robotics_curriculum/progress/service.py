@@ -151,6 +151,16 @@ class ProgressService:
         self.store.save_lesson(progress)
         return progress
 
+    def missing_prerequisites(self, lesson_id: str) -> list[str]:
+        """Prerequisite lesson ids of ``lesson_id`` that are not done yet (empty = unlocked)."""
+        lesson = self._entry(lesson_id).lesson
+        done = {
+            p.lesson_id
+            for p in self.store.list_lessons(self.user_id)
+            if p.status is LessonStatus.DONE
+        }
+        return [p for p in lesson.prerequisites if p not in done]
+
     def current_session(self) -> Session | None:
         return self.store.open_session(self.user_id)
 
