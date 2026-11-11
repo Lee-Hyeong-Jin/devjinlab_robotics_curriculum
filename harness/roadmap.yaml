@@ -92,22 +92,22 @@ milestones:
 
     - id: P1-4
       title: 학습 자료·학습 방법 라이브러리 (FR-6)
-      status: in_progress
+      status: done
       depends_on: [P0-3]
       goal: 레슨별 resources 와 "이 단계 공부법" 을 CLI 와 정적 사이트에서 보기 좋게 보여주고, research_notes/ 의 조사 결과를 자료 목록으로 연결한다.
       acceptance:
         - `rc resources <lesson_id>` 가 레슨의 resources 를 종류별로 출력하고 테스트가 있다
         - 정적 사이트 레슨 페이지에 "이 단계 공부법" 절과 자료 목록이 렌더링된다
         - 자료 항목의 url 형식이 `rc validate` 에서 검사된다
-      note: CLI done (e772270); site rendering with P1-5
+      note: CLI + site rendering (e772270, 123e88f)
 
     - id: P1-5
       title: 정적 사이트·대시보드 (Phase 1 MVP 마감)
-      status: todo
+      status: done
       depends_on: [P0-4, P1-2, P1-3, P1-4]
       goal: 레슨 뷰어(수식·코드 렌더링), 로드맵, 대시보드(진도율, 주간 학습 시간, streak, 오늘 복습 수)를 정적 사이트로 생성한다.
       acceptance:
         - `rc site build` 가 정적 사이트를 생성하고 레슨 본문의 KaTeX 수식과 코드 하이라이트가 렌더링된다
         - 대시보드 페이지에 트랙별 진도율, 주간 학습 시간, streak, 오늘 복습 수가 표시된다
         - 사이트 빌드가 테스트로 커버되고 네트워크 없이 동작한다
-      note:
+      note: static site merged (123e88f)
