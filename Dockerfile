@@ -20,7 +20,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-dev --no-editable
 
 # ---- runtime: slim Python with only the virtualenv and the content ----
-FROM python:3.12-slim-bookworm AS runtime
+FROM python:3.15-slim-bookworm AS runtime
 
 RUN groupadd --system --gid 10001 rc \
     && useradd --system --uid 10001 --gid rc --home-dir /app --shell /usr/sbin/nologin rc
@@ -51,7 +51,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 # ---- api: server mode (P2-5, docs/architecture/operations.md) ----
 # Build with: docker build --target api -t robotics-curriculum-api:local .
-FROM python:3.12-slim-bookworm AS api
+FROM python:3.15-slim-bookworm AS api
 
 RUN groupadd --system --gid 10001 rc \
     && useradd --system --uid 10001 --gid rc --home-dir /app --shell /usr/sbin/nologin rc
