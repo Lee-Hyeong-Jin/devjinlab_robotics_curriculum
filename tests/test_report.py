@@ -18,7 +18,7 @@ from robotics_curriculum.report import (
     render_weekly,
 )
 
-CURRICULUM = Path(__file__).resolve().parents[1] / "curriculum"
+CURRICULUM = Path(__file__).resolve().parent / "fixtures" / "curriculum"
 VECTORS = "m1-vectors-matrices"
 ROTATION = "m1-rotation-representations"
 DH = "m2-dh-parameters"
