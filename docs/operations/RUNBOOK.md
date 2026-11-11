@@ -148,6 +148,21 @@ curl -fsS localhost:8000/version                     # 4. 확인
 있다. 되돌릴 때는 `docker compose run --rm --entrypoint alembic api downgrade -1` 후 이전
 이미지로 되돌린다. 컬럼 삭제가 포함된 릴리스는 스냅샷에서 복구하는 쪽이 안전하다.
 
+## 7.1 지속 배포 (pull 방식)
+
+단일 호스트(홈서버, 소형 VPS)는 `scripts/ops/deploy_pull.sh` 를 cron 이나 systemd 타이머로 돌린다.
+호스트가 바깥으로만 요청하므로 포트를 열거나 GitHub 에 비밀을 둘 필요가 없다.
+
+```cron
+*/5 * * * * /path/to/rc-deploy/scripts/ops/deploy_pull.sh >> /path/to/rc-deploy/deploy.log 2>&1
+```
+
+동작: `origin/main` 에 새 커밋이 있고 그 커밋의 GitHub Actions `CI` 가 `success` 일 때만 배포한다.
+배포 전에 `scripts/ops/backup.sh` 로 백업하고, 빨리 감기로 받은 뒤 `docker compose up -d --build --wait web`
+과 헬스 체크(`/readyz`, 웹 `/login`)를 통과해야 완료로 본다. 실패하면 이전 커밋으로 되돌려 다시 올린다.
+설정은 스크립트 머리말의 `DEPLOY_*` 환경 변수를 본다(비공개 저장소는 `DEPLOY_GITHUB_TOKEN` 필요).
+배포 체크아웃에는 `.env` 가 있어야 하고, 호스트별 덮어쓰기는 `docker-compose.override.yml` 에 둔다.
+
 ## 8. 설정
 
 주요 환경 변수(전체 표는 operations.md §6).

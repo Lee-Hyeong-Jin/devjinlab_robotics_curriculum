@@ -19,11 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and from the module overview.
 - Web: quiz explanations are rendered with the lesson Markdown pipeline (KaTeX, code, GFM and
   the same sanitiser) instead of being printed as their Markdown source.
+- `scripts/ops/deploy_pull.sh`: pull-based continuous deployment for a single host (deploys only commits with a green CI run, backs up first, rolls back on failure).
 
 ### Fixed
 
-- Web: `src/lib/api/schema.d.ts` was generated from an older contract and no longer matched
-  `docs/api/openapi.yaml` (it still had `lang` optional on lessons). Regenerated.
+- CI: restore-drill teardown now passes the required compose secrets; e2e jobs pin `ubuntu-24.04` for the Playwright browser install; generated web API types are back in step with the OpenAPI schema.
 
 ## [0.2.0] - 2026-11-12
 
