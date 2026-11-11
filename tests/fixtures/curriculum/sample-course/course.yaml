@@ -1,0 +1,7 @@
+id: sample-course
+title: 샘플 코스
+summary: 테스트 전용 고정 커리큘럼. 실제 콘텐츠와 무관하다.
+tags: [test]
+modules:
+  - m1-math-physics
+  - m2-kinematics

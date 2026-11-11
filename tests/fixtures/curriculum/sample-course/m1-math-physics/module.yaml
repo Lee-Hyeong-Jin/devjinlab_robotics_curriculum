@@ -1,0 +1,7 @@
+id: m1-math-physics
+title: M1 수학·물리
+summary: 테스트용 모듈.
+level: 기초
+lessons:
+  - vectors-matrices
+  - rotation-representations

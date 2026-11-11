@@ -21,7 +21,7 @@ from robotics_curriculum.progress import (
     parse_duration,
 )
 
-CURRICULUM = Path(__file__).resolve().parents[1] / "curriculum"
+CURRICULUM = Path(__file__).resolve().parent / "fixtures" / "curriculum"
 VECTORS = "m1-vectors-matrices"
 ROTATION = "m1-rotation-representations"
 DH = "m2-dh-parameters"
@@ -172,7 +172,7 @@ def test_next_respects_prerequisites(service: ProgressService) -> None:
     service.done(VECTORS)
     assert [s.lesson.id for s in service.next_lessons()] == [ROTATION, DH]
     service.log(DH, 5)  # in-progress lessons are recommended first
-    assert [s.lesson.id for s in service.next_lessons("robotics-basics")] == [DH, ROTATION]
+    assert [s.lesson.id for s in service.next_lessons("sample-course")] == [DH, ROTATION]
     assert [s.lesson.id for s in service.next_lessons(limit=1)] == [DH]
     service.done(DH)
     service.done(ROTATION)

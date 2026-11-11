@@ -1,0 +1,5 @@
+id: m2-kinematics
+title: M2 로봇 운동학
+summary: 테스트용 모듈.
+lessons:
+  - dh-parameters
