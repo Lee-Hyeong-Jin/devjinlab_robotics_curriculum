@@ -9,9 +9,9 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Query, status
+from fastapi import APIRouter, Depends, Query, status
 
-from robotics_curriculum.api.deps import Index, Progress
+from robotics_curriculum.api.deps import Index, Progress, get_principal
 from robotics_curriculum.api.problems import problem_responses
 from robotics_curriculum.api.schemas import (
     DoneRequest,
@@ -24,14 +24,14 @@ from robotics_curriculum.api.schemas import (
     StopRequest,
     StudySession,
 )
-from robotics_curriculum.progress import LessonProgress, ProgressExport
+from robotics_curriculum.progress import LessonProgress
 
 router = APIRouter(
+    dependencies=[Depends(get_principal)],
     prefix="/api/v1/progress",
     tags=["progress"],
     responses=problem_responses(404, 409, 422, 503),
 )
-me_router = APIRouter(prefix="/api/v1/me", tags=["me"], responses=problem_responses(503))
 
 CourseFilter = Annotated[str | None, Query(alias="course", description="Only this course id.")]
 
@@ -114,10 +114,3 @@ def done(body: DoneRequest, index: Index, progress: Progress) -> DoneResult:
             body.lesson_id, understanding=body.understanding, note=body.note
         )
     return DoneResult(progress=saved, unlocked_lesson_ids=[les.id for les in unlocked])
-
-
-@me_router.get("/export", response_model=ProgressExport)
-def export(progress: Progress) -> ProgressExport:
-    """All progress rows and sessions: the same JSON as ``rc progress export``."""
-    with progress.open() as service:
-        return service.export()
