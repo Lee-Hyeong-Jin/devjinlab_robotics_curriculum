@@ -1530,6 +1530,13 @@
             "type": "array",
             "title": "Resources"
           },
+          "content_format": {
+            "type": "string",
+            "const": "markdown",
+            "title": "Content Format",
+            "description": "Format of `body` and `study_method`.",
+            "default": "markdown"
+          },
           "body": {
             "type": "string",
             "title": "Body",

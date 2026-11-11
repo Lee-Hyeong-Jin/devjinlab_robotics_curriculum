@@ -82,6 +82,9 @@ class Lesson(LessonSummary):
     objectives: list[str]
     activities: list[Activity]
     resources: list[Resource]
+    content_format: Literal["markdown"] = Field(
+        default="markdown", description="Format of `body` and `study_method`."
+    )
     body: str = Field(description="Markdown body without front matter.")
     study_method: str | None = Field(
         description='Markdown of the "## 이 단계 공부법" section, if the lesson has one.'
