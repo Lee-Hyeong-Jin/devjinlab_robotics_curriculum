@@ -1,0 +1,130 @@
+{
+  "app": {
+    "title": "로보틱스 전문가 코스",
+    "shortTitle": "로보틱스 코스",
+    "skipToContent": "본문으로 건너뛰기",
+    "mainNavigation": "주요 메뉴",
+    "loading": "불러오는 중"
+  },
+  "nav": {
+    "dashboard": "대시보드",
+    "roadmap": "로드맵",
+    "resources": "자료실",
+    "theme": "테마",
+    "themeLight": "라이트",
+    "themeDark": "다크",
+    "themeSystem": "시스템",
+    "language": "언어"
+  },
+  "dashboard": {
+    "title": "대시보드",
+    "subtitle": "진행 상황과 다음 학습을 한눈에 봅니다.",
+    "current": "현재 학습",
+    "noCurrent": "진행 중인 모듈이 없습니다.",
+    "nextLesson": "다음 레슨",
+    "openLesson": "레슨 열기",
+    "weeklyMinutes": "주간 학습 시간",
+    "weeklyGoal": "목표 {goal}",
+    "streak": "연속 학습일",
+    "streakDays": "{days}일",
+    "dueCards": "오늘 복습",
+    "dueCardsValue": "{count}장",
+    "dueCardsCli": "복습은 CLI(`rc review`)에서 사용하세요.",
+    "courseProgress": "코스 진행률",
+    "stageProgress": "단계별 진행률",
+    "openSession": "진행 중인 학습 세션",
+    "openSessionSince": "{at} 부터",
+    "recent": "최근 활동",
+    "noRecent": "기록된 활동이 없습니다.",
+    "pending": "백엔드가 이 값을 아직 제공하지 않습니다.",
+    "moduleLessons": "레슨 {done}/{total}"
+  },
+  "roadmap": {
+    "title": "로드맵",
+    "subtitle": "단계 → 모듈 → 레슨 순서와 선수지식 흐름입니다.",
+    "stage": "{level} 단계",
+    "lessonCount": "레슨 {count}개",
+    "tableCaption": "단계별 모듈 진행 상황 (그래프의 텍스트 대안)",
+    "colModule": "모듈",
+    "colStage": "단계",
+    "colState": "상태",
+    "colProgress": "진행률",
+    "prerequisites": "선수지식",
+    "empty": "로드맵을 불러올 수 없습니다."
+  },
+  "module": {
+    "lessons": "레슨",
+    "resources": "모듈 자료",
+    "estimated": "예상 {minutes}",
+    "difficulty": "난이도 {level}/5",
+    "empty": "이 모듈에는 아직 레슨이 없습니다.",
+    "backToRoadmap": "로드맵으로"
+  },
+  "lesson": {
+    "studyMethod": "이 단계 공부법",
+    "objectives": "학습 목표",
+    "activities": "활동",
+    "resources": "자료",
+    "body": "본문",
+    "prev": "이전 레슨",
+    "next": "다음 레슨",
+    "toModule": "모듈 개요",
+    "estimated": "예상 {minutes}",
+    "studied": "학습 시간 {duration}",
+    "understanding": "이해도 {score}/5",
+    "note": "메모",
+    "writeActionsPending": "타이머·완료 표시는 CLI(`rc study`, `rc done`)에서 사용하세요. 웹 쓰기 동작은 다음 단계에서 추가됩니다.",
+    "onThisPage": "이 페이지 목차",
+    "empty": "본문이 없습니다.",
+    "difficulty": "난이도 {level}/5"
+  },
+  "resources": {
+    "title": "자료실",
+    "subtitle": "모듈·레슨별 추천 자료입니다. 외부 링크는 새 탭에서 열립니다.",
+    "search": "자료 검색",
+    "searchPlaceholder": "제목·메모 검색",
+    "filterKind": "종류",
+    "filterAll": "전체",
+    "count": "자료 {count}개",
+    "colTitle": "제목",
+    "colKind": "종류",
+    "colNote": "범위 메모",
+    "colLessons": "연결 레슨",
+    "empty": "조건에 맞는 자료가 없습니다.",
+    "externalLink": "새 탭에서 열기",
+    "unavailable": "자료 목록을 불러올 수 없습니다."
+  },
+  "kind": {
+    "book": "도서",
+    "course": "강의",
+    "video": "영상",
+    "article": "문서",
+    "other": "기타"
+  },
+  "activityKind": {
+    "reading": "읽기",
+    "quiz": "퀴즈",
+    "exercise": "실습"
+  },
+  "state": {
+    "done": "완료",
+    "in_progress": "진행 중",
+    "available": "학습 가능",
+    "locked": "잠김"
+  },
+  "error": {
+    "title": "화면을 불러오지 못했습니다",
+    "apiUnreachable": "API 서버에 연결할 수 없습니다. `uv run rc api serve` 가 실행 중인지 확인하세요.",
+    "generic": "잠시 후 다시 시도하세요.",
+    "retry": "다시 시도",
+    "notFoundTitle": "찾을 수 없습니다",
+    "notFoundBody": "요청한 페이지나 콘텐츠가 없습니다.",
+    "home": "대시보드로",
+    "forbidden": "권한이 없습니다."
+  },
+  "login": {
+    "title": "로그인",
+    "pending": "로그인은 인증 API(P2-2)가 머지된 뒤 추가됩니다. 그때까지 로컬 API는 단일 사용자로 동작합니다.",
+    "back": "대시보드로"
+  }
+}

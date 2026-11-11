@@ -1,0 +1,130 @@
+{
+  "app": {
+    "title": "Robotics Expert Course",
+    "shortTitle": "Robotics Course",
+    "skipToContent": "Skip to content",
+    "mainNavigation": "Main navigation",
+    "loading": "Loading"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "roadmap": "Roadmap",
+    "resources": "Resources",
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "language": "Language"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Your progress and what to study next.",
+    "current": "Current module",
+    "noCurrent": "No module in progress.",
+    "nextLesson": "Next lesson",
+    "openLesson": "Open lesson",
+    "weeklyMinutes": "Study time this week",
+    "weeklyGoal": "Goal {goal}",
+    "streak": "Streak",
+    "streakDays": "{days} days",
+    "dueCards": "Due today",
+    "dueCardsValue": "{count} cards",
+    "dueCardsCli": "Review runs in the CLI (`rc review`) for now.",
+    "courseProgress": "Course progress",
+    "stageProgress": "Progress by stage",
+    "openSession": "Study session in progress",
+    "openSessionSince": "since {at}",
+    "recent": "Recent activity",
+    "noRecent": "No activity recorded yet.",
+    "pending": "The backend does not expose this value yet.",
+    "moduleLessons": "{done}/{total} lessons"
+  },
+  "roadmap": {
+    "title": "Roadmap",
+    "subtitle": "Stage → module → lesson order and the prerequisite flow.",
+    "stage": "{level} stage",
+    "lessonCount": "{count} lessons",
+    "tableCaption": "Module progress by stage (text alternative to the graph)",
+    "colModule": "Module",
+    "colStage": "Stage",
+    "colState": "State",
+    "colProgress": "Progress",
+    "prerequisites": "Prerequisites",
+    "empty": "The roadmap could not be loaded."
+  },
+  "module": {
+    "lessons": "Lessons",
+    "resources": "Module resources",
+    "estimated": "about {minutes}",
+    "difficulty": "Difficulty {level}/5",
+    "empty": "This module has no lessons yet.",
+    "backToRoadmap": "Back to roadmap"
+  },
+  "lesson": {
+    "studyMethod": "How to study this stage",
+    "objectives": "Objectives",
+    "activities": "Activities",
+    "resources": "Resources",
+    "body": "Lesson",
+    "prev": "Previous lesson",
+    "next": "Next lesson",
+    "toModule": "Module overview",
+    "estimated": "about {minutes}",
+    "studied": "Studied {duration}",
+    "understanding": "Understanding {score}/5",
+    "note": "Note",
+    "writeActionsPending": "Use the CLI (`rc study`, `rc done`) for the timer and completion. Web write actions land in the next step.",
+    "onThisPage": "On this page",
+    "empty": "This lesson has no body.",
+    "difficulty": "Difficulty {level}/5"
+  },
+  "resources": {
+    "title": "Resources",
+    "subtitle": "Recommended material per module and lesson. External links open in a new tab.",
+    "search": "Search resources",
+    "searchPlaceholder": "Search title or note",
+    "filterKind": "Kind",
+    "filterAll": "All",
+    "count": "{count} resources",
+    "colTitle": "Title",
+    "colKind": "Kind",
+    "colNote": "Scope note",
+    "colLessons": "Lessons",
+    "empty": "No resource matches these filters.",
+    "externalLink": "Open in a new tab",
+    "unavailable": "The resource list could not be loaded."
+  },
+  "kind": {
+    "book": "Book",
+    "course": "Course",
+    "video": "Video",
+    "article": "Article",
+    "other": "Other"
+  },
+  "activityKind": {
+    "reading": "Reading",
+    "quiz": "Quiz",
+    "exercise": "Exercise"
+  },
+  "state": {
+    "done": "Done",
+    "in_progress": "In progress",
+    "available": "Available",
+    "locked": "Locked"
+  },
+  "error": {
+    "title": "This page could not be loaded",
+    "apiUnreachable": "Cannot reach the API server. Check that `uv run rc api serve` is running.",
+    "generic": "Please try again in a moment.",
+    "retry": "Try again",
+    "notFoundTitle": "Not found",
+    "notFoundBody": "The page or content you asked for does not exist.",
+    "home": "Go to dashboard",
+    "forbidden": "You do not have permission."
+  },
+  "login": {
+    "title": "Sign in",
+    "pending": "Sign-in arrives with the authentication API (P2-2). Until then the local API runs single-user.",
+    "back": "Go to dashboard"
+  }
+}
