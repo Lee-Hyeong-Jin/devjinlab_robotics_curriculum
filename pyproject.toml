@@ -1,6 +1,6 @@
 [project]
 name = "robotics-curriculum"
-version = "0.1.0"
+version = "0.2.0"
 description = "Robotics expert-course curriculum and learning-assist platform: Markdown/YAML content, progress tracking, reports, and a static study site."
 readme = "README.md"
 license = "Apache-2.0"

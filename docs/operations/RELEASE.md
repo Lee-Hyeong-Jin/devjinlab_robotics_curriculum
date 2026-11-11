@@ -15,9 +15,11 @@ SemVer 2.0.0 를 따르고, 릴리스는 `v<major>.<minor>.<patch>` 태그로 �
 ## 2. 버전 올리기
 
 - [ ] `pyproject.toml` 의 `version` 을 올린다(소스에서 읽히므로 다른 곳에 버전 문자열을 복제하지 않는다).
-- [ ] `uv lock` 으로 락파일의 프로젝트 버전을 맞춘다.
+- [ ] `uv lock` 으로 락파일의 프로젝트 버전을 맞추고, `uv sync` 로 설치본 메타데이터를 갱신한다
+      (`__version__` 은 설치된 배포판에서 읽으므로, 동기화 전에는 `tests/test_version.py` 가 실패한다).
 - [ ] `uv run rc version` 이 새 버전을 출력한다.
-- [ ] 웹을 함께 배포하면 `web/package.json` 의 `version` 도 같은 값으로 올린다.
+- [ ] 웹을 함께 배포하면 `web/package.json` 의 `version` 을 같은 값으로 올리고
+      `cd web && npm install --package-lock-only` 로 `package-lock.json` 을 맞춘다.
 
 ## 3. CHANGELOG
 

@@ -1,6 +1,6 @@
 {
   "name": "@robotics-curriculum/web",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "로보틱스 전문가 코스 플랫폼 — 웹 프론트엔드 (Next.js App Router)",
   "license": "Apache-2.0",

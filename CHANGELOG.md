@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-12
+
 ### Added
+
+#### Core (Phase 1)
 
 - `rc` CLI (Typer): `version`, `validate`, `show`, `resources`, `status`, `start`, `stop`,
   `log`, `done`, `next`, `roadmap`, `progress export|import`, `report weekly|module`,
@@ -43,6 +47,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prerequisite roadmap with done / in-progress / locked states and next-lesson recommendation.
 - Offline static study site (MkDocs Material): dashboard, roadmap, module and lesson pages,
   resource library.
+- Engineering scaffolding: Apache-2.0 license for code, CC BY 4.0 for curriculum content,
+  contribution guide, Code of Conduct, security policy, issue and PR templates, Dependabot,
+  GitHub Actions CI and release workflows, strict mypy, coverage gate, pre-commit hooks,
+  Dockerfile and Compose file.
+- Development harness: graph spec (`harness/graph.md`), roadmap state (`harness/roadmap.yaml`),
+  verification gate (`scripts/harness/check.sh`), Claude Code hooks, agents, and workflows
+  (see `docs/HARNESS.md`).
+- Architecture decision records 0001–0004 (Phase 1 stack, harness, SQLite progress store,
+  MkDocs static site).
+- `rc --verbose/-v` turns on debug logging to stderr; library modules log through the
+  standard `logging` module (never personal data such as study notes).
+- `rc progress import --allow-unknown` and `rc site build --force`: escape hatches for the
+  new input and output-path checks listed under Security.
+
+#### Server and web (Phase 2)
+
 - HTTP API (`rc api serve`, optional extra `api`): FastAPI app under `/api/v1` for courses,
   modules, lessons, resources, progress (status, next, start, stop, log, done), weekly and
   module reports, and progress export; `/healthz`, `/readyz`, `/version`; RFC 9457
@@ -65,19 +85,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   database pool usage); `RC_API_METRICS=0` turns it off.
 - `docs/api/openapi.yaml` is generated from the served API (plus `x-planned` routes) and a test
   keeps them identical.
-- Engineering scaffolding: Apache-2.0 license for code, CC BY 4.0 for curriculum content,
-  contribution guide, Code of Conduct, security policy, issue and PR templates, Dependabot,
-  GitHub Actions CI and release workflows, strict mypy, coverage gate, pre-commit hooks,
-  Dockerfile and Compose file.
-- Development harness: graph spec (`harness/graph.md`), roadmap state (`harness/roadmap.yaml`),
-  verification gate (`scripts/harness/check.sh`), Claude Code hooks, agents, and workflows
-  (see `docs/HARNESS.md`).
-- Architecture decision records 0001–0004 (Phase 1 stack, harness, SQLite progress store,
-  MkDocs static site).
-- `rc --verbose/-v` turns on debug logging to stderr; library modules log through the
-  standard `logging` module (never personal data such as study notes).
-- `rc progress import --allow-unknown` and `rc site build --force`: escape hatches for the
-  new input and output-path checks listed under Security.
+- Web frontend (`web/`, Next.js App Router): sign-in, dashboard, roadmap, lesson reader with
+  maths and highlighted code, resource library, quiz and review screens, reports and account
+  export, in Korean and English. It calls the API only and ships as its own container image.
 
 ### Changed
 
@@ -95,8 +105,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `scripts/harness/check.sh`: `--quick` (the Stop hook) skips the node stack, and a full run
   installs `web/node_modules` when it is missing instead of failing with exit 127.
 - CI runs the frontend checks for real on Node 22 and 26, fails on API client types that drift
-  from `docs/api/openapi.yaml`, and adds a Playwright + axe end-to-end job whose report is kept
-  as an artifact.
+  from `docs/api/openapi.yaml`, and runs two Playwright + axe end-to-end legs: smoke against a
+  local-mode API and the full sign-up-to-report journey against a server-mode one, each keeping
+  its own report as an artifact.
+
+### Fixed
+
+- The package version had two sources (`pyproject.toml` and `__version__`), so `rc version`
+  and `/version` could disagree with the release. `__version__` now comes from the installed
+  distribution and a test holds it to `pyproject.toml`.
 
 ### Security
 
