@@ -135,3 +135,33 @@ learner 의 `/admin/audit`(403), 사용자 간 진행도 격리(u9 1건 / admin 
   또 `promote_admin`(`auth/service.py:252-268`)은 `email_verified_at` 을 확인하지 않으므로, 운영자가 선점된
   주소에 `rc api promote-admin` 을 실행하면 공격자 계정이 admin 이 된다. 승격 시 이메일 인증을 요구하거나,
   선점 계정을 식별할 수 있게 경고를 출력할 것을 권고한다.
+
+---
+
+## 2차 재검증 (2026-11-12, integration 52d1608)
+
+대상 수정: 2364ee4(api-developer: SRV-10·11·14·15·16, promote-admin, SRV-08 테스트),
+75468eb(devops: SRV-13 npm audit CI, SRV-17 KaTeX 0.19.1 + MANIFEST), ff75e8d(frontend: SRV-12).
+방법은 1차와 같다: 실제 `rc api serve` 프로세스 프로빙, `bash scripts/smoke.sh`(docker, web 포함) 전체 실행,
+`tests/test_oidc.py` FakeIdP 하니스 재사용. 게이트: `scripts/harness/check.sh` ALL CHECKS PASSED.
+
+| ID | 판정 | 근거 |
+|---|---|---|
+| SRV-08 | **해결됨** (2364ee4) | `DELETE /api/v1/me` 204 → 세션 401, 재로그인 401, 진행도 삭제. 관리자 `/admin/audit` 200건 조회에서 삭제된 주소 0건(즉시 익명화), `account.deleted` 기록. 회귀 테스트 `tests/test_auth_review.py:178` |
+| SRV-10 | **해결됨** (2364ee4) | SMTP 포트를 닫고 `POST /auth/signup` 201, `POST /auth/password/forgot` 202, 서버 로그에 `mail delivery failed`, 로그의 500 응답 0건. `_send_token`(`auth/service.py:282-306`)이 예외를 삼키고 감사에 남긴다 |
+| SRV-11 | **해결됨** (2364ee4) | 가드가 `api/app.py:82-101`(`check_exposure`)로 이동. `uvicorn.run(create_app(Settings…host='0.0.0.0'))` 로컬 모드 → `UnsafeConfiguration` 으로 기동 실패(exit 1). `rc api serve --host 0.0.0.0` 도 여전히 거부 |
+| SRV-12 | **해결됨** (ff75e8d) | `web/src/lib/api/client.ts:24` 가 `csrf_token` 으로 API(`api/deps.py:129`)와 일치 |
+| SRV-13 | **부분 해결** (75468eb) | CI 에 `npm audit --omit=dev --audit-level=high`(차단) + 전체(비차단) 추가됨. **그러나 현재 락파일에서 두 명령 모두 exit 1**: 런타임 의존성에 high 1건(`postcss` XSS via unescaped `</style>`), moderate 2건(`next`, `next-intl` 오픈 리다이렉트), low 4건. 즉 이 잡은 업그레이드 전까지 CI 를 빨갛게 만든다(프런트 작업 중, 미해결로 표시) |
+| SRV-14 | **해결됨** (2364ee4) | `auth/oidc.py:361-369`. `aud: [rc-web, other]` + azp 없음 → 400, `azp: other` → 400, `aud: [other]` → 400, 정상 단일 aud 는 302 |
+| SRV-15 | **해결됨** (2364ee4) | 프로바이더가 있고 `RC_AUTH_SECRET` 이 없으면 기동 거부: "must be set when OIDC providers are configured: it signs the in-flight login cookie and must be identical on every worker and replica" |
+| SRV-16 | **해결됨** (2364ee4) | `RC_API_METRICS_TOKEN` 설정 시 `/metrics` 는 토큰 없음 401, 틀린 토큰 401, 올바른 토큰 200. 미설정 시 공개는 문서화된 기본값이며 compose 는 127.0.0.1 에만 공개 |
+| SRV-17 | **해결됨(정적 사이트)** (75468eb) | 번들 KaTeX 0.19.1(권고 범위 `<0.18.2` 밖), `MANIFEST.sha256` 25개 항목 `sha256sum -c` 전부 OK, 테스트 `tests/test_katex_assets.py`. **웹 의존성의 katex 는 아직 0.11.0–0.18.1 범위**(SRV-13 의 low 1건으로 남음) |
+
+1차 잔여 항목도 해소됐다: `promote_admin` 은 이메일 미인증 계정을 거부하고("has not verified its email
+address"), 인증 후에만 승격한다(실행 확인). 선점 자체(동일 주소 재가입 409)는 설계상 남지만, 승격 경로가 막혀
+악용 가치가 낮다.
+
+docker smoke(web 포함) 전체 통과: migrate exit 0, api/web healthy, 무자격 `/api/v1/courses` 401,
+세션 로그인 후 200, `/metrics` 200, X-Request-ID 상관관계, 단일 라인 JSON 로그, 웹 4개 화면 200.
+
+**미해결 1건(medium): SRV-13** — 런타임 의존성 high 1·moderate 2. 새 critical/high 결함은 없다.
