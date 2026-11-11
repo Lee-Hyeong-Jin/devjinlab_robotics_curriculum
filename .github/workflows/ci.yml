@@ -112,52 +112,104 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Is there a frontend yet?
-        id: detect
-        run: |
-          if [ -f web/package.json ]; then
-            echo "present=true" >>"$GITHUB_OUTPUT"
-          else
-            echo "present=false" >>"$GITHUB_OUTPUT"
-            echo "web/package.json not present yet - skipping the frontend checks"
-          fi
-
       - uses: actions/setup-node@v6
-        if: steps.detect.outputs.present == 'true'
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
           cache-dependency-path: web/package-lock.json
 
       - name: Install
-        if: steps.detect.outputs.present == 'true'
         working-directory: web
         run: npm ci
 
       - name: Lint
-        if: steps.detect.outputs.present == 'true'
         working-directory: web
         run: npm run lint
 
       - name: Format check
-        if: steps.detect.outputs.present == 'true'
         working-directory: web
         run: npm run format:check
 
       - name: Typecheck
-        if: steps.detect.outputs.present == 'true'
         working-directory: web
         run: npm run typecheck
 
       - name: Test
-        if: steps.detect.outputs.present == 'true'
         working-directory: web
         run: npm run test
 
       - name: Build
-        if: steps.detect.outputs.present == 'true'
         working-directory: web
         run: npm run build
+
+      # The generated client types must match docs/api/openapi.yaml. Regenerating them here
+      # catches a schema change that landed without `npm run api:types` (contract drift).
+      - name: API types are in step with the OpenAPI schema
+        working-directory: web
+        run: |
+          npm run api:types
+          git diff --exit-code -- src/lib/api/schema.d.ts
+
+  # Playwright smoke + axe accessibility pass (AC-WEB.1, AC-A11Y.1) against the real API and a
+  # production build of the web app. One Node version: this is about the app, not the runtime.
+  e2e:
+    name: e2e (playwright chromium)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      RC_API_BASE_URL: http://127.0.0.1:8000
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          uv sync --locked
+          npm ci --prefix web
+
+      - name: Install the chromium browser
+        working-directory: web
+        run: npx playwright install --with-deps chromium
+
+      - name: Start the API
+        run: |
+          uv run rc api serve --host 127.0.0.1 --port 8000 --log-level warning \
+            >"$RUNNER_TEMP/api.log" 2>&1 &
+          for _ in $(seq 1 60); do
+            curl -fsS --max-time 2 http://127.0.0.1:8000/healthz >/dev/null && break
+            sleep 1
+          done
+          curl -fsS --max-time 5 http://127.0.0.1:8000/healthz
+
+      - name: Build the web app
+        working-directory: web
+        run: npm run build
+
+      # playwright.config.ts starts `npm run start` itself and waits for the port.
+      - name: Playwright
+        working-directory: web
+        run: npm run e2e
+
+      - name: Upload the Playwright report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: web/playwright-report/
+          if-no-files-found: ignore
+
+      - name: API log
+        if: failure()
+        run: cat "$RUNNER_TEMP/api.log" || true
 
   # Keeps the backup/restore tooling honest: back up, destroy the data, restore, verify
   # (P2-5 / AC-OPS.4). The release drill is run by hand and recorded in docs/ops/restore-drills.md;
