@@ -73,8 +73,11 @@ export interface paths {
         };
         /**
          * Metrics
-         * @description Prometheus text format. Unauthenticated: expose to the internal network only
-         *     (block at the reverse proxy). ``RC_API_METRICS=0`` turns it off (404).
+         * @description Prometheus text format: request counts, latency, in-flight requests, DB pools.
+         *
+         *     Open by default and meant for the internal network: block ``/metrics`` at the reverse
+         *     proxy, or set ``RC_API_METRICS_TOKEN`` to require ``Authorization: Bearer <token>``
+         *     (SRV-16). ``RC_API_METRICS=0`` turns the endpoint off (404).
          */
         get: operations["metrics_metrics_get"];
         put?: never;
@@ -155,6 +158,9 @@ export interface paths {
         /**
          * Get Lesson
          * @description Lesson metadata, Markdown body, resources, and the study-method section.
+         *
+         *     ``Accept-Language`` picks a translation (``<lesson>.<lang>.md``); a lesson without one
+         *     answers in the language it was written in, which ``lang`` in the response states.
          */
         get: operations["get_lesson_api_v1_lessons__lesson_id__get"];
         put?: never;
@@ -1355,6 +1361,17 @@ export interface components {
             prerequisites: string[];
             /** Tags */
             tags: string[];
+            /**
+             * Lang
+             * @description Language of `title` and `summary`.
+             * @default ko
+             */
+            lang: string;
+            /**
+             * Available Languages
+             * @description Languages this lesson has text in.
+             */
+            available_languages?: string[];
             /** Objectives */
             objectives: string[];
             /** Activities */
@@ -1471,6 +1488,17 @@ export interface components {
             prerequisites: string[];
             /** Tags */
             tags: string[];
+            /**
+             * Lang
+             * @description Language of `title` and `summary`.
+             * @default ko
+             */
+            lang: string;
+            /**
+             * Available Languages
+             * @description Languages this lesson has text in.
+             */
+            available_languages?: string[];
         };
         /** LogRequest */
         LogRequest: {

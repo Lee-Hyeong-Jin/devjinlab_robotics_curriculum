@@ -157,7 +157,9 @@ jobs:
     # mode API (no login), journey signs up and walks AC-WEB.1 end to end against a server mode
     # API. Running one suite against the other's mode fails by design, so they are separate legs.
     name: e2e (${{ matrix.suite }})
-    runs-on: ubuntu-latest
+    # Pinned: `playwright install --with-deps` only knows the system packages of the Ubuntu
+    # releases its version supports, so a moving `ubuntu-latest` breaks the browser install.
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     strategy:
       fail-fast: false
@@ -248,6 +250,10 @@ jobs:
       - name: Restore drill
         run: bash scripts/ops/restore_drill.sh
 
+      # Compose refuses to parse the file without these two (SRV-06), also for `down`.
       - name: Tear down
         if: always()
+        env:
+          RC_DB_PASSWORD: teardown
+          RC_AUTH_SECRET: teardown
         run: docker compose down -v --remove-orphans
