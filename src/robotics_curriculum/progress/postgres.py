@@ -403,3 +403,18 @@ class PostgresProgressStore:
         with self.transaction(), self._connection() as conn:
             conn.execute(delete(sessions))
             conn.execute(delete(lesson_progress))
+
+    def delete_user(self, user_id: int) -> tuple[int, int]:
+        """Delete every row for one user (account deletion, FR-10.7).
+
+        Returns the number of lesson rows and sessions removed; ``(0, 0)`` for a user with no
+        data. Other users' rows are left untouched.
+        """
+        with self.transaction(), self._connection() as conn:
+            removed_sessions = conn.execute(
+                delete(sessions).where(sessions.c.user_id == user_id)
+            ).rowcount
+            removed_lessons = conn.execute(
+                delete(lesson_progress).where(lesson_progress.c.user_id == user_id)
+            ).rowcount
+        return removed_lessons, removed_sessions
