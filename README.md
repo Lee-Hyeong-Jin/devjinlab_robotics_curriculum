@@ -8,8 +8,41 @@ lessons with YAML front matter, each carrying prerequisites, objectives, curated
 a "how to study this stage" section. The `rc` command-line tool validates the content, tracks
 your progress and study time locally, recommends the next lesson from the prerequisite graph,
 writes weekly and per-module reports, and builds an offline static study site with a dashboard,
-roadmap, and resource library. A web platform with an API server, accounts, and multi-user
-progress is planned for Phase 2 (see `harness/roadmap.yaml`).
+roadmap, and resource library.
+
+Server mode adds a FastAPI server, accounts (local passwords or OIDC), PostgreSQL, and a Next.js
+web frontend on top of the same core library, for a study group or a team that wants to
+self-host. `harness/roadmap.yaml` tracks what is done and what is next.
+
+## Architecture at a glance
+
+```
+curriculum/**.md ──► content loader ──┐
+  (Markdown + YAML front matter)      │
+                                      ├──► core library (robotics_curriculum)
+.rc/progress.db  ──► progress store ──┘      content · progress · learn · report · site
+  (SQLite, or PostgreSQL in server mode)              │
+                                                      ├──► rc CLI ──► terminal, static site
+                                                      └──► api/v1 (FastAPI) ──► web/ (Next.js)
+```
+
+The core library knows nothing about HTTP or the terminal: `progress` references lessons by id
+only, `learn` is the one module that joins content and progress, and the CLI and the API are
+two thin callers of the same functions. See `.claude/rules/engineering.md` for the boundaries
+and `docs/platform-design.md` for the full design.
+
+## Documentation
+
+| Document | What it covers |
+|---|---|
+| [docs/PRD.md](docs/PRD.md) | Product requirements, release plan, data model |
+| [docs/platform-design.md](docs/platform-design.md) | Platform design: layers, storage, auth, operations |
+| [docs/curriculum/CONTENT_MODEL.md](docs/curriculum/CONTENT_MODEL.md) | Lesson schema: front matter, activities, quiz blocks |
+| [docs/api/openapi.yaml](docs/api/openapi.yaml) | Generated API schema (role matrix: `docs/api/role-matrix.md`) |
+| [docs/operations/RUNBOOK.md](docs/operations/RUNBOOK.md) | Running server mode: configuration, backup, restore |
+| [docs/operations/RELEASE.md](docs/operations/RELEASE.md) | How a release is cut and verified |
+| [docs/adr/](docs/adr/) | Architecture decisions, numbered and dated |
+| [docs/HARNESS.md](docs/HARNESS.md) | How this repository is developed (graph, hooks, workflows) |
 
 ## Setup
 
@@ -55,7 +88,26 @@ uv run rc site build --out /tmp/site  # other output dir; --src DIR keeps the ge
 uv run rc site build --serve          # live preview via `mkdocs serve` (http://127.0.0.1:8000)
 ```
 
-### PostgreSQL (server mode, optional)
+## Server mode (accounts, API, web)
+
+The whole stack runs from one compose file: PostgreSQL, a one-shot schema migration, the API,
+and the web frontend. Secrets have no defaults, so set them first.
+
+```bash
+cp .env.example .env                         # then edit: RC_DB_PASSWORD, RC_AUTH_SECRET, ...
+export RC_DB_PASSWORD=... RC_AUTH_SECRET=... # or: set -a; . ./.env; set +a
+docker compose up -d --build --wait web      # db -> migrate -> api -> web
+```
+
+- Web: <http://127.0.0.1:3000> · API: <http://127.0.0.1:8000/api/v1> (docs at `/docs`)
+- Liveness `/healthz`, readiness `/readyz`, Prometheus metrics `/metrics`, JSON logs with a
+  request id echoed in `X-Request-ID`.
+- `bash scripts/smoke.sh` brings the same stack up, checks it end to end, and tears it down.
+- First admin: set `RC_AUTH_ADMIN_EMAIL` before the first start, or run
+  `uv run rc api promote-admin <email>`.
+- Backup and restore, including a recovery drill: [docs/operations/RUNBOOK.md](docs/operations/RUNBOOK.md).
+
+### PostgreSQL without the full stack (optional)
 
 Local mode needs nothing beyond SQLite. To keep progress in PostgreSQL instead (Phase 2 server
 mode, `docs/adr/0007-postgres-store.md`), install the `postgres` extra (included in `uv sync`'s
