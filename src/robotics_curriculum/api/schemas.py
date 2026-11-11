@@ -143,6 +143,14 @@ class ResourceRef(Resource):
     lesson_ids: list[str] = Field(description="Lessons that list this resource.")
 
 
+class SearchHit(Schema):
+    kind: Literal["lesson", "resource"]
+    id: str = Field(description="Lesson id, or `<lesson_id>#<n>` for the n-th resource.")
+    title: str
+    snippet: str = Field(description="Matching text around the first query word.")
+    lesson_id: str = Field(description="The lesson to open.")
+
+
 # -- progress --------------------------------------------------------------------------
 
 
