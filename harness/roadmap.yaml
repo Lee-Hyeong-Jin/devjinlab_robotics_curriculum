@@ -1,0 +1,113 @@
+# 플랫폼 로드맵 = 개발 그래프의 "상태 저장소".
+# 바깥 루프 노드(platform-loop)가 여기서 다음 마일스톤을 고르고, 끝나면 status 를 갱신한다.
+# 사람이 직접 편집해도 된다. 형식은 scripts/harness/roadmap.py 의 docstring 참고.
+#
+#   status:     todo | in_progress | done | blocked
+#   depends_on: 모두 done 이어야 실행 가능
+#   acceptance: 수용 게이트(N8)가 검사하는 완료 조건. 검증 가능하게 쓸 것.
+#   note:       integrate 노드(N9)가 한 줄 메모를 남긴다.
+#
+# [플레이스홀더] 아래 마일스톤 내용은 docs/PRD.md(0.1 Draft) 의 릴리스 계획 Phase 0~1 과
+# 부록 A 를 바탕으로 한 초안이다. 플랫폼 설계 세션과 Webots 기능 설계 세션의 결과에 따라
+# 내용(goal/acceptance)은 바뀔 수 있다. 구조(id/title/status/depends_on/goal/acceptance/note)만 확정.
+# Phase 1 스택: Python 단일(uv + ruff + pytest), 콘텐츠는 Markdown + YAML, CLI + 정적 사이트.
+
+milestones:
+    - id: P0-1
+      title: 프로젝트 골격 (Python, uv, ruff, pytest, rc CLI 진입점)
+      status: todo
+      depends_on: []
+      goal: pyproject.toml 기반 Python 프로젝트 골격과 `rc` CLI 진입점을 만들고, 하네스 검증 게이트가 실제로 돌게 한다.
+      acceptance:
+        - 루트에 pyproject.toml 이 있고 `uv run ruff check .`, `uv run pytest -q` 가 통과한다
+        - `bash scripts/harness/check.sh` 가 ALL CHECKS PASSED 를 출력한다
+        - `uv run rc --help` 가 동작하고 validate/report 서브커맨드 자리가 있다
+        - README.md 에 설치/실행/테스트 명령이 있고 CLAUDE.md Commands 섹션이 채워져 있다
+      note:
+
+    - id: P0-2
+      title: 콘텐츠 스키마·로더·검증 CLI (FR-1)
+      status: todo
+      depends_on: [P0-1]
+      goal: Track > Module > Lesson > Activity 계층을 Markdown+YAML frontmatter 로 정의하고, 로더와 `rc validate` 를 만든다.
+      acceptance:
+        - 레슨 필수 필드(id, title, prerequisites, estimated_minutes, objectives, tags)와 Activity 타입(reading, quiz, lab, project, external)이 코드와 docs/curriculum/CONTENT_MODEL.md 에 정의되어 있다
+        - `rc validate` 가 누락 필드, 존재하지 않는 선수지식 ID, 순환 의존을 감지하면 비정상 종료 코드를 반환하며 각 경우에 테스트가 있다
+        - docs/curriculum/LESSON_TEMPLATE.md 형식의 샘플 레슨이 로더로 읽힌다
+      note:
+
+    - id: P0-3
+      title: 첫 트랙 콘텐츠 "로보틱스 기초" (부록 A, 모듈 5개)
+      status: todo
+      depends_on: [P0-2]
+      goal: curriculum/ 에 부록 A 의 모듈 M1~M5(수학·물리 기초, 운동학, 이동 로봇·제어, 센서·인식, 시뮬레이션·툴체인)를 레슨 10개 내외로 작성한다.
+      acceptance:
+        - curriculum/ 에 트랙 1개, 모듈 5개, 레슨 10개 이상이 있고 `rc validate` 가 통과한다
+        - 모든 레슨에 선수지식이 선언되어 있고 그래프가 DAG 이다
+        - 각 모듈에 최소 1개의 lab 또는 project Activity 가 있다
+      note:
+
+    - id: P0-4
+      title: 주간 리포트 CLI (FR-7)
+      status: todo
+      depends_on: [P0-2]
+      goal: 학습 기록을 입력으로 주간 리포트 Markdown 을 reports/YYYY-WW.md 에 생성하는 `rc report weekly` 를 만든다.
+      acceptance:
+        - `rc report weekly` 가 reports/YYYY-WW.md 를 생성하고 학습 시간, 완료 레슨, 퀴즈 정답률, 복습 수, 메모 요약 섹션을 포함한다
+        - 리포트 생성은 단위 테스트로 커버된다(고정 입력 → 기대 출력)
+      note:
+
+    - id: P1-1
+      title: 학습 진도 추적 저장소 (FR-3, FR-10)
+      status: todo
+      depends_on: [P0-2]
+      goal: Activity 단위 상태, 이해도, 메모, 세션 시간을 로컬 SQLite 에 저장·조회하고 JSON 으로 내보내기/가져오기한다.
+      acceptance:
+        - Progress/Session 모델에 user_id 가 있고 상태(not_started, in_progress, done) 변경이 저장 후 재조회로 확인된다
+        - `rc progress export/import` 가 JSON 왕복에서 데이터를 보존한다(테스트)
+        - 저장소 인터페이스와 SQLite 구현이 분리되어 있고 선택 이유가 ADR 에 있다
+      note:
+
+    - id: P1-2
+      title: 퀴즈·플래시카드·간격 반복 (FR-4 P0)
+      status: todo
+      depends_on: [P1-1]
+      goal: Markdown 으로 정의한 퀴즈를 채점하고, 틀린 문항과 핵심 개념을 카드로 만들어 SM-2 또는 FSRS 로 복습 일정을 계산한다.
+      acceptance:
+        - 객관식·단답·O/X 퀴즈가 파싱·채점되고 해설이 표시된다
+        - 카드 응답(again, hard, good, easy)에 따라 next_due 가 달라지는 테스트가 있다
+        - 알고리즘 선택(SM-2 vs FSRS)이 ADR 로 기록되어 있다
+      note:
+
+    - id: P1-3
+      title: 로드맵·선수지식 그래프·다음 레슨 추천 (FR-2)
+      status: todo
+      depends_on: [P1-1]
+      goal: 트랙의 레슨을 선수지식 DAG 로 계산하고 완료/진행/잠김 상태와 다음 추천 레슨을 CLI 와 정적 사이트에서 보여준다.
+      acceptance:
+        - `rc next` 가 선수지식 충족 + 미완료 레슨 중 트랙 순서상 가장 앞선 것을 반환한다(테스트)
+        - 잠김 레슨 강제 열기 시 경고가 표시된다
+        - 그래프 출력(텍스트 또는 정적 HTML)에 완료/진행/잠김이 구분된다
+      note:
+
+    - id: P1-4
+      title: Webots 실습 가이드 연동 (FR-5.1, FR-5.2)
+      status: todo
+      depends_on: [P0-3]
+      goal: lab Activity 가 Webots 월드, 컨트롤러 템플릿, 판정 스크립트를 참조하고 한 줄 명령으로 월드를 열고 템플릿을 복사하게 한다.
+      acceptance:
+        - lab Activity 스키마에 world/controller_template/judge 참조가 있고 `rc validate` 가 경로 존재를 검사한다
+        - `rc lab open <id>` 가 ../my_first_webots_project 구조를 재사용해 월드를 열고 템플릿을 복사한다(시뮬레이터 없이 테스트되는 fake 러너 포함)
+        - 자동 판정(FR-5.3)은 범위 밖임이 문서에 명시되어 있다
+      note:
+
+    - id: P1-5
+      title: 정적 사이트·대시보드 (Phase 1 MVP 마감)
+      status: todo
+      depends_on: [P0-4, P1-2, P1-3, P1-4]
+      goal: 레슨 뷰어(수식·코드 렌더링), 로드맵, 대시보드(진도율, 주간 학습 시간, streak, 오늘 복습 수)를 정적 사이트로 생성한다.
+      acceptance:
+        - `rc site build` 가 정적 사이트를 생성하고 레슨 본문의 KaTeX 수식과 코드 하이라이트가 렌더링된다
+        - 대시보드 페이지에 트랙별 진도율, 주간 학습 시간, streak, 오늘 복습 수가 표시된다
+        - 사이트 빌드가 테스트로 커버되고 네트워크 없이 동작한다
+      note:
