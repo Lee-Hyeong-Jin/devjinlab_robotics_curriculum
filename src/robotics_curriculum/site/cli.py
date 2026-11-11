@@ -5,6 +5,7 @@ from typing import Annotated
 
 import typer
 
+from robotics_curriculum.i18n import DEFAULT_LANG
 from robotics_curriculum.progress import ProgressError, open_service
 from robotics_curriculum.progress.store import StoreError
 
@@ -33,6 +34,10 @@ def build_cmd(
             help="Overwrite --out / --src even when they hold files from somewhere else.",
         ),
     ] = False,
+    lang: Annotated[
+        str | None,
+        typer.Option("--lang", help="Site language: ko or en [default: the global --lang]."),
+    ] = None,
 ) -> None:
     """Generate the site from curriculum/ and your progress, then run mkdocs.
 
@@ -48,10 +53,11 @@ def build_cmd(
     except (ProgressError, StoreError) as exc:
         typer.echo(f"error: {exc}", err=True)
         raise typer.Exit(code=1) from None
+    chosen = lang or getattr(opts, "lang", None) or DEFAULT_LANG
     try:
         if serve:
-            raise typer.Exit(code=serve_site(service, project_dir=src, force=force))
-        build_site(service, out, project_dir=src, force=force)
+            raise typer.Exit(code=serve_site(service, project_dir=src, force=force, lang=chosen))
+        build_site(service, out, project_dir=src, force=force, lang=chosen)
     except (SiteError, ProgressError, StoreError) as exc:
         typer.echo(f"error: {exc}", err=True)
         raise typer.Exit(code=1) from None

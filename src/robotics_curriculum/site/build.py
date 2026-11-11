@@ -20,6 +20,7 @@ from typing import Any
 
 import yaml
 
+from robotics_curriculum.i18n import DEFAULT_LANG, resolve_lang
 from robotics_curriculum.learn.review import due_count
 from robotics_curriculum.progress import ProgressService
 from robotics_curriculum.progress.service import find_repo_root
@@ -27,13 +28,14 @@ from robotics_curriculum.site.pages import (
     INDEX_PAGE,
     RESOURCES_PAGE,
     ROADMAP_PAGE,
-    STATES,
+    STATE_SYMBOLS,
     SiteModel,
     render_dashboard,
     render_lesson,
     render_module,
     render_resources,
     render_roadmap,
+    stage_text,
     state_of,
 )
 from robotics_curriculum.site.stats import stage_of
@@ -165,8 +167,10 @@ markdown_extensions:
 """
 
 
-def build_model(service: ProgressService, now: datetime | None = None) -> SiteModel:
-    """Snapshot content + progress for one user."""
+def build_model(
+    service: ProgressService, now: datetime | None = None, lang: str = DEFAULT_LANG
+) -> SiteModel:
+    """Snapshot content + progress for one user, in ``lang`` (ko / en)."""
     at = now or datetime.now().astimezone()
     return SiteModel(
         courses=service.courses,
@@ -175,11 +179,17 @@ def build_model(service: ProgressService, now: datetime | None = None) -> SiteMo
         sessions=service.store.list_sessions(service.user_id),
         now=at,
         due_today=due_count(service.store, today=at.astimezone().date(), user_id=service.user_id),
+        lang=resolve_lang(lang),
     )
 
 
 def _nav(model: SiteModel) -> list[Any]:
-    nav: list[Any] = [{"대시보드": INDEX_PAGE}, {"로드맵": ROADMAP_PAGE}]
+    t = model.t
+    # Material does not escape nav titles, so every title goes through html.escape.
+    nav: list[Any] = [
+        {html.escape(t("site.nav.dashboard")): INDEX_PAGE},
+        {html.escape(t("site.nav.roadmap")): ROADMAP_PAGE},
+    ]
     for stage in model.stages():
         modules = [m for m in model.modules() if stage_of(m) == stage]
         if not modules:
@@ -188,7 +198,7 @@ def _nav(model: SiteModel) -> list[Any]:
         for module in modules:
             items: list[Any] = [model.module_page(module)]
             for summary in model.module_summaries(module):
-                symbol = STATES[state_of(summary)][0]
+                symbol = STATE_SYMBOLS[state_of(summary)]
                 items.append(
                     {
                         f"{symbol} {html.escape(summary.lesson.title)}": model.lesson_page(
@@ -197,8 +207,8 @@ def _nav(model: SiteModel) -> list[Any]:
                     }
                 )
             stage_items.append({html.escape(module.title): items})
-        nav.append({stage: stage_items})
-    nav.append({"자료실": RESOURCES_PAGE})
+        nav.append({html.escape(stage_text(stage, t)): stage_items})
+    nav.append({html.escape(t("site.nav.resources")): RESOURCES_PAGE})
     return nav
 
 
@@ -216,7 +226,7 @@ def mkdocs_config(model: SiteModel) -> str:
         "theme": {
             "name": "material",
             "custom_dir": OVERRIDES_DIR,
-            "language": "ko",
+            "language": model.lang,
             "font": False,  # no Google Fonts request: system fonts, offline-safe
             "features": [
                 "navigation.tabs",
@@ -264,6 +274,7 @@ def generate_project(
     *,
     now: datetime | None = None,
     force: bool = False,
+    lang: str = DEFAULT_LANG,
 ) -> Path:
     """Write ``mkdocs.yml`` + ``docs/`` into ``project_dir``; return the config path.
 
@@ -272,7 +283,7 @@ def generate_project(
     """
     ensure_writable(project_dir, kind="mkdocs project directory", force=force)
     _mark(project_dir)
-    model = build_model(service, now)
+    model = build_model(service, now, lang)
     docs = project_dir / DOCS_DIR
     if docs.exists():
         shutil.rmtree(docs)
@@ -319,6 +330,7 @@ def build_site(
     project_dir: Path | None = None,
     now: datetime | None = None,
     force: bool = False,
+    lang: str = DEFAULT_LANG,
 ) -> Path:
     """Generate the MkDocs project (in ``project_dir`` or a temp dir) and build into ``out_dir``.
 
@@ -328,21 +340,25 @@ def build_site(
     ensure_writable(out_dir, kind="site output directory", force=force)
     _mark(out_dir)
     if project_dir is not None:
-        config = generate_project(service, project_dir, now=now, force=force)
+        config = generate_project(service, project_dir, now=now, force=force, lang=lang)
         run_mkdocs_build(config, out_dir)
         return out_dir
     with tempfile.TemporaryDirectory(prefix="rc-site-") as tmp:
-        config = generate_project(service, Path(tmp), now=now, force=force)
+        config = generate_project(service, Path(tmp), now=now, force=force, lang=lang)
         run_mkdocs_build(config, out_dir)
     return out_dir
 
 
 def serve_site(
-    service: ProgressService, *, project_dir: Path | None = None, force: bool = False
+    service: ProgressService,
+    *,
+    project_dir: Path | None = None,
+    force: bool = False,
+    lang: str = DEFAULT_LANG,
 ) -> int:
     """Generate the project and run ``mkdocs serve`` on it until interrupted."""
     with tempfile.TemporaryDirectory(prefix="rc-site-") as tmp:
-        config = generate_project(service, project_dir or Path(tmp), force=force)
+        config = generate_project(service, project_dir or Path(tmp), force=force, lang=lang)
         cmd = [sys.executable, "-m", "mkdocs", "serve", "-f", str(config)]
         try:
             return subprocess.call(cmd)

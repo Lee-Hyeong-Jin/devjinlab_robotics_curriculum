@@ -12,6 +12,7 @@ import typer
 
 from robotics_curriculum.content.models import Course, Lesson, Module, Resource, ResourceKind
 from robotics_curriculum.content.sections import STUDY_GUIDE_HEADING, extract_section
+from robotics_curriculum.i18n import Translator, get_translator
 from robotics_curriculum.progress import (
     DB_FILENAME,
     LessonStatus,
@@ -23,17 +24,21 @@ from robotics_curriculum.progress import (
 from robotics_curriculum.progress.factory import database_url, open_store
 from robotics_curriculum.progress.store import StoreError
 
-KIND_LABELS: dict[ResourceKind, str] = {
-    ResourceKind.BOOK: "교재",
-    ResourceKind.COURSE: "강의",
-    ResourceKind.VIDEO: "영상",
-    ResourceKind.ARTICLE: "글",
-    ResourceKind.OTHER: "기타",
+KIND_KEYS: dict[ResourceKind, str] = {
+    ResourceKind.BOOK: "book",
+    ResourceKind.COURSE: "course",
+    ResourceKind.VIDEO: "video",
+    ResourceKind.ARTICLE: "article",
+    ResourceKind.OTHER: "other",
 }
 
 
-def _fail(message: str) -> typer.Exit:
-    typer.echo(f"error: {message}", err=True)
+def _t(ctx: typer.Context | None = None) -> Translator:
+    return get_translator(getattr(ctx.obj, "lang", None) if ctx is not None else None)
+
+
+def _fail(message: str, ctx: typer.Context | None = None) -> typer.Exit:
+    typer.echo(_t(ctx)("cli.error_prefix", message=message), err=True)
     return typer.Exit(code=1)
 
 
@@ -57,10 +62,11 @@ def _find_lesson(courses: list[Course], lesson_id: str) -> tuple[Module, Lesson]
     raise _fail(f"unknown lesson '{lesson_id}'")
 
 
-def _by_kind(entries: list[tuple[Resource, str]]) -> list[str]:
-    """Group ``(resource, suffix)`` pairs under 교재/강의/영상/글/기타 headers."""
+def _by_kind(entries: list[tuple[Resource, str]], t: Translator) -> list[str]:
+    """Group ``(resource, suffix)`` pairs under the per-kind headers of the catalogue."""
     lines: list[str] = []
-    for kind, label in KIND_LABELS.items():
+    for kind, key in KIND_KEYS.items():
+        label = t(f"resource.kind.{key}")
         group = [(r, s) for r, s in entries if (r.kind or ResourceKind.OTHER) is kind]
         if group:
             lines.append(f"[{label}]")
@@ -69,7 +75,7 @@ def _by_kind(entries: list[tuple[Resource, str]]) -> list[str]:
             lines.append(f"  - {resource.title}{note}{suffix}")
             if resource.url:
                 lines.append(f"    {resource.url}")
-    return lines or ["  (등록된 자료 없음)"]
+    return lines or [t("resource.none")]
 
 
 def resources(
@@ -81,6 +87,7 @@ def resources(
     all_: Annotated[bool, typer.Option("--all", help="Library view of every resource.")] = False,
 ) -> None:
     """Show study materials by kind and the lesson's "이 단계 공부법" section."""
+    t = _t(ctx)
     if sum([lesson_id is not None, module is not None, all_]) != 1:
         raise _fail("give exactly one of LESSON_ID, --module MODULE_ID or --all")
     courses = _courses(ctx)
@@ -88,10 +95,10 @@ def resources(
     if lesson_id is not None:
         _, lesson = _find_lesson(courses, lesson_id)
         out += [f"{lesson.title} ({lesson.id})", ""]
-        out += _by_kind([(r, "") for r in lesson.resources])
+        out += _by_kind([(r, "") for r in lesson.resources], t)
         guide = extract_section(lesson.body, STUDY_GUIDE_HEADING)
         if guide:
-            out += ["", f"## {STUDY_GUIDE_HEADING}", "", guide]
+            out += ["", f"## {t('lesson.study_guide')}", "", guide]
     elif module is not None:
         found = [m for m in _modules(courses) if m.id == module]
         if not found:
@@ -99,12 +106,12 @@ def resources(
         out.append(f"{found[0].title} ({found[0].id})")
         for lesson in found[0].lessons:
             out += ["", f"{lesson.title} ({lesson.id})"]
-            out += _by_kind([(r, "") for r in lesson.resources])
+            out += _by_kind([(r, "") for r in lesson.resources], t)
     else:
         for course in courses:
             entries = [(r, f"  [{les.id}]") for les in course.iter_lessons() for r in les.resources]
-            out += [f"{course.title} 자료 라이브러리 ({len(entries)}개)", ""]
-            out += _by_kind(entries)
+            out += [t("resource.library_title", course=course.title, count=len(entries)), ""]
+            out += _by_kind(entries, t)
     typer.echo("\n".join(out))
 
 
@@ -127,18 +134,25 @@ def show(
     lesson_id: Annotated[str, typer.Argument(help="Lesson id.")],
 ) -> None:
     """Print a lesson's summary (objectives, prerequisites, time) and its Markdown body."""
+    t = _t(ctx)
     courses = _courses(ctx)
     module, lesson = _find_lesson(courses, lesson_id)
     statuses = _statuses(ctx, courses)
+    level = t("lesson.level_suffix", level=module.level) if module.level else ""
     out = [
         f"# {lesson.title} ({lesson.id})",
-        f"모듈: {module.title}" + (f" · 수준: {module.level}" if module.level else ""),
-        f"예상 시간: {lesson.estimated_minutes}분 · 난이도: {lesson.difficulty}/5",
+        t("lesson.module_line", module=module.title) + level,
+        t(
+            "lesson.estimate_line",
+            minutes=lesson.estimated_minutes,
+            difficulty=lesson.difficulty,
+        ),
         "",
-        "학습 목표:",
+        t("lesson.objectives"),
         *(f"  - {objective}" for objective in lesson.objectives),
         "",
-        "선수 레슨:" + ("" if lesson.prerequisites else " 없음"),
+        t("lesson.prerequisites")
+        + ("" if lesson.prerequisites else t("lesson.prerequisites_none")),
     ]
     for prereq in lesson.prerequisites:
         if not statuses:

@@ -13,6 +13,7 @@ from typing import Annotated, get_args
 import typer
 
 from robotics_curriculum.content.models import Level
+from robotics_curriculum.i18n import get_translator
 from robotics_curriculum.progress import (
     DB_FILENAME,
     LessonStatus,
@@ -27,8 +28,6 @@ from robotics_curriculum.progress.factory import database_url, open_store
 from robotics_curriculum.progress.store import StoreError
 
 LEVELS: tuple[str, ...] = get_args(Level)
-NO_LEVEL = "(레벨 미지정)"
-LEGEND = "[x] 완료  [>] 진행 중  [ ] 시작 전  [-] 잠김 (선수 레슨 미완료)"
 
 
 def marker(summary: LessonSummary) -> str:
@@ -45,9 +44,12 @@ def _fmt_minutes(minutes: int) -> str:
     return f"{minutes // 60}h{minutes % 60:02d}m" if minutes % 60 else f"{minutes // 60}h"
 
 
-def render_roadmap(summaries: list[LessonSummary], level: str | None = None) -> str:
+def render_roadmap(
+    summaries: list[LessonSummary], level: str | None = None, lang: str | None = None
+) -> str:
     """Course -> level -> module -> lesson lines, with a done/total line per module."""
-    out: list[str] = [LEGEND]
+    t = get_translator(lang)
+    out: list[str] = [t("roadmap.legend")]
     course_ids = list(dict.fromkeys(s.course.id for s in summaries))
     for course_id in course_ids:
         rows = [s for s in summaries if s.course.id == course_id]
@@ -59,7 +61,7 @@ def render_roadmap(summaries: list[LessonSummary], level: str | None = None) -> 
             in_level = [s for s in rows if s.module.level == lv]
             if not in_level:
                 continue
-            out += ["", f"== {lv or NO_LEVEL} =="]
+            out += ["", f"== {lv or t('roadmap.no_level')} =="]
             module_ids = list(dict.fromkeys(s.module.id for s in in_level))
             for module_id in module_ids:
                 lessons = [s for s in in_level if s.module.id == module_id]
@@ -112,4 +114,4 @@ def roadmap(
             store.close()
     except (ProgressError, StoreError) as exc:
         raise _fail(str(exc)) from None
-    typer.echo(render_roadmap(summaries, level))
+    typer.echo(render_roadmap(summaries, level, getattr(ctx.obj, "lang", None)))

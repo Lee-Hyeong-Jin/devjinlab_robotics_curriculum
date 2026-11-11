@@ -16,6 +16,8 @@ from datetime import UTC, datetime
 LOGGER_NAME = "robotics_curriculum.api"
 
 request_id_var: ContextVar[str | None] = ContextVar("rc_request_id", default=None)
+lang_var: ContextVar[str | None] = ContextVar("rc_lang", default=None)
+"""Language chosen for the current request (``Accept-Language`` / ``RC_LANG``)."""
 
 # Attributes every LogRecord has; anything else came from ``extra=`` and becomes a field.
 _STANDARD_ATTRS = frozenset(
