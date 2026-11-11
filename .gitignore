@@ -5,6 +5,9 @@
 # rc learner data (progress.db); override with RC_DATA_DIR
 .rc/
 
+# rc site build output
+/site/
+
 # Secrets / env
 .env
 .env.*
