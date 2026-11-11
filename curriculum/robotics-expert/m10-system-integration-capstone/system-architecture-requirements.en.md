@@ -117,7 +117,9 @@ for req, who in owners.items():
         print(f"[requirement] {req}: owning component {who or 'none'}")
 for c in components:
     if not c.satisfies:
-        print(f"[component] {c.name}: no reason to exist (no requirement) - mark it as a support component")
+        print(
+            f"[component] {c.name}: no reason to exist (no requirement) - mark it as a support component"
+        )
 
 rates = {t: hz for c in components for t, hz in c.publishes.items()}
 for c in components:
