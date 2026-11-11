@@ -52,6 +52,12 @@ uv run rc site build --out /tmp/site  # other output dir; --src DIR keeps the ge
 uv run rc site build --serve          # live preview via `mkdocs serve` (http://127.0.0.1:8000)
 ```
 
+HTTP API (FastAPI, `/api/v1`; extra `api` — `uv sync` installs it in dev, `pip install 'robotics-curriculum[api]'` otherwise):
+
+```bash
+uv run rc api serve --host 127.0.0.1 --port 8000   # docs at /docs, schema at /openapi.json; env RC_API_HOST/PORT/LOG_LEVEL
+```
+
 ## Lint / format
 
 ```bash

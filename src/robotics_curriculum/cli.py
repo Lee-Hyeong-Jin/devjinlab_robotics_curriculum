@@ -10,6 +10,7 @@ import typer
 from pydantic import ValidationError
 
 from robotics_curriculum import __version__
+from robotics_curriculum.api.cli import api_app
 from robotics_curriculum.content import check
 from robotics_curriculum.library import resources, show
 from robotics_curriculum.progress import (
@@ -29,6 +30,7 @@ progress_app = typer.Typer(help="Export / import learner progress (JSON).", no_a
 app.add_typer(progress_app, name="progress")
 app.add_typer(report_app, name="report")
 app.add_typer(site_app, name="site")
+app.add_typer(api_app, name="api")
 
 
 @dataclass
