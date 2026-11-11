@@ -97,7 +97,10 @@ import numpy as np
 waypoints = np.array([[0.0, -0.5, 1.0], [0.6, -0.2, 0.7], [1.2, 0.3, 0.2], [1.5, 0.4, -0.3]])
 VMAX = np.array([1.0, 1.0, 1.5])  # rad/s
 AMAX = np.array([2.0, 2.0, 3.0])  # rad/s^2
-KV, KA = 15 / 8, 10 / np.sqrt(3)  # max velocity and acceleration coefficients of a quintic (lesson 3)
+KV, KA = (
+    15 / 8,
+    10 / np.sqrt(3),
+)  # max velocity and acceleration coefficients of a quintic (lesson 3)
 
 
 def quintic(tau):

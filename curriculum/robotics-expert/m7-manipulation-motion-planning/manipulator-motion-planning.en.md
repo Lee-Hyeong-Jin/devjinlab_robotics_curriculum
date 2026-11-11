@@ -88,7 +88,9 @@ def in_collision(q1, q2):
 Q1, Q2 = np.meshgrid(th, th, indexing="ij")
 C_obs = in_collision(Q1, Q2)
 ws = (OBST[:, 2] ** 2).sum() / ((L1 + L2) ** 2 - (L1 - L2) ** 2)
-print(f"workspace blocked by obstacles {ws * 100:.1f}% -> colliding joint configurations {C_obs.mean() * 100:.1f}%")
+print(
+    f"workspace blocked by obstacles {ws * 100:.1f}% -> colliding joint configurations {C_obs.mean() * 100:.1f}%"
+)
 
 
 def idx(q):

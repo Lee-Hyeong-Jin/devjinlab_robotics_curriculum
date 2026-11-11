@@ -111,7 +111,9 @@ for k in range(T):
 
 for name, est in [("wheels only", dr), ("EKF", s)]:
     pos_err = np.linalg.norm(est[:2] - truth[:2])
-    print(f"{name}: position error {pos_err:.2f} m, heading error {np.rad2deg(est[2] - truth[2]):.1f} deg")
+    print(
+        f"{name}: position error {pos_err:.2f} m, heading error {np.rad2deg(est[2] - truth[2]):.1f} deg"
+    )
 ```
 
 Integrating the wheels alone leaves more than 10 m of position error and about 80° of heading

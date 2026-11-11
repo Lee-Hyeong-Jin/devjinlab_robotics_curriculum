@@ -122,7 +122,10 @@ for name, star in [("RRT", False), ("RRT*", True)]:
     path, n_nodes = rrt(star)
     length = np.linalg.norm(np.diff(path, axis=0), axis=1).sum()
     print(f"{name:5s} nodes {n_nodes:4d}  path points {len(path):3d}  length {length:5.2f}")
-print("straight-line distance (lower bound ignoring obstacles)", round(float(np.linalg.norm(goal - start)), 2))
+print(
+    "straight-line distance (lower bound ignoring obstacles)",
+    round(float(np.linalg.norm(goal - start)), 2),
+)
 ```
 
 RRT finds a path quickly with only about 150 nodes, but at roughly 15.5 m it wanders. RRT* spends

@@ -119,8 +119,10 @@ def policy_iteration():
 
 V_vi, pi_vi, sweeps = value_iteration()
 V_pi, pi_pi, rounds = policy_iteration()
-print(f"value iteration {sweeps} sweeps, policy iteration {rounds} rounds, "
-      f"value difference {np.abs(V_vi - V_pi).max():.0e}")
+print(
+    f"value iteration {sweeps} sweeps, policy iteration {rounds} rounds, "
+    f"value difference {np.abs(V_vi - V_pi).max():.0e}"
+)
 for r in range(4):
     cells = [LAYOUT[r][c] * 5 for c in range(4)]
     for c in range(4):

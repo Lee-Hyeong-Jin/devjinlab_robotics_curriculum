@@ -96,8 +96,10 @@ for name, (p1, n1, p2, n2) in cases.items():
     print(f"{name:26s} angles {ang.round(1)} -> {verdict}")
 
 m, g = 0.4, 9.81  # pick up a 0.4 kg object from the side with two fingers
-print(f"minimum grasp force N >= mg/(2mu) = {m * g / (2 * MU):.2f} N "
-      f"(safety factor 2 -> {m * g / MU:.2f} N)")
+print(
+    f"minimum grasp force N >= mg/(2mu) = {m * g / (2 * MU):.2f} N "
+    f"(safety factor 2 -> {m * g / MU:.2f} N)"
+)
 
 # 2) 1-DOF impedance control: command x_d = 0.12 m, beyond a wall at x = 0.10 m of stiffness k_e
 M_EE, K_ENV, X_WALL, X_D = 1.0, 2.0e4, 0.10, 0.12

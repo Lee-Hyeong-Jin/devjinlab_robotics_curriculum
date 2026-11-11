@@ -96,14 +96,18 @@ def curvature(p):
 
 
 def velocity_profile(s, kappa, v_max=0.5, a_max=0.3, a_lat=0.2):
-    v = np.minimum(v_max, np.sqrt(a_lat / np.maximum(kappa, 1e-6)))  # curvature limit v <= sqrt(a_lat/kappa)
+    v = np.minimum(
+        v_max, np.sqrt(a_lat / np.maximum(kappa, 1e-6))
+    )  # curvature limit v <= sqrt(a_lat/kappa)
     v[0] = v[-1] = 0.0  # start and stop
     ds = np.diff(s)
     for i in range(1, len(v)):  # forward: acceleration limit v_i^2 <= v_{i-1}^2 + 2 a ds
         v[i] = min(v[i], np.sqrt(v[i - 1] ** 2 + 2 * a_max * ds[i - 1]))
     for i in range(len(v) - 2, -1, -1):  # backward: deceleration limit
         v[i] = min(v[i], np.sqrt(v[i + 1] ** 2 + 2 * a_max * ds[i]))
-    t = np.r_[0, np.cumsum(2 * ds / np.maximum(v[1:] + v[:-1], 1e-6))]  # time from segment mean speed
+    t = np.r_[
+        0, np.cumsum(2 * ds / np.maximum(v[1:] + v[:-1], 1e-6))
+    ]  # time from segment mean speed
     return v, t
 
 

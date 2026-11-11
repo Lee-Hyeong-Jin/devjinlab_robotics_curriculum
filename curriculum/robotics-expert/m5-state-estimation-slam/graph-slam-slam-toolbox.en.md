@@ -97,7 +97,9 @@ def rmse(est):
     return np.sqrt(np.mean(np.sum((est - truth) ** 2, axis=1)))
 
 
-print(f"odometry only: RMSE {rmse(odom_only):.3f} m, endpoint {np.linalg.norm(odom_only[-1]):.3f} m")
+print(
+    f"odometry only: RMSE {rmse(odom_only):.3f} m, endpoint {np.linalg.norm(odom_only[-1]):.3f} m"
+)
 print(f"pose graph   : RMSE {rmse(x):.3f} m, endpoint {np.linalg.norm(x[-1]):.3f} m")
 ```
 

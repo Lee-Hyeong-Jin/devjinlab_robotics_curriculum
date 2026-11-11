@@ -128,7 +128,9 @@ def dist_to_line(p):
 dev_joint = max(dist_to_line(fk(qa + si * (qb - qa))) for si in s)
 q_task = [ik(pa + si * (pb - pa)) for si in s]
 len_task = np.abs(np.diff(q_task, axis=0)).sum(axis=0)
-print(f"joint space: deviation from the line {dev_joint * 100:.1f} cm, joint travel {np.abs(qb - qa).round(2)}")
+print(
+    f"joint space: deviation from the line {dev_joint * 100:.1f} cm, joint travel {np.abs(qb - qa).round(2)}"
+)
 print(f"task space : line held exactly, joint travel {len_task.round(2)}")
 ```
 
