@@ -9,12 +9,14 @@ and the scope/CSRF tests next to it.
 |---|---|---|---|---|---|
 | `GET /healthz`, `/readyz`, `/version` | 200 | 200 | 200 | 200 | — |
 | `POST /api/v1/auth/signup`, `/login`, `/verify-email`, `/password/forgot`, `/password/reset` | ✔ | ✔ | ✔ | ✔ | — |
+| `GET /api/v1/auth/oidc/{provider}/start`, `/callback` (302) | ✔ | ✔ (links) | ✔ (links) | ✔ (links) | — |
 | `POST /api/v1/auth/logout` | 401 | ✔ | ✔ | ✔ | session |
+| `GET /metrics` (internal network only) | 200 | 200 | 200 | 200 | — |
 | `GET /api/v1/courses`, `/modules/*`, `/lessons/*`, `/resources` | 401 | ✔ | ✔ | ✔ | `read:progress` |
 | `GET /api/v1/progress/*`, `/reports/*` (own data only) | 401 | ✔ | ✔ | ✔ | `read:progress` |
 | `POST /api/v1/progress/start|stop|log|done` (own data only) | 401 | ✔ | ✔ | ✔ | `write:progress` |
 | `GET /api/v1/me`, `/me/export` | 401 | ✔ | ✔ | ✔ | `read:progress` |
-| `PATCH /api/v1/me`, `PUT /me/password`, `GET|DELETE /me/sessions*`, `GET|POST|DELETE /me/tokens*`, `DELETE /me` | 401 | ✔ | ✔ | ✔ | not allowed (session only) |
+| `PATCH /api/v1/me`, `PUT /me/password`, `GET|DELETE /me/sessions*`, `GET|POST|DELETE /me/tokens*`, `GET|DELETE /me/identities*`, `DELETE /me` | 401 | ✔ | ✔ | ✔ | not allowed (session only) |
 | `GET /api/v1/admin/users`, `/admin/users/{id}`, `/admin/audit` | 401 | 403 | 403 | ✔ | `admin` |
 | `PATCH /api/v1/admin/users/{id}`, `DELETE /admin/users/{id}/sessions` | 401 | 403 | 403 | ✔ | `admin` (+`write:progress` for the method check) |
 

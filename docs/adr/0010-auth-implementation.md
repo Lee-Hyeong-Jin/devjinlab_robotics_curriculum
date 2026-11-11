@@ -27,8 +27,23 @@ ADR 0009가 "브라우저 = 서버 측 세션 쿠키, 프로그램 = PAT"를 정
 
 ## 결정
 
-위 표의 "택한 것". OIDC(AC-AUTH.3)는 `identities` 테이블과 `/auth/oidc/{provider}/start|callback`
-자리(501)만 두고 2차 증분에서 authlib로 구현한다.
+위 표의 "택한 것".
+
+OIDC(AC-AUTH.3, 2차 증분): authlib 대신 httpx + PyJWT로 직접 구현한다(Authorization Code + PKCE
+S256만 쓰므로 범위가 작고, 가짜 IdP로 끝까지 테스트하기 쉽다).
+
+- 제공자는 `RC_OIDC_PROVIDERS`(JSON 목록: id, issuer, client_id, client_secret 또는
+  client_secret_env, 선택적 엔드포인트). 엔드포인트가 없으면 discovery 문서를 읽고 issuer 일치를 확인.
+- 진행 중 로그인(state, nonce, PKCE verifier, return_to)은 서버 상태 대신 HMAC-SHA256 서명 쿠키
+  `oidc_flow`(HttpOnly, 10분, `/api/v1/auth/oidc` 경로)에 둔다. 서명 키 `RC_AUTH_SECRET`(레플리카
+  공통; 없으면 프로세스별 임의 키 + 경고).
+- id_token: 허용 알고리즘은 RS/ES/PS 계열만(HS·none 거부), JWKS `kid` 일치(없으면 1회 재조회로 키
+  교체 대응), iss·aud·exp·iat(서버 시계, 60초 여유)·nonce 검증. 이메일은 `email_verified=true`일 때만 신뢰.
+- 연결 규칙: 알려진 (provider, subject) → 그 사용자. 로그인 상태에서 시작 → 현재 계정에 연결.
+  같은 이메일의 기존 계정이 있으면 자동 연결하지 않고 409("비밀번호로 로그인 후 다시 시도") —
+  PRD의 "같은 이메일 계정과 연결"은 이 두 단계로 충족한다. 그 외에는 비밀번호 없는 새 계정.
+- `return_to`는 `/`로 시작하는 상대 경로만 허용(open redirect 방지), 성공 시 `RC_PUBLIC_URL`로 302.
+- GitHub(비 OIDC OAuth2)와 IdP 그룹→역할 매핑(`OIDC_ROLE_CLAIM_MAP`)은 후속.
 
 ## 결과
 
@@ -36,5 +51,5 @@ ADR 0009가 "브라우저 = 서버 측 세션 쿠키, 프로그램 = PAT"를 정
   학습 데이터 조회는 인증 컨텍스트의 `user_id`로만 묶인다(라우터·코어 서비스 두 겹).
 - 감수하는 것: 인증 요청마다 세션 조회 1회(+분당 1회 갱신), 로그인 실패마다 행 1개 기록
   (`login_attempts` 정리 작업은 P2-5 운영 작업으로).
-- 후속: OIDC(2차), 메일 인증 전 기능 제한(공개 기능이 생길 때), MFA(Phase 3), HIBP 유출 비밀번호
+- 후속: GitHub OAuth2 어댑터·OIDC 역할 매핑, 메일 인증 전 기능 제한(공개 기능이 생길 때), MFA(Phase 3), HIBP 유출 비밀번호
   검사(선택), `login_attempts`·만료 세션 정리 잡, 초대(`invite` 토큰 종류만 선반영).
