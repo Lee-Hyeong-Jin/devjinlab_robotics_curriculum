@@ -5,10 +5,12 @@ from pathlib import Path
 from typer.testing import CliRunner, Result
 
 from robotics_curriculum.cli import app
+from robotics_curriculum.i18n import translator
 from robotics_curriculum.progress import DB_FILENAME
 
 CURRICULUM = Path(__file__).resolve().parent / "fixtures" / "curriculum"
 VECTORS = "m1-vectors-matrices"
+PREREQ_WARNING = translator("ko")("cli.warn_prereq", ids=VECTORS)
 ROTATION = "m1-rotation-representations"
 DH = "m2-dh-parameters"
 
@@ -30,8 +32,8 @@ def _line(output: str, lesson_id: str) -> str:
 def test_start_on_locked_lesson_warns_and_still_starts(tmp_path: Path) -> None:
     result = rc(tmp_path, "start", DH)
     assert result.exit_code == 0, result.output
-    assert f"warning: prerequisites not done: {VECTORS}" in result.stderr
-    assert f"started {DH}" in result.stdout
+    assert translator("ko")("cli.warn_prereq", ids=VECTORS) in result.stderr
+    assert DH in result.stdout
     assert _line(rc(tmp_path, "roadmap").stdout, DH).startswith("[>]")
 
 
@@ -43,9 +45,9 @@ def test_start_on_unlocked_lesson_does_not_warn(tmp_path: Path) -> None:
 
 def test_log_and_done_on_locked_lesson_warn(tmp_path: Path) -> None:
     result = rc(tmp_path, "log", ROTATION, "30")
-    assert result.exit_code == 0 and "prerequisites not done" in result.stderr
+    assert result.exit_code == 0 and PREREQ_WARNING in result.stderr
     result = rc(tmp_path, "done", ROTATION)
-    assert result.exit_code == 0 and "prerequisites not done" in result.stderr
+    assert result.exit_code == 0 and PREREQ_WARNING in result.stderr
     assert "warning" not in rc(tmp_path, "done", VECTORS).stderr
     assert "warning" not in rc(tmp_path, "log", DH, "10").stderr
 

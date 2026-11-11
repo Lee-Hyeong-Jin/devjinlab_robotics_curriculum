@@ -1,0 +1,178 @@
+# 한국어 메시지 카탈로그 (원본 언어). 키는 점으로 구분된 경로로 평탄화된다.
+# 값은 str.format 템플릿이며 이름 있는 인자만 쓴다. 영어는 en.yaml.
+# 콘텐츠(레슨 본문·제목·자료)는 커리큘럼 파일에 있고 번역 대상이 아니다.
+
+cli:
+  error_prefix: "error: {message}"
+  warn_prereq: "warning: 선수 레슨이 끝나지 않았습니다: {ids}"
+  timer:
+    none: "열린 타이머: 없음"
+    running: "열린 타이머: {lesson_id} (시작 {since} UTC)"
+  review_line: "오늘 복습: {due}장 · 최근 7일 퀴즈 정답률: {rate}"
+  no_record: "기록 없음"
+  status:
+    header_module: "모듈"
+    header_lesson: "레슨"
+    header_title: "제목"
+    header_state: "상태"
+    header_time: "시간"
+    header_estimate: "예상"
+    header_completed: "완료일"
+    header_index: "#"
+    header_difficulty: "난이도"
+    course_line: "{title} ({course_id})  {percent}%  (레슨 {done}/{total}, 시간 {time})"
+  state:
+    done: "완료"
+    in_progress: "진행 중"
+    not_started: "시작 전"
+    locked: "잠김"
+  start: "시작 {lesson_id} ({title}) {at} UTC"
+  stop: "정지 {lesson_id}: {time}"
+  stop_discarded: "세션 폐기 {lesson_id}"
+  logged: "{lesson_id} 에 {time} 기록"
+  done_line: "완료 {lesson_id} ({title}), 시간 {time}{extra}"
+  done_understanding: ", 이해도 {value}"
+  unlocked: "  해금: {lesson_id} ({title})"
+  next:
+    empty: "할 일 없음: 지금 가능한 레슨을 모두 끝냈습니다"
+    hint: "시작: rc start {lesson_id}"
+  export: "레슨 {lessons}행, 세션 {sessions}개를 {path} 에 내보냈습니다"
+  import: "레슨 {lessons}행, 세션 {sessions}개를 가져왔습니다"
+
+quiz:
+  intro: "퀴즈: {title} ({lesson_id}) — {count}문항"
+  nothing_to_ask: "풀 문항이 없습니다 (마지막 시도에서 모두 정답)"
+  aborted: "중단: 결과를 저장하지 않았습니다"
+  new_cards: "새 카드 {count}장 ({detail}) → `rc review` 로 복습"
+  new_cards_detail: "오답 {wrong} + 개념 {concept}"
+  elapsed: "소요 {time} · 저장됨"
+  question: "[{number}/{total}] ({kind}) {prompt}"
+  correct: "정답"
+  wrong: "오답 (정답: {answer})"
+  explanation: "  해설: {text}"
+  score: "결과 {correct}/{total} ({percent}%)  오답 {wrong}"
+  kind:
+    single: "객관식"
+    multiple: "다중선택"
+    truefalse: "O/X"
+    short: "단답"
+  hint:
+    single: "번호"
+    multiple: "번호 (쉼표로 여러 개)"
+    truefalse: "O/X"
+    short: "답"
+  invalid:
+    need_number: "번호를 입력하세요 (1-{count})"
+    not_in_range: "'{token}' 은(는) 1-{count} 사이의 번호가 아닙니다"
+    truefalse: "O 또는 X 로 답하세요"
+    one_number: "번호 하나만 고르세요"
+    need_answer: "답을 입력하세요"
+
+review:
+  none_due: "오늘 복습할 카드가 없습니다"
+  due_count: "{count}장 due"
+  session_intro: "복습 {count}장"
+  rating_menu: "1 again · 2 hard · 3 good · 4 easy"
+  rating_invalid: "  ! 1-4 또는 again/hard/good/easy 로 답하세요"
+  front: "[{shown}/{total}]"
+  front_again: "[다시 {pass_no}/{max_pass}]"
+  reveal: "> Enter 로 뒷면 보기 "
+  back: "  답: {text}"
+  next_due: "  다음 복습: {date} ({days}일 뒤)"
+  summary: "완료 {reviewed}장  {ratings}   내일 예정 {tomorrow}장"
+  aborted: "중단: 답한 카드까지는 저장되었습니다"
+  header:
+    card: "카드"
+    lesson: "레슨"
+    source: "출처"
+    due: "예정일"
+
+resource:
+  kind:
+    book: "교재"
+    course: "강의"
+    video: "영상"
+    article: "글"
+    other: "기타"
+  none: "  (등록된 자료 없음)"
+  library_title: "{course} 자료 라이브러리 ({count}개)"
+
+lesson:
+  module_line: "모듈: {module}"
+  level_suffix: " · 수준: {level}"
+  estimate_line: "예상 시간: {minutes}분 · 난이도: {difficulty}/5"
+  objectives: "학습 목표:"
+  prerequisites: "선수 레슨:"
+  prerequisites_none: " 없음"
+  study_guide: "이 단계 공부법"
+
+roadmap:
+  no_level: "(레벨 미지정)"
+  legend: "[x] 완료  [>] 진행 중  [ ] 시작 전  [-] 잠김 (선수 레슨 미완료)"
+
+site:
+  title_fallback: "로보틱스 커리큘럼"
+  built: "빌드: {at} · 진도를 반영하려면 <code>rc site build</code> 를 다시 실행하세요."
+  nav:
+    dashboard: "대시보드"
+    roadmap: "로드맵"
+    resources: "자료실"
+  heading:
+    position: "현재 위치"
+    overview: "한눈에 보기"
+    stage_progress: "단계별 진행률"
+    next_lessons: "다음 레슨"
+    recent: "최근 활동"
+    study_guide: "이 단계 공부법"
+    resources: "학습 자료"
+    quiz: "확인 퀴즈 ({count}문항)"
+    answer: "정답·해설"
+  state:
+    done: "완료"
+    in_progress: "진행 중"
+    not_started: "시작 전"
+    locked: "잠김"
+  card:
+    week_time: "이번 주 학습 시간"
+    week_time_sub: "{sessions}회 세션 · {start}~"
+    streak: "연속 학습"
+    streak_value: "{days}일"
+    streak_sub: "하루 한 번 이상 학습한 날"
+    lessons_done: "완료한 레슨"
+    lessons_done_sub: "전체 {percent}%"
+    due: "오늘 복습"
+    due_value: "{count}장"
+    due_sub: "due 카드 · rc review"
+  stage: "단계"
+  progress: "진행률"
+  modules: "모듈"
+  stage_unassigned: "단계 미지정"
+  activity:
+    reading: "읽기"
+    quiz: "퀴즈"
+    exercise: "실습"
+  answer_label: "**정답:** {answer}"
+  study_tip: "이렇게 공부하세요"
+  study_missing: "공부법이 아직 작성되지 않았습니다"
+  study_missing_body: "학습 목표를 확인하고 본문을 읽은 뒤, 아래 학습 자료로 보충하세요."
+  locked_warning: "잠김"
+  locked_body: "선수 레슨을 먼저 완료하면 이 레슨이 열립니다."
+  no_resources: "등록된 자료가 없습니다."
+  all_done: "모든 레슨을 완료했습니다. 수고하셨습니다!"
+  nothing_available: "지금 시작할 수 있는 레슨이 없습니다."
+  no_activity: "아직 기록된 학습이 없습니다. `rc start <레슨>` 으로 시작하세요."
+
+api:
+  problem:
+    "400": "잘못된 요청"
+    "401": "인증이 필요합니다"
+    "403": "권한이 없습니다"
+    "404": "찾을 수 없습니다"
+    "405": "허용되지 않은 메서드"
+    "409": "현재 상태와 충돌합니다"
+    "415": "지원하지 않는 형식"
+    "422": "입력을 처리할 수 없습니다"
+    "429": "요청이 너무 많습니다"
+    "500": "서버 내부 오류"
+    "503": "서비스를 사용할 수 없습니다"
+  validation: "{count}개 필드가 올바르지 않습니다"

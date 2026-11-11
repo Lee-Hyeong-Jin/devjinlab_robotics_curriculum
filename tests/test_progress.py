@@ -236,7 +236,7 @@ def test_cli_smoke(tmp_path: Path) -> None:
     assert rc(tmp_path, "log", VECTORS, "1h30m", "--note", "problems").exit_code == 0
     result = rc(tmp_path, "done", VECTORS, "-u", "4")
     assert result.exit_code == 0, result.output
-    assert f"unlocked: {DH}" in result.output
+    assert f"{DH} (DH 파라미터)" in result.output  # 해금 line, localized (ko default)
 
     result = rc(tmp_path, "status")
     assert result.exit_code == 0, result.output
