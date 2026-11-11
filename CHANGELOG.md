@@ -39,6 +39,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   local SQLite file), `rc progress transfer` to move local SQLite or JSON-export data into
   PostgreSQL (merge without duplicates, `--user-id` to assign a server account), and a `db`
   service (PostgreSQL 16) in the Compose file.
+- Server-mode accounts (`RC_AUTH_MODE=server`): email + Argon2id passwords, login throttling,
+  server-side session cookies with CSRF protection, personal access tokens with scopes, roles
+  learner/author/admin, per-user progress, password reset and email verification by mail,
+  account export and deletion, admin user management and an audit log; security headers.
 - Engineering scaffolding: Apache-2.0 license for code, CC BY 4.0 for curriculum content,
   contribution guide, Code of Conduct, security policy, issue and PR templates, Dependabot,
   GitHub Actions CI and release workflows, strict mypy, coverage gate, pre-commit hooks,

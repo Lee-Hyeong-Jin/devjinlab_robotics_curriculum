@@ -85,6 +85,7 @@ HTTP API (FastAPI, `/api/v1`; extra `api` — `uv sync` installs it in dev, `pip
 
 ```bash
 uv run rc api serve --host 127.0.0.1 --port 8000   # docs at /docs, schema at /openapi.json; env RC_API_HOST/PORT/LOG_LEVEL
+RC_AUTH_MODE=server RC_AUTH_ADMIN_EMAIL=you@example.org uv run rc api serve   # accounts + login (docs/api/role-matrix.md)
 ```
 
 ## Lint / format
