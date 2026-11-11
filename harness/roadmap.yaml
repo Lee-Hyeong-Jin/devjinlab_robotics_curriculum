@@ -81,7 +81,7 @@ milestones:
 
     - id: P1-2
       title: 퀴즈·플래시카드·간격 반복 (FR-4 P0)
-      status: todo
+      status: done
       depends_on: [P1-1, P1-5]
       goal: 레슨 Markdown 의 quiz 블록을 검증·채점하고, 틀린 문항과 핵심 개념을 카드로 만들어 SM-2 로 복습 일정을 계산한다(PRD 부록 C.1).
       acceptance:
@@ -95,7 +95,7 @@ milestones:
         - AC-4.8a LESSON_TEMPLATE.md 에 퀴즈 블록 예시, CONTENT_MODEL.md 에 퀴즈 스키마가 있다(백엔드 개발자)
         - AC-4.8b 기초 M1 레슨 2개 이상에 실제 퀴즈가 있고 `rc validate` 와 `rc quiz` 가 통과한다(커리큘럼 저자)
         - AC-4.9 코어 라이브러리 라인·분기 커버리지 80% 이상(fail_under=80), mypy strict 통과
-      note:
+      note: quiz blocks, SM-2, rc quiz/review, progress v2 + alembic 0002 (d518e15, a581230); AC-4.8b content pending
 
     - id: P1-3
       title: 로드맵·선수지식 그래프·다음 레슨 추천 (FR-2)

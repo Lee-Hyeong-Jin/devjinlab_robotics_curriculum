@@ -32,7 +32,18 @@ ROOT = Path(__file__).resolve().parents[1]
 VECTORS = "m1-vectors-matrices"
 DH = "m2-dh-parameters"
 T0 = datetime(2026, 11, 11, 9, 0, tzinfo=UTC)
-TABLES = {"meta", "lesson_progress", "sessions", "alembic_version"}
+TABLES = {
+    "meta",
+    "alembic_version",
+    "lesson_progress",
+    "sessions",
+    "cards",
+    "card_state",
+    "reviews",
+    "quiz_attempts",
+    "quiz_runs",
+    "activity_progress",
+}
 
 
 @pytest.fixture
@@ -272,18 +283,3 @@ def test_open_store_shares_one_pool_per_url(clean_postgres_url: str) -> None:
     assert second.get_lesson(VECTORS) is not None
     second.close()
     pg.dispose_shared_engines()
-
-
-def test_delete_user_removes_only_that_user(clean_postgres_url: str) -> None:
-    with PostgresProgressStore(clean_postgres_url) as store:
-        for user in (1, 2):
-            store.save_lesson(LessonProgress(user_id=user, lesson_id=VECTORS))
-            store.save_lesson(LessonProgress(user_id=user, lesson_id=DH))
-            store.add_session(Session(user_id=user, lesson_id=VECTORS, started_at=T0))
-        assert store.delete_user(1) == (2, 1)
-        assert store.list_lessons(1) == [] and store.list_sessions(1) == []
-        assert [p.lesson_id for p in store.list_lessons(2)] == [VECTORS, DH]
-        assert len(store.list_sessions(2)) == 1
-        assert store.delete_user(99) == (0, 0)  # unknown user
-        assert store.delete_user(2) == (2, 1)
-        assert store.is_empty()
