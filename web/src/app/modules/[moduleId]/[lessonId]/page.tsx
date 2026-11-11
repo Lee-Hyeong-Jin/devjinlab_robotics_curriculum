@@ -3,16 +3,18 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getLocale, getTranslations } from 'next-intl/server'
 
+import { ButtonLink } from '@/components/Button'
 import { Card } from '@/components/Card'
 import { Chip } from '@/components/Chip'
 import { LessonRow } from '@/components/LessonRow'
 import { MarkdownBody } from '@/components/MarkdownBody'
 import { PageHeader } from '@/components/PageHeader'
 import { ResourceRow } from '@/components/ResourceRow'
+import { StudyPanel } from '@/components/StudyPanel'
 import { isNotFound } from '@/lib/api/errors'
-import { getLesson, getLessonProgress, getModule } from '@/lib/api/queries'
+import { getLesson, getLessonProgress, getModule, getStatus } from '@/lib/api/queries'
 import type { Lesson, Module } from '@/lib/api/types'
-import { formatMinutes, formatSeconds } from '@/lib/format'
+import { formatMinutes } from '@/lib/format'
 import { renderMarkdown } from '@/lib/markdown/render'
 import { lockStateFromStatus } from '@/lib/progress'
 
@@ -49,23 +51,26 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
  */
 export default async function LessonPage({ params }: Params) {
   const { moduleId, lessonId } = await params
-  const [t, tState, tKind, tActivity, locale] = await Promise.all([
+  const [t, tState, tKind, tActivity, tQuiz, locale] = await Promise.all([
     getTranslations('lesson'),
     getTranslations('state'),
     getTranslations('kind'),
     getTranslations('activityKind'),
+    getTranslations('quiz'),
     getLocale(),
   ])
-  const [lesson, progress, mod] = await Promise.all([
+  const [lesson, progress, mod, status] = await Promise.all([
     loadLesson(lessonId),
     getLessonProgress(lessonId),
     getModule(moduleId).catch((): Module | null => null),
+    getStatus(),
   ])
 
   const body = renderMarkdown(lesson.body)
   const studyMethod = renderMarkdown(lesson.study_method ?? undefined)
   const siblings = mod?.lessons ?? []
-  const sectionHeadings = body.headings.filter((heading) => heading.depth === 2)
+  // `##` in the body renders as <h3> after the shift under the page's <h1>.
+  const sectionHeadings = body.headings.filter((heading) => heading.depth === 3)
 
   return (
     <>
@@ -159,31 +164,21 @@ export default async function LessonPage({ params }: Params) {
         </div>
 
         <aside className="flex flex-col gap-6" aria-label={t('onThisPage')}>
-          <Card>
-            <p className="text-muted text-xs">{t('writeActionsPending')}</p>
-            {progress ? (
-              <dl className="mt-3 flex flex-col gap-1 text-sm">
-                <div className="flex justify-between gap-2">
-                  <dt className="text-muted">{t('studied')}</dt>
-                  <dd className="text-primary tabular-nums">
-                    {formatSeconds(progress.total_seconds, locale)}
-                  </dd>
-                </div>
-                {progress.understanding ? (
-                  <div className="flex justify-between gap-2">
-                    <dt className="text-muted">{t('understanding')}</dt>
-                    <dd className="text-primary tabular-nums">{`${progress.understanding}/5`}</dd>
-                  </div>
-                ) : null}
-                {progress.note ? (
-                  <div className="mt-1">
-                    <dt className="text-muted">{t('note')}</dt>
-                    <dd className="text-primary">{progress.note}</dd>
-                  </div>
-                ) : null}
-              </dl>
-            ) : null}
+          <Card as="section" aria-labelledby="quiz-link-heading">
+            <h2 id="quiz-link-heading" className="text-primary mb-2 text-sm font-semibold">
+              {tQuiz('title')}
+            </h2>
+            <ButtonLink href={`/modules/${moduleId}/${lessonId}/quiz`} kind="secondary">
+              {tQuiz('open')}
+            </ButtonLink>
           </Card>
+
+          <StudyPanel
+            moduleId={moduleId}
+            lessonId={lessonId}
+            progress={progress}
+            openSession={status?.open_session ?? null}
+          />
 
           {sectionHeadings.length > 0 ? (
             <Card as="nav" aria-labelledby="toc-heading">
@@ -214,7 +209,7 @@ export default async function LessonPage({ params }: Params) {
                 {lesson.prerequisites.map((id) => (
                   <li key={id}>
                     <Link
-                      href={`/modules/${moduleId}/${id}`}
+                      href={`/lessons/${encodeURIComponent(id)}`}
                       className="text-accent font-mono text-xs underline underline-offset-2"
                     >
                       {id}

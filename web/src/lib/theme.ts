@@ -3,6 +3,9 @@ export type Theme = 'system' | 'light' | 'dark'
 
 export const THEME_STORAGE_KEY = 'rc-theme'
 
+/** Fired on this tab when the theme changes; `storage` covers the other tabs. */
+export const THEME_EVENT = 'rc-theme-change'
+
 export function isTheme(value: unknown): value is Theme {
   return value === 'system' || value === 'light' || value === 'dark'
 }
@@ -14,6 +17,19 @@ export function readStoredTheme(): Theme {
     return isTheme(stored) ? stored : 'system'
   } catch {
     return 'system'
+  }
+}
+
+/**
+ * Subscribe to theme changes for `useSyncExternalStore`: this tab's own writes
+ * and another tab's, which arrive as a `storage` event.
+ */
+export function subscribeToTheme(onChange: () => void): () => void {
+  window.addEventListener(THEME_EVENT, onChange)
+  window.addEventListener('storage', onChange)
+  return () => {
+    window.removeEventListener(THEME_EVENT, onChange)
+    window.removeEventListener('storage', onChange)
   }
 }
 

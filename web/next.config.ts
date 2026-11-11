@@ -15,10 +15,6 @@ const nextConfig: NextConfig = {
     // `npm run typecheck` is the gate; `next build` must not pass on type errors either.
     ignoreBuildErrors: false,
   },
-  eslint: {
-    // `npm run lint` is the gate; no need for `next build` to lint a second time.
-    ignoreDuringBuilds: true,
-  },
 }
 
 export default withNextIntl(nextConfig)

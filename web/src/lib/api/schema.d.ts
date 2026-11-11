@@ -185,6 +185,52 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Search Content
+         * @description Search lessons (title, summary, objectives, tags) and their resources (title, note).
+         *
+         *     Every word must match; title matches rank first, then tags, then other text.
+         */
+        get: operations["search_content_api_v1_search_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/roadmap": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Roadmap
+         * @description Level -> module -> lesson tree with the caller's states (``rc roadmap``).
+         *
+         *     Lesson state: done, in_progress, locked (a prerequisite is not done) or available. Module
+         *     state: done if every lesson is done, in_progress if any is started or done, locked if every
+         *     lesson is locked, else available. Progress values are fractions (0-1).
+         */
+        get: operations["get_roadmap_api_v1_roadmap_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/progress/status": {
         parameters: {
             query?: never;
@@ -902,7 +948,7 @@ export interface paths {
         };
         /**
          * List Audit
-         * @description Audit log, newest first.
+         * @description Audit log, newest first (reading it is itself audited).
          */
         get: operations["list_audit_api_v1_admin_audit_get"];
         put?: never;
@@ -1876,6 +1922,59 @@ export interface components {
              */
             due_tomorrow: number;
         };
+        /** Roadmap */
+        Roadmap: {
+            /**
+             * Stages
+             * @description Consecutive modules of one level, in course order (like `rc roadmap`).
+             */
+            stages: components["schemas"]["RoadmapStage"][];
+        };
+        /** RoadmapLesson */
+        RoadmapLesson: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /**
+             * State
+             * @enum {string}
+             */
+            state: "done" | "in_progress" | "available" | "locked";
+        };
+        /** RoadmapModule */
+        RoadmapModule: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /**
+             * Progress
+             * @description Done lessons / all lessons.
+             */
+            progress: number;
+            /**
+             * State
+             * @enum {string}
+             */
+            state: "done" | "in_progress" | "available" | "locked";
+            /** Lessons */
+            lessons: components["schemas"]["RoadmapLesson"][];
+        };
+        /** RoadmapStage */
+        RoadmapStage: {
+            /** Course Id */
+            course_id: string;
+            /** Level */
+            level: ("기초" | "중급" | "고급") | null;
+            /**
+             * Progress
+             * @description Mean of the module progress values.
+             */
+            progress: number;
+            /** Modules */
+            modules: components["schemas"]["RoadmapModule"][];
+        };
         /**
          * Role
          * @enum {string}
@@ -1887,6 +1986,31 @@ export interface components {
          * @enum {string}
          */
         Scope: "read:progress" | "write:progress" | "admin";
+        /** SearchHit */
+        SearchHit: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "lesson" | "resource";
+            /**
+             * Id
+             * @description Lesson id, or `<lesson_id>#<n>` for the n-th resource.
+             */
+            id: string;
+            /** Title */
+            title: string;
+            /**
+             * Snippet
+             * @description Matching text around the first query word.
+             */
+            snippet: string;
+            /**
+             * Lesson Id
+             * @description The lesson to open.
+             */
+            lesson_id: string;
+        };
         /**
          * Session
          * @description One study session: a timer run (``rc start``/``rc stop``) or a manual log.
@@ -2201,7 +2325,7 @@ export interface components {
         };
         /**
          * Problem
-         * @description RFC 9457 problem details. ``type`` is ``about:blank`` and ``title`` the HTTP phrase.
+         * @description RFC 9457 problem details. ``type`` is ``about:blank`` and ``title`` is localized.
          */
         Problem: {
             /**
@@ -2555,6 +2679,98 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ResourceRef"][];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    search_content_api_v1_search_get: {
+        parameters: {
+            query: {
+                /** @description Words to find. */
+                q: string;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchHit"][];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    get_roadmap_api_v1_roadmap_get: {
+        parameters: {
+            query?: {
+                /** @description Only this course. */
+                course?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Roadmap"];
                 };
             };
             /** @description Not Found */

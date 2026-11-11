@@ -39,6 +39,15 @@ function placeholders(value: Catalogue, prefix = ''): Map<string, string[]> {
  * namespace must have a literal `t('…')` call for each of its keys.
  */
 const DYNAMIC_NAMESPACES = new Set(['state', 'kind', 'activityKind', 'role', 'userStatus'])
+/** Keys inside these namespaces that a runtime value selects. */
+const DYNAMIC_KEYS = new Set([
+  'search.lesson',
+  'search.resource',
+  'review.again',
+  'review.hard',
+  'review.good',
+  'review.easy',
+])
 
 const SOURCE_ROOT = join(process.cwd(), 'src')
 
@@ -108,7 +117,7 @@ describe('message catalogues', () => {
       // Namespaces whose keys are looked up by a runtime value, e.g.
       // `tState(state)` or `tKind(resource.kind)`. Listed explicitly so the
       // check stays meaningful for every other namespace.
-      return !DYNAMIC_NAMESPACES.has(namespace)
+      return !DYNAMIC_NAMESPACES.has(namespace) && !DYNAMIC_KEYS.has(key)
     })
     expect(unused).toEqual([])
   })

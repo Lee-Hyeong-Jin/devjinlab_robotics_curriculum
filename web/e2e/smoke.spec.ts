@@ -4,10 +4,11 @@ import { expect, test, type Page } from '@playwright/test'
 /**
  * Smoke + accessibility pass over the read screens.
  *
- * Needs the API running (`uv run rc api serve`) and the web app built and
- * started. The login → dashboard → roadmap → lesson → mark-done flow of AC-WEB.1
- * is completed once the P2-2 authentication API and the web write actions land;
- * this file covers the part that exists and the axe gate of AC-A11Y.1.
+ * Needs the web app built and started against an API in **local** mode (the
+ * default, `RC_AUTH_MODE=local`): these screens are visited signed-out, and a
+ * server-mode API would correctly redirect every one of them to `/login`.
+ * The signed-in flow of AC-WEB.1 lives in `journey.spec.ts`, which needs a
+ * server-mode API instead.
  */
 
 const AXE_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']

@@ -44,6 +44,8 @@ export type Lesson = Schemas['Lesson']
 export type Activity = Schemas['Activity']
 export type ResourceRef = Schemas['ResourceRef']
 export type Status = Schemas['Status']
+export type Roadmap = Schemas['Roadmap']
+export type SearchHit = Schemas['SearchHit']
 export type StageStat = Schemas['StageStat']
 export type WeekStat = Schemas['WeekStat']
 export type LessonState = Schemas['LessonState']
@@ -52,6 +54,17 @@ export type NextLesson = Schemas['NextLesson']
 export type DoneResult = Schemas['DoneResult']
 export type StudySession = Schemas['StudySession']
 export type Report = Schemas['Report']
+
+/**
+ * `Report.summary` is a union of the weekly and module shapes, and the
+ * discriminating `kind` lives on the report, not the summary — so narrowing
+ * needs a guard.
+ */
+export function isWeeklySummary(
+  summary: Report['summary'],
+): summary is Extract<Report['summary'], { session_count: number }> {
+  return 'session_count' in summary
+}
 
 /** A stage of the course: one level with its module summaries. */
 export type CourseStage = NonNullable<Course['stages']>[number]

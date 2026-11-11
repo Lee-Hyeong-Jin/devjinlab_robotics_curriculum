@@ -4,7 +4,7 @@
  */
 import 'server-only'
 
-import { composeRoadmap, type RoadmapStageView } from '../roadmap'
+import { toStageViews, type RoadmapStageView } from '../roadmap'
 import { apiGet, apiGetOrNull } from './client'
 import { defaultCourseId } from './config'
 import type {
@@ -13,7 +13,11 @@ import type {
   LessonProgress,
   Module,
   NextLesson,
+  QuizPublic,
+  Report,
   ResourceRef,
+  ReviewCard,
+  SearchHit,
   Status,
 } from './types'
 
@@ -75,15 +79,32 @@ export function getResources(scope?: {
   })
 }
 
-/**
- * The roadmap, composed from the course structure and the caller's lesson states.
- *
- * Replace this with a single `GET /api/v1/roadmap` call once that endpoint is in
- * the contract — see `src/lib/roadmap.ts`.
- */
+/** `GET /api/v1/roadmap` — stage → module → lesson witheach lesson's state. */
 export async function getRoadmap(
   courseId: string = defaultCourseId(),
 ): Promise<RoadmapStageView[]> {
-  const [course, status] = await Promise.all([getCourse(courseId), getStatus()])
-  return composeRoadmap(course, status?.lessons ?? [], status?.stages ?? [])
+  return toStageViews(await apiGetOrNull('/api/v1/roadmap', { query: { course: courseId } }))
+}
+
+/** `GET /api/v1/search` — lessons and resources matching `q` (min. 2 characters). */
+export function search(query: string, limit = 50): Promise<SearchHit[] | null> {
+  if (query.trim().length < 2) return Promise.resolve([])
+  return apiGetOrNull('/api/v1/search', { query: { q: query.trim(), limit } })
+}
+
+/** `GET /api/v1/lessons/{id}/quiz` — the lesson's questions, without answers. */
+export function getQuiz(lessonId: string): Promise<QuizPublic | null> {
+  return apiGetOrNull(
+    `/api/v1/lessons/${encodeURIComponent(lessonId)}/quiz` as '/api/v1/lessons/{lesson_id}/quiz',
+  )
+}
+
+/** `GET /api/v1/review/due` — the flashcards due today. */
+export function getDueCards(): Promise<ReviewCard[] | null> {
+  return apiGetOrNull('/api/v1/review/due')
+}
+
+/** `GET /api/v1/reports/weekly` — the weekly report, as Markdown plus a summary. */
+export function getWeeklyReport(): Promise<Report | null> {
+  return apiGetOrNull('/api/v1/reports/weekly')
 }
