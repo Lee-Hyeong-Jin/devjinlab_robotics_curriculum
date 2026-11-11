@@ -68,14 +68,15 @@ flowchart LR
 | 계층 | 위치 | ID | 예 |
 |---|---|---|---|
 | Course | `curriculum/<course-dir>/course.yaml` | slug | `robotics-expert` (코스는 하나) |
-| Module | `curriculum/<course-dir>/<module-dir>/module.yaml` | slug, 코스 내 유일 | `m3-kinematics` |
-| Lesson | `.../<module-dir>/<lesson>.md` | slug, 코스 내 유일. 관례 `<모듈 접두어>-<주제>` | `m3-forward-kinematics` |
-| Activity | 레슨 프런트매터 `activities[]` | slug, 코스 내 유일. 관례 `<lesson-id>-<kind>` | `m3-forward-kinematics-quiz` |
+| Module | `curriculum/<course-dir>/<module-dir>/module.yaml` | slug, 코스 내 유일 | `m2-kinematics` |
+| Lesson | `.../<module-dir>/<lesson>.md` | slug, 코스 내 유일. 관례 `<모듈 접두어>-<주제>` | `m2-forward-kinematics` |
+| Activity | 레슨 프런트매터 `activities[]` | slug, 코스 내 유일. 관례 `<lesson-id>-<kind>` | `m2-forward-kinematics-quiz` |
 | Resource (제안) | `curriculum/resources/*.yaml` | slug, 저장소 전체 유일 | `lynch-park-modern-robotics` |
-| Stage (제안) | 모듈의 `level` 필드 | `basic` · `intermediate` · `advanced` | 기초 / 중급 / 고급 |
+| 단계 | 모듈의 `level` 필드 (한글 리터럴) | `기초` · `중급` · `고급` | 기초 M1–M4, 중급 M5–M8, 고급 M9–M10 |
 
 - CLI 인자는 전체 ID 또는 유일한 접두어를 받는다. 둘 이상 매칭되면 후보를 보여주고 종료 코드 2.
-- 단계(Stage)는 별도 디렉터리가 아니라 모듈 메타데이터다. 로드맵·대시보드는 `level`로 모듈을 묶어 보여준다.
+- 단계는 별도 디렉터리가 아니라 모듈 메타데이터다. 로드맵·대시보드는 `level`로 모듈을 묶어 보여준다.
+- 모듈 배정(PRD v0.4 부록 A): 기초 = M1 수학·물리, M2 운동학, M3 이동 로봇·제어, M4 센서·인식 기초 / 중급 = M5 상태 추정·SLAM, M6 내비게이션·경로 계획, M7 매니퓰레이션·동작 계획, M8 ROS 2·도구 개요 / 고급 = M9 학습 기반 로보틱스, M10 시스템 통합·프로젝트.
 
 ### 2.2 정적 사이트 페이지 구조
 
@@ -105,20 +106,20 @@ site/
 │ 빌드: 2026-11-11 21:03  (진도 반영은 `rc build` 재실행)                 │
 │                                                                      │
 │ 현재 위치                                                              │
-│  단계  중급  ▸  모듈  M3 로봇 운동학 (2/5 레슨)  ▸  다음  m3-forward-kinematics│
-│  [이 레슨 공부법 보기]   시작: rc start m3-forward-kinematics             │
+│  단계  기초  ▸  모듈  M2 로봇 운동학 (1/3 레슨)  ▸  다음  m2-forward-kinematics│
+│  [이 레슨 공부법 보기]   시작: rc start m2-forward-kinematics             │
 │                                                                      │
 │ 단계별 진행률                                                           │
-│  기초   M1 수학·물리 ████████ 100%   M2 프로그래밍·툴 ████████ 100%  ✔ 완료 │
-│  중급   M3 운동학 ███░░░░░ 40%   M4 제어 ░░░░ 0%   M5 센서·인식 ░░░░ 0%    │
-│  고급   M6 모션 플래닝 ▨   M7 SLAM ▨   M8 ROS 2 ▨   M9 캡스톤 ▨  (잠김)    │
+│  기초 35%  M1 수학·물리 ████████ 100%  M2 운동학 ███░░░ 40%  M3 이동로봇·제어 ░░░ 0%  M4 센서·인식 ░░░ 0% │
+│  중급  0%  M5 상태추정·SLAM ▨  M6 내비게이션 ▨  M7 매니퓰레이션 ▨  M8 ROS 2·도구 ▨  (잠김) │
+│  고급  0%  M9 학습 기반 로보틱스 ▨  M10 시스템 통합·프로젝트 ▨  (잠김)          │
 │                                                                      │
 │ ┌ 이번 주 ──────────┐ ┌ 연속 학습 ─┐ ┌ 오늘 복습 ─┐ ┌ 읽는 중인 자료 ─────┐ │
 │ │ 4h 35m / 5h  91%  │ │ 🔥 7일     │ │ 12장       │ │ Modern Robotics ch.4│ │
 │ └───────────────────┘ └────────────┘ └────────────┘ │ 3Blue1Brown 선형대수 │ │
 │                                                     └─────────────────────┘ │
 │ 최근 활동                                                               │
-│  11/11 m3-dh-parameters 완료 (이해도 4) · 11/10 퀴즈 m3-dh 4/5            │
+│  11/11 m2-dh-parameters 완료 (이해도 4) · 11/10 퀴즈 m2-dh 4/5            │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -127,28 +128,30 @@ site/
 ┌──────────────────────────────────────────────────────────────────────┐
 │ 로드맵 — 단계별 모듈            범례: ■완료 ▣진행중 □가능 ▨잠김(선수 미완) │
 │                                                                      │
-│ ┌ 기초 (완료) ─────────────┐ ┌ 중급 (진행 중 40%) ────┐ ┌ 고급 (잠김) ───┐│
-│ │ ■ M1 수학·물리 기초       │ │ ▣ M3 로봇 운동학       │ │ ▨ M6 모션 플래닝││
-│ │   m1-vectors ■ m1-rot ■  │ │   m3-dh ■ m3-fk ▣ m3-ik ▨│ │ ▨ M7 SLAM       ││
-│ │ ■ M2 프로그래밍·툴       │─▶ □ M4 제어             │─▶ ▨ M8 ROS 2      ││
-│ │   m2-python ■ m2-git ■   │ │ □ M5 센서·인식         │ │ ▨ M9 캡스톤     ││
-│ └──────────────────────────┘ └───────────────────────┘ └────────────────┘│
+│ ┌ 기초 (진행 중 35%) ───────┐ ┌ 중급 (잠김) ───────────┐ ┌ 고급 (잠김) ──────────┐│
+│ │ ■ M1 수학·물리            │ │ ▨ M5 상태 추정·SLAM     │ │ ▨ M9 학습 기반 로보틱스││
+│ │   m1-vectors ■ m1-rot ■   │ │ ▨ M6 내비게이션·경로 계획│ │ ▨ M10 시스템 통합·    ││
+│ │ ▣ M2 운동학               │─▶ ▨ M7 매니퓰레이션·동작  │─▶     프로젝트         ││
+│ │   m2-dh ■ m2-fk ▣ m2-ik ▨ │ │ ▨ M8 ROS 2·도구 개요    │ │                      ││
+│ │ □ M3 이동 로봇·제어        │ │                        │ │                      ││
+│ │ □ M4 센서·인식 기초        │ │                        │ │                      ││
+│ └───────────────────────────┘ └────────────────────────┘ └──────────────────────┘│
 │                                                                      │
 │ 선수지식 그래프 (Mermaid, 노드 클릭 → 레슨)                               │
-│  m1-vectors → m1-rotations → m3-dh → m3-fk → m3-ik → m6-planning …      │
+│  m1-vectors → m1-rotations → m2-dh → m2-fk → m2-ik → m7-manipulation …   │
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
-**레슨 페이지 `modules/m3-kinematics/m3-forward-kinematics/`**
+**레슨 페이지 `modules/m2-kinematics/m2-forward-kinematics/`**
 ```
 ┌───────────────┬────────────────────────────────────────────┬───────────┐
-│ ◂ 중급         │ 정기구학 (Forward Kinematics)                │ 이 페이지  │
-│ M3 로봇 운동학  │ 중급 · M3 · ⏱ 40분 · 난이도 ●●●○○ · 선수: m3-dh  │ 공부법    │
-│  ■ m3-dh       │ 상태: 진행 중 (활동 1/3)                      │ 자료      │
-│  ▣ m3-fk       │                                            │ 1. 정의    │
-│  ▨ m3-ik       │ 학습 목표                                   │ 2. 유도    │
-│ M4 제어        │  • DH 표에서 T_0^n 을 계산한다                │ 3. 예제    │
-│  □ m4-pid      │  • 2링크 팔의 끝점 위치를 코드로 구한다        │ 퀴즈      │
+│ ◂ 기초         │ 정기구학 (Forward Kinematics)                │ 이 페이지  │
+│ M2 로봇 운동학  │ 기초 · M2 · ⏱ 40분 · 난이도 ●●●○○ · 선수: m2-dh  │ 공부법    │
+│  ■ m2-dh       │ 상태: 진행 중 (활동 1/3)                      │ 자료      │
+│  ▣ m2-fk       │                                            │ 1. 정의    │
+│  ▨ m2-ik       │ 학습 목표                                   │ 2. 유도    │
+│ M3 이동로봇·제어│  • DH 표에서 T_0^n 을 계산한다                │ 3. 예제    │
+│  □ m3-diffdrive│  • 2링크 팔의 끝점 위치를 코드로 구한다        │ 퀴즈      │
 │  …             │                                            │ 노트      │
 │               │ ┌ 이 단계 공부법 ───────────────────────────┐ │           │
 │               │ │ 1. 읽기  Modern Robotics 4.1–4.2 (60분)    │ │           │
@@ -160,22 +163,22 @@ site/
 │               │ │ 완료 조건: 퀴즈 ≥ 2/3, 이해도 자기평가 ≥ 3   │ │           │
 │               │ └────────────────────────────────────────────┘ │           │
 │               │ ┌ 자료 ──────────────────────────────────────┐ │           │
-│               │ │ 📘 Modern Robotics ch.4   교재 · 무료 · 중급 │ │           │
+│               │ │ 📘 Modern Robotics ch.4   교재 · 무료 · 기초 │ │           │
 │               │ │ 🎞 Lynch FK 강의 (12분)   영상 · 무료        │ │           │
 │               │ │ 📄 Craig ch.3             교재 · 유료 · 보조 │ │           │
-│               │ │ 📝 내 노트 research_notes/…/m3-fk.md         │ │           │
+│               │ │ 📝 내 노트 research_notes/…/m2-fk.md         │ │           │
 │               │ └────────────────────────────────────────────┘ │           │
 │               │ ## 1. 정의                                   │           │
 │               │ $$ T_0^n = \prod_{i=1}^{n} A_i(\theta_i) $$  │           │
 │               │ …                                            │           │
-│               │ ┌ 퀴즈 (3문항) · 터미널: rc quiz m3-fk ───────┐ │           │
+│               │ ┌ 퀴즈 (3문항) · 터미널: rc quiz m2-fk ───────┐ │           │
 │               │ │ Q1. DH 변환 A_i 의 곱 순서는? (객관식)        │ │           │
 │               │ └────────────────────────────────────────────┘ │           │
-│               │ ◂ m3-dh-parameters            m3-inverse-kinematics ▸│       │
+│               │ ◂ m2-dh-parameters            m2-inverse-kinematics ▸│       │
 └───────────────┴────────────────────────────────────────────┴───────────┘
 ```
 
-**모듈 페이지 `modules/m3-kinematics/`**: 모듈 요약, 단계·선수 모듈, 레슨 목록(상태·시간), **모듈 학습 가이드**(이 모듈을 어떤 순서로·몇 주에 걸쳐·어떤 교재 중심으로 공부할지), 모듈 공통 자료, 모듈 리포트 링크.
+**모듈 페이지 `modules/m2-kinematics/`**: 모듈 요약(`summary`), 단계, 레슨 목록(상태·시간·각 레슨 공부법의 첫 줄), 모듈에 걸친 자료(소속 레슨들의 `resources` 합집합), 모듈 리포트 링크.
 
 **자료실 `resources/`**: 표(제목·유형·단계·주제·비용·언어·읽기 상태), 상단 필터(유형·단계·주제·무료만), 각 행 클릭 → 자료가 쓰이는 레슨 목록.
 
@@ -199,9 +202,10 @@ curriculum/
 │  │  ├─ module.yaml
 │  │  ├─ m1-vectors-matrices.md
 │  │  └─ m1-rotations.md
-│  ├─ m2-programming-tools/
-│  ├─ m3-kinematics/
-│  └─ …
+│  ├─ m2-kinematics/
+│  ├─ m3-mobile-control/
+│  ├─ m4-sensing-basics/
+│  └─ … (m5-state-estimation-slam … m10-integration-project)
 └─ resources/                       # 제안(미구현): 자료 카탈로그
    ├─ foundations.yaml
    ├─ ros2.yaml
@@ -216,60 +220,60 @@ id: robotics-expert
 title: 로보틱스 전문가 코스
 summary: 기초 수학부터 SLAM·ROS 2·캡스톤까지 단계별로 완주하는 단일 코스
 tags: [robotics]
-modules: [m1-math-physics, m2-programming-tools, m3-kinematics, m4-control, m5-sensing,
-          m6-motion-planning, m7-slam, m8-ros2, m9-capstone]
+modules: [m1-math-physics, m2-kinematics, m3-mobile-control, m4-sensing-basics,
+          m5-state-estimation-slam, m6-navigation-planning, m7-manipulation-planning, m8-ros2-tools,
+          m9-learning-robotics, m10-integration-project]
 ```
 
 ```yaml
 # module.yaml
-id: m3-kinematics                      # 구현
+id: m2-kinematics                      # 구현
 title: 로봇 운동학                      # 구현
 summary: DH 파라미터부터 역기구학까지     # 구현
-lessons: [m3-dh-parameters, m3-forward-kinematics, m3-inverse-kinematics]   # 구현
-level: intermediate                    # 제안(반영 중): basic | intermediate | advanced
-prerequisites: [m1-math-physics]       # 제안(미구현): 모듈 단위 선수지식
-study_guide: |                         # 제안(미구현): 모듈 학습 가이드 (Markdown)
-  2주 권장. Modern Robotics 3–4장을 축으로 읽고, 각 레슨 퀴즈를 통과한 뒤
-  마지막에 2링크 FK/IK를 손으로 유도해 노트에 남긴다.
-resources: [lynch-park-modern-robotics, craig-intro-robotics]   # 제안(미구현)
+lessons: [m2-dh-parameters, m2-forward-kinematics, m2-inverse-kinematics]   # 구현
+level: 기초                             # 반영 중: 기초 | 중급 | 고급 (한글 리터럴)
 ```
+
+모듈 단위 선수지식·학습 가이드 필드는 도입하지 않는다. 모듈 간 순서는 `course.modules`와 레슨 `prerequisites`로 충분하다.
 
 ### 3.3 레슨 프런트매터
 
 ```yaml
 ---
-id: m3-forward-kinematics             # 구현
+id: m2-forward-kinematics             # 구현
 title: 정기구학                        # 구현
 summary: DH 표에서 엔드이펙터 자세를 계산한다            # 구현
 objectives:                           # 구현 (1개 이상)
   - DH 표에서 T_0^n 을 계산한다
   - 2링크 팔의 끝점 위치를 코드로 구한다
-prerequisites: [m3-dh-parameters]     # 구현 (레슨 ID)
+prerequisites: [m2-dh-parameters]     # 구현 (레슨 ID)
 difficulty: 3                         # 구현 (1~5)
 estimated_minutes: 40                 # 구현
 tags: [기구학, DH]                     # 구현
 activities:                           # 구현: id, kind(reading|quiz|lab|exercise), title, estimated_minutes
-  - { id: m3-forward-kinematics-reading, kind: reading, title: 본문 읽기, estimated_minutes: 25 }
-  - { id: m3-forward-kinematics-quiz, kind: quiz, title: 퀴즈 3문항, estimated_minutes: 5 }
-  - { id: m3-forward-kinematics-exercise, kind: exercise, title: MR 연습문제 4.1·4.5, estimated_minutes: 30 }
-
-# ---- 제안(미구현) ----
-study_plan:                           # "이 단계 공부법": 순서대로 무엇을 할지
-  - { action: read,  resource: lynch-park-modern-robotics, where: "4.1–4.2", minutes: 60,
-      note: "공간 프레임 PoE와 물체 프레임 PoE 구분에 집중" }
-  - { action: watch, resource: lynch-fk-video, minutes: 12 }
-  - { action: read,  where: "본문 1~3절", minutes: 25, note: "예제를 손으로 재현" }
-  - { action: solve, resource: lynch-park-modern-robotics, where: "연습문제 4.1, 4.5", minutes: 30 }
-  - { action: write, where: "노트", note: "DH vs PoE 차이 한 단락" }
-completion_criteria: "퀴즈 2/3 이상, 이해도 자기평가 3 이상"
-resources: [lynch-park-modern-robotics, lynch-fk-video, craig-intro-robotics]
-concepts:                             # 플래시카드 원천 (FR-4.2)
-  - { front: "DH 변환 A_i 의 4개 기본 변환 순서는?", back: "Rot_z(θ)·Trans_z(d)·Trans_x(a)·Rot_x(α)" }
+  - { id: m2-forward-kinematics-reading, kind: reading, title: 본문 읽기, estimated_minutes: 25 }
+  - { id: m2-forward-kinematics-quiz, kind: quiz, title: 퀴즈 3문항, estimated_minutes: 5 }
+  - { id: m2-forward-kinematics-exercise, kind: exercise, title: MR 연습문제 4.1·4.5, estimated_minutes: 30 }
+resources: [lynch-park-modern-robotics, lynch-fk-video, craig-intro-robotics]   # 자료 ID 목록 (§3.5)
 ---
+
+## 이 단계 공부법                      <!-- 본문 절. 사이트·rc guide 가 이 절을 그대로 보여준다 -->
+
+1. **읽기** Modern Robotics 4.1–4.2 (60분) — 공간 프레임 PoE와 물체 프레임 PoE 구분에 집중
+2. **보기** Lynch 강의 영상 "FK of open chains" (12분)
+3. **본문** 아래 1~3절을 읽고 예제를 손으로 재현 (25분)
+4. **풀기** MR 연습문제 4.1, 4.5 + 퀴즈 3문항 (30분)
+5. **쓰기** 노트에 "DH vs PoE 차이" 한 단락
+
+완료 조건: 퀴즈 2/3 이상, 이해도 자기평가 3 이상
+
+## 1. 정의
+…
 ```
 
-- `study_plan[].action`: `read` · `watch` · `solve` · `write` · `build` · `review`. `resource`는 자료 ID(선택), `where`는 장·절·문제 번호·URL 조각 등 자유 문자열.
-- 활동 `kind`에 외부 강의 수강용 `external`을 추가하는 것을 제안한다(PRD FR-1.3). `lab`은 모델에 남아 있으나 이 코스에서는 쓰지 않는다.
+- "이 단계 공부법"은 프런트매터 필드가 아니라 **본문의 `## 이 단계 공부법` 절**이다. 작성자는 무엇을 읽고·보고·풀고·쓸지를 번호 목록으로 적고, 마지막 줄에 완료 조건을 둔다. 구조화된 `study_plan` 필드, `concepts` 필드, 활동 `kind: external`은 당장 도입하지 않는다(필요해지면 이 절을 파싱해 옮긴다).
+- `resources`는 레슨이 참조하는 자료 ID 목록이며, 사이트의 자료 카드와 `rc guide`의 자료 목록이 여기서 나온다.
+- 활동 `kind`는 `reading | quiz | exercise`를 쓴다. `lab`은 모델에 남아 있으나 이 코스에서는 쓰지 않는다.
 
 ### 3.4 본문 안의 퀴즈 블록 (제안, 미구현)
 
@@ -297,7 +301,7 @@ concepts:                             # 플래시카드 원천 (FR-4.2)
   url: http://modernrobotics.org
   language: en          # ko | en | other  (다국어는 extra.languages)
   cost: { kind: free }  # kind: free | paid, amount, currency (원문 가격은 extra.cost_note)
-  level: intermediate   # beginner | intermediate | advanced
+  level: intermediate   # beginner | intermediate | advanced (자료 난이도. 모듈 단계 기초/중급/고급과 1:1 대응해 필터에 씀)
   prerequisites: []
   topics: [기구학, 동역학, 제어]
   est_hours: 80
@@ -305,7 +309,7 @@ concepts:                             # 플래시카드 원천 (FR-4.2)
   status: active        # active | stale | discontinued | unverified
   license: CC BY-NC-SA
   quality_signal: "교과서 표준, 강의 영상·연습문제 공개"
-  notes: "수식 밀도 높음. M3 전에 2~3장 먼저."
+  notes: "수식 밀도 높음. M2 전에 2~3장 먼저."
   source_checked_date: 2026-11-11
   extra: { isbn: "9781107156302", edition: 1, korean_edition: false }
 ```
@@ -314,7 +318,7 @@ concepts:                             # 플래시카드 원천 (FR-4.2)
 
 ### 3.6 검증 (구현 + 제안)
 
-구현된 규칙 1~7은 CONTENT_MODEL.md 참조. 제안 필드가 추가되면 다음을 더한다: `resources`·`study_plan[].resource`가 존재하는 자료 ID인지(E), `level` 값이 enum인지(E), 모듈 `prerequisites`가 존재하는 모듈 ID이고 순환이 없는지(E), 레슨에 `study_plan`이 없으면 경고(W), `quiz` 블록 YAML 파싱·`answer` 범위(E).
+구현된 규칙 1~7은 CONTENT_MODEL.md 참조. 추가 규칙: `level`이 `기초|중급|고급` 중 하나(E), `resources`가 존재하는 자료 ID(E, 카탈로그 로더 도입 후), 본문에 `## 이 단계 공부법` 절이 없으면 경고(W), `quiz` 블록 YAML 파싱·`answer` 범위(E, 퀴즈 블록 도입 후).
 
 ---
 
@@ -415,33 +419,33 @@ weekly_minutes = 300
 ```
 $ rc status
 로보틱스 전문가 코스   전체 31%   이번 주 4h 35m / 5h   연속 7일   오늘 복습 12장
-현재: 중급 › M3 로봇 운동학 (2/5) › 다음 m3-forward-kinematics
-  기초   ████████ 100%   M1 ■  M2 ■
-  중급   ███░░░░░  27%   M3 ▣ 40%   M4 □ 0%   M5 □ 0%
-  고급   ░░░░░░░░   0%   M6 ▨  M7 ▨  M8 ▨  M9 ▨   (선수 미완료)
-공부법: rc guide m3-forward-kinematics   시작: rc start m3-forward-kinematics
+현재: 기초 › M2 로봇 운동학 (1/3) › 다음 m2-forward-kinematics
+  기초   ███░░░░░  35%   M1 ■ 100%   M2 ▣ 40%   M3 □ 0%   M4 □ 0%
+  중급   ░░░░░░░░   0%   M5 ▨  M6 ▨  M7 ▨  M8 ▨   (선수 미완료)
+  고급   ░░░░░░░░   0%   M9 ▨  M10 ▨
+공부법: rc guide m2-forward-kinematics   시작: rc start m2-forward-kinematics
 ```
 
 **`rc next`** — 선수지식 충족 ∧ 미완료 레슨 중 `course.modules → module.lessons` 순으로 가장 앞선 것. `in_progress`가 있으면 그것이 1순위.
 ```
 $ rc next
-▶ m3-forward-kinematics  정기구학  (중급 · M3 · 40분 · 난이도 3)
+▶ m2-forward-kinematics  정기구학  (기초 · M2 · 40분 · 난이도 3)
   이유: 진행 중 · 남은 활동: quiz, exercise
-  공부법 1단계: 읽기 Modern Robotics 4.1–4.2 (60분)  → 전체: rc guide m3-forward-kinematics
+  공부법 1단계: 읽기 Modern Robotics 4.1–4.2 (60분)  → 전체: rc guide m2-forward-kinematics
 ```
 
-**`rc guide`** (제안) — 레슨이면 `study_plan`·`completion_criteria`·자료를, 모듈이면 `study_guide`와 레슨별 첫 스텝을 출력.
+**`rc guide`** (제안) — 레슨이면 본문의 `## 이 단계 공부법` 절과 `resources` 자료 목록을, 모듈이면 `summary`와 레슨별 공부법 첫 줄을 출력.
 ```
-$ rc guide m3-forward-kinematics
-정기구학 — 이 단계 공부법 (예상 2h 30m)
- 1. 읽기  Modern Robotics 4.1–4.2            60분   공간 vs 물체 프레임 PoE 구분
- 2. 보기  Lynch "FK of open chains" (12분)    12분
- 3. 읽기  본문 1~3절                           25분   예제를 손으로 재현
- 4. 풀기  MR 연습문제 4.1, 4.5                 30분
- 5. 쓰기  노트: DH vs PoE 차이 한 단락
+$ rc guide m2-forward-kinematics
+정기구학 — 이 단계 공부법
+ 1. 읽기  Modern Robotics 4.1–4.2 (60분) — 공간 프레임 PoE와 물체 프레임 PoE 구분에 집중
+ 2. 보기  Lynch 강의 영상 "FK of open chains" (12분)
+ 3. 본문  아래 1~3절을 읽고 예제를 손으로 재현 (25분)
+ 4. 풀기  MR 연습문제 4.1, 4.5 + 퀴즈 3문항 (30분)
+ 5. 쓰기  노트에 "DH vs PoE 차이" 한 단락
 완료 조건: 퀴즈 2/3 이상, 이해도 자기평가 3 이상
 자료
- 📘 Modern Robotics ch.4   book · free · intermediate · 읽는 중   http://modernrobotics.org
+ 📘 Modern Robotics ch.4   book · free · 기초 · 읽는 중   http://modernrobotics.org
  🎞 Lynch FK 강의           video_series · free
  📄 Craig ch.3              book · paid · 보조
 ```
@@ -450,12 +454,11 @@ $ rc guide m3-forward-kinematics
 
 **`rc done`**
 ```
-$ rc done m3-forward-kinematics -u 4 -m "자코비안은 아직 감이 없음"
+$ rc done m2-forward-kinematics -u 4 -m "자코비안은 아직 감이 없음"
 ✔ 정기구학 완료  이해도 4
-  플래시카드 1장 생성 (concepts) → 내일부터 rc review
-  해금: m3-inverse-kinematics
+  해금: m2-inverse-kinematics
 ```
-완료 시 `concepts`를 카드로 등록(`due = 내일 00:00`). `--undo`는 `in_progress`로 되돌린다.
+`--undo`는 `in_progress`로 되돌린다. 플래시카드는 당분간 퀴즈 오답(§`rc quiz`)에서만 생긴다.
 
 **`rc quiz`** — 문항을 순서대로 묻고 즉시 채점. `single` 인덱스 일치, `multi` 집합 일치, `short` 정규화(trim·소문자·공백 축약) 후 허용 답 중 하나, `truefalse` bool. 오답과 `card: true` 문항은 `cards(source=quiz)`로. 마지막에 `결과 2/3 (67%)  오답 1 → 카드 1장`.
 
@@ -473,7 +476,7 @@ due = today + interval days
 **`rc report weekly`** — 템플릿 `report/templates/weekly.md.j2`: 요약(학습 시간·세션·연속일, 완료 레슨·퀴즈 정답률, 복습 수), 완료 레슨 표(이해도·시간·메모), 막힌 지점(again 2회 이상 카드, 메모), 다음 주 제안(`rc next` 결과와 그 공부법 첫 스텝). `rc report module`은 모듈 레슨별 상태·이해도 분포·자료 읽기 상태.
 
 **`rc build`**
-1. `build/mkdocs/docs/`에 변환 복사: 레슨 프런트매터 → 헤더 블록(단계·모듈·시간·난이도·선수·상태), `study_plan` → "이 단계 공부법" 섹션, `resources` → 자료 카드, `quiz` 블록 → 문항만 남긴 admonition.
+1. `build/mkdocs/docs/`에 변환 복사: 레슨 프런트매터 → 헤더 블록(단계·모듈·시간·난이도·선수·상태), 본문 `## 이 단계 공부법` 절 → 상단 강조 섹션, `resources` → 자료 카드, `quiz` 블록 → 문항만 남긴 admonition.
 2. DB에서 `progress.json`(레슨 상태, 모듈·단계 진행률, 현재 위치, 주간 시간, streak, due 수, 자료 읽기 상태)을 생성해 `docs/assets/`에 두고 대시보드·로드맵·모듈 페이지를 Jinja로 생성.
 3. 로드맵: 단계별 모듈 카드 + Mermaid `flowchart LR` 선수지식 그래프(노드 class `done/in_progress/available/locked`).
 4. `mkdocs.yml` 생성(Material, `pymdownx.arithmatex`, `pymdownx.superfences`+mermaid, `search`, 다크 모드) → `mkdocs build -d site/`. `--serve`는 `mkdocs serve`.
@@ -503,7 +506,7 @@ src/robotics_curriculum/
 │  ├─ quiz.py             문항 제시·채점 (prompt 함수 주입)
 │  ├─ sm2.py              순수 함수 schedule(state, rating, today)
 │  ├─ review.py           due 카드 선택·세션 진행
-│  ├─ guide.py            study_plan·study_guide 조립 (rc guide, 사이트, 리포트 공용)
+│  ├─ guide.py            본문 "## 이 단계 공부법" 절 추출 + resources 조립 (rc guide, 사이트, 리포트 공용)
 │  └─ stats.py            단계·모듈 진행률, 현재 위치, 주간 시간, streak, due 수
 ├─ report/                weekly.py · module.py · templates/*.md.j2
 ├─ site/                  builder.py · transform.py · roadmap.py · templates/*.j2
@@ -557,8 +560,8 @@ flowchart TD
 
 | # | 항목 | 현재 가정 | 담당 |
 |---|---|---|---|
-| 1 | 모듈 `level`·`prerequisites`·`study_guide`, 레슨 `study_plan`·`resources`·`concepts`, 활동 `external` | 콘텐츠 모델 정리 에이전트가 `level`부터 반영 중; 나머지는 이 문서 제안 | 콘텐츠 모델 담당 |
+| 1 | 모듈 `level`(기초/중급/고급), 레슨 `resources` | 콘텐츠 모델 정리 에이전트가 반영 중. `study_plan`·`concepts`·`external`은 도입 보류(확정) | 콘텐츠 모델 담당 |
 | 2 | `resources/*.yaml` 6개 파일(foundations, ros2, simulators, hardware, korean, ai_robot_learning) | 리서치 세션이 §3.5 스키마로 생성 중 (`worktree-research`) | 리서치 세션 |
 | 3 | 활동 단위 진도(`activity_progress`) 도입 시점 | 레슨 단위로 시작, 퀴즈·연습문제 상태가 필요해지면 추가 | P1-1 |
-| 4 | 9개 모듈과 단계 배정(기초 M1–M2, 중급 M3–M5, 고급 M6–M9) | 예시. 리서치 결과에 따라 조정 | 오케스트레이터 |
+| 4 | 모듈 10개와 단계 배정 | PRD v0.4 부록 A로 확정(§2.1). 자료 조사 세션 제안이 오면 PRD와 함께 갱신 | 오케스트레이터 |
 | 5 | Figma 파일 링크 | Figma MCP 인증·세션 재시작 후 §2.4 기준으로 작성 | 이 세션 |
