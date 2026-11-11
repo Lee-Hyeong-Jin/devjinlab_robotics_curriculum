@@ -21,12 +21,13 @@ from robotics_curriculum.progress import (
     open_service,
     parse_duration,
 )
+from robotics_curriculum.progress.transfer_cli import transfer_command
 from robotics_curriculum.report.cli import report_app
 from robotics_curriculum.roadmap import roadmap
 from robotics_curriculum.site.cli import site_app
 
 app = typer.Typer(help="Robotics curriculum tools.", no_args_is_help=True)
-progress_app = typer.Typer(help="Export / import learner progress (JSON).", no_args_is_help=True)
+progress_app = typer.Typer(help="Export, import, transfer progress.", no_args_is_help=True)
 app.add_typer(progress_app, name="progress")
 app.add_typer(report_app, name="report")
 app.add_typer(site_app, name="site")
@@ -324,6 +325,7 @@ def progress_import(
 app.command()(resources)
 app.command()(show)
 app.command()(roadmap)
+progress_app.command("transfer")(transfer_command)
 
 
 if __name__ == "__main__":

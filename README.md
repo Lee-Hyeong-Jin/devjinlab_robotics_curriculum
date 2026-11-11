@@ -66,8 +66,16 @@ uv run alembic upgrade head             # create / upgrade the schema (alembic d
 
 `RC_DATABASE_URL` values: `postgresql://...` → PostgreSQL, `sqlite:///path/progress.db` → that
 SQLite file, unset → `.rc/progress.db`. Stores are opened through
-`robotics_curriculum.progress.factory.open_store()`; `factory.transfer(local_store_or_export,
-pg_store, mode="merge")` copies existing SQLite or `rc progress export` data into PostgreSQL.
+`robotics_curriculum.progress.factory.open_store()`.
+
+Move existing local progress to the server database (safe to re-run: lessons are upserted by
+lesson id, sessions already there are skipped):
+
+```bash
+uv run rc progress transfer --to postgresql://rc:...@host:5432/rc   # local .rc/progress.db -> server
+uv run rc progress transfer --from backup.json --user-id 42          # a JSON export into account 42 (--to defaults to $RC_DATABASE_URL)
+uv run rc progress transfer --mode replace                           # wipe the destination first (or --mode empty)
+```
 Tests start a throwaway `postgres:16.13` container via Docker (or use `RC_TEST_DATABASE_URL`)
 and skip the PostgreSQL cases with a reason when neither is available (`uv run pytest -rs`).
 

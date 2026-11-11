@@ -55,8 +55,9 @@ def clean_postgres_url(postgres_url: str) -> str:
     """The server URL with an empty ``public`` schema (each test starts from nothing)."""
     from sqlalchemy import create_engine, text
 
-    from robotics_curriculum.progress.postgres import normalize_url
+    from robotics_curriculum.progress.postgres import dispose_shared_engines, normalize_url
 
+    dispose_shared_engines()  # cached pools would remember the dropped schema as migrated
     engine = create_engine(normalize_url(postgres_url))
     with engine.begin() as conn:
         conn.execute(text("DROP SCHEMA public CASCADE"))
