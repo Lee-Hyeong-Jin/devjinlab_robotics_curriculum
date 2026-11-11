@@ -3106,13 +3106,13 @@
           "role": {
             "$ref": "#/components/schemas/Role"
           },
+          "status": {
+            "$ref": "#/components/schemas/UserStatus"
+          },
           "created_at": {
             "type": "string",
             "format": "date-time",
             "title": "Created At"
-          },
-          "status": {
-            "$ref": "#/components/schemas/UserStatus"
           },
           "has_password": {
             "type": "boolean",
@@ -3134,8 +3134,8 @@
           "locale",
           "timezone",
           "role",
-          "created_at",
           "status",
+          "created_at",
           "has_password",
           "updated_at"
         ],
@@ -4269,6 +4269,12 @@
             "type": "string",
             "maxLength": 1024,
             "title": "Password"
+          },
+          "remember": {
+            "type": "boolean",
+            "title": "Remember",
+            "description": "Accepted for the frontend contract; sessions always last 14 days.",
+            "default": false
           }
         },
         "additionalProperties": false,
@@ -5435,6 +5441,9 @@
           "role": {
             "$ref": "#/components/schemas/Role"
           },
+          "status": {
+            "$ref": "#/components/schemas/UserStatus"
+          },
           "created_at": {
             "type": "string",
             "format": "date-time",
@@ -5451,6 +5460,7 @@
           "locale",
           "timezone",
           "role",
+          "status",
           "created_at"
         ],
         "title": "User"
@@ -5513,7 +5523,10 @@
             "anyOf": [
               {
                 "type": "string",
-                "maxLength": 20
+                "enum": [
+                  "ko",
+                  "en"
+                ]
               },
               {
                 "type": "null"
