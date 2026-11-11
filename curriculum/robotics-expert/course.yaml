@@ -1,9 +1,11 @@
 id: robotics-expert
 title: 로보틱스 전문가 코스
 summary: >-
-  기초→중급→고급의 단계적 경로로 로보틱스 전문가를 기르는 단일 코스.
-  기초 단계(M1–M4)에서 수학·물리, 로봇 운동학, 이동 로봇 제어, 센서·인식 기초를 익히고,
-  중급 단계는 ROS 2·도구 개요(M8)로 시작해 상태 추정·SLAM(M5), 내비게이션·경로 계획(M6)으로 이어지며, 고급 단계에서 학습 기반 로봇 제어로 확장한다.
+  기초→중급→고급의 단계적 경로로 로보틱스 전문가를 기르는 단일 코스(10개 모듈).
+  기초(M1–M4): 수학·물리, 로봇 운동학, 이동 로봇·제어, 센서·인식 기초.
+  중급(M8, M5–M7): ROS 2·도구 개요로 시작해 상태 추정·SLAM, 내비게이션·경로 계획, 매니퓰레이션·동작 계획.
+  고급(M9–M10): 학습 기반 로보틱스, 시스템 통합·캡스톤 프로젝트.
+  권장 순서는 M1→M2→M3→M4→M8→M5→M6→M7→M9→M10 이다.
 tags: [robotics, fundamentals]
 modules:
   - m1-math-physics
@@ -13,4 +15,6 @@ modules:
   - m8-ros2-tools
   - m5-state-estimation-slam
   - m6-navigation-planning
+  - m7-manipulation-motion-planning
+  - m9-learning-based-robotics
   - m10-system-integration-capstone

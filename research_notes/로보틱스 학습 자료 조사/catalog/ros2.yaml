@@ -1371,7 +1371,7 @@ resources:
 - id: nav2-robot-localization-setup-guide
   title: 'Nav2 setup guide: Smoothing Odometry using Robot Localization'
   author: Nav2 project
-  url: https://docs.nav2.org/setup_guides/odom/setup_robot_localization.html
+  url: https://docs.nav2.org/rolling/configuration_and_development/first_time_robot_setup_guide/odom/setup_robot_localization/
   type: docs
   language: en
   cost:
@@ -1565,7 +1565,7 @@ resources:
   - mapping
   est_hours: null
   last_updated: null
-  status: active
+  status: unverified
   license: null
   quality_signal: null
   notes: University summer-school tutorial for SLAM Toolbox; one of the few stand-alone SLAM Toolbox walkthroughs found (no ROS 2 Cartographer tutorial surfaced). (level 추정)
@@ -2417,3 +2417,58 @@ resources:
   source_checked_date: '2026-11-11'
   extra:
     url_is_mirror: true
+- id: nav2-tutorial-navigating-while-mapping
+  title: 'Nav2 tutorial: Navigating While Mapping (slam_toolbox)'
+  author: Nav2 (Open Navigation / ROS Navigation)
+  url: https://docs.nav2.org/rolling/tutorials/general_tutorials/navigation2_with_slam/navigation2_with_slam/
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics
+  - Nav2 getting started
+  topics:
+  - slam-toolbox
+  - slam
+  - nav2
+  - mapping
+  est_hours: 2
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: 공식 Nav2 문서
+  notes: slam_toolbox로 지도를 만들며 동시에 내비게이션하는 공식 실습. 2026-11-11 curl 200 확인; Nav2 문서 재편 후 경로는 docs.nav2.org/rolling/ 하위 디렉터리형. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    replaces_broken: https://ros2.fh-aachen.de/summer_school/Day6/Tutorials/slam_toolbox.html (403)
+- id: nav2-setup-guide-mapping-localization
+  title: 'Nav2 First-Time Robot Setup Guide: Mapping and Localization'
+  author: Nav2 (Open Navigation / ROS Navigation)
+  url: https://docs.nav2.org/rolling/configuration_and_development/first_time_robot_setup_guide/sensors/mapping_localization/
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics
+  - URDF/TF 설정
+  topics:
+  - slam-toolbox
+  - amcl
+  - nav2
+  - localization
+  est_hours: 2
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: 공식 Nav2 문서
+  notes: slam_toolbox(지도 작성)와 AMCL(지도 기반 위치추정) 설정 절차. 2026-11-11 curl 200 확인. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}

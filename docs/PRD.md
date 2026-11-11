@@ -166,7 +166,7 @@
 | FR-10.5 | 서버 | P0 (Phase 2) | 역할 기반 권한: `learner`(자기 진도만), `author`(콘텐츠 작성·검증·게시), `admin`(사용자·역할·설정·백업). | 모든 API 엔드포인트에 권한 검사가 있고 테스트로 검증된다. |
 | FR-10.6 | 서버 | P0 (Phase 2) | 사용자별 진도·복습·노트·리포트 분리. 다른 사용자의 데이터는 admin도 집계 외에는 열람하지 않는다. | 모든 학습 데이터 쿼리에 `user_id` 조건. 교차 접근 테스트. |
 | FR-10.7 | 서버 | P0 (Phase 2) | 개인정보: 사용자가 자기 데이터 전체를 내보내고(JSON) 계정을 삭제할 수 있다. 삭제 시 학습 데이터는 즉시 삭제 또는 익명화, 감사 로그는 보존 기간 뒤 삭제. | 삭제 후 해당 사용자 데이터가 조회되지 않는다. 처리 기한·보존 기간을 설정으로 둔다. |
-| FR-10.8 | 서버 | P1 (Phase 2) | 세션 관리: 서버 측 세션 또는 짧은 수명의 토큰 + 갱신, 로그아웃 시 무효화, 기기별 세션 목록. | 토큰 탈취 시 피해 범위가 한정된다. |
+| FR-10.8 | 서버 | P1 (Phase 2) | 세션 관리: 브라우저는 서버 측 세션(불투명 쿠키, 14일 슬라이딩), 프로그램 클라이언트는 개인 액세스 토큰. 로그아웃 시 즉시 무효화, 기기별 세션 목록·개별 종료. | 토큰 탈취 시 피해 범위가 한정되고 즉시 폐기된다. |
 | FR-10.9 | 서버 | P2 | 그룹/코호트: admin이 학습자를 그룹으로 묶고 그룹 단위 진도 집계를 본다. | 집계만 제공하고 개인 상세는 본인만. |
 
 ## 7. 비기능 요구사항
@@ -189,7 +189,7 @@
 | 접근성 | 공통 | 웹 UI는 **WCAG 2.1 AA** 준수(키보드 탐색, 명도 대비, 스크린 리더 레이블, 포커스 표시). 자동 검사(axe)를 CI에 포함. CLI는 색 없이도 읽히는 출력. 다크 모드 지원. |
 | 데이터 소유 | 공통 | 모든 콘텐츠·진도·노트는 저장소 안, 로컬 파일, 또는 자체 호스팅 DB에 있다. 외부 전송은 AI 튜터 호출 시 명시적 동의 하에만. 텔레메트리는 기본 꺼짐(opt-in). |
 | 콘텐츠 이식성 | 공통 | 콘텐츠는 앱 없이도 GitHub에서 Markdown으로 읽을 수 있어야 한다 |
-| 품질 도구 | 공통 | `uv` 의존성 관리, `ruff` 린트/포맷, `mypy --strict` 타입 검사, `pytest` 테스트(코어 라이브러리 `src/robotics_curriculum` 라인 커버리지 80% 이상, Phase 2의 `api/`도 동일), 프론트엔드는 동급 린트·타입·테스트. pre-commit 훅과 CI(린트·타입·테스트·의존성 취약점 스캔 고위험 0건)를 모든 PR에 적용. 접근성 자동 검사(axe)는 `web/`이 생기는 Phase 2부터 CI에 추가. 상세 기준은 `.claude/rules/engineering.md`. |
+| 품질 도구 | 공통 | `uv` 의존성 관리, `ruff` 린트/포맷, `mypy --strict` 타입 검사, `pytest` 테스트(코어 라이브러리 `src/robotics_curriculum` 라인·분기(branch) 커버리지 80% 이상, pytest-cov `fail_under=80`; Phase 2의 `api/`도 동일), 프론트엔드는 동급 린트·타입·테스트. pre-commit 훅과 CI(린트·타입·테스트·의존성 취약점 스캔 고위험 0건)를 모든 PR에 적용. 접근성 자동 검사(axe)는 `web/`이 생기는 Phase 2부터 CI에 추가. 상세 기준은 `.claude/rules/engineering.md`. |
 | 호환성 | 공통 | 공개 API와 CLI는 시맨틱 버저닝을 따르고, 콘텐츠 스키마 변경은 마이그레이션 안내와 함께 마이너 이상에서만. |
 
 ## 8. 개념 데이터 모델
@@ -209,9 +209,12 @@ Review     (card_id, reviewed_at, rating, next_due, interval, ease)
 Note       (lesson_id, path, updated_at)   ← research_notes/ 파일을 색인
 Report     (kind: weekly|module, period, path)
 
-User       (id, email, password_hash: Argon2id | null, oidc_issuer+subject | null, role: learner|author|admin,
-            created_at, deleted_at)                                   ← 서버 모드(Phase 2). 로컬 모드는 고정 user_id 1개
-AuditLog   (id, actor_user_id, action, target, at, ip)                 ← 서버 모드, 관리 행위·인증 이벤트 기록
+User       (id, email, password_hash: Argon2id | null, role: learner|author|admin, created_at, deleted_at)
+                                                                        ← 서버 모드(Phase 2). 로컬 모드는 고정 user_id 1개
+Identity   (user_id, provider: local|oidc:<issuer>, subject)  1:N       ← 로컬 계정 + Google + GitHub 등 동시 연결
+Session    (id, user_id, created_at, last_seen_at, expires_at, device)  ← 브라우저 서버 세션(불투명 쿠키)
+PAT        (id, user_id, token_hash, scopes, expires_at)                ← 프로그램 클라이언트용 개인 액세스 토큰
+AuditLog   (id, actor_user_id, action, target, at, ip)                  ← 서버 모드, 관리 행위·인증 이벤트 기록
 ```
 
 - 확정 스키마와 검증 규칙은 `docs/curriculum/CONTENT_MODEL.md`를 따른다. 자료 읽기 상태(ReadState)와 구조화 학습 단계(StudyStep)는 Phase 2 제안(FR-6.6)이라 모델에 넣지 않는다.
@@ -235,7 +238,7 @@ src/robotics_curriculum/  코어 라이브러리 (Python): 콘텐츠 로더/검�
 site/                     `rc build` 결과물 (정적 HTML, MkDocs 기반) — .gitignore 대상
 tests/                    pytest (코어·CLI·API)
 api/                      Phase 2: FastAPI 서버. 인증(로컬 계정 + OIDC), 역할 권한, REST(OpenAPI 스키마 공개), 헬스체크·메트릭
-web/                      Phase 2: 웹 프론트엔드 (Next.js 또는 동급 — Phase 2 착수 시 결정). 로드맵·레슨·공부법·자료·대시보드·복습 UI
+web/                      Phase 2: 웹 프론트엔드 (Next.js App Router, 결정 10). 로드맵·레슨·공부법·자료·대시보드·복습 UI
 deploy/                   Phase 2: Docker Compose(api + web + postgres + reverse proxy), 환경 변수 예시, 백업 스크립트
 docs/                     PRD, 콘텐츠 모델, 운영·기여·보안 문서
 ```
@@ -250,7 +253,15 @@ docs/                     PRD, 콘텐츠 모델, 운영·기여·보안 문서
 | 화면 | 정적 사이트(읽기) + CLI(쓰기) | 웹 프론트엔드가 API를 호출 |
 | 배포 | `uv tool install` 또는 `pipx` | Docker Compose; Kubernetes 매니페스트는 Phase 3 검토 |
 
-주요 CLI 명령: `rc validate`, `rc build`, `rc status`, `rc next`, `rc show <lesson>`, `rc resources <lesson>|--module|--all`, `rc start|stop|log`, `rc done`, `rc quiz`, `rc review`, `rc note`, `rc report weekly|module`, `rc search`, `rc progress export|import`.
+설계 문서(`docs/platform-design.md` v0.4, 커밋 1113f66; `docs/architecture/auth.md`, `docs/architecture/operations.md`, `docs/api/openapi.yaml`)에서 확정한 결정으로, PRD는 이를 따른다.
+
+- **저장소 추상화**: `src/robotics_curriculum/progress/store.py`의 `ProgressStore`(typing.Protocol). 구현체 `SqliteProgressStore`(로컬), `PostgresProgressStore`(서버, SQLAlchemy Core 2.x + asyncpg, Alembic downgrade 필수), `RemoteProgressStore`(`rc` 서버 모드 HTTP 클라이언트). 로컬 SQLite 마이그레이션 번호와 Alembic 리비전은 1:1 대응.
+- **세션 방식**: 브라우저는 서버 측 세션 + 불투명 쿠키(HttpOnly, Secure, SameSite=Lax, 14일 슬라이딩, PostgreSQL 저장, Redis 교체 가능). 프로그램 클라이언트(`rc login`, 외부 도구)는 범위·만료가 있는 개인 액세스 토큰(해시 저장). JWT는 서비스 간 통신이 생길 때만.
+- **API 경로**: `/api/v1` 접두사. `/healthz`, `/readyz`, `/version`은 접두사 없음. 오류는 RFC 9457 problem+json(type, title, status, detail, instance, request_id). 목록은 커서 페이지네이션.
+- **서버 콘텐츠 색인**: 시작·reload·배포 시 재색인, 불변 스냅샷을 원자적으로 교체, 검증 실패 시 이전 색인 유지 + 422. 레슨 1,000개 60초 목표.
+- **web/ 프레임워크**: **Next.js(App Router)** 로 확정(결정 10, 설계 §1.2 비교표 근거). ADR로 기록한다.
+
+주요 CLI 명령: `rc validate`, `rc build`, `rc status`, `rc next`, `rc roadmap`, `rc show <lesson>`, `rc resources <lesson>|--module|--all`, `rc start|stop|log`, `rc done`, `rc quiz`, `rc review`, `rc note`, `rc report weekly|module`, `rc search`, `rc progress export|import`.
 
 | 선택 | 이유 |
 |---|---|
@@ -268,7 +279,7 @@ docs/                     PRD, 콘텐츠 모델, 운영·기여·보안 문서
 | 단계 | 범위 | 완료 기준 |
 |---|---|---|
 | **Phase 0: 콘텐츠 기반** | uv/ruff/pytest 프로젝트 골격, 콘텐츠 모델 확정(`CONTENT_MODEL.md`), 기초 모듈 M1~M3 레슨 15개(부록 A; 각 레슨에 `resources[]`와 공부법 절), 중급·고급은 `module.yaml`과 개요만, `rc validate`, `rc show`, `rc resources`, `rc report weekly` | `rc validate` 통과, 리포트 1건 생성, CI에서 pytest 통과 |
-| **Phase 1: MVP (P0 전부, CLI + 정적 사이트)** | `rc build` 정적 사이트(코스 로드맵 그래프, 단계별 모듈 목록, 레슨 페이지 + 공부법 절 + 자료 목록, 대시보드), 진도·타이머, 퀴즈, 플래시카드·SM-2 복습, 콘텐츠 범위는 **기초 M1~M4 전체**(Phase 0의 M1~M3에 M4 추가, 레슨 19개), 진도 JSON 내보내기 | 본인이 2주간 실제로 사용해 주간 리포트 2건 생성 |
+| **Phase 1: MVP (P0 전부, CLI + 정적 사이트)** | `rc build` 정적 사이트(코스 로드맵 그래프, 단계별 모듈 목록, 레슨 페이지 + 공부법 절 + 자료 목록, 대시보드), 진도·타이머, 퀴즈, 플래시카드·SM-2 복습, 콘텐츠 범위는 **기초 M1~M4 전체**(Phase 0의 M1~M3에 M4 추가, 레슨 19개), 진도 JSON 내보내기 | 본인이 2주간 실제로 사용해 주간 리포트 2건 생성. QA 리뷰(`docs/reviews/`) 기준 **high 이상 결함 0건**, 부록 C.0 AC-SEC.1~6 충족 |
 | **Phase 2: 멀티유저 웹 (v1.0)** | 서버 모드 구축: FastAPI API 서버(OpenAPI), 로컬 계정 + OIDC 인증, 역할 권한, PostgreSQL + Alembic, 웹 프론트엔드(로드맵·레슨·공부법·자료·대시보드·복습), 사용자별 데이터 분리·내보내기·삭제, Docker Compose 배포, 관측성·감사 로그, 7절 보안·성능 기준 충족. 콘텐츠: 모듈 안내, 노트 연동, 검색, 중급 M5~M8 레슨 작성. 필요성이 확인되면 FR-6.6 | 스터디 그룹 1팀(5명 이상)이 자체 호스팅 인스턴스에서 4주간 사용. ASVS L2 체크리스트·부하 테스트·접근성 검사 통과. 기초 단계를 공부법대로 완주하고 모듈 리포트 생성 |
 | **Phase 3: 운영·커뮤니티 (v1.x~v2)** | 배포 옵션 확장(Kubernetes 매니페스트, 관리형 DB 가이드), 플러그인 인터페이스(퀴즈 종류·리포트 템플릿·인증 제공자 확장), 콘텐츠 기여 워크플로(PR 템플릿, 미리보기 빌드, 리뷰 체크리스트), 콘텐츠 번역 병행, AI 튜터, FSRS, 그룹/코호트, 하이라이트, 연습문제 힌트. 고급 M9~M10 레슨 작성 | 외부 기여자의 콘텐츠 PR이 병합된 사례, 1.0 이후 시맨틱 버저닝 유지, 공개 보안 신고 채널 운영 |
 
@@ -282,7 +293,7 @@ docs/                     PRD, 콘텐츠 모델, 운영·기여·보안 문서
 | 공부법 보유율 | 기초 모듈 레슨의 100%에 "이 단계 공부법" 절과 자료 1개 이상 |
 | 콘텐츠 작성 마찰 | 레슨 1개(공부법·자료 포함) 추가에 검증 포함 20분 이내 |
 | 서버 모드 도입 (Phase 2 후 8주) | 자체 호스팅 인스턴스 1개 이상, 활성 학습자 5명 이상, 설치 소요 30분 이내(문서 기준) |
-| 품질·보안 (Phase 2 이후 상시) | 코어·API 라인 커버리지 80% 이상, 알려진 고위험 취약점 0건(CI 스캔 기준), 보안 신고 접수 확인 3영업일 이내 |
+| 품질·보안 (Phase 2 이후 상시) | 코어·API 라인·분기 커버리지 80% 이상, 알려진 고위험 취약점 0건(CI 스캔 기준), 보안 신고 접수 확인 3영업일 이내 |
 
 ## 12. 리스크 및 가정
 
@@ -315,13 +326,15 @@ v0.1의 열린 질문 5개에 대한 오케스트레이터 결정과, 그 뒤 �
 | 8 | 구현 기준 단순화 (오케스트레이터, v0.5) | 구현된 것은 구현이 기준, 사용자 요구는 "단순하게". 단계는 `module.yaml`의 `level` 필드(디렉터리 아님). 학습 방법·자료는 프런트매터 `resources[]` + 본문 "이 단계 공부법" 절 + `rc resources`/`rc show`. `study_steps[]`, 읽기 상태, `rc read`, 자료 카탈로그는 Phase 2 제안으로 강등 | FR-1, FR-6, 8절, 9절, 10절 |
 | 9 | 오픈소스·엔터프라이즈 (사용자 직접 지시, 2026-11-11) | **오픈소스 프로젝트로 가며 실제 엔터프라이즈급으로 개발한다.** 제품 목적·시뮬레이터 제외·콘텐츠 모델은 유지. Phase 1 CLI + 정적 사이트는 "코어 라이브러리 + 로컬 모드"로 존속. Phase 2에 멀티유저 서버 모드(API, 인증, 권한, PostgreSQL, 웹), 7절 비기능 요구사항을 엔터프라이즈 수준으로 상향, 14절 거버넌스 신설. 결정 5의 "웹은 Phase 2 이후"는 유지되며 범위만 확장 | 1절, 3.2절, 4절, FR-10, 7~10절, 12절, 14절 |
 
-남은 사용자 결정: AI 튜터 월 비용 상한(결정 4), 라이선스 최종 확정(14절, 기본값 Apache-2.0 / CC BY 4.0).
+| 10 | 웹 프레임워크·세션·라이선스 (오케스트레이터 담당자 권한, 2026-11-11) | `web/` = **Next.js(App Router)**. 세션 = **서버 세션 쿠키 + PAT**(설계 v0.4 (b) 확정). 라이선스 = **Apache-2.0(코드) / CC BY 4.0(콘텐츠)** 확정. Phase 1 완료 판정에 "QA high 결함 0" 조건 추가 | 9절, 10절, 14절, AC-WEB.7 |
+
+남은 사용자 결정: AI 튜터 월 비용 상한(결정 4).
 
 ## 14. 오픈소스 거버넌스
 
 | 항목 | 내용 |
 |---|---|
-| 라이선스 | 코드는 **Apache-2.0**, 커리큘럼 콘텐츠(`curriculum/`, 공부법, 퀴즈)는 **CC BY 4.0**. 외부 자료(`resources[]`)는 링크만 하고 원저작자 라이선스를 따른다. 기본값이며 사용자가 번복할 수 있다. 저장소 루트에 `LICENSE`, `curriculum/LICENSE`를 둔다. |
+| 라이선스 | 코드는 **Apache-2.0**, 커리큘럼 콘텐츠(`curriculum/`, 공부법, 퀴즈)는 **CC BY 4.0**. 외부 자료(`resources[]`)는 링크만 하고 원저작자 라이선스를 따른다. 결정 10으로 확정. 저장소 루트에 `LICENSE`, `curriculum/LICENSE`를 둔다. |
 | 기여 가이드 | `CONTRIBUTING.md`: 개발 환경 설정(uv), 브랜치 규칙, 커밋 메시지는 **Conventional Commits** + 모든 커밋에 **DCO `Signed-off-by`**(Developer Certificate of Origin) 필수, PR 템플릿, 코드·콘텐츠 리뷰 체크리스트, 콘텐츠 기여 시 `rc validate` 통과와 자료 출처 명시 의무. |
 | 행동 강령 | `CODE_OF_CONDUCT.md`: Contributor Covenant 2.1 채택, 신고 연락처와 처리 절차 명시. |
 | 보안 취약점 신고 | `SECURITY.md`: 비공개 신고 경로(GitHub Private Vulnerability Reporting 또는 보안 이메일), 접수 확인 3영업일·초기 평가 14일 목표, 조정된 공개(coordinated disclosure), 지원 버전 범위. 취약점 수정은 패치 릴리스와 보안 권고(GHSA)로 공개. |
@@ -375,6 +388,19 @@ v0.1의 열린 질문 5개에 대한 오케스트레이터 결정과, 그 뒤 �
 
 로드맵(`harness/roadmap.yaml`)의 마일스톤 수용 기준을 PM 관점에서 구체화한다. 로드맵의 항목이 상위이고, 본 부록은 그것을 검증 가능한 수준으로 푼 것이다. 구현이 끝나면 PM이 이 기준으로 완료 여부 의견을 낸다.
 
+### C.0 Phase 1 공통 보안·안전 기준 (모든 P1-x 마일스톤에 적용)
+
+QA 리뷰(`docs/reviews/2026-11-11-integration-review.md`, integration 8c53d4e 기준: high 4건)에서 도출했다. 로컬 모드라도 콘텐츠는 외부 기여를 받으므로 신뢰할 수 없는 입력으로 취급한다.
+
+| ID | 기준 | 검증 방법 |
+|---|---|---|
+| AC-SEC.1 | 정적 사이트 출력 인코딩: 프런트매터와 본문에서 온 값은 HTML로 렌더링하기 전에 이스케이프 또는 허용 목록 기반 sanitize를 거친다. 생성된 페이지에 CSP 메타 태그를 넣는다. 콘텐츠에 `<script>`·이벤트 핸들러·`javascript:` URL을 넣은 픽스처가 실행 가능한 형태로 출력되지 않는다. | XSS 픽스처 레슨 빌드 후 HTML 검사 |
+| AC-SEC.2 | 출력 경로 보호: `rc build --out`은 대상이 이전 빌드 결과(마커 파일)이거나 비어 있을 때만 덮어쓰고, 그 외에는 확인 없이 삭제하지 않는다. `--src`·`--out`은 저장소 밖이나 서로 겹치는 경로를 거부한다. | 경로 픽스처 테스트 |
+| AC-SEC.3 | 콘텐츠 검증은 `rc validate`뿐 아니라 사이트 빌드·진도·퀴즈·리포트 등 콘텐츠를 읽는 모든 경로에서 같은 로더·검증기를 거쳐 강제된다. 검증 실패 콘텐츠로는 어떤 명령도 진행하지 않는다. | 각 명령에 잘못된 픽스처 투입 테스트 |
+| AC-SEC.4 | 레슨 `id`는 `curriculum/` 전체(모든 코스)에서 유일해야 하며, 중복 시 로더가 에러를 낸다(CONTENT_MODEL.md 규칙의 구현). | 중복 ID 픽스처 |
+| AC-SEC.5 | 진도 가져오기(`rc progress import`)는 JSON 스키마, 존재하는 레슨·활동 ID, 상태 값, 시간 불변식(시작 ≤ 종료, 미래 시각 거부)을 검증하고 위반 시 아무것도 쓰지 않는다. | 손상 JSON 픽스처 |
+| AC-SEC.6 | 의존성 취약점 스캔(pip-audit 또는 동급)이 CI에서 실행되고 고위험 발견 시 실패한다(7절 품질 도구의 구현). | CI 워크플로 확인 |
+
 ### C.1 P1-2 퀴즈·플래시카드·간격 반복 (FR-4.1~4.3)
 
 **사용자 스토리**
@@ -412,14 +438,17 @@ questions:
 | ID | 기준 | 검증 방법 |
 |---|---|---|
 | AC-4.1 | `rc validate`가 퀴즈 블록의 YAML 오류, 알 수 없는 `type`, `answer` 범위 밖, `explanation` 누락, `activity` 참조 오류, `id` 중복을 `파일경로: 메시지`로 보고하고 종료 코드 1을 반환한다. | 각 오류 유형별 픽스처 레슨 + pytest |
-| AC-4.2 | `rc quiz <lesson>`이 문항을 순서대로 제시하고, 응답 즉시 정오와 해설을 보여주며, 끝나면 점수(정답 수/총 문항)와 소요 시간을 저장하고 해당 quiz 활동을 `done`으로 기록한다. 중간 종료 시 저장하지 않는다. | CLI 테스트(입력 스트림 모의), progress 조회 |
+| AC-4.2 | `rc quiz <lesson>`이 문항을 순서대로 제시하고, 응답 즉시 정오와 해설을 보여주며, 끝나면 점수(정답 수/총 문항)와 소요 시간을 한 트랜잭션으로 저장하고 해당 quiz 활동을 `done`으로 기록한다. 중간 종료(Ctrl-C/EOF) 시 아무것도 저장하지 않고 종료 코드 1. | CLI 테스트(입력 스트림 모의), progress 조회 |
 | AC-4.3 | 틀린 문항은 `source=quiz` 카드(front=prompt, back=정답+해설)가 되고, `concept`가 있는 문항은 `source=concept` 카드가 된다. 같은 문항을 다시 틀려도 카드가 중복 생성되지 않는다. 카드는 `lesson_id`와 문항 `id`를 보존한다. | 두 번 응시 후 카드 수 검증 |
 | AC-4.4 | `rc review`는 `next_due <= 오늘`인 카드만 제시한다. 응답 `again`/`hard`/`good`/`easy`에 따라 SM-2로 `interval`, `ease`, `next_due`를 갱신한다. 기준: 새 카드 `good` → 1일, 연속 `good` → 6일, 이후 `interval × ease`; `again` → 1일로 리셋 및 ease 감소; ease 하한 1.3. | 알고리즘 단위 테스트 표(응답 열 × 기대 interval/ease), 날짜 고정 픽스처 |
 | AC-4.5 | 알고리즘 선택(SM-2 채택, FSRS 보류 이유)이 `docs/adr/`에 기록되어 있다. | ADR 파일 존재·검토 |
 | AC-4.6 | `rc status`에 오늘 복습 예정 수와 최근 7일 퀴즈 정답률이 표시된다. | CLI 출력 스냅샷 테스트 |
 | AC-4.7 | 정적 사이트의 레슨 페이지에 퀴즈 문항이 정답·해설을 접은 상태(`<details>`)로 렌더링된다. 인터랙티브 채점은 Phase 2 웹 범위. | 빌드 결과 HTML 검사 |
-| AC-4.8 | `docs/curriculum/LESSON_TEMPLATE.md`에 퀴즈 블록 예시가 추가되고, 기초 M1 레슨 중 최소 2개에 실제 퀴즈가 들어간다. | 파일 검토, `rc validate` 통과 |
-| AC-4.9 | 코어 라이브러리 라인 커버리지 80% 이상, `mypy --strict` 통과. | CI |
+| AC-4.8a | `docs/curriculum/LESSON_TEMPLATE.md`에 퀴즈 블록 예시가, `docs/curriculum/CONTENT_MODEL.md`에 퀴즈 스키마가 추가된다(백엔드 개발자). | 파일 검토 |
+| AC-4.8b | 기초 M1 레슨 중 최소 2개에 실제 퀴즈가 들어간다(커리큘럼 저자; C.1 예시 형식 그대로). | `rc validate` 통과, `rc quiz` 실행 |
+| AC-4.9 | 코어 라이브러리 라인·분기 커버리지 80% 이상(`fail_under=80`), `mypy --strict` 통과. | CI |
+
+구현 확정 사항(백엔드 개발자, P1-2): 블록은 YAML 매핑 `{activity?, questions[]}`가 정식이며, 호환 별칭으로 최상위 리스트(= `questions`)와 `type: multi`(= `multiple`)도 받아들인다. 설계 초안의 `card: true`는 지원하지 않고 `concept`로 대체한다. 카드 ID는 `<lesson>-quiz-<qid>` / `<lesson>-concept-<qid>`로 중복을 막는다. `tags[]`는 보관만 한다.
 
 범위 밖: 웹 인터랙티브 퀴즈, FSRS, 힌트, 퀴즈 결과의 사용자 간 비교.
 
@@ -436,16 +465,18 @@ questions:
 
 | ID | 기준 | 검증 방법 |
 |---|---|---|
-| AC-API.1 | 엔드포인트: 코스·모듈·레슨 조회(레슨은 메타·본문·`resources[]`·퀴즈 포함, 학습자 응답 전에는 정답·해설 숨김), 활동 상태 갱신, 세션 시작/종료/수동 기록, 다음 레슨 추천, 복습 due 카드 조회·응답, 퀴즈 응시 제출, 주간·모듈 리포트 생성·조회, 진행도 내보내기. 모든 경로는 `/api/v1/` 아래. | 엔드포인트별 TestClient 테스트 |
+| AC-API.1 | 엔드포인트: 코스·모듈·레슨 조회(레슨은 메타·본문·`resources[]`·퀴즈 포함, 학습자 응답 전에는 정답·해설 숨김), 활동 상태 갱신, 세션 시작/종료/수동 기록, 다음 레슨 추천, 주간·모듈 리포트 생성·조회, 진행도 내보내기. 복습 due 카드 조회·응답과 퀴즈 응시 제출은 **P1-2 완료 후** 추가(로드맵 P2-1이 P1-2에 의존). 모든 경로는 `/api/v1/` 아래. | 엔드포인트별 TestClient 테스트 |
 | AC-API.2 | `/openapi.json`이 생성되고 스냅샷 테스트가 비호환 변경을 감지한다. 오류 응답은 RFC 9457 `application/problem+json` 형식이다. | 스냅샷·오류 형식 테스트 |
 | AC-API.3 | 라우터는 코어 라이브러리 함수만 호출한다. 저장소·로더를 직접 다루지 않으며, CLI와 API가 같은 입력에 같은 결과를 낸다. | 코드 리뷰 체크리스트, CLI/API 동치 테스트 1건 이상 |
-| AC-API.4 | 서버는 무상태다. `/healthz`(프로세스 생존), `/readyz`(DB 연결·콘텐츠 색인 완료)가 있고, Prometheus 형식 메트릭(요청 수·지연·오류율·DB 풀)을 노출한다. 모든 로그는 JSON이며 요청 ID가 응답 헤더와 로그에 같이 찍힌다. | 테스트 + 수동 확인 |
-| AC-API.5 | PostgreSQL을 Alembic 마이그레이션으로 초기화하고, 로컬 모드 SQLite도 같은 저장소 추상화로 동작한다. 마이그레이션 업/다운이 CI에서 통과한다. | CI 잡 |
-| AC-API.6 | 콘텐츠 재색인 엔드포인트(또는 시작 시 색인)와 색인 실패 시 이전 색인 유지. 레슨 1,000개 기준 색인 60초 이내. | 대용량 픽스처 |
+| AC-API.4 | 서버는 무상태다. `/healthz`(프로세스 생존)와 `/readyz`, JSON 구조화 로그, 요청 ID(응답 헤더·로그 동일)를 최소 구현한다. Prometheus 메트릭과 OpenTelemetry는 P2-5(C.5 AC-OPS.1). | 테스트 |
+| AC-API.5 | (P2-3으로 이동 → C.4 AC-DB.1~3) | — |
+| AC-API.6 | 콘텐츠 재색인(시작·reload·배포 시)과 불변 스냅샷 원자 교체, 검증 실패 시 이전 색인 유지 + 422. 레슨 1,000개 기준 60초 이내. 설계 §1.1 확정(1113f66)으로 조건 해제. P2-1 1차 범위에서는 미룸. | 대용량 픽스처 |
 | AC-API.7 | 프레임워크 선택과 버전 정책(`/api/v1`, 호환성 깨짐은 `/api/v2`)이 ADR에 기록되어 있다. | ADR |
-| AC-API.8 | 부하 테스트: 읽기 p95 300ms, 쓰기 p95 1초, 동시 사용자 500명 시나리오 통과. 결과를 `docs/`에 기록. | k6 또는 locust 스크립트와 결과 파일 |
+| AC-API.8 | (P2-5로 이동 → C.5 AC-OPS.3) | — |
 
-범위 밖: 웹 프론트엔드 자체, 인증(P2-2), 콘텐츠 편집 API(Git이 원본).
+P2-1 1차 범위 합의(API 개발자, 2026-11-11): 이번에 구현하는 것은 코스·모듈·레슨 조회(메타·본문·`resources[]`·공부법 절), 세션 start/stop/log, done, status, next, 주간·모듈 리포트(JSON + 동일 Markdown), 진행도 export, resources 목록, `/healthz`·`/readyz`·JSON 로그·요청 ID, `/openapi.json` 스냅샷, problem+json, ADR 0006, CLI/API 동치 테스트다. 뒤로 미루는 것: 퀴즈·복습 엔드포인트와 레슨 응답의 퀴즈 필드(P1-2 머지 후), 활동 단위 상태 갱신(활동별 상태 저장소가 생기는 P1-2/P2-3 이후; 그때까지 레슨 단위 `done`), 재색인(AC-API.6, 아키텍트 설계 후). 미룬 항목은 P2-1 완료 판정에서 제외하고 후속 마일스톤 기준으로 넘긴다.
+
+범위 밖: 웹 프론트엔드 자체, 인증(P2-2), DB 마이그레이션(P2-3), 운영·부하(P2-5), 콘텐츠 편집 API(Git이 원본).
 
 ### C.3 P2-2 인증·권한 (FR-10.3~10.7)
 
@@ -469,5 +500,81 @@ questions:
 | AC-AUTH.6 | 사용자는 자기 데이터 전체를 JSON으로 내보내고(로컬 모드 `rc progress import`와 호환), 계정 삭제 시 학습 데이터는 즉시 삭제, 감사 로그의 개인 식별자는 보존 기간(설정, 기본 90일) 뒤 익명화된다. | 삭제 후 조회 테스트 |
 | AC-AUTH.7 | 세션/토큰 방식, 만료·갱신·로그아웃 무효화 정책이 ADR에 기록되고 구현과 일치한다. 기기별 세션 목록·개별 종료는 P1. | ADR + 테스트 |
 | AC-AUTH.8 | OWASP ASVS L2의 V2(인증), V3(세션), V4(접근 제어) 항목 체크리스트를 작성해 통과·미해당을 표시한다. CSRF 방어와 보안 헤더(CSP, HSTS)가 적용된다. | 체크리스트 파일, 헤더 테스트 |
+| AC-AUTH.9 | 메일 어댑터: 비밀번호 재설정·초대 메일을 보내는 인터페이스와 SMTP 구현, 테스트용 fake mailer(발송 내용을 메모리에 보관)가 있다. SMTP 설정은 환경 변수. 메일 미설정 시 재설정 기능은 비활성 안내. | fake mailer로 재설정 흐름 테스트 |
 
 범위 밖: 결제·구독, 그룹/코호트(P2), 다중 조직(테넌트) 분리.
+
+### C.4 P2-3 PostgreSQL·마이그레이션
+
+**사용자 스토리**
+
+- US-DB.1 관리자로서, 표준 PostgreSQL에 설치하고 버전 업그레이드 때 마이그레이션이 자동으로 안전하게 적용되기를 바란다.
+- US-DB.2 학습자로서, 로컬 모드(SQLite)에서 쓰던 진행도를 서버로 옮기고 싶다.
+
+**수용 기준**
+
+| ID | 기준 | 검증 방법 |
+|---|---|---|
+| AC-DB.1 | 코어의 저장소 추상화가 SQLite(로컬)와 PostgreSQL(서버)을 모두 지원하고, 같은 테스트 스위트가 두 백엔드에서 통과한다. | 백엔드 파라미터화 테스트(CI에 Postgres 서비스 컨테이너) |
+| AC-DB.2 | 스키마 변경은 Alembic 마이그레이션으로만 한다. 빈 DB → 최신, 최신 → 한 단계 다운 → 업 왕복이 CI에서 통과한다. 마이그레이션 없는 모델 변경은 테스트가 실패시킨다. | CI 잡, autogenerate diff 검사 |
+| AC-DB.3 | 로컬 모드 JSON 내보내기(`rc progress export`)를 서버 계정으로 가져올 수 있고, 레슨 ID 기준으로 병합·중복 방지된다. | 왕복 테스트 |
+
+### C.5 P2-5 운영: 관측성·배포·백업·부하
+
+**사용자 스토리**
+
+- US-OPS.1 관리자로서, Docker Compose 한 번으로 올리고, 상태를 헬스체크·메트릭·로그로 보고, 백업·복구를 문서대로 할 수 있기를 바란다.
+
+**수용 기준**
+
+| ID | 기준 | 검증 방법 |
+|---|---|---|
+| AC-OPS.1 | `/readyz`(DB 연결·콘텐츠 색인 완료), Prometheus 형식 메트릭(요청 수·지연·오류율·DB 풀), JSON 구조화 로그에 요청 ID(응답 헤더와 동일). 선택적 OpenTelemetry 추적 활성화 설정. | 테스트 + 수동 확인 |
+| AC-OPS.2 | `deploy/`의 Docker Compose(api + web + postgres + reverse proxy)로 신규 설치 30분 이내(문서 기준). 비밀은 `.env`로 주입, `.env.example` 제공. 이미지 linux/amd64·arm64. | 클린 VM 설치 리허설 기록 |
+| AC-OPS.3 | 부하 테스트: 읽기 p95 300ms, 쓰기 p95 1초, 동시 사용자 500명·레슨 1,000개 시나리오 통과. 스크립트와 결과를 `docs/`에 기록. | k6 또는 locust |
+| AC-OPS.4 | 백업·복구 절차 문서(RPO 24시간, RTO 4시간)와 복구 리허설 1회 기록. 관리 행위(사용자·역할·설정 변경) 감사 로그가 기록되고 보존 기간 설정이 동작한다. | 리허설 기록, 감사 로그 테스트 |
+
+범위 밖: Kubernetes 매니페스트(Phase 3), 관리형 DB 가이드(Phase 3).
+
+### C.6 P2-4 웹 프론트엔드
+
+**사용자 스토리**
+
+- US-WEB.1 학습자로서, 로그인하면 대시보드에서 내 진행도·오늘 복습·다음 레슨을 보고 바로 레슨을 열고 싶다.
+- US-WEB.2 학습자로서, 코스 로드맵에서 단계·모듈·레슨의 잠김/진행/완료를 한눈에 보고 싶다.
+- US-WEB.3 학습자로서, 레슨 페이지에서 본문(수식·코드), "이 단계 공부법" 절, 자료 목록을 읽고 완료 표시를 하고 싶다.
+- US-WEB.4 관리자로서, 사용자·역할을 관리하는 화면을 쓰되 학습자는 그 화면에 들어올 수 없어야 한다.
+
+**수용 기준**
+
+| ID | 기준 | 검증 방법 |
+|---|---|---|
+| AC-WEB.1 | 로그인 → 대시보드 → 로드맵 → 레슨 열기 → 완료 표시 흐름이 헤드리스 브라우저 E2E 테스트로 통과한다. | E2E(Playwright 또는 동급) |
+| AC-WEB.2 | 레슨 뷰어가 KaTeX 수식과 코드 하이라이트를 렌더링하고, "이 단계 공부법" 절과 `resources[]` 목록(제목·종류·범위 메모·링크)을 표시한다. 정적 사이트(로컬 모드)와 같은 콘텐츠가 같은 의미로 보인다. | 스냅샷·컴포넌트 테스트 |
+| AC-WEB.3 | 대시보드: 단계별·모듈별·코스 진행률, 주간 학습 시간, 연속 학습일, 오늘 복습 수, 다음 레슨 추천(FR-3.4). 로드맵: 선수지식 그래프에 잠김/진행 중/완료 색 구분, 현재 단계 강조(FR-2.1~2.3). | 컴포넌트 테스트 |
+| AC-WEB.4 | 관리자 화면은 admin 역할에서만 접근되고 learner·author 접근은 거부된다. 모든 화면은 API 권한 검사에 의존하며 프론트엔드 숨김만으로 보호하지 않는다. | E2E 또는 컴포넌트 테스트 + API 403 확인 |
+| AC-WEB.5 | 자료실: 모듈·레슨별 자료 목록과 종류 필터, 외부 링크는 새 탭. 퀴즈·복습 UI는 P1-2 API 노출 후 추가(그 전에는 "CLI에서 사용" 안내). | 컴포넌트 테스트 |
+| AC-WEB.6 | 프론트엔드 lint·타입 검사·테스트가 CI와 `check.sh`(node 스택)에서 실행된다. 주요 화면 LCP 2.5초 이내(7절). | CI, Lighthouse 또는 동급 |
+| AC-WEB.7 | 프레임워크 선택(Next.js App Router, 결정 10, 설계 §1.2 비교표 근거)이 ADR에 기록되어 있다. 화면 구조는 `docs/platform-design.md`의 Figma 7페이지 구조를 따른다. | ADR, 설계 대조 |
+
+범위 밖: i18n·접근성(P2-6), 하이라이트·AI 튜터(Phase 3), 콘텐츠 편집 UI(Git이 원본).
+
+### C.7 P2-6 i18n·접근성
+
+**사용자 스토리**
+
+- US-I18N.1 학습자로서, UI를 한국어 또는 영어로 쓰고 선택이 다음 로그인에도 유지되기를 바란다.
+- US-A11Y.1 키보드·스크린 리더 사용자로서, 로그인부터 레슨 완료 표시까지 마우스 없이 끝내고 싶다.
+
+**수용 기준**
+
+| ID | 기준 | 검증 방법 |
+|---|---|---|
+| AC-I18N.1 | 웹 UI와 CLI 메시지의 문자열이 번역 카탈로그(ko/en)로 분리되어 있고, 키 누락·미사용 키를 검사하는 테스트가 CI에서 실행된다. | CI 테스트 |
+| AC-I18N.2 | 언어 전환이 사용자 설정에 저장되고 다음 로그인에도 유지된다. 비로그인·로컬 모드는 브라우저/OS 로케일 기본값. 날짜·숫자는 로케일 형식. | 테스트 |
+| AC-I18N.3 | 콘텐츠(레슨)는 번역 대상이 아니다. 레슨 단위 언어 태그와 번역본 병행은 Phase 3(7절 국제화). | 문서 확인 |
+| AC-A11Y.1 | 주요 화면(로그인, 대시보드, 로드맵, 레슨, 자료실, 관리자)에서 axe-core 자동 검사의 심각·치명 위반 0건이고 이 검사가 CI에서 실행된다(engineering.md, Phase 2부터). | CI |
+| AC-A11Y.2 | 키보드만으로 로그인 → 레슨 완료 표시까지 진행할 수 있고, 포커스 표시·건너뛰기 링크·폼 레이블·명도 대비(4.5:1)가 WCAG 2.1 AA를 충족한다. 다크 모드에서도 대비 기준 유지. | E2E + 수동 점검 체크리스트 |
+| AC-A11Y.3 | 로드맵 그래프와 진행률 등 시각 정보는 텍스트 대안(표 또는 목록)을 제공한다. | 컴포넌트 테스트 |
+
+범위 밖: 추가 언어, 콘텐츠 번역 워크플로(Phase 3).
