@@ -13,15 +13,43 @@
 
 ## 요약
 
-| 심각도 | 건수 | ID |
-|---|---|---|
-| critical | 0 | — |
-| high | 4 | QA-01, QA-02, QA-03, QA-04 |
-| medium | 8 | QA-05 ~ QA-11, QA-15 |
-| low | 9 | QA-12 ~ QA-14, QA-16 ~ QA-21 |
+| 심각도 | 건수 | ID | 상태 |
+|---|---|---|---|
+| critical | 0 | — | — |
+| high | 4 | QA-01, QA-02, QA-03, QA-04 | 해결됨 `ffdab29` |
+| medium | 8 | QA-05 ~ QA-11, QA-15 | 해결됨 `ffdab29` |
+| low | 9 | QA-12 ~ QA-14, QA-16 ~ QA-21 | QA-12·QA-17 해결됨 `ffdab29`, QA-20 해결됨 `84b13c2`(DevOps), 나머지(QA-13·14·16·18·19·21) 미해결 |
 
-담당: 모두 코어(content/progress/report/site/cli), 즉 오케스트레이터 담당이다. 범위 안에 P1-2 퀴즈·API·DB
-코드는 없었다.
+담당: 모두 코어(content/progress/report/site/cli). 범위 안에 P1-2 퀴즈·API·DB 코드는 없었다.
+
+## 해결 상태 (2026-11-11)
+
+`ffdab29`(브랜치 `worktree-qa-review`)에서 QA-01~QA-12 와 QA-15·QA-17 을 고쳤다. 수용 기준은 PRD 부록
+C.0 AC-SEC.1~6. `tests/test_security_review.py` 의 재현 테스트 12개는 strict xfail 에서 통과하는 회귀
+테스트로 바뀌었고, `scripts/harness/check.sh` 는 통과한다(107 passed, coverage 93.49%).
+
+적용한 수정과 남은 한계:
+
+- QA-01: 프런트매터 값은 `pages.md_text`(HTML escape → Markdown escape)로, `mkdocs.yml` 의 nav 제목과
+  `site_name` 은 `html.escape` 로 처리한다(Material 이 이 둘을 이스케이프 없이 출력하는 것을 실측 확인).
+  렌더된 모든 페이지는 생성된 mkdocs 훅에서 `nh3` 허용 목록(`site/sanitize.py`)으로 정리하고, 테마
+  override 가 CSP 메타 태그를 넣는다. **한계**: Material 이 인라인 부트스트랩 스크립트를 쓰기 때문에
+  CSP 는 `script-src 'unsafe-inline'` 을 허용한다 — 주 방어선은 sanitizer 다. 또한 `site_name` 이
+  `<title>` 에서는 테마가 한 번 더 이스케이프하므로, 제목에 `<`·`&` 가 들어가면 그 자리에서만
+  `&lt;` 가 글자로 보인다(안전하나 표시가 어색함).
+- QA-02: `ProgressService.load_curriculum` 이 `validate_courses` 를 실행하므로 모든 명령이 `rc validate`
+  와 같은 검증을 거친다. 자료 링크는 `is_http_url` 로 한 번 더 걸러 `javascript:` 를 링크로 만들지 않는다.
+- QA-03·QA-04: `site/build.py: ensure_writable` 가 `.rc-site` 표식이 없는 비어 있지 않은 디렉터리를
+  거부하고, cwd·저장소 루트·`$HOME` 은 `--force` 로도 허용하지 않는다. 진행 바는 width 클래스를 쓰므로
+  sanitizer 가 `style` 속성을 전면 금지할 수 있다.
+- QA-05: 순환 검사는 반복형 DFS. QA-06: 코스 간 id 중복 검사(규칙 7). QA-07: 디코딩·I/O 오류 수집.
+  QA-08: 심링크를 해석한 경로가 콘텐츠 루트를 벗어나면 거부.
+- QA-09·QA-10: `ProgressExport` 모델이 DB 불변식(세션 id 유일, 사용자별 열린 세션 1개, 시간 순서,
+  done↔completed_at)을 검증하고, import 는 커리큘럼에 없는 레슨 id 를 `--allow-unknown` 없이는 거부한다.
+- QA-11: WAL + busy timeout(15s), `sqlite3.Error` → `StoreError` → CLI 에서 `error: ...`.
+  QA-12: 학습 시간 상한 24시간. QA-15: `logging` 설정과 `rc -v`. QA-17: DB 파일 0600, 데이터 디렉터리 0700.
+- 미해결(low): QA-13(완료일 UTC 표시), QA-14(출력 파일 무확인 덮어쓰기), QA-16(i18n 하드코딩),
+  QA-18(터미널 이스케이프), QA-19(KaTeX 파일별 해시 검증·버전 갱신), QA-21(CLI 일관성).
 
 ## High
 
@@ -74,7 +102,10 @@
 ## 재현 방법
 
 ```bash
-uv run pytest tests/test_security_review.py -rx      # 12 xfailed = 결함 12건 재현
+uv run pytest tests/test_security_review.py   # 12 passed = 회귀 테스트 (ffdab29 이후)
+git show ffdab29 --stat                        # 수정 범위
 ```
+
+`ffdab29` 이전 커밋에서 같은 테스트를 돌리면 12건이 실패한다(결함 재현).
 
 수동 재현에 쓴 스크립트(XSS 스캐너, 경로·import·잠금 시나리오)는 위 표의 절차와 같고 임시 디렉터리에서만 실행했다.
