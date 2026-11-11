@@ -32,7 +32,9 @@ uv run pytest tests/test_cli.py::test_version_prints_package_version   # single 
 bash scripts/harness/check.sh [--quick]                # the verification gate (ruff+format+mypy+pytest/coverage; --quick skips tests)
 uv run pre-commit install                              # enable git hooks; `uv run pre-commit run --all-files` runs them all
 docker build -t robotics-curriculum:local .            # container image (non-root; default `rc --help`)
+export RC_DB_PASSWORD=dev RC_AUTH_SECRET=dev            # compose has no secret defaults (SRV-06)
 docker compose run --rm cli validate                   # run any rc subcommand in the container
+docker compose up -d --build --wait web                # db -> migrate -> api -> web (bash scripts/smoke.sh)
 uv build                                               # sdist + wheel into dist/ (release.yml does this on v* tags)
 python3 -I scripts/harness/roadmap.py summary|next|get <id>|set <id> <status> [note]   # roadmap state
 ```

@@ -3,7 +3,8 @@
 #        docker compose run --rm cli validate
 #        docker compose up -d db      # PostgreSQL for server mode (P2-3, docs/adr/0007)
 #        docker compose up -d --wait api   # db -> migrate -> api (bash scripts/smoke.sh)
-# `web` and the reverse proxy follow with P2-4 (docs/architecture/operations.md).
+#        docker compose up -d --wait web   # the frontend on http://127.0.0.1:3000
+# The reverse proxy follows (docs/architecture/operations.md).
 # Secrets have no defaults: compose refuses to start until they are set (server review SRV-06).
 # The api runs in server mode (accounts, sessions; SRV-01) on a read-only root filesystem with
 # no Linux capabilities (SRV-09). Production can swap the env values for Docker secrets.
@@ -149,9 +150,12 @@ services:
       - ALL
     security_opt:
       - no-new-privileges:true
-    # Not read_only yet: Next writes its fetch cache under .next/cache at runtime and that
-    # has not been proven with a writable tmpfs here. Turn it on once scripts/smoke.sh
-    # exercises the web service (it does not yet).
+    # Same hardening as the api (SRV-09). Next needs its fetch cache writable, so that one
+    # path is a tmpfs; verified by running the image read-only.
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /app/.next/cache
 
 volumes:
   rc-data:

@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Verification gate (the "verify" node of the dev graph).
 # Usage: scripts/harness/check.sh [--quick]
-#   --quick : lint + type-check only (used by the Stop hook)
-#   (none)  : lint + type-check + tests (with coverage gate when pytest-cov is present)
+#   --quick : lint + type-check only, Python only (used by the Stop hook)
+#   (none)  : lint + type-check + tests for every detected stack (with the coverage gate when
+#             pytest-cov is present), installing web/node_modules first if it is missing
 # Exit 0 = all green, or no stack configured. Non-zero = something failed.
 set -u
 root="$(git rev-parse --show-toplevel 2>/dev/null || echo "${CLAUDE_PROJECT_DIR:-$PWD}")"
@@ -40,10 +41,34 @@ for s in $stacks; do
       fi
       ;;
     node)
+      # The Stop hook runs --quick after every turn; a frontend install plus lint is far too
+      # slow for that, and most turns here touch Python only. CI and a full check.sh cover web.
+      if [ "$quick" = 1 ]; then
+        echo "> frontend checks ($node_dir)"
+        echo "  SKIP --quick skips the node stack (CI and a full check.sh run it)"
+        continue
+      fi
       pm=npm
       [ -f "$node_dir/pnpm-lock.yaml" ] && pm=pnpm
       [ -f "$node_dir/yarn.lock" ] && pm=yarn
       cd "$root/$node_dir" || exit 1
+      # A fresh worktree has no node_modules, so the scripts below would die with exit 127.
+      if [ ! -d node_modules ]; then
+        printf '> %s install (%s/node_modules missing)\n' "$pm" "$node_dir"
+        if [ "$pm" = npm ] && [ -f package-lock.json ]; then
+          install_cmd="npm ci"
+        else
+          install_cmd="$pm install"
+        fi
+        if ! $install_cmd >/dev/null 2>&1; then
+          printf '  FAIL %s in %s. Run it by hand to see why (no network in this environment?).\n' \
+            "$install_cmd" "$node_dir"
+          status=1
+          cd "$root" || exit 1
+          continue
+        fi
+        printf '  OK   %s\n' "$install_cmd"
+      fi
       has_script lint && run "$pm run lint ($node_dir)" $pm run --silent lint
       has_script typecheck && run "$pm run typecheck ($node_dir)" $pm run --silent typecheck
       has_script format:check && run "$pm run format:check ($node_dir)" $pm run --silent format:check
