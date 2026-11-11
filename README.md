@@ -37,7 +37,9 @@ uv run rc start m1-vectors-matrices           # start a timer (one at a time)
 uv run rc stop --note "chapter 1"             # stop it; --discard to drop it
 uv run rc log m1-vectors-matrices 1h30m       # manual time: 45, 45m, 1h30m
 uv run rc done m1-vectors-matrices -u 4 -m "memo"   # mark done, understanding 1-5
-uv run rc status                              # per-lesson table
+uv run rc status                              # per-lesson table + 오늘 복습 수 · 최근 7일 퀴즈 정답률
+uv run rc quiz m1-rotation-representations    # take the lesson quiz; --only q1,q2 / --retry-wrong
+uv run rc review                              # review due flashcards with SM-2; -n 10, --lesson ID, --dry-run
 uv run rc roadmap --level 기초                # [x] done [>] in progress [ ] not started [-] locked; --course ID
 uv run rc progress export backup.json         # JSON backup; `rc progress import FILE [--replace]`
 uv run rc report weekly                       # -> reports/weekly/YYYY-Www.md; --week 2026-W46, --out PATH, --stdout
@@ -83,6 +85,7 @@ HTTP API (FastAPI, `/api/v1`; extra `api` — `uv sync` installs it in dev, `pip
 
 ```bash
 uv run rc api serve --host 127.0.0.1 --port 8000   # docs at /docs, schema at /openapi.json; env RC_API_HOST/PORT/LOG_LEVEL
+RC_AUTH_MODE=server RC_AUTH_ADMIN_EMAIL=you@example.org uv run rc api serve   # accounts + login (docs/api/role-matrix.md)
 ```
 
 ## Lint / format

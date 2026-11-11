@@ -224,3 +224,43 @@ def test_qa11_locked_database_is_a_user_error(tmp_path: Path) -> None:
 def test_qa12_log_huge_duration_is_a_user_error(tmp_path: Path) -> None:
     result = _rc(FIXTURE, tmp_path / "d", "log", LESSON_ID, "99999999999999")
     assert _clean_user_error(result), repr(result.exception)
+
+
+# -- site: quiz blocks (P1-2) ------------------------------------------------------
+
+
+QUIZ_BLOCK = """
+## 확인 퀴즈
+
+```quiz
+activity: m1-rotation-representations-quiz
+questions:
+  - id: q1
+    type: single
+    prompt: "<img src=x onerror=alert('prompt')>"
+    choices: ["<script>alert('choice')</script>", "ok"]
+    answer: 1
+    explanation: "<svg onload=alert('explain')>"
+```
+"""
+
+
+def test_qa22_quiz_block_text_is_escaped_and_answers_still_fold(tmp_path: Path) -> None:
+    """Quiz text is content too, and sanitizing must not break the answer fold."""
+    root = tmp_path / "curriculum"
+    shutil.copytree(FIXTURE, root)
+    lesson = root / "sample-course" / "m1-math-physics" / "rotation-representations.md"
+    text = lesson.read_text(encoding="utf-8")
+    head, _, _ = text.partition("## 확인 퀴즈")
+    lesson.write_text(head + QUIZ_BLOCK.lstrip("\n"), encoding="utf-8")
+
+    site = tmp_path / "s"
+    result = _rc(root, tmp_path / "d", "site", "build", "--out", str(site))
+    assert result.exit_code == 0, result.output
+    assert _live_payloads(site) == []
+
+    page = next(p for p in site.rglob("*.html") if "확인 퀴즈" in p.read_text(encoding="utf-8"))
+    html_text = page.read_text(encoding="utf-8")
+    # The ??? admonition still renders as a <details> fold, and the payload is inert text.
+    assert "<details" in html_text
+    assert "alert('prompt')" in html_text and "<img src=x" not in html_text

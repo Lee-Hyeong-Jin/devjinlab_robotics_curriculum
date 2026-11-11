@@ -9,11 +9,17 @@ from __future__ import annotations
 import html
 import posixpath
 import re
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from datetime import datetime
 
 from robotics_curriculum.content import Course, Lesson, Module, Resource, ResourceKind
+from robotics_curriculum.content.quiz_block import (
+    QUIZ_FENCE,
+    QuizParseError,
+    QuizQuestion,
+    parse_quiz,
+)
 from robotics_curriculum.content.validate import is_http_url
 from robotics_curriculum.progress import LessonProgress, LessonStatus, LessonSummary, Session
 from robotics_curriculum.site.stats import (
@@ -165,6 +171,7 @@ class SiteModel:
     next_lessons: list[LessonSummary]
     sessions: list[Session]
     now: datetime
+    due_today: int = 0
     by_lesson: dict[str, LessonSummary] = field(init=False)
     module_keys: dict[int, str] = field(init=False)
 
@@ -287,7 +294,7 @@ def _cards(model: SiteModel) -> str:
         ),
         ("연속 학습", f"{streak(days, model.now.date())}일", "하루 한 번 이상 학습한 날"),
         ("완료한 레슨", f"{total.done} / {total.total}", f"전체 {total.percent}%"),
-        ("오늘 복습", "—", "복습 카드 기능 준비 중"),
+        ("오늘 복습", f"{model.due_today}장", "due 카드 · rc review"),
     ]
     parts = ['<div class="rc-cards">']
     for title, value, sub in cards:
@@ -488,7 +495,7 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
         out += [f"**내 기록**: {record}", ""]
     out += ["---", ""]
 
-    body, study = split_study_section(strip_leading_h1(lesson.body))
+    body, study = split_study_section(render_quiz_blocks(strip_leading_h1(lesson.body), lesson))
     out += [body.strip("\n"), ""]
 
     out += [f"## {STUDY_HEADING} {{#{STUDY_ANCHOR}}}", ""]
@@ -507,6 +514,80 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
     else:
         out.append("등록된 자료가 없습니다.")
     return "\n".join(out) + "\n"
+
+
+def render_quiz_blocks(body: str, lesson: Lesson) -> str:
+    """Replace each ```` ```quiz ```` fence with a question list; answers fold into ``<details>``.
+
+    Questions and choices stay visible; the correct answer and explanation go into a
+    collapsible ``???`` admonition (pymdownx.details renders it as ``<details>``). A block
+    that does not parse is shown as a plain YAML code block instead.
+    """
+    try:
+        quiz = parse_quiz(lesson)
+    except QuizParseError:
+        return _replace_fences(body, lambda _i, raw: _code_block(raw))
+    blocks = quiz.blocks
+    number = 0
+
+    def render(index: int, raw: str) -> str:
+        nonlocal number
+        if index >= len(blocks):
+            return _code_block(raw)
+        out = [f'!!! question "확인 퀴즈 ({len(blocks[index].questions)}문항)"', ""]
+        for question in blocks[index].questions:
+            number += 1
+            out += indent(_render_question(question, number)).splitlines() + [""]
+        return "\n".join(out)
+
+    return _replace_fences(body, render)
+
+
+def _code_block(raw: str, language: str = "yaml") -> str:
+    """Wrap ``raw`` in a fence long enough that its own backticks cannot close it."""
+    longest = max((len(run) for run in re.findall(r"`+", raw)), default=0)
+    fence = "`" * max(3, longest + 1)
+    return f"{fence}{language}\n{raw}\n{fence}"
+
+
+def _render_question(question: QuizQuestion, number: int) -> str:
+    # Quiz text comes from lesson front matter, so it is escaped like any other content.
+    lines = [f"**{number}.** ({question.type_label}) {md_text(question.prompt)}", ""]
+    if question.choices:
+        lines += [f"{i + 1}. {md_text(choice)}" for i, choice in enumerate(question.choices)]
+        lines.append("")
+    lines += [
+        '??? note "정답·해설"',
+        "",
+        f"    **정답:** {md_text(question.answer_text())}",
+        "",
+        f"    {md_text(question.explanation)}",
+    ]
+    return "\n".join(lines)
+
+
+def _replace_fences(body: str, render: Callable[[int, str], str]) -> str:
+    out: list[str] = []
+    current: list[str] | None = None
+    closing: str | None = None
+    index = 0
+    for line in body.splitlines():
+        if current is not None:
+            if closing is not None and line.strip() == closing:
+                out.append(render(index, "\n".join(current)))
+                index += 1
+                current, closing = None, None
+            else:
+                current.append(line)
+            continue
+        match = QUIZ_FENCE.match(line.strip())
+        if match:
+            current, closing = [], match["fence"]
+        else:
+            out.append(line)
+    if current is not None:  # unterminated fence: keep it verbatim
+        out += [f"{closing}quiz", *current]
+    return "\n".join(out)
 
 
 def _progress_line(progress: LessonProgress, now: datetime) -> str:

@@ -20,6 +20,7 @@ from typing import Any
 
 import yaml
 
+from robotics_curriculum.learn.review import due_count
 from robotics_curriculum.progress import ProgressService
 from robotics_curriculum.progress.service import find_repo_root
 from robotics_curriculum.site.pages import (
@@ -166,12 +167,14 @@ markdown_extensions:
 
 def build_model(service: ProgressService, now: datetime | None = None) -> SiteModel:
     """Snapshot content + progress for one user."""
+    at = now or datetime.now().astimezone()
     return SiteModel(
         courses=service.courses,
         summaries=service.status(),
         next_lessons=service.next_lessons(),
         sessions=service.store.list_sessions(service.user_id),
-        now=now or datetime.now().astimezone(),
+        now=at,
+        due_today=due_count(service.store, today=at.astimezone().date(), user_id=service.user_id),
     )
 
 

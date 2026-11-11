@@ -50,6 +50,11 @@ C.0 AC-SEC.1~6. `tests/test_security_review.py` 의 재현 테스트 12개는 st
   렌더러가 처리하며, P2-3 의 전송 테스트가 그런 행을 쓴다.
 - QA-11: WAL + busy timeout(15s), `sqlite3.Error` → `StoreError` → CLI 에서 `error: ...`.
   QA-12: 학습 시간 상한 24시간. QA-15: `logging` 설정과 `rc -v`. QA-17: DB 파일 0600, 데이터 디렉터리 0700.
+- QA-22(P1-2 퀴즈, integration e2842ab 머지 시 추가): 퀴즈 문항·선택지·정답·해설도 `md_text` 로
+  처리하고, 파싱 실패 시 폴백 코드 블록은 내용 안의 백틱보다 긴 울타리를 써서 블록을 조기에 닫고
+  Markdown 으로 탈출하지 못하게 한다. 접기(`???` → `<details>`)는 sanitizer 통과 후에도 유지된다
+  (`tests/test_security_review.py::test_qa22_...`). P1-2·P2-3 가 추가한 저장소 메서드의 SQL 도
+  `_exec` 경유로 바꿔 잠금·제약 오류가 사용자 메시지로 나오게 했다.
 - 미해결(low): QA-13(완료일 UTC 표시), QA-14(출력 파일 무확인 덮어쓰기), QA-16(i18n 하드코딩),
   QA-18(터미널 이스케이프), QA-19(KaTeX 파일별 해시 검증·버전 갱신), QA-21(CLI 일관성).
 

@@ -8,12 +8,14 @@ output is testable from fixed input. Weeks are ISO weeks (Monday-Sunday) in loca
 from __future__ import annotations
 
 import re
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta, tzinfo
 
 from robotics_curriculum.progress import LessonStatus, ProgressService
 
 STUCK_DAYS = 7
+STUCK_AGAIN = 2
 LOW_UNDERSTANDING = 2
 NEXT_COUNT = 3
 
@@ -77,6 +79,21 @@ class NoteLine:
     text: str
 
 
+@dataclass(frozen=True, slots=True)
+class QuizStats:
+    """Quiz attempts and card reviews that happened in the week (P1-2)."""
+
+    attempts: int = 0
+    correct: int = 0
+    runs: int = 0
+    reviews: int = 0
+    rating_counts: tuple[int, int, int, int] = (0, 0, 0, 0)  # again, hard, good, easy
+
+    @property
+    def percent(self) -> int:
+        return round(100 * self.correct / self.attempts) if self.attempts else 0
+
+
 @dataclass(slots=True)
 class WeeklyReport:
     week: IsoWeek
@@ -84,6 +101,7 @@ class WeeklyReport:
     total_seconds: int = 0
     session_count: int = 0
     active_days: int = 0
+    quiz: QuizStats = field(default_factory=QuizStats)
     completed: list[LessonLine] = field(default_factory=list)
     in_progress: list[LessonLine] = field(default_factory=list)
     module_time: list[ModuleTime] = field(default_factory=list)
@@ -163,12 +181,46 @@ def build_weekly_report(
             )
 
     report.module_time = sorted(per_module.values(), key=lambda m: -m.seconds)
+    report.quiz = _quiz_stats(service, in_week)
+    for card_id, again in _again_counts(service, in_week).items():
+        if again >= STUCK_AGAIN:
+            card = service.store.get_card(card_id, service.user_id)
+            title = card.front.splitlines()[0] if card else card_id
+            lesson_id = card.lesson_id if card else "?"
+            report.stuck.append(LessonLine(lesson_id, title, detail=f"복습 카드 again {again}회"))
     for nxt in service.next_lessons(limit=NEXT_COUNT):
         state = "진행 중" if nxt.status is LessonStatus.IN_PROGRESS else "시작 전"
         detail = f"{state}, 예상 {nxt.lesson.estimated_minutes}분"
         report.next_lessons.append(LessonLine(nxt.lesson.id, nxt.lesson.title, detail=detail))
     report.notes.sort(key=lambda n: n.day)
     return report
+
+
+def _quiz_stats(service: ProgressService, in_week: Callable[[datetime | None], bool]) -> QuizStats:
+    attempts = [
+        a for a in service.store.list_quiz_attempts(service.user_id) if in_week(a.answered_at)
+    ]
+    runs = [r for r in service.store.list_quiz_runs(service.user_id) if in_week(r.finished_at)]
+    reviews = [r for r in service.store.list_reviews(service.user_id) if in_week(r.reviewed_at)]
+    order = ("again", "hard", "good", "easy")
+    counts = tuple(sum(1 for r in reviews if r.rating == name) for name in order)
+    return QuizStats(
+        attempts=len(attempts),
+        correct=sum(1 for a in attempts if a.correct),
+        runs=len(runs),
+        reviews=len(reviews),
+        rating_counts=(counts[0], counts[1], counts[2], counts[3]),
+    )
+
+
+def _again_counts(
+    service: ProgressService, in_week: Callable[[datetime | None], bool]
+) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for review in service.store.list_reviews(service.user_id):
+        if review.rating == "again" and in_week(review.reviewed_at):
+            counts[review.card_id] = counts.get(review.card_id, 0) + 1
+    return counts
 
 
 def format_duration(seconds: int) -> str:
@@ -239,16 +291,19 @@ def render_weekly(report: WeeklyReport) -> str:
     else:
         lines.append("없음")
 
-    lines += [
-        "",
-        "## 퀴즈·복습",
-        "",
-        "- 퀴즈 정답률: 기록 없음 (퀴즈 기능 도입 후 집계)",
-        "- 복습 카드: 기록 없음 (간격 반복 기능 도입 후 집계)",
-        "",
-        "## 메모 요약",
-        "",
-    ]
+    quiz = report.quiz
+    if quiz.attempts:
+        detail = f"{quiz.correct}/{quiz.attempts} 문항, {quiz.runs}회 응시"
+        quiz_line = f"- 퀴즈 정답률: {quiz.percent}% ({detail})"
+    else:
+        quiz_line = "- 퀴즈 정답률: 기록 없음"
+    if quiz.reviews:
+        again, hard, good, easy = quiz.rating_counts
+        ratings = f"again {again} · hard {hard} · good {good} · easy {easy}"
+        review_line = f"- 복습 카드: {quiz.reviews}장 ({ratings})"
+    else:
+        review_line = "- 복습 카드: 기록 없음"
+    lines += ["", "## 퀴즈·복습", "", quiz_line, review_line, "", "## 메모 요약", ""]
     if report.notes:
         lines += [f"- {n.day:%m-%d} `{n.lesson_id}`: {n.text}" for n in report.notes]
     else:

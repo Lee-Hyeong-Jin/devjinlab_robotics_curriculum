@@ -20,6 +20,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Local progress tracking in SQLite (`.rc/progress.db`) behind a store interface, with JSON
   export and import.
 - Weekly and per-module Markdown reports.
+- Quizzes and spaced repetition (P1-2): ` ```quiz ` blocks in lesson bodies (single, multiple,
+  true/false, short answer) validated by `rc validate`; `rc quiz <lesson>` grades in the
+  terminal and turns wrong answers and `concept` questions into flashcards; `rc review`
+  schedules them with SM-2 (ADR 0005); progress schema v2 (cards, card_state, reviews,
+  quiz_attempts, quiz_runs, activity_progress) included in JSON export/import; quiz accuracy
+  and review counts in the weekly report and `rc status`; quiz questions on lesson pages with
+  answers folded into `<details>`.
 - Prerequisite roadmap with done / in-progress / locked states and next-lesson recommendation.
 - Offline static study site (MkDocs Material): dashboard, roadmap, module and lesson pages,
   resource library.
@@ -32,6 +39,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   local SQLite file), `rc progress transfer` to move local SQLite or JSON-export data into
   PostgreSQL (merge without duplicates, `--user-id` to assign a server account), and a `db`
   service (PostgreSQL 16) in the Compose file.
+- Server-mode accounts (`RC_AUTH_MODE=server`): email + Argon2id passwords, login throttling,
+  server-side session cookies with CSRF protection, personal access tokens with scopes, roles
+  learner/author/admin, per-user progress, password reset and email verification by mail,
+  account export and deletion, admin user management and an audit log; security headers.
 - Engineering scaffolding: Apache-2.0 license for code, CC BY 4.0 for curriculum content,
   contribution guide, Code of Conduct, security policy, issue and PR templates, Dependabot,
   GitHub Actions CI and release workflows, strict mypy, coverage gate, pre-commit hooks,

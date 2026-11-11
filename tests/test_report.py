@@ -8,6 +8,10 @@ import pytest
 from typer.testing import CliRunner
 
 from robotics_curriculum.cli import app
+from robotics_curriculum.content import parse_quiz
+from robotics_curriculum.learn import Rating
+from robotics_curriculum.learn.quiz import record_quiz_run, run_quiz
+from robotics_curriculum.learn.review import apply_rating
 from robotics_curriculum.progress import ProgressService, SqliteProgressStore
 from robotics_curriculum.report import (
     IsoWeek,
@@ -55,6 +59,27 @@ def _seed(service: ProgressService, clock: Clock) -> None:
     service.done(ROTATION, understanding=2)
     at(11, 12, 21)
     service.log(DH, 30)
+    # quiz on 11/12 (3/4 right) and a review on 11/13: q1 card gets "again" twice
+    lesson, quiz = service.lesson(ROTATION), parse_quiz(service.lesson(ROTATION))
+    answers = iter(["1", "1,2", "o", "+1"])
+    result = run_quiz(
+        lesson,
+        quiz,
+        quiz.questions,
+        prompt=lambda _t: next(answers),
+        echo=lambda _l: None,
+        clock=clock,
+    )
+    record_quiz_run(service.store, lesson, result)
+    at(11, 13, 9)
+    card = f"{ROTATION}-quiz-q1"
+    apply_rating(service.store, card, Rating.AGAIN, now=clock(), today=date(2026, 11, 13))
+    apply_rating(service.store, card, Rating.AGAIN, now=clock(), today=date(2026, 11, 13))
+    apply_rating(
+        service.store, f"{ROTATION}-concept-q1", Rating.GOOD, now=clock(), today=date(2026, 11, 13)
+    )
+    at(11, 20, 9)  # next week: must not count
+    apply_rating(service.store, card, Rating.GOOD, now=clock(), today=date(2026, 11, 20))
 
 
 @pytest.fixture
@@ -97,6 +122,7 @@ def test_weekly_report_numbers(seeded: ProgressService) -> None:
     assert [(s.lesson_id, s.detail) for s in report.stuck] == [
         (ROTATION, "이해도 2/5"),
         (DH, "11일째 진행 중"),
+        (ROTATION, "복습 카드 again 2회"),
     ]
     assert [n.lesson_id for n in report.next_lessons] == [DH]
     assert [(n.day, n.text) for n in report.notes] == [
@@ -120,6 +146,22 @@ def test_weekly_report_markdown(seeded: ProgressService) -> None:
     assert "- DH 파라미터 (`m2-dh-parameters`): 11일째 진행 중" in text
     assert "- 11-10 `m1-vectors-matrices`: 행렬 곱 연습" in text
     assert "1. DH 파라미터 (`m2-dh-parameters`): 진행 중" in text
+    # P1-2: quiz accuracy, reviews and "again" cards of the week
+    assert "- 퀴즈 정답률: 75% (3/4 문항, 1회 응시)" in text
+    assert "- 복습 카드: 3장 (again 2 · hard 0 · good 1 · easy 0)" in text
+    assert (
+        "- 회전 행렬 $R$ 의 역행렬은? (`m1-rotation-representations`): 복습 카드 again 2회" in text
+    )
+
+
+def test_weekly_report_without_quiz_activity_says_no_record(tmp_path: Path) -> None:
+    clock = Clock()
+    service = _service(tmp_path, clock)
+    try:
+        text = render_weekly(build_weekly_report(service, W46, today=TODAY, tz=UTC))
+    finally:
+        service.store.close()
+    assert "- 퀴즈 정답률: 기록 없음" in text and "- 복습 카드: 기록 없음" in text
 
 
 def test_past_week_is_judged_as_of_its_sunday(seeded: ProgressService) -> None:

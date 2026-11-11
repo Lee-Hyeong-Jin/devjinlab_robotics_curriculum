@@ -8,9 +8,12 @@ types (``TIMESTAMPTZ`` for timestamps, ``BIGINT IDENTITY`` for session ids).
 
 from sqlalchemy import (
     BigInteger,
+    Boolean,
     CheckConstraint,
     Column,
+    Date,
     DateTime,
+    Float,
     Identity,
     Index,
     Integer,
@@ -66,4 +69,106 @@ sessions = Table(
         unique=True,
         postgresql_where=text("ended_at IS NULL"),
     ),
+)
+
+
+# -- schema v2: cards, SM-2 state, reviews, quiz records (P1-2) ---------------------------------
+
+cards = Table(
+    "cards",
+    metadata,
+    Column("user_id", Integer, primary_key=True, server_default=text("1")),
+    Column("id", Text, primary_key=True),
+    Column("lesson_id", Text, nullable=False),
+    Column("question_id", Text, nullable=False),
+    Column("front", Text, nullable=False),
+    Column("back", Text, nullable=False),
+    Column("source", Text, nullable=False),
+    Column("created_at", DateTime(timezone=True), nullable=False),
+    Column("suspended", Boolean, nullable=False, server_default=text("false")),
+    CheckConstraint("source IN ('quiz', 'concept')", name="cards_source"),
+    Index("cards_user_lesson", "user_id", "lesson_id"),
+)
+
+card_state = Table(
+    "card_state",
+    metadata,
+    Column("user_id", Integer, primary_key=True, server_default=text("1")),
+    Column("card_id", Text, primary_key=True),
+    Column("repetitions", Integer, nullable=False, server_default=text("0")),
+    Column("interval_days", Integer, nullable=False, server_default=text("0")),
+    Column("ease", Float, nullable=False, server_default=text("2.5")),
+    Column("due", Date, nullable=False),
+    CheckConstraint("repetitions >= 0", name="card_state_repetitions"),
+    CheckConstraint("interval_days >= 0", name="card_state_interval_days"),
+    Index("card_state_user_due", "user_id", "due"),
+)
+
+reviews = Table(
+    "reviews",
+    metadata,
+    Column("id", BigInteger, Identity(always=False), primary_key=True),
+    Column("user_id", Integer, nullable=False, server_default=text("1")),
+    Column("card_id", Text, nullable=False),
+    Column("reviewed_at", DateTime(timezone=True), nullable=False),
+    Column("rating", Text, nullable=False),
+    Column("interval_before", Integer, nullable=False),
+    Column("interval_after", Integer, nullable=False),
+    Column("ease_after", Float, nullable=False),
+    CheckConstraint("rating IN ('again', 'hard', 'good', 'easy')", name="reviews_rating"),
+    Index("reviews_user_card", "user_id", "card_id"),
+)
+
+quiz_attempts = Table(
+    "quiz_attempts",
+    metadata,
+    Column("id", BigInteger, Identity(always=False), primary_key=True),
+    Column("user_id", Integer, nullable=False, server_default=text("1")),
+    Column("lesson_id", Text, nullable=False),
+    Column("question_id", Text, nullable=False),
+    Column("answered_at", DateTime(timezone=True), nullable=False),
+    Column("answer", Text, nullable=False),
+    Column("correct", Boolean, nullable=False),
+    Index("quiz_attempts_user_lesson", "user_id", "lesson_id"),
+)
+
+quiz_runs = Table(
+    "quiz_runs",
+    metadata,
+    Column("id", BigInteger, Identity(always=False), primary_key=True),
+    Column("user_id", Integer, nullable=False, server_default=text("1")),
+    Column("lesson_id", Text, nullable=False),
+    Column("activity_id", Text),
+    Column("started_at", DateTime(timezone=True), nullable=False),
+    Column("finished_at", DateTime(timezone=True), nullable=False),
+    Column("correct", Integer, nullable=False),
+    Column("total", Integer, nullable=False),
+    Index("quiz_runs_user_lesson", "user_id", "lesson_id"),
+)
+
+activity_progress = Table(
+    "activity_progress",
+    metadata,
+    Column("user_id", Integer, primary_key=True, server_default=text("1")),
+    Column("activity_id", Text, primary_key=True),
+    Column("lesson_id", Text, nullable=False),
+    Column("status", Text, nullable=False, server_default=text("'not_started'")),
+    Column("updated_at", DateTime(timezone=True), nullable=False),
+    CheckConstraint(
+        "status IN ('not_started', 'in_progress', 'done')", name="activity_progress_status"
+    ),
+)
+
+
+# Every learning-data table, children before parents (safe delete order). Mirrors
+# ``store.TABLES``; ``meta`` is schema bookkeeping and is not listed.
+ALL_TABLES = (
+    reviews,
+    card_state,
+    cards,
+    quiz_attempts,
+    quiz_runs,
+    activity_progress,
+    sessions,
+    lesson_progress,
 )

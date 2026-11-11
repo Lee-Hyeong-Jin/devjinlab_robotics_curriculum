@@ -9,6 +9,8 @@ Rules:
 5. a resource ``url``, when present, is a well-formed http(s) URL (no network access)
 6. resource titles are unique within a lesson
 7. ids are unique across every course under the content root (progress needs that)
+8. quiz blocks in the lesson body parse and reference a quiz activity of the lesson
+   (see :mod:`robotics_curriculum.content.quiz_block`)
 """
 
 from __future__ import annotations
@@ -19,6 +21,7 @@ from urllib.parse import urlsplit
 
 from robotics_curriculum.content.loader import ContentError, LoadError, load_courses
 from robotics_curriculum.content.models import Course, Lesson
+from robotics_curriculum.content.quiz_block import QuizParseError, parse_quiz
 
 
 def validate_course(course: Course) -> list[ContentError]:
@@ -51,6 +54,7 @@ def validate_course(course: Course) -> list[ContentError]:
             for activity in lesson.activities:
                 claim(activity.id, lesson_path)
             errors.extend(_check_resources(lesson, lesson_path))
+            errors.extend(_check_quiz(lesson, lesson_path))
 
     # Rule 2: dangling / self prerequisites.
     for lesson in lessons.values():
@@ -81,6 +85,15 @@ def _check_resources(lesson: Lesson, path: Path) -> list[ContentError]:
             msg = f"resource '{resource.title}' has invalid url '{resource.url}' (need http(s))"
             errors.append(ContentError(path, msg))
     return errors
+
+
+def _check_quiz(lesson: Lesson, path: Path) -> list[ContentError]:
+    """Rule 7: every quiz block parses (one error per problem)."""
+    try:
+        parse_quiz(lesson)
+    except QuizParseError as exc:
+        return [ContentError(path, f"lesson '{lesson.id}': {m}") for m in exc.messages]
+    return []
 
 
 def is_http_url(url: str) -> bool:
