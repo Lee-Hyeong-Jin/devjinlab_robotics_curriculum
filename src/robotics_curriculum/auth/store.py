@@ -122,6 +122,8 @@ class AuthStore(Protocol):
         self, user_id: int, kind: TokenKind, token_hash: str, now: datetime, expires_at: datetime
     ) -> None: ...
     def consume_one_time(self, token_hash: str, kind: TokenKind, now: datetime) -> int | None: ...
+    def count_one_time(self, user_id: int, kind: TokenKind, since: datetime) -> int: ...
+    def expire_one_time(self, user_id: int, kind: TokenKind, now: datetime) -> int: ...
 
     # login throttling
     def record_login(self, email: str, ip: str | None, success: bool, now: datetime) -> None: ...
@@ -546,6 +548,34 @@ class SqlAuthStore:
                 .first()
             )
         return row
+
+    def count_one_time(self, user_id: int, kind: TokenKind, since: datetime) -> int:
+        """Tokens of ``kind`` issued to the user since ``since`` (mail throttling)."""
+        with self._tx() as conn:
+            return int(
+                conn.execute(
+                    select(func.count())
+                    .select_from(one_time_tokens)
+                    .where(
+                        one_time_tokens.c.user_id == user_id,
+                        one_time_tokens.c.kind == kind.value,
+                        one_time_tokens.c.created_at >= since,
+                    )
+                ).scalar_one()
+            )
+
+    def expire_one_time(self, user_id: int, kind: TokenKind, now: datetime) -> int:
+        """Invalidate every unused token of ``kind`` for the user."""
+        with self._tx() as conn:
+            return conn.execute(
+                update(one_time_tokens)
+                .where(
+                    one_time_tokens.c.user_id == user_id,
+                    one_time_tokens.c.kind == kind.value,
+                    one_time_tokens.c.used_at.is_(None),
+                )
+                .values(used_at=now)
+            ).rowcount
 
     # -- login throttling -----------------------------------------------------------------
 
