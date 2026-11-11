@@ -2,6 +2,15 @@
 
 로보틱스 커리큘럼 및 학습 보조 플랫폼 — Markdown/YAML 콘텐츠 + `rc` CLI (Phase 1, Python only).
 
+An open-source curriculum and learning-assist platform for becoming a robotics engineer. A
+staged robotics expert course (foundation, intermediate, advanced) is written as Markdown
+lessons with YAML front matter, each carrying prerequisites, objectives, curated resources, and
+a "how to study this stage" section. The `rc` command-line tool validates the content, tracks
+your progress and study time locally, recommends the next lesson from the prerequisite graph,
+writes weekly and per-module reports, and builds an offline static study site with a dashboard,
+roadmap, and resource library. A web platform with an API server, accounts, and multi-user
+progress is planned for Phase 2 (see `harness/roadmap.yaml`).
+
 ## Setup
 
 Requires Python 3.12 and [uv](https://docs.astral.sh/uv/).
@@ -57,3 +66,21 @@ uv run pytest tests/test_cli.py::test_version_prints_package_version  # single t
 ```
 
 See `docs/adr/` for architecture decisions.
+
+## Contributing
+
+Contributions to code and curriculum content are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md)
+for the development setup, checks, commit conventions (Conventional Commits, DCO sign-off), and
+the lesson contribution flow. Everyone taking part follows the
+[Code of Conduct](CODE_OF_CONDUCT.md). Changes are tracked in [CHANGELOG.md](CHANGELOG.md).
+
+## Security
+
+Please report vulnerabilities privately as described in [SECURITY.md](SECURITY.md), not in
+public issues.
+
+## License
+
+Code is licensed under the [Apache License 2.0](LICENSE) (see also [NOTICE](NOTICE)).
+Curriculum content in `curriculum/` is licensed under
+[CC BY 4.0](curriculum/LICENSE).
