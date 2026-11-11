@@ -134,6 +134,47 @@ print(f"BOM {total:.0f} USD / 예산 {budget_usd:.0f} USD ({total / budget_usd:.
 2. 모터 PWM 과 인코더 카운트를 Raspberry Pi 의 Python 노드에서 직접 처리하지 않고 MCU 에 맡기는 이유는?
 3. 신경망 추론이 필요 없는 Nav2 로봇에 GPU 보드를 고르면 예산·전력 면에서 무엇을 잃는가?
 
+## 확인 퀴즈
+
+`rc quiz m10-hardware-selection-integration` 로 풀 수 있다. 오답은 복습 카드가 된다.
+
+```quiz
+activity: m10-hardware-selection-integration-quiz
+questions:
+  - id: q1
+    type: single
+    prompt: '모터와 SBC(Raspberry Pi 등)를 같은 5 V 레귤레이터에 물리면 생기는 증상과 원인은?'
+    choices:
+      - '모터 기동·정지 때 돌입 전류로 전압이 순간 강하해 SBC 가 리셋되거나 SD 카드가 손상된다'
+      - '모터가 느려지기만 한다'
+      - 'ROS 2 노드 이름이 충돌한다'
+      - '아무 문제가 없다 — 전압이 같으면 공유해도 된다'
+    answer: 0
+    explanation: '모터는 기동 토크와 역기전력 때문에 정격보다 훨씬 큰 돌입 전류를 끌어간다. 공유 레귤레이터의 출력 전압이 순간적으로 내려가면 SBC 는 브라운아웃으로 재부팅되고, 쓰기 중이던 파일 시스템이 깨질 수 있다. 전원 계통을 분리하고 접지만 공통으로 두는 것이 정석이다.'
+    concept: { front: '전원 계통 분리', back: '모터 돌입 전류 → 전압 강하 → SBC 리셋. 전원은 분리, 접지는 공통' }
+  - id: q2
+    type: single
+    prompt: '모터 PWM 과 인코더 카운트를 SBC 의 Python 노드가 아니라 MCU 에 맡기는 이유는?'
+    choices:
+      - '1 ms 이하의 결정적 타이밍이 필요하고, 비실시간 OS 의 Python 노드는 지터로 펄스·카운트를 놓칠 수 있기 때문'
+      - 'Python 으로는 GPIO 를 쓸 수 없기 때문'
+      - 'MCU 가 SBC 보다 연산이 빠르기 때문'
+      - 'ROS 2 가 GPIO 접근을 금지하기 때문'
+    answer: 0
+    explanation: '리눅스 스케줄러와 GC 때문에 수 ms 단위의 지터가 생기며, 그 사이 인코더 에지를 놓치면 오도메트리가 조용히 틀어진다. PWM·엔코더·최종 워치독처럼 마감이 짧고 놓치면 위험한 일은 MCU 에, 수십 ms 단위의 판단은 SBC 에 둔다.'
+    concept: { front: '상위(SBC) vs 하위(MCU) 분담', back: 'MCU = 1 ms 이하 결정적 작업(PWM·인코더·워치독), SBC = 수십 ms 판단(SLAM·계획)' }
+  - id: q3
+    type: single
+    prompt: '신경망 추론이 필요 없는 Nav2 로봇에 GPU 보드를 고르면 잃는 것은?'
+    choices:
+      - '예산과 전력(발열·배터리 시간)을 더 쓰면서 성능 이득은 거의 없다'
+      - 'Nav2 가 동작하지 않는다'
+      - 'ROS 2 드라이버를 쓸 수 없다'
+      - '오도메트리 정확도가 떨어진다'
+    answer: 0
+    explanation: 'SLAM 과 Nav2 는 CPU 기반 SBC(Pi 4/5)로 충분하다. GPU 보드는 가격·소비 전력·발열이 커서 배터리 시간과 BOM 을 압박한다. 학습은 노트북·클라우드에서 하고 로봇에는 필요한 추론만 올리는 분리가 예산을 크게 줄인다.'
+```
+
 ## 이 단계 공부법
 
 1. **강의(먼저):** 인프런 "로보틱스 시스템 완전 해부"(58분)로 상·하위 제어기, 통신 버스, 전원·비상정지 구조를 한 번에 본다.

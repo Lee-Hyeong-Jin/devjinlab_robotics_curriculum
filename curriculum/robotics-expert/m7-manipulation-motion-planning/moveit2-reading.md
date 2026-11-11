@@ -172,6 +172,42 @@ MoveIt 2 의 시간 최적 매개화(TOTG)는 경로 전체를 하나로 보고 
 2. `setPoseTarget` 부터 모터가 움직이기까지 거치는 구성 요소를 순서대로 써라.
 3. 물체를 잡은 뒤 플래닝 씬에서 그 물체를 그리퍼에 붙이지(attach) 않으면 어떤 문제가 생기는가?
 
+## 확인 퀴즈
+
+`rc quiz m7-moveit2-reading` 로 풀 수 있다. 오답은 복습 카드가 된다.
+
+```quiz
+activity: m7-moveit2-reading-quiz
+questions:
+  - id: q1
+    type: single
+    prompt: 'SRDF 의 "서로 충돌할 수 없는 링크 쌍" 목록이 계획 속도에 주는 영향은?'
+    choices:
+      - '영향이 없다(문서용 정보다)'
+      - '그 쌍의 자기 충돌 검사를 건너뛰어 충돌 검사 횟수가 줄고 계획이 빨라진다'
+      - '충돌 검사를 더 촘촘히 하게 만들어 느려진다'
+      - 'IK 해의 개수를 줄인다'
+    answer: 1
+    explanation: '샘플링 계획의 병목은 충돌 검사다. 인접해서 구조상 절대 닿을 수 없는 링크 쌍을 빼면 매 구성마다 검사할 쌍 수가 줄어 계획이 빨라진다. URDF 가 기하·한계를, SRDF 가 계획 그룹·엔드 이펙터·이름 붙은 자세·충돌 제외를 담는다.'
+    concept: { front: 'URDF vs SRDF', back: 'URDF = 링크·관절·한계·충돌 형상, SRDF = 계획 그룹·엔드 이펙터·이름 붙은 자세·자기 충돌 제외(검사 감소)' }
+  - id: q2
+    type: single
+    prompt: '`setPoseTarget` 부터 모터가 움직일 때까지의 순서로 올바른 것은?'
+    choices:
+      - 'IK → 계획(OMPL) → 단순화·시간 매개화 → FollowJointTrajectory 액션 → joint_trajectory_controller → 하드웨어 인터페이스'
+      - '계획 → IK → 하드웨어 인터페이스 → 컨트롤러'
+      - 'IK → 컨트롤러 → 계획 → 실행'
+      - '계획 → 시간 매개화 → IK → 실행'
+    answer: 0
+    explanation: '자세 목표는 먼저 IK 플러그인으로 관절 목표가 되고, 플래너가 충돌 없는 경로를 찾은 뒤 어댑터가 단순화·시간 매개화를 붙인다. 결과 `JointTrajectory` 를 `FollowJointTrajectory` 액션으로 ros2_control 의 궤적 컨트롤러에 보내면, 컨트롤러가 점 사이를 보간해 하드웨어 인터페이스로 명령한다.'
+    concept: { front: 'MoveIt 2 실행 경로', back: 'IK → OMPL 계획 → 단순화·시간 매개화 → FollowJointTrajectory → joint_trajectory_controller → 하드웨어' }
+  - id: q3
+    type: truefalse
+    prompt: '물체를 집은 뒤 플래닝 씬에서 그 물체를 그리퍼에 attach 하지 않으면, 이송 중 충돌 검사가 틀린 세계를 기준으로 수행된다.'
+    answer: true
+    explanation: 'attach 하지 않으면 MoveIt 은 물체가 아직 테이블에 있다고 보고(그리퍼와 상시 충돌로 판정하거나) 손에 든 물체의 부피를 무시한다. 둘 다 위험하다 — 계획이 실패하거나, 잡은 물체가 주변과 부딪히는 경로를 내놓는다.'
+```
+
 ## 이 단계 공부법
 
 1. **문서(먼저):** MoveIt 2 Tutorials 의 Getting Started 와 개념 문서를 읽고 본문의 데이터 흐름 그림을 손으로 그린다.

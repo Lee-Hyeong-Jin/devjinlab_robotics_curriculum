@@ -127,6 +127,43 @@ ros2 action send_goal /turtle1/rotate_absolute \
 2. LiDAR 노드가 best effort 로 발행하는데 구독자가 reliable 을 요구하면 어떤 일이 생기는가?
 3. 2026년 말에 학습을 시작하는 사람에게 Humble 보다 Jazzy 를 권하는 근거 두 가지를 들어라.
 
+## 확인 퀴즈
+
+`rc quiz m8-ros2-concepts-distros` 로 풀 수 있다. 오답은 복습 카드가 된다.
+
+```quiz
+activity: m8-ros2-concepts-distros-quiz
+questions:
+  - id: q1
+    type: single
+    prompt: '로봇 팔에 "물체를 집어라"를 지시하는 인터페이스로 가장 알맞은 것은?'
+    choices:
+      - '토픽 — 명령을 계속 흘려보낸다'
+      - '서비스 — 요청하고 결과를 기다린다'
+      - '액션 — 진행 피드백과 취소가 필요하다'
+      - '파라미터 — 설정 값으로 둔다'
+    answer: 2
+    explanation: '파지는 수 초 이상 걸리고, 진행 상황(접근 중·잡는 중)을 알아야 하며, 중간에 취소할 수 있어야 한다. 목표 → 피드백 → 결과 구조에 취소가 있는 액션이 맞다. 서비스는 응답까지 블로킹되고 피드백·취소가 없다.'
+    concept: { front: '토픽 / 서비스 / 액션 선택 기준', back: '계속 흐르는 데이터 = 토픽, 즉시 끝나는 질의 = 서비스, 오래 걸리고 피드백·취소가 필요 = 액션' }
+  - id: q2
+    type: single
+    prompt: '발행자가 best effort, 구독자가 reliable 을 요구하면 어떻게 되는가?'
+    choices:
+      - 'QoS 호환이 되지 않아 연결이 성립하지 않는다'
+      - '자동으로 둘 다 best effort 로 낮춰 연결된다'
+      - '발행자가 reliable 로 올라가 연결된다'
+      - '연결은 되지만 메시지 순서가 뒤바뀐다'
+    answer: 0
+    explanation: 'reliable 구독자는 발행자가 재전송을 보장해 주기를 요구하는데 best effort 발행자는 그 약속을 하지 않는다. QoS 가 호환되지 않아 연결 자체가 맺어지지 않고, 토픽 이름이 맞는데도 데이터가 오지 않는 흔한 버그가 된다(`ros2 topic info -v` 로 확인).'
+    concept: { front: 'QoS 비호환 증상', back: 'best effort 발행 + reliable 구독 = 연결 안 됨. 이름이 맞아도 데이터가 오지 않는다' }
+  - id: q3
+    type: truefalse
+    prompt: 'ROS 2 는 노드들을 연결해 주는 중앙 마스터(roscore 같은 것)가 필요하다.'
+    answer: false
+    explanation: 'ROS 1 의 roscore 와 달리 ROS 2 는 DDS 의 자동 발견(discovery)을 쓰므로 중앙 마스터가 없다. 같은 네트워크의 다른 로봇과 섞이지 않게 하려면 `ROS_DOMAIN_ID` 를 다르게 준다.'
+    concept: { front: 'ROS 2 의 노드 발견', back: '중앙 마스터 없음 — DDS 자동 발견, 분리는 `ROS_DOMAIN_ID`' }
+```
+
 ## 이 단계 공부법
 
 1. **공식 자습서(먼저):** Jazzy Tutorials 의 *Beginner: CLI tools* 를 문서의 배포판 선택기를

@@ -152,6 +152,48 @@ $\theta_2$ 가 1.0 → 0.01 로 줄면 행렬식이 약 0.67 → 0.008 로 떨�
 2. 2-link 팔의 두 특이 자세에서 만들 수 없는 말단 속도 방향은 각각 무엇인가?
 3. DLS 의 $\lambda$ 를 키우면 무엇을 얻고 무엇을 잃는가?
 
+## 확인 퀴즈
+
+`rc quiz m7-jacobian-singularity` 로 풀 수 있다. 오답은 복습 카드가 된다.
+
+```quiz
+activity: m7-jacobian-singularity-quiz
+questions:
+  - id: q1
+    type: single
+    prompt: '같은 자코비안 $J$ 가 속도는 $\dot x = J\dot\theta$, 힘은 $\tau = J^\top F$ 로 쓰이는 근거는?'
+    choices:
+      - '우연히 같은 행렬이 나온 것이다'
+      - '가상일의 원리 — 두 표현에서 일률이 같아야 하므로 $F^\top\dot x = \tau^\top\dot\theta$ 에서 전치가 나온다'
+      - '$J$ 가 항상 직교 행렬이기 때문'
+      - '힘과 속도가 같은 단위이기 때문'
+    answer: 1
+    explanation: '말단에서 계산한 일률 $F^\top \dot x$ 와 관절에서 계산한 일률 $\tau^\top\dot\theta$ 는 같아야 한다. $\dot x = J\dot\theta$ 를 넣으면 $F^\top J\dot\theta = \tau^\top\dot\theta$ 가 모든 $\dot\theta$ 에 대해 성립해야 하므로 $\tau = J^\top F$ 다. 속도는 관절→말단, 힘은 말단→관절로 간다.'
+    concept: { front: '$\dot x = J\dot\theta$ 와 $\tau = J^\top F$', back: '가상일(일률 보존)에서 나온다 — 속도는 관절→말단, 힘은 말단→관절' }
+  - id: q2
+    type: single
+    prompt: '2-link 평면 팔을 완전히 펴면($\theta_2 = 0$) 말단이 움직일 수 없는 방향은?'
+    choices:
+      - '팔 축에 수직인 방향(접선 방향)'
+      - '팔 축 방향(반지름 방향, 더 멀어지거나 가까워지는 방향)'
+      - '모든 방향'
+      - '수직 방향만'
+    answer: 1
+    explanation: '완전히 펴면 말단은 도달 가능한 최대 반지름에 있으므로 반지름 방향으로 더 나갈 수 없다. 두 관절이 만드는 말단 속도가 모두 접선 방향이어서 $J$ 의 두 열이 평행해지고 랭크가 1로 떨어진다. 완전히 접은 자세($\theta_2 = \pi$)도 마찬가지로 반지름 방향을 잃는다.'
+    concept: { front: '2-link 팔의 특이 자세', back: '$\theta_2 = 0, \pi$ — 반지름 방향 운동 불가, $J$ 의 열이 평행해져 랭크 하락' }
+  - id: q3
+    type: single
+    prompt: '감쇠 최소 제곱(DLS)의 감쇠 계수 $\lambda$ 를 키우면?'
+    choices:
+      - '특이점 근처 관절 속도가 작아져 안전하지만, 말단 속도 추종 정확도가 떨어진다'
+      - '정확도와 안전성이 모두 좋아진다'
+      - '관절 속도가 더 커진다'
+      - '특이점이 사라진다'
+    answer: 0
+    explanation: 'DLS 는 $J^\top(JJ^\top + \lambda^2 I)^{-1}$ 로 작은 특이값의 역수가 폭발하는 것을 막는다. $\lambda$ 가 크면 관절 속도가 확실히 유한해지지만 명령한 말단 속도를 정확히 내지 못한다. 정확도와 수치 안정성을 맞바꾸는 손잡이다.'
+    concept: { front: 'DLS 의 $\lambda$ 트레이드오프', back: '크면 관절 속도 유한·안전, 말단 속도 추종 정확도 손실' }
+```
+
 ## 이 단계 공부법
 
 1. **영상(먼저):** Modern Robotics 영상 Ch. 5 에서 자코비안·특이점·조작성 타원체 부분을 본다.

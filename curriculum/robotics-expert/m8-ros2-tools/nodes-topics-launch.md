@@ -165,6 +165,47 @@ def generate_launch_description():
 2. 예제에서 제어 계산을 구독 콜백이 아니라 타이머 콜백에 둔 이유는 무엇인가?
 3. 서비스 대신 액션을 써야 하는 상황을 예로 들고, 액션 클라이언트가 받는 세 종류의 응답을 써라.
 
+## 확인 퀴즈
+
+`rc quiz m8-nodes-topics-launch` 로 풀 수 있다. 오답은 복습 카드가 된다.
+
+```quiz
+activity: m8-nodes-topics-launch-quiz
+questions:
+  - id: q1
+    type: multiple
+    prompt: '`colcon build` 는 성공했는데 `ros2 run` 이 패키지를 찾지 못한다. 먼저 확인할 것을 모두 고르시오.'
+    choices:
+      - '현재 터미널에서 워크스페이스의 `install/setup.bash` 를 소싱했는지'
+      - 'underlay(`/opt/ros/<distro>/setup.bash`)를 소싱했는지'
+      - '`setup.py` 의 `entry_points` 에 실행 이름이 등록됐는지'
+      - '`ROS_DOMAIN_ID` 가 0인지'
+    answer: [0, 1, 2]
+    explanation: '빌드 산출물은 소싱해야 환경에 들어온다. 새 터미널이라면 underlay → overlay 순서로 소싱해야 하고, 실행 이름은 `entry_points` 가 정한다. `ROS_DOMAIN_ID` 는 노드 간 통신 분리용이라 실행 파일 탐색과 무관하다.'
+    concept: { front: '`ros2 run` 이 패키지를 못 찾을 때', back: 'underlay·overlay 소싱 여부와 `setup.py` 의 `entry_points` 를 먼저 확인' }
+  - id: q2
+    type: single
+    prompt: '제어 계산과 발행을 구독 콜백이 아니라 **타이머 콜백**에 두는 주된 이유는?'
+    choices:
+      - '타이머 콜백이 더 빠르게 실행되기 때문'
+      - '센서 주기와 제어 주기를 분리하고, 콜백이 길어져 다른 콜백을 막는 것을 피하기 때문'
+      - '구독 콜백에서는 발행이 금지되기 때문'
+      - '타이머 콜백만 파라미터를 읽을 수 있기 때문'
+    answer: 1
+    explanation: '구독 콜백은 "최신 값 저장"만 하고 제어는 일정 주기의 타이머가 맡으면, 센서가 느려지거나 여러 센서가 다른 주기로 와도 제어 주기가 일정하다. 콜백 안에서 오래 막히면 같은 실행자의 다른 콜백도 멈추므로 작업을 짧게 유지하는 것도 중요하다.'
+    concept: { front: '구독 콜백 vs 타이머 콜백 분업', back: '구독 = 최신 값 저장, 타이머 = 일정 주기 제어·발행. 콜백을 짧게 유지' }
+  - id: q3
+    type: single
+    prompt: '액션 클라이언트가 목표를 보낸 뒤 받는 응답 세 종류를 바르게 묶은 것은?'
+    choices:
+      - '목표 수락/거부, 피드백, 최종 결과'
+      - '요청, 응답, 오류'
+      - '발행, 구독, 파라미터'
+      - '목표, 취소, 종료 코드'
+    answer: 0
+    explanation: '액션은 먼저 목표가 수락됐는지(goal handle)를 받고, 진행 중 피드백을 받다가, 끝나면 결과와 상태를 받는다. 중간에 취소도 보낼 수 있다. Nav2 의 `NavigateToPose` 와 MoveIt 2 의 동작 실행이 이 구조다.'
+```
+
 ## 이 단계 공부법
 
 1. **공식 자습서(먼저):** *Beginner: Client libraries* 의 colcon → 워크스페이스 → 패키지 →

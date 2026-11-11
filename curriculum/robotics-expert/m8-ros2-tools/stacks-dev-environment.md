@@ -140,6 +140,42 @@ colcon test-result --verbose
    어느 쪽 코드를 고치는가?
 3. 네이티브 설치 대신 Docker 를 고를 상황과, 그때 감수해야 할 불편 하나를 들어라.
 
+## 확인 퀴즈
+
+`rc quiz m8-stacks-dev-environment` 로 풀 수 있다. 오답은 복습 카드가 된다.
+
+```quiz
+activity: m8-stacks-dev-environment-quiz
+questions:
+  - id: q1
+    type: truefalse
+    prompt: 'Nav2 는 스스로 로봇의 위치를 추정하므로 SLAM 이나 AMCL 없이도 지도 위에서 주행할 수 있다.'
+    answer: false
+    explanation: 'Nav2 는 `map → odom → base_link` 변환과 `/scan`·`/map` 이 이미 있다고 가정한다. `odom → base_link` 는 오도메트리(또는 robot_localization), `map → odom` 은 SLAM Toolbox·AMCL 이 제공한다. 위치 추정이 없으면 Nav2 는 동작하지 않는다.'
+    concept: { front: 'Nav2 의 전제 조건', back: '`map → odom → base_link` tf 와 `/scan`·`/map` 이 먼저 있어야 한다 — 위치 추정은 다른 스택의 일' }
+  - id: q2
+    type: single
+    prompt: '실제 모터 드라이버를 다른 제품으로 교체했다. ros2_control 에서 고쳐야 하는 쪽은?'
+    choices:
+      - '컨트롤러(예: `diff_drive_controller`) 코드'
+      - '하드웨어 컴포넌트(System/Actuator 플러그인)'
+      - 'Controller Manager 의 제어 루프'
+      - 'Nav2 의 행동 트리'
+    answer: 1
+    explanation: '하드웨어 컴포넌트가 실제 장치와 read/write 를 담당하고, 컨트롤러는 표준 명령·상태 인터페이스만 보고 동작한다. 그래서 장치를 바꿔도 컨트롤러와 상위 스택은 그대로 두고 하드웨어 컴포넌트만 교체하면 된다. 이것이 하드웨어 추상화의 목적이다.'
+    concept: { front: 'ros2_control 의 경계', back: '하드웨어 컴포넌트 = 장치별 read/write, 컨트롤러 = 장치와 무관한 제어 로직' }
+  - id: q3
+    type: single
+    prompt: 'ROS 2 개발 환경으로 가장 마찰이 적은 선택은?'
+    choices:
+      - '네이티브 Ubuntu 24.04 + Jazzy 바이너리'
+      - 'WSL2'
+      - '소스에서 전부 빌드'
+      - '가상 머신 안의 다른 배포판'
+    answer: 0
+    explanation: '문서와 패키지가 전제하는 조합이므로 문제가 가장 적다. macOS·Windows 사용자나 여러 배포판을 오가야 하면 공식 `ros:jazzy` 이미지 기반 Docker 가 좋은 대안이고, WSL2 는 동작하지만 네트워크·GUI 마찰 보고가 잦다.'
+```
+
 ## 이 단계 공부법
 
 1. **지도 먼저:** 스택 표를 외우기보다 L8.3 의 tf 트리 그림 위에 겹쳐 그려 본다.
