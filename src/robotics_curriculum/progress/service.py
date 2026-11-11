@@ -14,7 +14,14 @@ from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
-from robotics_curriculum.content import Course, Lesson, LoadError, Module, load_courses
+from robotics_curriculum.content import (
+    Course,
+    Lesson,
+    LoadError,
+    Module,
+    load_courses,
+    validate_courses,
+)
 from robotics_curriculum.progress.factory import open_store
 from robotics_curriculum.progress.models import (
     DEFAULT_USER,
@@ -53,16 +60,26 @@ def default_curriculum_dir() -> Path:
 
 
 _DURATION = re.compile(r"^(?:(?P<h>\d+)h)?(?:(?P<m>\d+)m?)?$")
+MAX_DURATION_MINUTES = 24 * 60
 
 
 def parse_duration(text: str) -> int:
-    """Minutes from ``"45"``, ``"45m"``, ``"1h"`` or ``"1h30m"``; must be positive."""
+    """Minutes from ``"45"``, ``"45m"``, ``"1h"`` or ``"1h30m"``.
+
+    Must be positive and at most one day; a longer value is bad input (and would overflow
+    the database) rather than a session anyone studied.
+    """
     match = _DURATION.match(text.strip().lower())
     if not match or not (match["h"] or match["m"]):
         raise ProgressError(f"invalid duration '{text}' (use e.g. 45, 45m, 1h30m)")
     minutes = int(match["h"] or 0) * 60 + int(match["m"] or 0)
     if minutes <= 0:
         raise ProgressError("duration must be positive")
+    if minutes > MAX_DURATION_MINUTES:
+        raise ProgressError(
+            f"duration {text} is longer than a day; log one session per day "
+            f"(at most {MAX_DURATION_MINUTES}m)"
+        )
     return minutes
 
 
@@ -119,12 +136,24 @@ class ProgressService:
 
     @staticmethod
     def load_curriculum(path: Path) -> list[Course]:
+        """Load and fully validate the curriculum under ``path``.
+
+        Every entry point runs the same checks as ``rc validate``: otherwise content that
+        the validator rejects (``javascript:`` resource URLs, prerequisite cycles, ids
+        shared by two courses) would still reach the site builder and the progress store.
+        """
         if not path.is_dir():
             raise ProgressError(f"curriculum directory not found: {path}")
         try:
-            return load_courses(path)
+            courses = load_courses(path)
         except LoadError as exc:
             raise ProgressError(f"cannot load curriculum (run `rc validate`):\n{exc}") from exc
+        problems = validate_courses(courses)
+        if problems:
+            listed = "\n".join(str(problem) for problem in problems[:10])
+            more = "" if len(problems) <= 10 else f"\n... and {len(problems) - 10} more"
+            raise ProgressError(f"curriculum is invalid (run `rc validate`):\n{listed}{more}")
+        return courses
 
     # -- helpers ---------------------------------------------------------------
 
@@ -308,13 +337,20 @@ class ProgressService:
     def delete_user_data(self, user_id: int | None = None) -> tuple[int, int]:
         """Erase one user's progress (default: this service's user).
 
-        Returns the (lesson rows, sessions) removed. Used by the account-deletion path of the
-        server; the CLI has no command for it.
+        Returns the (lesson rows, sessions) removed. Used by the account-deletion
+        path of the server; the CLI has no command for it.
         """
         return self.store.delete_user(self.user_id if user_id is None else user_id)
 
-    def import_(self, data: ProgressExport, *, replace: bool = False) -> tuple[int, int]:
-        """Load an export. Without ``replace`` the store must be empty. Returns row counts."""
+    def import_(
+        self, data: ProgressExport, *, replace: bool = False, allow_unknown: bool = False
+    ) -> tuple[int, int]:
+        """Load an export. Without ``replace`` the store must be empty. Returns row counts.
+
+        Lesson ids must exist in the loaded curriculum unless ``allow_unknown`` is set:
+        an unknown id is dead data no command can reach, and an unknown *open* session
+        blocks ``rc start`` until it is stopped by hand.
+        """
         if data.schema_version > SCHEMA_VERSION:
             raise ProgressError(
                 f"export schema version {data.schema_version} is newer than "
@@ -322,6 +358,18 @@ class ProgressService:
             )
         if not replace and not self.store.is_empty():
             raise ProgressError("progress store is not empty; pass --replace to overwrite it")
+        if not allow_unknown:
+            unknown = sorted(
+                {row.lesson_id for row in data.lesson_progress if row.lesson_id not in self._index}
+                | {s.lesson_id for s in data.sessions if s.lesson_id not in self._index}
+            )
+            if unknown:
+                listed = ", ".join(f"'{lesson_id}'" for lesson_id in unknown[:5])
+                more = "" if len(unknown) <= 5 else f" and {len(unknown) - 5} more"
+                raise ProgressError(
+                    f"the export refers to {len(unknown)} lesson id(s) that are not in this "
+                    f"curriculum: {listed}{more}; pass --allow-unknown to import anyway"
+                )
         with self.store.transaction():
             self.store.clear()
             for progress in data.lesson_progress:

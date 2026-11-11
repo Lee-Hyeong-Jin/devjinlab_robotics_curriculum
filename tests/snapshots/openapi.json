@@ -450,7 +450,7 @@
           "progress"
         ],
         "summary": "Get Status",
-        "description": "Every lesson's progress in teaching order, plus the running timer (``rc status``).",
+        "description": "Every lesson's progress in teaching order, the running timer, and the dashboard numbers.\n\nThe dashboard part (``stages``, ``week``, ``streak_days``, ``due_cards``) is the same\naggregate the static site and ``rc status`` show, and covers every course even when\n``course`` narrows the lesson list.",
         "operationId": "get_status_api_v1_progress_status_get",
         "parameters": [
           {
@@ -1013,6 +1013,340 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DoneResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/lessons/{lesson_id}/quiz": {
+      "get": {
+        "tags": [
+          "quiz"
+        ],
+        "summary": "Get Lesson Quiz",
+        "description": "A lesson's quiz questions in order, without answers or explanations.",
+        "operationId": "get_lesson_quiz_api_v1_lessons__lesson_id__quiz_get",
+        "parameters": [
+          {
+            "name": "lesson_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Lesson Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuizPublic"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/quiz/runs": {
+      "post": {
+        "tags": [
+          "quiz"
+        ],
+        "summary": "Submit Run",
+        "description": "Grade a whole attempt, store it, and return the feedback and any cards it created.\n\nRecording is one transaction: the run, one attempt per question, flashcards for wrong\nanswers and for questions carrying a ``concept``, and the quiz activity marked done.",
+        "operationId": "submit_run_api_v1_quiz_runs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuizSubmission"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/robotics_curriculum__api__schemas__QuizRun"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/review/due": {
+      "get": {
+        "tags": [
+          "review"
+        ],
+        "summary": "Get Due",
+        "description": "Cards due today (earliest due first), optionally limited to one lesson.",
+        "operationId": "get_due_api_v1_review_due_get",
+        "parameters": [
+          {
+            "name": "lesson_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Only this lesson.",
+              "title": "Lesson Id"
+            },
+            "description": "Only this lesson."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 100,
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "At most this many cards.",
+              "title": "Limit"
+            },
+            "description": "At most this many cards."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReviewCard"
+                  },
+                  "title": "Response Get Due Api V1 Review Due Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/review/{card_id}": {
+      "post": {
+        "tags": [
+          "review"
+        ],
+        "summary": "Rate",
+        "description": "Rate a card (again / hard / good / easy) and get its next review date.",
+        "operationId": "rate_api_v1_review__card_id__post",
+        "parameters": [
+          {
+            "name": "card_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Card Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewResult"
                 }
               }
             }
@@ -4307,6 +4641,7 @@
         "properties": {
           "user_id": {
             "type": "integer",
+            "minimum": 1.0,
             "title": "User Id",
             "default": 1
           },
@@ -4344,6 +4679,7 @@
           },
           "total_seconds": {
             "type": "integer",
+            "maximum": 3162240000.0,
             "minimum": 0.0,
             "title": "Total Seconds",
             "default": 0
@@ -4829,6 +5165,7 @@
         "properties": {
           "schema_version": {
             "type": "integer",
+            "minimum": 1.0,
             "title": "Schema Version"
           },
           "exported_at": {
@@ -4880,7 +5217,7 @@
           },
           "quiz_runs": {
             "items": {
-              "$ref": "#/components/schemas/QuizRun"
+              "$ref": "#/components/schemas/robotics_curriculum__progress__models__QuizRun"
             },
             "type": "array",
             "title": "Quiz Runs"
@@ -4900,7 +5237,42 @@
           "exported_at"
         ],
         "title": "ProgressExport",
-        "description": "JSON document produced by ``rc progress export`` (FR-10.2).\n\nLists added in schema version 2 default to empty, so a version-1 export still imports."
+        "description": "JSON document produced by ``rc progress export`` (FR-10.2).\n\nLists added in schema version 2 default to empty, so a version-1 export still imports.\n\nThe validators enforce the invariants the database also enforces, so an edited or\nhand-written file fails with a readable message instead of a sqlite error mid-import."
+      },
+      "QuizAnswerResult": {
+        "properties": {
+          "question_id": {
+            "type": "string",
+            "title": "Question Id"
+          },
+          "given": {
+            "type": "string",
+            "title": "Given"
+          },
+          "correct": {
+            "type": "boolean",
+            "title": "Correct"
+          },
+          "correct_answer": {
+            "type": "string",
+            "title": "Correct Answer"
+          },
+          "explanation": {
+            "type": "string",
+            "title": "Explanation"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "question_id",
+          "given",
+          "correct",
+          "correct_answer",
+          "explanation"
+        ],
+        "title": "QuizAnswerResult",
+        "description": "Per-question feedback, returned only once the answer was submitted."
       },
       "QuizAttempt": {
         "properties": {
@@ -4954,24 +5326,8 @@
         "title": "QuizAttempt",
         "description": "One answered question of a quiz run."
       },
-      "QuizRun": {
+      "QuizPublic": {
         "properties": {
-          "id": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Id"
-          },
-          "user_id": {
-            "type": "integer",
-            "title": "User Id",
-            "default": 1
-          },
           "lesson_id": {
             "type": "string",
             "title": "Lesson Id"
@@ -4985,40 +5341,117 @@
                 "type": "null"
               }
             ],
-            "title": "Activity Id"
+            "title": "Activity Id",
+            "description": "The `kind: quiz` activity it belongs to."
           },
-          "started_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Started At"
-          },
-          "finished_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Finished At"
-          },
-          "correct": {
-            "type": "integer",
-            "minimum": 0.0,
-            "title": "Correct"
-          },
-          "total": {
-            "type": "integer",
-            "minimum": 0.0,
-            "title": "Total"
+          "questions": {
+            "items": {
+              "$ref": "#/components/schemas/QuizQuestionPublic"
+            },
+            "type": "array",
+            "title": "Questions"
           }
         },
         "additionalProperties": false,
         "type": "object",
         "required": [
           "lesson_id",
-          "started_at",
-          "finished_at",
-          "correct",
-          "total"
+          "activity_id",
+          "questions"
         ],
-        "title": "QuizRun",
-        "description": "A completed ``rc quiz`` session: score and timing (AC-4.2)."
+        "title": "QuizPublic",
+        "description": "A lesson's quiz without answers (``GET /lessons/{id}/quiz``)."
+      },
+      "QuizQuestionPublic": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "single",
+              "multiple",
+              "truefalse",
+              "short"
+            ],
+            "title": "Type"
+          },
+          "prompt": {
+            "type": "string",
+            "title": "Prompt"
+          },
+          "choices": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Choices",
+            "description": "Empty for short / true-false."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "prompt"
+        ],
+        "title": "QuizQuestionPublic",
+        "description": "A question as a learner may see it before answering: no answer, no explanation."
+      },
+      "QuizSubmission": {
+        "properties": {
+          "lesson_id": {
+            "type": "string",
+            "title": "Lesson Id"
+          },
+          "answers": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "minProperties": 1,
+            "title": "Answers",
+            "description": "Question id -> answer, in the CLI notation: `2`, `1,3`, `o`/`x`, free text."
+          },
+          "partial": {
+            "type": "boolean",
+            "title": "Partial",
+            "description": "Allow leaving questions out instead of failing with 422.",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "lesson_id",
+          "answers"
+        ],
+        "title": "QuizSubmission",
+        "description": "One finished attempt at a lesson's quiz (``POST /quiz/runs``)."
+      },
+      "RateRequest": {
+        "properties": {
+          "rating": {
+            "type": "string",
+            "enum": [
+              "again",
+              "hard",
+              "good",
+              "easy"
+            ],
+            "title": "Rating"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "rating"
+        ],
+        "title": "RateRequest",
+        "description": "How well the learner recalled a card."
       },
       "Readiness": {
         "properties": {
@@ -5386,6 +5819,103 @@
         "title": "Review",
         "description": "One answer given during ``rc review``."
       },
+      "ReviewCard": {
+        "properties": {
+          "card_id": {
+            "type": "string",
+            "title": "Card Id"
+          },
+          "lesson_id": {
+            "type": "string",
+            "title": "Lesson Id"
+          },
+          "question_id": {
+            "type": "string",
+            "title": "Question Id"
+          },
+          "front": {
+            "type": "string",
+            "title": "Front"
+          },
+          "back": {
+            "type": "string",
+            "title": "Back"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "quiz",
+              "concept"
+            ],
+            "title": "Source"
+          },
+          "due": {
+            "type": "string",
+            "format": "date",
+            "title": "Due"
+          },
+          "interval_days": {
+            "type": "integer",
+            "title": "Interval Days"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "card_id",
+          "lesson_id",
+          "question_id",
+          "front",
+          "back",
+          "source",
+          "due",
+          "interval_days"
+        ],
+        "title": "ReviewCard",
+        "description": "A card that is due, with its current SM-2 schedule."
+      },
+      "ReviewResult": {
+        "properties": {
+          "card_id": {
+            "type": "string",
+            "title": "Card Id"
+          },
+          "repetitions": {
+            "type": "integer",
+            "title": "Repetitions"
+          },
+          "interval_days": {
+            "type": "integer",
+            "title": "Interval Days"
+          },
+          "ease": {
+            "type": "number",
+            "title": "Ease"
+          },
+          "due": {
+            "type": "string",
+            "format": "date",
+            "title": "Due"
+          },
+          "due_tomorrow": {
+            "type": "integer",
+            "title": "Due Tomorrow",
+            "description": "Cards scheduled for the next day."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "card_id",
+          "repetitions",
+          "interval_days",
+          "ease",
+          "due",
+          "due_tomorrow"
+        ],
+        "title": "ReviewResult",
+        "description": "The card's new schedule after a rating."
+      },
       "Role": {
         "type": "string",
         "enum": [
@@ -5410,7 +5940,8 @@
           "id": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "integer",
+                "minimum": 1.0
               },
               {
                 "type": "null"
@@ -5420,6 +5951,7 @@
           },
           "user_id": {
             "type": "integer",
+            "minimum": 1.0,
             "title": "User Id",
             "default": 1
           },
@@ -5544,6 +6076,47 @@
         ],
         "title": "Stage"
       },
+      "StageStat": {
+        "properties": {
+          "level": {
+            "type": "string",
+            "title": "Level"
+          },
+          "progress": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Progress",
+            "description": "Percent of the level's lessons done."
+          },
+          "lessons_done": {
+            "type": "integer",
+            "title": "Lessons Done"
+          },
+          "lessons_total": {
+            "type": "integer",
+            "title": "Lessons Total"
+          },
+          "module_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Module Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "level",
+          "progress",
+          "lessons_done",
+          "lessons_total",
+          "module_ids"
+        ],
+        "title": "StageStat",
+        "description": "One level (기초 / 중급 / 고급) with its lesson counts."
+      },
       "StartRequest": {
         "properties": {
           "lesson_id": {
@@ -5578,6 +6151,37 @@
             "type": "array",
             "title": "Lessons",
             "description": "Every lesson in teaching order."
+          },
+          "stages": {
+            "items": {
+              "$ref": "#/components/schemas/StageStat"
+            },
+            "type": "array",
+            "title": "Stages",
+            "description": "Progress per level."
+          },
+          "week": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WeekStat"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "This week's study time."
+          },
+          "streak_days": {
+            "type": "integer",
+            "title": "Streak Days",
+            "description": "Consecutive days with study activity.",
+            "default": 0
+          },
+          "due_cards": {
+            "type": "integer",
+            "title": "Due Cards",
+            "description": "Flashcards due today.",
+            "default": 0
           }
         },
         "additionalProperties": false,
@@ -5873,6 +6477,32 @@
         ],
         "title": "Version"
       },
+      "WeekStat": {
+        "properties": {
+          "start": {
+            "type": "string",
+            "format": "date",
+            "title": "Start"
+          },
+          "minutes": {
+            "type": "integer",
+            "title": "Minutes"
+          },
+          "sessions": {
+            "type": "integer",
+            "title": "Sessions"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "start",
+          "minutes",
+          "sessions"
+        ],
+        "title": "WeekStat",
+        "description": "Study time of the current week (Monday onwards, caller's timezone)."
+      },
       "WeeklySummary": {
         "properties": {
           "start": {
@@ -5962,6 +6592,126 @@
           "notes"
         ],
         "title": "WeeklySummary"
+      },
+      "robotics_curriculum__api__schemas__QuizRun": {
+        "properties": {
+          "lesson_id": {
+            "type": "string",
+            "title": "Lesson Id"
+          },
+          "correct": {
+            "type": "integer",
+            "title": "Correct"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "percent": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Percent"
+          },
+          "seconds": {
+            "type": "integer",
+            "title": "Seconds"
+          },
+          "answers": {
+            "items": {
+              "$ref": "#/components/schemas/QuizAnswerResult"
+            },
+            "type": "array",
+            "title": "Answers"
+          },
+          "new_card_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "New Card Ids",
+            "description": "Flashcards this attempt created."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "lesson_id",
+          "correct",
+          "total",
+          "percent",
+          "seconds",
+          "answers",
+          "new_card_ids"
+        ],
+        "title": "QuizRun",
+        "description": "The stored result of one quiz attempt."
+      },
+      "robotics_curriculum__progress__models__QuizRun": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "user_id": {
+            "type": "integer",
+            "title": "User Id",
+            "default": 1
+          },
+          "lesson_id": {
+            "type": "string",
+            "title": "Lesson Id"
+          },
+          "activity_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Activity Id"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Started At"
+          },
+          "finished_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Finished At"
+          },
+          "correct": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Correct"
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Total"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "lesson_id",
+          "started_at",
+          "finished_at",
+          "correct",
+          "total"
+        ],
+        "title": "QuizRun",
+        "description": "A completed ``rc quiz`` session: score and timing (AC-4.2)."
       },
       "FieldError": {
         "properties": {

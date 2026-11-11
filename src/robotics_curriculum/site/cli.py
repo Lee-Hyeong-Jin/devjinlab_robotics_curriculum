@@ -6,6 +6,7 @@ from typing import Annotated
 import typer
 
 from robotics_curriculum.progress import ProgressError, open_service
+from robotics_curriculum.progress.store import StoreError
 
 site_app = typer.Typer(
     help="Static site (MkDocs): dashboard, roadmap, lessons.", no_args_is_help=True
@@ -25,21 +26,35 @@ def build_cmd(
     serve: Annotated[
         bool, typer.Option("--serve", help="Run `mkdocs serve` instead of writing --out.")
     ] = False,
+    force: Annotated[
+        bool,
+        typer.Option(
+            "--force",
+            help="Overwrite --out / --src even when they hold files from somewhere else.",
+        ),
+    ] = False,
 ) -> None:
-    """Generate the site from curriculum/ and your progress, then run mkdocs."""
-    from robotics_curriculum.site.build import build_site, serve_site
+    """Generate the site from curriculum/ and your progress, then run mkdocs.
+
+    ``--out`` and ``--src`` are emptied by mkdocs, so a directory that this command did
+    not write is refused unless ``--force`` is given.
+    """
+    from robotics_curriculum.site.build import SiteError, build_site, serve_site
 
     # Global --data-dir / --curriculum come from the root callback's context object.
     opts = ctx.obj
     try:
         service = open_service(getattr(opts, "data_dir", None), getattr(opts, "curriculum", None))
-    except ProgressError as exc:
+    except (ProgressError, StoreError) as exc:
         typer.echo(f"error: {exc}", err=True)
         raise typer.Exit(code=1) from None
     try:
         if serve:
-            raise typer.Exit(code=serve_site(service, project_dir=src))
-        build_site(service, out, project_dir=src)
+            raise typer.Exit(code=serve_site(service, project_dir=src, force=force))
+        build_site(service, out, project_dir=src, force=force)
+    except (SiteError, ProgressError, StoreError) as exc:
+        typer.echo(f"error: {exc}", err=True)
+        raise typer.Exit(code=1) from None
     finally:
         service.store.close()
     typer.echo(f"site built: {out.resolve() / 'index.html'}")

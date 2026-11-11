@@ -35,6 +35,17 @@ def _docker_available() -> str | None:
     return None
 
 
+@pytest.fixture(autouse=True)
+def _local_backend_by_default(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Hide a real ``RC_DATABASE_URL`` from every test.
+
+    Otherwise a developer (or a compose shell) that exports it sends `open_store()` — and so
+    `open_service()`, the CLI and the API — to that server mid-suite, which shows up as
+    unrelated tests failing depending on order. Tests that want a URL set one themselves.
+    """
+    monkeypatch.delenv("RC_DATABASE_URL", raising=False)
+
+
 @pytest.fixture(scope="session")
 def postgres_url() -> Iterator[str]:
     url = os.environ.get("RC_TEST_DATABASE_URL", "").strip()

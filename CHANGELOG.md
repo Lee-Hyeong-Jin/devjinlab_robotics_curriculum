@@ -52,6 +52,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (see `docs/HARNESS.md`).
 - Architecture decision records 0001–0004 (Phase 1 stack, harness, SQLite progress store,
   MkDocs static site).
+- `rc --verbose/-v` turns on debug logging to stderr; library modules log through the
+  standard `logging` module (never personal data such as study notes).
+- `rc progress import --allow-unknown` and `rc site build --force`: escape hatches for the
+  new input and output-path checks listed under Security.
 
 ### Changed
 
@@ -68,3 +72,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.github/workflows/security.yml`: CodeQL (Python, security-and-quality) and pip-audit of the
   locked runtime dependencies on every PR, on pushes to `main`, and weekly. Any known
   vulnerability in a runtime dependency fails the job.
+- The static site no longer passes curriculum text through to HTML unchanged: titles,
+  summaries, objectives, tags, activity and resource names are HTML-escaped (including the
+  nav titles and `site_name` in `mkdocs.yml`, which the theme writes out verbatim), rendered
+  pages are cleaned with an `nh3` allowlist, and each page carries a Content-Security-Policy
+  meta tag. A resource `url` that is not `http(s)` is shown as plain text instead of a link.
+- `rc site build` refuses an `--out` or `--src` directory that holds files it did not write
+  (no `.rc-site` marker), and refuses the working directory, the repository root and `$HOME`
+  outright; `--force` allows the first case. mkdocs empties both directories, so a mistyped
+  path used to delete unrelated files.
+- Content loading rejects files that leave the content root once symlinks are resolved,
+  reports unreadable or non-UTF-8 files instead of raising, checks prerequisite cycles
+  iteratively (a long chain used to exhaust the stack) and requires ids to be unique across
+  courses. Every command validates the curriculum, not only `rc validate`.
+- `rc progress import` validates the export against the database invariants and refuses
+  lesson ids that are not in the curriculum unless `--allow-unknown` is passed; study
+  durations are capped at one day. The progress database is opened in WAL mode with a busy
+  timeout, its files are created owner-only, and storage failures (such as a locked
+  database) are reported as `error: ...` instead of a traceback.

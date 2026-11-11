@@ -141,6 +141,42 @@ print(pose.round(3))  # 대략 [0, 0.15, pi]: 지름 2R = 0.15 m
 2. 비홀로노믹 구속이 있어도 차동 구동 로봇이 평면 위 임의의 자세에 도달할 수 있는 이유는 무엇인가?
 3. 오도메트리 오차가 시간이 지날수록 커지는 원인 세 가지를 들어라.
 
+## 확인 퀴즈
+
+`rc quiz m3-differential-drive` 로 풀 수 있다. 오답은 복습 카드가 된다.
+
+```quiz
+activity: m3-differential-drive-quiz
+questions:
+  - id: q1
+    type: single
+    prompt: '$\omega_R = -\omega_L$ (크기가 같고 방향이 반대) 일 때 차동 구동 로봇은 어떻게 움직이는가?'
+    choices:
+      - '직진한다'
+      - '두 바퀴의 중점을 중심으로 제자리 회전한다'
+      - '한쪽 바퀴를 중심으로 회전한다'
+      - '멈춘다'
+    answer: 1
+    explanation: '$v = r(\omega_R + \omega_L)/2 = 0$ 이고 $\omega = r(\omega_R - \omega_L)/L \neq 0$ 이므로 전진 없이 회전만 한다. 회전 중심은 두 바퀴의 중점(로봇 중심)이다.'
+    concept: { front: '$\omega_R = -\omega_L$ 일 때의 운동', back: '$v = 0$, $\omega \neq 0$ — 두 바퀴 중점을 중심으로 제자리 회전' }
+  - id: q2
+    type: truefalse
+    prompt: '비홀로노믹 구속 때문에 차동 구동 로봇은 평면 위의 어떤 자세에는 도달할 수 없다.'
+    answer: false
+    explanation: '구속이 막는 것은 **순간적인** 옆 방향 이동뿐이다. 전진과 회전을 조합하면(평행 주차처럼) 평면 위 임의의 $(x, y, \theta)$ 에 도달할 수 있다. 제어가 어려워지는 것과 도달 가능성은 별개다.'
+    concept: { front: '비홀로노믹 구속의 의미', back: '옆으로 순간 이동만 불가 — 전진·회전을 조합하면 임의 자세에 도달 가능' }
+  - id: q3
+    type: multiple
+    prompt: '오도메트리(dead reckoning) 오차가 시간이 지날수록 커지는 원인을 모두 고르시오.'
+    choices:
+      - '바퀴 미끄러짐(slip)'
+      - '바퀴 반지름·축간 거리 측정 오차'
+      - '이산 적분 자체의 근사 오차'
+      - '바퀴 엔코더 분해능이 높을수록 오차가 커진다'
+    answer: [0, 1, 2]
+    explanation: '미끄러짐, 기구 파라미터($r$, $L$) 오차, 오일러 적분의 근사 오차가 모두 누적된다. 엔코더 분해능은 높을수록 좋으므로 오차 원인이 아니다. 이 누적 오차를 외부 센서로 보정하는 것이 M4 와 상태 추정의 역할이다.'
+```
+
 ## 이 단계 공부법
 
 1. **교재:** Modern Robotics 13장 도입부와 차동 구동 로봇 기구학 부분을 읽는다(이 레슨 수식과

@@ -12,8 +12,9 @@ transaction, so opening is idempotent.
 
 from __future__ import annotations
 
+import logging
 import sqlite3
-from collections.abc import Iterator
+from collections.abc import Iterator, Sequence
 from contextlib import AbstractContextManager, contextmanager
 from datetime import UTC, date, datetime
 from pathlib import Path
@@ -33,6 +34,22 @@ from robotics_curriculum.progress.models import (
 )
 
 DB_FILENAME = "progress.db"
+
+# Wait this long for another process to release the write lock before failing.
+BUSY_TIMEOUT_SECONDS = 15.0
+DB_FILE_MODE = 0o600  # study notes are personal data: owner-only
+DATA_DIR_MODE = 0o700
+
+logger = logging.getLogger(__name__)
+
+
+class StoreError(Exception):
+    """A storage failure: locked database, constraint violation, corrupt file.
+
+    The service layer lets this reach the CLI boundary, which turns it into an
+    ``error: ...`` message instead of a traceback.
+    """
+
 
 _META_DDL = "CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT NOT NULL)"
 
@@ -143,6 +160,19 @@ TABLES = (
     "quiz_runs",
     "activity_progress",
 )
+
+
+def _message(exc: sqlite3.Error) -> str:
+    """A user-facing sentence for a sqlite failure (no stack, no internal paths)."""
+    text = str(exc)
+    if isinstance(exc, sqlite3.OperationalError) and "locked" in text:
+        return (
+            "the progress database is busy (another `rc` command or editor is writing to it); "
+            "try again in a moment"
+        )
+    if isinstance(exc, sqlite3.IntegrityError):
+        return f"the progress data violates a database constraint: {text}"
+    return f"progress database error: {text}"
 
 
 def _ts(value: datetime | None) -> str | None:
@@ -258,13 +288,39 @@ class SqliteProgressStore:
 
     def __init__(self, path: Path | str) -> None:
         self.path = Path(path)
-        if str(path) != ":memory:":
-            self.path.parent.mkdir(parents=True, exist_ok=True)
-        # isolation_level=None: we issue BEGIN/COMMIT ourselves (see transaction()).
-        self._conn = sqlite3.connect(str(path), isolation_level=None)
+        on_disk = str(path) != ":memory:"
+        if on_disk:
+            self.path.parent.mkdir(parents=True, mode=DATA_DIR_MODE, exist_ok=True)
+        try:
+            # isolation_level=None: we issue BEGIN/COMMIT ourselves (see transaction()).
+            self._conn = sqlite3.connect(
+                str(path), isolation_level=None, timeout=BUSY_TIMEOUT_SECONDS
+            )
+        except sqlite3.Error as exc:
+            raise StoreError(f"cannot open the progress database {self.path}: {exc}") from exc
         self._conn.row_factory = sqlite3.Row
         self._depth = 0
+        if on_disk:
+            # WAL lets a reader (e.g. `rc status`) run while another process writes.
+            self._exec("PRAGMA journal_mode=WAL")
+            self._restrict_permissions()
         self._migrate()
+
+    def _restrict_permissions(self) -> None:
+        for target, mode in ((self.path.parent, DATA_DIR_MODE), (self.path, DB_FILE_MODE)):
+            try:
+                target.chmod(mode)
+            except OSError as exc:  # pragma: no cover - platform dependent
+                logger.debug("cannot chmod %s: %s", target.name, exc)
+
+    def _exec(self, sql: str, params: Sequence[object] = ()) -> sqlite3.Cursor:
+        """Run one statement, turning sqlite failures into :class:`StoreError`."""
+        try:
+            return self._conn.execute(sql, params)
+        except sqlite3.Error as exc:
+            raise StoreError(_message(exc)) from exc
+        except OverflowError as exc:
+            raise StoreError("a value is out of range for the progress database") from exc
 
     @classmethod
     def in_dir(cls, data_dir: Path) -> Self:
@@ -274,7 +330,7 @@ class SqliteProgressStore:
 
     def _migrate(self) -> None:
         with self.transaction():
-            self._conn.execute(_META_DDL)
+            self._exec(_META_DDL)
             current = self.schema_version
             if current > SCHEMA_VERSION:
                 raise RuntimeError(
@@ -283,8 +339,8 @@ class SqliteProgressStore:
                 )
             for version in range(current + 1, SCHEMA_VERSION + 1):
                 for statement in _split_sql(MIGRATIONS[version]):
-                    self._conn.execute(statement)
-                self._conn.execute(
+                    self._exec(statement)
+                self._exec(
                     "INSERT INTO meta (key, value) VALUES ('schema_version', ?) "
                     "ON CONFLICT (key) DO UPDATE SET value = excluded.value",
                     (str(version),),
@@ -292,7 +348,7 @@ class SqliteProgressStore:
 
     @property
     def schema_version(self) -> int:
-        row = self._conn.execute("SELECT value FROM meta WHERE key = 'schema_version'").fetchone()
+        row = self._exec("SELECT value FROM meta WHERE key = 'schema_version'").fetchone()
         return 0 if row is None else int(row[0])
 
     def close(self) -> None:
@@ -308,18 +364,18 @@ class SqliteProgressStore:
     def transaction(self) -> Iterator[None]:
         """Nestable: only the outermost block begins and commits / rolls back."""
         if self._depth == 0:
-            self._conn.execute("BEGIN IMMEDIATE")
+            self._exec("BEGIN IMMEDIATE")
         self._depth += 1
         try:
             yield
         except BaseException:
             self._depth -= 1
             if self._depth == 0:
-                self._conn.execute("ROLLBACK")
+                self._exec("ROLLBACK")
             raise
         self._depth -= 1
         if self._depth == 0:
-            self._conn.execute("COMMIT")
+            self._exec("COMMIT")
 
     # -- lesson_progress -------------------------------------------------------
 
@@ -337,14 +393,14 @@ class SqliteProgressStore:
         )
 
     def get_lesson(self, lesson_id: str, user_id: int = DEFAULT_USER) -> LessonProgress | None:
-        row = self._conn.execute(
+        row = self._exec(
             "SELECT * FROM lesson_progress WHERE user_id = ? AND lesson_id = ?",
             (user_id, lesson_id),
         ).fetchone()
         return None if row is None else self._lesson(row)
 
     def save_lesson(self, progress: LessonProgress) -> None:
-        self._conn.execute(
+        self._exec(
             """
             INSERT INTO lesson_progress (user_id, lesson_id, status, started_at, completed_at,
                                          total_seconds, understanding, note)
@@ -371,11 +427,11 @@ class SqliteProgressStore:
 
     def list_lessons(self, user_id: int | None = DEFAULT_USER) -> list[LessonProgress]:
         if user_id is None:
-            rows = self._conn.execute(
+            rows = self._exec(
                 "SELECT * FROM lesson_progress ORDER BY user_id, lesson_id"
             ).fetchall()
         else:
-            rows = self._conn.execute(
+            rows = self._exec(
                 "SELECT * FROM lesson_progress WHERE user_id = ? ORDER BY lesson_id", (user_id,)
             ).fetchall()
         return [self._lesson(row) for row in rows]
@@ -397,13 +453,13 @@ class SqliteProgressStore:
         )
 
     def open_session(self, user_id: int = DEFAULT_USER) -> Session | None:
-        row = self._conn.execute(
+        row = self._exec(
             "SELECT * FROM sessions WHERE user_id = ? AND ended_at IS NULL", (user_id,)
         ).fetchone()
         return None if row is None else self._session(row)
 
     def add_session(self, session: Session) -> Session:
-        cursor = self._conn.execute(
+        cursor = self._exec(
             """
             INSERT INTO sessions (id, user_id, lesson_id, started_at, ended_at, note, source)
             VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -421,13 +477,13 @@ class SqliteProgressStore:
         return session.model_copy(update={"id": cursor.lastrowid})
 
     def close_session(self, session_id: int, ended_at: datetime, note: str | None) -> None:
-        self._conn.execute(
+        self._exec(
             "UPDATE sessions SET ended_at = ?, note = COALESCE(?, note) WHERE id = ?",
             (_ts(ended_at), note, session_id),
         )
 
     def delete_session(self, session_id: int) -> None:
-        self._conn.execute("DELETE FROM sessions WHERE id = ?", (session_id,))
+        self._exec("DELETE FROM sessions WHERE id = ?", (session_id,))
 
     def list_sessions(
         self, user_id: int | None = DEFAULT_USER, lesson_id: str | None = None
@@ -441,7 +497,7 @@ class SqliteProgressStore:
             clauses.append("lesson_id = ?")
             params.append(lesson_id)
         where = f" WHERE {' AND '.join(clauses)}" if clauses else ""
-        rows = self._conn.execute(f"SELECT * FROM sessions{where} ORDER BY id", params).fetchall()
+        rows = self._exec(f"SELECT * FROM sessions{where} ORDER BY id", params).fetchall()
         return [self._session(row) for row in rows]
 
     # -- cards (v2) ------------------------------------------------------------
@@ -461,13 +517,13 @@ class SqliteProgressStore:
         )
 
     def get_card(self, card_id: str, user_id: int = DEFAULT_USER) -> Card | None:
-        row = self._conn.execute(
+        row = self._exec(
             "SELECT * FROM cards WHERE user_id = ? AND id = ?", (user_id, card_id)
         ).fetchone()
         return None if row is None else self._card(row)
 
     def save_card(self, card: Card) -> None:
-        self._conn.execute(
+        self._exec(
             """
             INSERT INTO cards (id, user_id, lesson_id, question_id, front, back, source,
                                created_at, suspended)
@@ -498,7 +554,7 @@ class SqliteProgressStore:
         self, user_id: int | None = DEFAULT_USER, lesson_id: str | None = None
     ) -> list[Card]:
         where, params = _where(user_id, lesson_id=lesson_id)
-        rows = self._conn.execute(
+        rows = self._exec(
             f"SELECT * FROM cards{where} ORDER BY user_id, created_at, id", params
         ).fetchall()
         return [self._card(row) for row in rows]
@@ -515,13 +571,13 @@ class SqliteProgressStore:
         )
 
     def get_card_state(self, card_id: str, user_id: int = DEFAULT_USER) -> CardState | None:
-        row = self._conn.execute(
+        row = self._exec(
             "SELECT * FROM card_state WHERE user_id = ? AND card_id = ?", (user_id, card_id)
         ).fetchone()
         return None if row is None else self._card_state(row)
 
     def save_card_state(self, state: CardState) -> None:
-        self._conn.execute(
+        self._exec(
             """
             INSERT INTO card_state (user_id, card_id, repetitions, interval_days, ease, due)
             VALUES (?, ?, ?, ?, ?, ?)
@@ -543,7 +599,7 @@ class SqliteProgressStore:
 
     def list_card_states(self, user_id: int | None = DEFAULT_USER) -> list[CardState]:
         where, params = _where(user_id)
-        rows = self._conn.execute(
+        rows = self._exec(
             f"SELECT * FROM card_state{where} ORDER BY user_id, due, card_id", params
         ).fetchall()
         return [self._card_state(row) for row in rows]
@@ -562,7 +618,7 @@ class SqliteProgressStore:
         )
 
     def add_review(self, review: Review) -> Review:
-        cursor = self._conn.execute(
+        cursor = self._exec(
             """
             INSERT INTO reviews (id, user_id, card_id, reviewed_at, rating, interval_before,
                                  interval_after, ease_after)
@@ -585,7 +641,7 @@ class SqliteProgressStore:
         self, user_id: int | None = DEFAULT_USER, card_id: str | None = None
     ) -> list[Review]:
         where, params = _where(user_id, card_id=card_id)
-        rows = self._conn.execute(f"SELECT * FROM reviews{where} ORDER BY id", params).fetchall()
+        rows = self._exec(f"SELECT * FROM reviews{where} ORDER BY id", params).fetchall()
         return [self._review(row) for row in rows]
 
     @staticmethod
@@ -601,7 +657,7 @@ class SqliteProgressStore:
         )
 
     def add_quiz_attempt(self, attempt: QuizAttempt) -> QuizAttempt:
-        cursor = self._conn.execute(
+        cursor = self._exec(
             """
             INSERT INTO quiz_attempts (id, user_id, lesson_id, question_id, answered_at, answer,
                                        correct)
@@ -623,9 +679,7 @@ class SqliteProgressStore:
         self, user_id: int | None = DEFAULT_USER, lesson_id: str | None = None
     ) -> list[QuizAttempt]:
         where, params = _where(user_id, lesson_id=lesson_id)
-        rows = self._conn.execute(
-            f"SELECT * FROM quiz_attempts{where} ORDER BY id", params
-        ).fetchall()
+        rows = self._exec(f"SELECT * FROM quiz_attempts{where} ORDER BY id", params).fetchall()
         return [self._attempt(row) for row in rows]
 
     @staticmethod
@@ -642,7 +696,7 @@ class SqliteProgressStore:
         )
 
     def add_quiz_run(self, run: QuizRun) -> QuizRun:
-        cursor = self._conn.execute(
+        cursor = self._exec(
             """
             INSERT INTO quiz_runs (id, user_id, lesson_id, activity_id, started_at, finished_at,
                                    correct, total)
@@ -665,7 +719,7 @@ class SqliteProgressStore:
         self, user_id: int | None = DEFAULT_USER, lesson_id: str | None = None
     ) -> list[QuizRun]:
         where, params = _where(user_id, lesson_id=lesson_id)
-        rows = self._conn.execute(f"SELECT * FROM quiz_runs{where} ORDER BY id", params).fetchall()
+        rows = self._exec(f"SELECT * FROM quiz_runs{where} ORDER BY id", params).fetchall()
         return [self._run(row) for row in rows]
 
     @staticmethod
@@ -679,7 +733,7 @@ class SqliteProgressStore:
         )
 
     def save_activity(self, progress: ActivityProgress) -> None:
-        self._conn.execute(
+        self._exec(
             """
             INSERT INTO activity_progress (user_id, activity_id, lesson_id, status, updated_at)
             VALUES (?, ?, ?, ?, ?)
@@ -699,7 +753,7 @@ class SqliteProgressStore:
 
     def list_activities(self, user_id: int | None = DEFAULT_USER) -> list[ActivityProgress]:
         where, params = _where(user_id)
-        rows = self._conn.execute(
+        rows = self._exec(
             f"SELECT * FROM activity_progress{where} ORDER BY user_id, activity_id", params
         ).fetchall()
         return [self._activity(row) for row in rows]
@@ -715,25 +769,23 @@ class SqliteProgressStore:
         with self.transaction():
             counts = tuple(
                 int(
-                    self._conn.execute(
+                    self._exec(
                         f"SELECT count(*) FROM {table} WHERE user_id = ?", (user_id,)
                     ).fetchone()[0]
                 )
                 for table in ("lesson_progress", "sessions")
             )
             for table in TABLES:
-                self._conn.execute(f"DELETE FROM {table} WHERE user_id = ?", (user_id,))
+                self._exec(f"DELETE FROM {table} WHERE user_id = ?", (user_id,))
         return counts[0], counts[1]
 
     def is_empty(self) -> bool:
-        return not any(
-            self._conn.execute(f"SELECT 1 FROM {table} LIMIT 1").fetchone() for table in TABLES
-        )
+        return not any(self._exec(f"SELECT 1 FROM {table} LIMIT 1").fetchone() for table in TABLES)
 
     def clear(self) -> None:
         with self.transaction():
             for table in TABLES:
-                self._conn.execute(f"DELETE FROM {table}")
+                self._exec(f"DELETE FROM {table}")
 
 
 def _split_sql(script: str) -> list[str]:
