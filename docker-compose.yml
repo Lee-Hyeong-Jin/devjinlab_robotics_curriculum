@@ -8,7 +8,9 @@
 # The db password below is a development default; production compose (P2-5) uses
 # POSTGRES_PASSWORD_FILE with a Docker secret instead (docs/architecture/operations.md).
 services:
+  # One-shot tool, not part of `up`: docker compose run --rm cli validate
   cli:
+    profiles: ["cli"]
     build: .
     image: robotics-curriculum:local
     volumes:
@@ -74,6 +76,26 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+
+  # Scheduled backup for hosts without the repository checked out (cron, systemd timer):
+  #   docker compose run --rm backup
+  # Interactive use goes through scripts/ops/backup.sh, which also prunes old dumps.
+  backup:
+    profiles: ["ops"]
+    image: postgres:16.13
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - 'exec pg_dump -Fc -h db -U "$$POSTGRES_USER" -d "$$POSTGRES_DB" > "/backups/rc-$$(date -u +%Y%m%dT%H%M%SZ).dump"'
+    environment:
+      POSTGRES_USER: rc
+      POSTGRES_DB: rc
+      PGPASSWORD: ${RC_DB_PASSWORD:-rc-dev-only}
+    volumes:
+      - ./backups:/backups
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
 
 volumes:
   rc-data:

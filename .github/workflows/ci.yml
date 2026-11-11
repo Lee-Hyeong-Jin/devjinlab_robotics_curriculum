@@ -96,3 +96,20 @@ jobs:
           name: smoke-compose-logs
           path: /tmp/rc-smoke-compose.log
           if-no-files-found: ignore
+
+  # Keeps the backup/restore tooling honest: back up, destroy the data, restore, verify
+  # (P2-5 / AC-OPS.4). The release drill is run by hand and recorded in docs/ops/restore-drills.md;
+  # here the record is thrown away with the runner.
+  restore-drill:
+    name: backup and restore drill
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Restore drill
+        run: bash scripts/ops/restore_drill.sh
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v --remove-orphans
