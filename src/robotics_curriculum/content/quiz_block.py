@@ -73,7 +73,9 @@ class QuizQuestion(_QuizModel):
     type: QuestionType
     prompt: str = Field(min_length=1)
     choices: list[str] = Field(default_factory=list)
-    answer: int | bool | list[int] | list[str]
+    # str is accepted here only so that a stray string reaches the type-specific
+    # messages below instead of a generic union error.
+    answer: int | bool | str | list[int] | list[str]
     explanation: str = Field(min_length=1)
     concept: Concept | None = None
     tags: list[str] = Field(default_factory=list)
