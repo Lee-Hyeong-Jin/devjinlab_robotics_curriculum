@@ -11,7 +11,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
 
-from robotics_curriculum.api.deps import Index, Progress, get_principal
+from robotics_curriculum.api.deps import Index, Progress, State, get_principal
 from robotics_curriculum.api.problems import problem_responses
 from robotics_curriculum.api.schemas import (
     DoneRequest,
@@ -19,11 +19,14 @@ from robotics_curriculum.api.schemas import (
     LessonState,
     LogRequest,
     NextLesson,
+    StageStat,
     StartRequest,
     Status,
     StopRequest,
     StudySession,
+    WeekStat,
 )
+from robotics_curriculum.learn import dashboard_stats
 from robotics_curriculum.progress import LessonProgress
 
 router = APIRouter(
@@ -37,16 +40,28 @@ CourseFilter = Annotated[str | None, Query(alias="course", description="Only thi
 
 
 @router.get("/status", response_model=Status)
-def get_status(index: Index, progress: Progress, course_id: CourseFilter = None) -> Status:
-    """Every lesson's progress in teaching order, plus the running timer (``rc status``)."""
+def get_status(
+    index: Index, progress: Progress, state: State, course_id: CourseFilter = None
+) -> Status:
+    """Every lesson's progress in teaching order, the running timer, and the dashboard numbers.
+
+    The dashboard part (``stages``, ``week``, ``streak_days``, ``due_cards``) is the same
+    aggregate the static site and ``rc status`` show, and covers every course even when
+    ``course`` narrows the lesson list.
+    """
     if course_id is not None:
         index.course(course_id)
     with progress.open() as service:
         summaries = service.status(course_id)
         running = service.current_session()
+        stats = dashboard_stats(service, now=state.clock())
     return Status(
         open_session=StudySession.of(running) if running else None,
         lessons=[LessonState.of(s) for s in summaries],
+        stages=[StageStat.of(s) for s in stats.stages],
+        week=WeekStat.of(stats.week),
+        streak_days=stats.streak_days,
+        due_cards=stats.due_today,
     )
 
 

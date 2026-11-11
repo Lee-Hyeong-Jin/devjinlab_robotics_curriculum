@@ -5,7 +5,7 @@ the PAT in :class:`ApiTokenCreated` and the CSRF token in :class:`LoginResult`."
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -26,6 +26,10 @@ class SignupRequest(Schema):
 class LoginRequest(Schema):
     email: str = Field(max_length=254)
     password: str = Field(max_length=1024)
+    remember: bool = Field(
+        default=False,
+        description="Accepted for the frontend contract; sessions always last 14 days.",
+    )
 
 
 class TokenRequest(Schema):
@@ -58,6 +62,7 @@ class User(Schema):
     locale: str | None
     timezone: str | None
     role: Role
+    status: UserStatus
     created_at: datetime
 
     @classmethod
@@ -70,12 +75,12 @@ class User(Schema):
             locale=user.locale,
             timezone=user.timezone,
             role=user.role,
+            status=user.status,
             created_at=user.created_at,
         )
 
 
 class AdminUser(User):
-    status: UserStatus
     has_password: bool
     updated_at: datetime
 
@@ -83,7 +88,6 @@ class AdminUser(User):
     def of(cls, user: models.User) -> AdminUser:
         return cls(
             **User.of(user).model_dump(),
-            status=user.status,
             has_password=user.has_password,
             updated_at=user.updated_at,
         )
@@ -96,7 +100,7 @@ class UserPage(Schema):
 
 class UserUpdate(Schema):
     display_name: str | None = Field(default=None, max_length=100)
-    locale: str | None = Field(default=None, max_length=20)
+    locale: Literal["ko", "en"] | None = None
     timezone: str | None = Field(default=None, max_length=64)
 
 

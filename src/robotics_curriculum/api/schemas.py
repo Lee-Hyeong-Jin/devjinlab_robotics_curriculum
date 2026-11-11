@@ -7,13 +7,15 @@ map core-library objects; no business logic lives here.
 from __future__ import annotations
 
 from datetime import date, datetime
-from typing import Literal
+from typing import Literal, cast
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from robotics_curriculum import content
 from robotics_curriculum.content import Activity, ResourceKind
-from robotics_curriculum.progress import LessonProgress, LessonStatus, Session
+from robotics_curriculum.learn import AnswerFeedback, CardView, QuestionView, SubmissionResult
+from robotics_curriculum.learn.stats import StageProgress, WeekStats
+from robotics_curriculum.progress import CardState, LessonProgress, LessonStatus, Session
 from robotics_curriculum.progress import LessonSummary as Summary
 from robotics_curriculum.report import ModuleReport, WeeklyReport
 
@@ -193,9 +195,45 @@ class LessonState(Schema):
         )
 
 
+class StageStat(Schema):
+    """One level (기초 / 중급 / 고급) with its lesson counts."""
+
+    level: str
+    progress: int = Field(ge=0, le=100, description="Percent of the level's lessons done.")
+    lessons_done: int
+    lessons_total: int
+    module_ids: list[str]
+
+    @classmethod
+    def of(cls, stage: StageProgress) -> StageStat:
+        return cls(
+            level=stage.stage,
+            progress=stage.progress.percent,
+            lessons_done=stage.progress.done,
+            lessons_total=stage.progress.total,
+            module_ids=stage.module_ids,
+        )
+
+
+class WeekStat(Schema):
+    """Study time of the current week (Monday onwards, caller's timezone)."""
+
+    start: date
+    minutes: int
+    sessions: int
+
+    @classmethod
+    def of(cls, week: WeekStats) -> WeekStat:
+        return cls(start=week.start, minutes=week.seconds // 60, sessions=week.sessions)
+
+
 class Status(Schema):
     open_session: StudySession | None = Field(description="The running timer, if any.")
     lessons: list[LessonState] = Field(description="Every lesson in teaching order.")
+    stages: list[StageStat] = Field(default_factory=list, description="Progress per level.")
+    week: WeekStat | None = Field(default=None, description="This week's study time.")
+    streak_days: int = Field(default=0, description="Consecutive days with study activity.")
+    due_cards: int = Field(default=0, description="Flashcards due today.")
 
 
 class NextLesson(Schema):
@@ -356,3 +394,146 @@ __all__ = [
     "Version",
     "WeeklySummary",
 ]
+
+
+# -- quiz ------------------------------------------------------------------------------
+
+
+QuestionKind = Literal["single", "multiple", "truefalse", "short"]
+CardSourceName = Literal["quiz", "concept"]
+
+
+class QuizQuestionPublic(Schema):
+    """A question as a learner may see it before answering: no answer, no explanation."""
+
+    id: str
+    type: QuestionKind
+    prompt: str
+    choices: list[str] = Field(default_factory=list, description="Empty for short / true-false.")
+
+    @classmethod
+    def of(cls, view: QuestionView) -> QuizQuestionPublic:
+        kind = cast(QuestionKind, view.type)  # validated by the quiz block parser
+        return cls(id=view.id, type=kind, prompt=view.prompt, choices=view.choices)
+
+
+class QuizPublic(Schema):
+    """A lesson's quiz without answers (``GET /lessons/{id}/quiz``)."""
+
+    lesson_id: str
+    activity_id: str | None = Field(description="The `kind: quiz` activity it belongs to.")
+    questions: list[QuizQuestionPublic]
+
+
+class QuizSubmission(Schema):
+    """One finished attempt at a lesson's quiz (``POST /quiz/runs``)."""
+
+    lesson_id: str
+    answers: dict[str, str] = Field(
+        min_length=1,
+        description="Question id -> answer, in the CLI notation: `2`, `1,3`, `o`/`x`, free text.",
+    )
+    partial: bool = Field(
+        default=False, description="Allow leaving questions out instead of failing with 422."
+    )
+
+
+class QuizAnswerResult(Schema):
+    """Per-question feedback, returned only once the answer was submitted."""
+
+    question_id: str
+    given: str
+    correct: bool
+    correct_answer: str
+    explanation: str
+
+    @classmethod
+    def of(cls, feedback: AnswerFeedback) -> QuizAnswerResult:
+        return cls(
+            question_id=feedback.question_id,
+            given=feedback.given,
+            correct=feedback.correct,
+            correct_answer=feedback.answer,
+            explanation=feedback.explanation,
+        )
+
+
+class QuizRun(Schema):
+    """The stored result of one quiz attempt."""
+
+    lesson_id: str
+    correct: int
+    total: int
+    percent: int = Field(ge=0, le=100)
+    seconds: int
+    answers: list[QuizAnswerResult]
+    new_card_ids: list[str] = Field(description="Flashcards this attempt created.")
+
+    @classmethod
+    def of(cls, outcome: SubmissionResult) -> QuizRun:
+        return cls(
+            lesson_id=outcome.lesson_id,
+            correct=outcome.correct,
+            total=outcome.total,
+            percent=outcome.percent,
+            seconds=outcome.seconds,
+            answers=[QuizAnswerResult.of(f) for f in outcome.feedback],
+            new_card_ids=outcome.new_card_ids,
+        )
+
+
+# -- review ----------------------------------------------------------------------------
+
+
+class ReviewCard(Schema):
+    """A card that is due, with its current SM-2 schedule."""
+
+    card_id: str
+    lesson_id: str
+    question_id: str
+    front: str
+    back: str
+    source: CardSourceName
+    due: date
+    interval_days: int
+
+    @classmethod
+    def of(cls, view: CardView) -> ReviewCard:
+        return cls(
+            card_id=view.card_id,
+            lesson_id=view.lesson_id,
+            question_id=view.question_id,
+            front=view.front,
+            back=view.back,
+            source=cast(CardSourceName, view.source),
+            due=view.due,
+            interval_days=view.interval_days,
+        )
+
+
+class RateRequest(Schema):
+    """How well the learner recalled a card."""
+
+    rating: Literal["again", "hard", "good", "easy"]
+
+
+class ReviewResult(Schema):
+    """The card's new schedule after a rating."""
+
+    card_id: str
+    repetitions: int
+    interval_days: int
+    ease: float
+    due: date
+    due_tomorrow: int = Field(description="Cards scheduled for the next day.")
+
+    @classmethod
+    def of(cls, state: CardState, due_tomorrow: int) -> ReviewResult:
+        return cls(
+            card_id=state.card_id,
+            repetitions=state.repetitions,
+            interval_days=state.interval_days,
+            ease=state.ease,
+            due=state.due,
+            due_tomorrow=due_tomorrow,
+        )
