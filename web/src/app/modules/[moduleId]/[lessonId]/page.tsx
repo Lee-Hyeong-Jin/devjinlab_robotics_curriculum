@@ -205,6 +205,26 @@ export default async function LessonPage({ params }: Params) {
             </Card>
           ) : null}
 
+          {lesson.prerequisites.length > 0 ? (
+            <Card as="section" aria-labelledby="prerequisites-heading">
+              <h2 id="prerequisites-heading" className="text-primary mb-2 text-sm font-semibold">
+                {t('prerequisites')}
+              </h2>
+              <ul className="flex flex-col gap-1">
+                {lesson.prerequisites.map((id) => (
+                  <li key={id}>
+                    <Link
+                      href={`/modules/${moduleId}/${id}`}
+                      className="text-accent font-mono text-xs underline underline-offset-2"
+                    >
+                      {id}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          ) : null}
+
           {lesson.activities && lesson.activities.length > 0 ? (
             <Card as="section" aria-labelledby="activities-heading">
               <h2 id="activities-heading" className="text-primary mb-2 text-sm font-semibold">

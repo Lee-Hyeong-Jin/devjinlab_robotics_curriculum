@@ -156,6 +156,14 @@ class ResourceRef(Resource):
     lesson_ids: list[str] = Field(description="Lessons that list this resource.")
 
 
+class SearchHit(Schema):
+    kind: Literal["lesson", "resource"]
+    id: str = Field(description="Lesson id, or `<lesson_id>#<n>` for the n-th resource.")
+    title: str
+    snippet: str = Field(description="Matching text around the first query word.")
+    lesson_id: str = Field(description="The lesson to open.")
+
+
 # -- progress --------------------------------------------------------------------------
 
 
@@ -580,7 +588,9 @@ class RoadmapModule(Schema):
     lessons: list[RoadmapLesson]
 
     @classmethod
-    def of(cls, module: content.Module, rows: list[Summary]) -> RoadmapModule:
+    def of(
+        cls, module: content.Module, rows: list[Summary], lang: str | None = None
+    ) -> RoadmapModule:
         states = [lock_state(s) for s in rows]
         if states and all(st == "done" for st in states):
             state: LockState = "done"
@@ -597,7 +607,7 @@ class RoadmapModule(Schema):
             progress=done / len(states) if states else 0.0,
             state=state,
             lessons=[
-                RoadmapLesson(id=s.lesson.id, title=s.lesson.title, state=st)
+                RoadmapLesson(id=s.lesson.id, title=s.lesson.localized(lang).title, state=st)
                 for s, st in zip(rows, states, strict=True)
             ],
         )
@@ -616,7 +626,7 @@ class Roadmap(Schema):
     )
 
     @classmethod
-    def of(cls, summaries: list[Summary]) -> Roadmap:
+    def of(cls, summaries: list[Summary], lang: str | None = None) -> Roadmap:
         stages: list[RoadmapStage] = []
         modules: dict[tuple[str, str], list[Summary]] = {}
         order: list[tuple[content.Course, content.Module]] = []
@@ -627,7 +637,7 @@ class Roadmap(Schema):
                 order.append((s.course, s.module))
             modules[key].append(s)
         for course, module in order:
-            item = RoadmapModule.of(module, modules[(course.id, module.id)])
+            item = RoadmapModule.of(module, modules[(course.id, module.id)], lang)
             last = stages[-1] if stages else None
             if last is None or last.course_id != course.id or last.level != module.level:
                 stages.append(

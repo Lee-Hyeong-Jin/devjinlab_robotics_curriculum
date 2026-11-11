@@ -318,6 +318,58 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
+  /api/v1/search:
+    get:
+      tags:
+      - content
+      summary: Search Content
+      description: |-
+        Search lessons (title, summary, objectives, tags) and their resources (title, note).
+
+        Every word must match; title matches rank first, then tags, then other text.
+      operationId: search_content_api_v1_search_get
+      parameters:
+      - name: q
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 2
+          maxLength: 200
+          description: Words to find.
+          title: Q
+        description: Words to find.
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 20
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SearchHit'
+                title: Response Search Content Api V1 Search Get
+        '503':
+          description: Service Unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
   /api/v1/roadmap:
     get:
       tags:
@@ -4148,6 +4200,38 @@ components:
       - admin
       title: Scope
       description: PAT scopes (ADR 0009).
+    SearchHit:
+      properties:
+        kind:
+          type: string
+          enum:
+          - lesson
+          - resource
+          title: Kind
+        id:
+          type: string
+          title: Id
+          description: Lesson id, or `<lesson_id>#<n>` for the n-th resource.
+        title:
+          type: string
+          title: Title
+        snippet:
+          type: string
+          title: Snippet
+          description: Matching text around the first query word.
+        lesson_id:
+          type: string
+          title: Lesson Id
+          description: The lesson to open.
+      additionalProperties: false
+      type: object
+      required:
+      - kind
+      - id
+      - title
+      - snippet
+      - lesson_id
+      title: SearchHit
     Session:
       properties:
         id:
@@ -4869,28 +4953,6 @@ x-planned:
               application/json:
                 schema:
                   $ref: '#/components/schemas/StudySessionPage'
-    /api/v1/search:
-      get:
-        tags:
-        - content
-        summary: 레슨·자료 검색
-        parameters:
-        - name: q
-          in: query
-          required: true
-          schema:
-            type: string
-            minLength: 2
-        - $ref: '#/components/parameters/Limit'
-        responses:
-          '200':
-            description: OK
-            content:
-              application/json:
-                schema:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/SearchHit'
   schemas:
     CardPage:
       type: object
@@ -4932,20 +4994,6 @@ x-planned:
       - in_progress
       - available
       - locked
-    SearchHit:
-      type: object
-      properties:
-        kind:
-          type: string
-          enum:
-          - lesson
-          - resource
-        id:
-          type: string
-        title:
-          type: string
-        snippet:
-          type: string
     StudySessionPage:
       type: object
       properties:

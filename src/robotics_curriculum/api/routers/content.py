@@ -20,10 +20,12 @@ from robotics_curriculum.api.schemas import (
     Resource,
     ResourceRef,
     Roadmap,
+    SearchHit,
     Stage,
 )
 from robotics_curriculum.content import Course as CourseModel
 from robotics_curriculum.content import ResourceKind
+from robotics_curriculum.content.search import search
 from robotics_curriculum.content.sections import extract_study_guide
 
 router = APIRouter(
@@ -131,6 +133,22 @@ def list_resources(
     return list(merged.values())
 
 
+@router.get("/search", response_model=list[SearchHit], responses=problem_responses(422))
+def search_content(
+    index: Index,
+    q: Annotated[str, Query(min_length=2, max_length=200, description="Words to find.")],
+    limit: Annotated[int, Query(ge=1, le=200)] = 20,
+) -> list[SearchHit]:
+    """Search lessons (title, summary, objectives, tags) and their resources (title, note).
+
+    Every word must match; title matches rank first, then tags, then other text.
+    """
+    return [
+        SearchHit(kind=h.kind, id=h.id, title=h.title, snippet=h.snippet, lesson_id=h.lesson_id)
+        for h in search(index.courses, q, limit=limit)
+    ]
+
+
 @router.get("/roadmap", response_model=Roadmap, responses=problem_responses(404))
 def get_roadmap(
     index: Index,
@@ -147,4 +165,4 @@ def get_roadmap(
         index.course(course_id)
     with progress.open() as service:
         summaries = service.status(course_id)
-    return Roadmap.of(summaries)
+    return Roadmap.of(summaries, lang_var.get())

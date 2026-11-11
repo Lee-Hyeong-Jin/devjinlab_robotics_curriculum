@@ -17,7 +17,13 @@ htmlcov
 site
 dist
 build
+# Patterns without a slash only match at the root, so the frontend's own build output and
+# dependencies need their own entries (the web target installs and builds inside the image).
 node_modules
+**/node_modules
+**/.next
+**/playwright-report
+**/test-results
 docs
 harness
 reports
