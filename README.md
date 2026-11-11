@@ -34,6 +34,14 @@ uv run rc report weekly                       # -> reports/weekly/YYYY-Www.md; -
 uv run rc report module m1-math-physics       # per-module progress table (stdout; --out PATH)
 ```
 
+Static site (MkDocs Material: 대시보드 · 로드맵 · 모듈/레슨 · 자료실; works offline):
+
+```bash
+uv run rc site build                  # -> site/index.html (re-run to refresh progress)
+uv run rc site build --out /tmp/site  # other output dir; --src DIR keeps the generated mkdocs project
+uv run rc site build --serve          # live preview via `mkdocs serve` (http://127.0.0.1:8000)
+```
+
 ## Lint / format
 
 ```bash

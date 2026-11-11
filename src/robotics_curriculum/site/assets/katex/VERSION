@@ -1,0 +1,3 @@
+KaTeX 0.16.11 (MIT), vendored from https://registry.npmjs.org/katex/-/katex-0.16.11.tgz
+(sha1 4bc84d5584f996abece5f01c6ad11304276a33f5). Only woff2 fonts are kept.
+Used by `rc site build` so math renders without network access.

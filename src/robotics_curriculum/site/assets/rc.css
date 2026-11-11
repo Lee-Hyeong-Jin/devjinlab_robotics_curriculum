@@ -1,0 +1,46 @@
+/* rc site: progress bars, status badges, dashboard cards. Uses Material CSS variables
+   so light/dark schemes both work. */
+.rc-bar {
+  display: inline-block;
+  width: 9rem;
+  height: 0.6rem;
+  border-radius: 0.3rem;
+  background: var(--md-default-fg-color--lightest);
+  vertical-align: middle;
+  overflow: hidden;
+}
+.rc-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--md-accent-fg-color, #526cfe);
+}
+.rc-pct { font-size: 0.8em; color: var(--md-default-fg-color--light); }
+.rc-status {
+  display: inline-block;
+  padding: 0 0.4em;
+  border-radius: 0.3em;
+  font-size: 0.8em;
+  white-space: nowrap;
+  border: 1px solid currentColor;
+}
+.rc-done { color: #2e7d32; }
+.rc-in_progress { color: #ef6c00; }
+.rc-not_started { color: var(--md-default-fg-color--light); }
+.rc-locked { color: var(--md-default-fg-color--lighter); }
+[data-md-color-scheme="slate"] .rc-done { color: #81c784; }
+[data-md-color-scheme="slate"] .rc-in_progress { color: #ffb74d; }
+.rc-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 0.8rem;
+  margin: 1em 0;
+}
+.rc-card {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.4rem;
+  padding: 0.7rem 0.9rem;
+}
+.rc-card-title { font-size: 0.75em; color: var(--md-default-fg-color--light); }
+.rc-card-value { font-size: 1.5em; font-weight: 700; margin: 0.15em 0; }
+.rc-card-sub { font-size: 0.7em; color: var(--md-default-fg-color--light); }
+.rc-meta, .rc-built { color: var(--md-default-fg-color--light); font-size: 0.85em; }

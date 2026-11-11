@@ -21,11 +21,13 @@ from robotics_curriculum.progress import (
     parse_duration,
 )
 from robotics_curriculum.report.cli import report_app
+from robotics_curriculum.site.cli import site_app
 
 app = typer.Typer(help="Robotics curriculum tools.", no_args_is_help=True)
 progress_app = typer.Typer(help="Export / import learner progress (JSON).", no_args_is_help=True)
 app.add_typer(progress_app, name="progress")
 app.add_typer(report_app, name="report")
+app.add_typer(site_app, name="site")
 
 
 @dataclass
