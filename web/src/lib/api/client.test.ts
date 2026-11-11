@@ -115,10 +115,10 @@ describe('apiGet', () => {
 describe('apiGetOrNull', () => {
   it('returns null for an endpoint that is not implemented yet', async () => {
     fetchMock.mockResolvedValue(new Response(null, { status: 404 }))
-    await expect(apiGetOrNull('/api/v1/roadmap')).resolves.toBeNull()
+    await expect(apiGetOrNull('/api/v1/progress/next')).resolves.toBeNull()
 
     fetchMock.mockResolvedValue(new Response(null, { status: 501 }))
-    await expect(apiGetOrNull('/api/v1/roadmap')).resolves.toBeNull()
+    await expect(apiGetOrNull('/api/v1/progress/next')).resolves.toBeNull()
   })
 
   it('returns null when the API cannot be reached', async () => {

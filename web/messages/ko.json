@@ -24,7 +24,6 @@
     "nextLesson": "다음 레슨",
     "openLesson": "레슨 열기",
     "weeklyMinutes": "주간 학습 시간",
-    "weeklyGoal": "목표 {goal}",
     "streak": "연속 학습일",
     "streakDays": "{days}일",
     "dueCards": "오늘 복습",
@@ -37,7 +36,9 @@
     "recent": "최근 활동",
     "noRecent": "기록된 활동이 없습니다.",
     "pending": "백엔드가 이 값을 아직 제공하지 않습니다.",
-    "moduleLessons": "레슨 {done}/{total}"
+    "moduleLessons": "레슨 {done}/{total}",
+    "weeklySessions": "세션 {count}회",
+    "unavailable": "API 서버에서 진행 상황을 받아오지 못했습니다."
   },
   "roadmap": {
     "title": "로드맵",
@@ -50,7 +51,8 @@
     "colState": "상태",
     "colProgress": "진행률",
     "prerequisites": "선수지식",
-    "empty": "로드맵을 불러올 수 없습니다."
+    "empty": "로드맵을 불러올 수 없습니다.",
+    "stageLessons": "레슨 {done}/{total}"
   },
   "module": {
     "lessons": "레슨",
@@ -70,8 +72,8 @@
     "next": "다음 레슨",
     "toModule": "모듈 개요",
     "estimated": "예상 {minutes}",
-    "studied": "학습 시간 {duration}",
-    "understanding": "이해도 {score}/5",
+    "studied": "학습 시간",
+    "understanding": "이해도",
     "note": "메모",
     "writeActionsPending": "타이머·완료 표시는 CLI(`rc study`, `rc done`)에서 사용하세요. 웹 쓰기 동작은 다음 단계에서 추가됩니다.",
     "onThisPage": "이 페이지 목차",

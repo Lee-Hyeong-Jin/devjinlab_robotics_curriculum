@@ -6,6 +6,9 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // Self-contained server bundle for the `web` container in deploy/compose.yaml:
+  // `.next/standalone/server.js` plus `.next/static` and `public/`.
+  output: 'standalone',
   typescript: {
     // `npm run typecheck` is the gate; `next build` must not pass on type errors either.
     ignoreBuildErrors: false,

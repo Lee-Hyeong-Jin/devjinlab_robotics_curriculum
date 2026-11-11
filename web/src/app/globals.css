@@ -9,14 +9,19 @@
  * ones do not reach the 4.5:1 contrast WCAG 2.1 AA requires for small text
  * (AC-A11Y.2), which axe-core fails the build on (AC-A11Y.1):
  *
- *   --text-muted   #6B7280 → #4B5563   (4.39:1 → 6.9:1 on --bg-subtle)
- *   --text-accent  #0F9D8A → #0B7A6B   (3.38:1 → 5.3:1 on --bg-surface,
- *                                       3.03:1 → 4.8:1 on --bg-accent-light)
+ *   --text-muted     #6B7280 → #4B5563   (4.39:1 → 6.9:1 on --bg-subtle)
+ *   --text-accent    #0F9D8A → #0B7A6B   (3.38:1 → 5.3:1 on --bg-surface,
+ *                                         3.03:1 → 4.8:1 on --bg-accent-light)
+ *   --accent-primary #0F9D8A → #0B7A6B   (white text on the fill: 3.38:1 → 5.3:1)
  *
- * The dark values already pass and are unchanged, as is --accent-primary (used
- * for fills behind --text-on-accent). This drift is a review item against the
- * Figma file per ADR 0008 — the Figma `Tokens` collection should be corrected
- * rather than this file reverted.
+ * and one dark-mode token:
+ *
+ *   --text-on-accent #FFFFFF → #0F1115   (on the bright dark accent: 2.6:1 → 7.4:1)
+ *
+ * The status dots and borders keep the Figma #0F9D8A, where WCAG's 3:1 for
+ * non-text content is enough. This drift is a review item against the Figma
+ * file per ADR 0008 — the Figma `Tokens` collection should be corrected rather
+ * than this file reverted.
  * ------------------------------------------------------------------------- */
 
 :root {
@@ -38,9 +43,12 @@
    * and status dots are unchanged; only text and icons use this darker shade. */
   --text-accent: #0b7a6b;
   --text-on-accent: #ffffff;
+  /* Figma says #0F9D8A, but white text on that fill is 3.38:1. The fill shares
+   * the darkened accent so buttons and the study-step badge reach AA; the dots
+   * and borders below keep the Figma value, where 3:1 for non-text is enough. */
   --text-warning: #b45309;
   --text-success: #15803d;
-  --accent-primary: #0f9d8a;
+  --accent-primary: #0b7a6b;
   --status-done: #0f9d8a;
   --status-in-progress: #f59e0b;
   --status-available: #9ca3af;
@@ -71,6 +79,8 @@
     --text-accent: #2bb5a0;
     --text-warning: #fbbf24;
     --text-success: #4ade80;
+    /* The dark accent is bright, so text on it must be dark (white is 2.6:1). */
+    --text-on-accent: #0f1115;
     --accent-primary: #2bb5a0;
     --status-done: #2bb5a0;
     --status-available: #6b7280;
@@ -95,6 +105,7 @@
   --text-accent: #2bb5a0;
   --text-warning: #fbbf24;
   --text-success: #4ade80;
+  --text-on-accent: #0f1115;
   --accent-primary: #2bb5a0;
   --status-done: #2bb5a0;
   --status-available: #6b7280;

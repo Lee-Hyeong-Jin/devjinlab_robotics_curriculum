@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 
 import type { ResourceRef } from '@/lib/api/types'
+import { resource } from '@/test/factories'
 import { renderWithIntl } from '@/test/render'
 
 import { Chip } from './Chip'
@@ -225,13 +226,16 @@ describe('StageProgress', () => {
         title="단계별 진행률"
         progressLabel="진행률"
         stateLabel={(state) => state}
+        lessonsLabel={(done, total) => `${done}/${total}`}
         stages={[
           {
             level: '기초',
             progress: 0.5,
+            lessonsDone: 1,
+            lessonsTotal: 2,
             modules: [
-              { id: 'm1', title: '모듈 1', progress: 1, state: 'done' },
-              { id: 'm2', title: '모듈 2', progress: 0, state: 'locked' },
+              { id: 'm1', title: '모듈 1', progress: 1, state: 'done', lessons: [] },
+              { id: 'm2', title: '모듈 2', progress: 0, state: 'locked', lessons: [] },
             ],
           },
         ]}
@@ -246,9 +250,19 @@ describe('StageProgress', () => {
 
 describe('ResourceExplorer', () => {
   const resources: ResourceRef[] = [
-    { title: 'Modern Robotics', url: 'https://example.com/mr', kind: 'book', note: '3장' },
-    { title: 'ROS 2 Tutorials', url: 'https://example.com/ros', kind: 'course' },
-    { title: 'SLAM 강의', url: 'https://example.com/slam', kind: 'video', lesson_ids: ['l1'] },
+    resource({
+      title: 'Modern Robotics',
+      url: 'https://example.com/mr',
+      kind: 'book',
+      note: '3장',
+    }),
+    resource({ title: 'ROS 2 Tutorials', url: 'https://example.com/ros', kind: 'course' }),
+    resource({
+      title: 'SLAM 강의',
+      url: 'https://example.com/slam',
+      kind: 'video',
+      lesson_ids: ['l1'],
+    }),
   ]
 
   it('lists every resource with an external link (AC-WEB.5)', () => {

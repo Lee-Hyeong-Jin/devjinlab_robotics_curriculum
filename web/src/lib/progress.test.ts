@@ -1,7 +1,18 @@
 import { describe, expect, it } from 'vitest'
 
-import type { LockState } from './api/types'
-import { average, doneCount, lockStateFromStatus, moduleState, ratio } from './progress'
+import { lessonState, lessonSummary } from '@/test/factories'
+
+import {
+  average,
+  courseProgress,
+  doneCount,
+  fromPercent,
+  lessonLockState,
+  lockStateFromStatus,
+  moduleState,
+  ratio,
+  type LockState,
+} from './progress'
 
 describe('moduleState', () => {
   it('is available for a module with no lessons', () => {
@@ -51,5 +62,47 @@ describe('lockStateFromStatus', () => {
     expect(lockStateFromStatus('in_progress')).toBe('in_progress')
     expect(lockStateFromStatus('not_started')).toBe('available')
     expect(lockStateFromStatus(undefined)).toBe('available')
+  })
+})
+
+describe('lessonLockState', () => {
+  it('reports done and in_progress regardless of the lock flag', () => {
+    expect(lessonLockState({ status: 'done', locked: true })).toBe('done')
+    expect(lessonLockState({ status: 'in_progress', locked: true })).toBe('in_progress')
+  })
+
+  it('reports locked only for an unstarted lesson with a missing prerequisite', () => {
+    expect(lessonLockState({ status: 'not_started', locked: true })).toBe('locked')
+    expect(lessonLockState({ status: 'not_started', locked: false })).toBe('available')
+    expect(lessonLockState({ status: 'not_started', locked: null })).toBe('available')
+    expect(lessonLockState({})).toBe('available')
+  })
+})
+
+describe('fromPercent', () => {
+  it('converts whole percent to a 0-1 ratio and clamps', () => {
+    expect(fromPercent(80)).toBe(0.8)
+    expect(fromPercent(0)).toBe(0)
+    expect(fromPercent(140)).toBe(1)
+    expect(fromPercent(-5)).toBe(0)
+    expect(fromPercent(null)).toBe(0)
+    expect(fromPercent(undefined)).toBe(0)
+  })
+})
+
+describe('courseProgress', () => {
+  it('is the share of done lessons over every lesson', () => {
+    const states = (['done', 'in_progress', 'not_started', 'done'] as const).map((status, index) =>
+      lessonState({
+        lesson: lessonSummary({ id: `l${index}` }),
+        status,
+        locked: status === 'not_started',
+      }),
+    )
+    expect(courseProgress(states)).toBe(0.5)
+  })
+
+  it('is 0 for an empty course', () => {
+    expect(courseProgress([])).toBe(0)
   })
 })
