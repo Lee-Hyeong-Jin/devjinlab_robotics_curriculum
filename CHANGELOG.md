@@ -27,3 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   contribution guide, Code of Conduct, security policy, issue and PR templates, Dependabot,
   GitHub Actions CI and release workflows, strict mypy, coverage gate, pre-commit hooks,
   Dockerfile and Compose file.
+- PostgreSQL progress store for server mode (optional extra `postgres`: SQLAlchemy 2 Core +
+  psycopg 3) with Alembic migrations, backend selection via `RC_DATABASE_URL` (unset keeps the
+  local SQLite file), a `transfer()` helper to move SQLite or JSON-export data into PostgreSQL,
+  and a `db` service (PostgreSQL 16) in the Compose file.

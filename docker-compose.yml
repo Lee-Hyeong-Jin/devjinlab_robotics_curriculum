@@ -1,5 +1,10 @@
-# Phase 1: the rc CLI only. The api, db and web services arrive with Phase 2 (harness/roadmap.yaml P2-5).
+# Phase 1: the rc CLI. Phase 2 adds services step by step (harness/roadmap.yaml P2-5: api, web).
 # Usage: docker compose run --rm cli validate
+#        docker compose up -d db      # PostgreSQL for server mode (P2-3, docs/adr/0007)
+#        export RC_DATABASE_URL=postgresql://rc:rc-dev-only@localhost:5432/rc
+#        uv run alembic upgrade head
+# The db password below is a development default; production compose (P2-5) uses
+# POSTGRES_PASSWORD_FILE with a Docker secret instead (docs/architecture/operations.md).
 services:
   cli:
     build: .
@@ -8,5 +13,22 @@ services:
       - rc-data:/data
       - ./curriculum:/app/curriculum:ro
 
+  db:
+    image: postgres:16.13
+    environment:
+      POSTGRES_DB: rc
+      POSTGRES_USER: rc
+      POSTGRES_PASSWORD: ${RC_DB_PASSWORD:-rc-dev-only}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rc -d rc"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   rc-data:
+  dbdata:
