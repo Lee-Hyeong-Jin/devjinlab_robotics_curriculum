@@ -30,6 +30,9 @@ A를 택한다.
   `health`(`/healthz`, `/readyz`, `/version`), `content`, `progress`, `reports`.
   fastapi·uvicorn은 optional extra `api`로 두어 CLI만 쓰는 사용자는 설치하지 않는다
   (`rc api serve`는 extra가 없으면 설치 안내를 출력하고 종료 코드 1).
+  최상위 `api/` 대신 코어 패키지 안에 두는 이유: 코어 함수를 같은 배포물·같은 버전으로 import
+  하고(별도 패키지면 버전 동기화 필요), `rc api serve`를 같은 CLI에 등록하며, mypy strict·커버리지
+  게이트(`files = ["src"]`, `source = robotics_curriculum`)를 그대로 적용받기 위해서다.
 - **버전 정책**: 모든 리소스는 `/api/v1` 아래. 필드 추가·새 엔드포인트처럼 하위 호환인 변경만
   v1에 넣는다. 필드 제거·이름/타입 변경·의미 변경은 `/api/v2`를 v1과 나란히 띄우고, v1은
   공지 후 최소 한 마이너 릴리스 동안 유지한다. 헬스체크(`/healthz`, `/readyz`, `/version`)는
