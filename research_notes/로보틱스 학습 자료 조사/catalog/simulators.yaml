@@ -1,0 +1,1333 @@
+# Normalized 2026-11-11 to platform-design §3.5 resource schema (proposal, not yet implemented in CONTENT_MODEL.md)
+resources:
+- id: webots
+  title: Webots
+  author: Cyberbotics Ltd.
+  url: https://github.com/cyberbotics/webots
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - programming background (Python/C/C++/Java/MATLAB)
+  topics:
+  - webots
+  - mobile-robot
+  - manipulator
+  - python-api
+  - ros2
+  - education
+  est_hours: null
+  last_updated: 2025-01
+  status: active
+  license: Apache-2.0
+  quality_signal: ~4.8k GitHub stars, ~2.1k forks; community on Discord, GitHub issues, Stack Overflow (webots tag)
+  notes: Stable release R2025a (Jan 31, 2025; ~21 months old) with nightly R2025b/R2026 builds from master; lowest hardware floor of the 3D simulators here (2 GB RAM, OpenGL 3.3) but Intel integrated graphics are 'not recommended' and only NVIDIA is recommended on Linux. Next release name (R2025b vs R2026a) is unconfirmed; pin R2025a in course material. Physics engine is ODE-based; smaller community than Gazebo, less photorealism/GPU-RL than Isaac.
+  source_checked_date: '2026-11-11'
+  extra:
+    version: R2025a
+    release_date: '2025-01-31'
+    nightly_builds: yes (master, may be unstable; latest 2026-11-10)
+    os_support: Ubuntu 22.04/24.04/26.04 (x86-64), Windows 10/11 64-bit, macOS 12/13/14
+    min_cpu: 2 GHz dual-core (quad-core recommended)
+    min_ram_gb: 2
+    min_gpu: NVIDIA or AMD with OpenGL 3.3+, >=512 MB VRAM (Intel iGPU not recommended)
+    wsl_vm_apple_silicon: no official statement found
+    python_api: controller module, Python >= 3.8, ~25 classes / ~200 functions
+    ros2_support: webots_ros2 2025.0.1 (Jazzy apt package, Kilted support); ROS 1 removed in R2025a
+    matlab_controllers: true
+    physics_engine: ODE
+    docs_url: https://cyberbotics.com/doc/guide/system-requirements
+    r2025a_changes: Clearpath Heron USV, X3D->W3D web format, Lua PROTO removed, ROS 1 removed, Ubuntu 20.04/macOS 11 dropped
+- id: webots-ros2
+  title: webots_ros2
+  author: Cyberbotics Ltd.
+  url: https://github.com/cyberbotics/webots_ros2
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics
+  - Webots basics
+  topics:
+  - webots
+  - ros2
+  - nav2
+  - slam
+  - turtlebot3
+  - e-puck
+  - universal-robots
+  est_hours: null
+  last_updated: 2025-07
+  status: active
+  license: Apache-2.0
+  quality_signal: ~549 GitHub stars, 194 forks; official ROS 2 docs carry a Webots tutorial section up to Lyrical
+  notes: Binary package ros-jazzy-webots-ros2 version 2025.0.1; driver changelog (2025-07-14) adds ROS 2 Kilted support. Downloads Webots automatically on first run (Linux/Windows only), but it is not in the ROS repository itself (extra package source step is a cited drawback vs Gazebo). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    version: 2025.0.1
+    ros2_distros: Jazzy (apt), Kilted
+    install: sudo apt-get install ros-jazzy-webots-ros2
+    packages: webots_ros2_driver, webots_ros2_control, webots_ros2_msgs, webots_ros2_importer + robot packages (e-puck, Mavic, Tesla, TIAGo, TurtleBot, Universal Robots, Husarion, Crazyflie)
+    os_support: Linux, Windows, macOS (auto Webots download only Linux/Windows)
+- id: gazebo-gz-sim
+  title: Gazebo (gz-sim)
+  author: Open Robotics / Open Source Robotics Foundation
+  url: https://github.com/gazebosim/gz-sim
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics
+  - Ubuntu / Linux command line
+  - URDF/SDF basics
+  topics:
+  - gazebo
+  - ros2
+  - sdf
+  - urdf
+  - nav2
+  - ros2-control
+  est_hours: null
+  last_updated: 2025-09
+  status: active
+  license: Apache-2.0
+  quality_signal: ~1.6k GitHub stars, 523 forks; de-facto ROS 2 simulator with the largest tutorial ecosystem; only 'a handful of people' make regular core contributions (Gazebo team, Mar 2025)
+  notes: 'Current LTS lines: Harmonic (Sep 2023-May 2029, pairs with ROS 2 Jazzy) and Jetty (Sep 2025-May 2031, pairs with Lyrical/Rolling); Ionic (pairs with Kilted) reaches EOL Dec 2026; next release ''M'' planned Mar 2027. Ogre2 renderer needs OpenGL 3.3 and real GPU drivers; Windows requires server and GUI in separate terminals; no official minimum-hardware page found; ''no turn-key RL example''. Beware: most web tutorials still target Gazebo Classic, which cannot coexist with Harmonic. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    recommended_pairing_2026: ROS 2 Jazzy + Gazebo Harmonic on Ubuntu 24.04 (both LTS to 2029)
+    release_table: Rotary (rolling); M Mar 2027-Dec 2028; Jetty Sep 2025-May 2031 LTS; Ionic Sep 2024-Dec 2026; Harmonic Sep 2023-May 2029 LTS; Garden EOL Nov 2024; Fortress Sep 2021-May 2027 LTS; Citadel EOL Dec 2024
+    ros2_pairing: Lyrical->Jetty, Kilted->Ionic, Jazzy->Harmonic, Humble->Fortress (Harmonic possible with effort), Rolling->Rotary
+    pairing_conflicts: ros_gz README lists Lyrical with Harmonic (source-only) vs official page Lyrical->Jetty; Jetty EOL May 2031 (release notes) vs Sep 2030 (Discourse announcement)
+    install: sudo apt-get install ros-${ROS_DISTRO}-ros-gz (vendor packages shipped from ROS repo since Jazzy)
+    os_support: Ubuntu Noble first-class; macOS via Homebrew; Windows partial
+    min_gpu: OpenGL 3.3 (Ogre2); no official spec page found
+    wsl: Harmonic works under WSLg with GPU (user report); one WSL2 user got a black GUI with Ogre2
+    headless: requires OGRE2 and --headless-rendering on Harmonic
+    python_api: 'limited: TestFixture class, PythonSystemLoader, gz.math/gz.sim helpers; PYTHONPATH setup needed'
+    ros2_support: ros_gz bridge, first-class
+    physics_engines: swappable physics engines / physics plugins
+- id: ros-gz
+  title: ros_gz (ROS 2 <-> Gazebo bridge)
+  author: Open Robotics
+  url: https://github.com/gazebosim/ros_gz
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics
+  - Gazebo basics
+  topics:
+  - gazebo
+  - ros2
+  - bridge
+  est_hours: null
+  last_updated: null
+  status: active
+  license: Apache-2.0
+  quality_signal: null
+  notes: Official bridge package; its README pairing table (Lyrical with Harmonic, source-only) conflicts with the gazebosim.org install page (Lyrical->Jetty) - treat gazebosim.org as authoritative. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    official_pairing_page: https://gazebosim.org/docs/all/ros_installation
+    vendor_packages_doc: https://gazebosim.org/docs/all/ros2_gz_vendor_pkgs/
+    see_also: 'ros-gz-bridge (ros2.yaml: bridge syntax and friction)'
+- id: nvidia-isaac-sim
+  title: NVIDIA Isaac Sim
+  author: NVIDIA
+  url: https://developer.nvidia.com/isaac/sim
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - Python
+  - RTX-class GPU (16 GB VRAM)
+  - Omniverse/USD basics helpful
+  topics:
+  - isaac-sim
+  - omniverse
+  - photorealism
+  - synthetic-data
+  - ros2
+  - newton
+  - mujoco-warp
+  est_hours: null
+  last_updated: 2026-10
+  status: active
+  license: Apache-2.0 + NVIDIA Isaac Sim Additional Software and Materials License
+  quality_signal: Rated the preferred tool for photorealism/perception by opinion sources (roboticscenter.ai, DEV Community)
+  notes: 6.0 GA June 8, 2026 (Experimental API, Newton authoring, MCP server, browser streaming client, native Windows ROS 2 via Pixi); 6.2 GA Oct 22, 2026 is mainly a bug-fix release supporting Isaac Lab 3.0 (Kit SDK 110.4, Newton 1.6.1, MuJoCo-Warp 3.12.0, Cortex removed). Minimum spec (RTX 4080 16 GB, 32 GB RAM, 50 GB SSD) rules out modest laptops; treat as optional advanced track with cloud fallback (Brev, AWS Marketplace EC2 fees, NGC container, Isaac Launchable - pricing not found). Product page still lags at 5.1.0 links; rapid cadence (4.5->5.x->6.0->6.2 in ~1 year) makes third-party tutorials go stale fast. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    version: 6.2.0
+    release_date: '2026-10-22'
+    previous_versions: 6.0 GA 2026-06-08; 5.0 GA Aug 2025 (SIGGRAPH)
+    os_support: Ubuntu 22.04 (deprecated, removal planned) / 24.04, Windows 11 (Windows 10 not supported); aarch64 only on DGX Spark
+    min_cpu: Intel i7 7th gen / AMD Ryzen 5 (4 cores)
+    min_ram_gb: 32
+    recommended_ram_gb: 64
+    min_storage_gb: 50
+    min_gpu: 'GeForce RTX 4080 16 GB (good: RTX 5080 16 GB; ideal: RTX PRO 6000 Blackwell 48 GB); GPUs without RT cores (A100/H100) not supported'
+    min_driver: Linux 595.58.03 / Windows 595.97
+    internet_required: true
+    python_api: Python 3.11 for 5.x (6.x stack not stated in notes)
+    ros2_support: Humble/Jazzy bridges; native Windows ROS 2 via Pixi (6.0)
+    cloud_options: Brev one-click GPU, AWS Marketplace, NGC container, Isaac Launchable
+    redistribution: embedding Omniverse Kit in own product needs Omniverse Enterprise subscription
+    release_notes_url: https://docs.isaacsim.omniverse.nvidia.com/6.2.0/overview/release_notes.html
+    requirements_url: https://docs.isaacsim.omniverse.nvidia.com/latest/installation/requirements.html
+- id: nvidia-isaac-lab
+  title: NVIDIA Isaac Lab
+  author: NVIDIA
+  url: https://github.com/isaac-sim/IsaacLab
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - Python 3.12
+  - PyTorch
+  - RL fundamentals
+  - CUDA GPU
+  topics:
+  - isaac-lab
+  - reinforcement-learning
+  - newton
+  - mujoco-warp
+  - gpu-parallel
+  - legged-robot
+  est_hours: null
+  last_updated: 2026-10
+  status: active
+  license: BSD-3
+  quality_signal: Rated 'the current leader for GPU-parallelized robot RL' (roboticscenter.ai, opinion)
+  notes: v3.0.0 GA (GitHub tag Oct 20, 2026; forum post Oct 29; third-party claims GTC Berlin Oct 21 - exact date ambiguous) adds multiple physics backends (Newton built on MuJoCo-Warp/VBD/MPM, OVPhysX, OVRTX), 'kit-less' execution where Isaac Sim is optional, Warp-native zero-copy ProxyArray to PyTorch, unified isaaclab CLI and 17 browser-run Newton demos. Breaking changes from 2.x; hardware floor for kit-less Newton-only mode not stated. Pairs with Isaac Sim 6.2. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    version: 3.0.0
+    release_date: '2026-10-20'
+    pre_releases: 3.0.0-EA 2026-09-16 (Isaac Sim 6.1); beta2.patch1 2026-07-02; beta2 2026-06-17; beta 2026-03-17
+    previous_line: 2.3.x supported Isaac Sim 4.5/5.0/5.1; 2.2 GA Aug 2025
+    stack: Python 3.12, PyTorch 2.11 + CUDA 13.0, Warp 1.17, RSL-RL 5.5.1
+    isaac_sim_required: optional since 3.0 (kit-less mode)
+    physics_backends: Newton (MuJoCo-Warp, VBD, MPM), OVPhysX, OVRTX
+    min_gpu: not stated for kit-less mode; Isaac Sim mode inherits Isaac Sim spec
+    release_notes_url: https://isaac-sim.github.io/IsaacLab/v3.0.0/source/refs/release_notes.html
+    license_url: https://isaac-sim.github.io/IsaacLab/v2.2.0/source/refs/license.html
+- id: mujoco
+  title: MuJoCo
+  author: Google DeepMind
+  url: https://github.com/google-deepmind/mujoco
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Python
+  - basic rigid-body dynamics
+  topics:
+  - mujoco
+  - physics-engine
+  - reinforcement-learning
+  - mjx
+  - mujoco-warp
+  - control
+  - dynamics
+  est_hours: null
+  last_updated: 2026-11
+  status: active
+  license: Apache-2.0
+  quality_signal: Very active (3.x point releases every 2-3 weeks through 2026); 'underlies a huge fraction of academic robot learning' (roboticscenter.ai, opinion); used by robosuite, CoppeliaSim, Isaac Lab Newton backend
+  notes: '4.0.0 released Nov 6, 2026: pip distribution split into mujoco-core / mujoco-studio / mujoco (upgrade needs uninstall + force-reinstall), Python 3.10 dropped, new MuJoCo Studio viewer (Filament PBR + Dear ImGui) with web streaming (host needs no GPU/display). CPU-only pip install works on Linux/Windows/macOS - the best ''no hardware barrier'' option - but it is a physics engine plus viewer, not a full robot/sensor/ROS environment (no official ROS 2 integration found). Pin mujoco>=4.0 or mujoco==3.17.0 in course material and document the reinstall step. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    version: 4.0.0
+    release_date: '2026-11-06'
+    recent_releases: 3.17.0 2026-10-22 (mujoco.batch), 3.16.0 2026-10-14 (Bazel), 3.15.0 2026-10-05, 3.14.0 2026-09-22; 3.5.0 2026-02-12 MuJoCo Warp official; 3.0.0 Oct 2023
+    pip_packages: mujoco (core+Studio+OpenGL), mujoco-core (headless/RL), mujoco-core[rendering], mujoco[usd], mujoco[sysid]
+    python_versions: 3.10 removed in 4.0; mujoco-usd 3.11-3.13 (full matrix not stated)
+    os_support: Linux x86_64, Windows x86_64, macOS arm64 (macOS passive viewer needs mjpython)
+    min_gpu: none for core; MJX-Warp / MuJoCo Warp require a CUDA device
+    mjx: pure JAX and Warp implementations; Warp resolves contact/constraint bottlenecks but no autodiff; flex-on-articulated needs solver=CG
+    ros2_support: none official found
+    studio_viewer: python -m mujoco.studio.viewer --model=humanoid.xml; --gfx=web for browser stream; mujoco-studio-wasm (Windows web viewer) unreleased
+    changelog_url: https://mujoco.readthedocs.io/en/latest/changelog.html
+    python_docs_url: https://mujoco.readthedocs.io/en/latest/python.html
+- id: mujoco-menagerie
+  title: MuJoCo Menagerie
+  author: Google DeepMind
+  url: https://github.com/google-deepmind/mujoco_menagerie
+  type: dataset_model
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - mujoco
+  topics:
+  - mujoco
+  - robot-models
+  - manipulator
+  - humanoid
+  - quadruped
+  - drone
+  est_hours: null
+  last_updated: null
+  status: active
+  license: per-model BSD / Apache / MIT
+  quality_signal: ~4.3k GitHub stars; curated by Google DeepMind
+  notes: ~71 high-quality robot models in 11 categories (25 arms, 11 humanoids, 11 end-effectors, 8 quadrupeds, 7 mobile manipulators, 2 drones, ...). Load via pip install mujoco-menagerie then mm.load('unitree_go2'), uvx mujoco-menagerie view <model>, or in the browser via live.mujoco.org. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    model_count: 71
+    pip_package: mujoco-menagerie
+- id: mujoco-playground-paper
+  title: MuJoCo Playground (RSS 2025 paper)
+  author: Google DeepMind / UC Berkeley researchers
+  url: https://arxiv.org/html/2502.08844v1
+  type: paper
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - mujoco
+  - MJX/JAX
+  - RL fundamentals
+  topics:
+  - mujoco
+  - mjx
+  - reinforcement-learning
+  - colab
+  - sim-to-real
+  est_hours: null
+  last_updated: '2025'
+  status: active
+  license: null
+  quality_signal: null
+  notes: Open-source robot-learning framework on MJX (2025); the full pipeline 'from setup to policy training' runs in a single Colab notebook and uses Menagerie models - a free, GPU-via-Colab path into RL. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    arxiv_id: '2502.08844'
+    see_also: 'mujoco-playground (ai_robot_learning.yaml: v1.0 site and repo)'
+- id: pybullet
+  title: PyBullet / Bullet Physics
+  author: Erwin Coumans et al. (bulletphysics)
+  url: https://pypi.org/project/pybullet/
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Python <= 3.11
+  topics:
+  - pybullet
+  - physics-engine
+  - reinforcement-learning
+  - urdf
+  est_hours: null
+  last_updated: 2025-01
+  status: stale
+  license: zlib
+  quality_signal: bullet3 ~14.8k GitHub stars, 9,408 commits; Snyk maintenance rating 'Inactive'
+  notes: Last PyPI release 3.2.7 (Jan 30, 2025) with wheels only for CPython 3.6-3.11 (classifiers stale); community says it 'has not been well maintained since 2023' and RL examples rely on old Gym. Treat as legacy - useful for reading older RL papers/repos, not for new curriculum. Community fork pybullet-arm64 exists for macOS arm64; still used downstream by panda-gym. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    version: 3.2.7
+    release_date: '2025-01-30'
+    python_versions: CPython 3.6-3.11 wheels
+    repo_url: https://github.com/bulletphysics/bullet3
+    quickstart_guide: https://docs.google.com/document/d/10sXEhzFRSnvFcl3XxNGhnD4N2SedqwdAvK3dsihxVUA/edit
+    arm64_fork: pybullet-arm64 (PyPI)
+    resource_usage: used fewer resources than Gazebo/Webots in arXiv 2204.06433 comparison
+- id: coppeliasim
+  title: CoppeliaSim (formerly V-REP)
+  author: Coppelia Robotics AG (Zurich)
+  url: https://coppeliarobotics.com/
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Python or Lua scripting
+  topics:
+  - coppeliasim
+  - manipulator
+  - mobile-robot
+  - kinematics
+  - ros
+  - zeromq-remote-api
+  est_hours: null
+  last_updated: 2025-05
+  status: active
+  license: 'dual: commercial or GPL (Edu binaries: educational use only, EDU watermark must not be removed)'
+  quality_signal: Ranked best-performing simulator for mobile-robot motion accuracy in a Glasgow study (Gazebo 'not far behind'); used by Northwestern Modern Robotics
+  notes: 'Stable 4.10 (May 14, 2025; no 2026 release found - vendor site is JS-rendered so later releases could not be confirmed). Edu license excludes companies, research institutions, non-profits and hobbyists, which is a problem for a public developer-oriented curriculum. Selectable physics engines: MuJoCo, Bullet, ODE, Vortex, Newton; controllers via Python/Lua scripts, C/C++ plug-ins, ROS, ZeroMQ remote API (C/C++, Python, Java, MATLAB). (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    version: '4.10'
+    release_date: '2025-05-14'
+    previous_releases: 4.9.0 2025-01-10; 4.8.0 2024-10-31; 4.6 brought enhanced Python integration
+    os_support: Windows, Linux, macOS
+    physics_engines: MuJoCo, Bullet, ODE, Vortex, Newton
+    python_api: embedded Python scripts + ZeroMQ remote API
+    ros2_support: ROS supported (asynchronous controllers via ROS)
+    licensing_url: https://manual.coppeliarobotics.com/en/licensing.htm
+    pricing_url: https://coppeliarobotics.com/pricing
+    edu_restriction: students, teachers, professors of schools/universities only; academic email required
+    cost_note: free Edu edition (students/teachers only, academic email); Pro/Lite commercial (contact vendor); GPL source
+- id: genesis-world
+  title: Genesis World (Genesis)
+  author: Genesis-Embodied-AI (genesis.ai)
+  url: https://github.com/Genesis-Embodied-AI/Genesis
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - Python 3.12-3.14
+  - PyTorch
+  - GPU recommended (CUDA/ROCm/Metal) or CPU fallback
+  topics:
+  - genesis
+  - multi-physics
+  - reinforcement-learning
+  - soft-body
+  - embodied-ai
+  est_hours: null
+  last_updated: 2026-11
+  status: active
+  license: Apache-2.0
+  quality_signal: ~30.2k GitHub stars; marketing claim '430,000x faster than reality' (press) questioned by a Substack critique
+  notes: Began as an academic project Dec 2024; 'Genesis World 1.0' blog May 2026; PyPI genesis-world 1.4.6 on Nov 8, 2026. Multi-physics (rigid, FEM, MPM, PBD/SPH), renderers Nyx/Luisa/Pyrender, 'Quadrants' compiler for CUDA/ROCm/Apple Metal/Vulkan/x86/ARM64. Rapid releases, Python >= 3.12 requirement, no ROS 2 or robot-sensor tooling - suitable for a 'frontier' module, not as the primary beginner tool. Intel GPUs have no backend (use gs.cpu); Windows troubleshooting assumes WSL2. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    version: 1.4.6
+    release_date: '2026-11-08'
+    python_versions: '>=3.12, <3.15'
+    os_support: Linux, macOS (Apple Silicon Metal), Windows (WSL2 assumed for troubleshooting)
+    gpu_backends: NVIDIA CUDA, AMD ROCm (Linux/Windows), Apple Metal (macOS), CPU everywhere; no Intel GPU backend
+    asset_formats: URDF, MJCF, OBJ, GLB, USD
+    ros2_support: none found
+    install: install PyTorch first, then pip install genesis-world
+    docs_url: https://genesis-world.readthedocs.io/en/latest/
+    pypi_url: https://pypi.org/project/genesis-world/
+- id: unity-robotics-hub
+  title: Unity Robotics Hub / Unity Simulation Pro
+  author: Unity Technologies
+  url: https://github.com/Unity-Technologies/Unity-Robotics-Hub
+  type: repo
+  language: en
+  cost:
+    kind: paid
+    amount: 2
+    currency: null
+  level: advanced
+  prerequisites:
+  - Unity 6.3+
+  - C#
+  - ROS 2
+  topics:
+  - unity
+  - game-engine
+  - urdf
+  - ros2
+  - digital-twin
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: Apache-2.0
+  quality_signal: ~2.6k GitHub stars, 472 forks, 150 commits
+  notes: README now centres on the commercial 'Simulation Pro' (supported for production on Unity 6.3+, ROS 2 support, drag-and-drop URDF importer; course modules use Ubuntu 26.04 + ROS 2 Lyrical in a VM); older open packages were moved to ARCHIVE.md as unsupported. No pricing or GA date found for Simulation Pro - niche/paid path, mention as industry context only. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    unity_version: 6.3+
+    ros2_support: yes (Simulation Pro)
+    archived_packages: ARCHIVE.md (unsupported)
+    cost_note: repo free (Apache-2.0); Unity Simulation Pro is a commercial Early Access product (price not found)
+- id: unreal-robotics-lab
+  title: Unreal Robotics Lab (URLab) - UE5 plugin embedding MuJoCo
+  author: Jonathan Embley-Riches et al.
+  url: https://arxiv.org/html/2504.14135v3
+  type: paper
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - Unreal Engine 5.7+
+  - MuJoCo 3.7+
+  - Windows (Linux experimental)
+  - GPU
+  topics:
+  - unreal-engine
+  - mujoco
+  - photorealism
+  - synthetic-data
+  - ros2
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: Apache-2.0
+  quality_signal: ICRA 2026 paper
+  notes: Open-source UE5 plugin embedding MuJoCo with a ZMQ interface for Python/ROS 2. Requires game-engine skills and a GPU; no mainstream beginner curriculum exists for Unreal robotics (Epic's Apr 2026 spotlight positions UE5 as a synthetic-data factory). rclUE bridge only had a 2025 Hello World (UE 5.3 + ROS 2 Foxy), no 2026 status. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    project_page: https://jonathanembleyriches.github.io/projects/unrealroboticslab/
+    unreal_version: 5.7+
+    mujoco_version: 3.7+
+    os_support: Windows; Linux experimental
+    epic_spotlight: https://www.unrealengine.com/spotlights/ue5-is-becoming-the-platform-of-choice-for-robotics-simulation
+- id: matlab-robotics-system-toolbox
+  title: MATLAB / Simulink Robotics System Toolbox (Gazebo co-simulation, Unreal 3D)
+  author: MathWorks
+  url: https://www.mathworks.com/help/robotics/ug/gazebo-simulation-requirements.html
+  type: docs
+  language: en
+  cost:
+    kind: paid
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - MATLAB/Simulink license
+  - Ubuntu 20.04 VM
+  topics:
+  - matlab
+  - simulink
+  - gazebo-classic
+  - unreal-engine
+  - co-simulation
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: proprietary
+  quality_signal: null
+  notes: R2026b docs still only co-simulate with Gazebo Classic 9/10/11 on Ubuntu Xenial/Bionic/Focal (MathWorks ships a ready Ubuntu 20.04 VM with Gazebo 11); no evidence of new Gazebo (Harmonic/Jetty) support; 3D scenes use Unreal Engine. If MATLAB is already owned, Webots' MATLAB controller support is the cheapest bridge. Niche/paid - not for a free developer curriculum. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    matlab_release: R2026b docs
+    gazebo_support: Gazebo Classic 9, 10, 11 only; no code generation
+    ros_vm: https://www.mathworks.com/ros_vm_install/v9 (Ubuntu 20.04 + Gazebo 11)
+    unreal_3d_sim: https://ch.mathworks.com/help/robotics/ug/3d-simulation-for-robots.html
+    webots_connection: https://au.mathworks.com/products/connections/product_detail/webots.html
+    cost_note: 'paid: MATLAB + Robotics System Toolbox license (amount not stated)'
+- id: webots-official-tutorials
+  title: Webots User Guide Tutorials 1-8
+  author: Cyberbotics Ltd.
+  url: https://cyberbotics.com/doc/guide/tutorials
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - programming background
+  topics:
+  - webots
+  - controllers
+  - proto
+  - supervisor
+  - physics
+  - mobile-robot
+  est_hours: 4
+  last_updated: null
+  status: active
+  license: Apache-2.0
+  quality_signal: official; solutions ship in WEBOTS_HOME/projects/samples/tutorials
+  notes: 'Eight tutorials with stated times totalling ~235 min: First Simulation (30), Modify Environment (30), Appearance (20), More about Controllers (30), Compound Solid & Physics (15), 4-Wheels Robot (60), First PROTO (20), Supervisor (30), plus ''Going Further''. Page examples are in C with a language tab for Python/C++/Java/MATLAB on the website. Together with the Python API guide this forms a coherent ''week 1''. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    markdown_source: https://raw.githubusercontent.com/cyberbotics/webots/master/docs/guide/tutorials.md
+    tutorial_count: 8
+    total_minutes: 235
+    languages_covered: C (default), Python, C++, Java, MATLAB
+- id: webots-python-api-guide
+  title: 'Webots User Guide: Using Python'
+  author: Cyberbotics Ltd.
+  url: https://cyberbotics.com/doc/guide/using-python
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Python >= 3.8
+  topics:
+  - webots
+  - python-api
+  est_hours: 1
+  last_updated: null
+  status: active
+  license: Apache-2.0
+  quality_signal: official
+  notes: Explains the controller module (~25 classes, ~200 functions mirroring the C++ API) and interpreter selection via PATH, Preferences, per-controller runtime.ini, or shebang (Linux/macOS only); pip is only needed for third-party libs such as OpenCV. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    markdown_source: https://raw.githubusercontent.com/cyberbotics/webots/master/docs/guide/using-python.md
+    python_versions: '>=3.8'
+- id: cu-boulder-coursera-webots-specialization
+  title: Introduction to Robotics with Webots (Coursera Specialization)
+  author: University of Colorado Boulder - Nikolaus Correll
+  url: https://www.coursera.org/specializations/introduction-robotics-webots
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Python basics
+  topics:
+  - webots
+  - python
+  - odometry
+  - path-planning
+  - task-execution
+  - mobile-robot
+  est_hours: null
+  last_updated: 2024-08
+  status: active
+  license: null
+  quality_signal: enrollment ~4.5k-9.4k across pages; counts toward CU Boulder online MS-CS/MS-AI
+  notes: Three 5-week courses (first 'Basic Robotic Behaviors and Odometry', last 'Robotic Path Planning and Task Execution') mirroring CU Boulder CSCI 3302; learners program in Python in Webots with peer-graded assignments. The most complete third-party Webots course and a ready-made model for a Python beginner track.
+  source_checked_date: '2026-11-11'
+  extra:
+    course_count: 3
+    weeks_per_course: 5
+    cu_course_page: https://www.colorado.edu/lab/correll/node/127
+    cu_ali_page: https://www.colorado.edu/ali/introduction-robotics-webots-specialization
+    course_1_url: https://www.coursera.org/learn/basic-robotic-behaviors-and-odometry
+    cost_note: free to audit; Coursera subscription for certificates/graded work (amount not stated)
+- id: introduction-to-autonomous-robots-textbook
+  title: 'Introduction to Autonomous Robots: Mechanisms, Sensors, Actuators, and Algorithms'
+  author: Nikolaus Correll, Bradley Hayes, Christoffer Heckman, Alessandro Roncone (MIT Press)
+  url: https://introduction-to-autonomous-robots.github.io/
+  type: book
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - undergraduate math
+  - programming
+  topics:
+  - mobile-robot
+  - sensors
+  - actuators
+  - kinematics
+  - planning
+  - textbook
+  est_hours: null
+  last_updated: '2022'
+  status: active
+  license: CC-BY-NC-ND
+  quality_signal: MIT Press 1st ed. 2022; companion to the CU Boulder Webots course
+  notes: Open textbook companion to the Coursera/CSCI 3302 Webots course; the site itself does not mention Webots. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    edition: 1st (2022)
+    cost_note: free open source (CC-BY-NC-ND); MIT Press print edition paid (amount not stated)
+- id: cyberbotics-robot-curriculum-wikibook
+  title: Cyberbotics' Robot Curriculum (Wikibook, Webots + e-puck)
+  author: Cyberbotics Ltd.
+  url: https://sourceforge.net/projects/robotcurriculum/
+  type: book
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - webots
+  - e-puck
+  - education
+  est_hours: null
+  last_updated: null
+  status: stale
+  license: null
+  quality_signal: null
+  notes: Older Wikibook targeting Webots and the e-puck robot; flagged as dated material in the notes - use only as historical reference. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    wikipedia_ref: https://en.wikipedia.org/wiki/Webots
+- id: webots-ros2-wiki-getting-started
+  title: 'webots_ros2 Wiki: Getting Started + tutorials/examples'
+  author: Cyberbotics Ltd.
+  url: https://github.com/cyberbotics/webots_ros2/wiki/Getting-Started
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 Jazzy/Kilted install
+  - colcon
+  topics:
+  - webots
+  - ros2
+  - urdf
+  - nav2
+  - slam
+  - turtlebot3
+  - tiago
+  - e-puck
+  est_hours: null
+  last_updated: null
+  status: active
+  license: Apache-2.0
+  quality_signal: official
+  notes: 'Covers Linux/Windows/macOS install (source build via git clone --recurse-submodules + rosdep + colcon), Ros2Supervisor node, URDF/Xacro import, custom C++/Python plugins, simulation reset; examples: E-puck ''for ROS 2 beginners'', TIAGo, TurtleBot3 Burger (Nav2/SLAM), UR arm, Tesla Model 3, DJI Mavic 2 Pro. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_jazzy_install_tutorial: https://docs.ros.org/en/jazzy/Tutorials/Advanced/Simulators/Webots/Installation-Ubuntu.html
+    ros2_lyrical_tutorials: https://docs.ros.org/en/lyrical/Tutorials/Advanced/Simulators/Webots/Simulation-Webots.html
+- id: webots-cloud
+  title: webots.cloud
+  author: Cyberbotics Ltd.
+  url: https://github.com/cyberbotics/webots-cloud
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - GitHub account/repo for demos
+  topics:
+  - webots
+  - cloud
+  - browser
+  - competitions
+  - no-install
+  est_hours: null
+  last_updated: null
+  status: active
+  license: Apache-2.0
+  quality_signal: ~3,573 commits
+  notes: Hosts Scenes (static 3D), Animations, Demos (interactive simulations run in the cloud from a GitHub repo created from webots-demo-template with webots.yaml) and Competitions (scored on Cyberbotics servers, e.g. Humanoid Robot Wrestling). Can auto-detect course Markdown in a repo and display it next to runnable simulations. Compute limits, quotas and whether an account is required were not found; competition-template last pushed Sept 2023. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    site_url: https://webots.cloud
+    use_cases_wiki: https://github.com/cyberbotics/webots-cloud/wiki/Use-Cases
+    demo_template: webots-demo-template (webots.yaml; Dockerfile base image sets Webots version)
+    competition_tooling: competition-template (last push 2023-09), competition-record-action
+    cost_note: free (no pricing mentioned; quotas unknown)
+- id: robotbenchmark-net
+  title: robotbenchmark.net (browser-based Webots challenges)
+  author: Cyberbotics Ltd.
+  url: https://robotbenchmark.net/
+  type: competition_curriculum
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - webots
+  - browser
+  - challenges
+  est_hours: null
+  last_updated: '2017'
+  status: discontinued
+  license: null
+  quality_signal: null
+  notes: 'WARNING: launched 2017 as free browser-based robotics challenges ''from middle school to PhD'', but on 2026-11-11 a fetch of https://robotbenchmark.net/ returned Indonesian gambling spam (''togel'', ''slot'') unrelated to robotics, strongly suggesting the domain has lapsed or been hijacked. Do NOT link learners to it. No official statement on its status was found. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    launch_article: https://robohub.org/robotbenchmark-lets-you-program-simulated-robots-from-your-browser/
+    hijack_suspected: true
+- id: webots-community-channels
+  title: 'Webots community: Discord, Stack Overflow (webots tag), community-projects, awesome-webots'
+  author: Cyberbotics Ltd. and community
+  url: https://github.com/cyberbotics/awesome-webots
+  type: community
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - webots
+  - community
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: Discord membership numbers not found
+  notes: Cyberbotics says quick answers come via Discord, issues via GitHub, general questions via Stack Overflow; community-projects holds user-contributed PROTOs/controllers/worlds. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    discord_invite: https://discordapp.com/invite/nTWbN9m
+    community_projects: https://github.com/cyberbotics/community-projects
+- id: gazebo-official-tutorials
+  title: Gazebo Simulation Tutorials (Jetty / Harmonic)
+  author: Open Robotics
+  url: https://gazebosim.org/docs/jetty/tutorials/
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Ubuntu 24.04
+  - ROS 2 Jazzy or Lyrical
+  topics:
+  - gazebo
+  - sdf
+  - urdf
+  - sensors
+  - gui
+  - fuel
+  - ros2
+  est_hours: null
+  last_updated: '2025'
+  status: active
+  license: Apache-2.0
+  quality_signal: official
+  notes: 'Jetty tutorials: Building your own robot, Moving the robot, SDF worlds, Sensors, Actors, Understanding the GUI, Manipulating Models, Model Insertion from Fuel, Keyboard Shortcuts, Spawn URDF; ROS 2 how-tos: ROS 2 overview, Launch Gazebo from ROS 2, Use ROS 2 to interact with Gazebo. Use the Harmonic variant for the Jazzy pairing. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    harmonic_url: https://gazebosim.org/docs/harmonic/tutorials/
+    python_interfaces_doc: https://gazebosim.org/api/sim/10/python_interfaces.html
+- id: ros2-docs-gazebo-tutorial
+  title: 'ROS 2 docs: Setting up a robot simulation (Gazebo)'
+  author: Open Robotics / ROS 2 documentation
+  url: https://docs.ros.org/en/jazzy/Tutorials/Advanced/Simulators/Gazebo/Gazebo.html
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 Jazzy
+  topics:
+  - gazebo
+  - ros2
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: official ROS 2 docs
+  notes: Page could not be fetched (docs.ros.org behind Anubis bot protection); title taken from search index - verify content before assigning. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: articulated-robotics
+  title: Articulated Robotics (Josh Newans) - Build a Mobile Robot with ROS
+  author: Josh Newans
+  url: https://articulatedrobotics.xyz/tutorials
+  type: video_series
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Linux basics
+  topics:
+  - ros2
+  - gazebo
+  - mobile-robot
+  - docker
+  - tf
+  - urdf
+  - micro-ros
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: popular YouTube channel + Discourse forum (metrics not cited)
+  notes: 'Series: Getting Ready to Build a ROS Robot; Build a Mobile Robot with ROS (Concept Design 2, Hardware 4, Applications 7 items); Docker for Robotics; Coordinate Transforms; Geometry Tips. The site does not state which ROS 2/Gazebo version it targets - check Classic vs new Gazebo before use; see articubot-one-jazzy-harmonic for a community port. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    series_url: https://articulatedrobotics.xyz/category/build-a-mobile-robot-with-ros
+    youtube: https://www.youtube.com/c/ArticulatedRobotics
+    cost_note: free (Patreon-supported)
+- id: articubot-one-jazzy-harmonic
+  title: articubot_one (ROS 2 Jazzy + Gazebo Harmonic port)
+  author: samstromer1990-crypto (community)
+  url: https://github.com/samstromer1990-crypto/articubot_one
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 Jazzy
+  - ros-jazzy-ros-gz
+  topics:
+  - ros2
+  - gazebo
+  - diff-drive
+  - mobile-robot
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Community rebuild of the Articulated Robotics diff-drive robot for Jazzy + Harmonic using ros_gz; maintenance status not verified. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: mogi-ros-gazebo-basics
+  title: 'MOGI-ROS Week 3-4: Gazebo basics - URDF and Gazebo Harmonic with ROS 2 Jazzy'
+  author: MOGI-ROS (university course materials)
+  url: https://github.com/MOGI-ROS/Week-3-4-Gazebo-basics
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 Jazzy
+  - Ubuntu 24.04
+  topics:
+  - gazebo
+  - ros2
+  - urdf
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: University course weeks 3-4 targeting exactly the recommended Jazzy + Harmonic pairing on Ubuntu 24.04. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: Jazzy
+    gazebo_version: Harmonic
+- id: umd-enpm605-simulation
+  title: UMD ENPM605 (Spring 2026) simulation docs - Gazebo Harmonic
+  author: University of Maryland
+  url: https://enpm605-spring-2026-docs.readthedocs.io/en/latest/simulation/simulation.html
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2
+  topics:
+  - gazebo
+  - ros2
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: null
+  notes: Course docs note that Gazebo Harmonic 'cannot coexist with Gazebo Classic' on the same machine - a key setup warning. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: gazebo-classic-migration-guide
+  title: Migrating ROS 2 packages that use Gazebo Classic
+  author: Open Robotics
+  url: https://gazebosim.org/docs/all/migrating_gazebo_classic_ros2_packages/
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2
+  - gazebo_ros_pkgs experience
+  topics:
+  - gazebo
+  - gazebo-classic
+  - migration
+  - turtlebot3
+  - ros2
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: official
+  notes: 'Walks through converting the TurtleBot3 simulation from gazebo_ros_pkgs to ros_gz (example targets Fortress; ''concepts should work with newer versions''). Official position: no Gazebo Classic support for ROS 2 Jazzy; community warns ''almost every guide you find on the internet will be for Gazebo Classic''. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    office_hours_thread: https://discourse.openrobotics.org/t/gazebo-migration-guide-office-hours/48770
+    classic_eol_thread: https://discourse.openrobotics.org/t/gazebo-classic-end-of-life/48748
+    nav2_modern_gazebo_guide: https://discourse.openrobotics.org/t/nav2-new-modern-gazebo-getting-started-guide/41803
+- id: ros-discourse-webots-vs-gazebo
+  title: 'ROS Discourse: Why is Gazebo very famous in the ROS community? What about Webots?'
+  author: Open Robotics community (incl. Gazebo team and Cyberbotics contributors)
+  url: https://discourse.openrobotics.org/t/why-is-gazebo-very-famous-in-the-ros-community-what-about-webots/42459
+  type: community
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - webots
+  - gazebo
+  - isaac-sim
+  - comparison
+  est_hours: null
+  last_updated: 2025-03
+  status: active
+  license: null
+  quality_signal: includes statements from Gazebo team (Katherine Scott) and Cyberbotics (lukicdarkoo)
+  notes: 'March 2025 thread: Webots called ''a lot more beginner-friendly'' with more systematic docs; Gazebo has the most ROS tutorials, ships in the ROS repos and allows swapping physics engines; Isaac Sim''s hardware requirements too steep; Gazebo has no turn-key RL example. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: ros2-simulator-comparison-paper-2022
+  title: Comparison of ROS 2 robot simulators for arm manipulation (arXiv 2204.06433)
+  author: arXiv authors (2022)
+  url: https://www.arxiv.org/pdf/2204.06433
+  type: paper
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - gazebo
+  - webots
+  - pybullet
+  - coppeliasim
+  - comparison
+  - manipulator
+  est_hours: null
+  last_updated: '2022'
+  status: active
+  license: null
+  quality_signal: peer-reviewed
+  notes: Found Ignition (Gazebo) and Webots had higher stability while PyBullet and CoppeliaSim used fewer resources. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: nvidia-dli-assemble-simple-robot-isaac-sim
+  title: 'NVIDIA DLI: Assemble a Simple Robot in NVIDIA Isaac Sim (S-OV-27)'
+  author: NVIDIA Deep Learning Institute
+  url: https://learn.nvidia.com/courses/course-detail?course_id=course-v1:DLI+S-OV-27+V1
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Isaac Sim-capable GPU or cloud instance
+  topics:
+  - isaac-sim
+  - physics
+  - sensors
+  est_hours: 2.5
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: official NVIDIA
+  notes: 'Self-paced 2-3 h mini course: build a simple robot, apply physics, integrate sensors, troubleshoot. Note that an older paid DLI ''Introduction to Robotics Simulation'' course had exercises reported as ''not working anymore'' - prefer NVIDIA''s current free courses.'
+  source_checked_date: '2026-11-11'
+  extra:
+    forum_announcement: https://forums.developer.nvidia.com/t/free-dli-mini-self-paced-course-assemble-a-simple-robot-in-nvidia-isaac-sim/230566
+    stale_paid_course_thread: https://forums.developer.nvidia.com/t/introduction-to-robotics-simulation-course/269001
+- id: nvidia-robotics-learning-path
+  title: NVIDIA Robotics Learning Path (Isaac Sim / Isaac Lab / Newton)
+  author: NVIDIA
+  url: https://www.nvidia.com/en-us/learn/learning-path/robotics/
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Python
+  - RTX GPU or cloud
+  topics:
+  - isaac-sim
+  - isaac-lab
+  - newton
+  - ros2
+  - synthetic-data
+  - reinforcement-learning
+  est_hours: 3.5
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: official NVIDIA
+  notes: Free intro courses (basic robot simulation, ROS 2 integration, synthetic data generation) plus an intermediate Isaac Lab course (~3-4 h); 'Accelerating Robot Learning with Isaac Lab and Newton' lives on the Physical AI learning hub. Given Isaac's rapid 2026 cadence, rely on these first-party courses over third-party tutorials.
+  source_checked_date: '2026-11-11'
+  extra:
+    physical_ai_hub: https://docs.nvidia.com/learning/physical-ai/
+    newton_course: https://docs.nvidia.com/learning/physical-ai/getting-started-with-newton/latest/index.html
+- id: isaac-sim-office-hours
+  title: Isaac Sim Office Hours livestreams + Isaac Sim forum
+  author: NVIDIA
+  url: https://www.youtube.com/watch?v=ybtJxQbj2NE&list=PL3jK4xNnlCVewIu3MAcrP3HbvVUmKWNpS
+  type: video_series
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - isaac-sim
+  - community
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Official livestream playlist; the developer forum is the main support channel. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    forum_url: https://forums.developer.nvidia.com/c/omniverse/simulation/69
+- id: mujoco-colab-notebooks
+  title: MuJoCo official Colab notebooks (tutorial, mjspec, rollout, least squares, sysid, MJX)
+  author: Google DeepMind
+  url: https://colab.research.google.com/github/google-deepmind/mujoco/blob/main/python/tutorial.ipynb
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Python
+  - Google account for Colab
+  topics:
+  - mujoco
+  - colab
+  - no-install
+  - dynamics
+  - system-identification
+  - mjx
+  est_hours: null
+  last_updated: null
+  status: active
+  license: Apache-2.0
+  quality_signal: official
+  notes: 'Zero-install path with real compute: Tutorial, Model editing (mjspec), Rollout, Least squares, System identification notebooks, plus an MJX tutorial referenced in the README. The only fully free, no-install option here that gives learners actual compute. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    mjspec_notebook: https://colab.research.google.com/github/google-deepmind/mujoco/blob/main/python/mjspec.ipynb
+    rollout_notebook: https://colab.research.google.com/github/google-deepmind/mujoco/blob/main/python/rollout.ipynb
+    least_squares_notebook: https://colab.research.google.com/github/google-deepmind/mujoco/blob/main/python/least_squares.ipynb
+    sysid_notebook: https://colab.research.google.com/github/google-deepmind/mujoco/blob/main/python/mujoco/sysid/sysid.ipynb
+- id: mujoco-live-browser-viewer
+  title: MuJoCo Live (live.mujoco.org) + MuJoCo Studio web viewer
+  author: Google DeepMind
+  url: https://live.mujoco.org
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - mujoco
+  - browser
+  - no-install
+  - visualization
+  est_hours: null
+  last_updated: 2026-11
+  status: active
+  license: Apache-2.0
+  quality_signal: official
+  notes: 'Runs entirely in the browser: drag-drop an XML or load from GitHub via ?model=github:<org>/<repo>/<branch>/<path>; Menagerie models have live viewers. MuJoCo Studio (4.0) can also stream a local Python sim to the browser with --gfx=web and no GPU/display server on the host; standalone Studio builds for macOS/Windows/Linux with software-rasterizer fallbacks. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    studio_docs: https://mujoco.readthedocs.io/en/latest/studio/index.html
+- id: the-construct
+  title: The Construct (browser-based ROS 2 / Gazebo learning platform)
+  author: The Construct (theconstruct.ai)
+  url: https://www.theconstruct.ai/pricing/
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - web browser
+  topics:
+  - ros2
+  - gazebo
+  - cloud
+  - no-install
+  - turtlebot3
+  - courses
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: proprietary
+  quality_signal: works with 100+ universities; 60+ courses
+  notes: 'Basic (free): 2 GB storage, public rosjects only, full access to the Linux/Python3/C++ for Robotics courses and the first unit of others. Learner: 2 CPU / 4 GB RAM, all courses incl. ''Introduction to Gazebo Sim with ROS2'' and ''Mastering Gazebo Simulator'', learning paths, certificates, TurtleBot3 real-robot lab; Enterprise: 8 CPU / 15 GB RAM, all distros, remote labs; educational discount available. Best mitigation for Gazebo on modest laptops; current ROS 2 distro/Gazebo versions in the free tier were not confirmed. Also offers a ~240 h ''Robotics Developer Masterclass'' (2026, price not stated). (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    price_eur_month_learner: 39.97
+    price_eur_year_learner: 439
+    price_eur_year_enterprise: 2399
+    free_tier: 'Basic: 2 GB storage, public rosjects, 3 free courses'
+    gazebo_courses: Introduction to Gazebo Sim with ROS2; Mastering Gazebo Simulator (paid plans)
+    masterclass_brochure: https://www.theconstruct.ai/wp-content/uploads/2026/04/Brochure-Robotics-Developer-Masterclass-2026-English.pdf
+    campus_page: https://theconstruct.ai/?p=22444
+    cost_note: 'free Basic tier; paid: €39.97/user/month or €439/year (Learner); €2,399/user/year (Enterprise)'
+- id: olo-browser-ros2-platform
+  title: OLO - browser-based ROS 2 platform for simulation, visualisation and robot programming
+  author: OLO (announced on ROS Discourse)
+  url: https://discourse.openrobotics.org/t/introducing-olo-a-browser-based-ros-2-platform-for-simulation-visualisation-and-robot-programming/54932
+  type: community
+  language: en
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - web browser
+  topics:
+  - ros2
+  - browser
+  - no-install
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Only an announcement thread was found; pricing, maturity and feature set not verified. A separate browser URDF playground was also announced on Discourse. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    urdf_playground_thread: https://discourse.openrobotics.org/t/built-a-browser-based-urdf-playground-for-ros-developers/55049.md
+- id: northwestern-modern-robotics-coursera
+  title: 'Modern Robotics: Mechanics, Planning, and Control (Coursera specialization, CoppeliaSim)'
+  author: Northwestern University - Kevin Lynch, Frank Park
+  url: https://www.coursera.org/learn/modernrobotics-course1
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - linear algebra
+  - calculus
+  - programming (Python/MATLAB)
+  topics:
+  - coppeliasim
+  - kinematics
+  - dynamics
+  - manipulator
+  - ur5
+  - youbot
+  - textbook
+  est_hours: null
+  last_updated: 2024-11
+  status: active
+  license: null
+  quality_signal: canonical textbook-based specialization (6 courses)
+  notes: Ships CoppeliaSim scenes (interactive UR5, CSV-animation UR5, interactive youBot, CSV-animation youBot; scenes dated Nov 2024) used mainly to visualise kinematics from CSV trajectories; the wiki recommends the EDU edition (student/teacher only). A student notes the specialization 'does not teach how to use CoppeliaSim in detail'. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    course_count: 6
+    coppeliasim_intro: https://hades.mech.northwestern.edu/index.php/CoppeliaSim_Introduction
+    getting_started: https://hades.mech.northwestern.edu/index.php/Getting_Started_with_the_CoppeliaSim_Simulator
+    me449_course: https://hades.mech.northwestern.edu/index.php/ME_449_Robotic_Manipulation
+    cost_note: free to audit; Coursera subscription for certificates (amount not stated)
+- id: ctu-coppeliasim-python-tutorial
+  title: 'CTU Prague UIR course: CoppeliaSim installation + Python API tutorial'
+  author: Czech Technical University in Prague (FEE)
+  url: https://cw.fel.cvut.cz/b251/courses/uir/tutorials/vrep_tut
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Python
+  topics:
+  - coppeliasim
+  - python-api
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: University tutorial for installing CoppeliaSim and using its Python API; UC3M has a similar install guide. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    uc3m_install_guide: https://robots.uc3m.es/installation-guides/install-coppeliasim.html

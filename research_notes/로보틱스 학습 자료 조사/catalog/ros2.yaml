@@ -1,0 +1,2419 @@
+# Normalized 2026-11-11 to platform-design §3.5 resource schema (proposal, not yet implemented in CONTENT_MODEL.md)
+resources:
+- id: ros2-releases-page
+  title: ROS 2 Releases (Distributions) page
+  author: Open Robotics / ROS 2 documentation (ros2/ros2_documentation)
+  url: https://raw.githubusercontent.com/ros2/ros2_documentation/rolling/source/Releases.rst
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - ros2-basics
+  - distributions
+  - eol
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: Official source of record for release/EOL dates
+  notes: 'Source of the distribution table: Lyrical Luth (LTS, May 22 2026 - May 2031), Kilted Kaiju (non-LTS, May 23 2025 - Dec 2026; REP 2000 says Nov 2026), Jazzy Jalisco (LTS, May 23 2024 - May 2029), Iron (EOL Dec 4 2024), Humble (LTS, EOL May 2027), planned Makoa Mata-mata (May 2027 - Dec 2028). Read via the GitHub source because docs.ros.org sits behind Anubis bot-protection; the rendered page is the Releases section of docs.ros.org (mirror: repo.test.ros2.org). (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    rendered_mirror: https://repo.test.ros2.org
+    recommended_curriculum_target: Jazzy on Ubuntu 24.04, with a 'Lyrical differences' appendix
+- id: ros2-lyrical-luth-release-notes
+  title: ROS 2 Lyrical Luth release notes and supported platforms
+  author: Open Robotics / ROS 2 documentation
+  url: https://raw.githubusercontent.com/ros2/ros2_documentation/rolling/source/Releases/Release-Lyrical-Luth.rst
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics (Jazzy-era knowledge)
+  topics:
+  - ros2-basics
+  - lyrical
+  - distributions
+  - rclcpp
+  - rclpy
+  - rosbag2
+  - urdf
+  est_hours: null
+  last_updated: 2026-05
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Lyrical (12th ROS 2 release, LTS until May 2031) targets Ubuntu 26.04 Tier 1 (Ubuntu 24.04 Tier 3 source-only), Windows 11 Tier 1, RHEL 10 Tier 2. Teaching-relevant changes: EventsCBGExecutor in rclcpp, AsyncNode in rclpy, enforced parameter range constraints, rosbag2 Python API and remote record/stop, expanded ros2 doctor --report, fish shell support, URDF 1.2, runtime-selectable logging backend. Learning material for Lyrical is still thin as of late 2026. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: lyrical
+    supported_platforms: https://raw.githubusercontent.com/ros2/ros2_documentation/rolling/source/Releases/lyrical/supported-platforms.rst
+    release_timeline: https://docs.ros.org/en/jazzy/Releases/lyrical/release-timeline.html
+    testing_announcement: https://discourse.openrobotics.org/t/ros-2-lyrical-luth-testing-kicks-off-on-april-30th/54184
+    distribution_freeze: https://discourse.openrobotics.org/t/pre-release-distribution-freeze-for-lyrical-luth/54938.md
+- id: ros2-kilted-kaiju-release-notes
+  title: ROS 2 Kilted Kaiju release notes
+  author: Open Robotics / ROS 2 documentation
+  url: https://raw.githubusercontent.com/ros2/ros2_documentation/rolling/source/Releases/Release-Kilted-Kaiju.rst
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - ros2-basics
+  - kilted
+  - distributions
+  est_hours: null
+  last_updated: 2025-05
+  status: stale
+  license: null
+  quality_signal: null
+  notes: Non-LTS release (May 23 2025) on Ubuntu 24.04 Tier 1; EOL Nov/Dec 2026 (sources conflict), i.e. within weeks of the research date, so the note says it should not be targeted by a curriculum. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: kilted
+- id: rep-2000-ros2-target-platforms
+  title: 'REP 2000: ROS 2 Releases and Target Platforms'
+  author: ROS Infrastructure (ros-infrastructure/rep)
+  url: https://raw.githubusercontent.com/ros-infrastructure/rep/master/rep-2000.rst
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - ros2-basics
+  - distributions
+  - platforms
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: Official REP
+  notes: 'Defines per-distro target platforms and tiers (Jazzy: Ubuntu 24.04 Tier 1 amd64/arm64, Windows 10 Tier 1, RHEL 9 Tier 2; Kilted same Noble set). The fetched master did not yet contain a Lyrical section, so the REP may lag the docs. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: moveit2-binary-install
+  title: MoveIt 2 binary install page
+  author: MoveIt / PickNik
+  url: https://moveit.ai/install-moveit2/binary/
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - ROS 2 installed
+  topics:
+  - moveit2
+  - manipulation
+  - install
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Lists binary packages ros-humble/jazzy/kilted/lyrical/rolling-moveit and corroborates the distro-to-OS pairing (Humble 22.04, Jazzy/Kilted 24.04, Lyrical/Rolling 26.04); recommends CycloneDDS (RMW_IMPLEMENTATION=rmw_cyclonedds_cpp). The note recommends binaries over the 20+ minute / 16 GB source build for beginners. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    packages:
+    - ros-humble-moveit
+    - ros-jazzy-moveit
+    - ros-kilted-moveit
+    - ros-lyrical-moveit
+    - ros-rolling-moveit
+- id: eprosima-fastdds-lyrical-post
+  title: ROS 2 Lyrical Luth and 11 years of Fast DDS as ROS 2 default middleware
+  author: eProsima (ROS Discourse)
+  url: https://discourse.openrobotics.org/t/ros-2-lyrical-luth-and-11-years-of-fast-dds-as-ros-2-default-middleware/55062
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - dds
+  - middleware
+  - lyrical
+  est_hours: null
+  last_updated: 2026-05
+  status: active
+  license: null
+  quality_signal: null
+  notes: Confirms Fast DDS remains the default RMW in Lyrical and describes native rosidl::Buffer support for GPU/accelerated-memory transport. Background reading for a middleware lesson. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: discourse-hardest-part-learning-ros2
+  title: What is the hardest part of learning ROS 2 as a beginner? (ROS Discourse thread)
+  author: ROS community (Open Robotics Discourse)
+  url: https://discourse.openrobotics.org/t/what-is-the-hardest-part-of-learning-ros-2-as-a-beginner/57917
+  type: community
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - ros2-basics
+  - learning-advice
+  - workspace
+  - lyrical
+  est_hours: null
+  last_updated: 2026-10
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Sep 7 - Oct 9 2026 thread: Lyrical tutorials are scarce (''Jazzy material still mostly applies''); ros2_control removed Jazzy-deprecated APIs so old controller examples fail on Lyrical; instructors report students lose ''about a week each semester'' to workspace/sourcing problems; suggested fixes include startup scripts/Apptainer images, deliberate breakage exercises, and giving AI assistants the exact distro (''most bad answers come from it guessing Humble''). (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: clearpath-ros2-support-2026
+  title: 'ROS 2 support: platforms, sensors, and getting started (Clearpath blog, Jan 2026)'
+  author: Clearpath Robotics
+  url: https://clearpathrobotics.com/blog/2026/01/ros-2-support-platforms-sensors-and-getting-started/
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - ros2-basics
+  - hardware
+  - jazzy
+  - humble
+  est_hours: null
+  last_updated: 2026-01
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Industry baseline: Clearpath platforms (Husky A200/A300, Jackal, Warthog, Ridgeback, Dingo, TurtleBot 4) are supported under Humble and Jazzy (no Kilted/Lyrical), with Jazzy arm64 ''coming soon''; also publishes a ''ROS 2 Jazzy Cheat Sheet''. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    turtlebot4_docs: https://docs.clearpathrobotics.com/docs_robots/learning_platforms/turtlebot4
+- id: nav2-docs
+  title: Nav2 documentation (docs.nav2.org)
+  author: Nav2 project (Open Navigation / Steve Macenski et al.)
+  url: https://docs.nav2.org/rolling/index.html
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics (nodes, topics, launch, tf2, URDF)
+  - a simulated or physical mobile robot
+  topics:
+  - nav2
+  - navigation
+  - slam
+  - localization
+  - behavior-trees
+  - docker
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: '''Professionally supported successor to the ROS Navigation Stack ... trusted by 300+ companies'''
+  notes: 'Support matrix: Rolling (dev), Lyrical and Jazzy (Active Support), Kilted and Humble (Maintained). Structure: Getting Started (Quickstart ''Launch Nav2 in simulation in under 5 minutes with Turtlebot'', Docker/Dev Container, concepts, behavior trees); First-Time Robot Setup Guide (TF -> URDF/SDF -> odometry incl. robot_localization -> sensors -> mapping/localization -> footprint -> plugins); plugin-writing and general tutorials (physical TurtleBot 3, SLAM while navigating, GPS, vision-only, Groot2, keepout zones, Docking Server, Collision Monitor, ''Docker for Development: Zero to Hero'', ROSCon UK 2025 state-estimation workshop); Configuration/Tuning guides, Simple Commander API, migration guides. The Quickstart URL itself could not be fetched during research. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: rolling, lyrical, kilted, jazzy, humble
+    getting_started: https://docs.nav2.org/rolling/getting_started/index.html
+    demo_robot: TurtleBot 3 / TurtleBot 4
+- id: ros2-control-docs
+  title: ros2_control documentation (control.ros.org) - Getting Started
+  author: ros-controls
+  url: https://control.ros.org/rolling/doc/getting_started/getting_started.html
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics
+  - URDF/xacro
+  topics:
+  - ros2-control
+  - hardware-interface
+  - controllers
+  - urdf
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Architecture (Controller Manager, Resource Manager, pluginlib controllers, System/Sensor/Actuator hardware components, <ros2_control> URDF tag, ros2 control CLI); stable docs for Lyrical (latest), Kilted, Jazzy and Humble; getting-started example_1 is the RRBot (rrbot_controllers.yaml, rrbot.ros2_control.xacro, rrbot.launch.py). Lyrical removed APIs deprecated since Jazzy, so older examples can fail there. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: lyrical, kilted, jazzy, humble
+    jazzy_controllers_migration: https://control.ros.org/jazzy/doc/ros2_controllers/doc/migration.html
+- id: ros2-control-lyrical-whats-new
+  title: 'ros2_control in Lyrical Luth: what''s new (ROS Discourse)'
+  author: ros-controls maintainers (Open Robotics Discourse)
+  url: https://discourse.openrobotics.org/t/ros2-control-in-lyrical-luth-whats-new/59593.md
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ros2_control on Jazzy
+  topics:
+  - ros2-control
+  - lyrical
+  - migration
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: null
+  notes: Dedicated thread on ros2_control changes in Lyrical; relevant for the curriculum's 'Lyrical differences' appendix because deprecated-since-Jazzy APIs were removed. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: micro-ros-setup
+  title: micro_ros_setup
+  author: micro-ROS project (eProsima)
+  url: https://github.com/micro-ROS/micro_ros_setup
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 workspace basics
+  - embedded/microcontroller toolchain familiarity
+  topics:
+  - micro-ros
+  - microcontrollers
+  - embedded
+  - freertos
+  - zephyr
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Supports Humble, Jazzy, Kilted, Lyrical and Rolling (Foxy/Galactic/Iron EOL). Platforms: FreeRTOS (ST Nucleo F446RE/F446ZE/F746ZG/F767ZI, ESP32, Crazyflie 2.1), Zephyr (Olimex STM32-E407, Nucleo, native POSIX), Linux host, Android; standalone components for ESP-IDF, Zephyr, Mbed, NuttX, Azure RTOS, RT-Thread, Renesas, TI Tiva C, STM32CubeMX/IDE, PlatformIO, Arduino IDE, Pico SDK. Workflow: create_firmware_ws.sh -> configure_firmware.sh -> build_firmware.sh -> flash_firmware.sh; agent via create_agent_ws.sh/build_agent.sh; Docker image with client+agent. micro.ros.org tutorial pages returned 404 during research, so the README is the entry point. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: humble, jazzy, kilted, lyrical, rolling
+    tutorial_hint: micro-ros.github.io first_application_rtos
+- id: ros2-official-tutorials-jazzy
+  title: 'ROS 2 Documentation: Tutorials (Jazzy)'
+  author: Open Robotics / ROS 2 documentation
+  url: https://docs.ros.org/en/jazzy/Tutorials.html
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Ubuntu 24.04 (or Docker) with ROS 2 installed
+  - basic Linux shell
+  - Python or C++
+  topics:
+  - ros2-basics
+  - cli-tools
+  - colcon
+  - launch
+  - tf2
+  - urdf
+  - rviz
+  - actions
+  - rosbag2
+  - python
+  - cpp
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: Recommended on Discourse and Reddit as the primary path ('I've learnt using ros2 through that way only')
+  notes: 'Ladder: Beginner CLI tools (turtlesim, nodes/topics/services/parameters/actions, rqt_console, launch, rosbag) -> Beginner client libraries (colcon, workspace, package, pub/sub, service/client, custom interfaces, parameters, ros2doctor, plugins) -> Intermediate (rosdep, actions, composition, launch, tf2, testing, URDF, RViz) -> Advanced (topic statistics, discovery server, allocators, ament lint, rosbag from node, ros2_tracing, simulators, security) -> Demos (QoS, lifecycle, intra-process, real-time, logging, content filtering, service introspection). Distro selector covers Jazzy/Kilted/Lyrical. Known weakness: steep entry level (55-reply Discourse thread, Apr 2025). Note estimates ~1-2 weeks for the Beginner blocks.'
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: jazzy
+    mirror: https://repo.test.ros2.org/en/jazzy/Tutorials.html
+    complexity_thread: https://discourse.openrobotics.org/t/ros-2-tutorials-upgrade-entrance-level-complexity/42926.md
+- id: ubuntu-getting-started-ros2
+  title: Getting started with ROS 2 (Ubuntu tutorial)
+  author: Canonical
+  url: https://ubuntu.com/tutorials/getting-started-with-ros-2
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Ubuntu
+  topics:
+  - ros2-basics
+  - install
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Canonical's own quickstart, a lighter alternative to the official tutorial ladder for the very first steps. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: the-construct-platform
+  title: The Construct (browser-based ROS learning platform)
+  author: The Construct (theconstruct.ai)
+  url: https://www.theconstruct.ai/pricing/
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - none (no local ROS install required)
+  topics:
+  - ros2-basics
+  - python
+  - cpp
+  - linux
+  - nav2
+  - moveit2
+  - remote-lab
+  est_hours: null
+  last_updated: 2026-11
+  status: active
+  license: proprietary
+  quality_signal: null
+  notes: 'Basic (free): full access to Linux for Robotics, Python3 for Robotics, C++ for Robotics; first unit only of other courses; 2 GB storage; public rosjects. Learner: 2 CPUs/4 GB, all non-Enterprise courses and learning paths, certificates, 24/7 TurtleBot3 Real Robot Lab, private rosjects. Yearly adds a ROS Developers Day ticket. Humble/Jazzy content; best option for learners who cannot run Ubuntu locally. A reseller lists the annual license at 526.80 EUR incl. French VAT; institutional pricing needs a demo booking. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: theconstruct
+    certificate: true
+    ros2_distro: humble, jazzy
+    reseller_listing: https://generationrobots.com/en/404148-the-construct-annual-license.html
+    campus_page: https://www.theconstruct.ai/?p=22444
+    jazzy_learning_week_2024: https://discourse.openrobotics.org/t/ros-2-jazzy-learning-week/38844.md
+    cost_note: 'free Basic tier; paid: Learner €39.97/month or €439/year; Enterprise €2,399/year'
+- id: the-construct-ros2-basics-5-days
+  title: ROS 2 Basics in 5 Days Humble (Python)
+  author: The Construct
+  url: https://theconstruct.ai/?p=25563
+  type: course
+  language: en
+  cost:
+    kind: paid
+    amount: 39.97
+    currency: EUR
+  level: intermediate
+  prerequisites:
+  - Python (Python3 for Robotics course)
+  - Linux basics
+  topics:
+  - ros2-basics
+  - python
+  - cpp
+  - humble
+  est_hours: 20
+  last_updated: null
+  status: active
+  license: proprietary
+  quality_signal: null
+  notes: 'Flagship course: ''Intermediate Level. Approx. 20 hours to complete'', no local ROS setup required. Course IDs: 268 (Python), 61 (C++); a Galactic version was announced Oct 2022. Whether a Jazzy version exists could not be confirmed (course pages require login).'
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: theconstruct
+    ros2_distro: humble
+    course_python: https://app.theconstruct.ai/courses/268
+    course_cpp: https://app.theconstruct.ai/courses/61/
+    galactic_announcement: https://discourse.openrobotics.org/t/new-ros-online-course-ros2-basics-in-5-days-galactic-python/27841
+    cost_note: 'paid: Learner tier (€39.97/month); first unit free on Basic tier'
+- id: the-construct-robotics-developer-masterclass
+  title: Robotics Developer Masterclass
+  author: The Construct
+  url: https://www.theconstruct.ai/robotics-developer/
+  type: course
+  language: en
+  cost:
+    kind: paid
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - ros2-basics
+  - robotics-software
+  - mentorship
+  - hardware-kit
+  est_hours: null
+  last_updated: 2026-03
+  status: active
+  license: proprietary
+  quality_signal: null
+  notes: Six-month beginner-to-advanced cohort program with live mentorship and a robotics kit; March 2026 brochure available. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: theconstruct
+    brochure: https://www.theconstruct.ai/wp-content/uploads/2025/09/Brochure-Robotics-Developer-Masterclass-March-2026.pdf
+    duration_months: 6
+    cost_note: paid (amount not stated)
+- id: the-construct-humanoid-robotics-masterclass-2026
+  title: Humanoid Robotics Masterclass 2026
+  author: The Construct
+  url: https://app.theconstruct.ai/product/humanoid-robotics-masterclass-2026-enrollment
+  type: course
+  language: en
+  cost:
+    kind: paid
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - ROS 2 experience
+  topics:
+  - humanoid
+  - ros2
+  - hardware
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: proprietary
+  quality_signal: null
+  notes: Paid cohort program to 'build your own human-sized humanoid'; announced on ROS Discourse. Outside beginner-intermediate scope. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: theconstruct
+    announcement: https://discourse.openrobotics.org/t/build-your-own-human-sized-humanoid-with-the-humanoid-robotics-masterclass/56895
+    cost_note: paid (amount not stated)
+- id: robotics-backend-courses-index
+  title: Robotics Back-End courses (Edouard Renard)
+  author: Edouard Renard (Robotics Back-End)
+  url: https://roboticsbackend.com/courses/
+  type: course
+  language: en
+  cost:
+    kind: paid
+    amount: 11.99
+    currency: USD
+  level: beginner
+  prerequisites:
+  - basic programming (Python or C++)
+  topics:
+  - ros2-basics
+  - tf2
+  - urdf
+  - rviz
+  - gazebo
+  - nav2
+  - moveit2
+  - ros2-control
+  - raspberry-pi
+  - arduino
+  est_hours: null
+  last_updated: null
+  status: active
+  license: proprietary
+  quality_signal: Teaching online since 2019; 15 courses
+  notes: 'Index of Renard''s course ladder: ROS 2 For Beginners -> Level 2 (TF, URDF, RViz, Gazebo) -> Level 3 (Advanced Concepts) -> Nav2 / MoveIt 2 / ros2_control / ROS 2 and Raspberry Pi (+Arduino), plus maker courses (Arduino, Raspberry Pi, Python, C++, Linux CLI). Links go through rbcknd.com with auto-applied coupons. The note calls this the strongest paid video spine. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: udemy
+    ros2_distro: jazzy
+    raspberry_pi_course: ROS 2 and Raspberry Pi (+ Arduino) - no direct URL in the note
+    cost_note: 'paid: Udemy courses, frequently $11.99-12.99 on sale (list prices fluctuate)'
+- id: robotics-backend-ros2-written-tutorials
+  title: Robotics Back-End ROS 2 written tutorials
+  author: Edouard Renard (Robotics Back-End)
+  url: https://roboticsbackend.com/category/ros2/
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - basic programming
+  topics:
+  - ros2-basics
+  - python
+  - cpp
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Free text tutorials that accompany the paid Udemy ladder. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: robotics-backend-youtube
+  title: Robotics Back-End YouTube channel
+  author: Edouard Renard (Robotics Back-End)
+  url: https://www.youtube.com/channel/UCelRThOKlWMnpjqr5EBq6tg
+  type: video_series
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - ros2-basics
+  - python
+  - cpp
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Free video companion to the Robotics Back-End tutorials and Udemy courses. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: udemy-renard-ros2-for-beginners-level1
+  title: ROS 2 for Beginners (ROS Jazzy - 2025/2026)
+  author: Edouard Renard on Udemy
+  url: https://www.udemy.com/course/ros2-for-beginners/
+  type: course
+  language: en
+  cost:
+    kind: paid
+    amount: 11.99
+    currency: USD
+  level: beginner
+  prerequisites:
+  - basic Python or C++
+  - no ROS 1 needed
+  topics:
+  - ros2-basics
+  - nodes
+  - topics
+  - services
+  - parameters
+  - launch
+  - python
+  - cpp
+  - jazzy
+  est_hours: 13.2
+  last_updated: null
+  status: active
+  license: proprietary
+  quality_signal: 4.7 from 6,129 ratings; 26,315 students (aggregator snapshot of the Udemy listing)
+  notes: 'Level 1 of Renard''s ladder: 13 h 13 min of video, starts from zero on Jazzy. Also distributed as a Manning liveVideo and on O''Reilly. Udemy figures are from aggregator snapshots (udemy.com returned 403) and must be re-checked on the live page.'
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: udemy
+    ros2_distro: jazzy
+    certificate: true
+    aggregator_snapshot: https://www2.ctgoodjobs.hk/Learning/1382619490/udemy/ros-2-for-beginners-ros-jazzy-2025
+    listing_2026: https://skillsetcourse.com/robo/robo-udemy-ros-2-for-beginners-ros-jazzy-2026
+    manning_livevideo: https://www.manning.com/books/ros2-for-beginners
+    oreilly: https://www.oreilly.com/videos/ros2-for-beginners/10000DIVC2022146/
+    cost_note: 'paid: Udemy (frequent sale ~$11.99-12.99; list price not read)'
+- id: udemy-renard-ros2-level2-tf-urdf-rviz-gazebo
+  title: ROS 2 for Beginners Level 2 - TF, URDF, RViz, Gazebo
+  author: Edouard Renard on Udemy
+  url: https://skillsetcourse.com/robo/robo-udemy-ros-2-for-beginners-level-2-tf-urdf-rviz-gazebo
+  type: course
+  language: en
+  cost:
+    kind: paid
+    amount: 11.99
+    currency: USD
+  level: beginner
+  prerequisites:
+  - ROS 2 for Beginners (Level 1)
+  topics:
+  - tf2
+  - urdf
+  - rviz
+  - gazebo
+  - simulation
+  - jazzy
+  est_hours: 14
+  last_updated: null
+  status: active
+  license: proprietary
+  quality_signal: 4.8/5 from 1,818 ratings (aggregator snapshot)
+  notes: ~14 hours covering TF, URDF, RViz and Gazebo. The only URL in the note is a third-party mirror listing of the Udemy course; re-check on udemy.com before publishing. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: udemy
+    ros2_distro: jazzy
+    url_is_mirror: true
+    cost_note: 'paid: Udemy, frequent sale price $11.99'
+- id: udemy-renard-ros2-level3-advanced-core-concepts
+  title: ROS2 Advanced Core Concepts (Level 3)
+  author: Edouard Renard on Udemy
+  url: https://www.udemy.com/course/ros2-advanced-core-concepts/
+  type: course
+  language: en
+  cost:
+    kind: paid
+    amount: 11.99
+    currency: USD
+  level: intermediate
+  prerequisites:
+  - ROS 2 Levels 1-2
+  topics:
+  - actions
+  - lifecycle-nodes
+  - executors
+  - composition
+  - jazzy
+  est_hours: null
+  last_updated: null
+  status: active
+  license: proprietary
+  quality_signal: 4.7 from 476 ratings; 6,645 students (aggregator snapshot)
+  notes: Actions, Lifecycle Nodes, Executors, Components. Figures from aggregator snapshots; re-check live. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: udemy
+    ros2_distro: jazzy
+    aggregator_listing: https://skillsetcourse.com/robo/robo-udemy-ros-2-for-beginners-level-3-advanced-concepts
+    cost_note: 'paid: Udemy (frequent sale ~$11.99-12.99)'
+- id: udemy-renard-ros2-moveit2
+  title: ROS 2 - MoveIt 2 - Control a Robotic Arm
+  author: Edouard Renard on Udemy
+  url: https://www.udemy.com/course/ros2-moveit2/
+  type: course
+  language: en
+  cost:
+    kind: paid
+    amount: 11.99
+    currency: USD
+  level: intermediate
+  prerequisites:
+  - ROS 2 Levels 1-2 (URDF, TF)
+  topics:
+  - moveit2
+  - manipulation
+  - jazzy
+  est_hours: 7
+  last_updated: null
+  status: active
+  license: proprietary
+  quality_signal: null
+  notes: 7 hours, 53 lectures; recommended third-party step-by-step for MoveIt 2 on Jazzy. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: udemy
+    ros2_distro: jazzy
+    lecture_count: 53
+    cost_note: 'paid: Udemy (frequent sale ~$11.99-12.99)'
+- id: udemy-renard-ros2-nav2
+  title: ROS 2 Nav2 - SLAM and Navigation
+  author: Edouard Renard on Udemy
+  url: https://classcentral.com/course/udemy-ros2-nav2-stack-403407
+  type: course
+  language: en
+  cost:
+    kind: paid
+    amount: 11.99
+    currency: USD
+  level: intermediate
+  prerequisites:
+  - ROS 2 Levels 1-2
+  topics:
+  - nav2
+  - slam
+  - navigation
+  - jazzy
+  est_hours: null
+  last_updated: null
+  status: active
+  license: proprietary
+  quality_signal: 4.6 from 1,221 ratings (Class Central listing)
+  notes: Nav2 SLAM and navigation course; the URL in the note is the Class Central listing (the Udemy page was not read). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: udemy
+    ros2_distro: jazzy
+    url_is_listing: true
+    cost_note: 'paid: Udemy (frequent sale ~$11.99-12.99)'
+- id: udemy-renard-ros2-hardware-ros2-control
+  title: ROS 2 Hardware and ros2_control Step by Step
+  author: Edouard Renard on Udemy
+  url: https://skillsetcourse.com/robo/robo-udemy-ros-2-hardware-and-ros2-control-step-by-step
+  type: course
+  language: en
+  cost:
+    kind: paid
+    amount: 11.99
+    currency: USD
+  level: intermediate
+  prerequisites:
+  - ROS 2 Levels 1-2 (URDF)
+  topics:
+  - ros2-control
+  - hardware-interface
+  - jazzy
+  est_hours: null
+  last_updated: null
+  status: active
+  license: proprietary
+  quality_signal: null
+  notes: Third-party step-by-step coverage of ros2_control hardware interfaces; URL is a third-party mirror listing. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: udemy
+    ros2_distro: jazzy
+    url_is_mirror: true
+    cost_note: 'paid: Udemy (frequent sale ~$11.99-12.99)'
+- id: udemy-renard-ros1-to-ros2-migration
+  title: Learn ROS2 as a ROS1 Developer and Migrate Your ROS Projects
+  author: Edouard Renard on Udemy
+  url: https://www.udemy.com/course/learn-ros2-as-a-ros1-developer-and-migrate-your-ros-projects/
+  type: course
+  language: en
+  cost:
+    kind: paid
+    amount: 11.99
+    currency: USD
+  level: intermediate
+  prerequisites:
+  - ROS 1 experience
+  topics:
+  - ros1-migration
+  - ros2-basics
+  est_hours: null
+  last_updated: 2025-11
+  status: active
+  license: proprietary
+  quality_signal: null
+  notes: For existing ROS 1 developers; last updated 11/2025. Not needed for a from-scratch curriculum (ROS 1 is EOL since 31 May 2025). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: udemy
+    cost_note: 'paid: Udemy (frequent sale ~$11.99-12.99)'
+- id: articulated-robotics-tutorials
+  title: Articulated Robotics tutorials
+  author: Josh Newans (Articulated Robotics)
+  url: https://articulatedrobotics.xyz/tutorials
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - basic Linux
+  topics:
+  - ros2-basics
+  - tf2
+  - docker
+  - geometry
+  - mobile-robotics
+  - foxy
+  est_hours: null
+  last_updated: 2024-03
+  status: stale
+  license: null
+  quality_signal: '''Still excellent for concepts'' per the note'
+  notes: 'Series: Getting Ready to build a ROS robot, Build a Mobile Robot with ROS, Docker for Robotics, Coordinate Transforms For Robotics, Geometry Tips (video + text). Written series is Foxy-era: the Installing ROS page still sources /opt/ros/foxy with no Humble/Jazzy banner; site rebuilt on Docusaurus 26 Mar 2024. Use for concepts (tf, ros2_control, Docker) with a Jazzy translation layer; whether videos were re-recorded for Humble/Jazzy is unconfirmed. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: foxy
+    youtube: youtube.com/c/ArticulatedRobotics
+    forum: discourse.articulatedrobotics.xyz
+    github: github.com/joshnewans
+    installing_ros_page: https://articulatedrobotics.xyz/tutorials/ready-for-ros/installing-ros
+    site_rebuild_post: https://articulatedrobotics.xyz/blog/2024/03/26/new-website
+- id: articulated-robotics-build-a-mobile-robot
+  title: Build a Mobile Robot with ROS (project series)
+  author: Josh Newans (Articulated Robotics)
+  url: https://articulatedrobotics.xyz/tutorials/mobile-robot/project-overview
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics
+  - basic electronics/soldering
+  topics:
+  - mobile-robotics
+  - hardware
+  - slam
+  - nav2
+  - opencv
+  - ros2-control
+  - raspberry-pi
+  - foxy
+  est_hours: null
+  last_updated: null
+  status: stale
+  license: null
+  quality_signal: null
+  notes: 'Goals: phone teleop with camera, lidar+SLAM mapping and autonomous navigation, OpenCV object following. BOM: Raspberry Pi 4B (>=4 GB), Arduino Nano motor controller, two 12 V encoder DC motors + L298N, RPLidar A1, Pi Camera v2 (optional OAK-D Lite), 3S LiPo + 5 V buck. Sections: Concept Design (2), Hardware (4), Applications (7). Author''s dev machine runs ROS 2 Foxy on Ubuntu MATE 20.04, so commands need Jazzy translation. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: foxy
+    series_category: https://articulatedrobotics.xyz/category/build-a-mobile-robot-with-ros
+    cost_note: free (hardware BOM not priced by design)
+- id: articubot-one
+  title: articubot_one (package template)
+  author: Josh Newans (joshnewans)
+  url: https://github.com/joshnewans/articubot_one
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Build a Mobile Robot series
+  topics:
+  - mobile-robotics
+  - urdf
+  - ros2-control
+  - nav2
+  - gazebo
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: 507 stars, 372 forks, 25 commits
+  notes: Robot package template from the Build a Mobile Robot series; no distro named in the repo, so Jazzy compatibility is unverified. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    stars: 507
+    forks: 372
+- id: articulated-robotics-humble-migration-notes
+  title: Articulated-Robotics/Humble-Migration (community notes, mirror)
+  author: Unknown (third-party mirror page)
+  url: https://random-restart.vercel.app/Robotics/Articulated-Robotics/Humble-Migration
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Articulated Robotics mobile robot series
+  topics:
+  - migration
+  - humble
+  - mobile-robotics
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Third-party page suggesting community-maintained Humble migration notes for the Articulated Robotics series; unverified. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: automatic-addison-tutorials
+  title: Automatic Addison ROS 2 tutorials
+  author: Addison Sears-Collins (Automatic Addison)
+  url: https://automaticaddison.com/tutorials
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Ubuntu 24.04
+  - basic Python or C++
+  topics:
+  - ros2-basics
+  - urdf
+  - gazebo
+  - launch
+  - testing
+  - nav2
+  - slam
+  - robot-localization
+  - moveit2
+  - moveit-task-constructor
+  - jazzy
+  - lyrical
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: 'Note: ''strongest free spine'' together with the official docs'
+  notes: Text tutorial index organised Getting Started -> Beginner -> Intermediate with Jazzy-specific posts (install, DDS/ROS_DOMAIN_ID, workspace, VS Code, pub/sub, URDF arms and mobile robots, launch, pytest/GTest, Gazebo, parameters, actions, services, bags, ros2 doctor); Navigation (install Nav2, robot_localization sensor fusion, SLAM mapping, autonomous navigation, Simple Commander API, AprilTag docking); Manipulation (MoveIt 2 setup, first C++ project, planning scene, MoveIt Task Constructor series, pick-and-place with perception). Also has Iron and new Lyrical sections. Beginner-to-intermediate.
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: jazzy (plus iron and new lyrical posts)
+    install_jazzy: https://automaticaddison.com/how-to-install-ros-2-jazzy/
+    sensor_fusion_jazzy: https://automaticaddison.com/sensor-fusion-and-robot-localization-using-ros-2-jazzy/
+    nav2_slam_overview: https://automaticaddison.com/navigation-and-slam-using-the-ros-2-navigation-stack/
+    slam_map_building_jazzy: https://automaticaddison.com/?p=16750
+    lyrical_example_listing: https://automaticaddison.com/category/robotics/page/4/
+- id: marinho-ros2-tutorial
+  title: ROS2 Tutorial (Murilo M. Marinho, readthedocs)
+  author: Murilo M. Marinho
+  url: https://ros2-tutorial.readthedocs.io/
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Ubuntu 24.04
+  - Python
+  topics:
+  - ros2-basics
+  - software-engineering
+  - gazebo
+  - ros-gz
+  - jazzy
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Targets Ubuntu 24.04 + ROS 2 Jazzy and emphasises software-engineering practice; includes Gazebo/ros_gz_bridge chapters (some marked under construction). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: jazzy
+- id: mogi-ros-course-repos
+  title: MOGI-ROS university course repos (Week 1-2 Introduction to ROS2 ... Week 7-8 ROS2 Navigation)
+  author: MOGI-ROS (GitHub)
+  url: https://github.com/MOGI-ROS/Week-1-2-Introduction-to-ROS2
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Ubuntu 24.04
+  topics:
+  - ros2-basics
+  - gazebo
+  - nav2
+  - slam-toolbox
+  - jazzy
+  - course-repo
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Weekly university course repos on Jazzy, from introduction through Week 7-8 ROS2 Navigation (installs ros-jazzy-slam-toolbox). Beginner-to-intermediate across the series. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: jazzy
+    week_7_8_listing: https://awesome.ecosyste.ms/projects/github.com%2Fmogi-ros%2Fweek-7-8-ros2-navigation
+- id: openhorizon-ros2-learning
+  title: OpenHorizon ros2-learning (self-paced Jazzy path)
+  author: OpenHorizon Robotics (GitHub)
+  url: https://scriptagc.wasmer.app/https_GitHub_com/openhorizonrobotics/ros2-learning
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - ros2-basics
+  - jazzy
+  - self-paced
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Self-paced Jazzy learning path with a 'first principles' approach; the only URL captured is a proxy listing of the GitHub repo, so verify the canonical repo before use. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: jazzy
+    url_is_mirror: true
+- id: henki-robotics-essentials-ros2
+  title: Robotics & ROS 2 Essentials
+  author: henki-robotics (GitHub)
+  url: https://github.com/henki-robotics/robotics_essentials_ros2
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Python
+  topics:
+  - ros2-basics
+  - python
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Python-based beginner course repo for robotics and ROS 2 essentials; distro not stated in the note.
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: ros2-zero-to-robot
+  title: 'ROS 2: Zero to Robot (free online book)'
+  author: Pouya Mansournia
+  url: https://pouya-mansournia.github.io/ros2-zero-to-robot/
+  type: book
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - ros2-basics
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Free online ROS 2 book; distro and depth not described in the note. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: robocademy-ros-developer-learning-path
+  title: ROS Developer Learning Path 2.0 (open-sourced)
+  author: Robocademy (Lentin Joseph)
+  url: https://robocademy.com/blog/open-sourcing-ros-developer-learning-path-2-0-by-robocademy
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - ros2-basics
+  - learning-path
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Open-sourced structured learning path announced on the Robocademy blog; contents and distro not detailed in the note. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: fkromer-awesome-ros2
+  title: fkromer/awesome-ros2
+  author: fkromer (GitHub)
+  url: https://www.github.com/fkromer/awesome-ros2
+  type: community
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - curated-list
+  - ros2
+  est_hours: null
+  last_updated: 2023-08
+  status: stale
+  license: null
+  quality_signal: ~2,021 stars
+  notes: Older curated ROS 2 list; last updated Aug 2023, so superseded by vovaekb/Awesome-ROS2 for current material. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    stars: 2021
+- id: vovaekb-awesome-ros2
+  title: vovaekb/Awesome-ROS2
+  author: vovaekb (GitHub)
+  url: https://github.com/vovaekb/Awesome-ROS2
+  type: community
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - curated-list
+  - ros2
+  - books
+  - courses
+  - playlists
+  est_hours: null
+  last_updated: 2026-01
+  status: active
+  license: null
+  quality_signal: 65 commits; announced on ROS Discourse Jan 2026
+  notes: Newer curated list with Books/Courses/Tutorials/Playlists sections and example-robot projects (e.g. Space Station OS); source of several items here (micro-ROS playlist, MIT 16.485, CS223A). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    commits: 65
+    announcement: https://discourse.openrobotics.org/t/awesome-list-of-ros2-packages/51321.md
+- id: husarion-ros2-tutorials
+  title: Husarion ROS 2 Tutorials
+  author: Husarion
+  url: https://husarion.com/tutorials/ros2-tutorials/1-ros2-introduction/
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - ROSbot XL or Gazebo simulation
+  topics:
+  - ros2-basics
+  - mobile-robotics
+  - gazebo
+  - navigation
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Sequential tutorial series designed to be followed in order, runnable on ROSbot XL hardware or in Gazebo simulation. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    robot: ROSbot XL
+    cost_note: free (ROSbot XL hardware optional; Gazebo sim alternative)
+- id: book-ros2-from-scratch
+  title: ROS 2 from Scratch
+  author: Edouard Renard; Packt
+  url: https://www.packtpub.com/en-ro/product/ros-2-from-scratch-9781835881415
+  type: book
+  language: en
+  cost:
+    kind: paid
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Python (C++ optional)
+  - Ubuntu 24.04
+  topics:
+  - ros2-basics
+  - python
+  - cpp
+  - jazzy
+  est_hours: null
+  last_updated: 2024-11
+  status: active
+  license: proprietary
+  quality_signal: 'Note: ''the best beginner text'''
+  notes: 386 pages, Nov 2024; targets Ubuntu 24.04 and ROS 2 Jazzy ('should also work with later versions'); Python first with optional C++; aimed at beginners with no ROS 1 experience; code on GitHub under PacktPublishing.
+  source_checked_date: '2026-11-11'
+  extra:
+    isbn: '9781835881415'
+    pages: 386
+    ros2_distro: jazzy
+    oreilly: https://www.oreilly.com/library/view/ros-2-from/9781835881408/
+    cost_note: paid (price not captured)
+- id: book-concise-intro-robot-programming-ros2-2e
+  title: A Concise Introduction to Robot Programming with ROS 2 (2nd edition)
+  author: Francisco Martín Rico; CRC Press / Routledge
+  url: https://www.routledge.com/A-Concise-Introduction-to-Robot-Programming-with-ROS-2/MartinRico/p/book/9781032851488
+  type: book
+  language: en
+  cost:
+    kind: paid
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - C++ (mainly) and Python
+  topics:
+  - ros2-basics
+  - cpp
+  - tf2
+  - finite-state-machines
+  - behavior-trees
+  - nav2
+  est_hours: null
+  last_updated: '2025'
+  status: active
+  license: proprietary
+  quality_signal: Author is Full Professor at URJC Madrid and author of PlanSys2
+  notes: '258 pages (238 per some listings), 2025; chapters include ''First Behavior: Avoiding Obstacles with Finite State Machines'', ''The TF Subsystem'', ''Reactive Behaviors'', ''Programming Robot Behaviors with Behavior Trees'', plus Nav2. Beginner-to-intermediate; the note''s pick for behaviour-programming/BT concepts.'
+  source_checked_date: '2026-11-11'
+  extra:
+    isbn: '9781032851488'
+    pages: 258
+    edition: 2nd
+    announcement: https://discourse.openrobotics.org/t/a-concise-introduction-to-robot-programming-with-ros-2-second-edition/44410
+    cost_note: paid (price not captured)
+- id: book-mastering-ros2-4e
+  title: Mastering ROS 2 for Robotics Programming (4th edition)
+  author: Lentin Joseph, Jonathan Cacace; Packt
+  url: https://www.packtpub.com/en-US/product/mastering-ros-2-for-robotics-programming-9781836209003
+  type: book
+  language: en
+  cost:
+    kind: paid
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Linux
+  - C++
+  - Python
+  topics:
+  - ros2
+  - gazebo
+  - ros2-control
+  - llm
+  - deep-reinforcement-learning
+  - jazzy
+  est_hours: null
+  last_updated: 2025-07
+  status: active
+  license: proprietary
+  quality_signal: null
+  notes: 576 pages, July 2025, 'integrated with ROS 2 Jazzy'; covers Gazebo Sim modelling, ros2 controllers, LLM interfacing and deep RL chapters. Assumes Linux, C++ and Python.
+  source_checked_date: '2026-11-11'
+  extra:
+    isbn: '9781836209003'
+    pages: 576
+    edition: 4th
+    ros2_distro: jazzy
+    cost_note: paid (price not captured)
+- id: book-programming-robots-with-ros
+  title: Programming Robots with ROS
+  author: Morgan Quigley, Brian Gerkey, William D. Smart; O'Reilly
+  url: https://www.oreilly.com/library/view/programming-robots-with/9781449325480
+  type: book
+  language: en
+  cost:
+    kind: paid
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - ros1
+  - historical
+  est_hours: null
+  last_updated: 2015-12
+  status: stale
+  license: proprietary
+  quality_signal: null
+  notes: ROS 1 only (Dec 2015); historical reference now that ROS 1 Noetic is EOL (31 May 2025). Not recommended for a ROS 2 curriculum. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    isbn: '9781449325480'
+    cost_note: paid (price not captured)
+- id: ros2-multi-robot-book
+  title: ROS 2 Multi-Robot Book (Open-RMF)
+  author: Open Source Robotics Foundation
+  url: https://osrf.github.io/ros2multirobotbook/intro.html
+  type: book
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics
+  topics:
+  - open-rmf
+  - multi-robot
+  - fleet-management
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Free online manual for Open-RMF multi-robot fleet management; serves as the manual for rmf_demos. The note classes Open-RMF as an advanced elective, not core beginner material.
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: nav2-robot-localization-setup-guide
+  title: 'Nav2 setup guide: Smoothing Odometry using Robot Localization'
+  author: Nav2 project
+  url: https://docs.nav2.org/setup_guides/odom/setup_robot_localization.html
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics, tf2, URDF
+  - odometry source
+  topics:
+  - robot-localization
+  - ekf
+  - odometry
+  - nav2
+  - sensor-fusion
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Part of Nav2''s First-Time Robot Setup Guide: configures ekf.yaml and removes the /tf bridge so ekf_node publishes odom->base_link. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: clearpath-navigation-demos
+  title: Clearpath ROS 2 navigation demos (SLAM and localization)
+  author: Clearpath Robotics
+  url: https://docs.clearpathrobotics.com/docs/ros/tutorials/navigation_demos/slam
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics
+  - Clearpath platform or simulation
+  topics:
+  - slam-toolbox
+  - localization
+  - nav2
+  - humble
+  - jazzy
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Vendor tutorials for SLAM (via slam_toolbox online_sync_launch.py) and localization on Clearpath platforms; evidence that SLAM Toolbox is the de-facto teaching SLAM. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    overview: https://docs.clearpathrobotics.com/docs/ros/tutorials/navigation_demos/overview
+    cost_note: free (Clearpath hardware or sim)
+- id: moveit2-tutorials
+  title: MoveIt 2 Tutorials
+  author: MoveIt / PickNik Robotics
+  url: https://moveit.picknik.ai/main/doc/tutorials/tutorials.html
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics (C++)
+  - Ubuntu 22.04/24.04
+  topics:
+  - moveit2
+  - manipulation
+  - motion-planning
+  - rviz
+  - moveit-task-constructor
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Six-step sequence: Getting Started -> Quickstart in RViz -> Your First C++ MoveIt Project -> Visualizing in RViz -> Planning Around Objects -> Pick and Place with MoveIt Task Constructor, using the Kinova Gen3 as demo robot. Supports Rolling, Jazzy (''latest LTS'', recommended for new users) and Humble; source build via moveit2_tutorials.repos with colcon --mixin release ''takes 20+ minutes and may need up to 16 GB of RAM per package'' (use binaries for beginners). (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: rolling, jazzy, humble
+    getting_started: https://moveit.picknik.ai/main/doc/tutorials/getting_started/getting_started.html
+    demo_robot: Kinova Gen3
+- id: discourse-moveit-humble-to-jazzy-port-notes
+  title: 'Ported the arduinobot manipulator workspace from Humble to ROS 2 Jazzy: notes on what broke'
+  author: ROS community (Open Robotics Discourse)
+  url: https://discourse.openrobotics.org/t/ported-the-arduinobot-manipulator-workspace-from-humble-to-ros-2-jazzy-notes-on-what-broke/58225
+  type: community
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - MoveIt 2 on Humble
+  topics:
+  - moveit2
+  - migration
+  - humble
+  - jazzy
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: null
+  notes: Community migration notes for a MoveIt arm workspace from Humble to Jazzy; useful for a distro-migration lesson. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: ros2-control-demos
+  title: ros2_control_demos
+  author: ros-controls (GitHub)
+  url: https://github.com/ros-controls/ros2_control_demos
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ros2_control getting started
+  topics:
+  - ros2-control
+  - examples
+  - rrbot
+  - diff-drive
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Official demos repo; example_1 (RRBot) is the getting-started example referenced by control.ros.org. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: andino-robot
+  title: Andino (Ekumen-OS) open-source differential-drive robot
+  author: Ekumen
+  url: https://github.com/Ekumen-OS/andino
+  type: hardware
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics
+  - 'basic electronics/3D printing for the physical build (optional: Gazebo)'
+  topics:
+  - mobile-robotics
+  - ros2-control
+  - slam
+  - nav2
+  - gazebo
+  - raspberry-pi
+  - capstone
+  - humble
+  - jazzy
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: 343 stars, 91 forks, 217 commits
+  notes: '''Fully open-source differential-drive robot ... for education and low-cost applications''; Humble (22.04) and Jazzy (24.04). Packages map one-to-one onto curriculum modules: andino_description, andino_hardware (assembly), andino_firmware, andino_base (ros2_control HW interface), andino_control (diff drive + joint state broadcaster), andino_slam, andino_navigation (Nav2), andino_gz (modern Gazebo, recommended) plus Webots/O3DE/Isaac/MuJoCo sims. The note''s best ''capstone reference'' for a hardware-optional curriculum; license and last-commit date not visible in the fetched page. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: humble, jazzy
+    stars: 343
+    compute: Raspberry Pi 4B
+    cost_note: free (open-source design; Raspberry Pi 4B + Arduino-class MCU; BOM price not found)
+- id: fh-aachen-slam-toolbox-tutorial
+  title: 'FH Aachen ROS 2 summer school: SLAM Toolbox tutorial (Day 6)'
+  author: FH Aachen
+  url: https://ros2.fh-aachen.de/summer_school/Day6/Tutorials/slam_toolbox.html
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics
+  - a lidar-equipped robot or sim
+  topics:
+  - slam-toolbox
+  - slam
+  - mapping
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: University summer-school tutorial for SLAM Toolbox; one of the few stand-alone SLAM Toolbox walkthroughs found (no ROS 2 Cartographer tutorial surfaced). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: robotlabs-sensor-fusion-slam-jazzy
+  title: robotlabs gitbook 2.6 Sensor fusion and SLAM (ROS 2 Jazzy)
+  author: robotlabs (GitBook)
+  url: https://robotlabs.gitbook.io/docs/ros/ros2-jazzy/2.6-sensor-fusion-and-slam
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics
+  topics:
+  - robot-localization
+  - sensor-fusion
+  - slam
+  - jazzy
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Jazzy-specific gitbook chapter on robot_localization sensor fusion and SLAM. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: jazzy
+- id: micro-ros-youtube-playlist
+  title: eProsima micro-ROS YouTube playlist
+  author: eProsima
+  url: https://www.youtube.com/playlist?list=PL-Kh3H15FsNTD8A8wD0_iMnvhDsqw-rga
+  type: video_series
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics
+  - microcontroller basics
+  topics:
+  - micro-ros
+  - microcontrollers
+  - embedded
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: Listed in vovaekb/Awesome-ROS2
+  notes: Official micro-ROS video playlist; complements micro_ros_setup as the hardware elective. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: linorobot2
+  title: Linorobot2 (Jazzy + Gazebo Harmonic + Raspberry Pi Pico 2 release)
+  author: Linorobot community (Juan Miguel Jimeno et al.)
+  url: https://groups.google.com/g/linorobot/c/hGZAbjiapvA
+  type: hardware
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics
+  - basic electronics
+  topics:
+  - mobile-robotics
+  - micro-ros
+  - raspberry-pi-pico
+  - gazebo
+  - nav2
+  - jazzy
+  est_hours: null
+  last_updated: 2025-07
+  status: active
+  license: null
+  quality_signal: null
+  notes: July 2025 release adds ROS 2 Jazzy, Gazebo Harmonic and Raspberry Pi Pico 2 microcontroller support; URL is the Google Group announcement cited in the note. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: jazzy
+    gazebo: harmonic
+    cost_note: free (open-source design; hardware cost not stated)
+- id: ros-gz-bridge
+  title: ros_gz bridge usage (ROS 2 Jazzy <-> Gazebo Harmonic)
+  author: Gazebo (gazebosim) on GitHub
+  url: https://github.com/gazebosim/ros_gz
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics
+  - Gazebo (gz-sim)
+  topics:
+  - gazebo
+  - simulation
+  - ros-gz-bridge
+  - jazzy
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Version pairing: Jazzy <-> Gazebo Harmonic (jazzy branch, binaries on packages.ros.org; apt install ros-jazzy-ros-gz). Bridge usage: parameter_bridge /chatter@std_msgs/msg/String@gz.msgs.StringMsg (''@'' bidirectional, ''['' / '']'' one-way), YAML config_file, service bridging (e.g. ros_gz_interfaces/srv/ControlWorld). Known friction: a Jazzy/Harmonic user reported missing launch files in a spawn tutorial. The note orders simulation first in the curriculum since everything else depends on it. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: jazzy
+    gazebo: harmonic
+    bridge_docs_jazzy: https://docs.ros.org/en/jazzy/p/ros_gz_bridge
+    gazebo_ros2_integration_docs: https://gazebosim.org/docs/garden/ros2_integration
+    friction_thread: https://discourse.openrobotics.org/t/issue-with-ros2-jazzy-and-gazebo-harmonic-ros-integration/48642
+    see_also: 'ros-gz (simulators.yaml: pairing table and install)'
+- id: robobe-jazzy-harmonic-setup
+  title: 'robobe: Jazzy / Harmonic dev environment setup guide'
+  author: robobe (GitHub Pages blog)
+  url: https://robobe.github.io/new_blog/ROS/dev_environment/tutorials/jazzy_harmonic_setup
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Ubuntu 24.04
+  topics:
+  - gazebo
+  - install
+  - jazzy
+  - dev-environment
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Community setup guide for ROS 2 Jazzy with Gazebo Harmonic. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: jazzy
+    gazebo: harmonic
+- id: rmf-demos
+  title: rmf_demos (Open-RMF demonstrations)
+  author: Open-RMF (open-rmf on GitHub)
+  url: https://github.com/open-rmf/rmf_demos
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - ROS 2 (Kilted recommended; core libs also Humble/Iron/Jazzy)
+  - Gazebo Ionic
+  - Docker for rmf-web dashboards
+  topics:
+  - open-rmf
+  - multi-robot
+  - fleet-management
+  - gazebo
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Built/tested on Ubuntu 24.04 + ROS 2 Kilted + Gazebo Ionic; worlds: Hotel, Office, Airport Terminal, Clinic, Campus (GPS), Manufacturing & Logistics; launch with ros2 launch rmf_demos_gz office.launch.xml; manual is the ROS 2 Multi-Robot Book. Advanced elective (fleet management). (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: kilted
+    gazebo: ionic
+    manual: https://osrf.github.io/ros2multirobotbook/intro.html
+- id: gazebo-ionic-demo
+  title: Gazebo Ionic Release Demo (ionic_demo)
+  author: Gazebo (gazebosim on GitHub)
+  url: https://github.com/gazebosim/ionic_demo
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 and Gazebo Ionic
+  topics:
+  - gazebo
+  - nav2
+  - moveit2
+  - demo
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Gazebo Ionic release demo showing Nav2 + MoveIt integration in one simulated scene. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    gazebo: ionic
+- id: turtlebot4-user-manual
+  title: TurtleBot 4 User Manual and tutorials
+  author: Clearpath Robotics / iRobot (Create 3)
+  url: https://turtlebot.github.io/turtlebot4-user-manual/tutorials/
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - ROS 2 basics
+  topics:
+  - mobile-robotics
+  - nav2
+  - slam
+  - turtlebot
+  - jazzy
+  - humble
+  est_hours: null
+  last_updated: 2025-03
+  status: active
+  license: null
+  quality_signal: 'Note: ''best commercial option where budget exists'''
+  notes: 'Manual covers setup/software/mechanical/electrical/troubleshooting/changelogs (Galactic, Humble, Jazzy) with 8 tutorials: Driving, First node (C++), First node (Python), Generating a map, Navigation, TurtleBot 4 Navigator, Multiple robots, SD-card backup. Jazzy supported since Oct 2024 (image v2.0.0 = Ubuntu Server 24.04.5 + Create 3 firmware I.0.0; Create 3 must run I.x firmware). Standard vs Lite models; Fast DDS or CycloneDDS. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: jazzy, humble, galactic
+    jazzy_announcement: https://clearpathrobotics.com/blog/2024/10/turtlebot-4-now-supports-ros-2-jazzy/
+    jazzy_changelog: https://turtlebot.github.io/turtlebot4-user-manual/changelogs/jazzy.html
+    jazzy_setup_guide: https://clearpathrobotics.com/blog/2025/03/how-to-set-up-your-turtlebot-4-with-ros-2-jazzy/
+    tutorial_count: 8
+    cost_note: paid hardware (price not found); documentation free
+- id: husarion-rosbot3-quick-start
+  title: Husarion ROSbot 3 quick start
+  author: Husarion
+  url: https://husarion.com/tutorials/howtostart/rosbot3-quick-start/
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - ROS 2 basics
+  topics:
+  - mobile-robotics
+  - nav2
+  - slam
+  - jazzy
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: ROSbot 3 ships with Ubuntu 24.04 and ROS 2 Jazzy preinstalled; driver source rosbot_ros; a rosbot-autonomy mapping+navigation project exists. ROSbot 2R quick start is also available. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: jazzy
+    rosbot2r_quick_start: https://husarion.com/tutorials/howtostart/rosbot2r-quick-start/
+    driver_repo: rosbot_ros
+    cost_note: paid hardware (price not stated); docs free
+- id: ras-mobile-robotics-turtlebot4-tutorial
+  title: 'RAS mobile robotics tutorial: TurtleBot 4 (Jazzy)'
+  author: ras-mobile-robotics (GitHub Pages)
+  url: https://ras-mobile-robotics.github.io/tutorials/turtlebot4
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - TurtleBot 4
+  topics:
+  - turtlebot
+  - mobile-robotics
+  - dds
+  - jazzy
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Third-party summary of the Clearpath TurtleBot 4 Jazzy setup (Standard vs Lite, Fast DDS or CycloneDDS). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: jazzy
+- id: discourse-ros2-tutorials-physical-robots-gazebo
+  title: ROS 2 tutorials based on physical robots or Gazebo simulations (ROS Discourse thread)
+  author: ROS community (Open Robotics Discourse)
+  url: https://discourse.openrobotics.org/t/ros-2-tutorials-based-on-physical-robots-or-gazebo-simulations/32077.md
+  type: community
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - ros2-basics
+  - gazebo
+  - example-robots
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Community thread collecting ROS 2 tutorials built around physical robots or Gazebo simulations. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: pythonrobotics
+  title: PythonRobotics
+  author: Atsushi Sakai
+  url: https://atsushisakai.github.io/PythonRobotics/
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Python 3
+  topics:
+  - localization
+  - mapping
+  - slam
+  - path-planning
+  - path-tracking
+  - arm-navigation
+  - python
+  - algorithms
+  est_hours: null
+  last_updated: null
+  status: active
+  license: MIT
+  quality_signal: Listed in mithi/robotics-coursework; companion arXiv paper 1808.10703
+  notes: '''Python code collection of robotics algorithms'' whose aim is ''to help beginners in robotics understand the basic ideas behind each algorithm''; sample code depends only on standard modules; docs modules: Getting Started, Localization, Mapping, SLAM, Path Planning, Path Tracking, Arm Navigation, Aerial Navigation, Bipedal, Inverted Pendulum, Mission Planning. Companion textbook based on the code and animations. Good ''read-the-code'' algorithms track before or alongside ROS.'
+  source_checked_date: '2026-11-11'
+  extra:
+    paper_repo: https://github.com/AtsushiSakai/PythonRoboticsPaper
+    korean_commentary: https://wikidocs.net/blog/@hueykim/3015/
+    cost_note: free (textbook price/format not confirmed)
+- id: pythonrobotics-paper
+  title: 'PythonRobotics: a Python code collection of robotics algorithms (arXiv 1808.10703)'
+  author: Atsushi Sakai et al.
+  url: https://arxiv.org/abs/1808.10703v2
+  type: paper
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - algorithms
+  - python
+  - education
+  est_hours: null
+  last_updated: '2018'
+  status: active
+  license: null
+  quality_signal: null
+  notes: 2018 arXiv paper describing the PythonRobotics project and its educational goals. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    arxiv_id: '1808.10703'
+- id: robotics-toolbox-python
+  title: Robotics Toolbox for Python
+  author: Peter Corke (petercorke on GitHub)
+  url: https://github.com/petercorke/robotics-toolbox-python
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Python >= 3.10
+  - linear algebra
+  topics:
+  - kinematics
+  - manipulation
+  - mobile-robotics
+  - planning
+  - localization
+  - slam
+  - python
+  est_hours: null
+  last_updated: null
+  status: active
+  license: MIT
+  quality_signal: 3.6k stars, 651 forks; ICRA 2021 paper 'Not your grandmother's toolbox' (Corke & Haviland)
+  notes: '''Robotics without the cruft'': pip install roboticstoolbox-python (extras swift, collision, ik, all); manipulators via DH or URDF with 50+ bundled models (Panda, Puma 560), sub-microsecond FK, resolved-rate control; mobile robots (unicycle/bicycle, bug/D*/PRM/RRT planners, EKF/particle-filter localization, EKF SLAM); Swift browser visualizer (needs a hotfix on Windows); tutorial of 2 articles + 12 Jupyter notebooks (Colab) and a JupyterLite browser version; companion book Robotics, Vision & Control. Latest release number/date not captured. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    stars: 3600
+    pypi: https://pypi.org/project/roboticstoolbox-python
+    companion_book: https://link.springer.com/10.1007/978-3-031-06469-2
+    notebook_count: 12
+- id: drake-underactuated
+  title: Drake (taught via MIT Underactuated Robotics / Robotic Manipulation notes)
+  author: Russ Tedrake / MIT (Drake chapter of Underactuated Robotics)
+  url: https://underactuated.csail.mit.edu/drake.html
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - Python
+  - dynamics, linear algebra, optimization
+  topics:
+  - drake
+  - control
+  - manipulation
+  - simulation
+  - python
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: '''Drake is the main software toolbox for the text'''
+  notes: 'Drake (C++ with pydrake) is best taught through the free MIT notes: Underactuated Robotics (examples in pydrake; Deepnote is the main platform, ''Drake no longer supports Google Colab''; local install via pip) and Robotic Manipulation (Fall 2026 offering; 12 chapters with a Pydrake appendix). Both notes are catalogued in foundations.yaml. The note places Drake/Pinocchio in an advanced manipulation/control elective. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    underactuated_notes: https://underactuated.mit.edu/
+    manipulation_notes: https://manipulation.mit.edu/
+- id: pinocchio-practical-exercises
+  title: Pinocchio practical exercises (ROS Jazzy package docs)
+  author: stack-of-tasks (LAAS-CNRS)
+  url: https://docs.ros.org/en/jazzy/p/pinocchio/doc/d-practical-exercises/1-directgeom.html
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - Python
+  - rigid-body kinematics/dynamics
+  topics:
+  - pinocchio
+  - rigid-body-dynamics
+  - kinematics
+  - optimal-control
+  - python
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: C++ rigid-body dynamics library with Python bindings, packaged in the ROS Jazzy index; official numbered practical exercises (1 direct geometry ... 4 direct/inverse dynamics with a home-made contact simulator ... 7 learn/optimal control with an inverted pendulum); visualizers Meshcat, Gepetto Viewer, RViz, Viser. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: jazzy
+    exercise_4: https://docs.ros.org/en/jazzy/p/pinocchio/doc/d-practical-exercises/4-dyn.html
+    exercise_7: https://gepettoweb.laas.fr/doc/stack-of-tasks/pinocchio/master/doxygen-html/md_doc_d-practical-exercises_7-learn.html
+- id: seeed-physical-ai-course-pinocchio
+  title: Seeed Studio Physical AI course, chapter 26 (Pinocchio + MeshCat)
+  author: Seeed Studio
+  url: https://wiki.seeedstudio.com/robotics/rebot_physical_ai_course_chapter_26/
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Python
+  topics:
+  - pinocchio
+  - kinematics
+  - inverse-kinematics
+  - trajectory
+  - meshcat
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Course chapter using Pinocchio with MeshCat for FK/IK/trajectory demos; evidence of Pinocchio being used in teaching. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: open3d
+  title: Open3D documentation and tutorials
+  author: Open3D (Intel ISL)
+  url: https://www.open3d.org/docs/release/getting_started.html
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Python 3.8-3.12 (or C++)
+  topics:
+  - point-clouds
+  - registration
+  - icp
+  - rgbd
+  - 3d-reconstruction
+  - perception
+  - python
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'v0.19.0; pip install open3d (or open3d-cpu). Tutorials: Core (Tensor, Hash map), Geometry (point cloud, mesh, RGBD, KDTree, voxelization, octree, surface reconstruction, ray casting), Visualization (web visualizer, TensorBoard), Pipelines (ICP, global/colored/multiway registration, RGBD integration and odometry), Reconstruction system, Sensors (Azure Kinect, RealSense). Fits a perception module alongside ROS 2 camera/lidar topics; no evidence of course adoption was collected. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    version: 0.19.0
+- id: mit-16-485-vnav
+  title: MIT 16.485 Visual Navigation for Autonomous Vehicles (VNAV)
+  author: MIT (vnav.mit.edu)
+  url: https://vnav.mit.edu/
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - linear algebra, probability
+  - C++ / ROS
+  topics:
+  - visual-navigation
+  - slam
+  - perception
+  - autonomous-vehicles
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: Listed in vovaekb/Awesome-ROS2
+  notes: MIT graduate course on visual navigation; listed as 'beyond ROS' course material in the Jan 2026 Awesome-ROS2 list. Content not evaluated in the note. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: discourse-is-wsl-sufficient
+  title: Is WSL Sufficient for Learning and Using ROS? (ROS Discourse thread)
+  author: ROS community (Open Robotics Discourse)
+  url: https://discourse.openrobotics.org/t/is-wsl-sufficient-for-learning-and-using-ros/42700
+  type: community
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - tooling
+  - wsl2
+  - ubuntu
+  - environment-setup
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: A poster who tried macOS, Windows, WSL2 and native Ubuntu 'concluded that a dedicated Ubuntu setup is best for a beginner'; another found WSL2 'has just got in the way'. Basis for the note's native-Ubuntu-first recommendation. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: reddit-containerised-humble-wsl2
+  title: Containerised ROS 2 Humble for Windows WSL2 (r/ROS thread, Apr 2025)
+  author: r/ROS community (Reddit, via mirror)
+  url: https://redlib.ssps.io/r/ROS/comments/1jp6f35/containerised_ros_2_humble_for_windows_wsl2
+  type: community
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - tooling
+  - wsl2
+  - docker
+  - humble
+  est_hours: null
+  last_updated: 2025-04
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Reddit thread on a containerised Humble setup for WSL2; a commenter urges native install after seeing learners struggle with WSL2. URL is a Reddit mirror. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    url_is_mirror: true
+- id: docker-ros2-guide
+  title: Introduction to ROS 2 Development with Docker (Docker official guide)
+  author: Docker, Inc.
+  url: https://docs.docker.com/guides/ros2/
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Docker basics
+  topics:
+  - docker
+  - tooling
+  - environment-setup
+  - humble
+  - jazzy
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Uses the ros:humble image (switchable to jazzy/rolling), covers a Compose dev container and a Turtlesim example; Linux needs xhost +local:docker, macOS requires XQuartz with network clients enabled; no Windows GUI guidance. The note recommends a ros:jazzy Compose dev container as the equal-footing alternative for macOS/Windows learners. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    base_image: ros:humble (switchable to jazzy/rolling)
+- id: tom-howard-com2009-docker-ros2
+  title: COM2009 Docker ROS 2 setup (University of Sheffield course page)
+  author: Tom Howard (University of Sheffield)
+  url: https://tom-howard.github.io/com2009/ros/other-options/docker-ros2
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Docker
+  topics:
+  - docker
+  - macos
+  - tooling
+  - environment-setup
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: University ROS 2 course page stating 'for Mac users, the best option ... is by using Docker, but please note that performance is not optimal'. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: docker-for-robotics-2b-t
+  title: 2b-t/docker-for-robotics (best-practices guide)
+  author: 2b-t (GitHub)
+  url: https://awesome.ecosyste.ms/projects/github.com%2F2b-t%2Fdocker-for-robotics
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Docker basics
+  topics:
+  - docker
+  - tooling
+  - gui
+  - wsl2
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Best-practices guide for Docker in robotics incl. GUIs on Linux and Windows/WSL2; URL is the ecosyste.ms listing cited in the note. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    url_is_listing: true
+- id: av1tenth-installing-ubuntu
+  title: 'av1tenth docs: Installing Ubuntu (WSL2 vs VM guidance)'
+  author: av1tenth (readthedocs)
+  url: https://av1tenth-docs.readthedocs.io/en/latest/gettingstarted/installingubuntu.html
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - tooling
+  - wsl2
+  - ubuntu
+  - environment-setup
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Robotics setup guide preferring WSL2 over VMware/VirtualBox because 'WSL2 supports NVIDIA GPU passthrough'. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: foxglove-ros2-docs
+  title: 'Foxglove docs: connecting to ROS 2 data'
+  author: Foxglove
+  url: https://docs.foxglove.dev/docs/connecting-to-data/frameworks/ros2
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - ROS 2 basics
+  topics:
+  - foxglove
+  - visualization
+  - rosbag2
+  - mcap
+  - tooling
+  est_hours: null
+  last_updated: null
+  status: active
+  license: proprietary (closed source since Foxglove 2.0; 1.x source remains on GitHub)
+  quality_signal: null
+  notes: Foxglove Bridge auto-subscribes all topics for live viewing; plays .mcap and .db3 (db3 lacks message definitions so custom types can fail); from Iron, ros2 bag records MCAP by default. Free-plan device limit conflicts between sources (5 vs 10) and should be re-verified on foxglove.dev/pricing. The note recommends RViz first, Foxglove + MCAP second. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    getting_started_ros2: https://docs.foxglove.dev/docs/getting-started/ros2
+    foxglove_2_0_announcement: https://discourse.openrobotics.org/t/foxglove-2-0-integrated-ui-new-pricing-and-open-source-changes/36583
+    cost_note: free plan (3 developer seats, 10 GB cloud storage, 5 connected devices; academic users free); paid tiers above
+- id: ros-docs-visualizing-with-foxglove
+  title: Visualizing ROS 2 data with Foxglove (ROS 2 docs, Lyrical)
+  author: Open Robotics / ROS 2 documentation
+  url: https://docs.ros.org/en/lyrical/Related-Projects/Visualizing-ROS-2-Data-With-Foxglove.html
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - ROS 2 basics
+  topics:
+  - foxglove
+  - visualization
+  - tooling
+  - lyrical
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Official ROS docs page on using Foxglove with ROS 2 (Lyrical edition). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distro: lyrical
+- id: foxglove-rviz-vs-foxglove-vs-rerun
+  title: RViz vs Foxglove vs Rerun
+  author: Foxglove (blog)
+  url: https://foxglove.dev/robotics/rviz-vs-foxglove-vs-rerun
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - visualization
+  - rviz
+  - foxglove
+  - rerun
+  - tooling
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Vendor comparison of the three visualizers; useful context for a tooling lesson but written by Foxglove. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: foxglove-best-rosbag-tools-2025
+  title: The best tools for rosbag visualization in 2025
+  author: Foxglove (blog)
+  url: https://foxglove.dev/robotics/the-best-tools-for-rosbag-visualization-in-2025
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - rosbag2
+  - mcap
+  - visualization
+  - tooling
+  est_hours: null
+  last_updated: '2025'
+  status: active
+  license: null
+  quality_signal: null
+  notes: Vendor round-up of rosbag visualization tools (2025); vendor-authored. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: reddit-how-to-start-with-ros2
+  title: How to start with ROS2 (r/ROS thread, July 2025)
+  author: r/ROS community (Reddit, via mirror)
+  url: https://reddit.zackpollard.pro/r/ROS/comments/1m5d854/how_to_start_with_ros2
+  type: community
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - ros2-basics
+  - learning-advice
+  - jazzy
+  est_hours: null
+  last_updated: 2025-07
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Commenters recommend the official docs and 'just start building something'; one warns that 'some packages are still not updated for Jazzy'. URL is a Reddit mirror. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    url_is_mirror: true
