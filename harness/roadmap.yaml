@@ -27,14 +27,14 @@ milestones:
 
     - id: P0-2
       title: 콘텐츠 스키마·로더·검증 CLI (FR-1)
-      status: todo
+      status: done
       depends_on: [P0-1]
       goal: Track > Module > Lesson > Activity 계층을 Markdown+YAML frontmatter 로 정의하고, 로더와 `rc validate` 를 만든다.
       acceptance:
         - 레슨 필수 필드(id, title, prerequisites, estimated_minutes, objectives, tags)와 Activity 타입(reading, quiz, lab, project, external)이 코드와 docs/curriculum/CONTENT_MODEL.md 에 정의되어 있다
         - `rc validate` 가 누락 필드, 존재하지 않는 선수지식 ID, 순환 의존을 감지하면 비정상 종료 코드를 반환하며 각 경우에 테스트가 있다
         - docs/curriculum/LESSON_TEMPLATE.md 형식의 샘플 레슨이 로더로 읽힌다
-      note:
+      note: M1 content model merged (526c4d3)
 
     - id: P0-3
       title: 첫 트랙 콘텐츠 "로보틱스 기초" (부록 A, 모듈 5개)
