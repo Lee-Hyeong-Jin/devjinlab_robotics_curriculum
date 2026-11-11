@@ -14,6 +14,29 @@
   height: 100%;
   background: var(--md-accent-fg-color, #526cfe);
 }
+/* Fill width in 5% steps. Classes rather than an inline style, so the HTML sanitizer
+   can forbid the style attribute outright (no CSS, and no remote url(), from content). */
+.rc-w-0 { width: 0; }
+.rc-w-5 { width: 5%; }
+.rc-w-10 { width: 10%; }
+.rc-w-15 { width: 15%; }
+.rc-w-20 { width: 20%; }
+.rc-w-25 { width: 25%; }
+.rc-w-30 { width: 30%; }
+.rc-w-35 { width: 35%; }
+.rc-w-40 { width: 40%; }
+.rc-w-45 { width: 45%; }
+.rc-w-50 { width: 50%; }
+.rc-w-55 { width: 55%; }
+.rc-w-60 { width: 60%; }
+.rc-w-65 { width: 65%; }
+.rc-w-70 { width: 70%; }
+.rc-w-75 { width: 75%; }
+.rc-w-80 { width: 80%; }
+.rc-w-85 { width: 85%; }
+.rc-w-90 { width: 90%; }
+.rc-w-95 { width: 95%; }
+.rc-w-100 { width: 100%; }
 .rc-pct { font-size: 0.8em; color: var(--md-default-fg-color--light); }
 .rc-status {
   display: inline-block;

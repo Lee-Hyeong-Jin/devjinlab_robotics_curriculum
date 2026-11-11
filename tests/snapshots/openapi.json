@@ -4333,6 +4333,7 @@
         "properties": {
           "user_id": {
             "type": "integer",
+            "minimum": 1.0,
             "title": "User Id",
             "default": 1
           },
@@ -4370,6 +4371,7 @@
           },
           "total_seconds": {
             "type": "integer",
+            "maximum": 3162240000.0,
             "minimum": 0.0,
             "title": "Total Seconds",
             "default": 0
@@ -4855,6 +4857,7 @@
         "properties": {
           "schema_version": {
             "type": "integer",
+            "minimum": 1.0,
             "title": "Schema Version"
           },
           "exported_at": {
@@ -4926,7 +4929,7 @@
           "exported_at"
         ],
         "title": "ProgressExport",
-        "description": "JSON document produced by ``rc progress export`` (FR-10.2).\n\nLists added in schema version 2 default to empty, so a version-1 export still imports."
+        "description": "JSON document produced by ``rc progress export`` (FR-10.2).\n\nLists added in schema version 2 default to empty, so a version-1 export still imports.\n\nThe validators enforce the invariants the database also enforces, so an edited or\nhand-written file fails with a readable message instead of a sqlite error mid-import."
       },
       "QuizAnswerResult": {
         "properties": {
@@ -5629,7 +5632,8 @@
           "id": {
             "anyOf": [
               {
-                "type": "integer"
+                "type": "integer",
+                "minimum": 1.0
               },
               {
                 "type": "null"
@@ -5639,6 +5643,7 @@
           },
           "user_id": {
             "type": "integer",
+            "minimum": 1.0,
             "title": "User Id",
             "default": 1
           },

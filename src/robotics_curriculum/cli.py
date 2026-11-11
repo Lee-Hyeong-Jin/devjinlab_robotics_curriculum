@@ -1,5 +1,7 @@
 """`rc` command-line interface."""
 
+import logging
+import sys
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -29,6 +31,7 @@ from robotics_curriculum.progress import (
     open_service,
     parse_duration,
 )
+from robotics_curriculum.progress.store import StoreError
 from robotics_curriculum.progress.transfer_cli import transfer_command
 from robotics_curriculum.report.cli import report_app
 from robotics_curriculum.roadmap import roadmap
@@ -46,6 +49,20 @@ app.add_typer(api_app, name="api")
 class _Options:
     data_dir: Path | None = None
     curriculum: Path | None = None
+    verbose: bool = False
+
+
+def _setup_logging(verbose: bool) -> None:
+    """Send library logs to stderr; -v turns on debug detail.
+
+    Study notes and other personal data are never logged (engineering rules),
+    so the handler is safe to leave on at warning level.
+    """
+    logging.basicConfig(
+        level=logging.DEBUG if verbose else logging.WARNING,
+        format="%(levelname)s %(name)s: %(message)s",
+        stream=sys.stderr,
+    )
 
 
 @app.callback()
@@ -59,6 +76,10 @@ def main(
             help="Directory holding progress.db [default: <repo>/.rc].",
         ),
     ] = None,
+    verbose: Annotated[
+        bool,
+        typer.Option("--verbose", "-v", help="Log what the command does to stderr."),
+    ] = False,
     curriculum: Annotated[
         Path | None,
         typer.Option(
@@ -69,7 +90,8 @@ def main(
     ] = None,
 ) -> None:
     """Robotics curriculum tools."""
-    ctx.obj = _Options(data_dir=data_dir, curriculum=curriculum)
+    _setup_logging(verbose)
+    ctx.obj = _Options(data_dir=data_dir, curriculum=curriculum, verbose=verbose)
 
 
 def _fail(message: str) -> typer.Exit:
@@ -82,11 +104,13 @@ def _service(ctx: typer.Context) -> Iterator[ProgressService]:
     opts = ctx.obj if isinstance(ctx.obj, _Options) else _Options()
     try:
         service = open_service(opts.data_dir, opts.curriculum)
-    except ProgressError as exc:
+    except (ProgressError, StoreError) as exc:
         raise _fail(str(exc)) from None
     try:
         yield service
-    except ProgressError as exc:
+    # StoreError carries a user-facing sentence (locked database, constraint);
+    # the CLI is the only place that turns an exception into a message.
+    except (ProgressError, StoreError) as exc:
         raise _fail(str(exc)) from None
     finally:
         service.store.close()
@@ -445,6 +469,13 @@ def progress_import(
     replace: Annotated[
         bool, typer.Option("--replace", help="Overwrite existing progress.")
     ] = False,
+    allow_unknown: Annotated[
+        bool,
+        typer.Option(
+            "--allow-unknown",
+            help="Import rows whose lesson ids are not in this curriculum.",
+        ),
+    ] = False,
 ) -> None:
     """Load progress from a JSON export (the store must be empty unless --replace)."""
     try:
@@ -454,7 +485,7 @@ def progress_import(
     except ValidationError as exc:
         raise _fail(f"{file} is not a valid progress export:\n{exc}") from None
     with _service(ctx) as service:
-        n_lessons, n_sessions = service.import_(data, replace=replace)
+        n_lessons, n_sessions = service.import_(data, replace=replace, allow_unknown=allow_unknown)
     typer.echo(f"imported {n_lessons} lesson rows, {n_sessions} sessions")
 
 

@@ -9,6 +9,7 @@ import typer
 
 from robotics_curriculum.progress import ProgressError, ProgressService, open_service
 from robotics_curriculum.progress.service import find_repo_root
+from robotics_curriculum.progress.store import StoreError
 from robotics_curriculum.report.module import build_module_report, render_module
 from robotics_curriculum.report.weekly import IsoWeek, build_weekly_report, render_weekly
 
@@ -26,11 +27,11 @@ def _generate(ctx: typer.Context, make: Callable[[ProgressService], str]) -> str
     curriculum = getattr(ctx.obj, "curriculum", None)
     try:
         service = open_service(data_dir, curriculum)
-    except ProgressError as exc:
+    except (ProgressError, StoreError) as exc:
         raise _fail(str(exc)) from None
     try:
         return make(service)
-    except ProgressError as exc:
+    except (ProgressError, StoreError) as exc:
         raise _fail(str(exc)) from None
     finally:
         service.store.close()

@@ -24,6 +24,7 @@ from robotics_curriculum.progress import (
     default_data_dir,
 )
 from robotics_curriculum.progress.factory import database_url, open_store
+from robotics_curriculum.progress.store import StoreError
 
 LEVELS: tuple[str, ...] = get_args(Level)
 NO_LEVEL = "(레벨 미지정)"
@@ -109,6 +110,6 @@ def roadmap(
             summaries = ProgressService(store, courses).status(course)
         finally:
             store.close()
-    except ProgressError as exc:
+    except (ProgressError, StoreError) as exc:
         raise _fail(str(exc)) from None
     typer.echo(render_roadmap(summaries, level))

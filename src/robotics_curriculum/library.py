@@ -21,6 +21,7 @@ from robotics_curriculum.progress import (
     default_data_dir,
 )
 from robotics_curriculum.progress.factory import database_url, open_store
+from robotics_curriculum.progress.store import StoreError
 
 KIND_LABELS: dict[ResourceKind, str] = {
     ResourceKind.BOOK: "교재",
@@ -115,7 +116,7 @@ def _statuses(ctx: typer.Context, courses: list[Course]) -> dict[str, LessonStat
     store = open_store(data_dir)
     try:
         return {s.lesson.id: s.status for s in ProgressService(store, courses).status()}
-    except ProgressError:
+    except (ProgressError, StoreError):
         return {}
     finally:
         store.close()
