@@ -49,13 +49,13 @@ milestones:
 
     - id: P0-4
       title: 주간 리포트 CLI (FR-7)
-      status: todo
+      status: done
       depends_on: [P0-2]
       goal: 학습 기록을 입력으로 주간 리포트 Markdown 을 reports/YYYY-WW.md 에 생성하는 `rc report weekly` 를 만든다.
       acceptance:
         - `rc report weekly` 가 reports/YYYY-WW.md 를 생성하고 학습 시간, 완료 레슨, 퀴즈 정답률, 복습 수, 메모 요약 섹션을 포함한다
         - 리포트 생성은 단위 테스트로 커버된다(고정 입력 → 기대 출력)
-      note:
+      note: weekly/module report merged (4fa7ffc); quiz stats pending P1-2
 
     - id: P1-1
       title: 학습 진도 추적 저장소 (FR-3, FR-10)
@@ -92,14 +92,14 @@ milestones:
 
     - id: P1-4
       title: 학습 자료·학습 방법 라이브러리 (FR-6)
-      status: todo
+      status: in_progress
       depends_on: [P0-3]
       goal: 레슨별 resources 와 "이 단계 공부법" 을 CLI 와 정적 사이트에서 보기 좋게 보여주고, research_notes/ 의 조사 결과를 자료 목록으로 연결한다.
       acceptance:
         - `rc resources <lesson_id>` 가 레슨의 resources 를 종류별로 출력하고 테스트가 있다
         - 정적 사이트 레슨 페이지에 "이 단계 공부법" 절과 자료 목록이 렌더링된다
         - 자료 항목의 url 형식이 `rc validate` 에서 검사된다
-      note:
+      note: CLI done (e772270); site rendering with P1-5
 
     - id: P1-5
       title: 정적 사이트·대시보드 (Phase 1 MVP 마감)
