@@ -189,7 +189,7 @@
 | 접근성 | 공통 | 웹 UI는 **WCAG 2.1 AA** 준수(키보드 탐색, 명도 대비, 스크린 리더 레이블, 포커스 표시). 자동 검사(axe)를 CI에 포함. CLI는 색 없이도 읽히는 출력. 다크 모드 지원. |
 | 데이터 소유 | 공통 | 모든 콘텐츠·진도·노트는 저장소 안, 로컬 파일, 또는 자체 호스팅 DB에 있다. 외부 전송은 AI 튜터 호출 시 명시적 동의 하에만. 텔레메트리는 기본 꺼짐(opt-in). |
 | 콘텐츠 이식성 | 공통 | 콘텐츠는 앱 없이도 GitHub에서 Markdown으로 읽을 수 있어야 한다 |
-| 품질 도구 | 공통 | `uv` 의존성 관리, `ruff` 린트/포맷, `mypy --strict` 타입 검사, `pytest` 테스트(코어 라이브러리 `src/robotics_curriculum` 라인 커버리지 80% 이상, Phase 2의 `api/`도 동일), 프론트엔드는 동급 린트·타입·테스트. pre-commit 훅과 CI(린트·타입·테스트·의존성 취약점 스캔 고위험 0건·접근성)를 모든 PR에 적용. 상세 기준은 `docs/engineering.md`. |
+| 품질 도구 | 공통 | `uv` 의존성 관리, `ruff` 린트/포맷, `mypy --strict` 타입 검사, `pytest` 테스트(코어 라이브러리 `src/robotics_curriculum` 라인 커버리지 80% 이상, Phase 2의 `api/`도 동일), 프론트엔드는 동급 린트·타입·테스트. pre-commit 훅과 CI(린트·타입·테스트·의존성 취약점 스캔 고위험 0건)를 모든 PR에 적용. 접근성 자동 검사(axe)는 `web/`이 생기는 Phase 2부터 CI에 추가. 상세 기준은 `.claude/rules/engineering.md`. |
 | 호환성 | 공통 | 공개 API와 CLI는 시맨틱 버저닝을 따르고, 콘텐츠 스키마 변경은 마이그레이션 안내와 함께 마이너 이상에서만. |
 
 ## 8. 개념 데이터 모델
@@ -326,7 +326,7 @@ v0.1의 열린 질문 5개에 대한 오케스트레이터 결정과, 그 뒤 �
 | 행동 강령 | `CODE_OF_CONDUCT.md`: Contributor Covenant 2.1 채택, 신고 연락처와 처리 절차 명시. |
 | 보안 취약점 신고 | `SECURITY.md`: 비공개 신고 경로(GitHub Private Vulnerability Reporting 또는 보안 이메일), 접수 확인 3영업일·초기 평가 14일 목표, 조정된 공개(coordinated disclosure), 지원 버전 범위. 취약점 수정은 패치 릴리스와 보안 권고(GHSA)로 공개. |
 | 버저닝 | **시맨틱 버저닝 2.0.0**. 공개 API(REST, 코어 Python API, CLI 인터페이스)와 콘텐츠 스키마가 호환성 범위. 1.0.0 이전에는 마이너 버전에서 호환성 깨짐 허용하되 변경 이력에 명시. |
-| 변경 이력 | `CHANGELOG.md`를 Keep a Changelog 형식으로 유지. 릴리스마다 Added/Changed/Deprecated/Removed/Fixed/Security 구분. 릴리스는 Git 태그 + GitHub Release + Docker 이미지 태그를 동시에. |
+| 변경 이력 | `CHANGELOG.md`를 Keep a Changelog 형식으로 유지. 릴리스마다 Added/Changed/Deprecated/Removed/Fixed/Security 구분. 릴리스는 Git 태그 + GitHub Release를 동시에 발행하고, Docker 이미지 태그는 서버 모드가 생기는 Phase 2부터 함께 발행한다. |
 | 의사결정·유지보수 | 초기에는 저장소 소유자가 단독 유지보수자(BDFL). 기여자가 늘면 `MAINTAINERS.md`에 영역별 유지보수자와 결정 방식(lazy consensus, 이견 시 유지보수자 투표)을 명시. 큰 설계 변경은 `docs/rfcs/`에 RFC로 제안·토론하고, 채택된 결정은 `docs/adr/`에 ADR(Architecture Decision Record)로 기록. |
 | 이슈·로드맵 공개 | 이슈 템플릿(버그/기능/콘텐츠 오류), 라벨 체계(`good first issue` 포함), 공개 로드맵(10절 릴리스 계획을 GitHub Projects로 미러). |
 | 상표·브랜딩 | 프로젝트 이름과 로고 사용 지침을 `TRADEMARK.md`에 둔다(포크는 이름 변경 권장). |
