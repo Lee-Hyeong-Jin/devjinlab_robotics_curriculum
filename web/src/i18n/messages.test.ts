@@ -34,6 +34,12 @@ function placeholders(value: Catalogue, prefix = ''): Map<string, string[]> {
   return out
 }
 
+/**
+ * Namespaces indexed by a runtime value rather than a literal key. Every other
+ * namespace must have a literal `t('…')` call for each of its keys.
+ */
+const DYNAMIC_NAMESPACES = new Set(['state', 'kind', 'activityKind', 'role', 'userStatus'])
+
 const SOURCE_ROOT = join(process.cwd(), 'src')
 
 function sourceFiles(dir: string): string[] {
@@ -92,17 +98,17 @@ describe('message catalogues', () => {
 
   it('has no unused key (AC-I18N.1)', () => {
     const unused = flatten(ko).filter((key) => {
+      // `t('namespace.leaf')` from another namespace, or the bare path.
       if (messageKeys.has(key)) return false
       const dot = key.lastIndexOf('.')
       const namespace = key.slice(0, dot)
       const leaf = key.slice(dot + 1)
       // `t('leaf')` inside `getTranslations('namespace')`.
       if (namespaces.has(namespace) && messageKeys.has(leaf)) return false
-      // Namespaces indexed dynamically, e.g. `tState(state)` over `state.*`.
-      if (namespaces.has(namespace) && new RegExp(`\\(\\s*'${namespace}'\\s*\\)`).test(allSource)) {
-        return !new RegExp(`t[A-Za-z]*\\(`).test(allSource)
-      }
-      return true
+      // Namespaces whose keys are looked up by a runtime value, e.g.
+      // `tState(state)` or `tKind(resource.kind)`. Listed explicitly so the
+      // check stays meaningful for every other namespace.
+      return !DYNAMIC_NAMESPACES.has(namespace)
     })
     expect(unused).toEqual([])
   })

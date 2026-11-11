@@ -1,13 +1,16 @@
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 
+import { getMe } from '@/lib/auth'
+
+import { AccountMenu } from './AccountMenu'
 import { LocaleSwitcher } from './LocaleSwitcher'
 import { NavTab } from './NavTab'
 import { ThemeToggle } from './ThemeToggle'
 
 /** Top navigation (frontend.md §4 — no standalone Figma node; see screen frames). */
 export async function TopNav() {
-  const t = await getTranslations()
+  const [t, user] = await Promise.all([getTranslations(), getMe()])
   return (
     <header className="bg-surface border-border-default sticky top-0 z-40 border-b">
       <nav
@@ -27,6 +30,7 @@ export async function TopNav() {
           <NavTab href="/resources">{t('nav.resources')}</NavTab>
         </div>
         <div className="ml-auto flex items-center gap-2">
+          <AccountMenu user={user} />
           <LocaleSwitcher />
           <ThemeToggle
             groupLabel={t('nav.theme')}

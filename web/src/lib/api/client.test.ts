@@ -52,11 +52,11 @@ describe('apiGet', () => {
   })
 
   it('forwards the request cookies so the API sees the session', async () => {
-    cookieJar.push({ name: 'sid', value: 'abc' }, { name: 'csrf', value: 'tok' })
+    cookieJar.push({ name: 'sid', value: 'abc' }, { name: 'csrf_token', value: 'tok' })
     fetchMock.mockResolvedValue(jsonResponse({}))
     await apiGet('/api/v1/progress/status')
     const init = fetchMock.mock.calls[0]?.[1] as RequestInit
-    expect((init.headers as Headers).get('Cookie')).toBe('sid=abc; csrf=tok')
+    expect((init.headers as Headers).get('Cookie')).toBe('sid=abc; csrf_token=tok')
   })
 
   it('appends query parameters and drops empty ones', async () => {
@@ -134,7 +134,7 @@ describe('apiGetOrNull', () => {
 
 describe('apiPost', () => {
   it('double-submits the CSRF cookie and sends JSON', async () => {
-    cookieJar.push({ name: 'csrf', value: 'tok-123' })
+    cookieJar.push({ name: 'csrf_token', value: 'tok-123' })
     fetchMock.mockResolvedValue(jsonResponse({ ok: true }))
     await apiPost('/api/v1/progress/start', { lesson_id: 'l1' })
     const init = fetchMock.mock.calls[0]?.[1] as RequestInit
