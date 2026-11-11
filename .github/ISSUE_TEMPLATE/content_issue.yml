@@ -1,0 +1,36 @@
+name: Content issue
+description: An error, gap, or broken link in a curriculum lesson.
+labels: ["content", "triage"]
+body:
+  - type: input
+    id: lesson
+    attributes:
+      label: Lesson ID or file
+      description: For example `m1-vectors-matrices` or `curriculum/robotics-expert/...md`.
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind of issue
+      options:
+        - Factual or mathematical error
+        - Broken or outdated resource link
+        - Missing or wrong prerequisite
+        - Unclear explanation or study method
+        - Typo or formatting
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Quote the passage and explain what is wrong.
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested correction
+      description: Proposed text, a better resource, or a source that supports the fix.

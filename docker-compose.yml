@@ -1,0 +1,12 @@
+# Phase 1: the rc CLI only. The api, db and web services arrive with Phase 2 (harness/roadmap.yaml P2-5).
+# Usage: docker compose run --rm cli validate
+services:
+  cli:
+    build: .
+    image: robotics-curriculum:local
+    volumes:
+      - rc-data:/data
+      - ./curriculum:/app/curriculum:ro
+
+volumes:
+  rc-data:

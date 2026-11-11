@@ -1,0 +1,43 @@
+name: Bug report
+description: Something in the rc CLI, static site, or tooling does not work as documented.
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Security problems must not be reported here. See SECURITY.md.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. uv sync
+        2. uv run rc ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Output or traceback
+      render: shell
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Output of `uv run rc version`, or the commit SHA.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python version, and how you run it (uv, Docker).
+    validations:
+      required: true

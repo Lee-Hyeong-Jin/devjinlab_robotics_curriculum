@@ -2,7 +2,7 @@
 # Verification gate (the "verify" node of the dev graph).
 # Usage: scripts/harness/check.sh [--quick]
 #   --quick : lint + type-check only (used by the Stop hook)
-#   (none)  : lint + type-check + tests
+#   (none)  : lint + type-check + tests (with coverage gate when pytest-cov is present)
 # Exit 0 = all green, or no stack configured. Non-zero = something failed.
 set -u
 root="$(git rev-parse --show-toplevel 2>/dev/null || echo "${CLAUDE_PROJECT_DIR:-$PWD}")"
@@ -28,9 +28,12 @@ for s in $stacks; do
         run "ruff check" $PY ruff check .
         run "ruff format --check" $PY ruff format --check .
       fi
-      $PY mypy --version >/dev/null 2>&1 && run "mypy" $PY mypy .
+      # mypy targets come from [tool.mypy] files in pyproject.toml (src/, strict).
+      $PY mypy --version >/dev/null 2>&1 && run "mypy" $PY mypy
       if [ "$quick" = 0 ] && $PY pytest --version >/dev/null 2>&1; then
-        run "pytest" $PY pytest -q
+        # With pytest-cov installed, enforce [tool.coverage.report] fail_under.
+        cov=""; $PY python -c "import pytest_cov" >/dev/null 2>&1 && cov="--cov --cov-report=term"
+        run "pytest" $PY pytest -q $cov
       fi
       ;;
     node)
