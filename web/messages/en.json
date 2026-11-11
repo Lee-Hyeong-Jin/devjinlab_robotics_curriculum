@@ -14,7 +14,8 @@
     "themeLight": "Light",
     "themeDark": "Dark",
     "themeSystem": "System",
-    "language": "Language"
+    "language": "Language",
+    "search": "Search"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -71,14 +72,12 @@
     "next": "Next lesson",
     "toModule": "Module overview",
     "estimated": "about {minutes}",
-    "studied": "Study time",
     "understanding": "Understanding",
     "note": "Note",
     "onThisPage": "On this page",
     "empty": "This lesson has no body.",
     "difficulty": "Difficulty {level}/5",
-    "prerequisites": "Prerequisites",
-    "writeActionsPending": "Use the CLI (`rc study`, `rc done`) for the timer and completion. Web write actions land in the next step."
+    "prerequisites": "Prerequisites"
   },
   "resources": {
     "title": "Resources",
@@ -361,5 +360,18 @@
     "doneWithUnlocked": "Marked complete. {count} lessons unlocked: {ids}",
     "doneFailed": "Could not mark it complete.",
     "alreadyDone": "You have already completed this lesson."
+  },
+  "search": {
+    "title": "Search",
+    "subtitle": "Across lesson bodies and resources.",
+    "label": "Query",
+    "placeholder": "At least two characters",
+    "submit": "Search",
+    "count": "{count} results",
+    "noResults": "Nothing matched \"{query}\".",
+    "tooShort": "Type at least two characters.",
+    "unavailable": "Search is unavailable.",
+    "lesson": "Lesson",
+    "resource": "Resource"
   }
 }

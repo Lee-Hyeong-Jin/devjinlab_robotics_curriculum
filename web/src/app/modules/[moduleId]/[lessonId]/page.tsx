@@ -9,10 +9,11 @@ import { LessonRow } from '@/components/LessonRow'
 import { MarkdownBody } from '@/components/MarkdownBody'
 import { PageHeader } from '@/components/PageHeader'
 import { ResourceRow } from '@/components/ResourceRow'
+import { StudyPanel } from '@/components/StudyPanel'
 import { isNotFound } from '@/lib/api/errors'
-import { getLesson, getLessonProgress, getModule } from '@/lib/api/queries'
+import { getLesson, getLessonProgress, getModule, getStatus } from '@/lib/api/queries'
 import type { Lesson, Module } from '@/lib/api/types'
-import { formatMinutes, formatSeconds } from '@/lib/format'
+import { formatMinutes } from '@/lib/format'
 import { renderMarkdown } from '@/lib/markdown/render'
 import { lockStateFromStatus } from '@/lib/progress'
 
@@ -56,10 +57,11 @@ export default async function LessonPage({ params }: Params) {
     getTranslations('activityKind'),
     getLocale(),
   ])
-  const [lesson, progress, mod] = await Promise.all([
+  const [lesson, progress, mod, status] = await Promise.all([
     loadLesson(lessonId),
     getLessonProgress(lessonId),
     getModule(moduleId).catch((): Module | null => null),
+    getStatus(),
   ])
 
   const body = renderMarkdown(lesson.body)
@@ -159,31 +161,12 @@ export default async function LessonPage({ params }: Params) {
         </div>
 
         <aside className="flex flex-col gap-6" aria-label={t('onThisPage')}>
-          <Card>
-            <p className="text-muted text-xs">{t('writeActionsPending')}</p>
-            {progress ? (
-              <dl className="mt-3 flex flex-col gap-1 text-sm">
-                <div className="flex justify-between gap-2">
-                  <dt className="text-muted">{t('studied')}</dt>
-                  <dd className="text-primary tabular-nums">
-                    {formatSeconds(progress.total_seconds, locale)}
-                  </dd>
-                </div>
-                {progress.understanding ? (
-                  <div className="flex justify-between gap-2">
-                    <dt className="text-muted">{t('understanding')}</dt>
-                    <dd className="text-primary tabular-nums">{`${progress.understanding}/5`}</dd>
-                  </div>
-                ) : null}
-                {progress.note ? (
-                  <div className="mt-1">
-                    <dt className="text-muted">{t('note')}</dt>
-                    <dd className="text-primary">{progress.note}</dd>
-                  </div>
-                ) : null}
-              </dl>
-            ) : null}
-          </Card>
+          <StudyPanel
+            moduleId={moduleId}
+            lessonId={lessonId}
+            progress={progress}
+            openSession={status?.open_session ?? null}
+          />
 
           {sectionHeadings.length > 0 ? (
             <Card as="nav" aria-labelledby="toc-heading">
@@ -214,7 +197,7 @@ export default async function LessonPage({ params }: Params) {
                 {lesson.prerequisites.map((id) => (
                   <li key={id}>
                     <Link
-                      href={`/modules/${moduleId}/${id}`}
+                      href={`/lessons/${encodeURIComponent(id)}`}
                       className="text-accent font-mono text-xs underline underline-offset-2"
                     >
                       {id}
