@@ -1,0 +1,5 @@
+id: m2-kinematics
+title: M2 로봇 운동학
+summary: DH 파라미터로 매니퓰레이터를 모델링하고 정기구학·역기구학을 푼다.
+lessons:
+  - dh-parameters

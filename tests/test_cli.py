@@ -14,14 +14,17 @@ def test_version_prints_package_version() -> None:
     assert result.output.strip() == f"rc {__version__}"
 
 
-def test_validate_counts_markdown_files(tmp_path: Path) -> None:
+def test_validate_default_curriculum_passes() -> None:
+    result = runner.invoke(app, ["validate", "curriculum"])
+    assert result.exit_code == 0, result.output
+    assert result.output.startswith("OK: ")
+
+
+def test_validate_dir_without_course_yaml_exits_1(tmp_path: Path) -> None:
     (tmp_path / "a.md").write_text("# a")
-    (tmp_path / "sub").mkdir()
-    (tmp_path / "sub" / "b.md").write_text("# b")
-    (tmp_path / "ignored.txt").write_text("x")
     result = runner.invoke(app, ["validate", str(tmp_path)])
-    assert result.exit_code == 0
-    assert "2 markdown file(s) found" in result.output
+    assert result.exit_code == 1
+    assert "no course.yaml found" in result.output
 
 
 def test_validate_missing_dir_exits_1(tmp_path: Path) -> None:
