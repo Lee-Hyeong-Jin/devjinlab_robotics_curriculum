@@ -78,8 +78,9 @@ describe('renderMarkdown', () => {
   it('gives headings ids and collects them in document order', () => {
     const { container, headings } = renderBody('## 이 단계 공부법\n\n본문\n\n### 세부\n\n## 정리\n')
     expect(headings.map((heading) => heading.text)).toEqual(['이 단계 공부법', '세부', '정리'])
-    expect(headings.map((heading) => heading.depth)).toEqual([2, 3, 2])
-    expect(container.querySelector('h2')?.id).toBe('이-단계-공부법')
+    // Shifted one level down to nest under the page's own <h1>.
+    expect(headings.map((heading) => heading.depth)).toEqual([3, 4, 3])
+    expect(container.querySelector('h3')?.id).toBe('이-단계-공부법')
   })
 
   it('de-duplicates repeated heading slugs', () => {
@@ -115,5 +116,27 @@ describe('single-line display math', () => {
     const { container } = renderBody('```bash\n$$x$$\n```\n')
     expect(container.querySelector('math')).toBeNull()
     expect(container.querySelector('pre code')?.textContent).toContain('$$x$$')
+  })
+})
+
+describe('heading hierarchy', () => {
+  it('pushes content headings under the page heading by default', () => {
+    const { container, headings } = renderBody('# 주간 리포트\n\n## 완료한 레슨\n\n### 상세\n')
+    // The page owns the only <h1>; the body starts at <h2>.
+    expect(container.querySelector('h1')).toBeNull()
+    expect(container.querySelector('h2')?.textContent).toBe('주간 리포트')
+    expect(headings.map((heading) => heading.depth)).toEqual([2, 3, 4])
+  })
+
+  it('never pushes past h6', () => {
+    const { container } = renderBody('###### 여섯 번째\n')
+    expect(container.querySelector('h6')).not.toBeNull()
+    expect(container.querySelector('h7')).toBeNull()
+  })
+
+  it('can be told not to shift at all', () => {
+    const { content } = renderMarkdown('# 제목\n', { headingOffset: 0 })
+    const { container } = render(<MarkdownBody>{content}</MarkdownBody>)
+    expect(container.querySelector('h1')?.textContent).toBe('제목')
   })
 })

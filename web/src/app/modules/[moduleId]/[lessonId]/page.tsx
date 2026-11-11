@@ -69,7 +69,8 @@ export default async function LessonPage({ params }: Params) {
   const body = renderMarkdown(lesson.body)
   const studyMethod = renderMarkdown(lesson.study_method ?? undefined)
   const siblings = mod?.lessons ?? []
-  const sectionHeadings = body.headings.filter((heading) => heading.depth === 2)
+  // `##` in the body renders as <h3> after the shift under the page's <h1>.
+  const sectionHeadings = body.headings.filter((heading) => heading.depth === 3)
 
   return (
     <>

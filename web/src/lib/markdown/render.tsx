@@ -14,7 +14,7 @@ import { unified } from 'unified'
 
 import { normalizeDisplayMath } from './normalize'
 import { lessonSanitizeSchema } from './sanitize'
-import { rehypeHeadingIds, type Heading } from './slug'
+import { rehypeHeadingIds, rehypeShiftHeadings, type Heading } from './slug'
 
 export type { Heading } from './slug'
 
@@ -55,7 +55,18 @@ const components = {
  *   `rehype-pretty-code` (inline styles), and the classes are themed from the
  *   design tokens in `globals.css`.
  */
-export function renderMarkdown(markdown: string | undefined): RenderedMarkdown {
+export interface RenderOptions {
+  /**
+   * Push content headings down this many levels so they nest under the page's
+   * own `<h1>`. 1 by default: a body `#` becomes `<h2>`.
+   */
+  headingOffset?: number
+}
+
+export function renderMarkdown(
+  markdown: string | undefined,
+  { headingOffset = 1 }: RenderOptions = {},
+): RenderedMarkdown {
   if (!markdown || markdown.trim() === '') return { content: null, headings: [] }
 
   const headings: Heading[] = []
@@ -66,6 +77,7 @@ export function renderMarkdown(markdown: string | undefined): RenderedMarkdown {
     .use(remarkRehype)
     .use(rehypeKatex, { output: 'mathml', throwOnError: false, strict: false })
     .use(rehypeHighlight, { detect: false, ignoreMissing: true })
+    .use(rehypeShiftHeadings(headingOffset))
     .use(rehypeSanitize, lessonSanitizeSchema)
     // After the sanitizer: the ids are generated here from heading text, so they
     // must not pick up its `user-content-` clobber prefix (the "on this page"

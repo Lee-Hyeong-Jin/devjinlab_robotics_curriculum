@@ -32,6 +32,24 @@ npm run dev            # http://localhost:3000
 
 게이트: `npm run lint && npm run typecheck && npm test && npm run build`.
 
+### E2E 두 종류
+
+| 스펙                  | 필요한 API 모드   | 실행                                                      |
+| --------------------- | ----------------- | --------------------------------------------------------- |
+| `e2e/smoke.spec.ts`   | **local** (기본)  | `E2E_BASE_URL=... npx playwright test smoke`              |
+| `e2e/journey.spec.ts` | **server** (계정) | `E2E_AUTH=1 E2E_BASE_URL=... npx playwright test journey` |
+
+스모크는 비로그인 상태로 화면을 돌기 때문에 server 모드 API 를 쓰면 전부
+`/login` 으로 리다이렉트돼 실패한다. 반대로 journey(AC-WEB.1 전체 흐름: 가입 →
+로그인 → 레슨 → 타이머 → 완료 → 퀴즈 → 복습 → 리포트)는 계정이 필요하므로
+`E2E_AUTH=1` 이 없으면 스스로 skip 한다.
+
+```bash
+# server 모드 API (journey 용)
+RC_AUTH_MODE=server RC_AUTH_COOKIE_SECURE=0 RC_DATA_DIR=$(mktemp -d) \
+  uv run rc api serve --port 8000
+```
+
 ## 환경 변수
 
 `.env.local` 에 넣는다(하네스가 `.env*` 쓰기를 막으므로 예시 파일 대신 여기에 적는다).
