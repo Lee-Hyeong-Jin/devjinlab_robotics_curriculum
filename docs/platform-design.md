@@ -186,8 +186,19 @@ site/
 
 Figma 파일은 위 네 화면(대시보드·로드맵·레슨·자료실)을 데스크톱 1440 기준으로 옮긴다. 페이지 구성 `00 Cover · 01 Tokens · 02 Components(모듈 카드, 레슨 행, 공부법 스텝, 자료 행, 진행률 바) · 03 Dashboard · 04 Roadmap · 05 Lesson · 06 Resources`.
 
-- 대상 파일: https://www.figma.com/design/BVk1OeYnq1gFHz4etJi1oN/ (파일 키 `BVk1OeYnq1gFHz4etJi1oN`, 2026-11-11 사용자 제공, 현재 제목 "Untitled" → "로보틱스 전문가 코스 플랫폼"으로 변경 예정)
-- 작업 상태: Figma MCP 인증 대기. 인증 후 위 페이지 구성대로 프레임을 만들고 이 항목을 갱신한다.
+- 파일: https://www.figma.com/design/BVk1OeYnq1gFHz4etJi1oN/ (파일 키 `BVk1OeYnq1gFHz4etJi1oN`, 2026-11-11). Starter 플랜은 페이지가 3개로 제한되어 위 7페이지 구성을 3페이지로 통합했다.
+- 작업 상태: 2026-11-11 Figma MCP(`use_figma`)로 작성 완료. 글꼴 Noto Sans KR(본문)·JetBrains Mono(ID·명령). 색상은 로컬 변수 컬렉션 `Tokens`(22개)에 바인딩. 화면 데이터는 `curriculum/robotics-expert`(기초 M1–M4, 레슨 14개)와 정기구학 레슨 본문을 그대로 썼다.
+
+| 페이지 | 프레임 | 링크 |
+|---|---|---|
+| 00 Cover | Cover / 1440 — 제품 정의, 페이지 구성, 토큰 스와치 | https://www.figma.com/design/BVk1OeYnq1gFHz4etJi1oN/?node-id=12-107 |
+| 01 Screens | Dashboard / 1440 — 현재 위치, 단계별 진행률, 스탯 타일, 최근 활동 | https://www.figma.com/design/BVk1OeYnq1gFHz4etJi1oN/?node-id=11-2 |
+| 01 Screens | Roadmap / 1440 — 기초/중급/고급 열, 모듈 카드, 선수지식 체인 | https://www.figma.com/design/BVk1OeYnq1gFHz4etJi1oN/?node-id=11-119 |
+| 01 Screens | Lesson / 1440 — m2-forward-kinematics: 사이드바, 학습 목표, "이 단계 공부법", 자료, 본문, 자가 점검, 우측 목차 | https://www.figma.com/design/BVk1OeYnq1gFHz4etJi1oN/?node-id=11-307 |
+| 01 Screens | Resources / 1440 — 필터 바, 자료 표(제목·유형·단계·주제·비용·언어·읽기 상태) | https://www.figma.com/design/BVk1OeYnq1gFHz4etJi1oN/?node-id=11-492 |
+| 02 Components | Status Dot(4) · Chip(5) · Button(3) · Nav Tab(2) · Progress Bar · Stat Tile · Module Card · Lesson Row · Study Step · Resource Row | https://www.figma.com/design/BVk1OeYnq1gFHz4etJi1oN/?node-id=8-4 |
+
+알려진 제약: Figma 플러그인 API에서 인스턴스 내부 자식 크기 변경이 적용되지 않아 화면의 진행률 바는 인스턴스를 분리(detach)한 일반 프레임이다. 컴포넌트 페이지의 섹션 정리와 라이브러리 게시는 Starter 플랜 MCP 호출 한도로 보류.
 
 ---
 
@@ -567,4 +578,4 @@ flowchart TD
 | 2 | `resources/*.yaml` 6개 파일(foundations, ros2, simulators, hardware, korean, ai_robot_learning) | 리서치 세션이 §3.5 스키마로 생성 중 (`worktree-research`) | 리서치 세션 |
 | 3 | 활동 단위 진도(`activity_progress`) 도입 시점 | 레슨 단위로 시작, 퀴즈·연습문제 상태가 필요해지면 추가 | P1-1 |
 | 4 | 모듈 10개와 단계 배정 | PRD v0.4 부록 A로 확정(§2.1). 자료 조사 세션 제안이 오면 PRD와 함께 갱신 | 오케스트레이터 |
-| 5 | Figma 화면 디자인 | 파일은 §2.4에 기록됨. Figma MCP 인증·세션 재시작 후 프레임 작성 | 이 세션 |
+| 5 | Figma 화면 디자인 | §2.4에 네 화면·컴포넌트·커버 링크 기록(2026-11-11 완료). 남은 것: 컴포넌트 페이지 섹션 정리, 다크 모드 토큰, 모바일 폭 | 이 세션 |
