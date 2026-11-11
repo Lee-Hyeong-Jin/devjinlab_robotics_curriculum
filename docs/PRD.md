@@ -2,8 +2,8 @@
 
 | 항목 | 내용 |
 |---|---|
-| 문서 버전 | 0.2 (Draft) |
-| 작성일 | 2026-11-11 (v0.1), 2026-11-11 (v0.2: 열린 질문 결정 반영) |
+| 문서 버전 | 0.3 (Draft) |
+| 작성일 | 2026-11-11 (v0.1 초안 → v0.2 열린 질문 결정 반영 → v0.3 시뮬레이터 조사 반영) |
 | 상태 | 검토 대기 |
 | 관련 저장소 | `devjin_robotics_curriculum` (본 저장소), `../my_first_webots_project` (실습 시뮬레이션) |
 
@@ -107,10 +107,10 @@ MVP는 P1/P2가 동일 인물인 **단일 사용자** 환경을 전제로 한다
 | ID | 우선순위 | 요구사항 | 수용 기준 |
 |---|---|---|---|
 | FR-5.1 | P0 | `lab` Activity는 Webots 월드 파일, 컨트롤러 템플릿, 판정 스크립트(`judge.py`)를 참조한다. | 레슨 페이지에 실습 파일 경로와 실행 방법이 보인다. |
-| FR-5.2 | P0 | `rc lab open <id>`가 월드를 열고 템플릿을 작업 폴더로 복사한다. | `../my_first_webots_project` 구조를 재사용한다. |
+| FR-5.2 | P0 | `rc lab open <id>`가 월드를 열고 템플릿을 작업 폴더로 복사한다. 컨트롤러는 외부(extern) 컨트롤러 방식을 기본으로 해 학습자의 venv/IDE에서 실행한다. | `../my_first_webots_project` 구조를 재사용한다. |
 | FR-5.3 | P1 | 자동 검증: `rc lab run <id>`가 Webots를 headless로 실행하고 판정 결과를 기록한다. 판정은 **Python 스크립트**로 작성하되 공용 헬퍼 `labs/_lib/judge.py`(위치 오차, 도달 시간, 충돌 여부 등)를 사용한다. YAML 선언형 판정은 보류. | 통과/실패, 로그, 지표(오차, 시간)를 저장. |
 | FR-5.4 | P1 | 실습 제출 이력(코드 스냅샷, 결과)을 남긴다. | 과거 제출과 비교 가능. |
-| FR-5.5 | P2 | ROS 2 기반 실습 지원(Gazebo 또는 Webots-ROS2). | 별도 설계 문서로 분리. |
+| FR-5.5 | P2 | ROS 2 기반 실습 지원. 타깃은 ROS 2 Jazzy + Ubuntu 24.04, `webots_ros2` 패키지 우선, Gazebo Harmonic은 이후 검토. | 별도 설계 문서로 분리. |
 
 ### FR-6. 리소스 및 리서치 노트 라이브러리 (P1)
 
@@ -155,7 +155,8 @@ MVP는 P1/P2가 동일 인물인 **단일 사용자** 환경을 전제로 한다
 |---|---|
 | 성능 | CLI 명령 응답 1초 이내, `rc build` 200개 레슨 기준 30초 이내 |
 | 오프라인 | 네트워크 없이 로컬에서 전체 핵심 기능(FR-1~FR-5, FR-7) 동작. AI 튜터만 예외 |
-| 이식성 | Linux 우선, macOS 지원. Python 3.12 이상, Webots R2023b 이상 |
+| 이식성 | Linux(Ubuntu 22.04/24.04) 우선, macOS 12~14 지원. Python 3.12 이상. Webots는 안정판 **R2025a**로 고정하고 `rc doctor`가 설치 버전을 검사한다 |
+| 저사양 환경 | Webots 최소 사양(RAM 2 GB, OpenGL 3.3)에 못 미치거나 Intel 내장 GPU인 학습자를 위해 `--no-rendering --batch` 실행 옵션과 webots.cloud(브라우저 실행) 대안을 실습 가이드에 포함한다 |
 | 데이터 소유 | 모든 콘텐츠·진도·노트는 저장소 안 또는 로컬 파일. 외부 전송은 AI 튜터 호출 시 명시적 동의 하에만 |
 | 콘텐츠 이식성 | 콘텐츠는 앱 없이도 GitHub에서 Markdown으로 읽을 수 있어야 한다 |
 | 품질 도구 | `uv`로 의존성 관리, `ruff` 린트/포맷, `pytest` 테스트. 콘텐츠 검증, SM-2 계산, 리포트 생성, 판정 헬퍼는 단위 테스트 필수 |
@@ -235,6 +236,7 @@ frontend/, backend/    Phase 2 예정 (웹 UI, API 서버). Phase 1에서는 만
 | 과도한 기능 범위 | MVP 지연 | P0 외 기능은 이슈로만 남기고 구현하지 않음 |
 | 단일 사용자 가정 고착 | 멀티유저 전환 비용 | 모든 학습 데이터에 `user_id` 컬럼 선반영 |
 | 정적 사이트의 읽기 전용 한계 | 진도 반영마다 `rc build` 필요, 복습 UX가 터미널에 묶임 | Phase 1 사용 기록으로 마찰을 측정하고 Phase 2 웹 전환 시점 결정 |
+| Webots 버전·GPU 호환성 | 차기 릴리스(R2025b 미확정)나 저사양 GPU에서 실습이 깨짐 | R2025a 고정 + `rc doctor` 버전 검사, 헤드리스·webots.cloud 대안 안내 |
 
 **가정**: 첫 사용자는 저장소 소유자 본인이며 Linux + Webots 환경이 이미 갖춰져 있다. 스택과 범위는 13절 결정 사항을 따르며, 사용자가 추후 번복할 수 있다.
 
@@ -260,4 +262,13 @@ v0.1의 열린 질문 5개에 대해 오케스트레이터가 내린 결정이�
 | M2 로봇 운동학 | DH 파라미터(M1), 정기구학, 역기구학(정기구학) | Webots 2-link 매니퓰레이터 목표 자세 도달 |
 | M3 이동 로봇·제어 | 차동 구동 모델(M1), PID 제어, 경로 추종(PID) | Webots e-puck 라인 트레이싱, 목표점 도달 오차 판정 |
 | M4 센서·인식 | 거리 센서, 카메라 기초, 센서 노이즈·필터링 | Webots 장애물 회피 |
-| M5 시뮬레이션·툴체인 | Webots 구조(world/controller/proto), ROS 2 개요 | `my_first_webots_project` 리팩터링 과제 |
+| M5 시뮬레이션·툴체인 | Webots 구조(world/controller/proto), ROS 2 Jazzy 개요 | `my_first_webots_project` 리팩터링 과제 |
+
+M1~M5의 Webots 실습은 공식 튜토리얼 1~8(Python 컨트롤러 기준, 총 약 235분)을 레슨 단위로 매핑해 구성한다.
+
+## 부록 B. 참고 사례 및 주의
+
+- **선행 사례**: CU Boulder Coursera "Introduction to Robotics with Webots"(Python, 3코스)를 커리큘럼 구조의 1차 참고로 삼는다.
+- **시뮬레이터 확장 순서**(Phase 3 이후 검토): Webots R2025a → MuJoCo(pip/Colab) → Gazebo Harmonic + ROS 2 Jazzy → 선택적으로 Isaac Lab(고사양 GPU 필요).
+- **링크 금지**: robotbenchmark.net은 현재 스팸 페이지로 바뀌어 있으므로 콘텐츠에서 참조하지 않는다. `rc validate`의 외부 링크 검사 차단 목록에 넣는다.
+- **출처**: `research_notes/로보틱스 학습 자료 조사/simulators.md` (자료 조사 세션, 2026-11-11).
