@@ -32,4 +32,28 @@ Courses:
 | `m10-system-integration-capstone` | M10 시스템 통합·캡스톤 프로젝트 | 고급 | 6 | 750분 (약 12.5시간) | 18 |
 | **합계** | | | **50** | **5,600분 (약 93시간)** | **150** |
 
+### 번역 현황 (en)
+
+영어 판은 원문 옆의 형제 파일 `<lesson>.en.md` 다(`docs/curriculum/CONTENT_MODEL.md`
+"레슨 번역", ADR 0012). 번역은 텍스트만 담고 구조 필드는 원문에만 있다. 번역이 없는 레슨은
+한국어 원문으로 폴백한다(`translated: false`). 영어 사이트는 `uv run rc site build --lang en`.
+
+| 모듈 | 레슨 수 | en 번역 | 비고 |
+|---|---|---|---|
+| `m1-math-physics` | 3 | 3 / 3 | 완료 |
+| `m2-kinematics` | 3 | 3 / 3 | 완료 |
+| `m3-mobile-robots-control` | 3 | 3 / 3 | 완료 |
+| `m4-sensors-perception` | 5 | 5 / 5 | 완료 |
+| `m8-ros2-tools` | 5 | 0 / 5 | 예정 |
+| `m5-state-estimation-slam` | 6 | 0 / 6 | 예정 |
+| `m6-navigation-planning` | 6 | 0 / 6 | 예정 |
+| `m7-manipulation-motion-planning` | 6 | 0 / 6 | 예정 |
+| `m9-learning-based-robotics` | 7 | 0 / 7 | 예정 |
+| `m10-system-integration-capstone` | 6 | 0 / 6 | 예정 |
+| **합계** | **50** | **14 / 50** | 기초 단계(M1~M4) 완료 |
+
+번역본에는 ` ```quiz ` 블록을 넣지 않는다. CONTENT_MODEL 의 "레슨 번역" 절이 퀴즈 블록을
+다루지 않아 문항 id·활동 참조가 중복될 수 있기 때문이다. 영어 학습자도 `rc quiz <lesson_id>`
+로 한국어 원문의 퀴즈를 풀 수 있고, 규칙이 정해지면 번역을 추가한다.
+
 Content in this directory is licensed under [CC BY 4.0](LICENSE) (Creative Commons Attribution 4.0 International); code elsewhere in the repository is Apache-2.0.
