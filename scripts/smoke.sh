@@ -70,6 +70,22 @@ echo "--- api endpoints"
 check /openapi.json 200 '"openapi"'
 check /api/v1/courses 200 'robotics-expert'
 
+echo "--- metrics"
+# /metrics is optional until the api session's work lands, and RC_API_METRICS=0 turns it off.
+mcode="$(curl -fsS -o /tmp/rc-smoke-metrics -w '%{http_code}' --max-time 10 "$base/metrics" 2>/dev/null || true)"
+case "$mcode" in
+  200)
+    grep -q 'http_requests_total' /tmp/rc-smoke-metrics ||
+      fail "/metrics lacks http_requests_total: $(head -c 200 /tmp/rc-smoke-metrics)"
+    echo "  OK   /metrics -> 200 with http_requests_total"
+    ;;
+  404 | "")
+    echo "  SKIP /metrics not served (RC_API_METRICS=0 or not implemented yet)"
+    ;;
+  *) fail "/metrics returned $mcode" ;;
+esac
+rm -f /tmp/rc-smoke-metrics
+
 echo "--- request id correlation"
 rid="smoke-$$"
 got="$(curl -fsS -o /dev/null -D - --max-time 10 -H "X-Request-ID: $rid" "$base/healthz" |
