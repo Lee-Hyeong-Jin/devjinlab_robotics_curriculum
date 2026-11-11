@@ -81,3 +81,57 @@ platform-harness-rules-file(컨테이너·CI), SRV-08 = db-engineer.
 uv run pytest tests/test_server_review.py -rx   # 5 xfailed = 결함 5건 재현
 bash scripts/harness/check.sh                   # 전체 게이트
 ```
+
+---
+
+## 재검증 (2026-11-11, integration 8164f71)
+
+방법: 실제 `rc api serve`(서버 모드, SQLite, 포획 SMTP 서버로 메일 토큰 수신) 프로세스에 대한 HTTP 프로빙,
+`bash scripts/smoke.sh`(docker compose, 빌드 포함) 1회 전체 실행, 그리고 `tests/test_oidc.py` 의 FakeIdP
+하니스를 재사용한 OIDC 프로빙. 실행한 명령과 응답에 근거해 적는다.
+
+### SRV-01 ~ SRV-09 판정
+
+| ID | 판정 | 근거 |
+|---|---|---|
+| SRV-01 | **해결됨** (a285491, 7e7d14c) | 서버 모드 실서버: `/api/v1/courses`·`/me`·`/progress/status`·`POST /progress/log` 모두 401. 로컬 모드 바인드 가드 동작: `--host 0.0.0.0`, `--host ::` 기동 거부, `127.0.0.1` 기동, `RC_API_ALLOW_REMOTE_LOCAL=1` 로만 우회. compose/Dockerfile 에 `RC_AUTH_MODE=server`. docker smoke: `/api/v1/courses -> 401 without credentials` |
+| SRV-02 | **해결됨** (7e7d14c) | `RC_AUTH_ADMIN_EMAIL` 주소로 가입 → `role: learner`, 미인증 상태로 `/admin/users` 403. 메일 토큰으로 이메일 인증 후에만 admin 승격, 승격 후 두 번째 계정은 learner 유지(활성 admin 이 있으면 승격 안 함) |
+| SRV-03 | **해결됨** (7e7d14c) | 같은 주소 8회 요청 → `[202,202,202,429,…]`, 메일 3통. 대소문자·공백 변형(`VICTIM@Example.com `)도 같은 키로 429. 다른 주소는 IP 한도(10)까지 202 |
+| SRV-04 | **해결됨** (7e7d14c) | 연속 2회 요청 후 오래된 토큰 422, 최신 토큰 204, 최신 토큰 재사용 422, verify-email 토큰을 reset 으로 제출 시 422 |
+| SRV-05 | **해결됨** (7e7d14c) | `/api/v1/courses`, `/readyz`, 404 응답 본문에 파일시스템 경로 없음(정규식 스캔). 상세는 서버 로그에만 |
+| SRV-06 | **해결됨** (a285491) | `docker-compose.yml` 의 비밀은 모두 `${…:?set …}` 필수값. smoke 는 임의값을 생성해 주입 |
+| SRV-07 | **해결됨** (7e7d14c) | `/admin/audit` 에 `auth.denied`, `admin.users.viewed`, `auth.password.reset_invalid`, `user.role.changed` 기록 확인 |
+| SRV-08 | **미재검증** | 계정 삭제·익명화 경로는 이번 프로빙에서 실행하지 않았다. 문서 합의 사항(AC-AUTH.6 문구)도 미확인 |
+| SRV-09 | **해결됨** (a285491) | compose 의 api/web/db 에 `read_only: true`, `tmpfs`, `cap_drop: [ALL]`, `security_opt`, Dockerfile 에 `HEALTHCHECK`. docker smoke 전체 통과(migrate exit 0, api healthy, JSON 로그, X-Request-ID 상관관계) |
+
+우회 시도 중 막힌 것: OIDC `return_to` 오픈 리다이렉트·헤더 주입(`//evil.com`, `/\evil.com`,
+`https://evil.com`, CR/LF, 탭, `%2f%2f` 모두 `/` 로 축약되거나 퍼센트 인코딩됨), 코드 재사용(다른 브라우저에서
+400), state 불일치(400), PAT 로 계정 연결(409), 기존 계정 이메일 대문자 변형 자동 연결(409), CSRF 헤더 없는/틀린
+쓰기(403), PAT 스코프 상승(`write:progress` 없는 PAT 로 쓰기 403, `/me/tokens` 403, `/admin/users` 403),
+learner 의 `/admin/audit`(403), 사용자 간 진행도 격리(u9 1건 / admin 0건).
+
+이전 커리큘럼 리뷰(QA-01 ~ QA-12)도 모두 해결됨: 콘텐츠 15개 필드(코스·모듈 제목/요약, 레슨 제목·요약·목표·태그·
+활동·자료 note·본문·공부법)에 XSS 페이로드를 넣고 사이트를 빌드해 DOM 파서로 스캔한 결과 살아 있는 스크립트 0건.
+`tests/test_security_review.py`·`tests/test_server_review.py` 21건 모두 통과(xfail 없음).
+
+### 새 결함 (보고만, 수정하지 않음)
+
+| ID | 심각도 | 파일:줄 | 재현 | 영향 | 권고 |
+|---|---|---|---|---|---|
+| SRV-10 메일 발송 실패가 500, 계정은 생성됨 | medium | `auth/service.py:267-287`(`_send_token` 가 `smtplib` 예외를 감싸지 않음), `api/routers/auth.py:90,125` | SMTP 포트를 닫고 `POST /auth/signup` → 500 `internal server error`(서버 로그에 ConnectionRefused). 그 뒤 `POST /auth/login` 200: 계정은 존재하고 인증 메일만 없다. `POST /auth/password/forgot` 도 500 | 메일 서버 장애 시 가입이 "실패"로 보이지만 계정이 남아 재가입은 409. 사용자는 이메일 인증을 받을 수 없고, 500 은 ASVS V7.4.1(예상 가능한 실패를 사용자 메시지로) 위반 | `_send_token` 에서 `smtplib.SMTPException`·`OSError` 를 잡아 `Unavailable`(503)로 바꾸고, 가입은 트랜잭션으로 되돌리거나 "메일 재발송" 경로를 제공한다 |
+| SRV-11 바인드 가드가 CLI 에만 있음 | medium | `api/cli.py:84-95`(가드), `api/app.py:126-140`(`create_app` 에는 없음) | `uvicorn.run(create_app(Settings.from_env().with_overrides(host="0.0.0.0")))` 를 로컬 모드로 실행 → 기동되고 `/api/v1/me` 가 `role: admin` 반환 | FastAPI 관례대로 `uvicorn robotics_curriculum.api.app:...` 로 띄우면 SRV-01 보호가 사라진다. compose 는 `rc api serve` 를 쓰므로 기본 배포는 안전 | 가드를 `create_app`(또는 startup 이벤트)으로 옮긴다. 문서에도 `rc api serve` 사용을 명시 |
+| SRV-12 웹의 CSRF 쿠키 이름 불일치 | medium | `web/src/lib/api/client.ts:21`(`CSRF_COOKIE = 'csrf'`) 대 `api/deps.py:129`(`CSRF_COOKIE = "csrf_token"`) | 코드 확인. API 는 `csrf_token` 쿠키를 심는데 웹은 `csrf` 를 읽어 `X-CSRF-Token` 을 붙인다 → 헤더 없이 전송 → 모든 쓰기가 403 | 지금은 웹에 쓰기 화면이 없어 드러나지 않는다(로그인 화면도 플레이스홀더). P2-4 의 첫 변경 요청에서 전부 실패한다 | 이름을 `csrf_token` 으로 맞추고, 상수를 생성된 스키마나 공용 상수에서 가져온다. 계약 테스트에 쓰기 1건을 추가 |
+| SRV-13 웹 의존성 취약점, CI 에 npm audit 없음 | medium | `web/package.json`, `.github/workflows/security.yml:42-67`(pip-audit 만) | `npm audit --omit=dev`: 7건(high 1 `postcss` XSS via unescaped `</style>`, moderate `next`, moderate `next-intl` 오픈 리다이렉트, low `katex` 외). 전체(dev 포함) 19건, critical 2(`vitest`, `tinypool` 프로토타입 오염→RCE) | PRD 7절은 의존성 스캔을 CI 에 포함하라고 요구한다. 파이썬만 스캔되고 있다. `next-intl` 오픈 리다이렉트는 웹 라우팅에 직접 닿는다 | `npm audit --omit=dev --audit-level=high` 를 security.yml 에 추가(차단), dev 는 비차단. `next-intl`·`next`·`postcss` 갱신 |
+| SRV-14 id_token 의 다중 `aud` 수용 | low | `auth/oidc.py:245-258`(PyJWT `audience=client_id`, `azp` 미검사) | FakeIdP 로 `aud: [rc-web, some-other-client]`, `azp: other` 인 id_token 발급 → 콜백 302 로그인 성공. `aud: [some-other-client]` 만이면 400 | OIDC Core 3.1.3.7 ③~⑤ 위반. 같은 IdP 에 다른 클라이언트를 가진 공격자가 다중 `aud` 토큰을 우리 코드 교환 흐름에 넣을 수 있어야 하므로 실제 악용은 어렵다(코드 교환은 우리 클라이언트가 수행) | `aud` 가 리스트면 길이 1 이고 `client_id` 와 같은지 확인하거나, `azp` 가 있으면 `client_id` 와 일치할 것을 요구한다 |
+| SRV-15 `RC_AUTH_SECRET` 미설정 시 프로세스별 플로우 키 | low | `api/app.py:148-151` | 프로바이더가 설정돼 있고 시크릿이 없으면 경고만 남기고 `secrets.token_bytes(32)` 사용 | `uvicorn --workers N` 이나 복제본이 2개 이상이면 OIDC 콜백이 다른 워커에 도달해 "login expired" 로 간헐 실패. compose 는 시크릿을 필수로 요구하므로 기본 배포는 영향 없음 | 프로바이더가 있으면 시크릿을 필수로 요구(기동 실패)하거나, 단일 워커임을 확인한다 |
+| SRV-16 `/metrics` 무인증 | low | `api/routers/health.py:61-72`, `api/metrics.py:1-15` | 서버 모드 실서버에서 `GET /metrics` 200(인증 없음). 라벨은 라우트 템플릿·상태코드와 DB 풀 수치뿐이고 개인 데이터는 없다. 미매칭 경로는 `unmatched` 라벨로 고정되어 카디널리티 폭증도 없다 | 설계·문서상 "내부망 전용"이며 compose 는 8000 을 127.0.0.1 에만 공개한다. 그래도 라우트 목록과 트래픽량이 노출된다 | 리버스 프록시 차단을 RUNBOOK 에 명시(이미 주석에 있음)하거나, 선택적 베어러 토큰(`RC_API_METRICS_TOKEN`)을 둔다 |
+| SRV-17 번들 KaTeX 가 취약점 범위 안 | low | `src/robotics_curriculum/site/assets/katex/VERSION`(0.16.11) | `npm audit` 가 같은 권고를 보고: GHSA-238p-pmpm-9mq7 는 `>=0.11.0 <0.18.2`. 정적 사이트의 번들 사본도 같은 범위다. `katex-init.js` 는 `trust` 를 켜지 않으므로 현재 설정에서는 악용 경로가 없다 | 이전 리뷰 QA-19 의 "미확인" 항목이 확인됐다 | 0.18.2 이상으로 갱신하고 파일별 sha256 매니페스트를 테스트로 고정한다 |
+
+### 남은 위험 (해결된 항목의 잔여)
+
+- SRV-01 잔여: 로컬 모드는 여전히 `/api/v1/me` 에서 `role: admin` 을 반환한다(원 권고 ③ 미적용). 단일 사용자
+  모드이므로 영향은 작지만, 역할 개념을 로컬 모드에서 분리하면 혼동이 줄어든다.
+- SRV-02 잔여: 공격자가 `RC_AUTH_ADMIN_EMAIL` 주소를 선점하면 실제 운영자는 409 로 가입할 수 없다(계정 선점).
+  또 `promote_admin`(`auth/service.py:252-268`)은 `email_verified_at` 을 확인하지 않으므로, 운영자가 선점된
+  주소에 `rc api promote-admin` 을 실행하면 공격자 계정이 admin 이 된다. 승격 시 이메일 인증을 요구하거나,
+  선점 계정을 식별할 수 있게 경고를 출력할 것을 권고한다.
