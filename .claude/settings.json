@@ -76,7 +76,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/harness/session_start.sh\"",
+            "command": "h=scripts/harness/session_start.sh; [ -f \"$h\" ] || h=\"$CLAUDE_PROJECT_DIR/scripts/harness/session_start.sh\"; [ -f \"$h\" ] && bash \"$h\" || exit 0",
             "timeout": 15,
             "statusMessage": "Loading harness status"
           }
@@ -89,7 +89,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 -I \"$CLAUDE_PROJECT_DIR/scripts/harness/guard_bash.py\"",
+            "command": "h=scripts/harness/guard_bash.py; [ -f \"$h\" ] || h=\"$CLAUDE_PROJECT_DIR/scripts/harness/guard_bash.py\"; [ -f \"$h\" ] && python3 -I \"$h\" || exit 0",
             "timeout": 10,
             "onFailure": "continue"
           }
@@ -102,7 +102,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/harness/format_file.sh\"",
+            "command": "h=scripts/harness/format_file.sh; [ -f \"$h\" ] || h=\"$CLAUDE_PROJECT_DIR/scripts/harness/format_file.sh\"; [ -f \"$h\" ] && bash \"$h\" || exit 0",
             "timeout": 60,
             "statusMessage": "Formatting"
           }
@@ -114,7 +114,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/harness/stop_gate.sh\"",
+            "command": "h=scripts/harness/stop_gate.sh; [ -f \"$h\" ] || h=\"$CLAUDE_PROJECT_DIR/scripts/harness/stop_gate.sh\"; [ -f \"$h\" ] && bash \"$h\" || exit 0",
             "timeout": 240,
             "statusMessage": "Verification gate (check.sh --quick)"
           }

@@ -9,8 +9,8 @@ estimated_minutes: 90
 objectives:                                            # 관찰 가능한 동사로
   - DH 파라미터 표로부터 동차 변환 행렬을 구성할 수 있다
   - 2-link 평면 매니퓰레이터의 말단 위치를 계산할 수 있다
-  - 정기구학 결과를 시뮬레이터에서 검증할 수 있다
-tags: [kinematics, manipulator, webots]
+  - 계산 결과를 수치 예제로 검산할 수 있다
+tags: [kinematics, manipulator]
 activities:
   - type: reading
     id: read-1
@@ -18,15 +18,20 @@ activities:
   - type: quiz
     id: quiz-1
     title: 핵심 개념 체크
-  - type: lab
-    id: lab-1
-    title: Webots 2-link 매니퓰레이터 목표 자세 도달
-    world: labs/m2/two_link.wbt                        # 저장소 상대 경로
-    controller_template: labs/m2/two_link_controller_template.py
-    judge: labs/m2/two_link_judge.py                   # 또는 YAML 선언형(열린 질문 3)
+  - type: project
+    id: proj-1
+    title: 2-link 매니퓰레이터 정기구학 계산 스크립트
   - type: external
     id: ext-1
     title: 참고 강의
+    url: https://example.org/lecture
+resources:                                             # FR-6: 레슨별 추천 자료
+  - type: book
+    title: Modern Robotics (Lynch & Park) 4장
+    url: https://example.org/modern-robotics
+    note: 정기구학의 PoE 표현과 DH 비교
+  - type: video
+    title: 참고 강의 영상
     url: https://example.org/lecture
 ---
 
@@ -35,6 +40,13 @@ activities:
 ## 왜 배우나
 
 한두 문단. 이 레슨이 트랙 안에서 어디에 놓이고, 다음 레슨(역기구학)에 어떻게 이어지는지.
+
+## 단계별 공부법
+
+1. **읽기(20분)**: 아래 핵심 개념을 읽고 동차 변환 행렬을 손으로 한 번 써 본다.
+2. **확인(10분)**: 퀴즈로 개념을 점검한다. 틀린 문항은 플래시카드가 된다.
+3. **적용(50분)**: 프로젝트 활동에서 2-link 정기구학을 코드로 구현하고 수치 예제로 검산한다.
+4. **정리(10분)**: 이해도(1~5)와 메모를 남기고, 막힌 부분은 추천 자료에서 찾아본다.
 
 ## 핵심 개념
 
@@ -67,14 +79,15 @@ def dh(a: float, alpha: float, d: float, theta: float) -> np.ndarray:
 2. [O/X] DH 파라미터는 링크당 4개다.
    - 정답: O
 
-## 실습 {#lab-1}
+## 프로젝트 {#proj-1}
 
-- 월드: `labs/m2/two_link.wbt`
-- 템플릿: `labs/m2/two_link_controller_template.py` 의 `# TODO` 를 채운다.
-- 판정: 말단이 목표점 반경 1cm 안에 10초 내 도달.
-- 실행: `rc lab open robotics-basics/m2-kinematics/forward-kinematics` (P1-4 에서 구현)
+- 과제: 링크 길이 (1.0, 0.5), 관절각 (30°, 45°) 인 2-link 평면 매니퓰레이터의 말단 위치를 계산하는 스크립트를 작성한다.
+- 검산: 손 계산 결과와 1e-6 이내로 일치하는지 확인한다.
+- 제출: 스크립트와 결과를 레슨 메모에 남긴다.
 
-## 더 읽기
+## 추천 자료 {#resources}
 
+frontmatter 의 `resources` 가 원본이다. 여기에는 자료별로 "왜 이 자료인가" 한 줄을 적는다.
+
+- Modern Robotics 4장: PoE 와 DH 를 함께 보면 표현 차이가 명확해진다.
 - research_notes/... (조사 노트 경로)
-- external 활동의 URL
