@@ -2,8 +2,9 @@
 
 | 항목 | 내용 |
 |---|---|
-| 문서 버전 | 0.4 (Draft) |
-| 작성일 | 2026-11-11 (v0.1 초안 → v0.2 열린 질문 결정 → v0.3 자료 조사 반영 → v0.4 사용자 최종 범위·포지셔닝 결정 반영) |
+| 문서 버전 | 0.5 (Draft) |
+| 작성일 | 2026-11-11 (v0.1 초안 → v0.2 열린 질문 결정 → v0.3 자료 조사 반영 → v0.4 사용자 최종 범위·포지셔닝 결정 → v0.5 구현 기준으로 단순화) |
+| 확정 콘텐츠 모델 | `docs/curriculum/CONTENT_MODEL.md` (구현 기준. 본 PRD와 어긋나면 그 문서가 우선) |
 | 상태 | 검토 대기 |
 | 관련 저장소 | `devjin_robotics_curriculum` (본 저장소) |
 
@@ -58,11 +59,11 @@ MVP는 P1/P2가 동일 인물인 **단일 사용자** 환경을 전제로 한다
 ## 5. 핵심 사용자 시나리오
 
 1. **첫 방문**: 정적 사이트의 코스 로드맵 페이지에서 기초/중급/고급 세 단계와 모듈별 선수지식 그래프, 예상 소요 시간, 현재 위치를 보고, `rc next`가 시작 레슨을 추천한다.
-2. **학습 방법 확인**: 레슨 페이지 상단의 "학습 방법" 블록에서 이 레슨을 어떤 순서로 공부할지(예: 교재 3장 읽기 → 강의 2편 → 연습문제 5개 → 퀴즈)와 각 단계의 자료 링크·예상 시간을 본다.
-3. **레슨 학습**: 학습 방법의 단계를 따라 진행하며 각 단계를 `rc done`으로 체크하고, 핵심 개념 체크 퀴즈(`rc quiz <lesson>`)를 푼 뒤 이해도(1~5)와 메모를 남긴다.
+2. **학습 방법 확인**: `rc show <lesson>` 또는 레슨 페이지에서 본문의 "이 단계 공부법" 절(예: 교재 3장 읽기 → 강의 2편 → 연습문제 5개 → 퀴즈)과 프런트매터 `resources[]`의 자료 목록(제목, 링크, 종류, 범위 메모)을 본다. `rc resources --module <id>`로 모듈 전체 자료를 한눈에 본다.
+3. **레슨 학습**: 공부법 절을 따라 진행하며 활동(reading/quiz/exercise)을 `rc done`으로 체크하고, 핵심 개념 체크 퀴즈(`rc quiz <lesson>`)를 푼 뒤 이해도(1~5)와 메모를 남긴다.
 4. **복습**: `rc review`가 오늘 복습할 카드 N개를 터미널에 띄우고, 응답에 따라 다음 복습 일정이 조정된다.
 5. **주간 리포트**: 매주 학습 시간, 완료 레슨, 퀴즈 정답률, 막힌 지점을 Markdown 리포트로 생성해 `reports/YYYY-WW.md`에 저장한다.
-6. **콘텐츠 작성**: 작성자가 `curriculum/` 아래에 레슨 파일과 학습 방법을 추가하면, `rc validate`가 frontmatter·선수지식 참조·순환 의존·자료 링크를 검사하고 `rc build`로 정적 사이트에 반영된다.
+6. **콘텐츠 작성**: 작성자가 `curriculum/robotics-expert/<module>/`에 레슨 파일(프런트매터 `resources[]` + 본문 "이 단계 공부법" 절)을 추가하고 `module.yaml`의 `lessons`에 등록하면, `rc validate`가 스키마·선수지식 참조·순환 의존·목록 누락을 검사하고 `rc build`로 정적 사이트에 반영된다.
 
 ## 6. 기능 요구사항
 
@@ -72,10 +73,10 @@ MVP는 P1/P2가 동일 인물인 **단일 사용자** 환경을 전제로 한다
 
 | ID | 요구사항 | 수용 기준 |
 |---|---|---|
-| FR-1.1 | 콘텐츠 계층은 `Course > Level > Module > Lesson > Activity`로 구성한다. 코스는 "로보틱스 전문가 코스"(id: `robotics-expert`) 하나이며, Level은 `basic`(기초) / `intermediate`(중급) / `advanced`(고급) 셋이다. | 계층을 파일 시스템 디렉터리와 1:1로 대응시킨다(`curriculum/robotics-expert/<level>/<module>/<lesson>.md`). |
-| FR-1.2 | 레슨은 YAML frontmatter가 있는 Markdown 파일이다. | 필수 필드: `id`, `title`, `prerequisites[]`, `estimated_minutes`, `objectives[]`, `tags[]`, `study_steps[]`(FR-6.4). |
-| FR-1.3 | Activity 타입은 `reading`, `quiz`, `exercise`(연습문제), `external`(외부 강의/논문)을 지원한다. | 각 타입별 스키마 정의 및 렌더링. |
-| FR-1.4 | 콘텐츠 검증 CLI를 제공한다. | 누락 필드, 존재하지 않는 선수지식·자료 ID, 순환 의존을 감지하면 비정상 종료 코드를 반환한다. |
+| FR-1.1 | 콘텐츠 계층은 `Course > Module > Lesson > Activity`로 구성한다. 코스는 "로보틱스 전문가 코스"(id: `robotics-expert`) 하나이며, 단계(기초/중급/고급)는 별도 디렉터리가 아니라 `module.yaml`의 `level` 필드다. | 디렉터리 구조 `curriculum/robotics-expert/<module>/<lesson>.md`, 코스·모듈 메타는 `course.yaml`, `module.yaml`. 확정 스키마는 `docs/curriculum/CONTENT_MODEL.md`. |
+| FR-1.2 | 레슨은 YAML 프런트매터가 있는 Markdown 파일이다. | 필수 필드: `id`, `title`, `summary`, `objectives[]`, `difficulty`, `estimated_minutes`. 선택: `prerequisites[]`, `tags[]`, `activities[]`, `resources[]`(FR-6.1). 모르는 키는 에러. |
+| FR-1.3 | Activity 종류는 `reading`, `quiz`, `exercise`(연습문제)다. 레슨 프런트매터 `activities[]`에 둔다. | 각 종류별 렌더링. `external` 등 추가 종류는 필요해질 때 확장. |
+| FR-1.4 | 콘텐츠 검증 CLI `rc validate`를 제공한다. | 스키마 위반, 목록(`modules`/`lessons`) 누락, ID 중복, 존재하지 않는 선수지식, 순환 의존을 감지하면 종료 코드 1을 반환한다. |
 | FR-1.5 | 정적 사이트가 수식(LaTeX)과 코드 블록, 이미지, 임베드 영상을 렌더링한다. | KaTeX/MathJax 수식, Python/C++ 하이라이트가 깨지지 않는다. |
 
 ### FR-2. 학습 로드맵 및 선수지식 그래프 (P0)
@@ -111,14 +112,16 @@ MVP는 P1/P2가 동일 인물인 **단일 사용자** 환경을 전제로 한다
 
 ### FR-6. 학습 자료 및 단계별 학습 방법 (P0)
 
+원칙은 "단순하게"다. 학습 방법은 구조화 데이터가 아니라 레슨 본문의 한 절로 쓰고, 자료는 레슨 프런트매터의 목록으로 둔다.
+
 | ID | 우선순위 | 요구사항 | 수용 기준 |
 |---|---|---|---|
-| FR-6.1 | P0 | 책(장 단위), 논문, 강의(편 단위), 블로그, 도구 문서를 `Resource`로 등록하고 레슨에 연결한다. | 타입, URL/파일, 태그, 난이도, 예상 소요 시간, 읽기 상태. `curriculum/resources/*.yaml`에 카탈로그로 관리. |
-| FR-6.2 | P1 | `research_notes/`의 Markdown 파일을 색인해 레슨과 양방향 링크한다. | 노트에서 `[[lesson-id]]` 링크 지원. |
-| FR-6.3 | P0 | 리소스 읽기 상태(미독/읽는 중/완료)와 한 줄 요약을 기록한다(`rc read <resource>`). | 대시보드에 "읽는 중" 목록 표시. |
-| FR-6.4 | P0 | **단계별 학습 방법**: 레슨·모듈마다 "무엇을 어떤 순서로 어떻게 공부할지"를 `study_steps[]`로 정의한다. 각 단계는 종류(읽기/시청/연습문제/정리/퀴즈), 대상 자료(Resource ID + 범위), 방법 설명, 예상 시간, 완료 기준을 가진다. | 레슨 페이지 상단에 단계 목록이 순서대로 렌더링되고, 각 단계가 Activity로 진도 추적된다(FR-3.1). |
-| FR-6.5 | P0 | 모듈 단위 학습 가이드: 모듈 소개, 권장 학습 순서, 총 예상 시간, 끝났을 때 할 수 있어야 하는 것(출구 기준). | 모듈 페이지 상단에 표시. |
-| FR-6.6 | P1 | 자료 대안 제시: 같은 단계에 대해 교재/강의/무료 대안을 병기한다. | 단계마다 대안 1개 이상 선택 가능. |
+| FR-6.1 | P0 | 레슨 프런트매터 `resources[]`에 학습 자료를 적는다. 각 항목은 `title`(필수), `url`, `kind`(`book`/`course`/`video`/`article`/`other`), `note`(범위·메모, 예: `Ch. 3`). | `rc validate`가 스키마를 검사하고, 레슨 페이지에 자료 목록이 렌더링된다. |
+| FR-6.2 | P0 | 레슨 본문에 `## 이 단계 공부법` 절을 두어 "무엇을 어떤 순서로 어떻게 공부할지"를 산문·목록으로 쓴다. | 레슨 페이지와 `rc show <lesson>`에 그 절이 표시된다. 작성 가이드는 콘텐츠 작성 문서에 둔다. |
+| FR-6.3 | P0 | `rc resources <lesson>`, `rc resources --module <id>`, `rc resources --all`로 자료 목록을 터미널에 출력하고, `rc show <lesson>`으로 레슨 메타·공부법·자료를 함께 본다. | 레슨/모듈/코스 단위 출력이 각각 동작한다. |
+| FR-6.4 | P1 | 모듈 단위 안내: `module.yaml`의 `summary`에 모듈 소개를, 모듈 첫 레슨 또는 모듈 README에 권장 순서와 출구 기준을 쓴다. | 모듈 페이지 상단에 표시. |
+| FR-6.5 | P1 | `research_notes/`의 Markdown 파일을 색인해 레슨과 양방향 링크한다. | 노트에서 `[[lesson-id]]` 링크 지원. |
+| FR-6.6 | P2 | Phase 2 제안: 자료 읽기 상태(미독/읽는 중/완료)와 `rc read`, 구조화된 학습 단계(`study_steps[]`)의 진도 추적, 자료 대안 병기, 코스 공용 자료 카탈로그. Phase 1 사용 경험으로 필요성이 확인될 때만 도입. | — |
 
 ### FR-7. 리포트 생성 (P0)
 
@@ -164,24 +167,24 @@ MVP는 P1/P2가 동일 인물인 **단일 사용자** 환경을 전제로 한다
 ## 8. 개념 데이터 모델
 
 ```
-Course (robotics-expert, 1개)
- └──< Level (basic | intermediate | advanced; 순서, 소개, 출구 기준)
-       └──< Module ──< Lesson ──< Activity (reading | quiz | exercise | external)
-                        │  prerequisites: Lesson[]  (DAG, 단계 경계를 넘을 수 있음)
-                        │  study_steps: StudyStep[] (순서, 종류, resource_id + 범위, 방법, 예상 시간, 완료 기준)
-                        └──< Resource (n:m; book|paper|lecture|blog|tool_doc, 난이도, 예상 시간)
-Module.guide            (소개, 권장 순서, 총 예상 시간, 출구 기준)
+Course (robotics-expert, 1개; course.yaml: id, title, summary, tags, modules[] 순서)
+ └──< Module (module.yaml: id, title, summary, level: 기초|중급|고급, lessons[] 순서)
+       └──< Lesson (<lesson>.md 프런트매터: id, title, summary, objectives[], difficulty, estimated_minutes,
+                    prerequisites[] (레슨 ID, DAG), tags[], activities[], resources[]; 본문에 "## 이 단계 공부법" 절)
+              ├──< Activity (id, kind: reading|quiz|exercise, title, estimated_minutes)   ← 프런트매터 내장
+              └──< Resource (title, url?, kind?: book|course|video|article|other, note?)   ← 프런트매터 내장
 
-Progress   (user_id, activity_id, status, understanding 1-5, note, updated_at)
+Progress   (user_id, lesson_id 또는 activity_id, status, understanding 1-5, note, updated_at)
 Session    (user_id, lesson_id, started_at, ended_at, minutes)
 Card       (id, lesson_id, front, back, source: quiz|concept)
 Review     (card_id, reviewed_at, rating, next_due, interval, ease)
-ReadState  (user_id, resource_id, status: unread|reading|done, summary, updated_at)
 Note       (lesson_id, path, updated_at)   ← research_notes/ 파일을 색인
 Report     (kind: weekly|module, period, path)
 ```
 
-- 콘텐츠(Course~Resource, StudyStep, Module.guide)는 **파일이 원본**이고 DB는 색인 캐시다. `rc reindex` 또는 각 명령 실행 시 변경된 파일만 재색인한다.
+- 확정 스키마와 검증 규칙은 `docs/curriculum/CONTENT_MODEL.md`를 따른다. 자료 읽기 상태(ReadState)와 구조화 학습 단계(StudyStep)는 Phase 2 제안(FR-6.6)이라 모델에 넣지 않는다.
+- 진도 데이터는 레슨 프런트매터의 `id` 문자열로 저장되므로(콘텐츠 테이블 FK 없음) 레슨 ID는 `curriculum/` 전체에서 유일해야 하고, 학습 기록이 있는 레슨의 ID는 바꾸지 않는다.
+- 콘텐츠(Course~Resource)는 **파일이 원본**이고 DB는 색인 캐시다. `rc reindex` 또는 각 명령 실행 시 변경된 파일만 재색인한다.
 - 학습 데이터(Progress~Report)는 **SQLite가 원본**이며 JSON으로 내보낼 수 있다.
 
 ## 9. 시스템 아키텍처 및 기술 스택 제안
@@ -189,8 +192,10 @@ Report     (kind: weekly|module, period, path)
 Phase 1까지는 **Python 단일 스택(uv + ruff + pytest)** 으로 CLI와 정적 사이트만 만든다. 웹 프론트엔드와 API 서버는 Phase 2 예정이다.
 
 ```
-curriculum/robotics-expert/   코스 콘텐츠 원본 (Markdown + YAML; basic/ intermediate/ advanced/ 아래 모듈·레슨)
-curriculum/resources/         자료 카탈로그 (YAML; 책·강의·논문·도구 문서)
+curriculum/robotics-expert/   코스 콘텐츠 원본
+  course.yaml                 코스 메타 + 모듈 순서
+  <module>/module.yaml        모듈 메타 (level: 기초|중급|고급) + 레슨 순서
+  <module>/<lesson>.md        레슨 (프런트매터 activities[]/resources[] + 본문 "이 단계 공부법" 절)
 research_notes/           개인 노트 (Markdown)
 reports/                  생성된 리포트 (Markdown)
 src/robotics_curriculum/  (Python) 패키지(CLI 명령명은 `rc`): 콘텐츠 로더/검증기, SQLite 진도 저장, SM-2, 리포트 생성, 정적 사이트 빌더
@@ -199,14 +204,14 @@ tests/                    pytest
 frontend/, backend/       Phase 2 예정 (웹 UI, API 서버). Phase 1에서는 만들지 않음.
 ```
 
-주요 CLI 명령: `rc validate`, `rc build`, `rc status`, `rc next`, `rc start|stop|log`, `rc done`, `rc quiz`, `rc review`, `rc read`, `rc note`, `rc report weekly|module`, `rc search`, `rc export|import`.
+주요 CLI 명령: `rc validate`, `rc build`, `rc status`, `rc next`, `rc show <lesson>`, `rc resources <lesson>|--module|--all`, `rc start|stop|log`, `rc done`, `rc quiz`, `rc review`, `rc note`, `rc report weekly|module`, `rc search`, `rc progress export|import`.
 
 | 선택 | 이유 |
 |---|---|
 | Python 단일 스택 | 콘텐츠 처리·진도 저장·리포트가 모두 텍스트와 SQLite 작업이라 한 런타임으로 충분하다. 프론트엔드 빌드 체인이 없어 Phase 1 범위가 작다. |
 | 정적 사이트(MkDocs) | 콘텐츠·학습 방법·로드맵·대시보드 읽기 전용 화면을 Markdown에서 바로 생성한다. "보기 편하게"가 핵심 목적이므로 가장 먼저 완성한다. 쓰기(진도, 복습)는 CLI가 담당한다. |
 | SQLite | 단일 사용자·로컬 우선. 파일 하나로 백업·내보내기 가능. |
-| Markdown + YAML 콘텐츠 | 앱 없이도 읽히고 Git diff로 리뷰 가능. 자료 카탈로그는 YAML로 구조화해 검증한다. |
+| Markdown + YAML 콘텐츠 | 앱 없이도 읽히고 Git diff로 리뷰 가능. 메타데이터(코스·모듈·레슨 프런트매터)만 YAML로 검증하고, 공부법은 본문 산문으로 둔다. |
 
 제약: 정적 사이트는 읽기 전용이므로 진도 반영은 `rc build`를 다시 실행해야 보인다. 이 마찰이 커지면 Phase 2 웹 앱 도입을 앞당긴다.
 
@@ -214,9 +219,9 @@ frontend/, backend/       Phase 2 예정 (웹 UI, API 서버). Phase 1에서는 
 
 | 단계 | 범위 | 완료 기준 |
 |---|---|---|
-| **Phase 0: 콘텐츠 기반** | uv/ruff/pytest 프로젝트 골격, 코스·단계·모듈·학습 방법·자료 카탈로그 스키마 확정, 기초 단계 M1~M3 레슨 10개 내외(각 레슨에 `study_steps`), 중급·고급은 모듈 개요만, `rc validate`, `rc report weekly` | `rc validate` 통과, 리포트 1건 생성, CI에서 pytest 통과 |
-| **Phase 1: MVP (P0 전부, CLI + 정적 사이트)** | `rc build` 정적 사이트(코스 로드맵 그래프, 단계·모듈 가이드, 레슨 페이지 + 학습 방법 블록, 자료 목록, 대시보드), 진도·타이머, 읽기 상태, 퀴즈, 플래시카드·SM-2 복습, 기초 단계 M4 콘텐츠, JSON 내보내기 | 본인이 2주간 실제로 사용해 주간 리포트 2건 생성 |
-| **Phase 2: v1.0 (P1 + 웹 전환)** | 노트 연동, 자료 대안 제시, 검색, 중급 단계 레슨 작성. 이후 웹 프론트엔드/API 서버 도입과 AI 튜터, FSRS 검토 | 기초 단계를 학습 방법대로 완주하고 모듈 리포트 생성 |
+| **Phase 0: 콘텐츠 기반** | uv/ruff/pytest 프로젝트 골격, 콘텐츠 모델 확정(`CONTENT_MODEL.md`), 기초 모듈 M1~M3 레슨 10개 내외(각 레슨에 `resources[]`와 공부법 절), 중급·고급은 `module.yaml`과 개요만, `rc validate`, `rc show`, `rc resources`, `rc report weekly` | `rc validate` 통과, 리포트 1건 생성, CI에서 pytest 통과 |
+| **Phase 1: MVP (P0 전부, CLI + 정적 사이트)** | `rc build` 정적 사이트(코스 로드맵 그래프, 단계별 모듈 목록, 레슨 페이지 + 공부법 절 + 자료 목록, 대시보드), 진도·타이머, 퀴즈, 플래시카드·SM-2 복습, 기초 모듈 M4 콘텐츠, 진도 JSON 내보내기 | 본인이 2주간 실제로 사용해 주간 리포트 2건 생성 |
+| **Phase 2: v1.0 (P1 + 웹 전환)** | 모듈 안내, 노트 연동, 검색, 중급 모듈 레슨 작성. 필요성이 확인되면 자료 읽기 상태·구조화 학습 단계·자료 대안(FR-6.6). 이후 웹 프론트엔드/API 서버 도입과 AI 튜터, FSRS 검토 | 기초 단계를 공부법대로 완주하고 모듈 리포트 생성 |
 | **Phase 3: v2 (P2)** | 하이라이트, 연습문제 힌트, 멀티유저 | 스터디 그룹 1팀 시범 운영 |
 
 ## 11. 성공 지표
@@ -226,14 +231,14 @@ frontend/, backend/       Phase 2 예정 (웹 UI, API 서버). Phase 1에서는 
 | 주간 학습 시간 기록률 | 학습한 주의 90% 이상에서 리포트 생성 |
 | 레슨 완료 수 | 주당 3개 이상 |
 | 복습 완료율 | 예정 카드의 80% 이상 당일 처리 |
-| 학습 방법 준수율 | 완료 레슨의 `study_steps` 중 80% 이상 체크 |
-| 콘텐츠 작성 마찰 | 레슨 1개(학습 방법 포함) 추가에 검증 포함 20분 이내 |
+| 공부법 보유율 | 기초 모듈 레슨의 100%에 "이 단계 공부법" 절과 자료 1개 이상 |
+| 콘텐츠 작성 마찰 | 레슨 1개(공부법·자료 포함) 추가에 검증 포함 20분 이내 |
 
 ## 12. 리스크 및 가정
 
 | 리스크 | 영향 | 대응 |
 |---|---|---|
-| 콘텐츠·학습 방법 작성이 가장 큰 병목 | 플랫폼이 비어 있으면 가치 없음 | Phase 0을 콘텐츠에 집중, 자료 조사 결과(부록 B)를 카탈로그로 먼저 투입, AI 보조 초안 생성(FR-8.2)은 Phase 2 |
+| 콘텐츠·공부법 작성이 가장 큰 병목 | 플랫폼이 비어 있으면 가치 없음 | Phase 0을 콘텐츠에 집중, 자료 조사 결과(부록 B)를 레슨 `resources[]`로 먼저 투입, AI 보조 초안 생성(FR-8.2)은 Phase 2 |
 | 외부 자료 링크 소멸·변질 | 학습 방법이 깨진 링크를 가리킴 | `rc validate`에 링크 검사(선택 실행)와 차단 목록 |
 | 과도한 기능 범위 | MVP 지연 | P0 외 기능은 이슈로만 남기고 구현하지 않음 |
 | 단일 사용자 가정 고착 | 멀티유저 전환 비용 | 모든 학습 데이터에 `user_id` 컬럼 선반영 |
@@ -254,6 +259,7 @@ v0.1의 열린 질문 5개에 대한 오케스트레이터 결정과, 그 뒤 �
 | 5 | 축소안 채택 | **Phase 1까지 CLI + 정적 사이트**. 웹 프론트엔드/API 서버는 Phase 2 이후. 스택은 Python 단일(uv + ruff + pytest), 콘텐츠는 Markdown + YAML | 1절, 7절, 9절, 10절 |
 | 6 | 플랫폼 범위 (사용자 최종 결정, 2026-11-11) | 목적은 **커리큘럼, 개인 학습 진행도, 단계별 학습 방법·자료를 보기 편하게 하는 것**. Webots 연동 등 복잡한 기능은 불필요 | 1절, 3절, FR-5 삭제, FR-6 P0 승격, 8~12절, 부록 A·B |
 | 7 | 포지셔닝 (사용자 직접 지시, 2026-11-11) | **로보틱스 전문가 코스를 위한 전용 플랫폼**. 범용이 아니라 코스 1개(`robotics-expert`)를 기초/중급/고급 단계와 모듈로 담는다 | 1절, 4절, FR-1.1, FR-2.1, FR-3.4, 8~10절, 부록 A |
+| 8 | 구현 기준 단순화 (오케스트레이터, v0.5) | 구현된 것은 구현이 기준, 사용자 요구는 "단순하게". 단계는 `module.yaml`의 `level` 필드(디렉터리 아님). 학습 방법·자료는 프런트매터 `resources[]` + 본문 "이 단계 공부법" 절 + `rc resources`/`rc show`. `study_steps[]`, 읽기 상태, `rc read`, 자료 카탈로그는 Phase 2 제안으로 강등 | FR-1, FR-6, 8절, 9절, 10절 |
 
 남은 사용자 결정: AI 튜터 월 비용 상한(결정 4).
 
@@ -286,10 +292,9 @@ v0.1의 열린 질문 5개에 대한 오케스트레이터 결정과, 그 뒤 �
 | M9 학습 기반 로보틱스 | 강화학습 기초(MDP, 정책 경사), 모방학습, 시뮬레이션-실제 전이, VLA(Vision-Language-Action) 모델 개요 | RL 교재 핵심 장 읽기 → 강의 시청 → 대표 논문 3편 요약 노트 → 퀴즈 |
 | M10 시스템 통합·프로젝트 | 로봇 시스템 아키텍처, 인식-계획-제어 파이프라인 설계, 사례 분석(M5~M9) | 시스템 설계 사례 자료 읽기 → 가상의 로봇 시스템 설계 문서 작성(연습) → 설계 리뷰 체크리스트 자가 점검 |
 
-각 레슨의 학습 방법은 `study_steps[]`로 작성하며, 교재·강의 선택은 `curriculum/resources/` 카탈로그에서 가져온다. 단계마다 출구 기준(이 단계를 마치면 할 수 있어야 하는 것)을 Level 메타데이터에 적는다.
+각 레슨의 학습 방법은 본문 "이 단계 공부법" 절에, 교재·강의는 프런트매터 `resources[]`에 적는다. 모듈의 단계는 `module.yaml`의 `level`로 표시하고, 모듈을 마치면 할 수 있어야 하는 것은 `summary` 또는 모듈 안내(FR-6.4)에 적는다.
 
 ## 부록 B. 참고 사례 및 출처
 
 - **선행 사례**: CU Boulder Coursera "Introduction to Robotics with Webots"(Python, 3코스)를 커리큘럼 구조(모듈 순서, 주차 배분)의 1차 참고로 삼는다. 시뮬레이터 실습 부분은 참고만 하고 가져오지 않는다.
-- **출처**: `research_notes/로보틱스 학습 자료 조사/simulators.md` (자료 조사 세션, 2026-11-11; 브랜치 `worktree-research`, main 미반영). 최종 보고서는 같은 브랜치의 `reports/로보틱스 학습 자료 조사.md`.
-- **구조화 자료**: 같은 브랜치의 `curriculum/resources/simulators.yaml`(시뮬레이터·튜토리얼·클라우드 옵션 카탈로그)은 M5 소개 레슨의 Resource 항목으로 재사용한다.
+- **출처**: `research_notes/로보틱스 학습 자료 조사/simulators.md` (자료 조사 세션, 2026-11-11; 브랜치 `worktree-research`, main 미반영). 최종 보고서는 같은 브랜치의 `reports/로보틱스 학습 자료 조사.md`. 조사 결과의 자료는 별도 카탈로그 파일 없이 해당 레슨의 `resources[]`에 직접 적는다.
