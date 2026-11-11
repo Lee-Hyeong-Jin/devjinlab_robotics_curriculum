@@ -1,0 +1,16 @@
+id: m9-learning-based-robotics
+title: M9 학습 기반 로보틱스
+summary: >-
+  M6 에서 빠졌던 의사결정과 MDP(가치·정책 반복)로 출발해, 로봇 러닝 개관, 강화학습 기초(Q-learning·정책 경사·PPO),
+  모방학습(행동 복제·DAgger·ACT·Diffusion Policy), 시뮬레이션 기반 RL 과 sim-to-real(도메인 랜덤화),
+  VLA·로봇 파운데이션 모델(RT-2·OpenVLA·π0·SmolVLA), LeRobot 데이터셋·벤치마크와 안전한 평가까지 다룬다.
+  시뮬레이터 실습 대신 numpy 예제와 문서 읽기로 구성하며, M10 캡스톤의 학습 기반 트랙으로 이어진다.
+level: 고급
+lessons:
+  - mdp-decision-making
+  - robot-learning-overview
+  - reinforcement-learning-basics
+  - imitation-learning-bc-dagger
+  - sim-to-real-domain-randomization
+  - vla-foundation-models
+  - datasets-benchmarks-evaluation
