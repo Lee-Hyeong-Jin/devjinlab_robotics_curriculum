@@ -260,3 +260,30 @@ def test_transfer_json_export_into_server_account(tmp_path: Path) -> None:
         assert dest.list_lessons(1) == []
         [session] = dest.list_sessions(42)
         assert session.user_id == 42
+
+
+def test_open_store_shares_one_pool_per_url(clean_postgres_url: str) -> None:
+    first = open_store(url=clean_postgres_url)
+    second = open_store(url=clean_postgres_url.replace("postgresql+psycopg://", "postgresql://"))
+    assert isinstance(first, PostgresProgressStore) and isinstance(second, PostgresProgressStore)
+    assert first.engine is second.engine is pg.shared_engine(clean_postgres_url)
+    first.save_lesson(LessonProgress(lesson_id=VECTORS))
+    first.close()  # does not dispose the shared pool
+    assert second.get_lesson(VECTORS) is not None
+    second.close()
+    pg.dispose_shared_engines()
+
+
+def test_delete_user_removes_only_that_user(clean_postgres_url: str) -> None:
+    with PostgresProgressStore(clean_postgres_url) as store:
+        for user in (1, 2):
+            store.save_lesson(LessonProgress(user_id=user, lesson_id=VECTORS))
+            store.save_lesson(LessonProgress(user_id=user, lesson_id=DH))
+            store.add_session(Session(user_id=user, lesson_id=VECTORS, started_at=T0))
+        assert store.delete_user(1) == (2, 1)
+        assert store.list_lessons(1) == [] and store.list_sessions(1) == []
+        assert [p.lesson_id for p in store.list_lessons(2)] == [VECTORS, DH]
+        assert len(store.list_sessions(2)) == 1
+        assert store.delete_user(99) == (0, 0)  # unknown user
+        assert store.delete_user(2) == (2, 1)
+        assert store.is_empty()

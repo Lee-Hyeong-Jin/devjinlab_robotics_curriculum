@@ -45,13 +45,13 @@ def open_store(data_dir: Path | None = None, url: str | None = None) -> Progress
         return SqliteProgressStore(url[len(_SQLITE_PREFIX) :])
     if url.startswith(("postgresql://", "postgres://", "postgresql+")):
         try:
-            from robotics_curriculum.progress.postgres import PostgresProgressStore
+            from robotics_curriculum.progress.postgres import PostgresProgressStore, shared_engine
         except ImportError as exc:  # pragma: no cover - extra installed in dev
             raise RuntimeError(
                 "PostgreSQL support needs the 'postgres' extra: "
                 "pip install 'robotics-curriculum[postgres]'"
             ) from exc
-        return PostgresProgressStore(url)
+        return PostgresProgressStore(shared_engine(url), migrate=False)
     scheme = url.split(":", 1)[0]
     raise ValueError(
         f"unsupported {DATABASE_URL_ENV} scheme {scheme!r}; use postgresql:// or sqlite:///"

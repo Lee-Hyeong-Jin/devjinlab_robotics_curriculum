@@ -3,6 +3,7 @@
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Annotated
 
@@ -11,7 +12,14 @@ from pydantic import ValidationError
 
 from robotics_curriculum import __version__
 from robotics_curriculum.api.cli import api_app
-from robotics_curriculum.content import check
+from robotics_curriculum.content import QuizParseError, check, parse_quiz
+from robotics_curriculum.learn.quiz import record_quiz_run, run_quiz, select_questions
+from robotics_curriculum.learn.review import (
+    due_cards,
+    due_count,
+    recent_accuracy,
+    run_review,
+)
 from robotics_curriculum.library import resources, show
 from robotics_curriculum.progress import (
     LessonSummary,
@@ -21,12 +29,13 @@ from robotics_curriculum.progress import (
     open_service,
     parse_duration,
 )
+from robotics_curriculum.progress.transfer_cli import transfer_command
 from robotics_curriculum.report.cli import report_app
 from robotics_curriculum.roadmap import roadmap
 from robotics_curriculum.site.cli import site_app
 
 app = typer.Typer(help="Robotics curriculum tools.", no_args_is_help=True)
-progress_app = typer.Typer(help="Export / import learner progress (JSON).", no_args_is_help=True)
+progress_app = typer.Typer(help="Export, import, transfer progress.", no_args_is_help=True)
 app.add_typer(progress_app, name="progress")
 app.add_typer(report_app, name="report")
 app.add_typer(site_app, name="site")
@@ -115,6 +124,30 @@ def _status_label(summary: LessonSummary) -> str:
     return _LABEL[summary.status.value]
 
 
+def _local_today(now: datetime) -> date:
+    return now.astimezone().date()
+
+
+def _prompt(text: str) -> str:
+    """Terminal input for quiz / review sessions (EOF or Ctrl-C aborts via click)."""
+    return str(typer.prompt(text, default="", show_default=False, prompt_suffix=""))
+
+
+def _review_header(service: ProgressService, now: datetime) -> str:
+    """``오늘 복습 N장 · 최근 7일 퀴즈 정답률 X% (c/t)`` for ``rc status`` (AC-4.6)."""
+    today = _local_today(now)
+    due = due_count(service.store, today=today, user_id=service.user_id)
+    accuracy = recent_accuracy(
+        service.store.list_quiz_attempts(service.user_id), since=now - timedelta(days=7)
+    )
+    if accuracy is None:
+        rate = "기록 없음"
+    else:
+        correct, total = accuracy
+        rate = f"{round(100 * correct / total)}% ({correct}/{total})"
+    return f"오늘 복습: {due}장 · 최근 7일 퀴즈 정답률: {rate}"
+
+
 def _warn_locked(service: ProgressService, lesson_id: str) -> None:
     """Forced open of a locked lesson: warn on stderr but carry on."""
     missing = service.missing_prerequisites(lesson_id)
@@ -158,11 +191,13 @@ def status(
     with _service(ctx) as service:
         summaries = service.status(course)
         running = service.current_session()
+        review_line = _review_header(service, service.clock())
     if running is None:
         typer.echo("열린 타이머: 없음")
     else:
         since = f"{running.started_at:%Y-%m-%d %H:%M} UTC"
         typer.echo(f"열린 타이머: {running.lesson_id} (since {since})")
+    typer.echo(review_line)
     courses = {s.course.id: s.course for s in summaries}
     for course_obj in courses.values():
         rows = [s for s in summaries if s.course.id == course_obj.id]
@@ -283,6 +318,108 @@ def next_(
     typer.echo(f"\nstart: rc start {lessons[0].lesson.id}")
 
 
+@app.command()
+def quiz(
+    ctx: typer.Context,
+    lesson_id: Annotated[str, typer.Argument(help="Lesson id.")],
+    only: Annotated[
+        str | None, typer.Option("--only", help="Comma-separated question ids to ask.")
+    ] = None,
+    retry_wrong: Annotated[
+        bool, typer.Option("--retry-wrong", help="Only questions last answered wrong.")
+    ] = False,
+) -> None:
+    """Take the lesson's quiz in the terminal; wrong answers become flashcards."""
+    with _service(ctx) as service:
+        lesson = service.lesson(lesson_id)
+        try:
+            lesson_quiz = parse_quiz(lesson)
+        except QuizParseError as exc:
+            raise _fail(f"quiz of '{lesson_id}' is invalid (run `rc validate`):\n{exc}") from None
+        if not lesson_quiz.questions:
+            raise _fail(f"lesson '{lesson_id}' has no quiz block")
+        wanted = [q.strip() for q in only.split(",") if q.strip()] if only else None
+        try:
+            questions = select_questions(
+                lesson_quiz,
+                only=wanted,
+                retry_wrong=retry_wrong,
+                store=service.store,
+                user_id=service.user_id,
+            )
+        except ValueError as exc:
+            raise _fail(str(exc)) from None
+        if not questions:
+            typer.echo("풀 문항이 없습니다 (마지막 시도에서 모두 정답)")
+            return
+        typer.echo(f"퀴즈: {lesson.title} ({lesson.id}) — {len(questions)}문항\n")
+        try:
+            result = run_quiz(
+                lesson,
+                lesson_quiz,
+                questions,
+                prompt=_prompt,
+                echo=typer.echo,
+                clock=service.clock,
+            )
+        except (typer.Abort, EOFError, KeyboardInterrupt):
+            typer.echo("\n중단: 결과를 저장하지 않았습니다", err=True)
+            raise typer.Exit(code=1) from None
+        recorded = record_quiz_run(service.store, lesson, result, user_id=service.user_id)
+    cards = recorded.new_cards
+    if cards:
+        detail = f"오답 {recorded.new_quiz_cards} + 개념 {recorded.new_concept_cards}"
+        typer.echo(f"새 카드 {len(cards)}장 ({detail}) → `rc review` 로 복습")
+    typer.echo(f"소요 {_fmt_seconds(recorded.run.seconds)} · 저장됨")
+
+
+@app.command()
+def review(
+    ctx: typer.Context,
+    count: Annotated[int | None, typer.Option("-n", min=1, help="At most this many cards.")] = None,
+    lesson: Annotated[
+        str | None, typer.Option("--lesson", help="Only cards from this lesson id.")
+    ] = None,
+    dry_run: Annotated[
+        bool, typer.Option("--dry-run", help="List due cards without reviewing.")
+    ] = False,
+) -> None:
+    """Review due flashcards with SM-2 (1 again · 2 hard · 3 good · 4 easy)."""
+    with _service(ctx) as service:
+        now = service.clock()
+        today = _local_today(now)
+        if lesson is not None:
+            service.lesson(lesson)  # validates the id
+        cards = due_cards(
+            service.store, today=today, user_id=service.user_id, lesson_id=lesson, limit=count
+        )
+        if not cards:
+            typer.echo("오늘 복습할 카드가 없습니다")
+            return
+        if dry_run:
+            rows = [
+                [d.card.id, d.card.lesson_id, d.card.source, f"{d.state.due:%Y-%m-%d}"]
+                for d in cards
+            ]
+            typer.echo(_table(["card", "lesson", "source", "due"], rows))
+            typer.echo(f"\n{len(cards)}장 due")
+            return
+        typer.echo(f"복습 {len(cards)}장\n")
+        try:
+            run_review(
+                service.store,
+                cards,
+                prompt=_prompt,
+                echo=typer.echo,
+                now=now,
+                today=today,
+                user_id=service.user_id,
+            )
+        except (typer.Abort, EOFError, KeyboardInterrupt):
+            typer.echo("\n중단: 답한 카드까지는 저장되었습니다", err=True)
+            raise typer.Exit(code=1) from None
+
+
 @progress_app.command("export")
 def progress_export(
     ctx: typer.Context,
@@ -324,6 +461,7 @@ def progress_import(
 app.command()(resources)
 app.command()(show)
 app.command()(roadmap)
+progress_app.command("transfer")(transfer_command)
 
 
 if __name__ == "__main__":

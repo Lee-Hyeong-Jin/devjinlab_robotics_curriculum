@@ -15,6 +15,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from robotics_curriculum.content import Course, Lesson, LoadError, Module, load_courses
+from robotics_curriculum.progress.factory import open_store
 from robotics_curriculum.progress.models import (
     DEFAULT_USER,
     LessonProgress,
@@ -22,7 +23,7 @@ from robotics_curriculum.progress.models import (
     ProgressExport,
     Session,
 )
-from robotics_curriculum.progress.store import SCHEMA_VERSION, ProgressStore, SqliteProgressStore
+from robotics_curriculum.progress.store import SCHEMA_VERSION, ProgressStore
 
 DATA_DIR_ENV = "RC_DATA_DIR"
 DATA_DIR_NAME = ".rc"
@@ -289,14 +290,28 @@ class ProgressService:
 
     # -- export / import (FR-10.2) --------------------------------------------
 
-    def export(self) -> ProgressExport:
-        """Every user's progress and sessions."""
+    def export(self, *, user_id: int | None = None) -> ProgressExport:
+        """Progress of every user (``user_id=None``, the CLI default) or of one user."""
         return ProgressExport(
             schema_version=SCHEMA_VERSION,
             exported_at=self.clock(),
-            lesson_progress=self.store.list_lessons(None),
-            sessions=self.store.list_sessions(None),
+            lesson_progress=self.store.list_lessons(user_id),
+            sessions=self.store.list_sessions(user_id),
+            cards=self.store.list_cards(user_id),
+            card_states=self.store.list_card_states(user_id),
+            reviews=self.store.list_reviews(user_id),
+            quiz_attempts=self.store.list_quiz_attempts(user_id),
+            quiz_runs=self.store.list_quiz_runs(user_id),
+            activity_progress=self.store.list_activities(user_id),
         )
+
+    def delete_user_data(self, user_id: int | None = None) -> tuple[int, int]:
+        """Erase one user's progress (default: this service's user).
+
+        Returns the (lesson rows, sessions) removed. Used by the account-deletion path of the
+        server; the CLI has no command for it.
+        """
+        return self.store.delete_user(self.user_id if user_id is None else user_id)
 
     def import_(self, data: ProgressExport, *, replace: bool = False) -> tuple[int, int]:
         """Load an export. Without ``replace`` the store must be empty. Returns row counts."""
@@ -313,6 +328,18 @@ class ProgressService:
                 self.store.save_lesson(progress)
             for session in data.sessions:
                 self.store.add_session(session)
+            for card in data.cards:
+                self.store.save_card(card)
+            for state in data.card_states:
+                self.store.save_card_state(state)
+            for review in data.reviews:
+                self.store.add_review(review)
+            for attempt in data.quiz_attempts:
+                self.store.add_quiz_attempt(attempt)
+            for run in data.quiz_runs:
+                self.store.add_quiz_run(run)
+            for activity in data.activity_progress:
+                self.store.save_activity(activity)
         return len(data.lesson_progress), len(data.sessions)
 
 
@@ -324,5 +351,5 @@ def open_service(
 ) -> ProgressService:
     """Build a service over the SQLite store in ``data_dir`` and the given curriculum."""
     courses = ProgressService.load_curriculum(curriculum_dir or default_curriculum_dir())
-    store = SqliteProgressStore.in_dir(data_dir or default_data_dir())
+    store = open_store(data_dir or default_data_dir())  # $RC_DATABASE_URL may pick PostgreSQL
     return ProgressService(store, courses, clock=clock)

@@ -9,7 +9,8 @@ import pytest
 from typer.testing import CliRunner
 
 from robotics_curriculum.cli import app
-from robotics_curriculum.content import load_courses
+from robotics_curriculum.content import load_courses, parse_quiz
+from robotics_curriculum.learn.quiz import record_quiz_run, run_quiz
 from robotics_curriculum.progress import ProgressService, Session, SqliteProgressStore
 from robotics_curriculum.site import build_site, generate_project
 from robotics_curriculum.site.pages import split_study_section
@@ -52,6 +53,19 @@ def service(curriculum: Path, tmp_path: Path) -> ProgressService:
     svc.log("m1-vectors-matrices", 40)
     svc.done("m1-vectors-matrices", understanding=4)
     svc.log("m1-rotation-representations", 30)
+    # quiz with one wrong answer -> 1 quiz card + 1 concept card due today
+    lesson = svc.lesson("m1-rotation-representations")
+    quiz = parse_quiz(lesson)
+    answers = iter(["1", "1,2", "o", "+1"])
+    result = run_quiz(
+        lesson,
+        quiz,
+        quiz.questions,
+        prompt=lambda _t: next(answers),
+        echo=lambda _l: None,
+        clock=lambda: NOW,
+    )
+    record_quiz_run(svc.store, lesson, result)
     yield svc
     store.close()
 
@@ -98,7 +112,7 @@ def test_dashboard_shows_position_progress_week_and_next(docs: Path) -> None:
     assert "2회 세션" in page
     assert "1 / 3" in page  # lessons done
     assert "1일" in page  # streak
-    assert "오늘 복습" in page
+    assert "오늘 복습" in page and "2장" in page  # quiz card + concept card are due
     assert "| **기초** |" in page and "50% (1/2)" in page
     assert "단계 미지정" in page  # m2 has no level
 
@@ -140,6 +154,36 @@ def test_lesson_page_header_body_study_and_resources(docs: Path) -> None:
     resources = page[page.index("## 학습 자료") :]
     assert "### 교재" in resources
     assert "- Sample Robotics Textbook — Ch. 3" in resources
+
+
+def test_lesson_page_renders_quiz_with_folded_answers(docs: Path) -> None:
+    page = read(docs, f"{M1}/m1-rotation-representations.md")
+    assert "```quiz" not in page
+    assert '!!! question "확인 퀴즈 (4문항)"' in page
+    assert "    **1.** (객관식) 회전 행렬 $R$ 의 역행렬은?" in page
+    assert "    2. $R^T$" in page
+    assert '    ??? note "정답·해설"' in page
+    assert "        **정답:** 2. $R^T$" in page
+    assert "        회전 행렬은 직교 행렬이므로 $R^{-1} = R^T$ 다." in page
+    assert "    **4.** (단답) 3×3 회전 행렬의 행렬식 값은?" in page
+    assert "**정답:** 1 / +1" in page
+
+
+def test_unparseable_quiz_block_falls_back_to_yaml_code(curriculum: Path) -> None:
+    from robotics_curriculum.content import load_course
+    from robotics_curriculum.site.pages import render_quiz_blocks
+
+    lesson = next(
+        les
+        for les in load_course(curriculum / "sample-course").iter_lessons()
+        if les.id == "m1-rotation-representations"
+    )
+    lesson.body = "intro\n```quiz\n- id: q1\n  type: nope\n```\nafter"
+    assert render_quiz_blocks(lesson.body, lesson) == (
+        "intro\n```yaml\n- id: q1\n  type: nope\n```\nafter"
+    )
+    lesson.body = "intro\n```quiz\n- unterminated"
+    assert render_quiz_blocks(lesson.body, lesson) == "intro\n```quiz\n- unterminated"
 
 
 def test_lesson_without_study_section_gets_fallback(docs: Path) -> None:
@@ -190,6 +234,11 @@ def test_mkdocs_build_renders_html_offline(service: ProgressService, tmp_path: P
     assert '<span class="arithmatex">\\(T = A_1 A_2\\)</span>' in lesson
     assert 'id="study-method"' in lesson
     assert "admonition tip" in lesson
+    # AC-4.7: quiz answers are folded into <details>
+    quiz_page = (out / f"{M1}/m1-rotation-representations.html").read_text(encoding="utf-8")
+    assert "admonition question" in quiz_page
+    assert "<details" in quiz_page and "정답·해설" in quiz_page
+    assert quiz_page.index("의 역행렬은?") < quiz_page.index("<details")
     # every script / stylesheet is local (works without network)
     refs = re.findall(r'<(?:script src|link rel="stylesheet" href)="([^"]+)"', lesson)
     assert refs and not [r for r in refs if r.startswith(("http:", "https:", "//"))]

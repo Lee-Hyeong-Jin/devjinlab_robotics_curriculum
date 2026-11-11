@@ -16,6 +16,7 @@ roll back together.
 
 from __future__ import annotations
 
+import threading
 from collections.abc import Iterator
 from contextlib import contextmanager
 from datetime import UTC, datetime
@@ -48,10 +49,12 @@ from robotics_curriculum.progress.store import SCHEMA_VERSION
 __all__ = [
     "DATABASE_URL_ENV",
     "PostgresProgressStore",
+    "dispose_shared_engines",
     "downgrade",
     "make_engine",
     "metadata",
     "normalize_url",
+    "shared_engine",
     "upgrade",
 ]
 
@@ -110,6 +113,38 @@ def downgrade(engine: Engine, revision: str = "base") -> None:
 
     with engine.begin() as conn:
         command.downgrade(alembic_config(connection=conn), revision)
+
+
+_shared_lock = threading.Lock()
+_shared_engines: dict[str, Engine] = {}
+
+
+def shared_engine(url: str) -> Engine:
+    """One pooled engine per URL for the whole process, migrated to head on first use.
+
+    ``open_store()`` uses this so that opening a store per CLI call or per API request reuses
+    the connection pool instead of building a new one each time.
+    """
+    key = normalize_url(url)
+    with _shared_lock:
+        engine = _shared_engines.get(key)
+        if engine is None:
+            engine = make_engine(key)
+            try:
+                upgrade(engine)
+            except BaseException:
+                engine.dispose()
+                raise
+            _shared_engines[key] = engine
+        return engine
+
+
+def dispose_shared_engines() -> None:
+    """Close every shared pool (process shutdown, or tests that recreate the schema)."""
+    with _shared_lock:
+        for engine in _shared_engines.values():
+            engine.dispose()
+        _shared_engines.clear()
 
 
 def _utc(value: datetime | None) -> datetime | None:
@@ -368,3 +403,18 @@ class PostgresProgressStore:
         with self.transaction(), self._connection() as conn:
             conn.execute(delete(sessions))
             conn.execute(delete(lesson_progress))
+
+    def delete_user(self, user_id: int) -> tuple[int, int]:
+        """Delete every row for one user (account deletion, FR-10.7).
+
+        Returns the number of lesson rows and sessions removed; ``(0, 0)`` for a user with no
+        data. Other users' rows are left untouched.
+        """
+        with self.transaction(), self._connection() as conn:
+            removed_sessions = conn.execute(
+                delete(sessions).where(sessions.c.user_id == user_id)
+            ).rowcount
+            removed_lessons = conn.execute(
+                delete(lesson_progress).where(lesson_progress.c.user_id == user_id)
+            ).rowcount
+        return removed_lessons, removed_sessions

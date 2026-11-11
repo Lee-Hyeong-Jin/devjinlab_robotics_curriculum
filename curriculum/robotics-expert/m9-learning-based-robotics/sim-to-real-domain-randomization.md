@@ -24,10 +24,16 @@ activities:
     title: 랜덤화 범위와 강건성 실험
     estimated_minutes: 50
 resources:
-  - title: "Getting Started with Isaac Lab (NVIDIA Physical AI Learning)"
-    url: https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-lab/latest/index.html
+  - title: "Robot Learning Fundamentals (NVIDIA Physical AI Learning)"
+    url: https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-lab/latest/robot-learning-fundamentals/index.html
     kind: course
-    note: 무료 등록. 읽기 위주로. Isaac Lab 3.0 은 Newton 백엔드로 Isaac Sim 없이 실행되나 NVIDIA GPU(Turing+) 필요.
+    note: >-
+      무료 등록. 읽기 위주로. RL·PPO·보상 설계·sim-to-real 9개 레슨 중 08 Simulation to Reality 가
+      이 레슨과 가장 가깝다. Isaac Lab 3.0 은 Newton 백엔드로 Isaac Sim 없이 실행되나 NVIDIA GPU(Turing+) 필요.
+  - title: "Visual Domain Randomization (Isaac Lab, NVIDIA Physical AI Learning)"
+    url: https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-lab/latest/transfer-policies-from-simulation-to-reality/03-bridging-the-gap-simulation-enhancement/01-visual-domain-randomization.html
+    kind: article
+    note: 조명·재질·카메라 랜덤화를 설정 파일에서 어떻게 지정하는지 보는 실습 단원.
   - title: "MuJoCo Playground"
     url: https://playground.mujoco.org/
     kind: other
@@ -152,15 +158,18 @@ for name, params in [("공칭 시뮬", nominal), ("도메인 랜덤화", randomi
 
 ## 이 단계 공부법
 
-1. **문서(먼저):** NVIDIA "Getting Started with Isaac Lab" 의 로봇 러닝 입문 장을 읽으며 과제·보상·랜덤화 설정이 어디에 있는지 표시한다.
+1. **문서(먼저):** NVIDIA "Robot Learning Fundamentals" 를 읽으며 과제·보상·랜덤화 설정이 어디에 있는지
+   표시하고, 08 Simulation to Reality 와 Visual Domain Randomization 단원을 이어서 본다.
 2. **본문 + 예제:** 예제와 연습 과제 (1) 로 어떤 격차가 결정적인지 찾는 습관을 들인다.
 3. **코드 읽기:** unitree_rl_mjlab 의 속도 추종 과제에서 보상 항과 랜덤화 항목을 목록으로 뽑는다.
 4. **확장(선택, GPU 필요):** MuJoCo Playground CartpoleBalance 를 CPU 로, 이후 SO-101 sim-to-real 과정을 읽는다.
 
 ## 참고 자료
 
-- NVIDIA Physical AI Learning, "Getting Started with Isaac Lab" —
-  <https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-lab/latest/index.html>
+- NVIDIA Physical AI Learning, "Robot Learning Fundamentals" —
+  <https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-lab/latest/robot-learning-fundamentals/index.html>
+- NVIDIA Physical AI Learning, "Visual Domain Randomization" —
+  <https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-lab/latest/transfer-policies-from-simulation-to-reality/03-bridging-the-gap-simulation-enhancement/01-visual-domain-randomization.html>
 - MuJoCo Playground — <https://playground.mujoco.org/>
 - Unitree Robotics, unitree_rl_mjlab — <https://github.com/unitreerobotics/unitree_rl_mjlab>
 - NVIDIA Physical AI Learning, "Sim-to-Real with SO-101" —

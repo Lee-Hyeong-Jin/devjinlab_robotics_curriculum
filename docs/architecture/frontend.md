@@ -29,7 +29,7 @@
 
 | 라우트 | 화면 | 주 API | 비고 |
 |---|---|---|---|
-| `/` | 대시보드 | `GET /progress/status` | 로그인 필수. 현재 단계·모듈·다음 레슨, 단계별 진행률, 주간 시간, 연속일, 복습 수, 최근 활동 |
+| `/` | 대시보드 | `GET /progress/status` | 로그인 필수. 현재 단계·모듈·다음 레슨, 단계별 진행률, 주간 시간, 연속일, 복습 수, 최근 활동. **필드 가용 시점**: P2-1은 `open_session`·`lessons`만, `current`·`stages`·`week`·`streak_days`·`recent`는 P2-1 후속(P2-2와 함께), `due_cards`는 P1-2 머지 후. 없는 필드는 스켈레톤으로 두고 화면을 먼저 만든다 |
 | `/roadmap` | 로드맵 | `GET /roadmap` | 단계별 모듈 카드 + 선수지식 체인 |
 | `/modules/[moduleId]` | 모듈 개요 | `GET /modules/{module_id}`, `GET /progress/lessons` | 레슨 목록·상태, 모듈 자료 |
 | `/modules/[moduleId]/[lessonId]` | 레슨 | `GET /lessons/{lesson_id}`, `GET /progress/lessons/{lesson_id}` | 본문·공부법·자료·활동. 타이머·완료는 아래 동작 참조 |
