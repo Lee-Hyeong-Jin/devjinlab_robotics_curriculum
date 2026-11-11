@@ -43,7 +43,9 @@
 
 병렬 세션은 각자 `.claude/worktrees/<name>/` 워크트리에서 일한다. 훅이 워크트리에서 어떻게 해석되는지 알아야 "훅이 조용히 꺼진" 상태나 "막혀서 아무것도 못 하는" 상태를 피할 수 있다.
 
-**스크립트 해석 순서.** 각 훅 명령은 ① 현재 cwd 기준 `scripts/harness/<스크립트>`, ② 없으면 `$CLAUDE_PROJECT_DIR/scripts/harness/<스크립트>`, ③ 둘 다 없으면 `exit 0`(아무 것도 안 함) 순으로 찾는다. 스크립트가 실행되면 내부에서 `git rev-parse --show-toplevel` 로 루트를 다시 잡으므로 이후 동작은 워크트리 기준이다.
+**스크립트 해석 순서.** 각 훅 명령은 `git rev-parse --show-toplevel`(실패하면 `$CLAUDE_PROJECT_DIR`, 그것도 없으면 `$PWD`)을 루트로 잡고 거기서 `scripts/harness/<스크립트>` 를 찾는다. cwd 가 워크트리의 어느 하위 디렉터리든 같은 스크립트를 찾는다. 스크립트가 없을 때는:
+- 저장소에 `harness/` 가 있으면(= 이 저장소인데 스크립트만 없는 상태) **PreToolUse 가드는 deny 로 차단**하고(fail-closed), Stop 은 "게이트를 건너뛴다"는 경고만 stderr 로 남긴다. Stop 을 차단하면 턴을 끝낼 방법이 없어 세션이 갇히므로 의도적으로 열어 둔다 — 같은 검사는 CI 가 강제한다.
+- `harness/` 도 없으면(다른 저장소) 모든 훅이 조용히 `exit 0`.
 
 **실측 결과 (2026-11-11, 새 `git worktree add --detach` 워크트리에서 settings.json 의 훅 명령을 페이로드와 함께 직접 실행).**
 
@@ -51,19 +53,18 @@
 |---|---|---|---|---|
 | A. cwd = 워크트리 루트 | 상태 주입 | 위험 명령 deny | ruff 포맷 적용 | 실패 시 block |
 | B. cwd = 워크트리 하위(`src/`), `CLAUDE_PROJECT_DIR` = 같은 워크트리 | 정상 | 정상 | 정상 | 정상 |
-| C. cwd = 워크트리 하위, `CLAUDE_PROJECT_DIR` 에 스크립트 없음 | **무동작** | **무동작(가드 꺼짐)** | **무동작** | **무동작(게이트 꺼짐)** |
-| D. 저장소 밖 cwd | 무동작 | 무동작 | 무동작 | 무동작 |
+| C. cwd = 워크트리 하위, `CLAUDE_PROJECT_DIR` 없음 | 정상 | 정상 | 정상 | 실패 시 block |
+| D. 하네스 저장소인데 `scripts/harness/` 없음 | 무동작 | **deny(스크립트 없음 사유)** | 무동작 | 경고 후 통과 |
+| E. 하네스가 아닌 저장소·저장소 밖 | 무동작 | 무동작 | 무동작 | 무동작 |
 
-모든 경우 종료 코드는 0 이라 세션이 막히지는 않는다(fail-open). 대신 C 는 경고 없이 가드와 게이트가 꺼진다. 메인 체크아웃(`main`, 초기 커밋만 있음)에는 `scripts/harness/` 와 `.claude/settings.json` 이 없으므로, 메인 체크아웃에서 시작한 세션이 워크트리로 옮긴 뒤 하위 디렉터리로 `cd` 하면 C 가 된다.
+예전에는 cwd 기준으로만 스크립트를 찾아서, 메인 체크아웃(`scripts/harness/` 없음)에서 시작한 세션이 워크트리 하위 디렉터리로 `cd` 하면 가드와 게이트가 경고 없이 모두 꺼졌다(fail-open). 지금은 C 가 정상 동작하고 D 에서 가드가 차단한다.
 
 **규칙.**
-- 세션은 해당 워크트리 루트에서 시작하고, Bash 에서 하위 디렉터리로 `cd` 하지 말고 경로를 인자로 넘긴다(`uv run pytest tests/test_x.py`).
+- 세션은 해당 워크트리 루트에서 시작하는 것이 좋다(하위 디렉터리에서도 훅은 동작하지만 명령 경로가 헷갈린다).
 - 세션은 시작할 때 읽은 훅 설정을 캐시한다. `integration` 을 머지해 `.claude/settings.json` 이나 `scripts/harness/` 가 바뀌었으면 `/hooks` 를 열어 다시 읽히거나 세션을 재시작한다. 오래된 훅 명령이 사라진 스크립트 경로를 가리켜 Bash 가 계속 막힌 사례가 있었다(platform-dev-agent-harness 세션).
 - 훅이 Bash 를 막는데 원인이 훅 자체라면 우회하지 말고 사용자에게 `/hooks` 재로드나 세션 재시작을 요청한다. 다른 세션에 대신 실행을 부탁하지 않는다.
 - 가드 차단 문구는 명령 문자열 전체에 정규식으로 걸린다. 테스트 페이로드나 heredoc 안의 문자열도 차단되므로, 그런 텍스트는 Write 도구로 파일에 쓴다.
-- 새 워크트리에서 훅을 점검하려면: 훅 명령을 `.claude/settings.json` 에서 꺼내 워크트리 루트와 하위 디렉터리 각각에서 이벤트별 JSON 페이로드를 stdin 으로 넣어 실행하고, 가드는 deny JSON, Stop 은 실패 코드에 대해 `"decision": "block"` 을 내는지 확인한다.
-
-**미해결(사용자 결정 필요).** C 의 fail-open 은 훅 명령이 cwd 대신 `git rev-parse --show-toplevel` 로 스크립트를 찾으면 없어진다. `.claude/settings.json` 변경이라 사용자 승인 후 반영한다.
+- 새 워크트리에서 훅을 점검하려면: 훅 명령을 `.claude/settings.json` 에서 꺼내 워크트리 루트와 하위 디렉터리 각각에서 이벤트별 JSON 페이로드를 stdin 으로 넣어 실행하고, 가드는 deny JSON, Stop 은 실패 코드에 대해 `"decision": "block"` 을 내는지 확인한다. `scripts/harness/` 를 잠시 다른 이름으로 옮겨 D 시나리오(가드 deny)도 확인한다.
 
 ## 권한
 
