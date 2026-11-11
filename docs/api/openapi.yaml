@@ -570,7 +570,7 @@ components:
       properties: { id: { type: integer }, user_id: { type: integer }, lesson_id: { type: string }, started_at: { type: string, format: date-time }, ended_at: { type: string, format: date-time }, note: { type: string }, source: { type: string, enum: [timer, manual] } }
     Status:
       type: object
-      description: P2-1 초기 구현은 open_session 과 lessons 만 반환하며, 나머지 대시보드 필드(current, stages, week, streak_days, due_cards, recent)는 가산적으로 추가된다.
+      description: 필드는 단계적으로 채워진다(가산적, 기존 필드 변경 없음). P2-1 = open_session, lessons. P2-1 후속(P2-2와 함께) = current, stages, week, streak_days, recent. P1-2 머지 후 = due_cards.
       properties:
         lessons: { type: array, items: { $ref: "#/components/schemas/LessonState" } }
         current: { type: object, properties: { level: { $ref: "#/components/schemas/Level" }, module_id: { type: string }, module_title: { type: string }, lessons_done: { type: integer }, lessons_total: { type: integer }, next_lesson_id: { type: string }, next_lesson_title: { type: string } } }
