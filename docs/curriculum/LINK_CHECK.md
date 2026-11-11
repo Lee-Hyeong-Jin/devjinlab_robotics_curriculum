@@ -3,7 +3,7 @@
 - 점검일: 2026-11-11 (2차: M9 포함 50개 레슨)
 - 대상: `curriculum/robotics-expert/**` 레슨 frontmatter `resources[].url` (중복 제거)
 - 방법: Python `urllib` 로 HEAD 요청, 실패하면 GET 으로 재시도. 타임아웃 10초, 기본 User-Agent.
-- 결과: 109개 중 104개 200 OK, 5개 확인 필요
+- 결과: 110개 중 105개 200 OK, 5개 확인 필요
 
 ## 교체한 링크
 
@@ -13,7 +13,7 @@
 | m10-testing-ci-deployment | `awesome.ecosyste.ms` 목록 페이지 (402) | GitHub 원본 저장소 |
 | m5-odometry-sensor-fusion | Nav2 옛 `setup_guides/` 경로 (404) | `docs.nav2.org/rolling/` 공식 후속 페이지 + robot_localization 공식 문서 추가 |
 | m5-graph-slam-slam-toolbox | FH Aachen 여름학교 자습서 (403, 브라우저에서도 차단) | Nav2 공식 튜토리얼 "Navigating While Mapping" |
-| m9-sim-to-real-domain-randomization | NVIDIA Isaac Lab 하위 페이지 (404) | 같은 코스의 상위 랜딩 페이지 |
+| m9-sim-to-real-domain-randomization | NVIDIA Isaac Lab 입문 단원 (404) | 후속 모듈 Robot Learning Fundamentals + Visual Domain Randomization 단원 |
 
 Nav2 와 Isaac Lab 대체 URL 은 리서처 세션(robotics-learning-research)이 제안했고 `research_notes/로보틱스 학습 자료 조사/link_fixes.md` 에 근거가 있다.
 
@@ -50,7 +50,8 @@ Nav2 와 Isaac Lab 대체 URL 은 리서처 세션(robotics-learning-research)�
 | <https://docs.nav2.org/rolling/configuration_and_development/first_time_robot_setup_guide/odom/setup_robot_localization/> | 200 | m5-odometry-sensor-fusion |
 | <https://docs.nav2.org/rolling/index.html> | 200 | m10-system-architecture-requirements, m6-costmap-global-planning, m6-local-planning-dwa-mppi, m6-nav2-architecture-behavior-trees, m6-path-smoothing-trajectory |
 | <https://docs.nav2.org/rolling/tutorials/general_tutorials/navigation2_with_slam/navigation2_with_slam/> | 200 | m5-graph-slam-slam-toolbox |
-| <https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-lab/latest/index.html> | 200 | m9-sim-to-real-domain-randomization |
+| <https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-lab/latest/robot-learning-fundamentals/index.html> | 200 | m9-sim-to-real-domain-randomization |
+| <https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-lab/latest/transfer-policies-from-simulation-to-reality/03-bridging-the-gap-simulation-enhancement/01-visual-domain-randomization.html> | 200 | m9-sim-to-real-domain-randomization |
 | <https://docs.nvidia.com/learning/physical-ai/sim-to-real-so-101/latest/index.html> | 200 | m9-datasets-benchmarks-evaluation, m9-sim-to-real-domain-randomization |
 | <https://docs.ros.org/en/jazzy/Tutorials.html> | 200 | m8-nodes-topics-launch, m8-ros2-concepts-distros, m8-tf2-urdf-visualization |
 | <https://docs.ros.org/en/jazzy/p/pinocchio/doc/d-practical-exercises/4-dyn.html> | 200 | m7-manipulator-dynamics-torque-control |
