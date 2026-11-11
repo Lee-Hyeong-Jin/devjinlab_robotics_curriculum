@@ -163,6 +163,48 @@ slam_toolbox:
 2. 첫 자세를 고정하지 않으면 정규 방정식이 풀리지 않는 이유는?
 3. SLAM Toolbox 와 robot_localization 이 각각 어떤 tf 를 발행해 트리를 완성하는가?
 
+## 확인 퀴즈
+
+`rc quiz m5-graph-slam-slam-toolbox` 로 풀 수 있다. 오답은 복습 카드가 된다.
+
+```quiz
+activity: m5-graph-slam-slam-toolbox-quiz
+questions:
+  - id: q1
+    type: single
+    prompt: '포즈 그래프 SLAM 에서 틀린 루프 클로저 간선을 만드는 것은 어느 쪽의 책임인가?'
+    choices:
+      - '백엔드 — 최적화가 잘못 수렴했다'
+      - '프런트엔드 — 간선(대응)을 잘못 만들었다'
+      - 'tf2 버퍼'
+      - '점유 격자 갱신'
+    answer: 1
+    explanation: '프런트엔드가 스캔 매칭과 루프 후보 탐색으로 간선을 만들고, 백엔드는 주어진 간선의 오차 합을 최소화할 뿐이다. 틀린 간선이 들어오면 백엔드는 그것까지 충실히 맞추려 해서 지도 전체가 휘어진다. 그래서 루프 후보 검증이 중요하다.'
+    concept: { front: '프런트엔드 vs 백엔드', back: '프런트엔드 = 간선 생성(스캔 매칭·루프 탐색), 백엔드 = 간선 오차 최소화. 틀린 루프는 프런트엔드 책임' }
+  - id: q2
+    type: single
+    prompt: '첫 자세를 고정(앵커)하지 않으면 포즈 그래프 최적화의 정규 방정식이 풀리지 않는 이유는?'
+    choices:
+      - '간선이 부족하기 때문'
+      - '모든 자세를 같은 변환만큼 함께 옮겨도 상대 측정 오차가 변하지 않아 해가 유일하지 않기 때문'
+      - '정보 행렬이 음수가 되기 때문'
+      - '루프 클로저가 없기 때문'
+    answer: 1
+    explanation: '간선은 모두 **상대** 측정이므로 궤적 전체를 평행 이동·회전해도 비용이 같다. 이 전역 자유도(게이지 자유도) 때문에 정보 행렬이 특이해진다. 첫 자세를 고정하거나 사전 간선을 넣어 기준을 주면 해가 유일해진다.'
+    concept: { front: '포즈 그래프에 앵커가 필요한 이유', back: '상대 측정만 있으면 전역 평행이동·회전이 비용을 바꾸지 않아 해가 유일하지 않다' }
+  - id: q3
+    type: single
+    prompt: 'SLAM Toolbox 와 robot_localization 은 각각 어떤 tf 를 발행해 트리를 완성하는가?'
+    choices:
+      - 'SLAM Toolbox: `map → odom`, robot_localization: `odom → base_link`'
+      - 'SLAM Toolbox: `odom → base_link`, robot_localization: `map → odom`'
+      - '둘 다 `map → base_link` 를 발행한다'
+      - 'SLAM Toolbox 만 tf 를 발행한다'
+    answer: 0
+    explanation: 'SLAM Toolbox 는 `/map` 과 `map → odom` 을 발행하고, 융합 EKF(robot_localization)가 `odom → base_link` 를 맡는다. 거기에 URDF 기반 static 변환이 붙어 `map → odom → base_link → laser` 트리가 완성된다.'
+    concept: { front: 'SLAM 스택의 tf 분담', back: 'SLAM Toolbox = `map → odom`, robot_localization = `odom → base_link`' }
+```
+
 ## 이 단계 공부법
 
 1. **영상(먼저):** Stachniss "Introduction to SLAM" → "Graph-based SLAM" 순서로 본다.
