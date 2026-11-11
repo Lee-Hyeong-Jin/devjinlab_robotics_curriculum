@@ -181,6 +181,47 @@ print("세밀 재검사 충돌:", bool(in_collision(fine[:, 0], fine[:, 1]).any(
 2. 관절각 격자에서 $-\pi$ 와 $\pi$ 를 이어 주지 않으면 어떤 경로를 놓치는가?
 3. MoveIt 2 가 계획 결과에 단순화와 시간 매개화를 거치는 이유는?
 
+## 확인 퀴즈
+
+`rc quiz m7-manipulator-motion-planning` 로 풀 수 있다. 오답은 복습 카드가 된다.
+
+```quiz
+activity: m7-manipulator-motion-planning-quiz
+questions:
+  - id: q1
+    type: single
+    prompt: '작업 공간의 작은 장애물 하나가 관절 구성공간에서는 넓은 영역을 막을 수 있는 이유는?'
+    choices:
+      - '충돌 검사가 보수적으로 근사하기 때문'
+      - '여러 링크 중 어느 하나라도 그 장애물과 겹치면 충돌이고, 정기구학이 비선형이라 그런 구성들이 $C_{obs}$ 에 넓게 흩어지기 때문'
+      - '관절 한계 때문'
+      - '격자 해상도가 낮기 때문'
+    answer: 1
+    explanation: '$C_{obs} = \{\theta \mid A(\theta) \cap \mathcal{O} \neq \varnothing\}$ 에서 $A(\theta)$ 는 팔 전체가 차지하는 영역이다. 서로 멀리 떨어진 관절 조합들이 같은 장애물에 닿을 수 있고, 매핑이 비선형이라 $C_{obs}$ 는 볼록하지도 연결되어 있지도 않다. 자기 충돌까지 더해진다.'
+    concept: { front: '작업 공간 장애물 → $C_{obs}$', back: '링크 중 하나라도 겹치면 충돌 + 비선형 FK → 관절 공간에 넓고 비볼록한 금지 영역' }
+  - id: q2
+    type: single
+    prompt: '회전 관절의 격자에서 $-\pi$ 와 $\pi$ 를 잇지 않으면 무엇을 놓치는가?'
+    choices:
+      - '관절 한계를 넘는 경로'
+      - '$\pi$ 를 지나 한 바퀴 돌아가는 더 짧은 경로'
+      - '자기 충돌이 있는 경로'
+      - '아무것도 놓치지 않는다'
+    answer: 1
+    explanation: '회전 관절의 구성공간은 원환($T^n$)이라 $-\pi$ 와 $\pi$ 는 같은 자세다. 양 끝을 끊어 두면 $\theta = 3.1$ 에서 $-3.1$ 로 가는 짧은 이동을 "거의 한 바퀴 되돌아가는" 경로로만 표현하게 되어 최적해를 놓친다(각도 감기와 같은 이야기).'
+    concept: { front: '관절 구성공간은 원환', back: '$-\pi$ 와 $\pi$ 는 같은 점 — 양 끝을 이어야 짧은 경로를 찾는다' }
+  - id: q3
+    type: single
+    prompt: 'MoveIt 2 가 플래너 출력에 단순화와 시간 매개화를 덧붙이는 이유는?'
+    choices:
+      - '샘플링 플래너의 경로는 구불구불하고 시간 정보가 없어, 그대로는 컨트롤러가 실행할 수 없기 때문'
+      - '충돌 검사를 건너뛰기 위해'
+      - 'IK 를 다시 풀기 위해'
+      - 'URDF 를 갱신하기 위해'
+    answer: 0
+    explanation: 'RRTConnect 같은 플래너는 충돌 없는 경로점 열만 준다. 지름길 잇기로 불필요한 꺾임을 없애고, 속도·가속도 한계로 각 점에 `time_from_start` 를 붙여야 `joint_trajectory_controller` 가 보간해 실행할 수 있다(경로 → 궤적).'
+```
+
 ## 이 단계 공부법
 
 1. **영상(먼저):** Modern Robotics Ch. 10 영상의 구성공간 장애물 부분을 본다.
