@@ -1,0 +1,2639 @@
+# Normalized 2026-11-11 to platform-design §3.5 resource schema (proposal, not yet implemented in CONTENT_MODEL.md)
+resources:
+- id: hf-robotics-course
+  title: Hugging Face Robotics Course
+  author: Hugging Face (announced by Ben Burtenshaw, Community Education Lead)
+  url: https://huggingface.co/learn/robotics-course
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - basic Python (variables, functions, loops)
+  - elementary linear algebra/calculus helpful but not required
+  - general ML familiarity a bonus
+  topics:
+  - robot-learning
+  - lerobot
+  - classical-robotics
+  - rl
+  - imitation-learning
+  - foundation-models
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Self-paced, LeRobot-based, no robot required (sim environments/datasets), ~30-45 min per unit, no certification. As of 2026-11-11 only Units 0-2 (Welcome, Course Introduction, Classical Robotics) are released; Units 5 RL / 6 Imitation Learning / 7 Foundation Models are still ''Coming Soon'' and Units 3-4 are not listed — use ''Robot Learning: A Tutorial'' for those topics. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: huggingface
+    units_released:
+    - Unit 0
+    - Unit 1
+    - Unit 2
+    units_coming_soon:
+    - Unit 5 Reinforcement Learning
+    - Unit 6 Imitation Learning
+    - Unit 7 Foundation Models
+    minutes_per_unit: 30-45
+    secondary_source: https://www.edtechinnovationhub.com/news/hugging-face-launches-free-robotics-course-exploring-ai-driven-learning-in-robotics
+- id: hf-robot-learning-tutorial
+  title: 'Robot Learning: A Tutorial'
+  author: Francesco Capuano, Caroline Pascal, Adil Zouitine, Thomas Wolf, Michel Aractingi (Hugging Face LeRobot team)
+  url: https://arxiv.org/abs/2510.12403
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Python
+  - basic ML
+  topics:
+  - robot-learning
+  - rl
+  - behavioral-cloning
+  - imitation-learning
+  - generalist-policies
+  - vla
+  - lerobot
+  est_hours: null
+  last_updated: 2025-10
+  status: active
+  license: null
+  quality_signal: 'HF Space lerobot/robot-learning-tutorial: 560 likes at time of fetch'
+  notes: arXiv 2510.12403 (submitted 2025-10-14) with interactive HF Space; covers the shift from model-based robotics to data-driven robot learning, RL and behavioral cloning through language-conditioned generalist models, with ready-to-use lerobot examples. The LeRobot README calls it a free hands-on course; the HF Robotics Course is based on it. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    arxiv_id: '2510.12403'
+    hf_space: https://huggingface.co/spaces/lerobot/robot-learning-tutorial
+- id: berkeley-cs285-deep-rl
+  title: UC Berkeley CS 285 Deep Reinforcement Learning
+  author: Sergey Levine (UC Berkeley RAIL); Head GSI Seohong Park; GSIs incl. Kevin Black
+  url: https://rail.eecs.berkeley.edu/deeprlcourse/
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - deep learning fluency
+  - PyTorch
+  topics:
+  - rl
+  - imitation-learning
+  - behavioral-cloning
+  - policy-gradients
+  - actor-critic
+  - q-learning
+  - offline-rl
+  - model-based-rl
+  - llm-rl
+  - exploration
+  est_hours: null
+  last_updated: 2026-01
+  status: active
+  license: null
+  quality_signal: flagship graduate deep-RL course; GSI Kevin Black is a co-author of pi0
+  notes: 'Spring 2026 offering (Week 1 Jan 19-23, 2026). Five homeworks: Imitation Learning, Policy Gradients, Q-Learning/Actor-Critic, LLM RL, Offline RL. Public YouTube recordings are linked only for Fall 2023; whether Spring 2026 lectures are public was not confirmed. Graduate-level — reference material rather than first stop for a developer with some ML.'
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: university
+    public_video_offering: Fall 2023
+    current_offering: Spring 2026
+- id: stanford-cs224r-deep-rl
+  title: Stanford CS 224R Deep Reinforcement Learning
+  author: Stanford (Chelsea Finn confirmed for Spring 2025; Spring 2026 instructor not confirmed officially)
+  url: https://cs224r.stanford.edu
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - deep learning incl. transformers
+  - basic RL
+  - PyTorch
+  topics:
+  - rl
+  - q-learning
+  - offline-rl
+  - rlhf
+  - reward-learning
+  - model-based-rl
+  - goal-conditioned-rl
+  - meta-rl
+  - hierarchical-rl
+  - sim-to-real
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: null
+  notes: Spring 2026 offering with public slides (2026 intro slides at cs224r.stanford.edu/slides/01_cs224r_intro_2026.pdf). More applied than CS234, emphasizing robotics and language modeling. Topic list from secondary student notes; a third-party aggregator names Chelsea Finn for 2026 but no official page confirms. Graduate-level.
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: university
+    intro_slides_2026: https://cs224r.stanford.edu/slides/01_cs224r_intro_2026.pdf
+    secondary_sources:
+    - https://web.stanford.edu/~srliu/homepage/notes/cs224r/
+    - https://www.beri.net/learning/stanford-cs224r-deep-rl-spring-2026
+- id: mit-underactuated-robotics
+  title: 'Underactuated Robotics: Algorithms for Walking, Running, Swimming, Flying, and Manipulation (MIT 6.8210)'
+  author: Russ Tedrake (MIT)
+  url: https://underactuated.mit.edu/
+  type: book
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - linear algebra
+  - dynamics/control basics
+  - Python (pydrake)
+  topics:
+  - dynamic-programming
+  - lqr
+  - trajectory-optimization
+  - policy-search
+  - contact
+  - system-identification
+  - rl
+  - imitation-learning
+  - drake
+  est_hours: null
+  last_updated: '2024'
+  status: active
+  license: null
+  quality_signal: canonical MIT textbook with YouTube lecture videos
+  notes: 'Free online textbook + lecture videos; software Drake (pydrake), PDF via GitHub releases. Landing page describes working notes for the Spring 2024 course (no Spring 2026 edition stated). Bridge chapters to the AI layer: Ch. 7 DP, 8 LQR, 10 Trajectory Optimization, 11 Policy Search, 15 Pixels-to-Torques, 17 Contact, 18 System ID, 20 Model-Free Policy Search (RL), 21 Imitation Learning. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    software: Drake (pydrake)
+    key_chapters:
+    - 7
+    - 8
+    - 10
+    - 11
+    - 15
+    - 17
+    - 18
+    - 20
+    - 21
+- id: mit-robotic-manipulation
+  title: 'Robotic Manipulation: Perception, Planning, and Control (MIT 6.4210)'
+  author: Russ Tedrake (MIT)
+  url: https://manipulation.mit.edu/
+  type: book
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - linear algebra
+  - Python (pydrake)
+  topics:
+  - manipulation
+  - pick-and-place
+  - pose-estimation
+  - bin-picking
+  - motion-planning
+  - mobile-manipulation
+  - manipulator-control
+  - deep-perception
+  - rl
+  - tactile-sensing
+  - drake
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: actively maintained MIT textbook (Fall 2026 edition in progress)
+  notes: Free HTML + PDF textbook, notes 'will be updated throughout the Fall 2026 semester'; Drake with online Jupyter/Colab notebooks and DrakeGym appendix. Chapters 1-12 incl. Ch. 9 Object Detection, 10 Deep Perception, 11 Reinforcement Learning; imitation learning has no dedicated chapter in the TOC. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    software: Drake (pydrake)
+    edition: Fall 2026 (in progress)
+- id: cmu-16-831-intro-robot-learning
+  title: CMU 16-831 Introduction to Robot Learning
+  author: Carnegie Mellon University (third-party summary names Guanya Shi; not confirmed on the official page)
+  url: https://16-831.github.io/
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - deep learning
+  - basic RL
+  topics:
+  - imitation-learning
+  - model-free-rl
+  - model-based-rl
+  - bandits
+  - exploration
+  - offline-rl
+  - sim-to-real
+  - safe-robot-learning
+  est_hours: null
+  last_updated: '2025'
+  status: active
+  license: null
+  quality_signal: null
+  notes: Per-semester pages; most recent found is Fall 2025 (16-831.github.io/fall25, schedule at /fall25/lectures, T/Th 12:30-1:50). Free slides. Graduate-level.
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: university
+    latest_offering_url: https://16-831.github.io/fall25
+    secondary_source: https://gozhiyuan.github.io/robotics/2025/05/01/cmu-robotics-intro-01.html
+- id: nvidia-physical-ai-learning-portal
+  title: NVIDIA Physical AI Learning (DLI self-paced learning paths)
+  author: NVIDIA
+  url: https://docs.nvidia.com/learning/physical-ai/
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - comfort with Python
+  topics:
+  - isaac-lab
+  - newton
+  - robot-learning
+  - sim-to-real
+  - gr00t
+  - physical-ai
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: null
+  notes: Portal states 'all learning paths are free to access for self-paced learning'. Courses include An Introduction to Robot Learning and Isaac Lab, Train Your First Robot in Isaac Lab, Transferring Robot Learning Policies From Simulation to Reality, Accelerating Robot Learning With Isaac Lab and Newton, and the Sim-to-Real with SO-101 path. Pricing conflict with third-party DLI guide noted. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: nvidia-dli
+    courses:
+    - An Introduction to Robot Learning and Isaac Lab
+    - Train Your First Robot in Isaac Lab
+    - Transferring Robot Learning Policies From Simulation to Reality
+    - Accelerating Robot Learning With Isaac Lab and Newton
+    - Sim-to-Real with SO-101
+    learning_path_url: https://nvidia.com/en-us/learn/learning-path/robotics
+    pricing_conflict_source: https://pasqualepillitteri.it/en/news/25084/nvidia-ai-courses-certifications-dli-guide
+    cost_note: free (registration required; a secondary DLI guide claims some DLI courses cost $30-90 — verify per course)
+- id: nvidia-intro-robot-learning-isaac-lab
+  title: An Introduction to Robot Learning and Isaac Lab (NVIDIA)
+  author: NVIDIA
+  url: https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-lab/latest/an-introduction-to-robot-learning-and-isaac-lab/index.html
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Python
+  topics:
+  - isaac-lab
+  - robot-learning
+  - rl
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: null
+  notes: Part of the free Physical AI Learning portal; recommended third step in the note's on-ramp (after HF Course + Tutorial). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: nvidia-dli
+- id: nvidia-accelerating-robot-learning-isaac-lab-newton
+  title: Accelerating Robot Learning With Isaac Lab and Newton (NVIDIA)
+  author: NVIDIA
+  url: https://docs.nvidia.com/learning/physical-ai/getting-started-with-newton/latest/index.html
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - comfort with Python
+  topics:
+  - isaac-lab
+  - newton
+  - rl
+  - locomotion
+  - gpu-simulation
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: null
+  notes: Requires comfort with Python. Pairs with the NVIDIA blog ANYmal-D quadruped train/validate/deploy workflow. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: nvidia-dli
+- id: nvidia-sim-to-real-so-101
+  title: Sim-to-Real with SO-101 (NVIDIA Physical AI learning path)
+  author: NVIDIA
+  url: https://docs.nvidia.com/learning/physical-ai/sim-to-real-so-101/latest/index.html
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - Python
+  - LeRobot basics
+  - SO-101 arm
+  topics:
+  - sim-to-real
+  - so-101
+  - lerobot
+  - gr00t
+  - vla
+  - domain-randomization
+  - teleoperation
+  - cosmos
+  - data-augmentation
+  - actuation-gap
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Modules: Overview (sim-to-real + LeRobot background), Build Your Robot Lab (SO-101 setup/calibration), Collect Data/Train/Evaluate (teleop with domain randomization, GR00T VLA, sim + real eval), Augment Datasets (real-data co-training, Cosmos), Measure the Actuation Gap (SAGE + GapONet). Task: unstructured pick-and-place of centrifuge vials. No cost or GPU requirement stated. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: nvidia-dli
+    hardware: SO-101
+    models:
+    - GR00T
+- id: deepmind-ucl-rl-lecture-series-2021
+  title: DeepMind x UCL Reinforcement Learning Lecture Series 2021
+  author: DeepMind researchers (Lecture 1 by Hado van Hasselt)
+  url: https://discuss.ai.google.dev/t/deepminds-reinforcement-learning-lecture-series-2021/29496
+  type: video_series
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - probability
+  - linear algebra
+  - basic ML
+  topics:
+  - rl
+  - mdp
+  - dynamic-programming
+  - model-free
+  - function-approximation
+  - planning
+  - policy-gradients
+  - deep-rl
+  est_hours: 15
+  last_updated: '2021'
+  status: active
+  license: null
+  quality_signal: null
+  notes: 13 YouTube lectures (~45 min to just under 2 h each; est_hours is a rough midpoint sum). Playlist short link dpmd.ai/DeepMindxUCL21. General RL foundations, not robotics-specific; David Silver's 2015 RL Course is a separate older series. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: youtube
+    playlist_short_link: dpmd.ai/DeepMindxUCL21
+    videos: 13
+    class_central: https://classcentral.com/classroom/youtube-deepmind-x-ucl-deep-learning-lecture-series-2020-45714
+- id: openai-spinning-up-deep-rl
+  title: OpenAI Spinning Up in Deep RL
+  author: OpenAI
+  url: https://spinningup.openai.com
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Python
+  - basic ML
+  topics:
+  - rl
+  - policy-gradients
+  - key-papers
+  - algorithm-explanations
+  est_hours: null
+  last_updated: null
+  status: stale
+  license: null
+  quality_signal: null
+  notes: Official docs state the project 'is currently in maintenance mode, with bug fixes only and no major updates currently planned'; a 2025 community post describes a volunteer modernization effort because implementations are tied to older dependencies. Still useful as reading (Key Papers, algorithm explanations) but not as an implementation base in 2026 — use CleanRL or RSL-RL/SKRL. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    intro_url: https://spinningup.openai.com/en/latest/user/introduction.html
+    modernization_thread: https://community.openai.com/t/modernizing-spinning-up-for-today-s-reinforcement-learning-researchers/1358002
+- id: cleanrl
+  title: CleanRL (single-file deep RL implementations)
+  author: vwxyzjn (Shengyi Huang et al.)
+  url: https://github.com/vwxyzjn/cleanrl
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Python
+  - PyTorch
+  - basic RL
+  topics:
+  - rl
+  - ppo
+  - sac
+  - reference-implementations
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: JMLR 2022 paper; commonly cited modern alternative to Spinning Up
+  notes: Readable single-file algorithm references, recommended by the note in place of Spinning Up code. License not stated in the note. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    jmlr_url: https://jmlr.org/papers/v23/21-1342.html
+- id: coursera-foundations-of-rl-cu-boulder
+  title: 'Foundations of Reinforcement Learning Specialization (first course: Mastering Classic Reinforcement Learning Algorithms)'
+  author: University of Colorado Boulder (Coursera)
+  url: https://www.coursera.org/learn/mastering-classic-reinforcement-learning-algorithms
+  type: course
+  language: en
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - rl
+  - tabular-methods
+  est_hours: 14
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: General (non-robotics) RL; first course is 14 hours of tabular methods. No 2026 Coursera or edX course specifically on robot RL was found. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: coursera
+- id: edx-rl-rwth-aachen
+  title: Reinforcement Learning (RWTH Aachen, edX)
+  author: RWTH Aachen University (edX)
+  url: null
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - basic probability
+  topics:
+  - rl
+  est_hours: 16
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: 8 weeks x 2 h/week, intermediate, free to audit; general RL, not robot-specific. The note gives no direct edX URL.
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: edx
+    cost_note: free (audit)
+- id: columbia-plus-intro-deep-rl-robotics
+  title: Introduction to Deep RL from a Robotics Perspective (Columbia Plus)
+  author: Columbia University (Columbia Plus)
+  url: https://plus.columbia.edu/content/introduction-deep-rl-robotics-perspective
+  type: course
+  language: en
+  cost:
+    kind: paid
+    amount: 99
+    currency: USD
+  level: intermediate
+  prerequisites: []
+  topics:
+  - rl
+  - deep-rl
+  - robotics
+  est_hours: null
+  last_updated: null
+  status: active
+  license: proprietary
+  quality_signal: null
+  notes: Robotics-perspective deep-RL course on Columbia's own platform. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: columbia-plus
+    cost_note: 'paid: 99 USD'
+- id: ki-campus-robot-learning
+  title: Robot Learning (KI-Campus)
+  author: KI-Campus (German platform)
+  url: https://ki-campus.org/en/learning-opportunities/courses/robot-learning
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - robot-learning
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Free course on the German KI-Campus platform; content detail not captured in the note. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: ki-campus
+- id: theconstruct-rl-for-robotics
+  title: Reinforcement Learning for Robotics (The Construct)
+  author: The Construct
+  url: https://app.theconstruct.ai/courses/68
+  type: course
+  language: en
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Python
+  topics:
+  - rl
+  - robotics
+  - ros
+  est_hours: null
+  last_updated: null
+  status: active
+  license: proprietary
+  quality_signal: null
+  notes: Python-based RL-for-robotics course on The Construct's platform; pricing not captured. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: theconstruct
+- id: eth-robot-learning-fundamentals-to-foundation-models-2026
+  title: 'ETH Zurich — Robot Learning: From Fundamentals to Foundation Models (Spring 2026)'
+  author: ETH Zurich
+  url: https://bittide.aicompass.dev/article/69793b83-33b9-4b2d-a450-33b33c427b0c
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - deep learning
+  topics:
+  - robot-learning
+  - imitation-learning
+  - foundation-models
+  - vla
+  est_hours: null
+  last_updated: '2026'
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Reportedly released slides, lecture recordings and coding assignments openly (imitation learning through foundation models) — from a secondary post only; the official ETH page was not verified. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    secondary_only: true
+- id: lerobot
+  title: LeRobot (Hugging Face)
+  author: Hugging Face
+  url: https://github.com/huggingface/lerobot
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Python
+  - PyTorch
+  topics:
+  - lerobot
+  - imitation-learning
+  - act
+  - diffusion-policy
+  - vla
+  - rl
+  - hil-serl
+  - datasets
+  - so-101
+  - world-models
+  est_hours: null
+  last_updated: 2026-11
+  status: active
+  license: Apache-2.0
+  quality_signal: 28.8k stars, 6.1k forks (README, Nov 2026); ICLR 2026 paper arXiv 2602.22818
+  notes: 'De-facto learner entry point for imitation learning and VLA fine-tuning with a cheap real arm. v0.7.0 (2026-11-05): Trackio replaces W&B, FSDP2/HSDP, LanceDB datasets, pi0.5 RTC/MEM, MolmoAct2, breaking changes to install/training/hardware layer. Policies: ACT, Diffusion, VQ-BeT, Multitask DiT; HIL-SERL, TDMPC, QC-FQL (coming soon); Pi0/Pi0Fast/Pi0.5, GR00T N1.7, SmolVLA, XVLA and ~10 more VLAs; world/reward models. Four minor releases with breaking changes in ~9 months — pin the version a tutorial names. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    stars: 28800
+    version: 0.7.0
+    install: pip install lerobot
+    arxiv_id: '2602.22818'
+    min_pytorch: 2.7 (since v0.6.0)
+    python: 3.12+ (since v0.5.0)
+    robots:
+    - SO101
+    - OpenARM
+    - LeKiwi
+    - Unitree G1
+    - reBot B601
+    - Koch
+    - HopeJR
+    - OMX
+    - EarthRover
+    - Reachy2
+    sim_benchmarks:
+    - LIBERO
+    - MetaWorld
+    - RoboTwin 2.0
+    - RoboCasa365
+    - RoboMME
+    - LIBERO-plus
+    - VLABench
+    releases_url: https://github.com/huggingface/lerobot/releases
+    release_history:
+    - v0.7.0 2026-11-05
+    - v0.6.1 2026-08-03
+    - v0.6.0 2026-07-06
+    - v0.5.1 2026-04-07
+    - v0.5.0 2026-03-09
+    - v0.4.4 2026-02-27
+- id: lerobot-so101-arm
+  title: SO-101 arm (LeRobot flagship; TheRobotStudio SO-ARM100)
+  author: TheRobotStudio / Hugging Face LeRobot
+  url: https://huggingface.co/docs/lerobot/so101
+  type: hardware
+  language: en
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - LeRobot install
+  - 3D printing or pre-printed parts
+  topics:
+  - so-101
+  - lerobot
+  - teleoperation
+  - calibration
+  - imitation-learning
+  - feetech
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: null
+  notes: Follower uses 6x Feetech STS3215 motors (1/345 gearing), leader uses mixed gear ratios; BOM, 3D-print files and no-printer advice in the SO-ARM100 README. CLI flow lerobot-find-port -> lerobot-setup-motors -> lerobot-calibrate -> 'Getting started with real-world robots' tutorial; Discord support. No official kit price found on the HF docs page. Calibration matters because a policy trained on one robot should work on another. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    bom_repo: https://github.com/TheRobotStudio/SO-ARM100
+    motors: 6x Feetech STS3215
+- id: lerobot-hardware-guide
+  title: LeRobot hardware / compute guide
+  author: Hugging Face LeRobot
+  url: https://huggingface.co/docs/lerobot/main/hardware_guide
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - compute-requirements
+  - vram
+  - act
+  - diffusion-policy
+  - smolvla
+  - pi0
+  - gr00t
+  - hf-jobs
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: authoritative first-party sizing guide
+  notes: 'Indicative VRAM at BS 8: light BC (act/vqbet/tdmpc) 2-6 GB (RTX 3060/L4/A10G); Diffusion 8-14 GB (RTX 4070+); SmolVLA 10-16 GB (RTX 4080+); large VLA (pi0/pi0_fast/pi05/xvla/wall_x) and multimodal (groot/eo1) 24-40 GB (A100 40 GB+, ''24 GB tight at BS 1''). Wall-clock for 5 epochs on ~50 episodes: ACT 30-60 min on 4090/3090, Diffusion 2-4 h, SmolVLA 3-6 h on L4 or 1-2 h on A100, pi0/pi05 4-8 h on A100, ACT on Apple MPS 6-14 h; ''CPU only — Don''t train''. IL typically converges in 5-10 epochs. HF Jobs flavors t4/l4/a10g/a100 billed by the second. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    vram_tiers_gb:
+      light_bc: 2-6
+      diffusion: 8-14
+      smolvla: 10-16
+      large_vla: 24-40
+      multimodal_groot_eo1: 24-40
+- id: hf-blog-act-on-so101-sherry-chen
+  title: 'How I trained Action Chunking Transformer (ACT) on SO-101: my journey, gotchas and lessons'
+  author: Sherry Chen (Hugging Face blog)
+  url: https://www.plushcap.com/content/huggingface/blog/huggingface-how-i-trained-action-chunking-transformer-act-on-so-101-my-journey-gotchas-and-lessons
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - LeRobot
+  - SO-101
+  topics:
+  - act
+  - so-101
+  - lerobot
+  - imitation-learning
+  - field-report
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Community write-up of a first SO-101 ACT run (HF blog, mirror link). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: trelis-train-act-policy-so101
+  title: Train an ACT Policy for an SO-101 Robot (Trelis)
+  author: Trelis Research
+  url: https://trelis.substack.com/p/train-an-act-policy-for-an-so-101
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - LeRobot
+  - SO-101
+  topics:
+  - act
+  - so-101
+  - lerobot
+  - imitation-learning
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Step-by-step ACT training guide for the SO-101. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: classmethod-lerobot-so-arm101-act-eval
+  title: LeRobot SO-ARM101 ACT training and evaluation (Classmethod)
+  author: Classmethod
+  url: https://dev.classmethod.jp/en/articles/lerobot-so-arm101-act-training-eval/
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - LeRobot
+  - SO-101
+  topics:
+  - act
+  - so-101
+  - lerobot
+  - evaluation
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: ACT evaluation write-up on SO-ARM101. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: hil-serl-so101-deployment-blog-2026
+  title: 'HIL-SERL on SO-101: deployment learnings (2026)'
+  author: Indraneel Patil
+  url: https://indraneelpatil.github.io/blog/2026/hil-serl
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - LeRobot
+  - SO-101
+  - RL basics
+  topics:
+  - hil-serl
+  - rl
+  - so-101
+  - lerobot
+  - real-robot
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: null
+  notes: Practitioner notes on deploying human-in-the-loop sample-efficient RL (HIL-SERL) on an SO-101. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: hackster-jetson-agx-orin-so101-kit
+  title: Running LeRobot SO-101 arm kit using NVIDIA Jetson AGX Orin (Hackster)
+  author: shahizat (Hackster.io)
+  url: https://www.hackster.io/shahizat/running-lerobot-so-101-arm-kit-using-nvidia-jetson-agx-orin-19b8a4
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Jetson AGX Orin
+  - SO-101
+  topics:
+  - so-101
+  - lerobot
+  - jetson
+  - edge-deployment
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Guide to running the SO-101 kit on a Jetson AGX Orin. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: seeed-soarm-physical-ai-course
+  title: Seeed Studio SO-ARM Physical AI course (wiki)
+  author: Seeed Studio
+  url: https://wiki.seeedstudio.com/robotics/soarm_physical_ai_course_chapter_15/
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - SO-ARM kit
+  - LeRobot
+  topics:
+  - so-101
+  - lerobot
+  - imitation-learning
+  - physical-ai
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Vendor wiki course for the SO-ARM; chapter 15 example trains with --steps=300000. Seeed also hosts the LeIsaac (Isaac Lab + SO-101) docs. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    vendor: seeed
+- id: isaac-lab
+  title: NVIDIA Isaac Lab
+  author: NVIDIA
+  url: https://isaac-sim.github.io/IsaacLab/
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - Python 3.12
+  - NVIDIA GPU (Turing+ / compute capability 7.5+)
+  - Ubuntu 22.04+ or Windows 11
+  topics:
+  - isaac-lab
+  - rl
+  - imitation-learning
+  - motion-planning
+  - gpu-simulation
+  - newton
+  - locomotion
+  - manipulation
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: BSD-3-Clause (parts Apache-2.0)
+  quality_signal: paper arXiv 2511.04831; Newton 1.0 GA announced at GTC 2026
+  notes: Isaac Lab 3.0 is the current major release and installs standalone with the Newton physics backend (uv-based, 'uv pip install isaaclab==3.0.0' from pypi.nvidia.com) without Isaac Sim — headless Newton needs no RTX hardware; optional Isaac Sim 6.2 needs at least 32 GB RAM, 16 GB VRAM and a supported RTX GPU (Isaac Sim 5.1 and older unsupported). Stable vs beta status on 2026-11-11 ambiguous (docs show '3.0' and 'v3.0.0-beta2.patch1'). Third-party VRAM guidance conflicts (>=8 GB/12 GB+ vs 'RTX 3090 24 GB minimum'); unverified against NVIDIA data. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    version: 3.0 (beta2.patch1 also listed)
+    arxiv_id: '2511.04831'
+    install_url: https://isaac-sim.github.io/IsaacLab/main/source/isaaclab/installation.html
+    default_backend: Newton
+    isaac_sim_optional: '6.2'
+    min_gpu: Turing or newer (compute capability 7.5+), CUDA 13 stack
+    drivers: Linux x86_64 595.58.03 / Windows 595.97
+    with_isaac_sim: 32 GB RAM, 16 GB VRAM, RTX GPU
+    benchmarks_url: https://isaac-sim.github.io/IsaacLab/v3.0.0-beta/_sources/source/overview/reinforcement-learning/performance_benchmarks.rst
+    related_blogs:
+    - https://developer.nvidia.com/blog/streamline-robot-learning-with-whole-body-control-and-enhanced-teleoperation-in-nvidia-isaac-lab-2-3/
+    - https://developer.nvidia.com/blog/newton-adds-contact-rich-manipulation-and-locomotion-capabilities-for-industrial-robotics
+    vendor_vram_guide: https://www.roboticscenter.ai/ja/blog/nvidia-isaac-lab-getting-started
+- id: mujoco-playground
+  title: MuJoCo Playground 1.0 (Google DeepMind)
+  author: Google DeepMind
+  url: https://playground.mujoco.org/
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Python 3.12-3.13
+  - uv
+  topics:
+  - mujoco
+  - mujoco-warp
+  - rl
+  - sim-to-real
+  - so-101
+  - motion-tracking
+  - system-identification
+  - teleoperation
+  - unitree-g1
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: Apache-2.0
+  quality_signal: null
+  notes: 'v1.0 is PyTorch-based on MuJoCo / MuJoCo Warp / reaf-sim, successor to the RSS 2025 JAX/MJX preview (kept under rss2025). Workflows: G1 29-DoF whole-body motion tracking with RSL-RL, mujoco.sysid, SO-101 sim/real teleop (MCAP logging), zero-shot sim-to-real SO-101 pick-cube (--mode=sim/real), agentic VLM tabletop manipulation. CPU and CUDA 12/13; 8,192 parallel envs on GPU; CartpoleBalance ~1 min on CPU with 64 worlds. Page no longer lists the old DM Control / Go1 / Spot / Berkeley Humanoid suites. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    github: https://github.com/google-deepmind/mujoco_playground
+    install: uv venv --python 3.13 && uv pip install "playground>=1.0"
+    robots:
+    - SO-101
+    - i2rt YAM Pro
+    - Trossen WidowX AI (sim)
+    - Unitree G1 (sim)
+- id: mjlab
+  title: mjlab (MuJoCo Lab)
+  author: mujocolab
+  url: https://github.com/mujocolab/mjlab
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - NVIDIA GPU for training (macOS eval only)
+  - uv
+  topics:
+  - mujoco-warp
+  - isaac-lab-api
+  - rl
+  - locomotion
+  - unitree-g1
+  - motion-tracking
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: Apache-2.0
+  quality_signal: ~3.4k stars; arXiv 2601.22074 (2026)
+  notes: Combines Isaac Lab's manager-based API with MuJoCo Warp with minimal dependencies; tasks Mjlab-Velocity-Flat-Unitree-G1 and Mjlab-Tracking-Flat-Unitree-G1; try without install via 'uvx --from mjlab --refresh demo', Colab notebook available, multi-GPU via --gpu-ids. Unitree's official unitree_rl_mjlab builds on it. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    stars: 3400
+    arxiv_id: '2601.22074'
+    mujoco_warp_version: 3.16.0
+- id: maniskill3
+  title: ManiSkill3
+  author: ManiSkill team (Haosu Lab / Hillbot)
+  url: https://arxiv.org/abs/2410.00425
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - Python
+  - NVIDIA GPU
+  topics:
+  - gpu-simulation
+  - manipulation
+  - rendering
+  - gymnasium-api
+  - embodied-ai
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: paper claims simulation + rendering 10-1000x faster with 2-3x less GPU memory than other platforms
+  notes: GPU-parallelized manipulation sim built on PhysX (like Isaac Lab); Gymnasium-style API e.g. gym.make('PickCube-v1') with configurable parallel envs; PyPI mani-skill, docs maniskill.readthedocs.io. Heavier setup and more churn than LeRobot/Gymnasium-Robotics. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    arxiv_id: '2410.00425'
+    pypi: https://pypi.org/project/mani-skill
+    docs: maniskill.readthedocs.io
+- id: robosuite
+  title: robosuite
+  author: robosuite (ARISE Initiative)
+  url: https://robosuite.ai
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Python
+  - MuJoCo
+  topics:
+  - mujoco
+  - manipulation
+  - rl
+  - benchmarks
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: MuJoCo manipulation tasks; community overview recommends it for rich tasks + stable MuJoCo development. CPU-friendly starter; current version not verified from the primary page. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    community_overview: https://jeffliulab.github.io/ai-notes/en/Embodied_Intelligence/06_Software/%E5%BC%80%E6%BA%90%E6%A1%86%E6%9E%B6/
+- id: gymnasium-robotics
+  title: Gymnasium-Robotics (Farama)
+  author: Farama Foundation
+  url: https://robotics.farama.org
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Python
+  - Gymnasium
+  topics:
+  - gymnasium
+  - rl
+  - fetch
+  - shadow-hand
+  - stable-baselines3
+  - benchmarks
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Standard Gymnasium API with seamless Stable-Baselines3 integration; recommended as a standard RL benchmark and the simplest CPU-only sandbox for first PPO/SAC runs (Fetch/Hand). Current version not verified from the primary page. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: genesis-simulator
+  title: Genesis (open-source simulator)
+  author: Genesis-Embodied-AI
+  url: https://github.com/Genesis-Embodied-AI/Genesis
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - Python
+  - NVIDIA GPU recommended
+  topics:
+  - gpu-simulation
+  - rl
+  - locomotion
+  - go2
+  - physics
+  est_hours: null
+  last_updated: 2026-07
+  status: active
+  license: Apache-2.0
+  quality_signal: ~29.5k stars at v1.2.1 (July 2026, per secondary wiki)
+  notes: Released Dec 2024; developer speed claims up to ~430,000x real time and a Go2 locomotion policy in ~26 s on one RTX 4090 (developer claims; third-party benchmarks give 'a more nuanced picture'). Not to be confused with Genesis AI's 'Genesis World 1.0'. Heavier setup/churn than the lighter paths. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    stars: 29500
+    version: 1.2.1
+    sources:
+    - https://the-decoder.com/genesis-speeds-up-ai-robot-training-with-simulations-430000x-faster-than-reality/
+    - https://www.aiwiki.ai/wiki/genesis_simulator/raw
+- id: genesis-world-1-0
+  title: Genesis World 1.0 (Genesis AI)
+  author: Genesis AI (company)
+  url: https://www.genesis.ai/blog/the-role-of-simulation-in-scalable-robotics-genesis-world-10-and-the-path-forward
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites: []
+  topics:
+  - simulation
+  - sim-to-real
+  - gpu-compute
+  est_hours: null
+  last_updated: 2026-05
+  status: unverified
+  license: null
+  quality_signal: company claims ~89% sim-to-real correlation (not independently verified)
+  notes: Open-sourced 2026-05-27 (github.com/Genesis-Embodied-AI/genesis-world), three components including a GPU compute layer 'Quadrants'. Different product from the original Genesis simulator despite the shared name. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    github: https://github.com/Genesis-Embodied-AI/genesis-world
+    press: https://roboticsandautomationnews.com/2026/06/04/genesis-ai-launches-simulation-platform-to-accelerate-robotics-development/102243/
+- id: genesis-go2-locomotion-tutorial
+  title: Genesis docs — Go2 locomotion RL tutorial
+  author: Genesis-Embodied-AI
+  url: https://genesis-world.readthedocs.io/en/latest/user_guide/policy_training/examples/locomotion.html
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Genesis
+  - rsl-rl
+  - basic RL
+  topics:
+  - locomotion
+  - go2
+  - ppo
+  - rsl-rl
+  - sim-to-real
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Minimal pipeline: PPO from rsl-rl at 50 Hz, ~20 ms modeled action latency; the trained policy is a joint-position controller deployable to a physical Go2. One of the lightest learner-friendly locomotion on-ramps. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: open-x-embodiment
+  title: Open X-Embodiment (OXE)
+  author: Open X-Embodiment Collaboration (Google DeepMind et al.)
+  url: https://robotics-transformer-x.github.io/
+  type: dataset_model
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - RLDS/TFDS tooling or LeRobot mirror
+  topics:
+  - dataset
+  - cross-embodiment
+  - rt-x
+  - rlds
+  est_hours: null
+  last_updated: null
+  status: active
+  license: per-dataset (Google Sheet; CC-BY 4.0 to non-commercial-only)
+  quality_signal: 1M+ real robot trajectories, 22 embodiments, 60 source datasets, 527 skills, 160,266 tasks
+  notes: Native RLDS (TFDS) format; models RT-1-X and RT-2-X (incl. 55B) trained on the mixture, no download link stated. LeRobot-format mirror IPEC-COMMUNITY/OpenX-LeRobot with 31 subsets on the Hub (secondary). Licensing varies per subset. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    arxiv_id: '2310.08864'
+    code: https://github.com/google-deepmind/open_x_embodiment
+    format: RLDS
+    lerobot_mirror: IPEC-COMMUNITY/OpenX-LeRobot (31 subsets)
+    open_weights: null
+    secondary_sources:
+    - https://blog.pebblous.ai/report/robot-physical-ai-datasets-landscape/en/
+    - https://www.roboticscenter.ai/datasets/compare/open-x-vs-droid/
+- id: droid-dataset
+  title: DROID (Distributed Robot Interaction Dataset)
+  author: DROID collaboration
+  url: https://droid-dataset.github.io
+  type: dataset_model
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - RLDS tooling or openpi
+  topics:
+  - dataset
+  - manipulation
+  - rlds
+  - openpi
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: trajectory count reported as 76k vs 60k by secondary sources (unresolved)
+  notes: Began in RLDS format; openpi provides DROID fine-tuning instructions and checkpoints. The official site was not fetched in this pass, so counts and license are unverified. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    format: RLDS
+    openpi_url: https://github.com/Physical-Intelligence/openpi
+    open_weights: null
+- id: openpi
+  title: openpi (Physical Intelligence)
+  author: Physical Intelligence
+  url: https://github.com/Physical-Intelligence/openpi
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - Ubuntu 22.04
+  - NVIDIA GPU >8 GB (inference)
+  - JAX or PyTorch
+  topics:
+  - vla
+  - pi0
+  - pi0-fast
+  - pi0.5
+  - flow-matching
+  - droid
+  - aloha
+  - libero
+  - fine-tuning
+  est_hours: null
+  last_updated: 2025-09
+  status: active
+  license: Apache-2.0
+  quality_signal: null
+  notes: 'Models pi0 (flow-based VLA), pi0-FAST (autoregressive, FAST tokenizer), pi0.5 (flow-matching head only); pi0.6 not mentioned. Single-GPU memory: inference >8 GB, LoRA fine-tune >22.5 GB (RTX 4090), full fine-tune >70 GB (A100 80 GB/H100); tested only on Ubuntu 22.04. Examples: DROID, ALOHA, LIBERO, UR5; SO-101 not mentioned. PyTorch pi0/pi0.5 added Sept 2025 (no pi0-FAST, no LoRA/FSDP/EMA; requires patching transformers 4.53.2). (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    min_vram_gb: 8
+    lora_vram_gb: 22.5
+    full_finetune_vram_gb: 70
+    examples:
+    - DROID
+    - ALOHA
+    - LIBERO
+    - UR5
+- id: pi0-pi05-models
+  title: pi0 / pi0-FAST / pi0.5 (Physical Intelligence)
+  author: Physical Intelligence
+  url: https://github.com/Physical-Intelligence/openpi
+  type: dataset_model
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - openpi or LeRobot
+  - 24 GB+ GPU for LoRA fine-tune
+  topics:
+  - vla
+  - pi0
+  - pi0.5
+  - foundation-model
+  - flow-matching
+  est_hours: null
+  last_updated: 2025-09
+  status: active
+  license: Apache-2.0 (code; weights distributed via openpi/LeRobot)
+  quality_signal: named among 'the leading open-weight VLAs in October 2026' by a vendor comparison; pi0.5 ~3B params (vendor table)
+  notes: Open weights runnable via openpi (inference >8 GB, LoRA >22.5 GB, full >70 GB) or LeRobot (PaliGemma-3B backbone, checkpoints like lerobot/pi05_base; 24-40 GB VRAM, '24 GB tight at BS 1'; pi05 fine-tune on 4xH100 for 5k steps ~3h41m). pi0.5 first released April 2025. Later PI models reportedly have no open weights (secondary). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    open_weights: true
+    min_vram_gb: 8
+    params: ~3B (pi0.5, vendor table)
+    lerobot_checkpoint: lerobot/pi05_base
+    backbone: PaliGemma-3B
+    sources:
+    - https://huggingface.co/docs/lerobot/main/hardware_guide
+    - https://sebastiandavidlee.github.io/seb-lab/lerobot-study/ecosystem.html
+    - https://www.roboticscenter.ai/tools/vla-models-comparison/
+- id: smolvla
+  title: SmolVLA (Hugging Face)
+  author: Hugging Face LeRobot
+  url: https://huggingface.co/blog/smolvla
+  type: dataset_model
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - LeRobot
+  - consumer GPU (10-16 GB for fine-tuning)
+  topics:
+  - vla
+  - smolvla
+  - foundation-model
+  - lerobot
+  - so-101
+  - fine-tuning
+  est_hours: null
+  last_updated: null
+  status: active
+  license: Apache-2.0
+  quality_signal: '''the most plug-and-play VLA route on LeRobot'' (vendor); community: ~20,000 steps in ~4 h on one A100 at batch 64'
+  notes: 'Trained on LeRobot community data; 450M params (one secondary source says 500M — conflict), runnable on a consumer GPU or CPU per vendor pages. LeRobot sizing: 10-16 GB VRAM at BS 8 (RTX 4080+/L4/A10G), 3-6 h for 5 epochs/50 episodes on an L4; set freeze_vision_encoder=True if memory-bound. Has an SO-101 fine-tune tutorial (OpenELAB). (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    open_weights: true
+    min_vram_gb: 10
+    params: '450M (secondary sources conflict: 500M)'
+    tutorial_url: https://openelab.io/fr/blogs/learn/how-to-fine-tune-smolvla-on-so-101-with-lerobot
+    example_finetune: https://huggingface.co/Project-IRA/TPSoSe2026_SmolVLA_LeRobot_SO101_Finetuning_V2_Lego
+    sources:
+    - https://www.roboticscenter.ai/tools/vla-models-comparison/
+    - https://particula.tech/blog/openvla-vs-pi0-vs-smolvla-vs-groot-n1
+- id: openelab-finetune-smolvla-so101
+  title: How to Fine-Tune SmolVLA on SO-101 with LeRobot (OpenELAB)
+  author: OpenELAB
+  url: https://openelab.io/fr/blogs/learn/how-to-fine-tune-smolvla-on-so-101-with-lerobot
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - LeRobot
+  - SO-101
+  - GPU
+  topics:
+  - smolvla
+  - so-101
+  - lerobot
+  - fine-tuning
+  - vla
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Vendor tutorial; one of the three 'has-a-tutorial' learner routes (SmolVLA, GR00T N1.7, pi0.x). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: nvidia-gr00t-n1-7
+  title: NVIDIA GR00T N1.7 (Isaac-GR00T)
+  author: NVIDIA
+  url: https://github.com/NVIDIA/Isaac-GR00T
+  type: dataset_model
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - NVIDIA GPU 16 GB+ (inference)
+  - 40 GB+ recommended (fine-tuning)
+  - Docker optional
+  topics:
+  - vla
+  - gr00t
+  - foundation-model
+  - humanoid
+  - so-100
+  - unitree-g1
+  - whole-body-control
+  - tensorrt
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: Apache-2.0 (code); NVIDIA Open Model License (weights)
+  quality_signal: H100 ~115.5 ms/step, L40 190.5 ms, RTX Pro 6000 Blackwell 119.3 ms (batch 1, two cameras); ~40 Hz on RTX PRO 6000 Blackwell, ~28 Hz on Jetson AGX Thor with TensorRT
+  notes: 'N1.7 is current GA (previous N1.6, N1.5; no N2 on the repo page — ''N2 previewed at GTC 2026'' and ''commercial licensing'' appear only in secondary sources). Inference on 1 GPU with 16 GB+ (RTX 4090, L40, H100, Jetson AGX Thor/Orin, DGX Spark); fine-tuning 40 GB+ recommended (H100/L40; A6000 slower). Embodiments: SO-100 via NEW_EMBODIMENT (examples/SO100), LIBERO_PANDA, OXE_DROID, SIMPLER_ENV, UNITREE_G1, UNITREE_G1_SONIC. Tutorials: finetune_new_embodiment.md, GR00T_inference.ipynb, data_preparation.md, hardware_recommendation.md, deployment README. LeRobot v0.6.0 moved from N1.5 to N1.7. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    open_weights: true
+    min_vram_gb: 16
+    finetune_vram_gb: 40
+    version: N1.7
+    embodiments:
+    - SO-100 (NEW_EMBODIMENT)
+    - LIBERO_PANDA
+    - OXE_DROID
+    - SIMPLER_ENV
+    - UNITREE_G1
+    - UNITREE_G1_SONIC
+    secondary_conflict_source: https://www.marktechpost.com/2026/04/28/top-10-physical-ai-models-powering-real-world-robots-in-2026/
+- id: openvla-openvla-oft
+  title: OpenVLA / OpenVLA-OFT
+  author: OpenVLA team (Stanford/Berkeley et al.)
+  url: https://presenc.ai/research/best-open-weight-robotics-vla-models-2026
+  type: dataset_model
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - GPU
+  topics:
+  - vla
+  - openvla
+  - foundation-model
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: MIT
+  quality_signal: null
+  notes: MIT-licensed open weights; size given as 7B or 7.5B depending on source. No 2026 maintenance/status updates found; details come from vendor/secondary pages only, so treat as unverified. MolmoAct2 reports results against OpenVLA-OFT. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    open_weights: true
+    min_vram_gb: null
+    params: 7B or 7.5B (sources differ)
+    secondary_sources:
+    - https://www.roboticscenter.ai/vla-models/best-2026/
+- id: octo
+  title: Octo (generalist robot policy)
+  author: Octo Model Team (UC Berkeley et al.)
+  url: https://presenc.ai/research/best-open-weight-robotics-vla-models-2026
+  type: dataset_model
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - GPU
+  topics:
+  - generalist-policy
+  - foundation-model
+  - oxe
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Listed by the note among open-weight models a learner can run, but no 2026 maintenance/status updates were found and only secondary sources were consulted. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    open_weights: true
+    min_vram_gb: null
+- id: molmoact2
+  title: 'MolmoAct2: Action Reasoning Models for Real-world Deployment (Ai2)'
+  author: Allen Institute for AI (Ai2)
+  url: https://arxiv.org/html/2605.02881v1
+  type: dataset_model
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - GPU
+  - LeRobot v0.7.0+ for integrated use
+  topics:
+  - vla
+  - action-reasoning
+  - foundation-model
+  - bimanual
+  - lerobot
+  est_hours: null
+  last_updated: 2026-05
+  status: active
+  license: null
+  quality_signal: 'fully open: weights, training code and complete training data released; named among leading open-weight VLAs (vendor, Oct 2026)'
+  notes: Paper arXiv 2605.02881 (May 2026); 'deployable out-of-the-box on multiple embodiments'; results vs OpenVLA-OFT on bimanual YAM tasks. Added to LeRobot in v0.7.0. VRAM requirement not stated in the note. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    open_weights: true
+    open_data: true
+    min_vram_gb: null
+    arxiv_id: '2605.02881'
+    ai2_page: https://allenai.org/papers/molmoact2
+- id: gemini-robotics-on-device-2
+  title: Gemini Robotics On-Device / On-Device 2 (Google DeepMind)
+  author: Google DeepMind
+  url: https://deepmind.google/models/model-cards/gemini-robotics-on-device-2/
+  type: dataset_model
+  language: en
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - Trusted Tester access
+  topics:
+  - vla
+  - foundation-model
+  - on-device
+  est_hours: null
+  last_updated: 2026-07
+  status: active
+  license: proprietary
+  quality_signal: null
+  notes: On-Device announced 2025-06-24 (runs locally on robot hardware); On-Device 2 model card published 2026-07-30 but distributed only to Trusted Testers — not openly available to learners. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    open_weights: false
+    min_vram_gb: null
+    announcement_2025: https://deepmind.google/blog/gemini-robotics-on-device-brings-ai-to-local-robotic-devices/
+- id: figure-helix
+  title: Figure Helix
+  author: Figure AI
+  url: null
+  type: dataset_model
+  language: en
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites: []
+  topics:
+  - vla
+  - humanoid
+  - foundation-model
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: proprietary
+  quality_signal: null
+  notes: No open weights found in this research (no search hit; not searched directly). Assumed closed. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    open_weights: false
+    min_vram_gb: null
+- id: rt-2-rt-x
+  title: RT-2 / RT-1-X / RT-2-X (Google DeepMind)
+  author: Google DeepMind
+  url: https://robotics-transformer-x.github.io/
+  type: dataset_model
+  language: en
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites: []
+  topics:
+  - vla
+  - rt-2
+  - rt-x
+  - foundation-model
+  - oxe
+  est_hours: null
+  last_updated: null
+  status: active
+  license: proprietary
+  quality_signal: null
+  notes: RT-2 weights were never released; RT-1-X and RT-2-X (incl. a 55B version) are described on the OXE site as models trained on the OXE mixture with no download link stated. Historical reference only. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    open_weights: false
+    min_vram_gb: null
+- id: roboticscenter-vla-models-comparison-2026
+  title: VLA models comparison / best open-weight VLAs 2026 (roboticscenter.ai, vendor)
+  author: roboticscenter.ai
+  url: https://www.roboticscenter.ai/vla-models/best-2026/
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - vla
+  - model-comparison
+  - gpu-requirements
+  est_hours: null
+  last_updated: 2026-10
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Vendor comparison naming pi0.5, GR00T N1.7 and MolmoAct2 as the leading open-weight VLAs in October 2026 and claiming pi0.5 inference on an 8 GB GPU; also a companion 'scaling VLA training on a budget' post ('VLA fine-tunes on a single 24 GB consumer GPU in hours', model unnamed). Vendor source — verify before citing. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    related_urls:
+    - https://www.roboticscenter.ai/tools/vla-models-comparison/
+    - https://br.roboticscenter.ai/blog/scaling-vla-training-on-a-budget
+- id: yotta-labs-vla-inference-gpu-benchmarks
+  title: VLA inference GPU benchmarks (Yotta Labs, vendor)
+  author: Yotta Labs
+  url: https://www.yottalabs.ai/post/vla-inference-gpu-benchmarks.md
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - vla
+  - inference-latency
+  - gpu-benchmarks
+  - consumer-gpu
+  est_hours: null
+  last_updated: '2026'
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Claims pi0.5 gives 'deployable latency everywhere — even on a consumer GPU' while Lingbot-VLA on an RTX 4090 takes 10.2 s/action — consumer-GPU viability is model-specific. TurboVLA (0.2B) separately claims 0.9 GB VRAM / 32 Hz on an RTX 4090 (authors' claim, secondary summary at ai-tldr.dev). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    turbovla_summary: https://ai-tldr.dev/releases/h-embodvis-turbovla/index.md
+- id: survey-vla-embodied-ai-2405-14093
+  title: A Survey on Vision-Language-Action Models for Embodied AI
+  author: Yueen Ma et al.
+  url: https://arxiv.org/html/2405.14093v7
+  type: paper
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - deep learning
+  - basic robotics
+  topics:
+  - vla
+  - survey
+  - taxonomy
+  - embodied-ai
+  est_hours: null
+  last_updated: 2026-02
+  status: active
+  license: null
+  quality_signal: 'actively revised: first posted May 2024, v7 Feb 2026'
+  notes: Taxonomy of VLAs into three lines of research; companion repo yueen-ma/Awesome-VLA. Suggested reading-order step after the HF Tutorial for architecture sections. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    arxiv_id: '2405.14093'
+    version: v7
+    companion_repo: https://github.com/yueen-ma/Awesome-VLA
+- id: survey-efficient-vla-2510-24795
+  title: A Survey on Efficient Vision-Language-Action Models
+  author: null
+  url: https://arxiv.org/abs/2510.24795v2
+  type: paper
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - deep learning
+  - VLA basics
+  topics:
+  - vla
+  - survey
+  - efficiency
+  - model-compression
+  - data-pipeline
+  est_hours: null
+  last_updated: 2026-02
+  status: active
+  license: null
+  quality_signal: '''first comprehensive review of Efficient VLAs across the entire model-training-data pipeline'''
+  notes: v2 Feb 2026. Relevant for consumer-GPU deployment questions. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    arxiv_id: '2510.24795'
+    version: v2
+- id: survey-vla-datasets-benchmarks-2604-23001
+  title: 'Vision-Language-Action in Robotics: A Survey of Datasets, Benchmarks, and Data Engines'
+  author: null
+  url: https://arxiv.org/html/2604.23001
+  type: paper
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - VLA basics
+  topics:
+  - vla
+  - survey
+  - datasets
+  - benchmarks
+  - data-engines
+  - evaluation
+  est_hours: null
+  last_updated: 2026-04
+  status: active
+  license: null
+  quality_signal: null
+  notes: Apr 2026; argues future advances depend on co-designing high-fidelity data engines and structured evaluation protocols. Recommended for data/benchmark literacy before attempting fine-tuning. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    arxiv_id: '2604.23001'
+- id: preprints-vla-evaluation-survey-2026
+  title: Evaluation-focused VLA survey covering 582 papers (2023-May 2026) (Preprints.org)
+  author: null
+  url: https://www.preprints.org/manuscript/202606.0425
+  type: paper
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - VLA basics
+  topics:
+  - vla
+  - survey
+  - evaluation
+  - manipulation
+  est_hours: null
+  last_updated: 2026-06
+  status: active
+  license: null
+  quality_signal: 582 papers covered (non-peer-reviewed preprint server)
+  notes: Non-arXiv 2026 preprint; a separate VLA/VLM manipulation review (4 June 2026) is on the same server. Lower provenance than the arXiv surveys. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    arxiv_id: null
+- id: moonlight-survey-vla-embodied-manipulation
+  title: Survey of Vision-Language-Action Models for Embodied Manipulation (literature review summary, themoonlight.io)
+  author: null
+  url: https://www.themoonlight.io/en/review/survey-of-vision-language-action-models-for-embodied-manipulation
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - vla
+  - survey
+  - manipulation
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: AI-generated-style literature review summary page; use as a pointer, not a primary source. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    arxiv_id: null
+- id: gs-playground-sim-to-real-2604-25459
+  title: 'GS-Playground (sim-to-real evidence: Go2 velocity tracking, G1 23-DoF balancing/walking)'
+  author: null
+  url: https://arxiv.org/pdf/2604.25459
+  type: paper
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - RL
+  - locomotion basics
+  topics:
+  - sim-to-real
+  - locomotion
+  - go2
+  - unitree-g1
+  - gaussian-splatting
+  est_hours: null
+  last_updated: 2026-04
+  status: active
+  license: null
+  quality_signal: null
+  notes: Reports Go2 velocity-tracking and G1 23-DoF balancing/walking transfer. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    arxiv_id: '2604.25459'
+- id: awesome-vla-study
+  title: MilkClouds/awesome-vla-study
+  author: MilkClouds
+  url: https://relatedrepos.com/gh/MilkClouds/awesome-vla-study
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - deep learning basics
+  topics:
+  - reading-list
+  - vla
+  - generative-models
+  - robot-foundation-models
+  - data-scaling
+  - rl-fine-tuning
+  - world-models
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: closest thing to a curriculum among awesome lists (papers in recommended reading order)
+  notes: Structured reading list from foundational generative concepts to SOTA robot foundation models, data scaling, RL fine-tuning and world models. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: awesome-vla-yueen-ma
+  title: yueen-ma/Awesome-VLA
+  author: Yueen Ma
+  url: https://github.com/yueen-ma/Awesome-VLA
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites: []
+  topics:
+  - reading-list
+  - vla
+  est_hours: null
+  last_updated: 2026-02
+  status: active
+  license: null
+  quality_signal: null
+  notes: Companion to the arXiv 2405.14093 survey (v7 Feb 2026). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: awesome-vla-robotics-jiaaqiliu
+  title: jiaaqiliu/Awesome-VLA-Robotics
+  author: jiaaqiliu
+  url: https://www.context-awesome.com/list/jiaaqiliu/awesome-vla-robotics
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites: []
+  topics:
+  - reading-list
+  - vla
+  - models
+  - datasets
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Papers, models, datasets and resources on VLA in robotics. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: awesome-embodied-vla-va-vln
+  title: jonyzhang2023/awesome-embodied-vla-va-vln
+  author: jonyzhang2023
+  url: https://github.com/jonyzhang2023/awesome-embodied-vla-va-vln
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites: []
+  topics:
+  - reading-list
+  - vla
+  - world-action-models
+  - vln
+  - mllm
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Covers VLA, World-Action-Model, VLN, VA and MLLM-based embodied learning. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: awesome-embodied-ai-wadekeith
+  title: wadeKeith/Awesome-Embodied-AI
+  author: wadeKeith
+  url: https://awesome.ecosyste.ms/lists/wadekeith%2Fawesome-embodied-ai
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - reading-list
+  - embodied-ai
+  - vla
+  - datasets
+  - simulators
+  - humanoids
+  - safety
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Breadth-first list: surveys, VLA models, datasets, simulators, humanoids, robot learning, safety. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: awesome-vla-papers-psi-robot
+  title: Psi-Robot/Awesome-VLA-Papers
+  author: Psi-Robot
+  url: https://github.com/Psi-Robot/Awesome-VLA-Papers
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites: []
+  topics:
+  - reading-list
+  - vla
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: VLA paper list. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: awesome-vla-kwanwaipang
+  title: KwanWaiPang/Awesome-VLA
+  author: KwanWaiPang
+  url: https://github.com/KwanWaiPang/Awesome-VLA
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites: []
+  topics:
+  - reading-list
+  - vla
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: VLA paper list. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: awesome-vla-wam
+  title: DravenALG/awesome-vla-wam (VLA + World Action Models)
+  author: DravenALG
+  url: https://github.com/DravenALG/awesome-vla-wam
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites: []
+  topics:
+  - reading-list
+  - vla
+  - world-action-models
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: VLA and World Action Model paper list. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: awesome-rl-vla
+  title: Denghaoyuan123/Awesome-RL-VLA (RL fine-tuning of VLAs)
+  author: Denghaoyuan123
+  url: https://github.com/Denghaoyuan123/Awesome-RL-VLA
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites: []
+  topics:
+  - reading-list
+  - vla
+  - rl-fine-tuning
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: RL fine-tuning of VLAs; OpenHelix-Team/Awesome-VLA-RL covers the same niche (no URL captured). No repo named exactly 'awesome-robot-learning' surfaced. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    related: OpenHelix-Team/Awesome-VLA-RL
+- id: dwarkesh-podcast-sergey-levine-2025
+  title: Sergey Levine on the Dwarkesh Podcast (12 Sept 2025)
+  author: Dwarkesh Patel (interview with Sergey Levine)
+  url: https://www.dwarkesh.com/p/sergey-levine
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - vla
+  - robot-foundation-models
+  - self-improvement
+  - podcast
+  est_hours: null
+  last_updated: 2025-09
+  status: active
+  license: null
+  quality_signal: null
+  notes: Long-form interview on how VLA models work and self-improvement from deployment; more accessible than papers. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    format: podcast
+- id: twiml-pi0-sergey-levine-2025
+  title: 'TWIML — pi0: A Foundation Model for Robotics with Sergey Levine (Feb 2025)'
+  author: TWIML AI Podcast (Sam Charrington) with Sergey Levine
+  url: https://twimlai.com/go/719
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - pi0
+  - robot-foundation-models
+  - podcast
+  est_hours: null
+  last_updated: 2025-02
+  status: active
+  license: null
+  quality_signal: null
+  notes: Podcast episode on pi0 as a robotics foundation model. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    format: podcast
+- id: actuate-robotic-foundation-models-talk
+  title: Robotic Foundation Models — Sergey Levine and Liyiming Ke at Actuate (Foxglove)
+  author: Sergey Levine, Liyiming Ke (Actuate / Foxglove)
+  url: https://actuate.foxglove.dev/recordings/robotic-foundation-models
+  type: video_series
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - robot-foundation-models
+  - vla
+  - talk
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Conference talk recording. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    format: talk recording
+- id: interconnects-realistic-path-robotic-foundation-models
+  title: A realistic path to robotic foundation models (Interconnects)
+  author: Nathan Lambert (Interconnects)
+  url: https://www.interconnects.ai/p/robotic-foundation-models
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - robot-foundation-models
+  - vla
+  - explainer
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Accessible 'why' explainer recommended as the second step in the note's reading order. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: robopapers-podcast
+  title: RoboPapers podcast (co-hosted by Chris Paxton), e.g. Ep. 52 'Probe, Learn, Distill'
+  author: RoboPapers (Chris Paxton, co-host)
+  url: https://robopapers.substack.com/p/ep52-probe-learn-distill-self-improving
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - familiarity with current VLA papers
+  topics:
+  - podcast
+  - paper-discussion
+  - vla
+  - residual-policies
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Paper-discussion podcast; Ep. 52 covers residual actors on top of a frozen VLA. Chris Paxton's personal blog was not located. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    format: podcast
+- id: datacamp-vla-models-explained
+  title: Vision Language Action Models Explained (DataCamp)
+  author: DataCamp
+  url: https://www.datacamp.com/tutorial/vision-language-action-models-explained
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - vla
+  - explainer
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Intro explainer: a VLA ''takes the same kind of input as a VLM and produces an action instead''. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: markaicode-vla-explainer
+  title: VLA models explained (markaicode)
+  author: markaicode
+  url: https://www.markaicode.com/vla-models-explained/
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - vla
+  - explainer
+  - rt-2
+  - openvla
+  - pi0
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Compares RT-2 / OpenVLA / pi0 action outputs; notes OXE's ~1M trajectories from 20+ robot types. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: ml6-field-report-imitation-learning-lerobot
+  title: 'AI Robotics: a field report on imitation learning with LeRobot (ML6)'
+  author: ML6
+  url: https://www.ml6.eu/en/blog/ai-robotics-a-field-report-on-imitation-learning-with-lerobot
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - imitation-learning
+  - lerobot
+  - field-report
+  - data-collection
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Practitioner report; key line: ''if the policy cannot explore environments independently, it will need data, and lots of it'' — data is the bottleneck for IL. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: nvidia-blog-newton-contact-rich-locomotion
+  title: Newton adds contact-rich manipulation and locomotion capabilities for industrial robotics (NVIDIA blog)
+  author: NVIDIA
+  url: https://developer.nvidia.com/blog/newton-adds-contact-rich-manipulation-and-locomotion-capabilities-for-industrial-robotics
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Isaac Lab
+  topics:
+  - newton
+  - isaac-lab
+  - locomotion
+  - anymal
+  - sim-to-real
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: null
+  notes: Describes a complete train/validate/deploy workflow for an ANYmal-D quadruped locomotion policy with Newton in Isaac Lab; Newton supports soft bodies, cloth and experimental cables (VBD solver). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: nvidia-blog-train-quadruped-locomotion-isaac-lab-newton
+  title: Train a Quadruped Locomotion Policy and Simulate Cloth Manipulation with NVIDIA Isaac Lab and Newton (NVIDIA blog tutorial)
+  author: NVIDIA
+  url: https://developer.nvidia.com/blog/train-a-quadruped-locomotion-policy-and-simulate-cloth-manipulation-with-nvidia-isaac-lab-and-newton
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Isaac Lab 3.0
+  - NVIDIA GPU
+  topics:
+  - isaac-lab
+  - newton
+  - locomotion
+  - quadruped
+  - rl
+  - cloth-simulation
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: null
+  notes: Companion tutorial post for the ANYmal-D quadruped workflow. The official Isaac Lab docs locomotion tutorial page was not fetched; only NVIDIA blog tutorials were confirmed. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: notion-tutorial-rl-environments-legged-robots-isaac-lab
+  title: A Tutorial on Developing Reinforcement Learning Environments for Legged Robots in Isaac Lab — From Quadrupedal Locomotion to Humanoid Challenges (Notion)
+  author: null
+  url: https://marble-resistance-175.notion.site/A-Tutorial-on-Developing-Reinforcement-Learning-Environments-for-Legged-Robots-in-Isaac-Lab-25e59724dbdf80b5b6c6c2dbd9ea6b66
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - Isaac Lab
+  - RL basics
+  topics:
+  - isaac-lab
+  - rl
+  - locomotion
+  - quadruped
+  - humanoid
+  - environment-design
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Community tutorial on building legged-robot RL environments in Isaac Lab. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: unitree-rl-gym
+  title: unitree_rl_gym (legged_gym / Isaac Gym based)
+  author: Unitree Robotics
+  url: https://docsearch.algolia.com/mcp/docs/repo/unitreerobotics/unitree_rl_gym
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - Isaac Gym
+  - NVIDIA GPU
+  topics:
+  - rl
+  - locomotion
+  - legged-gym
+  - isaac-gym
+  - sim2sim
+  - mujoco
+  - go2
+  - unitree-g1
+  - h1
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: '''Complete pipeline from training in Isaac Gym to Sim2Sim (Mujoco) and Sim2Real physical deployment''; tasks go2, g1, h1, h1_2. Oldest of Unitree''s three parallel RL repos (legged_gym lineage). URL is a docs-index mirror as captured in the note. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    tasks:
+    - go2
+    - g1
+    - h1
+    - h1_2
+- id: unitree-rl-lab
+  title: unitree_rl_lab (Isaac Lab based)
+  author: Unitree Robotics
+  url: https://gitee.com/hilbertw/unitree_rl_lab
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - Isaac Lab
+  - NVIDIA GPU
+  topics:
+  - rl
+  - locomotion
+  - isaac-lab
+  - sim2sim
+  - mujoco
+  - go2
+  - h1
+  - unitree-g1
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Supports Go2, H1, G1-29dof; workflow includes a sim2sim step in MuJoCo before real deployment. URL is a Gitee mirror as captured in the note. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    robots:
+    - Go2
+    - H1
+    - G1-29dof
+- id: unitree-rl-mjlab
+  title: unitree_rl_mjlab (MuJoCo / mjlab based)
+  author: Unitree Robotics
+  url: https://github.com/unitreerobotics/unitree_rl_mjlab
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - mjlab
+  - NVIDIA GPU
+  topics:
+  - rl
+  - locomotion
+  - mjlab
+  - mujoco-warp
+  - onnx
+  - go2
+  - unitree-g1
+  - h2
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Built on mjlab with MuJoCo as physics backend; supports Go2, A2, As2, G1, R1, H1_2, H2; velocity tasks Unitree-Go2-Flat / Unitree-G1-Flat; training exports policy.onnx; recommends testing in unitree_mujoco before hardware. A learner without a quadruped can still complete train -> sim2sim -> ONNX export. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    robots:
+    - Go2
+    - A2
+    - As2
+    - G1
+    - R1
+    - H1_2
+    - H2
+    tasks:
+    - Unitree-Go2-Flat
+    - Unitree-G1-Flat
+- id: limx-tron1-rl-training-deployment-guide
+  title: LimX Dynamics TRON1 — RL Training and Deployment Guide (Isaac Lab)
+  author: LimX Dynamics
+  url: https://www.limxdynamics.com/en/documents/800015958042349568
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - Isaac Lab 2.x
+  - TRON1 robot for deployment
+  topics:
+  - rl
+  - locomotion
+  - isaac-lab
+  - biped
+  - vendor-guide
+  est_hours: null
+  last_updated: 2026-01
+  status: active
+  license: null
+  quality_signal: null
+  notes: Vendor guide (Jan 2026), Isaac Lab 2.x-era — may not match Isaac Lab 3.0/Newton. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    isaac_lab_version: 2.x
+- id: ubtech-walker-tienkung-gait-training
+  title: UBTech Walker / Tien Kung — gait training and deployment
+  author: UBTech
+  url: https://docs.ubtrobot.com/walker-tienkung/en/docs/gait-training-and-deployment
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - UBTech humanoid for deployment
+  topics:
+  - rl
+  - locomotion
+  - humanoid
+  - vendor-guide
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Vendor documentation for humanoid gait training and deployment. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: roboverse-wiki-unitree-rl
+  title: RoboVerse wiki — Unitree RL section
+  author: RoboVerse
+  url: https://roboverse.wiki/roboverse_learn/reinforcement_learning/unitree_rl
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - RoboVerse
+  - RL basics
+  topics:
+  - rl
+  - locomotion
+  - unitree
+  - roboverse
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: RL section on Unitree robots within the RoboVerse learning docs. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: hf-discord-lerobot
+  title: Hugging Face Discord — official LeRobot support channel
+  author: Hugging Face
+  url: https://huggingface.co/docs/lerobot/so101
+  type: community
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - community
+  - lerobot
+  - so-101
+  - support
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Invite link lives in the LeRobot docs (SO-101 page). Discord content is not indexed, so recommendations there could not be cited. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: discord
+- id: reddit-askrobotics-learning-path-threads-2026
+  title: r/AskRobotics learning-path and GPU threads (2025-2026, via mirrors)
+  author: r/AskRobotics community
+  url: https://reddit.sentinel-team.org/subreddits/AskRobotics/snapshots/2026-04-03T16%3A02%3A43.268571Z
+  type: community
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - community
+  - learning-path
+  - ros-vs-robotics
+  - gpu-selection
+  - sentiment
+  est_hours: null
+  last_updated: 2026-05
+  status: unverified
+  license: null
+  quality_signal: small number of threads; mirror sources only
+  notes: 'Feb-May 2026 threads: ''learning ROS is not learning robotics'' — do kinematics/dynamics/control/motion planning before ros2_control/Nav2; for learning-based robotics start with VLAs and PyTorch behavioral cloning. Apr 2025 GPU thread debates 12 GB RTX 3060 vs ~5070 Ti budgets. Sentiment evidence is thin and secondary. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    gpu_thread: https://redlib.hbubli.cc/r/AskRobotics/comments/1jsmh3d/gpu_recommendation_for_robotics_and_reinforcement
+    related_urls:
+    - https://forums.developer.nvidia.com/t/gpu-upgrade-impact-on-isaacgym-training-speed-rtx-3060-to-3090-4090/299424
+    - https://pr-879-hackernews.vinext.workers.dev/item/48586329

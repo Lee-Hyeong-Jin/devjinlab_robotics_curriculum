@@ -1,0 +1,2275 @@
+# Normalized 2026-11-11 to platform-design §3.5 resource schema (proposal, not yet implemented in CONTENT_MODEL.md)
+resources:
+- id: turtlebot3-burger
+  title: TurtleBot3 Burger
+  author: ROBOTIS (Korea)
+  url: https://emanual.robotis.com/docs/en/platform/turtlebot3/overview/
+  type: hardware
+  language: ko
+  cost:
+    kind: paid
+    amount: 894.92
+    currency: USD
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics (Humble/Jazzy)
+  - Linux
+  - Python
+  topics:
+  - turtlebot3
+  - ros2
+  - mobile-robot
+  - slam
+  - nav2
+  - lidar
+  - gazebo
+  - raspberry-pi
+  - dynamixel
+  est_hours: null
+  last_updated: 2026-11
+  status: active
+  license: null
+  quality_signal: de-facto ROS 2 tutorial robot; only platform from a Korean vendor with domestic support and a full free e-Manual
+  notes: 'Pragmatic ROS 2 flagship for a Korean audience: domestic vendor, Korean-language community, CPU-only Raspberry Pi 4 (unaffected by Jetson Nano EOL), individually replaceable parts via the ROBOTIS mall. Ships with RPi4 and LDS-02 360-degree LiDAR since Sept 2021. No confirmed 2026 USD or KRW list price (robotis.us returned HTTP 429; Korean mall TurtleBot3 page not retrieved); KRW ~1.0-1.25M원 is an inference from €895. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: null
+    price_usd_launch: 549
+    price_eur: 894.92
+    price_eur_excl_vat: 745.87
+    price_eur_other_listings: ~€460 without LiDAR (Funduino); ~€714-789 with RPi4 (Funduino, Robot Italy)
+    price_krw: null
+    price_krw_estimate: 1.0-1.25M원 (inferred, verify)
+    kr_vendor: ROBOTIS Korea mall https://www.robotis.com/shop/ (category ca_id=4050); robotis.us for US
+    availability_2026: in stock EU (3 units, 24-48h shipping, Generation Robots)
+    compute: Raspberry Pi 4 (4GB)
+    lidar: LDS-02 (LD19/LD06 family)
+    ros2_support: Humble/Jazzy
+    replacement_parts: XL430 drive Dynamixel $27.50 (GrabARobot 2026 guide, weak source)
+    waffle_launch_price_usd: 1799
+    store_url: https://www.robotis.us/
+    eu_listing: https://www.generationrobots.com/en/402707-turtlebot3-burger-mobile-robot.html
+    languages:
+    - ko
+    - en
+    cost_note: 'paid: €894.92 incl. VAT (EU, Nov 2026); launch MSRP $549'
+- id: turtlebot3-emanual
+  title: ROBOTIS TurtleBot3 e-Manual
+  author: ROBOTIS
+  url: https://emanual.robotis.com/docs/en/platform/turtlebot3/overview/
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics
+  - TurtleBot3 or Gazebo simulation
+  topics:
+  - turtlebot3
+  - ros2
+  - slam
+  - nav2
+  - gazebo
+  - manipulation
+  - machine-learning
+  - autonomous-driving
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: 'canonical TurtleBot3 curriculum; ranked #2 teaching material in the notes after Duckietown'
+  notes: 'Covers ROS 2 (Humble/Jazzy) setup, SLAM, Navigation, Gazebo simulation, manipulation with OpenMANIPULATOR-X, machine learning and autonomous-driving examples; usable without hardware via the Gazebo section. Migration caveat: the e-Manual banner says it has moved to ROBOTIS Docs and will be removed in July; Jazzy + Gazebo Sim support was planned for Q2 2025 but hardware-side completion was not confirmed. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    features_page: https://emanual.robotis.com/docs/en/platform/turtlebot3/features/
+    ros2_distros: Humble, Jazzy
+    ros2_distro: humble (jazzy roadmap/sim examples)
+    new_examples_thread: https://discourse.openrobotics.org/t/tb3-new-turtlebot3-examples-are-here/43239
+    qualcomm_jazzy_guide: https://dragonwingdocs.qualcomm.com/Linux/robotics-workflows/turtlebot3.md
+- id: modulabs-turtlebot-korean-guide
+  title: 모두의연구소 TurtleBot 시리즈 정리 (Korean community guide)
+  author: 모두의연구소 (modulabs)
+  url: https://modulabs.notion.site/10-65340cb0d83f4a70b047f923ba65c05f
+  type: article
+  language: ko
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - turtlebot3
+  - ros2
+  - mobile-robot
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Korean-language community summary of the TurtleBot series; the only Korean community starting guide retrieved in the research. Currency and depth not verified. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: turtlebot4
+  title: TurtleBot 4 (Lite / Standard / Pro)
+  author: Clearpath Robotics (Canada); base iRobot Create 3
+  url: https://clearpathrobotics.com/turtlebot-4/
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 1465
+    currency: USD
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics
+  - Linux
+  topics:
+  - turtlebot4
+  - ros2
+  - mobile-robot
+  - nav2
+  - slam
+  - create3
+  - oak-d
+  est_hours: null
+  last_updated: 2026-11
+  status: active
+  license: null
+  quality_signal: official ROS 2 reference platform; docs rated good (#3 in notes)
+  notes: 'RISK: rests on the iRobot Create 3 base, which iRobot has retired (iRobot paused non-floorcare development Jan 2024, entered Chapter 11, taken over by Picea); no confirmed statement on whether Clearpath will continue production. Clearpath landing page is a lead-capture form with no public prices. Launch prices were $1,850 Standard / $1,195 Lite (2022). KRW ~2.05M원 (Lite) is an inference. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 1465
+    price_usd_standard: 2575
+    price_eur_pro: 3206.5
+    price_usd_launch: Standard $1,850 / Lite $1,195 (2022)
+    price_krw: null
+    price_krw_estimate: Lite ~2.05M원 (inferred, verify)
+    kr_vendor: null
+    availability_2026: listed at RobotShop; long-term supply risk due to Create 3 retirement
+    docs_url: https://turtlebot.github.io/turtlebot4-user-manual/
+    robotshop_lite: https://www.robotshop.com/products/clearpath-robotics-turtlebot-4-lite-mobile-robot
+    robotshop_standard: https://www.robotshop.com/products/clearpath-robotics-turtlebot-4-mobile-robot
+    robotshop_pro_eu: https://eu.robotshop.com/products/turtlebot-4-pro
+    cost_note: 'paid: $1,465 (Lite) / $2,575 (Standard) RobotShop US, tariffs included; Pro €3,206.50'
+- id: irobot-create-3
+  title: iRobot Create 3
+  author: iRobot Education
+  url: https://iroboteducation.github.io/create3_docs/
+  type: hardware
+  language: en
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics
+  topics:
+  - create3
+  - ros2
+  - mobile-robot
+  est_hours: null
+  last_updated: 2024-11
+  status: discontinued
+  license: null
+  quality_signal: null
+  notes: Retired by iRobot (warranty still honoured; troubleshooting via the Create 3 forum); standalone purchase no longer possible, only legacy stock and TurtleBot 4 bundles remain. Create 3 shop link broke Nov 2, 2024. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: null
+    price_krw: null
+    availability_2026: retired; legacy stock only
+    irobot_kb: https://experience.irobot.com/en/irobot-education-support/what-is-your-return-policy
+    community_thread: https://community.robotshop.com/forum/t/irobot-and-the-create3/110122
+- id: husarion-rosbot-3
+  title: Husarion ROSbot 3 / ROSbot 3 PRO
+  author: Husarion (Poland)
+  url: https://husarion.com/manuals/rosbot/
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 2749
+    currency: USD
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics
+  - Docker helpful
+  topics:
+  - rosbot
+  - ros2
+  - mobile-robot
+  - lidar
+  est_hours: null
+  last_updated: 2026-11
+  status: active
+  license: null
+  quality_signal: good tutorials (#4 in notes) but €2.7k price
+  notes: Manual covers ROSbot 3 plus legacy 2R/2 PRO; Tier-4 budget item. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: null
+    price_eur: 2749
+    price_gbp: 2345
+    price_cad_pro: 6209.97
+    price_krw: null
+    kr_vendor: null
+    availability_2026: in stock at Husarion store / RoboSavvy
+    store_url: https://store.husarion.com/products/rosbot-3
+    cost_note: 'paid: €2,749 (Husarion store sale, 1-year warranty); UK £2,345; PRO C$6,209.97'
+- id: duckiebot-db21
+  title: Duckiebot DB21 (DB21J / DB-J, Jetson Nano)
+  author: Duckietown Foundation (ETH Zurich / MIT origin)
+  url: https://get.duckietown.com/products/duckiebot-db21
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 299
+    currency: USD
+  level: beginner
+  prerequisites:
+  - Python
+  - basic Linux/Docker
+  topics:
+  - duckietown
+  - ros
+  - docker
+  - self-driving
+  - computer-vision
+  - jetson-nano
+  - lane-following
+  est_hours: null
+  last_updated: 2026-11
+  status: active
+  license: null
+  quality_signal: 'ranked #1 teaching material in the notes (complete free university-grade curriculum with simulation fallback)'
+  notes: Runs on Jetson Nano, which NVIDIA is retiring - label 'buy only with hardware already in hand / expect migration'; official store showed 'Sold out' in one snapshot. Classroom Kit (30) and DB21M/J -> DB21J v3 upgrade kit exist. KRW ~42만원 (+Jetson) is an inference. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 299
+    price_usd_mooc_founders_kit: 669
+    price_gbp_without_jetson: 215.58
+    price_krw: null
+    price_krw_estimate: ~42만원 + Jetson (inferred, verify)
+    kr_vendor: null
+    availability_2026: official store showed Sold out in one snapshot; RobotShop had 47 Founders kits in stock
+    compute: Jetson Nano (EOL)
+    docs_url: https://docs.duckietown.com
+    classroom_kit: https://get.duckietown.com/collections/frontpage/products/classroom-kit-30
+    upgrade_kit: https://get.duckietown.com/products/duckiebot-upgrade-kit-db21m-or-db21j-to-db21j-v3
+    rs_uk_listing: https://uk.rs-online.com/web/p/stem-invention-kits/2268899
+    robotshop_listing: https://www.robotshop.com/products/duckietown-mooc-founders-edition-kit-db21-m-k
+    cost_note: 'paid: $299 official (DB-J); RS UK £215.58 ex-VAT without Jetson; RobotShop MOOC Founders kit $669'
+- id: duckietown-mooc-edx
+  title: Self-Driving Cars with Duckietown (edX MOOC)
+  author: ETH Zurich, Universite de Montreal, TTIC (Duckietown Foundation)
+  url: https://www.edx.org/learn/technology/eth-zurich-self-driving-cars-with-duckietown
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Python
+  - basic Linux
+  topics:
+  - duckietown
+  - ros
+  - docker
+  - lane-following
+  - object-detection
+  - planning
+  - self-driving
+  est_hours: null
+  last_updated: '2025'
+  status: active
+  license: null
+  quality_signal: university-grade MOOC; supports virtual Duckiebots since the 2025 edition (no hardware required)
+  notes: Covers lane following, object detection and planning with Python, ROS and Docker; the Tier-0 (zero-hardware) path for mobile robotics. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    mooc_page: https://duckietown.com/mooc/
+    instructor_manual_curriculum: https://docs.duckietown.com/ente/duckietown-manual/80-instructor-manual/sample-curricula/mooc/index.html
+    hardware_required: false
+    cost_note: free to audit; paid graded certificate (amount not stated)
+- id: duckietown-learning-experiences
+  title: 'Duckietown Education: Learning Experiences (LX) + instructor manual'
+  author: Duckietown Foundation
+  url: https://duckietown.com/education/
+  type: competition_curriculum
+  language: en
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Python
+  - ROS basics
+  topics:
+  - duckietown
+  - ros
+  - kinematics
+  - odometry
+  - pid
+  - computer-vision
+  - ekf
+  - object-detection
+  - planning
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: fully open curriculum lineage (AI Driving Olympics)
+  notes: Hands-on modules (ROS Basics, Kinematics & Odometry, PID Control, Computer Vision, EKF Localization, Object Detection, Collision Checker, Planning, Braitenberg Vehicles) each with slides/notes/videos, runnable in the Duckiematrix simulator or on a robot. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    instructor_manual: https://docs.duckietown.com/ente/instructor-manual/curricula/mooc/index.html
+    simulator: Duckiematrix
+    cost_note: pricing tiers for independent learners / universities / enterprise (amounts not stated); MOOC free
+- id: hiwonder-mentorpi-a1
+  title: Hiwonder MentorPi A1 Standard
+  author: Hiwonder (China)
+  url: https://specpicks.com/product/B0FHHPZFVZ
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 639.99
+    currency: USD
+  level: intermediate
+  prerequisites:
+  - ROS 2 Humble basics
+  - Python
+  topics:
+  - ros2
+  - mobile-robot
+  - lidar
+  - slam
+  - raspberry-pi-5
+  est_hours: null
+  last_updated: 2026-04
+  status: active
+  license: null
+  quality_signal: budget ROS 2 middle tier; documentation quality weaker (uneven English, pre-configured images rather than teaching ROS 2 from scratch)
+  notes: Pi 5 8GB, LiDAR SLAM, ROS 2 Humble. Many Yahboom/Hiwonder listings exclude the Pi 5 board and the ROS version varies by bundle - check before buying. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 639.99
+    price_krw: null
+    kr_vendor: null
+    availability_2026: Amazon listing (Apr 2026)
+    compute: Raspberry Pi 5 8GB
+    ros2_support: Humble
+    cost_note: 'paid: $639.99 (Amazon, Apr 2026)'
+- id: hiwonder-turbopi
+  title: Hiwonder TurboPi
+  author: Hiwonder (China)
+  url: https://specpicks.com/product/B0FHHPZFVZ
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 339.99
+    currency: USD
+  level: beginner
+  prerequisites:
+  - Python
+  topics:
+  - mobile-robot
+  - python
+  - raspberry-pi-5
+  - computer-vision
+  est_hours: null
+  last_updated: 2026-04
+  status: active
+  license: null
+  quality_signal: null
+  notes: Pi 5 8GB Python car (no ROS 2 stated); same vendor caveats as MentorPi (board sometimes excluded, uneven docs). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 339.99
+    price_krw: null
+    kr_vendor: null
+    availability_2026: Amazon listing (Apr 2026)
+    compute: Raspberry Pi 5 8GB
+    cost_note: 'paid: $339.99 (Amazon, Apr 2026)'
+- id: hiwonder-armpi-fpv
+  title: Hiwonder ArmPi FPV (6-DOF arm, Pi 5) / ArmPi Ultra
+  author: Hiwonder (China)
+  url: https://specpicks.com/product/B0FHHPZFVZ
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 539.99
+    currency: USD
+  level: intermediate
+  prerequisites:
+  - Python
+  - ROS 2 basics for Ultra
+  topics:
+  - manipulator
+  - raspberry-pi-5
+  - computer-vision
+  - ros2
+  est_hours: null
+  last_updated: 2026-04
+  status: active
+  license: null
+  quality_signal: null
+  notes: 6-DOF arm with Pi 5 8GB; ArmPi Ultra is tagged as a ROS 2 robot arm by OZRobotics. Same vendor documentation caveats. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 539.99
+    price_usd_ultra: 666.99
+    price_krw: null
+    kr_vendor: null
+    availability_2026: Amazon / OZRobotics listings
+    ozrobotics_url: https://ozrobotics.com/product-tag/ros2-robot-arm/
+    cost_note: 'paid: $539.99 (ArmPi FPV, Amazon Apr 2026); ~$666.99 (ArmPi Ultra, OZRobotics)'
+- id: yahboom-raspbot-v2
+  title: Yahboom Raspbot V2 4WD (Raspberry Pi 5, ROS 2 Humble / Python)
+  author: Yahboom (China)
+  url: https://tufzen.com/products/yahboom-4wd-raspbot-v2-ai-large-model-robot-kit-for-raspberry-pi-5-beginners-educational-project-ros2-humble-python-programming
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 158.64
+    currency: USD
+  level: beginner
+  prerequisites:
+  - Python
+  - Raspberry Pi 5 (not included)
+  topics:
+  - mobile-robot
+  - ros2
+  - raspberry-pi-5
+  - python
+  est_hours: null
+  last_updated: 2026-11
+  status: active
+  license: null
+  quality_signal: lots of video/Gitee docs but uneven English (notes)
+  notes: Budget entry to a Pi-class ROS 2 car; the Pi 5 board is excluded and 2026 Pi 5 prices are inflated by the DRAM shortage. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 158.64
+    price_usd_list: 226.63
+    price_usd_bundle_rosmaster_a1: 664.89
+    price_krw: null
+    kr_vendor: null
+    availability_2026: Tufzen / SpecPicks listings
+    board_included: false
+    ros2_support: Humble
+    specpicks_bundle_url: https://specpicks.com/product/B0G4QXVH4T
+    cost_note: 'paid: $158.64 without Pi 5 (list $226.63); ROSMASTER A1 + Raspbot V2 bundle $664.89'
+- id: yahboom-pi5-ros2-robot-lidar
+  title: Yahboom Raspberry Pi 5 8GB ROS 2 robot (dual LiDAR / 2D SLAM + AI vision)
+  author: Yahboom (China)
+  url: https://specpicks.com/product/B0G4QXVH4T
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 969.9
+    currency: USD
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics
+  - Python
+  topics:
+  - mobile-robot
+  - ros2
+  - lidar
+  - slam
+  - raspberry-pi-5
+  est_hours: null
+  last_updated: 2026-11
+  status: active
+  license: null
+  quality_signal: null
+  notes: Upper end of the budget ROS 2 middle tier ($340-$1,080 range in the notes); ROS version varies by bundle. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 969.9
+    price_usd_slam_vision: 1079.9
+    price_krw: null
+    kr_vendor: null
+    availability_2026: SpecPicks aggregator listing
+    compute: Raspberry Pi 5 8GB
+    cost_note: 'paid: $969.90 (dual LiDAR) / $1,079.90 (2D SLAM + AI vision)'
+- id: yahboom-microros-pi5-car
+  title: Yahboom MicroROS Pi5 ROS 2 robot car (ESP32 micro-ROS + Pi 5 ROS 2 Humble)
+  author: Yahboom (China)
+  url: https://robotshop.com/products/yahboom-microros-pi5-ros2-robot-car-raspberry-pi-5-ros2-humblepython3-with-raspberry-pi5-2gb
+  type: hardware
+  language: en
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 Humble basics
+  - micro-ROS concepts
+  topics:
+  - micro-ros
+  - esp32
+  - ros2
+  - raspberry-pi-5
+  - mobile-robot
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Combines an ESP32 running micro-ROS with a Pi 5 (2GB) running ROS 2 Humble/Python3; price not cited in the notes. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: null
+    price_krw: null
+    kr_vendor: null
+    availability_2026: RobotShop listing
+    compute: Raspberry Pi 5 2GB + ESP32
+    ros2_support: Humble
+- id: elegoo-smart-robot-car-v4
+  title: Elegoo Smart Robot Car Kit V4.0 (with camera)
+  author: Elegoo (China)
+  url: https://elegoo.com/collections/filaments/products/elegoo-smart-robot-car-kit-v-4-0
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 75.99
+    currency: USD
+  level: beginner
+  prerequisites:
+  - none; Arduino IDE basics helpful
+  topics:
+  - arduino
+  - mobile-robot
+  - sensors
+  - motors
+  - pid
+  - beginner-kit
+  est_hours: null
+  last_updated: 2026-11
+  status: active
+  license: null
+  quality_signal: community-recommended Tier-1 starter kit
+  notes: 'Tier 1 ($50-100): teaches motors, sensors, PID and serial; no ROS. Bundled Elegoo tutorials were not verified by the research. KRW ~10-11만원 is an inference. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 75.99
+    price_eur: 69.99
+    price_usd_uno_r3_v4_kit: 79.95
+    price_krw: null
+    price_krw_estimate: ~10-11만원 (inferred, verify)
+    kr_vendor: null
+    availability_2026: in stock at Elegoo US/EU stores
+    eu_store_url: https://eu.elegoo.com/en-it/products/elegoo-smart-robot-car-kit-v-4-0
+    cost_note: 'paid: $75.99 (US store) / €69.99 (EU); UNO R3 V4 kit $79.95 (reseller)'
+- id: elegoo-conqueror-tank
+  title: Elegoo Conqueror Tank STEM programming robot kit
+  author: Elegoo (China)
+  url: https://slickdeals.net/f/17226169-elegoo-conqueror-tank-stem-programming-robot-kit-99-99
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 99.99
+    currency: USD
+  level: beginner
+  prerequisites:
+  - Arduino IDE basics helpful
+  topics:
+  - arduino
+  - mobile-robot
+  - beginner-kit
+  est_hours: null
+  last_updated: '2026'
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Only a deal listing was cited; regular price and current availability not verified. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 99.99
+    price_krw: null
+    kr_vendor: null
+    availability_2026: null
+    cost_note: 'paid: $99.99 (deal price)'
+- id: freenove-4wd-arduino-car
+  title: Freenove 4WD Car Kit (Arduino IDE compatible)
+  author: Freenove (China)
+  url: https://www.desertcart.us/products/735190192-freenove-4wd-car-kit-with-remote-control-arduino-ide-compatible.md
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 45
+    currency: USD
+  level: beginner
+  prerequisites:
+  - none; Arduino IDE basics helpful
+  topics:
+  - arduino
+  - mobile-robot
+  - beginner-kit
+  est_hours: null
+  last_updated: 2026-11
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Cheapest Tier-1 option cited, but the listing was out of stock; Freenove Pi-based kits do not include the Pi. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 45
+    price_krw: null
+    kr_vendor: null
+    availability_2026: out of stock at cited listing
+    cost_note: 'paid: ~$45 (out-of-stock listing)'
+- id: pololu-3pi-plus-2040
+  title: Pololu 3pi+ 2040 Robot (Hyper / Standard / Turtle editions)
+  author: Pololu (USA)
+  url: https://www.pololu.com/product/5000/blog
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 161.95
+    currency: USD
+  level: beginner
+  prerequisites:
+  - MicroPython or C++
+  topics:
+  - rp2040
+  - micropython
+  - mobile-robot
+  - line-following
+  - embedded
+  est_hours: null
+  last_updated: 2026-11
+  status: active
+  license: null
+  quality_signal: well-documented US vendor
+  notes: Tier 2 ($200-350) pre-ROS embedded robot on RP2040 with MicroPython/C++. KRW ~23만원 is an inference. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 161.95
+    price_krw: null
+    price_krw_estimate: ~23만원 (inferred, verify)
+    kr_vendor: null
+    availability_2026: Pololu direct + distributors (Core Electronics)
+    mcu: RP2040
+    standard_edition_url: https://core-electronics.com.au/catalog/product/view/sku/POLOLU-5004
+    turtle_edition_url: https://www.pololu.com/product/5005
+    cost_note: 'paid: $161.95 (Hyper Edition assembled, #5000); Standard (#5004) and Turtle (#5005) kits price not cited'
+- id: pololu-zumo-2040
+  title: Pololu Zumo 2040 Robot
+  author: Pololu (USA)
+  url: https://www.pololu.com/product/5012/specs
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 194.95
+    currency: USD
+  level: beginner
+  prerequisites:
+  - MicroPython or C++
+  topics:
+  - rp2040
+  - micropython
+  - mobile-robot
+  - sumo
+  - embedded
+  est_hours: null
+  last_updated: 2026-11
+  status: active
+  license: null
+  quality_signal: null
+  notes: Tier 2 tracked RP2040 robot, sibling of the 3pi+ 2040. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 194.95
+    price_krw: null
+    kr_vendor: null
+    availability_2026: Pololu direct
+    mcu: RP2040
+    motorless_kit_url: https://www.pololu.com/product/5011
+    cost_note: 'paid: $194.95 (assembled, 75:1, #5012); motorless kit #5011 price not cited'
+- id: nvidia-jetbot
+  title: NVIDIA JetBot (Jetson Nano DIY robot)
+  author: NVIDIA
+  url: https://developer.nvidia.com/embedded/learn/jet-diy-robotics-kit
+  type: hardware
+  language: en
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Python
+  - Jetson Nano (EOL)
+  topics:
+  - jetson-nano
+  - computer-vision
+  - deep-learning
+  - mobile-robot
+  est_hours: null
+  last_updated: null
+  status: stale
+  license: null
+  quality_signal: null
+  notes: 'Project page still up, but Jetson Nano dev kit is EOL (vendor: from Jan 2026) and the SparkFun JetBot kit is marked discontinued by a reseller; ''buy only with hardware already in hand''. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: null
+    price_krw: null
+    kr_vendor: null
+    availability_2026: kits discontinued at resellers; Nano EOL
+    compute: Jetson Nano (EOL)
+    sparkfun_kit_discontinued: https://littlebirdelectronics.com.au/products/sparkfun-jetbot-ai-kit-without-jetson-nano
+- id: donkeycar
+  title: DonkeyCar (on Jetson Nano / Raspberry Pi)
+  author: DonkeyCar community
+  url: https://developer.nvidia.com/embedded/community/jetson-projects/donkey_car
+  type: hardware
+  language: en
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Python
+  - RC car chassis
+  - deep-learning basics
+  topics:
+  - self-driving
+  - deep-learning
+  - rc-car
+  - jetson-nano
+  - raspberry-pi
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Community DIY autonomous RC car; 2026 project maintenance status unverified (no GitHub release info retrieved) and the Jetson Nano path is EOL. Waveshare JetRacer lists DonkeyCar among supported libraries. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: null
+    price_krw: null
+    availability_2026: null
+- id: waveshare-jetracer-ai-kit
+  title: Waveshare JetRacer AI Kit / JetRacer Pro (Jetson Nano not included)
+  author: Waveshare (China)
+  url: https://www.waveshare.com/jetracer-ai-kit.htm
+  type: hardware
+  language: en
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Python
+  - Jetson Nano (EOL)
+  topics:
+  - jetson-nano
+  - self-driving
+  - rc-car
+  - deep-learning
+  est_hours: null
+  last_updated: null
+  status: stale
+  license: null
+  quality_signal: null
+  notes: Jetson Nano not included and Nano is EOL from Jan 2026 per the ThinkRobotics JetRacer Pro listing; price not cited. Expect migration to Orin Nano. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: null
+    price_krw: null
+    kr_vendor: null
+    availability_2026: listed at Waveshare / RobotShop CA, Nano EOL
+    robotshop_ca_url: https://ca.robotshop.com/products/waveshare-jetracer-ai-kit-ai-racing-robot-powered-by-jetson-nano-not-included
+    jetracer_pro_listing: https://thinkrobotics.com/products/jetracer-pro-high-speed-ai-racing-robot-kit-online
+- id: lerobot-so-101
+  title: LeRobot SO-100 / SO-101 (SO-ARM100) low-cost 3D-printable arm
+  author: Hugging Face (LeRobot) + The Robot Studio
+  url: https://github.com/TheRobotStudio/SO-ARM100
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 121.94
+    currency: USD
+  level: intermediate
+  prerequisites:
+  - Python
+  - basic 3D-printer operation
+  - mechanical assembly (#0/#1 Phillips)
+  - USB/serial motor setup
+  topics:
+  - manipulator
+  - lerobot
+  - imitation-learning
+  - feetech
+  - 3d-printing
+  - teleoperation
+  - act
+  - diffusion-policy
+  est_hours: null
+  last_updated: 2026-11
+  status: active
+  license: null
+  quality_signal: canonical ~$110-$230 entry into learning-based manipulation per community roadmaps; only arm with a fully free Python-native learning stack (BOM, assembly video, calibration CLI, teleop, dataset recording, ACT/Diffusion training)
+  notes: 'Price/learning sweet spot; the official BOM lists RoboSEasy (South Korea) as a complete-kit vendor, so a Korean learner can buy domestically (KRW unverified; ~40-70만원 inferred from the $300-$500 global kit range; DIY pair ~32만원 + printing inferred). LeRobot is pure Python, not ROS 2 - pair with TurtleBot3/OpenMANIPULATOR-X or a ROS 2 wrapper if MoveIt 2 is a goal. 2026 kit prices: Seeed SO-ARM101 Pro assembled $432.84, Seeed servo kit $312 (sold out), printed skeleton $59.65, Hiwonder assembled starter $396.89, India ₹27,999 DIY. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 229.88
+    price_usd_follower_only: 121.94
+    price_eur_pair: 226.3
+    price_jpy_pair: 44530
+    price_usd_assembled_kits: $300-$500 (Seeed Pro $432.84; Hiwonder $396.89; roboticscenter.ai 'complete kit $499 / DIY ~$300')
+    price_usd_launch: $100 base; $100-~$500 assembled/tariffed
+    price_krw: null
+    price_krw_estimate: DIY pair ~32만원 + 3D printing; complete kit ~40-70만원 (inferred, verify)
+    kr_vendor: RoboSEasy (listed in official BOM for complete kits)
+    availability_2026: multiple global sellers (Alibaba, Amazon, Seeed, Hiwonder, Akizuki Denshi JP, RoboSEasy KR); some kits sold out
+    motors: Feetech STS3215 7.4V (follower 6x 1/345; leader mixed 1/147, 1/191, 1/345); 12V variant 30 kg-cm vs 16.5 kg-cm
+    printing: PLA+, 15% infill, 0.4 mm nozzle / 0.2 mm layer; Ender 220x220 or Prusa/UP bed single-file sets
+    software: pip install 'lerobot[feetech]'; lerobot-find-port, lerobot-setup-motors, lerobot-calibrate
+    ros2_support: not native (pure Python)
+    docs_url: https://huggingface.co/docs/lerobot/so101
+    lerobot_repo: https://github.com/huggingface/lerobot
+    discord: https://discord.com/invite/s3KuuzsPFb
+    seeed_pro_listing: https://openelab.com/products/seeed-studio-so-arm101-pro-assembled-kit-lerobot-6dof-robotic-arm
+    cost_note: 'paid: BOM $121.94 follower only / $229.88 leader+follower (DIY, €226.30 / ¥44,530); assembled kits $300-$500'
+- id: lerobot-so101-docs
+  title: LeRobot SO-101 documentation (Hugging Face)
+  author: Hugging Face
+  url: https://huggingface.co/docs/lerobot/so101
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Python
+  - SO-101 hardware
+  topics:
+  - lerobot
+  - manipulator
+  - imitation-learning
+  - calibration
+  - teleoperation
+  - dataset-recording
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: official; Discord support
+  notes: Covers motor setup via lerobot-find-port / lerobot-setup-motors / lerobot-calibrate, pip install 'lerobot[feetech]', teleop, dataset recording and policy training. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    repo_url: https://github.com/huggingface/lerobot
+- id: so-arm101-korean-wikidocs-guide
+  title: SO-ARM101 BOM 및 조립 가이드 (wikidocs, Korean)
+  author: wikidocs author (unnamed)
+  url: https://wikidocs.net/307112
+  type: docs
+  language: ko
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - SO-ARM101 parts
+  - 3D printer access
+  topics:
+  - lerobot
+  - manipulator
+  - 3d-printing
+  - assembly
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Korean-language BOM (wikidocs 307112) and assembly guide (wikidocs 328746) for the SO-ARM101; roboticscenter.ai also has a Korean SO-101 buying guide. Currency not verified. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    assembly_guide_url: https://wikidocs.net/328746
+    ko_buying_guide: https://www.roboticscenter.ai/ko/guides/robot-arms/so-101-buying-guide
+- id: mobile-aloha
+  title: Mobile ALOHA (bimanual mobile manipulator)
+  author: Stanford (Fu, Zhao, Finn et al.)
+  url: null
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 32000
+    currency: USD
+  level: advanced
+  prerequisites:
+  - imitation learning
+  - research lab budget
+  topics:
+  - aloha
+  - bimanual
+  - mobile-manipulator
+  - imitation-learning
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: reference design for low-cost derivatives (TidyBot++ $5-6k, XLeRobot $660, AhaRobot $1-2k)
+  notes: 'Institutional-tier (> $10k) reference platform; cost cited via the Nori Bot paper. Derivatives mentioned without URLs in the notes: TidyBot++ $5,000-6,000, XLeRobot $660, AhaRobot $1,000-2,000. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 32000
+    price_krw: null
+    availability_2026: null
+    cited_via: https://arxiv.org/html/2605.16537
+    cost_note: 'paid: ~$32,000'
+- id: nori-bot
+  title: Nori Bot (17-DoF dual-arm mobile manipulator, May 2026)
+  author: arXiv 2605.16537 authors
+  url: https://arxiv.org/html/2605.16537
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 947
+    currency: USD
+  level: advanced
+  prerequisites:
+  - 3D printing
+  - electronics assembly
+  - imitation learning
+  topics:
+  - bimanual
+  - mobile-manipulator
+  - open-hardware
+  - imitation-learning
+  est_hours: null
+  last_updated: 2026-05
+  status: active
+  license: null
+  quality_signal: arXiv preprint (May 2026)
+  notes: Open low-cost ALOHA-style build; parts cost $947. Research-grade, not a packaged kit. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 947
+    price_krw: null
+    availability_2026: DIY from paper BOM
+    arxiv_id: '2605.16537'
+    cost_note: 'paid: parts ~$947'
+- id: yor-bimanual-mobile-manipulator
+  title: YOR open-source bimanual mobile manipulator (Feb 2026)
+  author: arXiv 2602.11150 authors
+  url: https://arxiv.org/pdf/2602.11150
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 10000
+    currency: USD
+  level: advanced
+  prerequisites:
+  - research lab budget
+  - mechanical/electrical assembly
+  topics:
+  - bimanual
+  - mobile-manipulator
+  - open-hardware
+  est_hours: null
+  last_updated: 2026-02
+  status: active
+  license: null
+  quality_signal: arXiv preprint (Feb 2026)
+  notes: Open-source design with a sub-$10k BOM; institutional tier. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: null
+    price_usd_bom_max: 10000
+    price_krw: null
+    availability_2026: DIY from paper BOM
+    arxiv_id: '2602.11150'
+    cost_note: 'paid: BOM < $10,000'
+- id: trossen-solo-ai
+  title: Trossen Solo AI (ALOHA-derived single-arm kit)
+  author: Trossen Robotics (USA)
+  url: https://store.trossenrobotics.com/products/solo-ai
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 11385.95
+    currency: USD
+  level: advanced
+  prerequisites:
+  - imitation learning
+  - institutional budget
+  topics:
+  - aloha
+  - manipulator
+  - imitation-learning
+  - teleoperation
+  est_hours: null
+  last_updated: 2026-11
+  status: active
+  license: null
+  quality_signal: null
+  notes: Commercial ALOHA-derived kit; institutional tier (> $10k). Hobbyists on HomeBrew Robotics Club (Jun 2026) instead build 'AlohaMini' variants with SO-ARM-200. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 11385.95
+    price_krw: null
+    kr_vendor: null
+    availability_2026: Trossen store
+    hbrobotics_thread: https://groups.google.com/g/hbrobotics/c/XRpjKicK6qQ
+    cost_note: 'paid: $11,385.95'
+- id: elephant-mycobot-280
+  title: Elephant Robotics myCobot 280 (M5 / Arduino / Raspberry Pi / RDK X5)
+  author: Elephant Robotics (China)
+  url: https://www.elephantrobotics.com/en/mycobot-en/
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 499
+    currency: USD
+  level: intermediate
+  prerequisites:
+  - Python
+  - ROS 2 Humble basics for ROS use
+  topics:
+  - manipulator
+  - ros2
+  - moveit
+  - python
+  - 6-dof
+  est_hours: null
+  last_updated: 2026-07
+  status: active
+  license: null
+  quality_signal: GrabARobot price guide (weak source - page asks for quotes rather than listing transaction prices)
+  notes: Mid-tier 6-DOF desktop arm supporting Linux/Windows/macOS, ROS 1 Noetic and ROS 2 Humble; RDK X5 variant (released 2025-10-02) runs ROS 2 via TogetheROS.Bot. No Korean listing found; KRW ~90만원 (M5) is an inference. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 649
+    price_usd_arduino: 499
+    price_usd_raspberry_pi: 759
+    price_jpy_rdk_x5: 150920
+    price_krw: null
+    price_krw_estimate: M5 ~90만원 (inferred, verify)
+    kr_vendor: null
+    availability_2026: listed at Robozaps, Switch Science (JP)
+    ros2_support: Humble; RDK X5 via TogetheROS.Bot
+    os_support: Linux, Windows, macOS
+    price_guide_url: https://grabarobot.com/blog/elephant-robotics-price-guide-2026/
+    switch_science_url: https://www.switch-science.com/collections/mycobot/products/10623
+    cost_note: 'paid: $499 (Arduino) / $649 (M5) / $759 (Raspberry Pi) per Jul 2026 guide; RDK X5 ¥150,920 (Japan)'
+- id: robotis-openmanipulator-x
+  title: ROBOTIS OpenMANIPULATOR-X
+  author: ROBOTIS (Korea)
+  url: https://emanual.robotis.com/docs/en/platform/openmanipulator_x/overview/
+  type: hardware
+  language: ko
+  cost:
+    kind: paid
+    amount: 1629.09
+    currency: USD
+  level: intermediate
+  prerequisites:
+  - ROS 2 basics
+  - Dynamixel SDK
+  topics:
+  - manipulator
+  - ros2
+  - moveit
+  - dynamixel
+  - turtlebot3
+  est_hours: null
+  last_updated: 2026-07
+  status: active
+  license: null
+  quality_signal: GrabARobot price guide (weak source); official ROBOTIS e-Manual
+  notes: 4-DOF + gripper, 500 g payload, 380 mm reach; integrates with TurtleBot3 (Waffle) for the e-Manual manipulation chapter. Official ROBOTIS price not retrieved (robotis.us HTTP 429); Korean mall category ca_id=4030 exists but no KRW listing retrieved; KRW ~2.3M원 is an inference. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 1629.09
+    price_krw: null
+    price_krw_estimate: ~2.3M원 (inferred, verify)
+    kr_vendor: ROBOTIS Korea mall (category ca_id=4030)
+    availability_2026: ROBOTIS mall / robotis.us (not fetched)
+    dof: 4
+    payload_g: 500
+    reach_mm: 380
+    ros2_support: true
+    languages:
+    - ko
+    - en
+    cost_note: 'paid: $1,629.09 (Jul 2026 guide, weak source)'
+- id: trossen-widowx-ai
+  title: Trossen / Interbotix WidowX AI
+  author: Trossen Robotics (USA)
+  url: https://store.trossenrobotics.com/products/widowx-ai
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 3795
+    currency: USD
+  level: advanced
+  prerequisites:
+  - imitation learning
+  - research budget
+  topics:
+  - manipulator
+  - lerobot
+  - imitation-learning
+  - research-arm
+  est_hours: null
+  last_updated: 2026-11
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Prices conflict across Trossen snapshots and a 2026 guide ($3-6k range, build-to-order); whether it ships with ROS 2 drivers vs LeRobot-only was not verified. Exceeds a learner budget; legacy WidowX-250S still listed. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: null
+    price_usd_range: $2,995-$5,935.45 (conflicting)
+    price_eur: 5880
+    price_krw: null
+    kr_vendor: null
+    availability_2026: build-to-order
+    ros2_support: unverified
+    legacy_widowx_250s: https://store.trossenrobotics.com/products/widowx250s
+    cost_note: 'paid: conflicting - $3,795 base / $3,825 leader; $5,935.45; 2026 guide $2,995 base / $3,135 leader / $3,445 follower; €5,880 (Generation Robots)'
+- id: ufactory-lite-6
+  title: uFactory Lite 6
+  author: uFactory (China)
+  url: https://www.generationrobots.com/blog/?p=21535
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 3000
+    currency: USD
+  level: advanced
+  prerequisites:
+  - ROS 2 / MoveIt or vendor SDK
+  topics:
+  - manipulator
+  - cobot
+  - research-arm
+  est_hours: null
+  last_updated: 2026-11
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Research/cobot-class arm above learner budget; US price spread is flagged unreliable in the notes. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: null
+    price_usd_range: $7,101-$8,539 (Qviro, unreliable)
+    price_eur_from: 3000
+    price_krw: null
+    kr_vendor: null
+    availability_2026: null
+    qviro_url: https://qviro.com/product/ufactory/lite-6
+    cost_note: 'paid: from €3,000 ex-VAT; US listings $7,101-$8,539 (wide spread, unreliable)'
+- id: dobot-magician-lite
+  title: Dobot Magician Lite (education arm)
+  author: Dobot (China)
+  url: https://www.robotlab.com/?p=5762
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 995
+    currency: USD
+  level: beginner
+  prerequisites:
+  - none for block/GUI programming; Python for API
+  topics:
+  - manipulator
+  - education
+  - 4-axis
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: GrabARobot Dobot guide (weak source)
+  notes: Mid-tier education arm; Magician (classic) 2026 price not found and Magician E6 cobot ($15,993) is a different product. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 995
+    price_usd_range: $995-$1,995
+    price_krw: null
+    kr_vendor: null
+    availability_2026: RobotLAB
+    price_guide_url: https://grabarobot.com/blog/dobot-robot-price-guide-2026/
+    cost_note: 'paid: from $995 (RobotLAB); education arms $995-$1,995 street'
+- id: niryo-ned2
+  title: Niryo Ned2
+  author: Niryo (France)
+  url: https://uk.rs-online.com/web/p/educational-robots/2356719
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 3719.69
+    currency: USD
+  level: intermediate
+  prerequisites:
+  - ROS basics
+  - Python
+  topics:
+  - manipulator
+  - ros
+  - education
+  - 6-axis
+  est_hours: null
+  last_updated: 2026-11
+  status: discontinued
+  license: null
+  quality_signal: null
+  notes: RobotLAB states 'Ned 2 is no longer available' while RS still lists it - appears end-of-life at distributors; verify before recommending. Price ~$3.7-8k exceeds learner budget. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: null
+    price_gbp: 3719.69
+    price_aud_ex_gst: 7144.62
+    price_krw: null
+    kr_vendor: null
+    availability_2026: 'conflicting: RS lists it; RobotLAB says no longer available'
+    robotlab_url: https://www.robotlab.com/store/niryo-ned-2-robotic-arm/
+    cost_note: 'paid: £3,719.69 (RS UK); A$7,144.62 ex-GST (RS Australia)'
+- id: unitree-go2
+  title: Unitree Go2 (Air / Pro / EDU)
+  author: Unitree Robotics (China)
+  url: https://unitree.com/go2
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 1600
+    currency: USD
+  level: advanced
+  prerequisites:
+  - EDU tier for SDK development
+  - institutional budget
+  topics:
+  - quadruped
+  - legged-robot
+  - sdk
+  - reinforcement-learning
+  est_hours: null
+  last_updated: 2026-10
+  status: active
+  license: null
+  quality_signal: roboticscenter.ai price guide updated 2026-10-17; retailer listings
+  notes: Only the EDU tier ships an SDK for development, and it is an institutional purchase (> $10k); earlier 2026 guides listed EDU at $3,790 (conflicting/outdated). No official unitree.com price confirmed; no Korean distributor pricing found. KRW ~5.2M원 (Pro) is an inference. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 3690
+    price_usd_air: 1600
+    price_usd_pro_range: $3,690-$3,790
+    price_usd_edu_range: $11,090-$15,637.50 (Airpuria $14,599; Stemfinity $15,637.50)
+    price_usd_launch: Air $1,600 / Pro $2,800
+    price_krw: null
+    price_krw_estimate: Pro ~5.2M원 (inferred, verify)
+    kr_vendor: null
+    availability_2026: Air often not stocked; Pro/EDU at US retailers
+    sdk_tier: EDU only
+    price_guide_url: https://www.roboticscenter.ai/blog/robot-dog-price-guide
+    cost_note: 'paid: Air $1,600 (often not stocked) / Pro $3,690-3,790 / EDU $11,090-$15,637.50 (Oct 2026 US guides/retailers)'
+- id: petoi-bittle-x
+  title: Petoi Bittle X (voice-controlled robot dog, V2 alloy)
+  author: Petoi (USA)
+  url: https://www.petoi.com/products/petoi-robot-dog-bittle-x-voice-controlled
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 319
+    currency: USD
+  level: beginner
+  prerequisites:
+  - Python or block coding; C++ optional
+  topics:
+  - quadruped
+  - legged-robot
+  - python
+  - ros
+  - beginner-kit
+  est_hours: null
+  last_updated: 2026-08
+  status: active
+  license: null
+  quality_signal: listed in Mitrade 'Best Robot Dogs 2026'
+  notes: Learner-tier quadruped fitting the ~$300 tier; supports block coding, Python, C++ and ROS; optional robotic arm. Korean availability not found; KRW ~45-56만원 is an inference. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 319
+    price_usd_range: $254.99 (sale) - $399
+    price_krw: null
+    price_krw_estimate: ~45-56만원 (inferred, verify)
+    kr_vendor: null
+    availability_2026: Petoi direct, RobotShop
+    ros_support: true
+    robotshop_v2_url: https://www.robotshop.com/products/petoi-bittle-x-v2-construction-kit-w-alloy-servos
+    cost_note: 'paid: from $319 (kit, lite servos) / $339 assembled lite / $379 kit alloy / $399 assembled alloy; NRW 2026 sale $254.99'
+- id: stanford-pupper-v3
+  title: Stanford Pupper v3 (open-source quadruped)
+  author: Stanford University (Hands-On Robotics)
+  url: https://pupper-v3-documentation.readthedocs.io/
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 2000
+    currency: USD
+  level: advanced
+  prerequisites:
+  - Python
+  - motor control / FK-IK
+  - RL basics
+  - DIY assembly
+  topics:
+  - quadruped
+  - legged-robot
+  - reinforcement-learning
+  - sim-to-real
+  - foxglove
+  - open-hardware
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: backed by the Stanford CS123 course (third year in 2025); lineage from Stanford Doggo (2019)
+  notes: '''Build Pupper yourself for about $2000''; RL locomotion trained in sim (''one hour = 3 months of training''), uses OpenAI Realtime API + VLMs, Foxglove for visualisation; capstone-tier build with CS123 labs as curriculum. KRW ~2.8M원 is an inference. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 2000
+    price_krw: null
+    price_krw_estimate: ~2.8M원 (inferred, verify)
+    kr_vendor: null
+    availability_2026: DIY build
+    discord: discord.gg/qbmaU8NmP2
+    course_url: https://pupper-v3-documentation.readthedocs.io/en/latest/course/course.html
+    independent_study_docs: https://pupper-independent-study.readthedocs.io/en/latest/
+    cost_note: 'paid: ~$2,000 DIY build'
+- id: stanford-cs123-pupper-course
+  title: 'Stanford CS 123: A Hands-On Introduction to Building AI-Enabled Robots (Pupper v3)'
+  author: Stanford University
+  url: https://cs123-stanford.readthedocs.io/en/latest/
+  type: competition_curriculum
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Python
+  - linear algebra
+  - Pupper v3 hardware or simulation
+  topics:
+  - quadruped
+  - motor-control
+  - forward-kinematics
+  - inverse-kinematics
+  - system-identification
+  - simulation
+  - reinforcement-learning
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: all labs and lectures public on readthedocs; lottery admits 24 of first 100 applicants on campus
+  notes: 'Weekly labs assembling and programming Pupper (motor control, FK/IK, system ID, simulation, RL) plus a final project (Fall 2026: presentations 11/30, final code 12/7); 2023/2024/Fall 2025 editions archived. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    fall_2025_ref: https://cs123-stanford.readthedocs.io/en/latest/_sources/reference/fall_2025.rst.txt
+    lab3_ik: https://cs123-stanford.readthedocs.io/en/latest/schedule/labs/spring-25/lab-3.html
+    edition_2024: https://cs123-stanford-2024.readthedocs.io/en/latest/
+    edition_2023: https://cs-123-stanford-2023.readthedocs.io/en/latest/
+    stanford_news: https://news.stanford.edu/stories/2025/07/ai-powered-robot-dogs-pupper-cs-123-robotics-students
+- id: bitcraze-crazyflie-2-1-brushless
+  title: Bitcraze Crazyflie 2.1 Brushless / 2.1+ (and STEM / Happy Hacker bundles)
+  author: Bitcraze (Sweden)
+  url: https://www.bitcraze.io/products/crazyflie-2-1-brushless/
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 480
+    currency: USD
+  level: intermediate
+  prerequisites:
+  - Python
+  - ROS 2 basics for Crazyswarm2
+  - control basics
+  topics:
+  - drone
+  - quadrotor
+  - ros2
+  - crazyswarm2
+  - control
+  - python-api
+  est_hours: null
+  last_updated: 2026-11
+  status: active
+  license: null
+  quality_signal: only sub-$700 drone with a maintained MIT-licensed ROS 2 stack and strong Python API (notes)
+  notes: Good fit for a 'ROS 2 + control' module; Bitcraze's own 2026 store price and Korean availability not retrieved. KRW ~67만원 is an inference. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 480
+    price_usd_stem_ranging_bundle: 673
+    price_usd_happy_hacker_bundle: 571.5
+    price_eur: 600
+    price_gbp: 397.57
+    price_krw: null
+    price_krw_estimate: ~67만원 (inferred, verify)
+    kr_vendor: null
+    availability_2026: RobotShop US / Generation Robots in stock; UK listing sold out
+    plus_variant_url: https://bitcraze.io/products/crazyflie-2-1-plus/
+    robotshop_url: https://www.robotshop.com/products/bitcraze-crazyflie-21-brushless
+    cost_note: 'paid: $480 bare (RobotShop US, tariffs incl.); STEM Ranging Bundle $673; Happy Hacker Bundle $571.50; €600 incl. VAT; UK £397.57 (sold out)'
+- id: crazyswarm2
+  title: Crazyswarm2 (ROS 2 stack for Crazyflie)
+  author: IMRC Lab (TU Berlin) and contributors
+  url: https://imrclab.github.io/crazyswarm2/
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2
+  - Crazyflie 2.1(+)/Brushless/Flapper/Bolt
+  topics:
+  - drone
+  - ros2
+  - crazyflie
+  - swarm
+  est_hours: null
+  last_updated: null
+  status: active
+  license: MIT
+  quality_signal: null
+  notes: Supports Crazyflie 2.1(+), 2.1 Brushless, Flapper Nimble+ and Bolt-based builds; supported ROS 2 distributions are not stated on the landing page. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    ros2_distros: not stated
+- id: px4-gazebo-sitl
+  title: PX4 + Gazebo SITL (software-in-the-loop drone simulation)
+  author: PX4 Autopilot project
+  url: https://docs.px4.io/main/en/sim_gazebo_gz/
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Linux
+  - Gazebo
+  - PX4 toolchain
+  topics:
+  - drone
+  - px4
+  - gazebo
+  - sitl
+  - no-hardware
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Zero-hardware drone tier; the URL was NOT fetched during research (from training knowledge) - verify before use. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: raspberry-pi-5
+  title: Raspberry Pi 5 (2GB-16GB)
+  author: Raspberry Pi Ltd.
+  url: https://omgubuntu.co.uk/2026/11/raspberry-pi-5-price-goes-up-and-up
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 77.5
+    currency: USD
+  level: beginner
+  prerequisites:
+  - Linux basics
+  topics:
+  - raspberry-pi
+  - sbc
+  - ros2
+  - compute
+  est_hours: null
+  last_updated: 2026-11
+  status: active
+  license: null
+  quality_signal: null
+  notes: 2026 prices inflated by the global DRAM shortage (LPDDR4 up sevenfold YoY as of Apr 2026; supply expected tight until 2028-2030); budget Pi 5 4GB/8GB at ~$100-150+. Any kit bundling a Pi 5 costs more than 2024-2025 guides suggest; Pi 4 / Pi Zero 2 W are the cost-stable alternatives. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 77.5
+    price_usd_16gb: 385
+    price_usd_16gb_launch: 120
+    price_usd_16gb_previous: 305
+    price_usd_4gb_8gb_estimate: $100-150+ (inferred)
+    price_krw: null
+    kr_vendor: null
+    availability_2026: available; repeated price hikes
+    phoronix_16gb: https://phoronix.com/news/Raspberry-Pi-5-16GB-385
+    phoronix_2gb: https://www.phoronix.com/news/Raspberry-Pi-5-2GB-Price-77.50
+    cost_note: 'paid: $77.50 (2GB, from Oct 1, 2026); $385 (16GB, Nov 2026; launched at $120 in 2025)'
+- id: nvidia-jetson-orin-nano-super
+  title: NVIDIA Jetson Orin Nano Super Developer Kit
+  author: NVIDIA
+  url: https://cnx-software.com/2026/07/22/nvidia-increases-the-price-of-jetson-modules-and-devkits-by-up-to-101
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 399
+    currency: USD
+  level: intermediate
+  prerequisites:
+  - Linux
+  - CUDA/deep-learning basics
+  topics:
+  - jetson
+  - edge-ai
+  - compute
+  - cuda
+  - ros2
+  est_hours: null
+  last_updated: 2026-07
+  status: active
+  license: null
+  quality_signal: null
+  notes: +60% price hike in Jul 2026 (AGX Thor kit $3,499 -> $5,499); some retailers still show $245-249 (likely stale). Successor path for Jetson Nano-based kits (JetBot, Duckiebot, JetRacer, F1TENTH). KRW ~56만원 is an inference. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 399
+    price_usd_launch: 249
+    price_krw: null
+    price_krw_estimate: ~56만원 (inferred, verify)
+    kr_vendor: null
+    availability_2026: available; DFRobot still lists $245-249 (likely stale)
+    dfrobot_url: https://www.dfrobot.com/product-2900.html
+    cost_note: 'paid: $399 (from Jul 2026; launched at $249 Dec 2024)'
+- id: nvidia-jetson-nano-developer-kit
+  title: NVIDIA Jetson Nano Developer Kit (4GB)
+  author: NVIDIA
+  url: https://forums.developer.nvidia.com/t/jetson-nano-developer-kit-eol/276729
+  type: hardware
+  language: en
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Linux
+  topics:
+  - jetson-nano
+  - edge-ai
+  - compute
+  est_hours: null
+  last_updated: '2026'
+  status: discontinued
+  license: null
+  quality_signal: null
+  notes: NVIDIA states the 4GB dev kit will be discontinued as inventory declines; a vendor cites EOL from Jan 2026; older Jetson modules phased out as LPDDR4 tightens (final POs by Jul 1, 2026; last shipments Jul 15, 2027). Affects JetBot, Duckiebot DB21-J, JetRacer. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: null
+    price_krw: null
+    availability_2026: EOL; remaining inventory only
+    module_phase_out: final POs 2026-07-01, last shipments 2027-07-15
+- id: ldrobot-ld19-lidar
+  title: LDROBOT LD19 / LD06 (D300 kit; successor D500) 2D LiDAR
+  author: LDROBOT (China)
+  url: https://waveshare.com/dtof-lidar-ld19.htm
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 69
+    currency: USD
+  level: beginner
+  prerequisites:
+  - ROS 2 basics for SLAM use
+  topics:
+  - lidar
+  - slam
+  - ros2
+  - sensors
+  est_hours: null
+  last_updated: 2026-11
+  status: active
+  license: null
+  quality_signal: cheapest ROS 2-compatible 2D LiDAR per the notes; basis of TurtleBot3 LDS-02
+  notes: Waveshare says the LD19-based D300 kit is discontinued and recommends the D500; supports ROS 1 and ROS 2. Korean retailer listing not found. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 69
+    price_aud: 209.95
+    price_krw: null
+    kr_vendor: null
+    availability_2026: D300 kit discontinued at Waveshare (D500 recommended); LD19 still sold elsewhere
+    sensorlidar_url: https://sensorlidar.com/products/ldrobot-ld06-ld19-d300-of-laser-radar-lidar-scanner-360-scanning-d500-lidar-kit-support-ros1-and-ros2-for-indoor-and-outdoor
+    ros2_support: true
+    cost_note: 'paid: $69 (LD19 with connector, SensorLidar); A$209.95 (Core Electronics)'
+- id: slamtec-rplidar-a1
+  title: Slamtec RPLIDAR A1
+  author: Slamtec (China)
+  url: https://industrialmonitordirect.com/blogs/knowledgebase/affordable-lidar-options-for-student-robotics-projects
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 99
+    currency: USD
+  level: beginner
+  prerequisites:
+  - ROS 2 basics for SLAM use
+  topics:
+  - lidar
+  - slam
+  - ros2
+  - sensors
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: better-documented alternative to LD19 (notes)
+  notes: Classic ~$99 student LiDAR with wide ROS support; Korean retailer listing not found. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 99
+    price_krw: null
+    kr_vendor: null
+    availability_2026: null
+    ros2_support: true
+    cost_note: 'paid: ~$99'
+- id: awesome-2d-lidars
+  title: awesome-2d-lidars (community list of 2D LiDARs with ROS support)
+  author: kaiaai (community)
+  url: https://github.imc.re/kaiaai/awesome-2d-lidars
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - lidar
+  - ros
+  - ros2
+  - sensors
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Reference list for choosing a ROS-compatible 2D LiDAR (URL as cited is a GitHub mirror). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: luxonis-oak-d-lite
+  title: Luxonis OAK-D Lite (Auto Focus)
+  author: Luxonis (USA)
+  url: https://shop.luxonis.com/products/oak-d-lite-1
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 269
+    currency: USD
+  level: intermediate
+  prerequisites:
+  - Python
+  - DepthAI SDK
+  topics:
+  - depth-camera
+  - stereo
+  - computer-vision
+  - sensors
+  - ros2
+  est_hours: null
+  last_updated: 2026-07
+  status: active
+  license: null
+  quality_signal: null
+  notes: Price jumped $169 -> $269 effective Jul 9, 2026; Korean retailer listing not found. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: 269
+    price_usd_previous: 169
+    price_krw: null
+    kr_vendor: null
+    availability_2026: Luxonis shop
+    pricing_change_url: https://shop.luxonis.com/pages/pricing-change-oak-lite-oak-1
+    cost_note: 'paid: $269 (from Jul 9, 2026; previously $169)'
+- id: intel-realsense-d435
+  title: Intel RealSense D435 / D435i
+  author: Intel RealSense
+  url: https://generationrobots.com/en/225-sensors
+  type: hardware
+  language: en
+  cost:
+    kind: paid
+    amount: 2026
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Python/C++
+  - librealsense / ROS 2 wrapper
+  topics:
+  - depth-camera
+  - rgbd
+  - computer-vision
+  - sensors
+  - ros2
+  est_hours: null
+  last_updated: 2026-11
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: '''In stock, price upon request'' at one retailer; no reliable 2026 USD/KRW price retrieved. See roboticscenter.ai depth-camera comparison. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: null
+    price_krw: null
+    kr_vendor: null
+    availability_2026: in stock at Generation Robots (price on request)
+    comparison_url: https://roboticscenter.ai/learn/robot-camera-depth-sensor-comparison
+    cost_note: 'paid: price upon request (no reliable 2026 price)'
+- id: micro-ros-raspberry-pi-pico-canonical
+  title: Getting started with micro-ROS on Raspberry Pi Pico (+ HC-SR04 sonar follow-up)
+  author: Canonical (Ubuntu blog)
+  url: https://ubuntu.com/blog/getting-started-with-micro-ros-on-raspberry-pi-pico
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - ROS 2 host install
+  - C/C++
+  - Raspberry Pi Pico
+  topics:
+  - micro-ros
+  - raspberry-pi-pico
+  - rp2040
+  - ros2
+  - embedded
+  - sensors
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: official Canonical tutorial; cited as 'solid free tutorial' in the notes
+  notes: VS Code project with a micro-ROS node visible to a ROS 2 host; follow-up post publishes HC-SR04 ultrasonic readings. Pico + LD19 (~$69) is the cheapest micro-ROS + LiDAR Tier-2 combo. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    hc_sr04_followup: https://ubuntu.com/blog/hc-sr04-with-the-raspberry-pi-pico-and-micro-ros
+    discourse_thread: https://discourse.openrobotics.org/t/raspberry-pi-pico-and-ros-2/18733.md
+    hackaday_project: https://hackaday.io/project/180426
+- id: micro-ros-esp32-arduino-ide
+  title: micro-ROS on ESP32 using Arduino IDE (Hackster tutorial)
+  author: Hackster.io community author
+  url: https://hackster.io/514301/micro-ros-on-esp32-using-arduino-ide-1360ca
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - Arduino IDE
+  - ROS 2 host install
+  - ESP32 board
+  topics:
+  - micro-ros
+  - esp32
+  - arduino
+  - ros2
+  - embedded
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Community tutorial; see also the ROS Discourse ESP32 porting thread. ESP32 boards are cost-stable entry hardware readily available at Korean retailers (디바이스마트/엘레파츠; specific items not verified). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    porting_discussion: https://discourse.openrobotics.org/t/micro-ros-porting-to-esp32/16101?page=2
+- id: articulated-robotics-micro-ros-beginner-video
+  title: Could this button control your robot? Beginner micro-ROS tutorial (Articulated Robotics)
+  author: Josh Newans (Articulated Robotics)
+  url: https://classcentral.com/course/youtube-could-this-button-control-your-robot-beginner-micro-ros-tutorial-272127
+  type: video_series
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - ROS 2 basics
+  topics:
+  - micro-ros
+  - esp32
+  - ros2
+  - embedded
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: Class Central listing of a YouTube video
+  notes: Beginner micro-ROS video (button -> robot); URL is the Class Central listing, not YouTube directly. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: f1tenth-roboracer
+  title: F1TENTH / RoboRacer autonomous racing (open build docs + course materials)
+  author: F1TENTH Foundation / UPenn mLab and partner universities
+  url: https://f1tenth.readthedocs.io/en/main/getting_started/build_car/bom.html
+  type: competition_curriculum
+  language: en
+  cost:
+    kind: paid
+    amount: 2100
+    currency: USD
+  level: advanced
+  prerequisites:
+  - ROS 2
+  - Python/C++
+  - Jetson (Orin Nano / Xavier NX)
+  - university lab access helpful
+  topics:
+  - autonomous-racing
+  - ros2
+  - lidar
+  - jetson
+  - planning
+  - control
+  - competition
+  est_hours: null
+  last_updated: 2026-07
+  status: active
+  license: null
+  quality_signal: open course slides/labs public on GitHub/readthedocs; taught at UPenn, UCSB, TU Wien
+  notes: Official BOM (Traxxas Slash 4x4 Premium chassis, Jetson Xavier NX; TX2 deprecated; Master BOM Google Sheet last updated Jul 1, 2026). UCSB estimates ~$2,100 (Orin Nano $500, LiDAR $200-600) and a May 2026 capstone sheet $3,022.29 with Orin Nano Super at $249 pre-hike - expect more after the Jul 2026 Jetson price increase. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    price_usd: null
+    price_usd_range: $2,100-$3,022.29 (UCSB estimates)
+    price_krw: null
+    build_index: https://f1tenth-doc.readthedocs.io/en/latest/getting_started/build_car/index.html
+    course_repo: https://www.github.com/mlab-upenn/f1tenthpublic
+    ucsb_2025_26: https://courses.ece.ucsb.edu/ECE188/188_F25Ilan/Projects%20Offered/F1TENTH_2025-26.pdf
+    ucsb_capstone_2026: https://capstone.engineering.ucsb.edu/sites/default/files/2026-06/F1tenth1centauri.pdf
+    tu_wien_course: https://tuwien.at/inf/f1tenth/?p=195
+    cost_note: car build ~$2,100-$3,022 (UCSB 2025-26 estimates); docs free
+- id: robocup-2026-incheon
+  title: RoboCup 2026 Incheon (Jun 30 - Jul 6, 2026, Songdo Convensia)
+  author: RoboCup Federation
+  url: https://2026.robocup.org/
+  type: competition_curriculum
+  language: ko
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - team entry
+  - league-specific robot
+  topics:
+  - competition
+  - robocup
+  - korea
+  - humanoid
+  - soccer
+  - rescue
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: first RoboCup hosted in Korea
+  notes: Includes the WEROB educational robotics workshop; RoboCupJunior 2026 has public rules (Rescue/Soccer kits) reusable by self-learners. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    dates: 2026-06-30 to 2026-07-06
+    venue: Songdo Convensia, Incheon
+    event_page: https://robocup.org/events/80
+    werob_workshop: https://2026.robocup.org/werob/
+    robocupjunior_info: https://junior.robocup.org/?p=7309
+    korea_herald: https://www.koreaherald.com/article/10797456
+    languages:
+    - ko
+    - en
+- id: robocup-korea-open-2026
+  title: RoboCup South Korea Open 2026 (Feb 6-8, Alpensia, PyeongChang)
+  author: RoboCup Korea
+  url: https://www.robocup.org/events/78
+  type: competition_curriculum
+  language: ko
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - team entry
+  topics:
+  - competition
+  - robocup
+  - korea
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: null
+  notes: Named in the notes as one of the most accessible structured targets for a Korea-based adult learner. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    dates: 2026-02-06 to 2026-02-08
+    venue: Alpensia, PyeongChang
+    languages:
+    - ko
+    - en
+- id: vex-korea-nationals-2026
+  title: VEX Korea national tournaments 2026 (V5RC HS Feb 20-21; VEX IQ MS Jan 31-Feb 1, KIS Jeju)
+  author: REC Foundation / VEX Robotics
+  url: https://events.vex.com/robot-competitions/vex-robotics-competition/RE-V5RC-25-0420.html
+  type: competition_curriculum
+  language: ko
+  cost:
+    kind: paid
+    amount: 5
+    currency: null
+  level: beginner
+  prerequisites:
+  - school team
+  - VEX V5 or IQ kit
+  topics:
+  - competition
+  - vex
+  - korea
+  - k12
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: null
+  notes: Closed-ecosystem, K-12 team-based - less relevant for adult software developers (notes). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    viqrc_event: https://events.vex.com/RE-VIQRC-25-0677.html
+    languages:
+    - ko
+    - en
+    cost_note: VEX V5/IQ kits required (price not stated)
+- id: first-global-challenge-2026-incheon
+  title: FIRST Global Challenge 2026 (Incheon, Oct 7-10, 190+ national teams)
+  author: FIRST Global
+  url: https://first.global/press-releases/south-korea-to-host-190-national-teams-at-the-2026-first-global-challenge-robotics-premier-global-competition/
+  type: competition_curriculum
+  language: ko
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - national team selection
+  topics:
+  - competition
+  - first
+  - korea
+  - k12
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: LG sponsors the Korean FGC team
+  notes: K-12 national-team event; closed ecosystem, low relevance for adult self-learners. FRC/FTC Korea 2026 regional schedules not found. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    herald_article: https://biz.heraldcorp.com/article/10894691
+    inews24_lg: https://inews24.com/view/2013080
+    languages:
+    - ko
+    - en
+- id: wro-2026-season
+  title: World Robot Olympiad 2026 season rules
+  author: WRO Association
+  url: https://wro-association.org/competition/2026-season/
+  type: competition_curriculum
+  language: en
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - LEGO Spike or WRO-approved kit
+  topics:
+  - competition
+  - wro
+  - k12
+  - lego
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: null
+  notes: Closed-ecosystem K-12 competition; WRO Korea 2026 schedule not found. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    cost_note: LEGO Spike / WRO kits required (price not stated)
+- id: international-robot-contest-21
+  title: 제21회 국제로봇콘테스트 (IRC 2026)
+  author: 산업통상자원부 / 한국로봇산업진흥원 (operator via 나라장터 tender)
+  url: https://www.sankun.com/bid-info/dsuNRittU8wt5DABkLJF2oHp3H6IUdWT5hmHjrI44Ig
+  type: competition_curriculum
+  language: ko
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - competition
+  - korea
+  est_hours: null
+  last_updated: 2026-06
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Only the venue/operation tender (posted 2026-06-11, bid close 07-02, est. 424,427,273원) was found; competition rules, categories and schedule NOT retrieved. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    tender_estimate_krw: 424427273
+- id: national-student-robot-contest-guro-21
+  title: 제21회 전국학생로봇경진대회 (구로구)
+  author: 서울 구로구
+  url: https://m.go.seoul.co.kr/news/2026/07/09/20260709500092
+  type: competition_curriculum
+  language: ko
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - 초·중·고 학생
+  topics:
+  - competition
+  - korea
+  - k12
+  est_hours: null
+  last_updated: 2026-07
+  status: active
+  license: null
+  quality_signal: null
+  notes: 초·중·고 대상, 로봇 창작/코딩/조종 3개 부문; not for adult learners. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: robotics-work-contest-2026-msit
+  title: 2026 로보틱스 작품공모전 (과기정통부 주최, 한국과학창의재단 주관)
+  author: 과학기술정보통신부 / 한국과학창의재단
+  url: https://eopla.net/magazines/48000
+  type: competition_curriculum
+  language: ko
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - own robotics project
+  topics:
+  - competition
+  - korea
+  - project-submission
+  est_hours: null
+  last_updated: 2026-10
+  status: active
+  license: null
+  quality_signal: null
+  notes: Project-submission contest, 접수 2026-10-08 ~ 11-02; named in the notes as an accessible target for Korea-based adult learners. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    submission_window: 2026-10-08 to 2026-11-02
+- id: busan-robofest-korea-qualifier-2026
+  title: 부산 로봇 대회 / Robofest 국내예선 2026 (Nov 28, BPEX)
+  author: Robofest Korea / Busan organisers
+  url: https://biz.heraldcorp.com/article/10858475
+  type: competition_curriculum
+  language: ko
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - competition
+  - korea
+  - robofest
+  est_hours: null
+  last_updated: 2026-08
+  status: active
+  license: null
+  quality_signal: null
+  notes: Domestic Robofest qualifier on 2026-11-28 at BPEX (Busan); details limited to press coverage. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    asiae_article: https://view.asiae.co.kr/en/article/2026080710523494705
+- id: kaia-university-uav-competition-2026
+  title: 한국우주항공산업협회 대학생 무인항공기 경연대회 2026 (VTOL 조난자 구조 임무)
+  author: 한국우주항공산업협회 (KAIA)
+  url: https://view.asiae.co.kr/article/2026032509590361856
+  type: competition_curriculum
+  language: ko
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - university student team
+  - VTOL UAV development
+  topics:
+  - competition
+  - drone
+  - vtol
+  - korea
+  - university
+  est_hours: null
+  last_updated: 2026-03
+  status: active
+  license: null
+  quality_signal: null
+  notes: University-team UAV competition with development funding; KARI-affiliated 로봇항공기경연대회 2026 was not found. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    prize_total_krw: 64000000
+    cost_note: free entry; 총상금 6,400만원 + 개발비 지원
+- id: r-robotics-community
+  title: r/robotics wiki (FAQ / Resources) and r/AskRobotics
+  author: Reddit community
+  url: https://thehiveindex.com/communities/r-robotics/
+  type: community
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - community
+  - beginner-guide
+  est_hours: null
+  last_updated: 2026-04
+  status: active
+  license: null
+  quality_signal: null
+  notes: Beginners are directed to the wiki FAQ/Resources then r/AskRobotics; guidance converges on sim first (ROS 2 + Gazebo), then Arduino/ESP32, then Pi-class ROS 2. The wiki page itself could not be fetched (reddit blocked), so its hardware list is uncited. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    example_thread: https://lr.eu.psf.lt/r/robotics/comments/1ey031d/how_do_i_get_into_robotics
+    askrobotics_snapshot: https://reddit.sentinel-team.org/subreddits/AskRobotics/snapshots/2026-04-25T00%3A31%3A18.610234Z
+- id: homebrew-robotics-club
+  title: HomeBrew Robotics Club (hbrobotics) mailing list
+  author: HomeBrew Robotics Club
+  url: https://groups.google.com/g/hbrobotics/c/XRpjKicK6qQ
+  type: community
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - community
+  - aloha
+  - diy
+  - manipulator
+  est_hours: null
+  last_updated: 2026-06
+  status: active
+  license: null
+  quality_signal: active 2026 hobbyist list
+  notes: Discusses low-cost ALOHA-style builds ('AlohaMini' with SO-ARM-200, Jun 2026). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: youware-robotics-beginner-roadmap-2026
+  title: 'Getting started with robotics: beginner guide / roadmap (2026)'
+  author: YouWare
+  url: https://www.youware.com/guide/getting-started-robotics-beginner-guide
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - roadmap
+  - beginner-guide
+  - ros2
+  - lerobot
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: secondary blog; consistent with community consensus
+  notes: 'Recommends ROS 2 Kilted Kaiju as the current framework, simulating in Gazebo before buying, and an SO-100 arm on a no-GPU laptop (~$110) to learn fundamentals. Other roadmap blogs cited: Dupple, Hashnode. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    dupple_guide: https://dupple.com/blog/how-to-create-robots
+    hashnode_roadmap: https://hashnode.com/posts/how-to-start-robotics-for-beginners-a-practical-step-by-step-roadmap/68fd0c745f447dae2e29969f

@@ -1,0 +1,2355 @@
+# Normalized 2026-11-11 to platform-design §3.5 resource schema (proposal, not yet implemented in CONTENT_MODEL.md)
+resources:
+- id: modern-robotics-textbook
+  title: 'Modern Robotics: Mechanics, Planning, and Control'
+  author: Kevin M. Lynch & Frank C. Park (Northwestern / SNU); Cambridge University Press
+  url: http://hades.mech.northwestern.edu/index.php/Modern_Robotics
+  type: book
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - freshman physics (f = ma, free-body diagrams)
+  - linear algebra (eigenvalues, positive definiteness)
+  - calculus
+  - basic linear ODEs
+  - basic programming
+  topics:
+  - kinematics
+  - dynamics
+  - control
+  - planning
+  - manipulation
+  - mobile-robotics
+  - screw-theory
+  est_hours: null
+  last_updated: 2019-12
+  status: active
+  license: null
+  quality_signal: Called 'the best general purpose intro robotics book' on r/AskRobotics; alternate text for Michigan AutoRob; canonical default in the note
+  notes: 'Default text for a self-taught developer: beginner-to-intermediate, 13 chapters with unified screw-theory treatment, free v2 preprint (Dec 2019), practice exercises with solutions, SNU exams 2017-2020, linear-algebra review and errata pages on the wiki. Korean and Chinese translations exist (see modern-robotics-korean-translation).'
+  source_checked_date: '2026-11-11'
+  extra:
+    publisher: Cambridge University Press, 2017
+    edition: 1st edition, online preprint 'version 2' (December 2019)
+    chapters: 13
+    pdf_default: http://hades.mech.northwestern.edu/images/2/25/MR-v2.pdf
+    pdf_tablet: http://hades.mech.northwestern.edu/images/0/0c/MR-tablet-v2.pdf
+    pdf_largefont: http://hades.mech.northwestern.edu/images/2/2e/MR-largefont-v2.pdf
+    pdf_2up: http://hades.mech.northwestern.edu/images/7/7e/MR-2up-v2.pdf
+    practice_exercises: MR_practice_exercises.pdf (with solutions) on the wiki
+    simulator: CoppeliaSim (formerly V-REP), free for education
+    chinese_translation: China Machine Press, https://item.jd.com/12788036.html
+    announcement: https://mccormick.northwestern.edu/news/articles/2017/09/new-textbook-examines-modern-robotics.html
+    cost_note: free (preprint PDF v2); print edition paid
+- id: modern-robotics-korean-translation
+  title: Modern Robotics (한국어판, 에이콘출판)
+  author: Kevin M. Lynch & 박종우 (Frank C. Park); acorn Publishing Korea
+  url: http://www.acornpub.co.kr/book/modern-robotics
+  type: book
+  language: ko
+  cost:
+    kind: paid
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - same as the English textbook
+  topics:
+  - kinematics
+  - dynamics
+  - control
+  - planning
+  - manipulation
+  - mobile-robotics
+  - korean
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Official Korean print translation listed on the Modern Robotics wiki; the acornpub URL returned HTTP 404 on 2026-11-11 and a Kyobo search found nothing, so current availability and price are unverified. A Korean learner blog (istein.tistory.com/142) confirms the translation exists.
+  source_checked_date: '2026-11-11'
+  extra:
+    learner_blog: https://istein.tistory.com/142
+    cost_note: paid (price not confirmed)
+- id: modern-robotics-code-library
+  title: ModernRobotics (NxRLab) code library
+  author: Northwestern NxR Lab (Kevin Lynch et al.)
+  url: https://github.com/NxRLab/ModernRobotics
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Python (or MATLAB/Octave/Mathematica)
+  - Modern Robotics textbook
+  topics:
+  - kinematics
+  - dynamics
+  - python
+  - matlab
+  - screw-theory
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Companion software for the textbook in Python (free), MATLAB (paid; Octave as free clone) and Mathematica. Pairs with the free CoppeliaSim simulator used by the Coursera projects. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    languages:
+    - python
+    - matlab
+    - octave
+    - mathematica
+- id: modern-robotics-video-lectures
+  title: Modern Robotics video lectures (YouTube)
+  author: Kevin Lynch (Northwestern)
+  url: https://hades.mech.northwestern.edu/index.php/Modern_Robotics_Videos
+  type: video_series
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - same as the Modern Robotics textbook
+  topics:
+  - kinematics
+  - dynamics
+  - control
+  - planning
+  - manipulation
+  - mobile-robotics
+  est_hours: 7.5
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: Consistently cited across curated lists (mithi/robotics-coursework, awesome-robotics)
+  notes: '98 short videos in per-chapter playlists; per-section runtimes sum to roughly 7 h 28 min. Longest chapters: Ch. 11 Robot Control (57:51, 13 videos), Ch. 12 Grasping (58:24), Ch. 13 Wheeled Mobile Robots (59:26). Chapter-aligned with the book (beginner-to-intermediate), so usable as a stand-alone video track.'
+  source_checked_date: '2026-11-11'
+  extra:
+    video_count: 98
+    playlist_all: https://www.youtube.com/playlist?list=PLggLP4f-rq02vX0OQQ5vrCxbJrzamYDfx
+    playlist_ch03_rigid_body_motions: PLggLP4f-rq01NLHOh2vVPPJZ0rxkbVFNc
+    playlist_ch08_dynamics: PLggLP4f-rq00TQamz2pXjzPWpuxhVN_Vy
+    playlist_ch10_motion_planning: PLggLP4f-rq01Q3clJrnWFPRtpUwSlr4mG
+    playlist_ch11_control: PLggLP4f-rq02N54sD6xwdDWlDScvb32Pp
+    playlist_ch13_wheeled_mobile_robots: PLggLP4f-rq00uzTEwsywVcTF2fJ2YqAXX
+- id: modern-robotics-coursera-specialization
+  title: 'Modern Robotics: Mechanics, Planning, and Control Specialization'
+  author: Northwestern University (Kevin Lynch) on Coursera
+  url: https://www.coursera.org/specializations/modernrobotics
+  type: course
+  language: ko
+  cost:
+    kind: paid
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - freshman-level physics
+  - linear algebra
+  - calculus
+  - basic differential equations
+  - a little programming
+  topics:
+  - kinematics
+  - dynamics
+  - control
+  - planning
+  - manipulation
+  - mobile-robotics
+  - simulation
+  est_hours: 120
+  last_updated: 2026-11
+  status: active
+  license: null
+  quality_signal: 4.7/5 from 1,259 reviews (83% five-star); 51,484 enrolled; session starting 11 Nov 2026
+  notes: Six courses (Foundations of Robot Motion 24 h, Robot Kinematics 19 h, Robot Dynamics 22 h, Motion Planning and Control 32 h, Manipulation and Wheeled Mobile Robots 35 h, Capstone Mobile Manipulation 21 h); FAQ says ~24 weeks/120 h while course-hour sum is 153 h. Taught in English with 22 subtitle languages; Korean-subtitled course pages exist (modernrobotics-course1-ko, -course2-ko, -course3-ko), hence ko+en. Uses the free CoppeliaSim simulator and the free textbook; the single most recommended structured course in the note.
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: coursera
+    certificate: true
+    course_count: 6
+    course_hours_sum: 153
+    chapter_mapping: C1 = Ch. 2-3, C2 = Ch. 4-7, C3 = Ch. 8-9, C4 = Ch. 10-11, C5 = Ch. 12-13, C6 = capstone
+    korean_course_slugs:
+    - modernrobotics-course1-ko
+    - modernrobotics-course2-ko
+    - modernrobotics-course3-ko
+    korean_lecture_example: https://www.coursera.org/lecture/modernrobotics-course1-ko/dongca-byeonhwan-haengryeol-caebteo-3-3-3-3-1-wAHKg
+    announcement_2018: https://www.robotics.northwestern.edu/news-events/articles/2018/modern-robotics-mooc-now-available-on-coursera.html
+    languages:
+    - ko
+    - en
+    cost_note: 'paid: included in Coursera Plus; cannot be taken for free per FAQ (financial aid available; amount not stated)'
+- id: probabilistic-robotics-textbook
+  title: Probabilistic Robotics
+  author: Sebastian Thrun, Wolfram Burgard, Dieter Fox; MIT Press
+  url: https://robots.stanford.edu/probabilistic-robotics/
+  type: book
+  language: en
+  cost:
+    kind: paid
+    amount: 85
+    currency: USD
+  level: intermediate
+  prerequisites:
+  - probability
+  - linear algebra
+  topics:
+  - estimation
+  - slam
+  - localization
+  - mapping
+  - probability
+  - filters
+  est_hours: null
+  last_updated: '2005'
+  status: active
+  license: proprietary
+  quality_signal: 'Textbook #1 for Michigan ROB 530 Mobile Robotics; canonical estimation/SLAM text'
+  notes: Canonical intermediate-to-advanced estimation/SLAM text; companion site offers all figures (PDF) and PowerPoint slides; no legitimate free full PDF found. Hardcover, 672 pages, published 2005-08-19; no new edition. Pair with Labbe's free filter book for a hands-on substitute.
+  source_checked_date: '2026-11-11'
+  extra:
+    isbn: '9780262201629'
+    pages: 672
+    companion_materials: figures (PDF) and PowerPoint slides
+    translations:
+    - Japanese
+    cost_note: 'paid: ~$85-110 USD (third-party listings; no MIT Press list price obtained)'
+- id: state-estimation-for-robotics-barfoot
+  title: State Estimation for Robotics (2nd edition)
+  author: Timothy D. Barfoot; Cambridge University Press
+  url: https://www.schweitzer-online.de/en/buch/Barfoot/State-Estimation-for-Robotics/9781009299893/A68274562/
+  type: book
+  language: en
+  cost:
+    kind: paid
+    amount: 89
+    currency: EUR
+  level: advanced
+  prerequisites:
+  - linear algebra
+  - probability
+  - matrix calculus
+  topics:
+  - estimation
+  - lie-groups
+  - batch-estimation
+  - inertial-navigation
+  - probability
+  est_hours: null
+  last_updated: 2024-02
+  status: active
+  license: proprietary
+  quality_signal: 'Textbook #2 for Michigan ROB 530 alongside Probabilistic Robotics'
+  notes: 2nd edition (1 Feb 2024, 530 pp) adds a chapter on variational inference, a section on inertial navigation, more introductory probability and a matrix-calculus primer. No open-access copy of the 2nd edition surfaced (1st edition was historically free from the author's site, not verified here).
+  source_checked_date: '2026-11-11'
+  extra:
+    isbn: '9781009299893'
+    pages: 530
+    edition: 2nd
+    ebook_listing: https://buecher.de/artikel/ebook/state-estimation-for-robotics-ebook-pdf/70910365
+    cost_note: 'paid: ~€89 (ebook with DRM)'
+- id: kalman-bayesian-filters-python
+  title: Kalman and Bayesian Filters in Python
+  author: Roger R. Labbe Jr.
+  url: https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python
+  type: book
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Python
+  - basic linear algebra
+  topics:
+  - estimation
+  - kalman-filter
+  - particle-filter
+  - probability
+  - python
+  - jupyter
+  est_hours: null
+  last_updated: null
+  status: active
+  license: CC-BY-4.0 (text) / MIT (code)
+  quality_signal: ~19.5k GitHub stars, 4.5k forks, 1,440 commits
+  notes: Jupyter-notebook book covering g-h filter, discrete Bayes, Gaussians, 1-D and multivariate Kalman filters, KF design, nonlinear filtering, UKF, EKF, particle filters, smoothing and adaptive filtering; appendices on H-infinity, ensemble KF, least squares. Intuition-first ('not formal proofs'), aimed at hobbyists and working engineers, every exercise has a solution; readable via Binder, nbviewer or PDF. Beginner-to-intermediate; the note estimates ~2-4 weeks of study.
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: GitHub / Jupyter / Binder / nbviewer / PDF
+    library: pip install filterpy
+    stars: 19500
+- id: planning-algorithms-lavalle
+  title: Planning Algorithms
+  author: Steven M. LaValle; Cambridge University Press
+  url: https://lavalle.pl/planning/
+  type: book
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - linear algebra
+  - discrete math
+  topics:
+  - planning
+  - motion-planning
+  - sampling-based-planning
+  - mdp
+  - pomdp
+  - differential-constraints
+  est_hours: null
+  last_updated: 2021-04
+  status: active
+  license: null
+  quality_signal: Recommended for motion planning by Skillbotics 'five most relevant books'; 842 pages
+  notes: 'Entire 2006 book free as HTML, full-book PDFs (US Letter 2-up, A4 2-up, one-page screen layout; files uploaded 11 April 2021) and per-chapter PDFs. Four parts: introductory/discrete planning (A*, Dijkstra, STRIPS); motion planning (C-space, RRT/PRM, combinatorial, feedback); decision-theoretic planning (MDPs, POMDPs, filtering); planning under differential constraints. Errata, BibTeX of 1005 refs and adopting-course list provided; no new edition announced. Intermediate-to-advanced reference rather than a first course.'
+  source_checked_date: '2026-11-11'
+  extra:
+    publisher: Cambridge University Press, 2006
+    pages: 842
+    cost_note: free (full HTML and PDF); print paid
+- id: underactuated-robotics-tedrake
+  title: 'Underactuated Robotics: Algorithms for Walking, Running, Swimming, Flying, and Manipulation'
+  author: Russ Tedrake (MIT)
+  url: https://underactuated.mit.edu/
+  type: book
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - dynamics
+  - linear algebra
+  - optimization
+  topics:
+  - control
+  - dynamics
+  - trajectory-optimization
+  - lqr
+  - lyapunov
+  - reinforcement-learning
+  - drake
+  est_hours: null
+  last_updated: '2024'
+  status: active
+  license: null
+  quality_signal: Listed in mithi/robotics-coursework and awesome-robotics as a core free text
+  notes: Free HTML 'working notes' (© 2024) updated every semester, with auto-generated PDF on GitHub releases and linked YouTube lectures. 21 chapters from pendulum/acrobot/cart-pole through dynamic programming, LQR, Lyapunov, trajectory optimization, sampling-based planning, robust control, limit cycles, contact, system ID, state estimation, policy search and imitation learning. Code is Drake (C++ with pydrake); runs in Jupyter/Colab (the ROS 2 note adds that Deepnote is now the main platform and Colab is no longer supported).
+  source_checked_date: '2026-11-11'
+  extra:
+    software: Drake / pydrake
+    chapters: 21
+    drake_chapter: https://underactuated.csail.mit.edu/drake.html
+- id: mit-ocw-6-832-underactuated-2009
+  title: MIT OCW 6.832 Underactuated Robotics (Spring 2009)
+  author: Russ Tedrake, MIT OpenCourseWare
+  url: https://ocw.mit.edu/courses/6-832-underactuated-robotics-spring-2009
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - intro robotics (6.141J/16.405J RSS, 2.12 or 2.165 listed by the syllabus)
+  topics:
+  - control
+  - dynamics
+  - trajectory-optimization
+  - legged-locomotion
+  est_hours: null
+  last_updated: '2009'
+  status: stale
+  license: CC-BY-NC-SA
+  quality_signal: null
+  notes: Older OCW archive with lecture videos, problem sets with solutions, exams and projects. Content predates the current online notes; use the live underactuated.mit.edu notes for up-to-date material.
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: MIT OpenCourseWare
+    has_videos: true
+- id: mit-ocw-6-832-underactuated-2022
+  title: MIT OCW 6.832 Underactuated Robotics (Spring 2022)
+  author: Russ Tedrake, MIT OpenCourseWare
+  url: https://ocw.mit.edu/courses/6-832-underactuated-robotics-spring-2022
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites:
+  - dynamics
+  - linear algebra
+  - optimization
+  topics:
+  - control
+  - dynamics
+  - trajectory-optimization
+  - legged-locomotion
+  est_hours: null
+  last_updated: '2022'
+  status: active
+  license: CC-BY-NC-SA
+  quality_signal: null
+  notes: Newer OCW edition of 6.832; the note does not detail which materials (videos/problem sets) it includes. Companion to the free online textbook.
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: MIT OpenCourseWare
+- id: robotic-manipulation-tedrake
+  title: 'Robotic Manipulation: Perception, Planning, and Control'
+  author: Russ Tedrake (MIT)
+  url: https://manipulation.mit.edu/
+  type: book
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - linear algebra
+  - programming
+  topics:
+  - manipulation
+  - perception
+  - planning
+  - control
+  - deep-learning
+  - reinforcement-learning
+  - drake
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: Actively maintained MIT course text ('will be updated throughout the Fall 2026 semester')
+  notes: 'Free HTML notes (© 2020-2026) with Drake/pydrake notebooks (Colab). 12 chapters: Introduction; Let''s get you a robot; Basic Pick and Place; Geometric Pose Estimation; Bin Picking; Motion Planning; Mobile Manipulation; Manipulator Control; Object Detection and Segmentation; Deep Perception; Reinforcement Learning; Soft Robots/Tactile; appendices on spatial algebra, Drake and DrakeGym. Intermediate-to-advanced; perception+planning+control in one stack.'
+  source_checked_date: '2026-11-11'
+  extra:
+    software: Drake / pydrake
+    chapters: 12
+    ocw_companion: https://ocw.mit.edu/courses/6-4210-robotic-manipulation-fall-2022/
+- id: mit-ocw-6-4210-robotic-manipulation
+  title: MIT OCW 6.4210 Robotic Manipulation (Fall 2022)
+  author: Russ Tedrake, MIT OpenCourseWare
+  url: https://ocw.mit.edu/courses/6-4210-robotic-manipulation-fall-2022/
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - linear algebra
+  - programming
+  topics:
+  - manipulation
+  - perception
+  - planning
+  - kinematics
+  - control
+  est_hours: null
+  last_updated: '2022'
+  status: active
+  license: CC-BY-NC-SA-4.0
+  quality_signal: null
+  notes: 'Undergrad+grad course with lecture videos linking to the online textbook; topics: perception (deep learning + 3D geometry), planning (kinematics, collision-free motion planning, TAMP, planning under uncertainty), dynamics and control. Homework builds a software stack for an arm in cluttered scenes.'
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: MIT OpenCourseWare
+    has_videos: true
+- id: craig-introduction-to-robotics-4e
+  title: 'Introduction to Robotics: Mechanics and Control (4th edition)'
+  author: John J. Craig; Pearson
+  url: https://pearson.com/en-us/subject-catalog/p/introduction-to-robotics-mechanics-and-control/P200000003304/9780137848744
+  type: book
+  language: en
+  cost:
+    kind: paid
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - linear algebra
+  - calculus
+  topics:
+  - kinematics
+  - inverse-kinematics
+  - dynamics
+  - control
+  - denavit-hartenberg
+  est_hours: null
+  last_updated: '2017'
+  status: active
+  license: proprietary
+  quality_signal: '''Solid reference'' per Skillbotics; assigned in a Korean KOCW course (한경대 로봇공학) and widely used in university intro courses'
+  notes: Classic Denavit-Hartenberg-based beginner-to-intermediate manipulator text; 4th edition published 23 Feb 2017 (© 2018). The note recommends naming Craig or Spong as the 'reference text' even when Modern Robotics is primary.
+  source_checked_date: '2026-11-11'
+  extra:
+    isbn: '9780133489798'
+    isbn_etext: '9780133489835'
+    isbn_pearson_plus: '9780137848744'
+    isbn_global_edition: '9781292164939'
+    edition: 4th
+    abebooks_listing: https://www.abebooks.com/Introduction-Robotics-Mechanics-Control-Craig-John/31839801020/bd
+    cost_note: paid (price not confirmed from Pearson)
+- id: spong-robot-modeling-and-control-2e
+  title: Robot Modeling and Control (2nd edition)
+  author: Mark W. Spong, Seth Hutchinson, M. Vidyasagar; Wiley
+  url: https://www.wiley-vch.de/en/areas-interest/engineering/robot-modeling-and-control-978-1-119-52399-4
+  type: book
+  language: en
+  cost:
+    kind: paid
+    amount: 121
+    currency: USD
+  level: beginner
+  prerequisites:
+  - linear algebra
+  - calculus
+  - ODEs
+  topics:
+  - kinematics
+  - dynamics
+  - control
+  - manipulation
+  est_hours: null
+  last_updated: 2020-03
+  status: active
+  license: proprietary
+  quality_signal: Required text for Michigan AutoRob (ROB 380/EECS 367/ROB 511); 'basics book that is well taught' per Skillbotics
+  notes: Beginner-to-intermediate manipulator text (608 pp, 30 March 2020). Widely assigned in university intro courses.
+  source_checked_date: '2026-11-11'
+  extra:
+    isbn: '9781119523994'
+    pages: 608
+    edition: 2nd
+    oreilly_listing: https://oreilly.com/library/view/robot-modeling-and/9781119523994
+    porchlight_listing: https://www.porchlightbooks.com/products/robot-modeling-and-control-mark-w-spong-9781119523994
+    cost_note: 'paid: ~$121-171 USD list (Wiley-VCH $139.25; Porchlight $121.50; campus store $171.30; used ~$70)'
+- id: siciliano-robotics-modelling-planning-control
+  title: 'Robotics: Modelling, Planning and Control'
+  author: Bruno Siciliano, Lorenzo Sciavicco, Luigi Villani, Giuseppe Oriolo; Springer
+  url: https://bookwire.bowker.com/book/USA/Robotics-9781846286414-Siciliano-Bruno-14035043
+  type: book
+  language: en
+  cost:
+    kind: paid
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - linear algebra
+  - calculus
+  - control
+  topics:
+  - kinematics
+  - dynamics
+  - control
+  - interaction-control
+  - mobile-robotics
+  - planning
+  est_hours: null
+  last_updated: '2009'
+  status: active
+  license: proprietary
+  quality_signal: '''The ultimate fundamentals book'' per Skillbotics (Jan 2023)'
+  notes: Written for graduate and senior undergraduate students; later chapters cover dynamics, motion control, interaction control, mobile robots and motion planning. Intermediate-to-advanced. A newer Siciliano text, Foundations of Robotics (2025), covers the same core pillars.
+  source_checked_date: '2026-11-11'
+  extra:
+    isbn: 978-1-84628-641-4
+    mathworks_book_page: https://au.mathworks.com/academia/books/robotics-sciavicco.html
+    cost_note: paid (amount not stated)
+- id: siciliano-foundations-of-robotics-2025
+  title: Foundations of Robotics
+  author: Bruno Siciliano; Springer
+  url: https://www.schweitzer-online.de/en/buch/Siciliano/Foundations-Robotics/9783031855221/A72685669/
+  type: book
+  language: en
+  cost:
+    kind: paid
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - kinematics
+  - dynamics
+  - control
+  - planning
+  est_hours: null
+  last_updated: '2025'
+  status: active
+  license: proprietary
+  quality_signal: null
+  notes: 'New 2025 Springer textbook by Siciliano covering the same core pillars as Robotics: Modelling, Planning and Control; only a bookseller listing was captured, so contents are not detailed in the note. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    isbn: '9783031855221'
+    cost_note: paid (amount not stated)
+- id: corke-robotics-vision-control-3e
+  title: 'Robotics, Vision and Control: Fundamental Algorithms in Python (3rd edition)'
+  author: Peter Corke; Springer
+  url: https://link.springer.com/10.1007/978-3-031-06469-2
+  type: book
+  language: en
+  cost:
+    kind: paid
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Python
+  topics:
+  - kinematics
+  - dynamics
+  - control
+  - computer-vision
+  - visual-servoing
+  - python
+  est_hours: null
+  last_updated: '2023'
+  status: active
+  license: proprietary
+  quality_signal: Alternate text for Michigan AutoRob; companion to the open-source Robotics Toolbox for Python
+  notes: Extensively revised 3rd edition using Python instead of MATLAB for all examples; all code runs with zero install on Google Colab and is backed by the open-source Python Robotics and Machine Vision Toolboxes. Code-first, beginner-to-intermediate.
+  source_checked_date: '2026-11-11'
+  extra:
+    edition: 3rd
+    companion_toolbox: https://github.com/petercorke/robotics-toolbox-python
+    cost_note: paid (amount not stated)
+- id: siegwart-autonomous-mobile-robots-2e
+  title: Introduction to Autonomous Mobile Robots (2nd edition)
+  author: Roland Siegwart, Illah R. Nourbakhsh, Davide Scaramuzza; MIT Press
+  url: https://bookwire.com/book/USA/Introduction-to-Autonomous-Mobile-Robots-9780262015356-Roland-Siegwart-32135686
+  type: book
+  language: en
+  cost:
+    kind: paid
+    amount: 75
+    currency: USD
+  level: intermediate
+  prerequisites:
+  - linear algebra
+  - probability
+  topics:
+  - mobile-robotics
+  - locomotion
+  - kinematics
+  - perception
+  - localization
+  - planning
+  est_hours: null
+  last_updated: 2011-02
+  status: active
+  license: proprietary
+  quality_signal: Textbook closely followed by the ETHx AMRx edX course
+  notes: Mobile-robot pipeline text (locomotion -> kinematics -> perception -> localization -> planning), 472 pages. No MIT Press list price obtained; third-party prices only.
+  source_checked_date: '2026-11-11'
+  extra:
+    isbn: '9780262015356'
+    pages: 472
+    edition: 2nd
+    knetbooks_listing: https://www.knetbooks.com/introduction-autonomous-mobile-robots-2nd/bk/9780262015356
+    cost_note: 'paid: ~$75-85 USD hardcover (used ~$36; ebook ~$45.99)'
+- id: murray-li-sastry-mathematical-intro-manipulation
+  title: A Mathematical Introduction to Robotic Manipulation
+  author: Richard Murray, Zexiang Li, S. Shankar Sastry; Caltech
+  url: http://www.cds.caltech.edu/~murray/mlswiki/?title=First_edition
+  type: book
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites: []
+  topics:
+  - kinematics
+  - manipulation
+  - screw-theory
+  - lie-groups
+  - math
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: Listed in kiloreux/awesome-robotics; 'strong math focus' per Skillbotics five-books article
+  notes: Free first edition hosted by Caltech; noted for its strong mathematical focus, so better as a second text after Modern Robotics. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: skillbotics-five-most-relevant-books
+  title: The five most relevant books in robotics
+  author: Skillbotics (Substack)
+  url: https://skillbotics.substack.com/p/the-five-most-relevant-books-in-robotics
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - textbooks
+  - reading-list
+  - kinematics
+  - planning
+  est_hours: null
+  last_updated: 2023-01
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Short recommendation article (Jan 2023): Siciliano et al. as ''the ultimate fundamentals book'', Murray/Li/Sastry (free, strong math focus), Spong et al. (well-taught basics), Craig (solid reference), LaValle for motion planning. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: coursera-penn-robotics-specialization
+  title: Robotics Specialization (UPenn GRASP)
+  author: University of Pennsylvania GRASP Lab on Coursera
+  url: https://www.coursera.org/specializations/robotics
+  type: course
+  language: en
+  cost:
+    kind: paid
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - linear algebra
+  - calculus
+  - MATLAB
+  topics:
+  - aerial-robotics
+  - planning
+  - mobility
+  - perception
+  - estimation
+  - learning
+  est_hours: 120
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: 'Stale search snippet for Aerial Robotics: 138,877 enrolled, 3,042 reviews, 88% (may be cached)'
+  notes: Launched Jan 2016 (Aerial Robotics, Computational Motion Planning, Mobility, Perception, Estimation and Learning, Capstone). On 2026-11-11 the specialization and course pages returned HTTP 404 to WebFetch and Class Central says the capstone 'may be unavailable', so it is likely retired but unverified (404s may be bot/geo blocking; needs manual browser check). Aggregators still listed Jan 2025 sessions; TechRepublic 2024 listed it as a beginner option at ~120 h.
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: coursera
+    course_urls_404:
+    - https://www.coursera.org/learn/robotics-flight
+    - https://www.coursera.org/learn/robotics-perception
+    class_central_capstone: https://classcentral.com/course/robotics-capstone-5129
+    mooc_list: https://www.mooc-list.com/tags/robotics-specialization
+    cost_note: paid (amount not stated)
+- id: edx-ethx-autonomous-mobile-robots
+  title: Autonomous Mobile Robots (ETHx AMRx)
+  author: ETH Zurich (Siegwart, Hutter, Chli, Scaramuzza, Furgale, Rufli) on edX
+  url: https://www.edx.org/learn/autonomous-robotics/eth-zurich-autonomous-mobile-robots
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - linear algebra
+  - probability
+  topics:
+  - mobile-robotics
+  - locomotion
+  - kinematics
+  - perception
+  - localization
+  - mapping
+  - planning
+  est_hours: null
+  last_updated: '2019'
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Historically a 15-week course following the Siegwart et al. textbook (locomotion, kinematics, perception, probabilistic localization/mapping, planning) with runs in 2014, 2015, 2016 and 2019. On 2026-11-11 the edX pages showed only a title/navigation shell and Coursegraph points to an edX archive URL, so it is likely archived; enrollment status unverified.
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: edx
+    archive_url: edx.org/archive/autonomous-mobile-robots-ethx-amrx-1
+    run_2019: https://courses.edx.org/courses/course-v1:ETHx+AMRx+2T2019/5b151c51e8bf47c29d97f8a12369df17/
+    duration_weeks: 15
+    cost_note: free audit (historical); verified ~$50
+- id: duckietown-self-driving-cars-edx
+  title: Self-Driving Cars with Duckietown (edX MOOC)
+  author: ETH Zurich / Duckietown on edX
+  url: https://duckietown.com/the-self-driving-cars-with-duckietown-hands-on-massive-open-online-course-on-edx/
+  type: course
+  language: en
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - autonomous-driving
+  - mobile-robotics
+  - hands-on
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: ETH's related hands-on self-driving MOOC on edX, mentioned only via the Duckietown announcement; status, cost and content were not verified in the note. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: edx
+- id: coursera-gt-control-of-mobile-robots
+  title: Control of Mobile Robots (Georgia Tech, Coursera)
+  author: Magnus Egerstedt, Georgia Tech on Coursera
+  url: https://opencourser.com/course/vnyatv/control-of-mobile-robots
+  type: course
+  language: en
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - control
+  - mobile-robotics
+  est_hours: null
+  last_updated: '2020'
+  status: discontinued
+  license: null
+  quality_signal: null
+  notes: One of the four 'classic' robotics MOOCs (first ran Jan 2013); closed to new enrollment 17 Aug 2020 and 'no longer accessible as an archived course'. The URL is the OpenCourser listing cited in the note; the courseware lives on under a Creative Commons license at MathWorks (see mathworks-control-of-mobile-robots-courseware). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: coursera
+    my_mooc_listing: https://www.my-mooc.com/en/mooc/control-of-mobile-robots/
+- id: mathworks-control-of-mobile-robots-courseware
+  title: Control of Mobile Robots courseware (MathWorks)
+  author: Magnus Egerstedt (Georgia Tech), hosted by MathWorks
+  url: https://ch.mathworks.com/academia/courseware/control-mobile-robots.html
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - control
+  - mobile-robotics
+  - matlab
+  est_hours: null
+  last_updated: null
+  status: active
+  license: Creative Commons (variant not stated)
+  quality_signal: null
+  notes: MathWorks hosts the courseware of the discontinued Georgia Tech Coursera course under a Creative Commons license; the only surviving access path for that material. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: udacity-robotics-software-engineer-nd209
+  title: Robotics Software Engineer Nanodegree (nd209)
+  author: Udacity
+  url: https://www.udacity.com/course/robotics-nanodegree--nd209
+  type: course
+  language: en
+  cost:
+    kind: paid
+    amount: 249
+    currency: USD
+  level: advanced
+  prerequisites:
+  - math background
+  - programming
+  topics:
+  - ros
+  - robotics-software
+  - slam
+  - planning
+  est_hours: 81
+  last_updated: 2025-10
+  status: active
+  license: proprietary
+  quality_signal: 'TechRepublic: ''not for beginners but gives those with a background in maths and computing practical experience of ROS'''
+  notes: Listed as Advanced, 81 hours, last updated 14 Oct 2025. Udacity moved to subscription-only in Sept 2025; pricing figures are third-party (learnopoly).
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: udacity
+    certificate: true
+    pricing_source: https://learnopoly.com/?p=9850
+    cost_note: 'paid: subscription only (~$249/month or ~$2,390/year per third-party figures)'
+- id: stanford-see-cs223a
+  title: Stanford Engineering Everywhere CS223A Introduction to Robotics
+  author: Oussama Khatib, Stanford
+  url: https://see.stanford.edu/Course/CS223A
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - matrix algebra
+  topics:
+  - kinematics
+  - jacobian
+  - dynamics
+  - control
+  - planning
+  - trajectory-generation
+  est_hours: 20
+  last_updated: '2008'
+  status: stale
+  license: null
+  quality_signal: Classic manipulator course; mirrored on YouTube/iTunes U/Class Central
+  notes: 16 recorded sessions (~1-1.3 h each) with transcripts (HTML/PDF), 8 handouts (Kinematics, Jacobian, Dynamics, Control, etc.), 6 problem sets and a full zip; covers geometry, kinematics, statics, dynamics, control, motion planning. 2008 recordings (beginner-to-intermediate); the live course is still taught (see stanford-cs223a-winter-2026). est_hours is the note's '~20 h' estimate.
+  source_checked_date: '2026-11-11'
+  extra:
+    lecture_count: 16
+    class_central_collection: https://classcentral.com/course/youtube-lecture-collection-introduction-to-robotics-54773
+- id: stanford-cs223a-winter-2026
+  title: Stanford CS223A Introduction to Robotics (Winter 2026 course page)
+  author: Oussama Khatib & Shameek Ganguly, Stanford
+  url: https://cs.stanford.edu/group/manips/teaching/cs223a/
+  type: course
+  language: en
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - matrix algebra
+  topics:
+  - kinematics
+  - dynamics
+  - control
+  - manipulation
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: null
+  notes: Current live offering (Winter 2026; 8 assignments = 40%). The note only confirms the course page exists; whether its materials are openly accessible is not stated (use stanford-see-cs223a for the open 2008 archive). Level taken from the SEE archive of the same course. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: mit-ocw-2-12-intro-robotics
+  title: MIT OCW 2.12 Introduction to Robotics (Fall 2005)
+  author: Harry Asada, MIT OpenCourseWare
+  url: https://ocw.mit.edu/courses/2-12-introduction-to-robotics-fall-2005/
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - kinematics
+  - dynamics
+  - control
+  - planning
+  - mechanisms
+  est_hours: null
+  last_updated: '2005'
+  status: stale
+  license: CC-BY-NC-SA
+  quality_signal: null
+  notes: Overview of robot mechanisms, dynamics and intelligent controls; planar/spatial kinematics, motion planning; term project. 2005 archive.
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: MIT OpenCourseWare
+- id: mit-ocw-16-410-principles-of-autonomy
+  title: MIT OCW 16.410 Principles of Autonomy and Decision Making (Fall 2010)
+  author: Brian Williams, Emilio Frazzoli, Sertac Karaman; MIT OpenCourseWare
+  url: https://ocw.mit.edu/courses/16-410-principles-of-autonomy-and-decision-making-fall-2010
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - planning
+  - search
+  - decision-making
+  - motion-planning
+  - ai
+  est_hours: null
+  last_updated: '2010'
+  status: stale
+  license: CC-BY-NC-SA
+  quality_signal: null
+  notes: 'Reasoning, optimization and decision-making: logic, heuristic/constraint search, model-based reasoning, planning and execution, ML; global path planning and sampling-based motion planning; readings from Russell & Norvig and planning texts. 2010 archive.'
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: MIT OpenCourseWare
+- id: michigan-robotics-open-courses-index
+  title: University of Michigan Robotics open online courses
+  author: University of Michigan Robotics
+  url: https://robotics.umich.edu/academics/courses/online-courses/
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - curriculum
+  - linear-algebra
+  - programming
+  - kinematics
+  - planning
+  - slam
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: Note calls these 'the best free substitute for a structured university sequence'
+  notes: Index of 8 open courses (ROB 101, 102, 201, 311, 320/AutoRob, 501, 502, 530) that 'typically include all lecture videos, notes, textbooks, homework, projects, and exams'; still being updated (Fall 2025/2026 pages). ROB 502 Programming for Robotics has no open URL in the note. Sequence starts at first-year level. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    course_count: 8
+    bulletin: https://bulletin.engin.umich.edu/courses/robotics-courses
+- id: michigan-rob101-computational-linear-algebra
+  title: Michigan ROB 101 Computational Linear Algebra
+  author: Jessy Grizzle, University of Michigan Robotics
+  url: https://grizzle.robotics.umich.edu/education/rob101
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - high-school algebra
+  topics:
+  - linear-algebra
+  - math
+  - julia
+  - least-squares
+  - eigenvalues
+  - gradient-descent
+  est_hours: null
+  last_updated: '2021'
+  status: active
+  license: null
+  quality_signal: ROB 101 students reached ML coursework ~2 semesters earlier than MATH 214 students with comparable grades in EECS 442/445
+  notes: 'First-year course teaching linear algebra via Julia in the browser with robotics/data projects (LiDAR mapping, regression, Segway control, camera/LiDAR models); topics: linear systems, LU, vector spaces, eigenvalues, QR, least squares, root finding, gradient descent, classification. Free textbook PDF with public LaTeX source and a Fall 2020 lecture playlist; ''first step in the Robotics math pathway''. Remote section paused Fall 2026 (course itself live; appendix says Fall 2021 materials).'
+  source_checked_date: '2026-11-11'
+  extra:
+    repo: github.com/michiganrobotics/rob101
+    textbook: Computational Linear Algebra (Grizzle), free PDF with LaTeX source
+    playlist_fall_2020: https://www.youtube.com/playlist?list=PLdPQZLMHRjDK8ZbLIcq1Q2PQobIi68dpv
+    language_used: julia
+- id: michigan-rob102-intro-ai-programming
+  title: Michigan ROB 102 Introduction to AI and Programming
+  author: Xiaoxiao Du (Fall 2025), University of Michigan Robotics
+  url: https://robotics102.org/um-f25
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - cpp
+  - programming
+  - path-planning
+  - fsm
+  - machine-learning
+  - mobile-robotics
+  est_hours: null
+  last_updated: '2025'
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'C++-based first programming course: projects go from first C++ programs -> drive square/wall follower -> FSM/bug navigation -> path planning -> nearest neighbors/ML/museum tour guide on the MBot. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    site: robotics102.github.io
+    language_used: cpp
+    robot: MBot
+- id: michigan-rob201-calculus-modern-engineer
+  title: Michigan ROB 201 Calculus for the Modern Engineer
+  author: University of Michigan Robotics
+  url: https://github.com/michiganrobotics/rob201
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - ROB 101 or equivalent linear algebra
+  topics:
+  - calculus
+  - math
+  - ode
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Open course materials on GitHub; in the Michigan BSE it can satisfy MATH 115/116/216 (calculus I-II and ODE). Content details are not described in the note. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: michigan-rob311-build-robots
+  title: Michigan ROB 311 How to Build Robots and Make Them Move
+  author: University of Michigan Robotics
+  url: https://github.com/michiganrobotics/rob311
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - hardware
+  - mechatronics
+  - mobile-robotics
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Open course materials on GitHub; a 300-level core course in Michigan's Hardware & Sensors concentration. Content details are not described in the note. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: michigan-autorob-rob320
+  title: AutoRob (ROB 320 / ROB 380 / EECS 367 / ROB 511) Robot Operating Systems
+  author: University of Michigan Robotics
+  url: https://autorob.org/
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - a programming course (EECS 281/402 or ROB 502/550)
+  - linear algebra (ROB 101 / Math 214/217/417/419)
+  - Math 116 strongly recommended
+  topics:
+  - kinematics
+  - inverse-kinematics
+  - dynamics
+  - pid
+  - planning
+  - rrt
+  - urdf
+  - collision-detection
+  - simulation
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Fall 2026 ''Agentic Edition'': A* planning, Lagrangian dynamics and integrators, PID, forward kinematics (transforms, quaternions), URDF parsing, inverse kinematics (gradient descent, Jacobian), RRT-Connect, collision detection, rigid-body simulation; students build their own pub-sub robot OS supporting rosbridge. Starter code in C/C++/Python/Rust with a KinEval stencil in JavaScript. Required text: Spong et al.; alternates Corke and Lynch & Park.'
+  source_checked_date: '2026-11-11'
+  extra:
+    required_text: Robot Modeling and Control (Spong, Hutchinson, Vidyasagar)
+    starter_languages:
+    - c
+    - cpp
+    - python
+    - rust
+    - javascript
+- id: michigan-rob501-mathematics-for-robotics
+  title: Michigan ROB 501 Mathematics for Robotics
+  author: University of Michigan Robotics
+  url: https://github.com/michiganrobotics/rob501
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - linear-algebra
+  - math
+  - optimization
+  - probability
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Graduate-level math course in the Michigan math pathway (ROB 101 -> ROB 201 -> ROB 501); cited by ROB 530 as a linear-algebra prerequisite source. Content details are not described in the note. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: michigan-rob530-mobile-robotics
+  title: Michigan ROB 530 / NA 568 / EECS 568 Mobile Robotics (Winter 2022)
+  author: University of Michigan CURLY lab
+  url: https://github.com/UMich-CURLY-teaching/UMich-ROB-530-public
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - linear algebra (ROB 101/501)
+  - basic probability and statistics
+  - estimation and matrix calculus
+  - calculus incl. Taylor series
+  - one programming language (MATLAB/Python/Julia/C++)
+  topics:
+  - estimation
+  - kalman-filter
+  - invariant-ekf
+  - lie-groups
+  - localization
+  - mapping
+  - slam
+  est_hours: null
+  last_updated: '2022'
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Slides, lecture notes, code, YouTube playlist and 7 homeworks (preliminaries, KF, nonlinear filtering, Lie groups and invariant EKF, localization, mapping, SLAM). Textbooks: Probabilistic Robotics and Barfoot''s State Estimation for Robotics. Intermediate-to-advanced.'
+  source_checked_date: '2026-11-11'
+  extra:
+    playlist: https://www.youtube.com/watch?v=pH4Pkmey2_E&list=PLdMorpQLjeXmbFaVku4JdjmQByHHqTd1F
+    homework_count: 7
+- id: cmu-16-811-math-fundamentals
+  title: CMU 16-811 Math Fundamentals for Robotics
+  author: Michael Erdmann, Carnegie Mellon University
+  url: https://www.cs.cmu.edu/~me/811/
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - calculus
+  - linear algebra
+  topics:
+  - math
+  - linear-algebra
+  - optimization
+  - numerical-methods
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: Listed for math in mithi/robotics-coursework; satisfies CMU MSR 'Foundations' (12 units)
+  notes: Public course page; applied-math survey for robotics. Last-updated date not captured.
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: cmu-16-711-kinematics-dynamics-control
+  title: CMU 16-711 Kinematics, Dynamic Systems and Control
+  author: Carnegie Mellon University Robotics Institute
+  url: https://www.cs.cmu.edu/~cga/kdc/description.html
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites: []
+  topics:
+  - kinematics
+  - dynamics
+  - control
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: Core 'Thinking About Action' course in the CMU MSR
+  notes: 'Graduate course description page: ''covers basic concepts and tools for the analysis, design, and control of robotic mechanisms.'' Openness of lecture materials not verified. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: freiburg-intro-mobile-robotics-ss22
+  title: Introduction to Mobile Robotics (University of Freiburg, SS 2022)
+  author: Wolfram Burgard et al., University of Freiburg
+  url: https://rl.informatik.uni-freiburg.de/teaching/ss22/mobile-robotics
+  type: course
+  language: en
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - mobile-robotics
+  - localization
+  - mapping
+  - slam
+  - planning
+  est_hours: null
+  last_updated: '2022'
+  status: unverified
+  license: null
+  quality_signal: Referenced by mithi/robotics-coursework
+  notes: The SS 2022 page says videos/slides/exercises are on ILIAS, i.e. login-gated; status not individually verified. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: eth-robot-dynamics-rsl
+  title: ETH Robot Dynamics (Robotic Systems Lab)
+  author: Marco Hutter, ETH Zurich RSL
+  url: https://rsl.ethz.ch/education-students/lectures/robotdynamics.html
+  type: course
+  language: en
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites: []
+  topics:
+  - dynamics
+  - kinematics
+  - legged-robots
+  - aerial-robotics
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Covers arms, legged robots, rotary-wing and fixed-wing systems; notes, slides, video segments and exercises are on Moodle for enrolled students only, so no public materials. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: tum-autonavx-flying-robots
+  title: Autonomous Navigation for Flying Robots (TUM AUTONAVx)
+  author: TU Munich Computer Vision Group
+  url: https://cvg.cit.tum.de/teaching/ss2014/autonavx
+  type: course
+  language: en
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - aerial-robotics
+  - navigation
+  - estimation
+  est_hours: null
+  last_updated: '2015'
+  status: stale
+  license: null
+  quality_signal: 19,950 participants, 1,393 passed (2014-2015 edX run)
+  notes: edX course listed by kiloreux/awesome-robotics; ran in 2014-2015 and was not confirmed as currently enrollable. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: edx
+- id: kmooc-ai-human-robot-interaction-suwon
+  title: 인공지능 휴먼-로봇 상호작용 (K-MOOC, 수원대)
+  author: 수원대학교 via K-MOOC
+  url: https://www.kmooc.kr/view/course/detail/19479
+  type: course
+  language: ko
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - kinematics
+  - inverse-kinematics
+  - denavit-hartenberg
+  - hri
+  - korean
+  est_hours: null
+  last_updated: '2026'
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Beginner Korean MOOC covering FK/IK and Denavit-Hartenberg; enrollment window shown as 2026-02-27 to 2026-05-05, so likely closed for new enrollment in Nov 2026. Course quality was not evaluated in the note.
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: kmooc
+    enrollment_window: 2026-02-27 to 2026-05-05
+- id: fastcampus-robotics-from-basics
+  title: 기초부터 시작하는 로봇 공학
+  author: 'FastCampus (instructor: ROBOTIS developer with 22+ years)'
+  url: https://fastcampus.co.kr/data_online_robotbegin
+  type: course
+  language: ko
+  cost:
+    kind: paid
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - programming
+  topics:
+  - kinematics
+  - control
+  - teleoperation
+  - korean
+  est_hours: null
+  last_updated: 2025-07
+  status: active
+  license: proprietary
+  quality_signal: null
+  notes: 'Paid Korean video course: kinematics plus 5 control practicals and a teleoperation project; runs 2025-07-04 to 2028-04-27. Recommended in the note as a hands-on supplement for Korean learners.'
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: fastcampus
+    run_period: 2025-07-04 to 2028-04-27
+    cost_note: paid (amount not stated)
+- id: inflearn-robot-system-structure
+  title: Inflearn robotics system structure course (a-complete-breakdown)
+  author: Inflearn
+  url: https://www.inflearn.com/course/a-complete-breakdown
+  type: course
+  language: ko
+  cost:
+    kind: paid
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - programming
+  topics:
+  - robot-architecture
+  - controllers
+  - sensors
+  - can
+  - ethercat
+  - korean
+  est_hours: null
+  last_updated: null
+  status: active
+  license: proprietary
+  quality_signal: null
+  notes: 'Paid Korean course on robotics system structure using the Unitree Go2 as the example: controllers, sensors, CAN/Ethernet/EtherCAT; no hardware needed. Level given as beginner-to-intermediate.'
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: inflearn
+    cost_note: paid (amount not stated)
+- id: inflearn-robot-control-taught
+  title: Inflearn robot control course (robot-control-taught)
+  author: Inflearn
+  url: https://www.inflearn.com/course/robot-control-taught
+  type: course
+  language: ko
+  cost:
+    kind: paid
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - programming
+  topics:
+  - kinematics
+  - dynamics
+  - control
+  - manipulation
+  - korean
+  est_hours: null
+  last_updated: null
+  status: active
+  license: proprietary
+  quality_signal: null
+  notes: Paid Korean course covering kinematics/dynamics implementation through multi-joint manipulator communication. Level given as beginner-to-intermediate.
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: inflearn
+    cost_note: paid (amount not stated)
+- id: kocw-hankyong-robot-engineering
+  title: 로봇공학 (한경대, KOCW)
+  author: 한경대학교 via KOCW
+  url: https://www.kocw.net:444/home/common/contents/syllabus/1403263_2021072195159103.pdf
+  type: course
+  language: ko
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - kinematics
+  - inverse-kinematics
+  - dynamics
+  - korean
+  est_hours: null
+  last_updated: '2021'
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Korean university robotics course on KOCW whose syllabus follows Craig's chapter order (Ch3 manipulator kinematics, Ch4 inverse kinematics, Ch6 dynamics). KOCW hosts free lecture videos/materials voluntarily published by universities, but the note did not verify that this course has video rather than only a syllabus. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: kocw
+    textbook: 'Craig, Introduction to Robotics: Mechanics and Control'
+- id: kocw-sejong-robotics-2023
+  title: 로보틱스 2023-1 (세종대, 이무연, KOCW)
+  author: 이무연, 세종대학교 via KOCW
+  url: https://www.kocw.net:444/home/common/contents/syllabus/1487027_202403079496577.pdf
+  type: course
+  language: ko
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - robotics-intro
+  - korean
+  est_hours: null
+  last_updated: '2023'
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Korean university robotics syllabus on KOCW (2023-1). Whether lecture video is available was not verified in the note. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: kocw
+- id: postech-mech439-intro-robotics
+  title: 로보틱스개론 (POSTECH MECH439, 2026-1)
+  author: POSTECH
+  url: https://plms.postech.ac.kr/local/ubion/course/syllabusV.php?id=14971
+  type: course
+  language: ko
+  cost:
+    kind: null
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - robotics-intro
+  - korean
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: null
+  notes: Syllabus page for POSTECH's intro robotics course (2026-1); a course page only, not open video. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: stachniss-online-training-mobile-robotics
+  title: Online Training - Mobile Robotics
+  author: Cyrill Stachniss, University of Bonn (IPB)
+  url: https://www.ipb.uni-bonn.de/online-training-robotics/
+  type: video_series
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - linear algebra
+  - probability (Basics block provided)
+  topics:
+  - probability
+  - rotations
+  - homogeneous-coordinates
+  - least-squares
+  - bayes-filter
+  - kalman-filter
+  - particle-filter
+  - localization
+  - mapping
+  - slam
+  - planning
+  - icp
+  - ransac
+  est_hours: 25
+  last_updated: '2020'
+  status: active
+  license: null
+  quality_signal: Note calls it 'the most curriculum-ready' series because it states a prerequisite order and ships exercises
+  notes: 'Two blocks: Basics (''before you start'': probability primer, 3D coordinates and rotations, homogeneous coordinates, least squares) and Robotics (Bayes filter -> occupancy grids -> motion/observation models -> KF/EKF -> EKF localization -> particle filter/MCL -> control -> A* -> MDPs -> ICP -> RANSAC -> SLAM intro -> graph SLAM -> landmarks -> robust LS), plus ''5 Minutes with Cyrill'' shorts. Recommends 3Blue1Brown and MIT OCW linear algebra first; 2020 exercise ZIP provided. est_hours is the note''s ''~20-30 h'' estimate.'
+  source_checked_date: '2026-11-11'
+  extra:
+    exercises_zip: https://www.ipb.uni-bonn.de/html/teaching/exercises-2020/2020-stachnisslab-all-exercises.zip
+    basics_block:
+      probability_primer: https://www.youtube.com/watch?v=JS5ndD8ans4
+      coordinates_rotations: https://www.youtube.com/watch?v=YXGUGSAv09A
+      homogeneous_coordinates: https://www.youtube.com/watch?v=MQdm0Z_gNcw
+      least_squares_intro: https://www.youtube.com/watch?v=r2cyMQ5NB1o
+    robotics_block:
+      bayes_filter: https://www.youtube.com/watch?v=0lKHFJpaZvE
+      occupancy_grid_maps: https://www.youtube.com/watch?v=v-Rm9TUG9LA
+      motion_models: https://www.youtube.com/watch?v=IVTV7vJgIkU
+      observation_models: https://www.youtube.com/watch?v=SfwxLpdFB-o
+      kalman_filter_ekf: https://www.youtube.com/watch?v=E-6paM_Iwfc
+      ekf_localization: https://www.youtube.com/watch?v=PiCC-SxWlH8
+      particle_filter_mcl: https://www.youtube.com/watch?v=MsYlueVDLI0
+      robot_control: https://www.youtube.com/watch?v=pEVsedl2KO4
+      a_star_planning: https://www.youtube.com/watch?v=HR1TNa8Lp7w
+      mdps: https://www.youtube.com/watch?v=72QwRnSNY88
+      icp: https://www.youtube.com/watch?v=djnd502836w
+      ransac: https://www.youtube.com/watch?v=Cu1f6vpEilg
+      intro_slam: https://www.youtube.com/watch?v=0I30M6yTklo
+      graph_slam: https://www.youtube.com/watch?v=uHbRKvD8TWg
+      graph_slam_landmarks: https://www.youtube.com/watch?v=mZBdPgBtrCM
+      robust_ls_graph_slam: https://www.youtube.com/watch?v=z60RbiY18I8
+    ipb_teaching: https://www.ipb.uni-bonn.de/teaching
+- id: stachniss-slam-course-2013-playlist
+  title: SLAM Course (2013/14) full playlist
+  author: Cyrill Stachniss, University of Freiburg/Bonn
+  url: https://www.youtube.com/playlist?list=PLgnQpQtFTOGQrZ4O5QzbIHgl3b1JHimN_
+  type: video_series
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - probability
+  - linear algebra
+  topics:
+  - slam
+  - estimation
+  - kalman-filter
+  - particle-filter
+  - graph-slam
+  est_hours: null
+  last_updated: '2014'
+  status: stale
+  license: null
+  quality_signal: Listed in mithi/robotics-coursework
+  notes: Older full-semester SLAM lecture playlist; superseded for curriculum use by the structured 2020 Online Training but still a complete course recording. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: stachniss-msr2-2021
+  title: Mobile Sensing and Robotics II (MSR2, 2021)
+  author: Cyrill Stachniss, University of Bonn (IPB)
+  url: https://www.ipb.uni-bonn.de/msr2-2021
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - MSR I / Online Training Basics block
+  topics:
+  - slam
+  - graph-slam
+  - pose-graphs
+  - least-squares
+  est_hours: null
+  last_updated: '2021'
+  status: active
+  license: null
+  quality_signal: null
+  notes: Course page listing the SLAM lecture videos (intro, pose graphs, hierarchical pose graphs, landmarks, robust LS) that make up the SLAM part of the Online Training. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: brunton-control-bootcamp
+  title: Control Bootcamp
+  author: Steve Brunton, University of Washington
+  url: https://www.youtube.com/playlist?list=PLMrJAkhIeNNR20Mz-VpzgfQs5zrYi085m
+  type: video_series
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites:
+  - linear algebra
+  - ODEs
+  topics:
+  - control
+  - state-space
+  - controllability
+  - observability
+  - lqr
+  - kalman-filter
+  - lqg
+  - mpc
+  - matlab
+  est_hours: 10
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: One listing counts 37 videos; consistently cited in curated lists
+  notes: Linear systems, stability/eigenvalues, controllability, observability, LQR, Kalman filter (MATLAB inverted-pendulum example), LQG, loop shaping/sensitivity, MPC; follows Chapter 8 of Brunton & Kutz 'Data-Driven Science and Engineering'. est_hours is the note's ~10 h estimate.
+  source_checked_date: '2026-11-11'
+  extra:
+    video_count: 37
+    class_central: https://classcentral.com/course/youtube-control-bootcamp-53182
+    companion_book: Data-Driven Science and Engineering (Brunton & Kutz), Ch. 8
+- id: brian-douglas-control-systems-lectures
+  title: Control Systems Lectures (YouTube)
+  author: Brian Douglas
+  url: https://www.youtube.com/user/ControlLectures
+  type: video_series
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - calculus
+  topics:
+  - control
+  - control-theory
+  - intuition
+  est_hours: 10
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: A 2018 MathWorks community post reports >10 million aggregate views
+  notes: Channel that 'aims to educate engineers on control systems theory through engaging and creative video lectures'; the note's pick for control intuition before Brunton's state-space material. est_hours is the note's ~10 h estimate; current video count not verified.
+  source_checked_date: '2026-11-11'
+  extra:
+    interview_2018: https://allaboutcircuits.com/news/brian-douglas-control-systems-lectures-engineering-education-YouTube
+- id: mathworks-tech-talks-controls
+  title: 'MATLAB Tech Talks: Controls'
+  author: Brian Douglas / MathWorks
+  url: https://mathworks.com/videos/tech-talks/controls
+  type: video_series
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - calculus
+  topics:
+  - control
+  - control-theory
+  - matlab
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: MathWorks' ongoing Controls Tech Talk series hosted by Brian Douglas, e.g. 'Everything You Need to Know About Control Theory' (16:07).
+  source_checked_date: '2026-11-11'
+  extra:
+    example_video: https://www.mathworks.com/videos/everything-you-need-to-know-about-control-theory-1664864151410.html
+- id: qut-robot-academy
+  title: QUT Robot Academy
+  author: Peter Corke, Queensland University of Technology
+  url: https://robotacademy.net.au/
+  type: video_series
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - kinematics
+  - dynamics
+  - control
+  - spatial-math
+  - computer-vision
+  - visual-servoing
+  est_hours: null
+  last_updated: '2017'
+  status: active
+  license: null
+  quality_signal: '''Over 200 lessons''; undergraduate level with per-lesson difficulty ratings'
+  notes: Free bite-size lessons (single lessons, multi-video masterclasses such as Robot Joint Control with 12 videos, and three 'Introducing Robotics' courses) with subject filters for Kinematics, Dynamics & Control, Spatial Maths, 3D Vision, Visual Servoing. Lessons first created 2015 (content from 2015-17).
+  source_checked_date: '2026-11-11'
+  extra:
+    lesson_count: 200+
+    robohub_article: https://robohub.org/the-robot-academy-an-open-online-robotics-education-resource
+- id: nayar-first-principles-computer-vision
+  title: First Principles of Computer Vision
+  author: Shree Nayar, Columbia University
+  url: https://fpcv.cs.columbia.edu/
+  type: video_series
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - linear algebra
+  topics:
+  - computer-vision
+  - imaging
+  - features
+  - 3d-reconstruction
+  - perception
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Lecture series on imaging, features/boundaries, 3D reconstruction (single and multiple viewpoints) and perception; also offered as a 5-course Coursera specialization. Beginner-to-intermediate.
+  source_checked_date: '2026-11-11'
+  extra:
+    youtube_channel: https://www.youtube.com/channel/UCf0WB91t8Ky6AuYcQV0CcLw
+    coursera_courses:
+    - Camera & Imaging
+    - Features & Boundaries
+    - 3D Reconstruction - Single Viewpoint
+    - 3D Reconstruction - Multiple Viewpoints
+    - Perception
+    announcement: https://www.cs.columbia.edu/tag/first-principles-of-computer-vision/
+    cost_note: free (YouTube); paid (Coursera specialization)
+- id: sodemann-robogrok-dh-video
+  title: Robotics 2 U1 (Kinematics) S2 (Denavit-Hartenberg) - RoboGrok
+  author: Angela Sodemann (RoboGrok / ASU)
+  url: https://www.youtube.com/watch?v=lVjFhNv2N8o
+  type: video_series
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - kinematics
+  - denavit-hartenberg
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: Cited in UMBC CMSC 479 slides; 'the common beginner pick for Denavit-Hartenberg'
+  notes: Beginner-friendly DH-parameter video series on YouTube. The brief's 'Angela Sorensen' appears to be Angela Sodemann; her official channel URL was not confirmed.
+  source_checked_date: '2026-11-11'
+  extra:
+    umbc_slides: https://courses.cs.umbc.edu/undergraduate/479/spring2020/Slides/20-kinematics-dh-frames_479s20+exercises.pdf
+- id: sodemann-udemy-robotics-1
+  title: Robotics 1 (Udemy / RoboGrok)
+  author: Angela Sodemann (RoboGrok)
+  url: https://udemy.com/course/robotics-1/
+  type: course
+  language: en
+  cost:
+    kind: paid
+    amount: 22.99
+    currency: USD
+  level: beginner
+  prerequisites: []
+  topics:
+  - kinematics
+  - denavit-hartenberg
+  - manipulation
+  est_hours: 13
+  last_updated: '2018'
+  status: unverified
+  license: proprietary
+  quality_signal: 4.80 from 76 reviews on an aggregator (Comidoc)
+  notes: 45 lectures / 13 h per a 2018 listing; the Udemy page itself returned HTTP 403, so current status is unverified. Also sold directly via SendOwl. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: udemy
+    comidoc: https://comidoc.com/udemy/robotics-1
+    sendowl: https://sendowl.com/s/robotics
+    lecture_count: 45
+    cost_note: 'paid: $22.99 (RoboGrok via SendOwl); Udemy price not read'
+- id: de-luca-robotics-1-sapienza
+  title: Robotics I (Sapienza University of Rome) lectures
+  author: Alessandro De Luca, Sapienza
+  url: https://www.youtube.com/watch?v=pitZv3PuVMw&list=PLAQopGWlIcyaqDBW1zSKx7lHfVcOmWSWt
+  type: video_series
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - kinematics
+  - manipulation
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: Listed in mithi/robotics-coursework
+  notes: Full lecture recording playlist of a university intro manipulator course ('Robotics I'); status not individually verified. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: brenner-slam-lectures-hannover
+  title: SLAM Lectures (Hannover)
+  author: Claus Brenner, Leibniz University Hannover
+  url: https://www.youtube.com/watch?v=B2qzYCeT9oQ&list=PLpUPoM7Rgzi_7YWn14Va2FODh7LzADBSm
+  type: video_series
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: intermediate
+  prerequisites: []
+  topics:
+  - slam
+  - estimation
+  - kalman-filter
+  - particle-filter
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: Listed in mithi/robotics-coursework
+  notes: SLAM lecture playlist referenced by curated lists; not individually verified. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: kim-donghan-kyunghee-robot-control-lectures
+  title: 로봇제어공학 Introduction to Robotics (경희대 김동한 YouTube)
+  author: 김동한, 경희대학교
+  url: https://vling.net/channel/UCT_h-5YhlC0t9LEdVckdrXQ
+  type: video_series
+  language: ko
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - control
+  - robotics-intro
+  - korean
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Kyung Hee University EE lecture channel listing '로봇제어공학 Introduction to Robotics'; found only via a third-party channel-stats page (vling), so content/depth are unverified. No dedicated free Korean kinematics YouTube channel was found. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    youtube_channel_id: UCT_h-5YhlC0t9LEdVckdrXQ
+- id: 3blue1brown-essence-of-linear-algebra
+  title: Essence of Linear Algebra
+  author: 3Blue1Brown (Grant Sanderson)
+  url: https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab
+  type: video_series
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - linear-algebra
+  - math
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: Recommended by Stachniss before his Basics block
+  notes: Visual intuition for vectors, transformations, eigenvalues; the note's first-choice linear-algebra gap-filler (no time estimate given by any source). (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: mit-ocw-linear-algebra-youtube-playlist
+  title: MIT OCW Linear Algebra lecture playlist (Gilbert Strang)
+  author: Gilbert Strang, MIT OpenCourseWare
+  url: https://www.youtube.com/playlist?list=PLE7DDD91010BC51F8
+  type: video_series
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - linear-algebra
+  - math
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: Recommended by Stachniss before his Basics block
+  notes: YouTube playlist of Strang's 18.06 lectures; the deeper full-semester linear-algebra option. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: mit-ocw-18-06sc-linear-algebra
+  title: MIT OCW 18.06SC Linear Algebra (Fall 2011)
+  author: Gilbert Strang, MIT OpenCourseWare (OCW Scholar)
+  url: https://www.ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011
+  type: course
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - linear-algebra
+  - math
+  est_hours: null
+  last_updated: '2012'
+  status: active
+  license: null
+  quality_signal: null
+  notes: OCW Scholar edition (2012) with all lecture videos plus 36 short problem-solving videos; textbook Introduction to Linear Algebra 5th ed. (2016). Strang gave his final 18.06 lecture in May 2023. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: MIT OpenCourseWare
+    textbook: Introduction to Linear Algebra, 5th ed. (2016)
+- id: wikidocs-pythonrobotics-korean
+  title: PythonRobotics 한국어 해설 시리즈 (wikidocs)
+  author: hueykim (wikidocs)
+  url: https://wikidocs.net/blog/@hueykim/3015/
+  type: article
+  language: ko
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites:
+  - Python
+  topics:
+  - kinematics
+  - inverse-kinematics
+  - path-planning
+  - python
+  - korean
+  est_hours: null
+  last_updated: 2025-04
+  status: active
+  license: null
+  quality_signal: null
+  notes: Korean-language written series (Apr 2025) explaining PythonRobotics FK/IK and path-planning examples. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: wikidocs
+- id: wikidocs-robotics-cpp-intro-korean
+  title: 로보틱스용 C++ 입문서 (wikidocs)
+  author: wikidocs (author not captured)
+  url: https://wikidocs.net/book/17761
+  type: book
+  language: ko
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - cpp
+  - programming
+  - korean
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: Free Korean online book introducing C++ for robotics; content depth not evaluated in the note. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    platform: wikidocs
+- id: coursera-robotics-learning-roadmap-2026
+  title: Robotics Learning Roadmap (2026)
+  author: Coursera
+  url: https://www.coursera.org/resources/robotics-learning-roadmap
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - roadmap
+  - curriculum
+  - projects
+  est_hours: null
+  last_updated: 2026-11
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Updated 5 Nov 2026: Stage 1 Foundations -> Stage 2 projects with hour estimates (line follower 4-6 h, obstacle-avoiding rover 8-10 h, arm pick-and-place 12-15 h, delivery-bot sim 10-12 h, voice assistant 14-18 h) -> Stage 3 specialization tracks with per-track prerequisites -> Stage 4 portfolio. Weakness: its recommended-course list is mostly ML/cloud certificates rather than robotics theory. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: cmu-msr-program-checklist-ay26
+  title: CMU Robotics Institute MSR Program Checklist (AY2026)
+  author: Carnegie Mellon University Robotics Institute
+  url: https://www.ri.cmu.edu/app/uploads/2025/11/MSR-Program-Checklist_AY26-1.pdf
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites: []
+  topics:
+  - curriculum
+  - degree-program
+  - roadmap
+  est_hours: null
+  last_updated: 2025-11
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Reference graduate sequence: 12 units Foundations (16-706/707/708/709/710 or 16-811) then one course from each of four core areas (Sensing & Perception, Thinking About Action, Robot Embodiment, Environment Interaction), plus electives and research; minimum 168 units. Useful as a four-bucket taxonomy for an intermediate tier. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    older_scheme_2019: https://www.ri.cmu.edu/app/uploads/2019/08/COS_August_2019.pdf
+- id: michigan-bse-robotics-program-requirements
+  title: University of Michigan BSE Robotics program requirements
+  author: University of Michigan Robotics
+  url: https://robotics.umich.edu/academics/undergraduate/program-requirements/
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - curriculum
+  - degree-program
+  - roadmap
+  est_hours: null
+  last_updated: '2026'
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Undergraduate spine: ROB 101 -> MATH 115/116 -> MATH 215/216 (or ROB 201) -> PHYSICS 140/240; core ROB 204 + three of ROB 310/311/314/320/330/340 + EECS 280 + probability + circuits + dynamics -> ROB 450 capstone; concentrations from Fall 2026 (Perception & Reasoning, Dynamics & Control, Hardware & Sensors, HRI, Full Stack). Most of this spine maps to open course materials. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: penn-grasp-mse-curriculum
+  title: UPenn Robotics MSE curriculum information (GRASP)
+  author: University of Pennsylvania GRASP Lab
+  url: https://www.grasp.upenn.edu/academics/masters-degree-program/curriculum-information/
+  type: docs
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: advanced
+  prerequisites: []
+  topics:
+  - curriculum
+  - degree-program
+  - roadmap
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Graduate reference sequence: one foundational course from at least three of four areas (AI, Robot Design & Analysis, Control, Perception), then at least 5 technical electives and up to 2 general electives. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: armi-robotics-roadmaps-2026
+  title: The Robotics Roadmaps (ARMI Research Lab)
+  author: ARMI Research Lab
+  url: https://armi-research.github.io/research/2026-04-12-The-Robotics-Roadmaps/
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - roadmap
+  - curriculum
+  est_hours: null
+  last_updated: 2026-04
+  status: active
+  license: null
+  quality_signal: null
+  notes: Four-year layered path (Y1 Foundation -> Y2 System Building with ROS 2/digital twins -> Y3 Advanced SLAM/learning from demonstration -> Y4 Robotics Scientist) with tracks for industrial arm, humanoid, ML/CV, educational robot, dynamics & modelling. Lists no specific textbooks or courses. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: mithi-robotics-coursework
+  title: mithi/robotics-coursework
+  author: mithi (GitHub)
+  url: https://github.com/mithi/robotics-coursework
+  type: community
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - curated-list
+  - courses
+  - textbooks
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: 5.4k stars; 83 commits
+  notes: Curated list organized as Series of Courses / Single Courses / Hands-on & Blogs / Useful Concepts & Tools, tagged fundamental/paid/video; lists CMU 16-811, Modern Robotics, Tedrake's texts, Labbe and Balzer82 for Kalman filters, Probabilistic Robotics, Stachniss and Hannover SLAM playlists, Berkeley CS287, PythonRobotics, Robot Academy. Last commit date unknown. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    stars: 5400
+    commits: 83
+- id: kiloreux-awesome-robotics
+  title: kiloreux/awesome-robotics
+  author: kiloreux (GitHub)
+  url: https://github.com/kiloreux/awesome-robotics
+  type: community
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - curated-list
+  - courses
+  - textbooks
+  est_hours: null
+  last_updated: null
+  status: stale
+  license: null
+  quality_signal: 7.3k stars; 83 commits; 43 open PRs
+  notes: 'Awesome-list of courses and books (free books: Murray/Li/Sastry, Correll, O''Kane, Behavior Trees, Automated Planning and Acting; edX courses from SNU, TUM, ColumbiaX, PennX). 43 open PRs suggest it is not recently curated; several listed MOOCs are no longer enrollable. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra:
+    stars: 7300
+    commits: 83
+    open_prs: 43
+- id: robotisim-robotics-software-engineer
+  title: Robotisim robotics_software_engineer learning path
+  author: Robotisim (GitHub)
+  url: https://github.com/Robotisim/robotics_software_engineer
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - roadmap
+  - curriculum
+  - robotics-software
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: GitHub learning path organized as modules with learning outcomes; not evaluated in depth. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: sarrasor-robotics-roadmap
+  title: Sarrasor/RoboticsRoadmap
+  author: Sarrasor (GitHub)
+  url: https://relatedrepos.com/gh/Sarrasor/RoboticsRoadmap
+  type: repo
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - roadmap
+  - curriculum
+  est_hours: null
+  last_updated: null
+  status: stale
+  license: null
+  quality_signal: ~84 stars
+  notes: GitHub robotics roadmap last updated ~3 years ago; URL is the mirror cited in the note. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra:
+    stars: 84
+- id: mathworks-awesome-robotics-teaching
+  title: MathWorks awesome-robotics-teaching
+  author: MathWorks (GitHub)
+  url: https://www.context-awesome.com/list/mathworks-robotics/awesome-robotics-teaching
+  type: community
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - curated-list
+  - curriculum
+  - matlab
+  - simulink
+  est_hours: null
+  last_updated: null
+  status: unverified
+  license: null
+  quality_signal: null
+  notes: Curated MATLAB/Simulink-based robotics teaching curricula; URL is the listing mirror cited in the note. (level 추정)
+  source_checked_date: '2026-11-11'
+  extra: {}
+- id: akshet-patel-how-to-start-learning-robotics
+  title: How to start learning robotics
+  author: Akshet Patel (Substack)
+  url: https://akshetpatel.substack.com/p/how-to-start-learning-robotics
+  type: article
+  language: en
+  cost:
+    kind: free
+    amount: null
+    currency: null
+  level: beginner
+  prerequisites: []
+  topics:
+  - roadmap
+  - practitioner-advice
+  est_hours: null
+  last_updated: null
+  status: active
+  license: null
+  quality_signal: null
+  notes: 'Practitioner advice for developers: learn Linux/Git/terminal -> ROS 2 -> small projects. (level 추정)'
+  source_checked_date: '2026-11-11'
+  extra: {}
