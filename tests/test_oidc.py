@@ -400,3 +400,90 @@ def test_multiple_audiences_with_our_azp_are_accepted(app: FastAPI, idp: FakeIdP
         app, idp, token_overrides={"aud": [CLIENT_ID, "other-client"], "azp": CLIENT_ID}
     )
     assert r.status_code == 302, r.text
+
+
+# -- GET /auth/providers ---------------------------------------------------------------
+
+
+def _providers_app(tmp_path: Path, clock: Clock, **providers: OidcProvider) -> FastAPI:
+    return create_app(
+        Settings(curriculum_dir=CURRICULUM, data_dir=tmp_path, auth_mode="server"),
+        clock=clock,
+        mailer=None,
+        auth_config=AuthConfig(public_url=PUBLIC),
+        oidc_providers=dict(providers),
+        oidc_http=httpx.Client(transport=httpx.MockTransport(FakeIdP().handler)),
+        auth_secret="test-flow-key",
+    )
+
+
+def test_providers_lists_configured_logins_without_a_session(app: FastAPI) -> None:
+    """The sign-in screen needs this before anyone is logged in (no 401)."""
+    r = client_for(app).get("/api/v1/auth/providers")
+    assert r.status_code == 200, r.text
+    assert r.json() == [
+        {
+            "id": "univ",
+            "name": "Univ",
+            "type": "oidc",
+            "start_url": "https://testserver/api/v1/auth/oidc/univ/start",
+        }
+    ]
+    assert "s3cret" not in r.text
+
+
+def test_providers_never_leak_the_client_secret_or_role_map(tmp_path: Path, clock: Clock) -> None:
+    provider = OidcProvider(
+        id="univ",
+        issuer=ISSUER,
+        client_id=CLIENT_ID,
+        client_secret="s3cret",
+        role_claim="groups",
+        role_map={"rc-admins": "admin"},
+    )
+    r = client_for(_providers_app(tmp_path, clock, univ=provider)).get("/api/v1/auth/providers")
+    body = r.text
+    assert r.status_code == 200
+    assert "s3cret" not in body and "role_map" not in body and "rc-admins" not in body
+    assert set(r.json()[0]) == {"id", "name", "type", "start_url"}
+
+
+def test_providers_is_empty_when_none_are_configured(tmp_path: Path, clock: Clock) -> None:
+    r = client_for(_providers_app(tmp_path, clock)).get("/api/v1/auth/providers")
+    assert r.status_code == 200 and r.json() == []
+
+
+def test_providers_names_default_to_the_id_and_github_to_its_brand(
+    tmp_path: Path, clock: Clock
+) -> None:
+    providers = parse_providers(
+        {
+            "RC_OIDC_PROVIDERS": json.dumps(
+                [
+                    {"id": "github", "type": "github", "client_id": "gh"},
+                    {"id": "campus_sso", "issuer": ISSUER, "client_id": CLIENT_ID},
+                ]
+            )
+        }
+    )
+    r = client_for(_providers_app(tmp_path, clock, **providers)).get("/api/v1/auth/providers")
+    assert [(p["id"], p["name"], p["type"]) for p in r.json()] == [
+        ("campus_sso", "Campus Sso", "oidc"),
+        ("github", "GitHub", "github"),
+    ]
+
+
+def test_providers_start_url_uses_the_public_api_base_url(tmp_path: Path, clock: Clock) -> None:
+    """Behind a proxy the request host is internal; the browser needs the public one —
+    the same base the OIDC redirect URI is built from."""
+    app = create_app(
+        Settings(curriculum_dir=CURRICULUM, data_dir=tmp_path, auth_mode="server"),
+        clock=clock,
+        mailer=None,
+        auth_config=AuthConfig(public_url=PUBLIC, api_base_url="https://api.test/"),
+        oidc_providers={"univ": PROVIDER},
+        oidc_http=httpx.Client(transport=httpx.MockTransport(FakeIdP().handler)),
+        auth_secret="test-flow-key",
+    )
+    r = client_for(app).get("/api/v1/auth/providers")
+    assert r.json()[0]["start_url"] == "https://api.test/api/v1/auth/oidc/univ/start"

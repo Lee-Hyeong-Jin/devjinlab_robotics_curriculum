@@ -492,6 +492,7 @@ def test_progress_is_isolated_between_users(app: FastAPI) -> None:
 
 MATRIX = [
     # method, path, anonymous, learner, author, admin
+    ("GET", "/api/v1/auth/providers", 200, 200, 200, 200),
     ("GET", "/api/v1/courses", 401, 200, 200, 200),
     ("GET", "/api/v1/progress/status", 401, 200, 200, 200),
     ("POST", "/api/v1/progress/log", 401, 201, 201, 201),

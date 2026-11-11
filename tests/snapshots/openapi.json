@@ -2087,6 +2087,62 @@
         }
       }
     },
+    "/api/v1/auth/providers": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Providers",
+        "description": "External logins configured through ``RC_OIDC_PROVIDERS``, for the sign-in buttons.\n\nUnauthenticated on purpose — the login screen is reached without a session. Secrets are\nnever included. Empty in local mode, or when no provider is configured, which the\nfrontend reads as \"show no provider buttons\".",
+        "operationId": "providers_api_v1_auth_providers_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AuthProvider"
+                  },
+                  "type": "array",
+                  "title": "Response Providers Api V1 Auth Providers Get"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/auth/oidc/{provider}/start": {
       "get": {
         "tags": [
@@ -4213,6 +4269,43 @@
           "next_cursor"
         ],
         "title": "AuditPage"
+      },
+      "AuthProvider": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "Provider id from `RC_OIDC_PROVIDERS`, e.g. `google`."
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "Label for the sign-in button."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "oidc",
+              "github"
+            ],
+            "title": "Type"
+          },
+          "start_url": {
+            "type": "string",
+            "title": "Start Url",
+            "description": "Where to send the browser to begin the login. Absolute, built from `RC_API_BASE_URL` when set — the same base as the OIDC redirect URI, so a deployment that can complete a login can also start one."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "type",
+          "start_url"
+        ],
+        "title": "AuthProvider",
+        "description": "A configured external login, as the sign-in screen needs it.\n\nPublic information only: the client secret and the role mapping never leave the server."
       },
       "AuthSession": {
         "properties": {

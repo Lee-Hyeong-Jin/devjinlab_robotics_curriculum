@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `GET /api/v1/auth/providers`: the external logins configured through `RC_OIDC_PROVIDERS`
+  (id, display name, type and the URL that starts the flow), so the sign-in screen can offer
+  a button per provider. Unauthenticated, and it never returns client secrets or role maps.
+
 ## [0.2.0] - 2026-11-12
 
 ### Added
