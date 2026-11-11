@@ -21,8 +21,26 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.12", "3.13"]
+    # PostgreSQL for the store contract tests (P2-3). tests/conftest.py uses RC_TEST_DATABASE_URL
+    # when set, so CI needs neither Docker-in-Docker nor testcontainers. Keep the image in step
+    # with the `db` service in docker-compose.yml.
+    services:
+      postgres:
+        image: postgres:16.13
+        env:
+          POSTGRES_DB: rc
+          POSTGRES_USER: rc
+          POSTGRES_PASSWORD: rc-ci-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U rc -d rc"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     env:
       UV_PYTHON: ${{ matrix.python-version }}
+      RC_TEST_DATABASE_URL: postgresql://rc:rc-ci-only@localhost:5432/rc
     steps:
       - uses: actions/checkout@v7
 

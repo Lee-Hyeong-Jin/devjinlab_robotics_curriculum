@@ -24,10 +24,14 @@ activities:
     title: 휠+IMU EKF 튜닝 실험
     estimated_minutes: 65
 resources:
-  - title: "Nav2 Setup Guide: Smoothing Odometry using Robot Localization"
-    url: https://docs.nav2.org/setup_guides/odom/setup_robot_localization.html
+  - title: "Nav2 First-Time Robot Setup Guide: Setting Up Odometry (robot_localization)"
+    url: https://docs.nav2.org/rolling/configuration_and_development/first_time_robot_setup_guide/odom/setup_robot_localization/
     kind: article
     note: ekf.yaml, odom→base_link. 공식 설정 가이드.
+  - title: "robot_localization 패키지 공식 문서 (ROS 2 Rolling)"
+    url: https://docs.ros.org/en/rolling/p/robot_localization/
+    kind: article
+    note: ekf_node 파라미터 레퍼런스. 설정 중 막힐 때 찾아본다.
   - title: "Sensor Fusion and Robot Localization Using ROS 2 Jazzy (Automatic Addison)"
     url: https://automaticaddison.com/sensor-fusion-and-robot-localization-using-ros-2-jazzy/
     kind: article
@@ -181,7 +185,8 @@ ekf_filter_node:
 
 ## 참고 자료
 
-- Nav2 Setup Guide, "Smoothing Odometry using Robot Localization" — <https://docs.nav2.org/setup_guides/odom/setup_robot_localization.html>
+- Nav2 First-Time Robot Setup Guide, "Setting Up Odometry" — <https://docs.nav2.org/rolling/configuration_and_development/first_time_robot_setup_guide/odom/setup_robot_localization/>
+- robot_localization 공식 문서 (ROS 2 Rolling) — <https://docs.ros.org/en/rolling/p/robot_localization/>
 - Automatic Addison, "Sensor Fusion and Robot Localization Using ROS 2 Jazzy" —
   <https://automaticaddison.com/sensor-fusion-and-robot-localization-using-ros-2-jazzy/>
 - 최종명, 『ROS2로 배우는 자율주행 로봇 센서 융합과 SLAM』(위키독스) — <https://wikidocs.net/book/18464>

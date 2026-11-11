@@ -6,7 +6,13 @@ objectives:
   - 관심·예산·위험도 기준으로 캡스톤 주제를 고르고, L10.1 형식의 요구사항으로 범위를 고정할 수 있다.
   - 6주 마일스톤과 주차별 산출물을 정하고, 위험이 큰 통합 작업을 앞쪽에 배치할 수 있다.
   - 평가 루브릭으로 자기 프로젝트를 채점하고, 점수가 낮은 항목을 다음 반복의 작업으로 바꿀 수 있다.
-prerequisites: [m10-hardware-selection-integration, m10-realtime-safety-reliability, m10-testing-ci-deployment, m6-nav2-architecture-behavior-trees]
+prerequisites:
+  - m10-hardware-selection-integration
+  - m10-realtime-safety-reliability
+  - m10-testing-ci-deployment
+  - m6-nav2-architecture-behavior-trees
+  - m7-manipulator-motion-planning
+  - m9-imitation-learning-bc-dagger
 difficulty: 5
 estimated_minutes: 180
 tags: [capstone, project, rubric, milestones, andino, so-101, dataset]
@@ -74,7 +80,9 @@ resources:
 2주 차의 "걷는 뼈대"가 가장 중요하다. 품질이 낮아도 센서에서 액추에이터까지(또는 데이터에서 지표까지)
 한 번 이어 두면 이후의 위험은 모두 "개선"이 된다.
 
-## 핵심 체크리스트: 평가 루브릭(100점)
+## 핵심 체크리스트
+
+### 평가 루브릭(100점)
 
 | 항목 | 배점 | 우수(만점) | 보통(절반) | 미흡(0) |
 |---|---|---|---|---|

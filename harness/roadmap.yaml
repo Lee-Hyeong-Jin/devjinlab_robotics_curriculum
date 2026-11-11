@@ -7,10 +7,21 @@
 #   acceptance: 수용 게이트(N8)가 검사하는 완료 조건. 검증 가능하게 쓸 것.
 #   note:       integrate 노드(N9)가 한 줄 메모를 남긴다.
 #
-# [플레이스홀더] 아래 마일스톤 내용은 docs/PRD.md(0.1 Draft) 의 릴리스 계획 Phase 0~1 과
-# 부록 A 를 바탕으로 한 초안이다. 플랫폼 설계와 PRD 변경에 따라
-# 내용(goal/acceptance)은 바뀔 수 있다. 구조(id/title/status/depends_on/goal/acceptance/note)만 확정.
+# 기준 문서: docs/PRD.md v0.9 의 릴리스 계획(§10)과 부록 C(마일스톤별 사용자 스토리·수용 기준).
+# acceptance 줄 앞의 AC-ID(AC-4.x, AC-API.x, AC-AUTH.x, AC-DB.x, AC-OPS.x)는 부록 C 표의 행을 가리키며,
+# 상세 기준과 검증 방법은 부록 C 가 원본이다. 여기에는 수용 게이트(N8)가 검사할 요지만 적는다.
+# 구조(id/title/status/depends_on/goal/acceptance/note)는 확정, 내용은 PRD 개정에 따라 갱신한다.
 # Phase 1 스택: Python 단일(uv + ruff + pytest), 콘텐츠는 Markdown + YAML, CLI + 정적 사이트.
+#
+# Phase 1 공통 기준(부록 C.0, QA 리뷰에서 도출): 아래 P1-x 마일스톤 전부에 추가로 적용된다.
+#   AC-SEC.1 정적 사이트 출력 인코딩·sanitize + CSP 메타 태그 (XSS 픽스처 테스트)
+#   AC-SEC.2 `--out`/`--src` 경로 보호: 빌드 마커 또는 빈 디렉터리만 덮어쓰고, 저장소 밖·겹치는 경로 거부
+#   AC-SEC.3 콘텐츠를 읽는 모든 명령(site, 진행도, 퀴즈, 리포트)이 같은 로더·검증기를 거친다
+#   AC-SEC.4 레슨 id 는 curriculum/ 전체에서 유일하고 중복 시 로더가 에러를 낸다
+#   AC-SEC.5 `rc progress import` 가 스키마·존재하는 ID·상태 값·시간 불변식을 검증하고 위반 시 아무것도 쓰지 않는다
+#   AC-SEC.6 CI 의존성 취약점 스캔 — 충족: .github/workflows/security.yml 의 pip-audit(84b13c2).
+#            pip-audit 에 심각도 필터가 없어 런타임 의존성의 알려진 취약점이 하나라도 있으면 실패한다(고위험 기준의 상위집합).
+#   AC-SEC.1~5 는 이미 done 인 P1-4·P1-5 산출물에도 걸리므로 담당자 배정이 필요하다(오케스트레이터 확인 중).
 
 milestones:
     - id: P0-1
@@ -58,7 +69,7 @@ milestones:
       note: weekly/module report merged (4fa7ffc); quiz stats pending P1-2
 
     - id: P1-1
-      title: 학습 진도 추적 저장소 (FR-3, FR-10)
+      title: 학습 진행도 추적 저장소 (FR-3, FR-10)
       status: done
       depends_on: [P0-2]
       goal: Activity 단위 상태, 이해도, 메모, 세션 시간을 로컬 SQLite 에 저장·조회하고 JSON 으로 내보내기/가져오기한다.
@@ -71,12 +82,19 @@ milestones:
     - id: P1-2
       title: 퀴즈·플래시카드·간격 반복 (FR-4 P0)
       status: todo
-      depends_on: [P1-1]
-      goal: Markdown 으로 정의한 퀴즈를 채점하고, 틀린 문항과 핵심 개념을 카드로 만들어 SM-2 또는 FSRS 로 복습 일정을 계산한다.
+      depends_on: [P1-1, P1-5]
+      goal: 레슨 Markdown 의 quiz 블록을 검증·채점하고, 틀린 문항과 핵심 개념을 카드로 만들어 SM-2 로 복습 일정을 계산한다(PRD 부록 C.1).
       acceptance:
-        - 객관식·단답·O/X 퀴즈가 파싱·채점되고 해설이 표시된다
-        - 카드 응답(again, hard, good, easy)에 따라 next_due 가 달라지는 테스트가 있다
-        - 알고리즘 선택(SM-2 vs FSRS)이 ADR 로 기록되어 있다
+        - AC-4.1 `rc validate` 가 퀴즈 블록 오류(YAML, type, answer 범위, explanation 누락, activity 참조, id 중복)를 파일경로와 함께 보고하고 종료 코드 1
+        - AC-4.2 `rc quiz <lesson>` 이 즉시 정오·해설을 보이고 점수·소요 시간을 한 트랜잭션으로 저장, 중간 종료 시 저장 없음
+        - AC-4.3 틀린 문항은 source=quiz 카드, concept 문항은 source=concept 카드가 되며 재응시해도 중복 생성되지 않는다
+        - AC-4.4 `rc review` 가 due 카드만 제시하고 again/hard/good/easy 응답으로 SM-2 interval·ease·next_due 를 갱신한다(기준 표 단위 테스트)
+        - AC-4.5 SM-2 채택과 FSRS 보류 이유가 docs/adr/ 에 기록되어 있다
+        - AC-4.6 `rc status` 에 오늘 복습 예정 수와 최근 7일 퀴즈 정답률이 표시된다
+        - AC-4.7 정적 사이트 레슨 페이지에 퀴즈가 정답·해설을 접은 details 요소로 렌더링된다
+        - AC-4.8a LESSON_TEMPLATE.md 에 퀴즈 블록 예시, CONTENT_MODEL.md 에 퀴즈 스키마가 있다(백엔드 개발자)
+        - AC-4.8b 기초 M1 레슨 2개 이상에 실제 퀴즈가 있고 `rc validate` 와 `rc quiz` 가 통과한다(커리큘럼 저자)
+        - AC-4.9 코어 라이브러리 라인·분기 커버리지 80% 이상(fail_under=80), mypy strict 통과
       note:
 
     - id: P1-3
@@ -104,7 +122,7 @@ milestones:
     - id: P1-5
       title: 정적 사이트·대시보드 (Phase 1 MVP 마감)
       status: done
-      depends_on: [P0-4, P1-2, P1-3, P1-4]
+      depends_on: [P0-4, P1-3, P1-4]
       goal: 레슨 뷰어(수식·코드 렌더링), 로드맵, 대시보드(진도율, 주간 학습 시간, streak, 오늘 복습 수)를 정적 사이트로 생성한다.
       acceptance:
         - `rc site build` 가 정적 사이트를 생성하고 레슨 본문의 KaTeX 수식과 코드 하이라이트가 렌더링된다
@@ -130,40 +148,47 @@ milestones:
 
     - id: P2-1
       title: API 서버 (FastAPI, OpenAPI, 코어 라이브러리 래핑)
-      status: todo
-      depends_on: [P2-0]
-      goal: 코어 라이브러리(content, progress, report, roadmap)를 FastAPI 로 감싸 콘텐츠 조회, 진도, 로드맵, 리포트를 HTTP 로 제공하고 OpenAPI 스키마를 공개한다.
+      status: done
+      depends_on: [P2-0, P1-2]
+      goal: 코어 라이브러리(content, progress, report, roadmap)를 FastAPI 로 감싸 /api/v1 아래에서 콘텐츠 조회, 진행도, 로드맵, 리포트를 제공하고 OpenAPI 스키마를 공개한다(PRD 부록 C.2, 설계 docs/platform-design.md §1·§1.1).
       acceptance:
-        - 코스·모듈·레슨 조회, 진도 갱신, 다음 레슨 추천, 주간 리포트 엔드포인트가 있고 각 엔드포인트에 httpx/TestClient 테스트가 있다
-        - /openapi.json 이 생성되고 스키마 스냅샷 테스트가 API 변경을 감지한다
-        - API 계층은 코어 라이브러리 함수를 호출만 하며 비즈니스 로직 중복이 없다(라우터에서 store/loader 를 직접 다루지 않음)
-        - 프레임워크 선택과 API 버전 정책(/api/v1)이 ADR 에 기록되어 있다
-      note:
+        - AC-API.1 코스·모듈·레슨 조회, 세션 start/stop/log, done, status, next, 주간·모듈 리포트, 진행도 export 엔드포인트가 /api/v1 아래 있고 엔드포인트별 TestClient 테스트가 있다. 퀴즈·복습 엔드포인트는 P1-2 머지 후 추가
+        - AC-API.2 /openapi.json 스냅샷 테스트가 비호환 변경을 감지하고, 오류 응답은 RFC 9457 application/problem+json 이다
+        - AC-API.3 라우터는 코어 라이브러리 함수만 호출하고(store/loader 직접 사용 없음) CLI/API 동치 테스트가 1건 이상 있다
+        - AC-API.4 무상태 서버, /healthz 와 /readyz, JSON 구조화 로그, 요청 ID(응답 헤더와 로그 동일)를 최소 구현한다. 메트릭은 P2-5(AC-OPS.1)
+        - AC-API.7 프레임워크 선택과 버전 정책(/api/v1, 비호환은 /api/v2)이 ADR 에 기록되어 있다
+        - AC-API.6 서버 콘텐츠 색인(재색인 엔드포인트 또는 시작 시 색인), 실패 시 이전 색인 유지, 레슨 1,000개 60초 이내(설계 §1.1 서버 색인)
+        - (이동) AC-API.5 는 P2-3(AC-DB.1~3), AC-API.8 은 P2-5(AC-OPS.3)에서 판정한다
+      note: API v1 merged (e82f641); quiz endpoints after P1-2
 
     - id: P2-2
-      title: 인증·권한 (로컬 계정 Argon2id + OIDC, RBAC, 사용자별 진도)
+      title: 인증·권한 (로컬 계정 Argon2id + OIDC, RBAC, 사용자별 진행도)
       status: todo
       depends_on: [P2-1, P2-3]
-      goal: 로컬 계정(Argon2id 해시)과 OIDC 로그인을 지원하고, learner/author/admin 역할로 API 접근을 제어하며, 진도를 사용자별로 분리한다.
+      goal: 로컬 계정(Argon2id 해시)과 OIDC 로그인을 지원하고, learner/author/admin 역할로 API 접근을 제어하며, 진행도를 사용자별로 분리한다(PRD 부록 C.3, 설계 §8 → docs/architecture/auth.md).
       acceptance:
-        - 비밀번호는 Argon2id 로만 저장되고 평문·가역 저장이 없음을 테스트가 확인한다
-        - OIDC 로그인 흐름이 모의 IdP(테스트 픽스처)로 끝까지 통과한다
-        - 역할별 권한 매트릭스(learner/author/admin × 엔드포인트) 테스트에서 허용·거부(401/403)가 모두 기대대로 나온다
-        - 사용자 A 의 진도가 사용자 B 의 조회·수정 요청에 노출되지 않는 테스트가 있다
-        - 세션/토큰 방식과 만료 정책이 ADR 에 기록되어 있다
+        - AC-AUTH.1 비밀번호는 Argon2id 로만 저장되고 평문·가역 저장·로그 노출이 없다. 최소 12자, 재설정 토큰은 1회용·만료 30분
+        - AC-AUTH.2 로그인 실패 5회(계정·IP, 15분 창) 후 지연 또는 임시 잠금, 인증 성공·실패가 감사 로그에 남는다
+        - AC-AUTH.3 OIDC Authorization Code + PKCE 흐름이 모의 IdP 픽스처로 끝까지 통과하고 같은 이메일의 로컬 계정과 연결된다
+        - AC-AUTH.4 역할 매트릭스(learner/author/admin × 모든 엔드포인트)가 문서화되고 허용·401·403 을 모두 확인하는 파라미터화 테스트가 있다
+        - AC-AUTH.5 사용자 A 의 진행도·카드·노트·리포트가 사용자 B 의 조회·수정 요청에 노출되지 않는다(교차 접근 테스트)
+        - AC-AUTH.6 자기 데이터 JSON 내보내기(rc progress import 호환), 계정 삭제 시 학습 데이터 즉시 삭제, 감사 로그 식별자는 보존 기간(기본 90일) 뒤 익명화
+        - AC-AUTH.7 세션/토큰 방식과 만료·갱신·로그아웃 무효화 정책이 ADR 에 기록되고 구현과 일치한다
+        - AC-AUTH.8 OWASP ASVS L2 V2·V3·V4 체크리스트 파일이 있고 CSRF 방어와 보안 헤더(CSP, HSTS)가 테스트로 확인된다
+        - AC-AUTH.9 메일 어댑터(인터페이스 + SMTP 구현 + fake mailer)로 재설정 흐름이 테스트되고, 메일 미설정 시 재설정이 비활성으로 안내된다
       note:
 
     - id: P2-3
       title: PostgreSQL 저장소·마이그레이션 (ProgressStore 구현, Alembic)
-      status: todo
+      status: in_progress
       depends_on: [P2-1]
-      goal: 기존 ProgressStore 인터페이스의 PostgreSQL 구현과 Alembic 마이그레이션을 추가하고, SQLite 구현과 같은 계약 테스트를 통과시킨다.
+      goal: 기존 ProgressStore 인터페이스의 PostgreSQL 구현과 Alembic 마이그레이션을 추가하고, SQLite 구현과 같은 계약 테스트를 통과시킨다(PRD 부록 C.4, 설계 §4.5).
       acceptance:
-        - 동일한 ProgressStore 계약 테스트 스위트가 SQLite 와 PostgreSQL(컨테이너) 구현 모두에서 통과한다
-        - `alembic upgrade head` 와 `alembic downgrade base` 가 빈 DB 에서 오류 없이 왕복된다(CI 테스트)
-        - SQLite(.rc/progress.db) 또는 JSON 내보내기에서 PostgreSQL 로 옮기는 마이그레이션 명령이 데이터를 보존한다(테스트)
-        - 모든 학습 데이터 테이블에 user_id 가 있고 인덱스가 정의되어 있다
-      note:
+        - AC-DB.1 같은 ProgressStore 테스트 스위트가 SQLite 와 PostgreSQL 에서 통과한다(CI 에 Postgres 서비스 컨테이너)
+        - AC-DB.2 스키마 변경은 Alembic 으로만 하고, 빈 DB → head, head → 한 단계 down → up 왕복이 CI 에서 통과하며 마이그레이션 없는 모델 변경은 테스트가 실패시킨다
+        - AC-DB.3 `rc progress export` JSON 을 서버 계정으로 가져올 수 있고 레슨 ID 기준으로 병합·중복 방지된다(왕복 테스트)
+        - 모든 학습 데이터 테이블에 user_id 가 있고 인덱스가 정의되어 있다(AC-AUTH.5 의 전제)
+      note: store+alembic merged (bf94408); transfer CLI, factory wiring, 0002 pending
 
     - id: P2-4
       title: 웹 프론트엔드 (로그인, 대시보드, 로드맵, 레슨, 자료실, 관리자)
@@ -171,24 +196,25 @@ milestones:
       depends_on: [P2-1, P2-2]
       goal: API 를 사용하는 웹 프론트엔드로 로그인, 대시보드, 로드맵, 레슨 뷰어(수식·코드), 자료실, 관리자 화면을 제공한다. 디자인은 docs/platform-design.md 를 따른다.
       acceptance:
-        - 로그인 → 대시보드 → 로드맵 → 레슨 열기 → 완료 표시 흐름이 E2E 테스트(헤드리스 브라우저)로 통과한다
-        - 레슨 뷰어가 KaTeX 수식과 코드 하이라이트를 렌더링하고 "이 단계 공부법" 절과 자료 목록을 표시한다
-        - 관리자 화면은 admin 역할에서만 접근되고 learner 접근은 거부된다(E2E 또는 컴포넌트 테스트)
-        - 프론트엔드 lint·타입 검사·테스트가 CI 와 check.sh(node 스택)에서 실행된다
-        - 프레임워크 선택이 ADR 에 기록되어 있다
+        - AC-WEB.1 로그인 → 대시보드 → 로드맵 → 레슨 열기 → 완료 표시 흐름이 헤드리스 브라우저 E2E 테스트로 통과한다
+        - AC-WEB.2 레슨 뷰어가 KaTeX 수식·코드 하이라이트, "이 단계 공부법" 절, resources[] 목록(제목·종류·범위 메모·링크)을 표시하고 정적 사이트와 같은 의미로 보인다
+        - AC-WEB.3 대시보드(단계·모듈·코스 진행률, 주간 학습 시간, 연속 학습일, 오늘 복습 수, 다음 레슨)와 로드맵(잠김·진행·완료 색 구분, 현재 단계 강조)
+        - AC-WEB.4 관리자 화면은 admin 만 접근되고 learner·author 는 거부된다. 프론트엔드 숨김이 아니라 API 권한 검사(403)에 의존한다
+        - AC-WEB.5 자료실(모듈·레슨별 목록, 종류 필터, 외부 링크는 새 탭). 퀴즈·복습 UI 는 P1-2 API 노출 후 추가
+        - AC-WEB.6 프론트엔드 lint·타입 검사·테스트가 CI 와 check.sh(node 스택)에서 실행되고 주요 화면 LCP 2.5초 이내
+        - AC-WEB.7 프레임워크 선택(설계 §1.2 비교표 기준)이 ADR 에 기록되고 화면 구조는 docs/platform-design.md 의 7페이지 구조를 따른다
       note:
 
     - id: P2-5
       title: 운영 (Docker Compose api/db/web, 헬스체크, 구조화 로깅, 메트릭, 백업)
       status: todo
       depends_on: [P2-3, P2-4]
-      goal: docker compose 하나로 api, db, web 을 띄우고 헬스체크, JSON 구조화 로깅, Prometheus 메트릭, DB 백업·복구 절차를 갖춘다.
+      goal: docker compose 하나로 api, db, web 을 띄우고 헬스체크, JSON 구조화 로깅, Prometheus 메트릭, 부하 기준, DB 백업·복구 절차를 갖춘다(PRD 부록 C.5, 설계 §9 → docs/architecture/operations.md).
       acceptance:
-        - `docker compose up` 후 api/db/web 서비스가 모두 healthy 상태가 되고 CI 스모크 테스트가 이를 확인한다
-        - /healthz(활성)와 /readyz(DB 연결 포함) 엔드포인트가 있고 DB 중단 시 readyz 가 실패한다(테스트)
-        - 로그가 요청 ID 를 포함한 JSON 한 줄 형식으로 출력되고 비밀번호·토큰이 로그에 남지 않음을 테스트가 확인한다
-        - /metrics 가 요청 수·지연 시간 메트릭을 Prometheus 형식으로 노출한다
-        - 백업 스크립트로 만든 덤프를 빈 DB 에 복구해 진도 데이터가 일치함을 검증하는 절차가 문서와 테스트로 있다
+        - AC-OPS.1 /readyz 가 DB 연결과 콘텐츠 색인 완료를 확인하고(DB 중단 시 실패), /metrics 가 요청 수·지연·오류율·DB 풀을 Prometheus 형식으로 노출하며, JSON 로그의 요청 ID 가 응답 헤더와 같고 비밀번호·토큰이 남지 않는다
+        - AC-OPS.2 deploy/ 의 Compose(api + web + postgres + reverse proxy)로 신규 설치가 문서 기준 30분 이내, 비밀은 .env 주입과 .env.example 제공, 이미지 linux/amd64·arm64. `docker compose up` 후 전 서비스 healthy 를 CI 스모크 테스트가 확인한다
+        - AC-OPS.3 부하 테스트(k6 또는 locust)가 읽기 p95 300ms, 쓰기 p95 1초, 동시 500명·레슨 1,000개 시나리오를 통과하고 스크립트와 결과가 docs/ 에 있다
+        - AC-OPS.4 백업·복구 절차(RPO 24시간, RTO 4시간)와 복구 리허설 기록 1회가 있고, 관리 행위 감사 로그와 보존 기간 설정이 테스트된다
       note:
 
     - id: P2-6
@@ -197,8 +223,10 @@ milestones:
       depends_on: [P2-4]
       goal: 웹 UI 와 CLI 메시지를 한국어·영어로 제공하고, 웹 UI 가 WCAG 2.1 AA 를 충족한다.
       acceptance:
-        - UI 문자열이 번역 카탈로그로 분리되어 있고 ko/en 키 누락을 검사하는 테스트가 CI 에서 실행된다
-        - 사용자가 언어를 전환하면 설정이 저장되고 다음 로그인에도 유지된다(테스트)
-        - 주요 화면(로그인, 대시보드, 로드맵, 레슨, 자료실, 관리자)에 axe-core 자동 검사 결과 심각·치명 위반이 0건이다
-        - 키보드만으로 로그인부터 레슨 완료 표시까지 진행할 수 있음을 E2E 테스트가 확인한다
+        - AC-I18N.1 웹 UI·CLI 문자열이 ko/en 번역 카탈로그로 분리되고 키 누락·미사용 키 검사가 CI 에서 실행된다
+        - AC-I18N.2 언어 전환이 사용자 설정에 저장되어 다음 로그인에도 유지되고(비로그인·로컬 모드는 브라우저/OS 로케일), 날짜·숫자가 로케일 형식이다
+        - AC-I18N.3 레슨 콘텐츠는 번역 대상이 아니다(언어 태그·번역본 병행은 Phase 3) — 문서로 확인
+        - AC-A11Y.1 주요 화면(로그인, 대시보드, 로드맵, 레슨, 자료실, 관리자)에 axe-core 심각·치명 위반 0건이고 이 검사가 CI 에서 실행된다
+        - AC-A11Y.2 키보드만으로 로그인 → 레슨 완료 표시까지 가능하고 포커스 표시·건너뛰기 링크·폼 레이블·명도 대비 4.5:1 이 다크 모드에서도 WCAG 2.1 AA 를 충족한다
+        - AC-A11Y.3 로드맵 그래프·진행률 등 시각 정보에 텍스트 대안(표 또는 목록)이 있다
       note:

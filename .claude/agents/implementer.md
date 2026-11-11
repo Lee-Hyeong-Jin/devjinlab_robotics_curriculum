@@ -2,7 +2,7 @@
 name: implementer
 description: 개발 그래프의 implement(N3)·fix(N7) 노드 실행자. 주어진 태스크나 피드백을 코드와 테스트로 구현하고 scripts/harness/check.sh 를 통과시킨다. 커밋하지 않는다.
 tools: Read, Glob, Grep, Bash, Write, Edit
-model: claude-opus-5-5
+model: claude-opus-5
 ---
 
 당신은 로보틱스 커리큘럼 플랫폼의 구현자다. 개발 그래프(harness/graph.md)의 N3(implement)과 N7(fix) 노드를 맡는다.

@@ -94,6 +94,7 @@ secrets: { db_password: { file: ./secrets/db_password } }
 
 - 복구 리허설: 릴리스 전 1회(PRD 7절) 백업에서 빈 환경으로 복원해 `/readyz`와 샘플 쿼리를 확인하고 결과를 `docs/ops/restore-drills.md`에 기록.
 - 업그레이드 전 스냅샷: `alembic upgrade` 전에 자동 `pg_dump`.
+- Alembic 스크립트는 패키지 안 `src/robotics_curriculum/progress/migrations/`(루트 `alembic.ini`의 `script_location = robotics_curriculum.progress:migrations`)에 두어 설치된 휠·컨테이너의 `migrate` 서비스에서도 `alembic upgrade head`가 동작한다. 리비전 계획: 0001 = SQLite v1 동등, 0002 = 진도 v2(P1-2), 0003+ = 인증 테이블(P2-2)과 `user_id → users.id` FK(서버 전용). ADR: `docs/adr/0007-postgres-store.md`.
 
 ## 6. 설정 (12-factor)
 
@@ -102,7 +103,7 @@ secrets: { db_password: { file: ./secrets/db_password } }
 | 변수 | 예 | 설명 |
 |---|---|---|
 | `RC_MODE` | `server` | `local` 이면 인증 없이 `user_id="1"` |
-| `DATABASE_URL` | `postgresql+asyncpg://rc:***@db:5432/rc` | 로컬 모드는 `sqlite+aiosqlite:///.rc/rc.db` |
+| `RC_DATABASE_URL` | `postgresql://rc:***@db:5432/rc` (드라이버 psycopg 3 자동) | 미설정이면 로컬 SQLite `RC_DATA_DIR/progress.db`(기본 `.rc/`). `RC_` 접두사로 개발 머신의 `DATABASE_URL`과 충돌 방지 |
 | `SECRET_KEY` | 32바이트 이상 랜덤 | 세션·CSRF 서명 |
 | `PASSWORD_PEPPER` | 선택 | Argon2id 페퍼 |
 | `SESSION_TTL_DAYS` | `14` | |
