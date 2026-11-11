@@ -52,7 +52,11 @@ export function LessonRow({
       <Link
         href={`/modules/${moduleId}/${lessonId}`}
         aria-current={current ? 'page' : undefined}
-        className={cx(base, 'hover:bg-subtle w-full transition-colors', current && 'bg-accent-light')}
+        className={cx(
+          base,
+          'hover:bg-subtle w-full transition-colors',
+          current && 'bg-accent-light',
+        )}
       >
         {inner}
       </Link>

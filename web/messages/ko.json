@@ -112,16 +112,6 @@
     "available": "학습 가능",
     "locked": "잠김"
   },
-  "status": {
-    "not_started": "시작 전",
-    "in_progress": "진행 중",
-    "done": "완료"
-  },
-  "level": {
-    "basic": "기초",
-    "intermediate": "중급",
-    "advanced": "고급"
-  },
   "error": {
     "title": "화면을 불러오지 못했습니다",
     "apiUnreachable": "API 서버에 연결할 수 없습니다. `uv run rc api serve` 가 실행 중인지 확인하세요.",

@@ -4,6 +4,19 @@
  * Design tokens — Figma collection `Tokens` (22 variables, Light/Dark).
  * Source of truth: docs/architecture/frontend.md §3. Never use a raw hex
  * colour in a component; ESLint blocks it.
+ *
+ * Two light-mode text tokens deviate from the Figma values because the Figma
+ * ones do not reach the 4.5:1 contrast WCAG 2.1 AA requires for small text
+ * (AC-A11Y.2), which axe-core fails the build on (AC-A11Y.1):
+ *
+ *   --text-muted   #6B7280 → #4B5563   (4.39:1 → 6.9:1 on --bg-subtle)
+ *   --text-accent  #0F9D8A → #0B7A6B   (3.38:1 → 5.3:1 on --bg-surface,
+ *                                       3.03:1 → 4.8:1 on --bg-accent-light)
+ *
+ * The dark values already pass and are unchanged, as is --accent-primary (used
+ * for fills behind --text-on-accent). This drift is a review item against the
+ * Figma file per ADR 0008 — the Figma `Tokens` collection should be corrected
+ * rather than this file reverted.
  * ------------------------------------------------------------------------- */
 
 :root {
@@ -16,8 +29,14 @@
   --border-default: #e5e7eb;
   --border-accent: #0f9d8a;
   --text-primary: #1a1d21;
-  --text-muted: #6b7280;
-  --text-accent: #0f9d8a;
+  /* Figma says #6B7280, which is 4.39:1 on --bg-subtle — just under WCAG AA for
+   * small text. Darkened to the next step of the same grey ramp. See the note
+   * above this block. */
+  --text-muted: #4b5563;
+  /* Figma says #0F9D8A, which is 3.38:1 on white and 3.03:1 on
+   * --bg-accent-light. --accent-primary keeps the Figma value, so solid fills
+   * and status dots are unchanged; only text and icons use this darker shade. */
+  --text-accent: #0b7a6b;
   --text-on-accent: #ffffff;
   --text-warning: #b45309;
   --text-success: #15803d;
@@ -243,12 +262,18 @@ body {
   border-radius: 8px;
 }
 
-/* KaTeX: keep long display formulas scrollable instead of widening the page
- * (§6 — no horizontal page scroll at 200% zoom). */
-.markdown-body .katex-display {
+/* KaTeX runs in MathML mode, so formulas are `<math>` elements. Keep long
+ * display formulas scrollable instead of widening the page (§6 — no horizontal
+ * page scroll at 200% zoom). */
+.markdown-body math {
+  font-size: 1.05em;
+}
+.markdown-body math[display='block'] {
+  display: block;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 0.25rem 0;
+  padding: 0.5rem 0;
+  text-align: center;
 }
 
 /* Code highlighting — highlight.js class names mapped onto the tokens so the

@@ -36,7 +36,11 @@ export function ThemeToggle({ labels, groupLabel }: ThemeToggleProps) {
   }
 
   return (
-    <div role="group" aria-label={groupLabel} className="bg-subtle flex items-center gap-0.5 rounded-lg p-0.5">
+    <div
+      role="group"
+      aria-label={groupLabel}
+      className="bg-subtle flex items-center gap-0.5 rounded-lg p-0.5"
+    >
       {ORDER.map((option) => (
         <button
           key={option}
@@ -45,9 +49,7 @@ export function ThemeToggle({ labels, groupLabel }: ThemeToggleProps) {
           onClick={() => choose(option)}
           className={cx(
             'rounded-md px-2 py-1 text-xs font-medium transition-colors',
-            ready && theme === option
-              ? 'bg-surface text-primary'
-              : 'text-muted hover:text-primary',
+            ready && theme === option ? 'bg-surface text-primary' : 'text-muted hover:text-primary',
           )}
         >
           {labels[option]}

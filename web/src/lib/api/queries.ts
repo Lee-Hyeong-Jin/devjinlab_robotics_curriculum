@@ -35,18 +35,24 @@ export function getCourse(courseId: string = defaultCourseId()): Promise<Course 
 
 /** `GET /api/v1/modules/{module_id}` — a module with its lesson list. */
 export function getModule(moduleId: string): Promise<Module> {
-  return apiGet(`/api/v1/modules/${encodeURIComponent(moduleId)}` as '/api/v1/modules/{module_id}', {
-    cache: 'content',
-    tags: ['content', `module:${moduleId}`],
-  })
+  return apiGet(
+    `/api/v1/modules/${encodeURIComponent(moduleId)}` as '/api/v1/modules/{module_id}',
+    {
+      cache: 'content',
+      tags: ['content', `module:${moduleId}`],
+    },
+  )
 }
 
 /** `GET /api/v1/lessons/{lesson_id}` — lesson body, study method, resources, activities. */
 export function getLesson(lessonId: string): Promise<Lesson> {
-  return apiGet(`/api/v1/lessons/${encodeURIComponent(lessonId)}` as '/api/v1/lessons/{lesson_id}', {
-    cache: 'content',
-    tags: ['content', `lesson:${lessonId}`],
-  })
+  return apiGet(
+    `/api/v1/lessons/${encodeURIComponent(lessonId)}` as '/api/v1/lessons/{lesson_id}',
+    {
+      cache: 'content',
+      tags: ['content', `lesson:${lessonId}`],
+    },
+  )
 }
 
 /** `GET /api/v1/progress/lessons` — every lesson's progress row for the caller. */

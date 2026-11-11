@@ -37,9 +37,7 @@ export function ProgressBar({ value, label, showValue = false, className }: Prog
         />
       </div>
       {showValue ? (
-        <span className="text-muted w-10 shrink-0 text-right text-xs tabular-nums">
-          {percent}%
-        </span>
+        <span className="text-muted w-10 shrink-0 text-right text-xs tabular-nums">{percent}%</span>
       ) : null}
     </div>
   )

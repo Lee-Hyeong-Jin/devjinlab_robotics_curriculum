@@ -171,9 +171,7 @@ export default async function DashboardPage() {
                 {status.recent.map((entry, index) => (
                   <li key={`${entry.at ?? index}`} className="flex flex-col">
                     <span className="text-primary text-sm">{entry.text}</span>
-                    <span className="text-muted text-xs">
-                      {formatDateTime(entry.at, locale)}
-                    </span>
+                    <span className="text-muted text-xs">{formatDateTime(entry.at, locale)}</span>
                   </li>
                 ))}
               </ul>

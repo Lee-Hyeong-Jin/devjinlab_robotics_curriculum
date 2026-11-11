@@ -56,7 +56,9 @@ export function StageProgress({ title, stages, stateLabel, progressLabel }: Stag
                   <span className="text-primary min-w-0 flex-1 truncate text-sm">
                     {module.title ?? module.id}
                   </span>
-                  <span className="text-muted text-xs">{stateLabel(module.state ?? 'available')}</span>
+                  <span className="text-muted text-xs">
+                    {stateLabel(module.state ?? 'available')}
+                  </span>
                   <ProgressBar
                     className="w-28 shrink-0"
                     value={module.progress}

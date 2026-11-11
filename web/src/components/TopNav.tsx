@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 
+import { LocaleSwitcher } from './LocaleSwitcher'
 import { NavTab } from './NavTab'
 import { ThemeToggle } from './ThemeToggle'
 
@@ -25,7 +26,8 @@ export async function TopNav() {
           </NavTab>
           <NavTab href="/resources">{t('nav.resources')}</NavTab>
         </div>
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center gap-2">
+          <LocaleSwitcher />
           <ThemeToggle
             groupLabel={t('nav.theme')}
             labels={{

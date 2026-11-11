@@ -12,6 +12,7 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { unified } from 'unified'
 
+import { normalizeDisplayMath } from './normalize'
 import { lessonSanitizeSchema } from './sanitize'
 import { rehypeHeadingIds, type Heading } from './slug'
 
@@ -44,7 +45,8 @@ const components = {
  * Render lesson Markdown to a React tree.
  *
  * Pipeline (frontend.md §5): remark-parse → remark-math → remark-gfm →
- * remark-rehype → rehype-katex → rehype-highlight → rehype-sanitize → rehype-react.
+ * remark-rehype → rehype-katex → rehype-highlight → rehype-sanitize → heading
+ * ids → rehype-react.
  *
  * Two deliberate choices, both to keep the sanitizer strict:
  * - KaTeX runs with `output: 'mathml'`, so no inline `style` attribute has to be
@@ -64,10 +66,13 @@ export function renderMarkdown(markdown: string | undefined): RenderedMarkdown {
     .use(remarkRehype)
     .use(rehypeKatex, { output: 'mathml', throwOnError: false, strict: false })
     .use(rehypeHighlight, { detect: false, ignoreMissing: true })
-    .use(rehypeHeadingIds(headings))
     .use(rehypeSanitize, lessonSanitizeSchema)
+    // After the sanitizer: the ids are generated here from heading text, so they
+    // must not pick up its `user-content-` clobber prefix (the "on this page"
+    // links target them directly).
+    .use(rehypeHeadingIds(headings))
     .use(rehypeReact, { Fragment, jsx, jsxs, components })
-    .processSync(markdown)
+    .processSync(normalizeDisplayMath(markdown))
 
   return { content: file.result as ReactElement, headings }
 }

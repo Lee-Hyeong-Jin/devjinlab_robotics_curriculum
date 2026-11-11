@@ -37,9 +37,7 @@ export function DataTable<Row>({
     <div className="border-border-default bg-surface overflow-x-auto rounded-[var(--radius-card)] border">
       <table className="w-full border-collapse text-sm">
         <caption
-          className={cx(
-            captionVisible ? 'text-muted px-4 py-3 text-left text-sm' : 'sr-only',
-          )}
+          className={cx(captionVisible ? 'text-muted px-4 py-3 text-left text-sm' : 'sr-only')}
         >
           {caption}
         </caption>

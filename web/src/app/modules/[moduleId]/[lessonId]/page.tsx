@@ -79,15 +79,19 @@ export default async function LessonPage({ params }: Params) {
         }
         actions={
           <>
-            {lesson.difficulty ? <Chip>{t('difficulty', { level: lesson.difficulty })}</Chip> : null}
+            {lesson.difficulty ? (
+              <Chip>{t('difficulty', { level: lesson.difficulty })}</Chip>
+            ) : null}
             {lesson.estimated_minutes ? (
               <Chip tone="accent">
                 {t('estimated', { minutes: formatMinutes(lesson.estimated_minutes, locale) })}
               </Chip>
             ) : null}
-            {progress?.status ? <Chip tone={progress.status === 'done' ? 'success' : 'warning'}>
-              {tState(lockStateFromStatus(progress.status))}
-            </Chip> : null}
+            {progress?.status ? (
+              <Chip tone={progress.status === 'done' ? 'success' : 'warning'}>
+                {tState(lockStateFromStatus(progress.status))}
+              </Chip>
+            ) : null}
           </>
         }
       />
@@ -167,7 +171,9 @@ export default async function LessonPage({ params }: Params) {
                 </div>
                 {progress.understanding ? (
                   <div className="flex justify-between gap-2">
-                    <dt className="text-muted">{t('understanding', { score: progress.understanding })}</dt>
+                    <dt className="text-muted">
+                      {t('understanding', { score: progress.understanding })}
+                    </dt>
                     <dd className="text-primary tabular-nums">{progress.understanding}</dd>
                   </div>
                 ) : null}
@@ -209,9 +215,7 @@ export default async function LessonPage({ params }: Params) {
               <ul className="flex flex-col gap-2">
                 {lesson.activities.map((activity, index) => (
                   <li key={activity.id ?? index} className="flex flex-wrap items-center gap-2">
-                    {activity.kind ? (
-                      <Chip>{tActivity(activity.kind as ActivityKind)}</Chip>
-                    ) : null}
+                    {activity.kind ? <Chip>{tActivity(activity.kind as ActivityKind)}</Chip> : null}
                     <span className="text-primary min-w-0 flex-1 text-sm">{activity.title}</span>
                     {activity.estimated_minutes ? (
                       <span className="text-muted text-xs">

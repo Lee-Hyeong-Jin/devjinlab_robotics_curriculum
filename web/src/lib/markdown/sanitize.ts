@@ -95,15 +95,12 @@ export const lessonSanitizeSchema: SanitizeOptions = {
   attributes: {
     ...defaultSchema.attributes,
     ...Object.fromEntries(MATHML_TAGS.map((tag) => [tag, MATHML_ATTRS])),
-    code: [...(defaultSchema.attributes?.code ?? []), ['className', /^language-./, HLJS_CLASS]],
-    span: [...(defaultSchema.attributes?.span ?? []), ['className', HLJS_CLASS]],
-    div: [...(defaultSchema.attributes?.div ?? []), ['className', 'math', 'math-display']],
-    h1: [['id']],
-    h2: [['id']],
-    h3: [['id']],
-    h4: [['id']],
-    h5: [['id']],
-    h6: [['id']],
+    // These replace (not extend) the default entries: hast-util-sanitize keeps
+    // the first rule it finds per attribute, so appending a second `className`
+    // rule would be ignored.
+    code: [['className', /^language-./, HLJS_CLASS]],
+    span: [['className', HLJS_CLASS]],
+    div: [['className', 'math', 'math-display']],
     a: [...(defaultSchema.attributes?.a ?? []), ['target'], ['rel']],
     th: [...(defaultSchema.attributes?.th ?? []), ['scope'], ['align']],
     td: [...(defaultSchema.attributes?.td ?? []), ['align']],

@@ -112,16 +112,6 @@
     "available": "Available",
     "locked": "Locked"
   },
-  "status": {
-    "not_started": "Not started",
-    "in_progress": "In progress",
-    "done": "Done"
-  },
-  "level": {
-    "basic": "Basic",
-    "intermediate": "Intermediate",
-    "advanced": "Advanced"
-  },
   "error": {
     "title": "This page could not be loaded",
     "apiUnreachable": "Cannot reach the API server. Check that `uv run rc api serve` is running.",

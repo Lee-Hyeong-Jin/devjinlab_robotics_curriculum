@@ -81,8 +81,7 @@ export function ResourceExplorer({ resources }: { resources: ResourceRef[] }) {
     {
       key: 'kind',
       header: t('colKind'),
-      cell: (row) =>
-        row.kind ? <Chip tone={KIND_TONE[row.kind]}>{tKind(row.kind)}</Chip> : null,
+      cell: (row) => (row.kind ? <Chip tone={KIND_TONE[row.kind]}>{tKind(row.kind)}</Chip> : null),
     },
     {
       key: 'note',

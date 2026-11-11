@@ -46,7 +46,7 @@ export function FilterBar({ label, options, value, onChange }: FilterBarProps) {
               />
               {option.label}
               {option.count === undefined ? null : (
-                <span className="ml-1 tabular-nums opacity-70">{option.count}</span>
+                <span className="ml-1 tabular-nums">{option.count}</span>
               )}
             </label>
           )
