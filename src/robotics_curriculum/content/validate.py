@@ -6,11 +6,14 @@ Rules:
 2. each lesson prerequisite refers to an existing lesson id (and not itself)
 3. the prerequisite graph has no cycles
 4. every course has at least one module, every module at least one lesson
+5. a resource ``url``, when present, is a well-formed http(s) URL (no network access)
+6. resource titles are unique within a lesson
 """
 
 from __future__ import annotations
 
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from robotics_curriculum.content.loader import ContentError, LoadError, load_courses
 from robotics_curriculum.content.models import Course, Lesson
@@ -45,6 +48,7 @@ def validate_course(course: Course) -> list[ContentError]:
             lessons.setdefault(lesson.id, lesson)
             for activity in lesson.activities:
                 claim(activity.id, lesson_path)
+            errors.extend(_check_resources(lesson, lesson_path))
 
     # Rule 2: dangling / self prerequisites.
     for lesson in lessons.values():
@@ -60,6 +64,33 @@ def validate_course(course: Course) -> list[ContentError]:
     # Rule 3: cycles (only over edges that resolve, so rule 2 errors are not duplicated).
     errors.extend(_find_cycles(lessons, course_dir))
     return errors
+
+
+def _check_resources(lesson: Lesson, path: Path) -> list[ContentError]:
+    """Rules 5 and 6: resource URLs are http(s) and titles are unique per lesson."""
+    errors: list[ContentError] = []
+    titles: set[str] = set()
+    for resource in lesson.resources:
+        if resource.title in titles:
+            msg = f"lesson '{lesson.id}' has duplicate resource title '{resource.title}'"
+            errors.append(ContentError(path, msg))
+        titles.add(resource.title)
+        if resource.url is not None and not is_http_url(resource.url):
+            msg = f"resource '{resource.title}' has invalid url '{resource.url}' (need http(s))"
+            errors.append(ContentError(path, msg))
+    return errors
+
+
+def is_http_url(url: str) -> bool:
+    """True for a well-formed ``http``/``https`` URL with a host (no network access)."""
+    if any(ch.isspace() for ch in url):
+        return False
+    try:
+        parts = urlsplit(url)
+        parts.port  # noqa: B018 - raises ValueError on a malformed port
+    except ValueError:
+        return False
+    return parts.scheme in {"http", "https"} and bool(parts.hostname)
 
 
 def _find_cycles(lessons: dict[str, Lesson], fallback: Path) -> list[ContentError]:

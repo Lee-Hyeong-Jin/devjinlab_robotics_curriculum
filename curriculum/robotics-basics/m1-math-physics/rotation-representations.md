@@ -23,6 +23,17 @@ activities:
     kind: exercise
     title: scipy.spatial.transform으로 변환 왕복 확인
     estimated_minutes: 35
+resources:
+  - title: Modern Robotics (Lynch & Park)
+    kind: book
+    url: http://hades.mech.northwestern.edu/index.php/Modern_Robotics
+    note: Ch. 3.2 회전과 각속도, Appendix B
+  - title: Visualizing quaternions (3Blue1Brown & Ben Eater)
+    kind: video
+    url: https://eater.net/quaternions
+  - title: scipy.spatial.transform.Rotation 문서
+    kind: article
+    url: https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.html
 ---
 
 # 회전 표현

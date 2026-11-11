@@ -11,6 +11,7 @@ from pydantic import ValidationError
 
 from robotics_curriculum import __version__
 from robotics_curriculum.content import check
+from robotics_curriculum.library import resources, show
 from robotics_curriculum.progress import (
     LessonSummary,
     ProgressError,
@@ -301,6 +302,10 @@ def progress_import(
     with _service(ctx) as service:
         n_lessons, n_sessions = service.import_(data, replace=replace)
     typer.echo(f"imported {n_lessons} lesson rows, {n_sessions} sessions")
+
+
+app.command()(resources)
+app.command()(show)
 
 
 if __name__ == "__main__":

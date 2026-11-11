@@ -16,6 +16,8 @@ uv sync
 uv run rc --help
 uv run rc version
 uv run rc validate            # defaults to ./curriculum
+uv run rc show m1-vectors-matrices        # lesson summary (objectives, prerequisites) + body
+uv run rc resources m1-vectors-matrices   # materials by kind + "이 단계 공부법"; or --module ID / --all
 ```
 
 Progress tracking (stored in `.rc/progress.db`; override with `RC_DATA_DIR` or `rc --data-dir DIR`):

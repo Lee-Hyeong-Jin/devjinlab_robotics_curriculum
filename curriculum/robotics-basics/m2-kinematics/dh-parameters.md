@@ -19,6 +19,18 @@ activities:
     kind: exercise
     title: 2-link 매니퓰레이터 DH 테이블 작성
     estimated_minutes: 20
+resources:
+  - title: Introduction to Robotics - Mechanics and Control (John J. Craig)
+    kind: book
+    note: Ch. 3 Manipulator kinematics
+  - title: Modern Robotics (Lynch & Park)
+    kind: book
+    url: http://hades.mech.northwestern.edu/index.php/Modern_Robotics
+    note: Appendix C (DH 파라미터)
+  - title: Robotics, Vision and Control (Peter Corke)
+    kind: book
+    url: https://petercorke.com/books/
+    note: Ch. 7 로봇 팔 운동학
 ---
 
 # DH 파라미터

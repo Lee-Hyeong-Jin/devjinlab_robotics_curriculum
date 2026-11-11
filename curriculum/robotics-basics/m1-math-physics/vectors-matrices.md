@@ -23,6 +23,19 @@ activities:
     kind: exercise
     title: NumPy로 2D 선형 변환 그려 보기
     estimated_minutes: 20
+resources:
+  - title: Introduction to Linear Algebra (Gilbert Strang)
+    kind: book
+    url: https://math.mit.edu/~gs/linearalgebra/
+    note: Ch. 1-2
+  - title: MIT OCW 18.06 Linear Algebra
+    kind: course
+    url: https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/
+    note: Lec. 1-4
+  - title: Essence of Linear Algebra (3Blue1Brown)
+    kind: video
+    url: https://www.3blue1brown.com/topics/linear-algebra
+    note: Ch. 1-5, 직관 잡기용
 ---
 
 # 벡터·행렬

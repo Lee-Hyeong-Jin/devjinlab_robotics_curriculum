@@ -80,6 +80,10 @@ front matter에 정의되지 않은 키가 있으면 에러다(오타 방지). `
 | `kind` | `book` \| `course` \| `video` \| `article` \| `other` | - | 자료 종류 |
 | `note` | str | - | 범위·메모 (예: `Ch. 3`) |
 
+그 단계의 공부 방법은 front matter가 아니라 본문의 `## 이 단계 공부법` 절에 쓴다
+(다음 `## ` 제목 전까지). `rc resources <lesson_id>`가 자료 목록과 함께 이 절을 출력한다
+(`content.sections.extract_section`).
+
 ## 검증 규칙 (`rc validate [PATH]`)
 
 `PATH`는 코스 디렉터리이거나 코스 디렉터리들을 담은 상위 디렉터리(기본 `curriculum/`).
@@ -93,6 +97,8 @@ front matter에 정의되지 않은 키가 있으면 에러다(오타 방지). `
 | 4 | `prerequisites`의 각 항목이 존재하는 레슨 ID이며 자기 자신이 아님 | validate |
 | 5 | 선수지식 그래프에 순환이 없음 (DAG) | validate |
 | 6 | 코스에 모듈이 1개 이상, 모듈에 레슨이 1개 이상 | validate |
+| 7 | 자료 `url`이 있으면 `http(s)://호스트...` 형식 (네트워크 접속 없이 `urllib.parse`로 검사) | validate |
+| 8 | 한 레슨 안에서 자료 `title`이 유일 | validate |
 
 성공 시 `OK: N lessons in M modules`.
 
