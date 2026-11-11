@@ -13,3 +13,4 @@ modules:
   - m8-ros2-tools
   - m5-state-estimation-slam
   - m6-navigation-planning
+  - m10-system-integration-capstone
