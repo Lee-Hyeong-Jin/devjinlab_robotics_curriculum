@@ -166,7 +166,7 @@
 | FR-10.5 | 서버 | P0 (Phase 2) | 역할 기반 권한: `learner`(자기 진도만), `author`(콘텐츠 작성·검증·게시), `admin`(사용자·역할·설정·백업). | 모든 API 엔드포인트에 권한 검사가 있고 테스트로 검증된다. |
 | FR-10.6 | 서버 | P0 (Phase 2) | 사용자별 진도·복습·노트·리포트 분리. 다른 사용자의 데이터는 admin도 집계 외에는 열람하지 않는다. | 모든 학습 데이터 쿼리에 `user_id` 조건. 교차 접근 테스트. |
 | FR-10.7 | 서버 | P0 (Phase 2) | 개인정보: 사용자가 자기 데이터 전체를 내보내고(JSON) 계정을 삭제할 수 있다. 삭제 시 학습 데이터는 즉시 삭제 또는 익명화, 감사 로그는 보존 기간 뒤 삭제. | 삭제 후 해당 사용자 데이터가 조회되지 않는다. 처리 기한·보존 기간을 설정으로 둔다. |
-| FR-10.8 | 서버 | P1 (Phase 2) | 세션 관리: 브라우저는 서버 측 세션(불투명 쿠키, 14일 슬라이딩), 프로그램 클라이언트는 개인 액세스 토큰. 로그아웃 시 즉시 무효화, 기기별 세션 목록·개별 종료. | 토큰 탈취 시 피해 범위가 한정되고 즉시 폐기된다. |
+| FR-10.8 | 서버 | P1 (Phase 2) | 세션 관리: 브라우저는 서버 측 세션(불투명 쿠키, 14일 슬라이딩), 프로그램 클라이언트는 개인 액세스 토큰. 로그아웃 시 즉시 무효화, 기기별 세션 목록·개별 종료는 `/me/sessions`로 제공. 근거 `docs/adr/0009-session-model.md`. | 토큰 탈취 시 피해 범위가 한정되고 즉시 폐기된다. |
 | FR-10.9 | 서버 | P2 | 그룹/코호트: admin이 학습자를 그룹으로 묶고 그룹 단위 진도 집계를 본다. | 집계만 제공하고 개인 상세는 본인만. |
 
 ## 7. 비기능 요구사항
@@ -258,10 +258,10 @@ docs/                     PRD, 콘텐츠 모델, 운영·기여·보안 문서
 설계 문서(`docs/platform-design.md` v0.4, 커밋 1113f66; `docs/architecture/auth.md`, `docs/architecture/operations.md`, `docs/api/openapi.yaml`)에서 확정한 결정으로, PRD는 이를 따른다.
 
 - **저장소 추상화**: `src/robotics_curriculum/progress/store.py`의 `ProgressStore`(typing.Protocol). 구현체 `SqliteProgressStore`(로컬), `PostgresProgressStore`(서버, SQLAlchemy Core 2.x + asyncpg, Alembic downgrade 필수), `RemoteProgressStore`(`rc` 서버 모드 HTTP 클라이언트). 로컬 SQLite 마이그레이션 번호와 Alembic 리비전은 1:1 대응.
-- **세션 방식**: 브라우저는 서버 측 세션 + 불투명 쿠키(HttpOnly, Secure, SameSite=Lax, 14일 슬라이딩, PostgreSQL 저장, Redis 교체 가능). 프로그램 클라이언트(`rc login`, 외부 도구)는 범위·만료가 있는 개인 액세스 토큰(해시 저장). JWT는 서비스 간 통신이 생길 때만.
+- **세션 방식**: 브라우저는 서버 측 세션 + 불투명 쿠키(HttpOnly, Secure, SameSite=Lax, 14일 슬라이딩, PostgreSQL 저장, Redis 교체 가능). 프로그램 클라이언트(`rc login`, 외부 도구)는 범위·만료가 있는 개인 액세스 토큰(해시 저장). JWT는 서비스 간 통신이 생길 때만 보류 해제. 기기별 세션 목록은 `/me/sessions`. ADR `docs/adr/0009-session-model.md`.
 - **API 경로**: `/api/v1` 접두사. `/healthz`, `/readyz`, `/version`은 접두사 없음. 오류는 RFC 9457 problem+json(type, title, status, detail, instance, request_id). 목록은 커서 페이지네이션.
 - **서버 콘텐츠 색인**: 시작·reload·배포 시 재색인, 불변 스냅샷을 원자적으로 교체, 검증 실패 시 이전 색인 유지 + 422. 레슨 1,000개 60초 목표.
-- **web/ 프레임워크**: **Next.js(App Router)** 로 확정(결정 10, 설계 §1.2 비교표 근거). ADR로 기록한다.
+- **web/ 프레임워크**: **Next.js(App Router)** 로 확정(결정 10). ADR `docs/adr/0008-web-nextjs.md`, 구현 가이드 `docs/architecture/frontend.md`.
 
 주요 CLI 명령: `rc validate`, `rc build`, `rc status`, `rc next`, `rc roadmap`, `rc show <lesson>`, `rc resources <lesson>|--module|--all`, `rc start|stop|log`, `rc done`, `rc quiz`, `rc review`, `rc note`, `rc report weekly|module`, `rc search`, `rc progress export|import`.
 
@@ -328,7 +328,7 @@ v0.1의 열린 질문 5개에 대한 오케스트레이터 결정과, 그 뒤 �
 | 8 | 구현 기준 단순화 (오케스트레이터, v0.5) | 구현된 것은 구현이 기준, 사용자 요구는 "단순하게". 단계는 `module.yaml`의 `level` 필드(디렉터리 아님). 학습 방법·자료는 프런트매터 `resources[]` + 본문 "이 단계 공부법" 절 + `rc resources`/`rc show`. `study_steps[]`, 읽기 상태, `rc read`, 자료 카탈로그는 Phase 2 제안으로 강등 | FR-1, FR-6, 8절, 9절, 10절 |
 | 9 | 오픈소스·엔터프라이즈 (사용자 직접 지시, 2026-11-11) | **오픈소스 프로젝트로 가며 실제 엔터프라이즈급으로 개발한다.** 제품 목적·시뮬레이터 제외·콘텐츠 모델은 유지. Phase 1 CLI + 정적 사이트는 "코어 라이브러리 + 로컬 모드"로 존속. Phase 2에 멀티유저 서버 모드(API, 인증, 권한, PostgreSQL, 웹), 7절 비기능 요구사항을 엔터프라이즈 수준으로 상향, 14절 거버넌스 신설. 결정 5의 "웹은 Phase 2 이후"는 유지되며 범위만 확장 | 1절, 3.2절, 4절, FR-10, 7~10절, 12절, 14절 |
 
-| 10 | 웹 프레임워크·세션·라이선스 (오케스트레이터 담당자 권한, 2026-11-11) | `web/` = **Next.js(App Router)**. 세션 = **서버 세션 쿠키 + PAT**(설계 v0.4 (b) 확정). 라이선스 = **Apache-2.0(코드) / CC BY 4.0(콘텐츠)** 확정. Phase 1 완료 판정에 "QA high 결함 0" 조건 추가 | 9절, 10절, 14절, AC-WEB.7 |
+| 10 | 웹 프레임워크·세션·라이선스 (오케스트레이터 담당자 권한, 2026-11-11) | `web/` = **Next.js(App Router)**(ADR 0008). 세션 = **서버 세션 쿠키 + PAT**, 기기별 목록 `/me/sessions`(ADR 0009). 라이선스 = **Apache-2.0(코드) / CC BY 4.0(콘텐츠)** 확정. Phase 1 완료 판정에 "QA high 결함 0" 조건 추가 | 9절, 10절, 14절, FR-10.8, AC-WEB.7 |
 
 남은 사용자 결정: AI 튜터 월 비용 상한(결정 4).
 
