@@ -161,6 +161,47 @@ $1/n$ 으로 줄여 과대추정이 줄어드는지 비교하라.
 2. 정책 경사에서 기준선을 빼도 경사의 기댓값이 변하지 않는 이유는 무엇이며, 그래도 빼는 이유는 무엇인가?
 3. PPO 의 클리핑이 없다면 한 배치로 여러 번 갱신할 때 어떤 일이 생길 수 있는가? on-policy 라는 성질은 로봇 실기 학습에 왜 불리한가?
 
+## 확인 퀴즈
+
+`rc quiz m9-reinforcement-learning-basics` 로 풀 수 있다. 오답은 복습 카드가 된다.
+
+```quiz
+activity: m9-reinforcement-learning-basics-quiz
+questions:
+  - id: q1
+    type: single
+    prompt: '가치 반복에서 Q-learning 으로 넘어갈 때 바뀌는 핵심은?'
+    choices:
+      - '전이 확률에 대한 **기댓값** $\sum_{s''} P(s'' \mid s,a)[\cdot]$ 이 실제 경험 **한 표본**으로 바뀐다'
+      - '할인율을 쓰지 않는다'
+      - '벨만 방정식을 쓰지 않는다'
+      - '상태 가치 대신 보상만 쓴다'
+    answer: 0
+    explanation: '가치 반복은 모델 $P$ 를 알고 모든 다음 상태에 대해 기댓값을 계산한다. Q-learning 은 모델 없이 경험한 $(s, a, r, s'')$ 하나로 목표값 $r + \gamma\max_{a''}Q(s'',a'')$ 을 만들어 조금씩 이동한다. 모델을 표본으로 대체한 것이 전부이고, 그래서 model-free 다.'
+    concept: { front: '가치 반복 → Q-learning', back: '전이 확률에 대한 기댓값을 경험 한 표본으로 대체(model-free TD)' }
+  - id: q2
+    type: single
+    prompt: '정책 경사에서 기준선(baseline) $V(s)$ 를 빼도 경사의 기댓값이 변하지 않는 이유는?'
+    choices:
+      - '$V(s)$ 가 행동에 의존하지 않아, $\nabla_\theta \log \pi$ 와의 곱의 기댓값이 0 이기 때문'
+      - '$V(s)$ 가 항상 0 이기 때문'
+      - '기댓값이 실제로는 변하지만 무시할 만큼 작기 때문'
+      - '기준선은 경사를 바꾸기 위해 쓰는 것이기 때문'
+    answer: 0
+    explanation: '$\mathbb{E}_a[\nabla_\theta\log\pi_\theta(a\mid s)] = 0$ 이므로, 행동과 무관한 항 $V(s)$ 를 곱해 빼도 기댓값에 0 을 더하는 셈이다. 편향은 없고 분산만 줄어든다. 이 차이 $A = Q - V$ 가 어드밴티지이고 actor-critic 의 핵심이다.'
+    concept: { front: '기준선이 편향을 만들지 않는 이유', back: '$\mathbb{E}[\nabla\log\pi] = 0$ — 행동과 무관한 항은 기댓값을 바꾸지 않고 분산만 줄인다' }
+  - id: q3
+    type: multiple
+    prompt: 'PPO 와 on-policy 학습에 대해 옳은 설명을 모두 고르시오.'
+    choices:
+      - '클리핑이 없으면 한 배치로 여러 번 갱신할 때 정책이 크게 틀어져 성능이 붕괴할 수 있다'
+      - 'on-policy 는 갱신할 때마다 현재 정책으로 새 데이터를 모아야 해서 실기 시행이 비싼 로봇에 불리하다'
+      - '그래서 로봇 RL 은 주로 GPU 병렬 시뮬레이션에서 학습한다'
+      - 'PPO 는 과거에 모은 데이터를 무제한 재사용할 수 있다'
+    answer: [0, 1, 2]
+    explanation: '확률 비를 자르지 않으면 한 배치에서 반복 갱신하는 동안 정책이 데이터를 모은 정책과 너무 멀어져 추정이 무효가 된다. on-policy 성질 때문에 데이터 재사용이 제한되고(off-policy 인 SAC 와 대비), 수백만 스텝을 실기에서 모으기는 불가능해 시뮬레이션 병렬 학습이 표준이 됐다.'
+```
+
 ## 이 단계 공부법
 
 1. **강의(먼저):** DeepMind x UCL Lecture 1–5 로 MDP·동적 계획·model-free 예측/제어를 한 줄로 잇는다.
