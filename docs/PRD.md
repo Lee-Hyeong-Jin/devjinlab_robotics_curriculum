@@ -270,6 +270,6 @@ M1~M5의 Webots 실습은 공식 튜토리얼 1~8(Python 컨트롤러 기준, �
 ## 부록 B. 참고 사례 및 주의
 
 - **선행 사례**: CU Boulder Coursera "Introduction to Robotics with Webots"(Python, 3코스)를 커리큘럼 구조의 1차 참고로 삼는다.
-- **시뮬레이터 확장 순서**(Phase 3 이후 검토): Webots R2025a → MuJoCo(pip/Colab) → Gazebo Harmonic + ROS 2 Jazzy → 선택적으로 Isaac Lab(고사양 GPU 필요).
+- **시뮬레이터 확장 순서**(Phase 3 이후 검토): Webots R2025a → MuJoCo(pip/Colab; 4.0부터 `mujoco-core` / `mujoco-studio` / `mujoco`로 패키지가 분리되고 Python 3.10 지원 종료) → Gazebo Harmonic + ROS 2 Jazzy → 선택적으로 Isaac Lab(고사양 GPU 필요).
 - **링크 금지**: robotbenchmark.net은 현재 스팸 페이지로 바뀌어 있으므로 콘텐츠에서 참조하지 않는다. `rc validate`의 외부 링크 검사 차단 목록에 넣는다.
-- **출처**: `research_notes/로보틱스 학습 자료 조사/simulators.md` (자료 조사 세션, 2026-11-11).
+- **출처**: `research_notes/로보틱스 학습 자료 조사/simulators.md` (자료 조사 세션, 2026-11-11; 브랜치 `worktree-research`, main 미반영). 최종 보고서는 같은 브랜치의 `reports/로보틱스 학습 자료 조사.md`.
