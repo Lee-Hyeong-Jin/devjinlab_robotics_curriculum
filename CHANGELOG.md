@@ -23,6 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Web: lesson formulas reached the reader as raw TeX. A `$$` display block written with
+  content on the marker line — how every "핵심 수식" section is written — was parsed as a math
+  fence with meta, so the block never closed and swallowed the rest of the lesson. The
+  Markdown normaliser now puts every `$$` marker on its own line; 12 of the 40 lessons were
+  affected. The static site (`rc site build`, pymdownx.arithmatex) was never affected.
 - CI: restore-drill teardown now passes the required compose secrets; e2e jobs pin `ubuntu-24.04` for the Playwright browser install; generated web API types are back in step with the OpenAPI schema.
 
 ## [0.2.0] - 2026-11-12
