@@ -153,9 +153,25 @@ jobs:
   # Playwright smoke + axe accessibility pass (AC-WEB.1, AC-A11Y.1) against the real API and a
   # production build of the web app. One Node version: this is about the app, not the runtime.
   e2e:
-    name: e2e (playwright chromium)
+    # Two suites, two API modes (web/README.md): smoke walks the read screens against a local
+    # mode API (no login), journey signs up and walks AC-WEB.1 end to end against a server mode
+    # API. Running one suite against the other's mode fails by design, so they are separate legs.
+    name: e2e (${{ matrix.suite }})
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - suite: smoke
+            auth_mode: local
+            cookie_secure: "1"
+            e2e_auth: ""
+          - suite: journey
+            auth_mode: server
+            # The browser talks to the app over plain http, so the session cookie cannot be Secure.
+            cookie_secure: "0"
+            e2e_auth: "1"
     env:
       RC_API_BASE_URL: http://127.0.0.1:8000
     steps:
@@ -180,8 +196,14 @@ jobs:
         working-directory: web
         run: npx playwright install --with-deps chromium
 
-      - name: Start the API
+      - name: Start the API (${{ matrix.auth_mode }} mode)
+        env:
+          RC_AUTH_MODE: ${{ matrix.auth_mode }}
+          RC_AUTH_COOKIE_SECURE: ${{ matrix.cookie_secure }}
+          RC_AUTH_SECRET: e2e-${{ github.run_id }}-${{ matrix.suite }}
         run: |
+          # A throwaway data directory per leg: the journey suite creates accounts and progress.
+          export RC_DATA_DIR="$(mktemp -d)"
           uv run rc api serve --host 127.0.0.1 --port 8000 --log-level warning \
             >"$RUNNER_TEMP/api.log" 2>&1 &
           for _ in $(seq 1 60); do
@@ -195,15 +217,17 @@ jobs:
         run: npm run build
 
       # playwright.config.ts starts `npm run start` itself and waits for the port.
-      - name: Playwright
+      - name: Playwright (${{ matrix.suite }})
         working-directory: web
-        run: npm run e2e
+        env:
+          E2E_AUTH: ${{ matrix.e2e_auth }}
+        run: npx playwright test ${{ matrix.suite }}
 
       - name: Upload the Playwright report
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: playwright-report
+          name: playwright-report-${{ matrix.suite }}
           path: web/playwright-report/
           if-no-files-found: ignore
 
