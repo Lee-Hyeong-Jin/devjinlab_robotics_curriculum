@@ -35,13 +35,24 @@ dependencies = [
 [project.scripts]
 rc = "robotics_curriculum.cli:app"
 
+[project.optional-dependencies]
+postgres = [
+    "alembic>=1.13",
+    "psycopg[binary]>=3.2",
+    "sqlalchemy>=2.0",
+]
+
 [dependency-groups]
 dev = [
+    "alembic>=1.13",
     "mypy>=2.4.1",
     "pre-commit>=4.7.0",
+    "psycopg[binary]>=3.2",
     "pytest>=8",
     "pytest-cov>=7.1.0",
     "ruff>=0.6",
+    "sqlalchemy>=2.0",
+    "testcontainers[postgres]>=4",
     "types-pyyaml>=6.0.12.20261103",
 ]
 

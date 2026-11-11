@@ -48,3 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.github/workflows/security.yml`: CodeQL (Python, security-and-quality) and pip-audit of the
   locked runtime dependencies on every PR, on pushes to `main`, and weekly. Any known
   vulnerability in a runtime dependency fails the job.
+- PostgreSQL progress store for server mode (optional extra `postgres`: SQLAlchemy 2 Core +
+  psycopg 3) with Alembic migrations, backend selection via `RC_DATABASE_URL` (unset keeps the
+  local SQLite file), a `transfer()` helper to move SQLite or JSON-export data into PostgreSQL,
+  and a `db` service (PostgreSQL 16) in the Compose file.
