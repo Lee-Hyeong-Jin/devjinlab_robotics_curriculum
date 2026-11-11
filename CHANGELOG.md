@@ -88,6 +88,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Roadmap acceptance criteria for P1-2 and P2-1 … P2-5 now cite PRD appendix C IDs; P1-2 uses
   SM-2 and depends on P1-5, P2-1 depends on P1-2.
 - `docs/HARNESS.md` documents how hooks behave in worktree sessions.
+- Container and compose stack cover server mode end to end: a `web` target builds the Next.js
+  standalone bundle (unprivileged user, read-only root, node-fetch health check) and the `web`
+  service waits for a healthy api. `scripts/smoke.sh` brings up db -> migrate -> api -> web and
+  checks that the screens render.
+- `scripts/harness/check.sh`: `--quick` (the Stop hook) skips the node stack, and a full run
+  installs `web/node_modules` when it is missing instead of failing with exit 127.
+- CI runs the frontend checks for real on Node 22 and 26, fails on API client types that drift
+  from `docs/api/openapi.yaml`, and adds a Playwright + axe end-to-end job whose report is kept
+  as an artifact.
 
 ### Security
 
@@ -98,6 +107,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   reset link works; error bodies no longer show server paths; denied requests and admin reads
   are audited; account deletion anonymizes the user's audit entries; api containers run with a
   read-only root, no capabilities and `no-new-privileges`.
+- Vendored KaTeX updated from 0.16.11 to 0.19.1, out of the range of GHSA-238p-pmpm-9mq7
+  (>=0.11.0 <0.18.2). Every shipped file is now pinned by sha256 in
+  `src/robotics_curriculum/site/assets/katex/MANIFEST.sha256` and checked by a test;
+  `scripts/ops/vendor_katex.sh` re-vendors and refreshes both.
+- `npm audit --omit=dev --audit-level=high` runs over the frontend lockfile in
+  `.github/workflows/security.yml`, with the dev toolchain audited without blocking.
 - `.github/workflows/security.yml`: CodeQL (Python, security-and-quality) and pip-audit of the
   locked runtime dependencies on every PR, on pushes to `main`, and weekly. Any known
   vulnerability in a runtime dependency fails the job.

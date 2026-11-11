@@ -65,3 +65,28 @@ jobs:
       - name: Audit dev dependencies (informational)
         continue-on-error: true
         run: uvx pip-audit --requirement dev.txt --no-deps --disable-pip --desc
+
+  # The frontend's own dependency audit (QA SRV-13). `--omit=dev` is what ships in the web
+  # image; the dev toolchain is audited without blocking, as on the Python side.
+  npm-audit:
+    name: npm audit (web)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      # No install step: `npm audit` resolves straight from the lockfile.
+      - name: Audit runtime dependencies
+        working-directory: web
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Audit the dev toolchain (informational)
+        continue-on-error: true
+        working-directory: web
+        run: npm audit --audit-level=high

@@ -1,3 +1,6 @@
-KaTeX 0.16.11 (MIT), vendored from https://registry.npmjs.org/katex/-/katex-0.16.11.tgz
-(sha1 4bc84d5584f996abece5f01c6ad11304276a33f5). Only woff2 fonts are kept.
+KaTeX 0.19.1 (MIT), vendored from https://registry.npmjs.org/katex/-/katex-0.19.1.tgz
+(sha512 8c6f2e2a7b63484726d84a503a1d17b6eae93eeb82f6bdd2ab91cb1ddb05756653dbb13aef6485d7d4048bea1fd3f61e3b2d7994381184abebe7ad78b91ac47c,
+ npm integrity sha512-jG8uKntjSEcm2EpQOh0XturpPuuC9r3Sq5HLHdsFdWZT27E672SF19QEi+of0/YeOy15lDgRhKvr5614uRrEfA==).
+Only woff2 fonts are kept.
 Used by `rc site build` so math renders without network access.
+Re-vendor with scripts/ops/vendor_katex.sh <version>; MANIFEST.sha256 pins every file.
