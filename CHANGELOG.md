@@ -36,8 +36,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `docs/curriculum/GLOSSARY.md`: the ko ↔ en term list every translation follows.
 - `scripts/i18n/audit.py` and `docs/reviews/i18n-gap-audit.md`: the English build is driven
   end to end (API, static site, CLI) and every Korean string that is left is reported.
+- Research-track module `c8-decision-making-learning-theory` (C8, decision making and
+  learning theory) at `level: 연구`, complete with all eight lessons in Korean and English:
+  `c8-mdp-pomdp-bellman`, `c8-policy-gradient`, `c8-value-based-rl`,
+  `c8-model-based-world-models`, `c8-imitation-learning`, `c8-offline-rl`,
+  `c8-control-as-inference` and `c8-generalization-sim2real`. Each derives its central
+  results to the depth the blueprint asks for, names a failure mode per D2/D3 result, and
+  carries a problem set, two to four must-read papers (resolved through the course registry),
+  a reproduction task whose acceptance criteria were checked by running the code, and open
+  problems.
 
 ### Changed
+
+- SEO. With `RC_PUBLIC_CONTENT=1` (ADR 0016) the curriculum is readable without a session and
+  the pages that hold it become indexable: per-page title and description, canonical URL,
+  `hreflang` for ko/en plus `x-default`, OpenGraph and Twitter cards, `sitemap.xml` covering
+  every course, module and lesson in both languages, a `robots.txt` that keeps crawlers out
+  of personal and operator pages, and JSON-LD (`Course`, `LearningResource`,
+  `BreadcrumbList`). `noindex` stays the default for the whole app, so a page has to ask to
+  be indexed and only gets it where content is actually published.
+- The UI language can be pinned with `?lang=en`. The URL carries no locale segment, so the
+  English version of a page had no address of its own — which `hreflang` and a sitemap both
+  need. `?lang=` overrides the cookie for that request; the canonical URL stays the bare path.
+- Web: an anonymous reader on a published page is no longer redirected to the login screen
+  when the page asks for their progress — having none is an answer, not an error. A signed-in
+  reader whose session expired is still redirected.
 
 - `rc validate` gains rule 12: a link in a lesson body (or in a translation of it) must be an
   http(s) URL, an anchor, or a relative path to an asset — never another lesson's `.md` file,
@@ -148,6 +171,77 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   authoring guide `docs/curriculum/AUTHORING_RESEARCH_TRACK.md`. The track design (benchmark of
   graduate courses, 97-lesson blueprint, lesson standard, 134-paper reading list) is under
   `research_notes/연구 트랙 설계/`.
+- Research track module C7 (perception and 3D representations), starting with
+  `c7-two-view-geometry`: the epipolar constraint and the essential matrix derived from
+  coplanarity, the singular-value characterisation of essential matrices proved in both
+  directions, the eight-point and five-point algorithms, and the optimality and bias of
+  triangulation — with an eight-item problem set, a measured reproduction task (eight- against
+  five-point, plus the planar degeneracy) and four open problems, in Korean and English.
+- `c7-bundle-adjustment`: the sparse normal equations of the reprojection error, the Schur
+  complement proved exact through the block LDL factorisation and Sylvester's law of inertia,
+  the seven gauge generators, and the solvability of self-calibration with its critical motion
+  sequences. The reproduction task converges a Schur-complement LM bundle adjuster on the public
+  BAL `problem-49-7776` and matches measured reference costs.
+- `c7-robust-fitting-ransac`: the RANSAC iteration count derived from the hypergeometric
+  distribution (and why the $w^m$ form is optimistic), the gap between what that formula
+  guarantees and what RANSAC delivers, the inlier threshold as a $\chi^2$ quantile, and branch
+  and bound for globally optimal maximum consensus checked against exhaustive enumeration.
+- `c7-learned-correspondence-slam`: the gradient of a differentiable bundle adjustment layer by
+  implicit differentiation (and the measured bias of the Gauss-Newton Hessian shortcut), the
+  SuperGlue matching layer derived as entropic optimal transport, the scale ambiguity of joint
+  depth-and-pose learning as a one-dimensional null space, and an experiment separating noise from
+  structural ambiguity as the cause of correspondence failure.
+- `c7-neural-fields-3dgs`: the volume rendering integral from the absorption-emission model, a
+  proof that NeRF's alpha-compositing discretisation is exact for piecewise-constant density (with
+  the measured second-order error for smooth density), the spectral bias of positional encoding
+  quantified through Gram eigenvalues, and the measured valid regime of the affine (EWA) projection
+  used by 3D Gaussian splatting.
+- `c7-event-tactile-sensing`, completing module C7: the event generation model as a threshold
+  crossing of log intensity (and why its rate form overpredicts for short windows), contrast
+  maximisation with a measured angular-velocity estimate on the public ECD dataset, the
+  non-convexity of that objective, and GelSight photometric stereo with the measured failure
+  condition of volume-based force estimation.
+- `curriculum/robotics-research/papers.yaml`: the course paper registry (ADR 0014) with the
+  eleven papers the C7 lessons assign; both C7 lessons reference them through front-matter
+  `papers:` and `rc papers <lesson_id>` lists them.
+- Research track module C5 (state estimation): the `c5-factor-graphs-map` lesson in Korean and
+  English — MAP on a factor graph proved equivalent to nonlinear least squares, Gaussian variable
+  elimination derived as the Schur complement, the Kalman filter re-derived from the normal
+  equations, and a two-lap SE(2) pose graph reproduction task with machine-checkable acceptance
+  criteria.
+- Research track module C5: the `c5-sparsity-isam` lesson in Korean and English — the fill-path
+  theorem proved in both directions, the locality of iSAM2's incremental re-elimination derived
+  from the Bayes tree's conditional factorization, incremental QR by Givens rotations with its
+  cost shown to be distance in the variable order, and KL-optimal sparsification derived as
+  moment matching. Adds five verified papers to the C5 block of the reading-list registry.
+- Research track module C5: the `c5-manifold-estimation` lesson in Korean and English — the
+  retraction invariance of on-manifold Gauss-Newton proved, the Ad transformation between left and
+  right uncertainty derived, the group-affine cancellation that makes the invariant error dynamics
+  autonomous derived line by line, and a 3000-run Monte Carlo NEES comparison of a standard EKF
+  against an invariant EKF on SE(3).
+- Research track module C5: the `c5-imu-preintegration` lesson in Korean and English — the
+  preintegration identity proved exactly for the stated discretization (including the gravity
+  bookkeeping that makes it work), the bias-relinearization Jacobian recursions and the
+  nine-dimensional noise covariance derived, and the two-fold scale/gravity ambiguity of monocular
+  visual-inertial fusion under constant acceleration derived in closed form and confirmed
+  numerically.
+- Research track module C5: the `c5-observability-consistency` lesson in Korean and English — the
+  Hermann-Krener rank condition, the four-dimensional unobservable subspace of monocular
+  visual-inertial estimation derived from its invariance group, the mechanism by which an EKF's
+  linearization points break the null space, and FEJ shown to turn on choosing between two
+  algebraically identical Jacobian expressions. The reproduction task measures all of it by
+  numerical rank, and reports honestly that null-space preservation did not improve NEES in either
+  simulated setting.
+- Research track module C5: the `c5-robust-global-estimation` lesson in Korean and English — the
+  M-estimator / IRLS equivalence proved and verified numerically, influence functions used to
+  separate bounded from redescending kernels, and a four-line proof of the global optimality
+  certificate for SO(2) rotation synchronization (SE-Sync in miniature) together with the measured
+  fact that its tightness survives noise but not outliers.
+- Research track module C5 is complete (six lessons) and converted to the landed schema
+  (AUTHORING §8-1): must-read papers moved from `resources[]` into front-matter `papers[]`
+  referencing the course registry, 23 entries added to the registry's C5 block (all with URLs
+  verified against the Crossref or arXiv API), activity kinds `paper` and `reproduction`, and
+  `level: 연구` on the module.
 - Research-track module C3 (nonlinear and robust control) under
   `curriculum/robotics-research/c3-nonlinear-robust-control/`: lesson 1, Lyapunov stability and
   ISS, in Korean and English — the Lyapunov theorem, its converse for exponential stability and
@@ -185,6 +279,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   references them from front-matter `papers[]` with `required`/`role` and a language-neutral
   locator, the activity kinds `paper` and `reproduction` replace the interim `reading`/`exercise`,
   tool resources use `kind: code`, and the module level is `연구`.
+- Research track module C2 (multibody dynamics) under
+  `curriculum/robotics-research/c2-multibody-dynamics/`: six research-grade lessons in Korean and
+  English on spatial vector algebra, RNEA, CRBA/ABA, constrained dynamics, contact dynamics and
+  the derivatives of dynamics with inertial parameter identification. Each lesson derives its key
+  results at depth D2-D3, sets 4-8 problems, assigns 2-4 verified must-read papers and a
+  reproduction task with machine-checkable acceptance criteria.
 
 ### Fixed
 

@@ -1,0 +1,12 @@
+id: r0-math-numerical-foundations
+lang: en
+title: "R0 Mathematical and numerical foundations (bridge)"
+summary: >-
+  The bridge module from undergraduate mathematics into graduate robotics. Seven lessons:
+  numerical linear algebra (decompositions and condition numbers, sparsity), convex and numerical
+  optimization (duality, KKT, Newton, SQP), estimation theory (MAP, Cramer-Rao), manifolds and
+  matrix Lie groups, and automatic differentiation with integrators. Its primary sources are
+  standard textbooks rather than papers, so the must-read-paper exception applies (lesson standard
+  §5). It is an optional module that a diagnosis can skip; its justification is that CMU's Robotics
+  Institute places a single course (16-811) in its Math Foundations area, and the prerequisites
+  stated by CS287 and 16-745.

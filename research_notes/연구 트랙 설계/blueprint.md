@@ -149,8 +149,10 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 **형식이 다르다**: F0 레슨은 내용을 새로 쓰지 않는다. **가이드형(guide) 레슨**이다 — 검증된 공개
 강의·교재를 어떤 순서로, 어디까지, 무엇으로 확인하며 볼지 안내하고, **진단 문제**로 통과 여부를
 스스로 판정하게 한다. 진단을 통과하면 그 레슨을 건너뛴다. 따라서 연구 트랙 레슨 표준
-([lesson-standard.md](lesson-standard.md) §1)의 고정 섹션 9–10개를 적용하지 않고, 아래 4개 절만 쓴다:
-`## 도달 목표` · `## 학습 경로` · `## 시작 전 자가 진단` · `## 이 단계 공부법`.
+([lesson-standard.md](lesson-standard.md) §1)의 고정 섹션을 적용하지 않고, 아래 4개 절만 **이 순서로** 쓴다:
+`## 도달 목표` · `## 시작 전 자가 진단` · `## 학습 경로` · `## 이 단계 공부법`.
+진단을 학습 경로보다 앞에 두는 것은 F0 에서 진단이 "이 레슨을 건너뛸지"를 먼저 정하는 관문이기
+때문이다(집필하면서 정한 순서다). 진단은 ` ```quiz ` 블록으로 써서 `rc quiz` 로 채점되게 한다.
 
 아래 URL 은 모두 2026-11-12 에 fetch 해 확인했다. 제공 내용(영상·문제집·해답·시험)도 그때 확인한 것이다.
 
@@ -223,12 +225,12 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 
 | 레슨 | 유도해야 할 핵심 결과 | 필독 | 교재 | 재현 과제 |
 |---|---|---|---|---|
-| `c2-spatial-vector-algebra` 공간 벡터 대수 | 6D 운동·힘 공간의 쌍대성 **[D2]**; 공간 관성의 변환 법칙 **[D2]**; 공간 가속도와 코리올리 항의 분리 **[D3]** | `featherstone2010-6d-vectors-part1`, `featherstone2010-6d-vectors-part2` | RBDA ch.2, MR ch.8.2 | R1: 공간 관성 변환과 동차변환 기반 계산이 1e-10 이내 일치 |
-| `c2-rnea-inverse-dynamics` 재귀 Newton–Euler | RNEA 의 $O(n)$ 복잡도와 재귀식 **[D3]**; Lagrange 유도와의 동등성 **[D2]** | `luh1980-rnea` | RBDA ch.5, MR ch.8.3 | R1: RNEA 토크가 Euler–Lagrange 수식 해와 1e-9 이내 일치(7-DOF) |
-| `c2-crba-aba` 질량행렬과 순동역학 | CRBA 의 $O(n^2)$ **[D3]**; ABA 의 $O(n)$ 과 관절 공간 관성의 분기 구조 **[D3]** | `featherstone1983-aba`, `walker1982-crba` | RBDA ch.6–7 | R1: CRBA 의 $M$ 이 유한차분 역동역학과 1e-8 이내 일치; ABA 와 $M^{-1}\tau$ 해가 일치 |
-| `c2-constrained-dynamics` 제약 동역학 | 라그랑주 승수와 KKT 형태의 동역학 **[D3]**; 널공간 투영과 조작 공간 관성 $\Lambda$ **[D3]**; Baumgarte 안정화 **[D1]** | `khatib1987-operational-space` | RBDA ch.8, MLS ch.6 | R2: 폐루프 4절 링크를 승수법과 축소좌표법으로 적분, 제약 위반 < 1e-8 유지 |
-| `c2-contact-dynamics` 접촉 동역학 | 상보성 조건(LCP/NCP)과 해 존재성 **[D3]**; 마찰 원뿔과 Painlevé 역설 **[D2]**; 시간 이산화(semi-implicit) 와 관통 **[D2]** | `stewart1996-implicit-timestepping`, `todorov2014-convex-contact` | UA ch.17, RBDA ch.11 | R2: 평면 접촉 공을 LCP 1스텝 해법으로 적분, 에너지 비증가와 비관통을 확인 |
-| `c2-dynamics-derivatives-sysid` 동역학 미분과 시스템 식별 | RNEA 의 해석적 미분 **[D2]**; 관성 매개변수의 선형성과 식별 가능성 조건 **[D3]**; 물리적 일관성 제약(SDP) **[D2]** | `carpentier2018-pinocchio` | RBDA ch.10, UA ch.18 | R2: 7-DOF 궤적에서 관성 매개변수를 선형 최소제곱으로 식별, 노이즈 대비 식별 가능한 조합만 복원됨을 조건수로 보임 |
+| `c2-spatial-vector-algebra` 공간 벡터 대수 | 6D 운동·힘 공간의 쌍대성 **[D2]**; 공간 관성의 변환 법칙 **[D2]**; 공간 가속도와 코리올리 항의 분리 **[D3]** | `featherstone2010-6d-vectors-part1`, `featherstone2010-6d-vectors-part2` (권장 `featherstone2006-plucker-basis`) | RBDA ch.2, MR ch.8.2 | R1: 공간 관성 변환과 동차변환 기반 계산이 1e-10 이내 일치 |
+| `c2-rnea-inverse-dynamics` 재귀 Newton–Euler | RNEA 의 $O(n)$ 복잡도와 재귀식 **[D3]**; Lagrange 유도와의 동등성 **[D2]** | `luh1980-rnea`, `featherstone2000-dynamics-equations-algorithms` | RBDA ch.5, MR ch.8.3 | R1: RNEA 토크가 Euler–Lagrange 해와 일치 — ① 기호·자동미분으로 미분한 정확한 해 대비 상대오차 < 1e-9(7-DOF) ② 유한차분 해 대비 < 1e-7 + h 스윕 V 곡선 (유한차분으로는 1e-9 가 불안정함을 실측: h=1e-4 에서 5.8e-8, 1e-5 에서 6.8e-10, 1e-6 에서 3.1e-9, 1e-7 에서 7.2e-8 — 저자 세션 측정 2026-11-12, 설계 담당 승인) |
+| `c2-crba-aba` 질량행렬과 순동역학 | CRBA 의 $O(n^2)$ **[D3]**; ABA 의 $O(n)$ 과 관절 공간 관성의 분기 구조 **[D3]** | `featherstone1983-aba`, `walker1982-crba` | RBDA ch.6–7 | R1: CRBA 의 $M$ 이 유한차분 역동역학과 일치 — 중력 0·$\dot q = 0$ 에서 $\tau$ 가 $\ddot q$ 에 정확히 선형이므로 기계 정밀도(1e-12, 실측 4.4e-16, 모든 $h$ 에서 동일)로 요구한다. 중력을 켜면 상쇄가 지배해 1e-9 수준에 머문다(저자 세션 측정 2026-11-12); ABA 와 $M^{-1}\tau$ 해가 일치 |
+| `c2-constrained-dynamics` 제약 동역학 | 라그랑주 승수와 KKT 형태의 동역학 **[D3]**; 널공간 투영과 조작 공간 관성 $\Lambda$ **[D3]**; Baumgarte 안정화 **[D1]** | `khatib1987-operational-space`, `udwadia1992-constrained-motion`, `baumgarte1972-constraint-stabilization` | RBDA ch.8, MLS ch.6 | R2: 폐루프 4절 링크를 승수법과 축소좌표법으로 적분, 제약 위반 < 1e-8 유지 |
+| `c2-contact-dynamics` 접촉 동역학 | 상보성 조건(LCP/NCP)과 해 존재성 **[D3]**; 마찰 원뿔과 Painlevé 역설 **[D2]**; 시간 이산화(semi-implicit) 와 관통 **[D2]** | `stewart1996-implicit-timestepping`, `todorov2014-convex-contact`, `anitescu1997-lcp-contact` (권장 `stewart2000-rigid-body-friction-impact`, `genot1999-painleve`) | UA ch.17, RBDA ch.11 | R2: 평면 접촉 공을 LCP 1스텝 해법(모드 열거)으로 적분, 에너지 비증가와 비관통을 확인 — 실측: 분리·고착·미끄럼 3모드 도달, 충격량 스텝 25031/50000 에서 최대 dE = -3.0e-6(전부 음수), 원판은 관통 정확히 0, 봉은 O(h^2)(비 3.92/3.96/3.98/3.99). Painlevé 임계는 닫힌 형태 mu_crit = 4/3 at theta = -arctan 2 이고 가속도 수준이 비가해인 상태에서도 속도 수준은 풀린다 (저자 세션 측정 2026-11-12) |
+| `c2-dynamics-derivatives-sysid` 동역학 미분과 시스템 식별 | RNEA 의 해석적 미분 **[D2]**; 관성 매개변수의 선형성과 식별 가능성 조건 **[D3]**; 물리적 일관성 제약(SDP) **[D2]** | `carpentier2018-pinocchio`, `atkeson1986-inertial-parameters`, `wensing2018-lmi-inertial` (권장 `gautier1990-minimal-inertial-parameters`) | RBDA ch.10, UA ch.18 | R2: 7-DOF 상태 표본에서 관성 매개변수를 선형 최소제곱으로 식별, 식별 가능한 조합만 복원됨을 조건수로 보임 — 실측(기준 팔): n_b = 43/70, dim N = 27, 특이값 간극 5.22 -> 1.9e-14, kappa = 25.39, 식별 가능 성분 오차는 sigma 에 선형(9.9e-4 per 1e-3)이고 N 성분 오차는 sigma 와 무관하게 4.7586 고정. 중력을 끄면 n_b = 39. 유사 관성 LMI 는 sigma = 0 에서도 최소노름 해를 비일관으로 만든다(저자 세션 측정 2026-11-12) |
 
 **열린 문제**: 접촉이 있는 계의 미분가능성과 학습에 쓰는 기울기의 정당성; 실제 마찰·변형의 모델
 오차 한계; 대규모 다물체계에서 실시간 미분 동역학의 비용.
@@ -272,11 +274,11 @@ Barfoot SER 전권, UPenn ESE 650 M1.
 | 레슨 | 유도해야 할 핵심 결과 | 필독 | 교재 | 재현 과제 |
 |---|---|---|---|---|
 | `c5-factor-graphs-map` 인자 그래프와 MAP | 필터링에서 평활(smoothing)로의 전환 **[D2]**; MAP = 비선형 최소제곱 **[D3]**; 가우시안 소거와 Schur 보완 **[D3]** | `dellaert2017-factor-graphs`, `dellaert2006-square-root-sam` | SER ch.3–4, 16-833 | R2: 1D/2D 포즈 그래프를 GN 으로 풀고 조밀 해와 1e-9 이내 일치 |
-| `c5-sparsity-isam` 희소성과 증분 추론 | 변수 순서와 fill-in **[D3]**; Bayes tree 와 iSAM2 의 증분 재선형화 **[D2]**; 주변화(marginalization) 가 만드는 조밀화 **[D2]** | `kaess2012-isam2` | SER ch.3.3, 16-833 | R2: 증분 해법과 배치 해법의 해가 1e-6 이내 일치하면서 갱신 비용이 $O(1)$ 수준임을 측정 |
-| `c5-manifold-estimation` 매니폴드 위 추정 | on-manifold GN·retraction **[D3]**; 불변 EKF 와 군 아핀 계의 오차 동역학 **[D3]**; 불확실성의 좌/우 표현 **[D2]** | `barrau2017-invariant-ekf` | SER ch.7–8 | R2: $SE(3)$ 추정에서 표준 EKF 와 불변 EKF 의 일관성(NEES)을 비교, 불변형이 더 일관됨을 확인 |
-| `c5-imu-preintegration` IMU 선적분과 관성 융합 | IMU 운동학과 선적분 측정 모델 **[D3]**; 바이어스 재선형화의 1차 보정 **[D2]**; 관성-시각 융합의 척도 관측가능성 **[D2]** | `forster2017-preintegration` | SER ch.9 | R2: 시뮬레이션 IMU 로 선적분 계수를 계산해 조밀 적분과 1e-6 이내 일치, 바이어스 보정 항의 1차 정확도 확인 |
-| `c5-observability-consistency` 관측가능성과 일관성 | 비선형 관측가능성(Lie 미분 랭크) **[D3]**; VIO 의 불관측 방향(4-DOF) **[D3]**; EKF-SLAM 의 비일관성과 FEJ **[D2]** | `huang2010-fej`, `li2013-vio-observability` | SER ch.5 | R1: VIO 선형화 계의 영공간 차원을 수치 랭크로 확인(= 4), FEJ 적용 시 보존됨을 보임 |
-| `c5-robust-global-estimation` 강건·전역 추정 | M-estimator 와 IRLS, 영향 함수 **[D3]**; 전역 최적 포즈 그래프(SE-Sync) 의 볼록 완화와 타이트성 **[D2]**; 점군 정합의 인증(TEASER) **[D2]** | `rosen2019-se-sync`, `yang2021-teaser`, `sunderhauf2012-switchable` | SER ch.5.3 | R3: 이상치 20% 포즈 그래프에서 강건 커널·SE-Sync 결과를 비교, 강건형의 ATE 가 2배 이상 개선됨을 확인 |
+| `c5-sparsity-isam` 희소성과 증분 추론 | 변수 순서와 fill-in **[D3]**; Bayes tree 와 iSAM2 의 증분 재선형화 **[D2]**; 주변화(marginalization) 가 만드는 조밀화 **[D2]** | `kaess2012-isam2`, `rose1976-vertex-elimination`, `carlevaris-bianco2014-node-removal` (권장 `yannakakis1981-min-fill-in`, `lipton1979-nested-dissection`, `kaess2008-isam`) | SER ch.3.3, 16-833 | R2: 증분 해법과 배치 해법의 해가 1e-6 이내 일치하면서 갱신 비용이 $O(1)$ 수준임을 측정 |
+| `c5-manifold-estimation` 매니폴드 위 추정 | on-manifold GN·retraction **[D3]**; 불변 EKF 와 군 아핀 계의 오차 동역학 **[D3]**; 불확실성의 좌/우 표현 **[D2]** | `barrau2017-invariant-ekf`, `sola2018-micro-lie-theory`, `absil2008-manifold-opt` (권장 `hartley2020-contact-inekf`) | SER ch.7–8 | R2: $SE(3)$ 추정에서 표준 EKF 와 불변 EKF 의 일관성(NEES)을 비교, 불변형이 더 일관됨을 확인 |
+| `c5-imu-preintegration` IMU 선적분과 관성 융합 | IMU 운동학과 선적분 측정 모델 **[D3]**; 바이어스 재선형화의 1차 보정 **[D2]**; 관성-시각 융합의 척도 관측가능성 **[D2]** | `forster2017-preintegration`, `lupton2012-preintegration`, `martinelli2012-closed-form-scale` (권장 `qin2018-vins-mono`, `mourikis2007-msckf`) | SER ch.9 | R2: 시뮬레이션 IMU 로 선적분 계수를 계산해 조밀 적분과 1e-6 이내 일치, 바이어스 보정 항의 1차 정확도 확인 |
+| `c5-observability-consistency` 관측가능성과 일관성 | 비선형 관측가능성(Lie 미분 랭크) **[D3]**; VIO 의 불관측 방향(4-DOF) **[D3]**; EKF-SLAM 의 비일관성과 FEJ **[D2]** | `huang2010-fej`, `li2013-vio-observability`, `hermann1977-observability` (권장 `hesch2014-vio-observability`, `cadena2016-slam-survey`) | SER ch.5 | R1: VIO 선형화 계의 영공간 차원을 수치 랭크로 확인(= 4), FEJ 적용 시 보존됨을 보임 |
+| `c5-robust-global-estimation` 강건·전역 추정 | M-estimator 와 IRLS, 영향 함수 **[D3]**; 전역 최적 포즈 그래프(SE-Sync) 의 볼록 완화와 타이트성 **[D2]**; 점군 정합의 인증(TEASER) **[D2]** | `rosen2019-se-sync`, `yang2021-teaser`, `sunderhauf2012-switchable` (권장 `carlone2015-lagrangian-duality`, `fischler1981-ransac`) | SER ch.5.3 | R3: 이상치 20% 포즈 그래프에서 강건 커널·SE-Sync 결과를 비교, 강건형의 ATE 가 2배 이상 개선됨을 확인 |
 
 **열린 문제**: 비볼록 SLAM 의 전역 최적성 인증 범위; 학습 기반 프런트엔드의 불확실성 정량화;
 장기 운용에서 지도 표현의 수명·압축; 밀집·뉴럴 표현과 확률 추론의 결합.
@@ -306,8 +308,8 @@ Stanford CS231A, TUM IN2228, MVG·CV 교재.
 | `c7-two-view-geometry` 다시점 기하와 에피폴라 | 본질·기본 행렬의 유도와 자유도 **[D3]**; 8점·5점 알고리즘 **[D2]**; 삼각측량의 최적성과 편향 **[D3]** | `nister2004-five-point`, `longuet-higgins1981-essential` | MVG ch.9–11, CV ch.11 | R2: 8점·5점 알고리즘을 구현해 노이즈 대비 회전 오차를 비교(5점이 우수함을 확인) |
 | `c7-bundle-adjustment` N-view 와 번들 조정 | 재투영 오차의 희소 정규방정식과 Schur 보완 **[D3]**; 게이지 자유도와 고정 방법 **[D2]**; 자기 보정의 가해성 **[D2]** | `triggs2000-bundle-adjustment`, `agarwal2010-rome` | MVG ch.18, SER ch.10 | R3: 공개 BAL 데이터셋 1개에서 BA 를 수렴시켜 보고된 최종 비용과 1% 이내 일치 |
 | `c7-robust-fitting-ransac` 강건 적합과 RANSAC 이론 | RANSAC 반복 수 공식과 실패 확률 **[D3]**; 최소 표본 집합과 오염률 한계 **[D2]**; 전역 최적 정합의 분기한정 **[D2]** | `fischler1981-ransac`, `barath2020-magsac` | MVG ch.4.7, CV ch.8 | R1: 오염률 대비 필요한 반복 수를 실험으로 측정해 이론식과 10% 이내 일치 |
-| `c7-learned-correspondence-slam` 학습 기반 대응과 SfM/SLAM | 미분가능 BA 와 학습 가중의 결합 **[D2]**; 특징 대응의 일반화 실패 모드 **[D2]**; 깊이·자세 동시 학습의 척도 모호성 **[D2]** | `teed2021-droid-slam`, `sarlin2020-superglue` | CV ch.11(비교) | R3: 사전학습 DROID-SLAM 류를 TUM RGB-D 1개 시퀀스에 실행해 보고된 ATE 와 20% 이내 일치 |
-| `c7-neural-fields-3dgs` 뉴럴 필드와 3D Gaussian splatting | 볼륨 렌더링 적분과 이산화 **[D3]**; 위치 인코딩의 스펙트럼 편향 **[D2]**; 3DGS 의 스플래팅·미분 가능 래스터화 **[D2]** | `mildenhall2020-nerf`, `kerbl2023-3dgs` | — | R3: 소형 장면에서 NeRF/3DGS 를 학습해 보고된 PSNR 경향(3DGS 가 더 빠름)을 재현 |
+| `c7-learned-correspondence-slam` 학습 기반 대응과 SfM/SLAM | 미분가능 BA 와 학습 가중의 결합 **[D2]**; 특징 대응의 일반화 실패 모드 **[D2]**; 깊이·자세 동시 학습의 척도 모호성 **[D2]** | `teed2021-droid-slam`, `sarlin2020-superglue` | CV ch.11(비교) | R4(선택): 사전학습 DROID-SLAM 류를 TUM RGB-D 1개 시퀀스에 실행해 보고된 ATE 와 20% 이내 일치 — GPU 필요 |
+| `c7-neural-fields-3dgs` 뉴럴 필드와 3D Gaussian splatting | 볼륨 렌더링 적분과 이산화 **[D3]**; 위치 인코딩의 스펙트럼 편향 **[D2]**; 3DGS 의 스플래팅·미분 가능 래스터화 **[D2]** | `mildenhall2020-nerf`, `kerbl2023-3dgs` | — | R4(선택): 소형 장면에서 NeRF/3DGS 를 학습해 보고된 PSNR 경향(3DGS 가 더 빠름)을 재현 — GPU 필요 |
 | `c7-event-tactile-sensing` 이벤트 카메라와 촉각 센싱 | 이벤트 생성 모델과 대비 최대화 **[D2]**; 모션 보상의 최적화 형태 **[D2]**; 촉각 이미지에서 접촉 기하·힘 추정 **[D2]** | `gallego2020-event-survey`, `yuan2017-gelsight` | — | R2: 이벤트 스트림(공개 데이터)에서 대비 최대화로 각속도를 추정, GT 와 10% 이내 일치 |
 
 **열린 문제**: 기하와 학습의 원리적 결합(언제 기하 제약이 손해인가); 뉴럴 표현의 불확실성과
@@ -319,14 +321,14 @@ UA ch.11,20–21, S&B.
 
 | 레슨 | 유도해야 할 핵심 결과 | 필독 | 교재 | 재현 과제 |
 |---|---|---|---|---|
-| `c8-mdp-pomdp-bellman` MDP·POMDP 와 Bellman 최적성 | 수축 사상으로서의 Bellman 연산자와 유일 고정점 **[D3]**; 가치·정책 반복의 수렴률 **[D3]**; POMDP 의 신념 MDP 변환과 PWLC 가치함수 **[D2]** | `kaelbling1998-pomdp` | S&B ch.3–4, PA ch.10–12 | R1: 가치 반복의 오차가 $\gamma^k$ 로 감소함을 수치로 확인(이론 상한 내) |
+| `c8-mdp-pomdp-bellman` MDP·POMDP 와 Bellman 최적성 | 수축 사상으로서의 Bellman 연산자와 유일 고정점 **[D3]**; 가치·정책 반복의 수렴률 **[D3]**; POMDP 의 신념 MDP 변환과 PWLC 가치함수 **[D2]** | `kaelbling1998-pomdp`, `blackwell1965-discounted-dp`, `smallwood1973-pomdp-pwlc` | S&B ch.3–4, PA ch.10–12 | R1: 가치 반복의 오차가 $\gamma^k$ 로 감소함을 수치로 확인(이론 상한 내) |
 | `c8-policy-gradient` 정책 경사 정리 | 정책 경사 정리 **[D3]**; 기저선과 분산 감소의 불편성 **[D3]**; 자연 경사·TRPO 의 신뢰영역과 단조 개선 한계 **[D3]** | `sutton2000-policy-gradient`, `schulman2015-trpo`, `schulman2017-ppo` | S&B ch.13, CS285 W3,5 | R2: REINFORCE/기저선/PPO 를 CartPole 에 구현, 분산 감소와 표본 효율 차이를 5시드 평균으로 보임 |
-| `c8-value-based-rl` 가치 기반 RL 과 함수 근사 | 선형 함수 근사에서 발산 예(Baird) **[D3]**; 수렴 조건(on-policy, 투영 Bellman) **[D2]**; 과대추정과 이중 Q **[D2]** | `mnih2015-dqn`, `vanhasselt2016-double-q` | S&B ch.9–11 | R1: Baird 반례를 재현해 TD 가 발산하고 잔차 경사법은 수렴함을 보임 |
-| `c8-model-based-world-models` 모델 기반 RL 과 세계 모델 | 모델 오차의 가치 오차 전파 한계(시뮬레이션 보조정리) **[D3]**; Dyna 류의 편향 **[D2]**; 잠재 공간 세계 모델의 학습 목표 **[D2]** | `janner2019-mbpo`, `hafner2023-dreamerv3` | S&B ch.8, CS285 W8 | R2: 간단한 모델 기반 롤아웃 길이를 바꿔 성능-편향 곡선을 재현 |
-| `c8-imitation-learning` 모방학습과 공변량 이동 | BC 의 복합 오차 $O(\epsilon T^2)$ **[D3]**; DAgger 의 후회 한계 $O(\epsilon T)$ **[D3]**; IRL 의 모호성과 최대 엔트로피 해 **[D2]** | `ross2011-dagger`, `ziebart2008-maxent-irl` | CS285 W1–2 | R2: BC 와 DAgger 를 같은 전문가로 학습해 지평선에 따른 오차 증가 차수를 실험으로 분리 |
-| `c8-offline-rl` 오프라인 RL 과 분포 이동 | 외삽 오차와 보수성(pessimism)의 하한 보장 **[D3]**; 행동 정규화 vs 가치 보수성 **[D2]**; 오프라인 평가(OPE)의 분산 **[D2]** | `levine2020-offline-rl`, `kumar2020-cql` | CS285 W9 | R2: D4RL 류 소형 데이터셋에서 BC·CQL 을 비교해 데이터 품질에 따른 역전 현상을 재현 |
+| `c8-value-based-rl` 가치 기반 RL 과 함수 근사 | 선형 함수 근사에서 발산 예(Baird) **[D3]**; 수렴 조건(on-policy, 투영 Bellman) **[D2]**; 과대추정과 이중 Q **[D2]** | `baird1995-residual`, `tsitsiklis1997-td-function-approx`, `mnih2015-dqn`, `vanhasselt2016-double-q` | S&B ch.9–11 | R1: Baird 반례를 재현해 TD 가 발산하고 잔차 경사법은 수렴함을 보임 |
+| `c8-model-based-world-models` 모델 기반 RL 과 세계 모델 | 모델 오차의 가치 오차 전파 한계(시뮬레이션 보조정리) **[D3]**; Dyna 류의 편향 **[D2]**; 잠재 공간 세계 모델의 학습 목표 **[D2]** | `kearns2002-near-optimal`, `janner2019-mbpo`, `hafner2023-dreamerv3` | S&B ch.8, CS285 W8 | R2: 간단한 모델 기반 롤아웃 길이를 바꿔 성능-편향 곡선을 재현 |
+| `c8-imitation-learning` 모방학습과 공변량 이동 | BC 의 복합 오차 $O(\epsilon T^2)$ **[D3]**; DAgger 의 후회 한계 $O(\epsilon T)$ **[D3]**; IRL 의 모호성과 최대 엔트로피 해 **[D2]** | `ross2010-efficient-reductions`, `ross2011-dagger`, `ziebart2008-maxent-irl` | CS285 W1–2 | R2: BC 와 DAgger 를 같은 전문가로 학습해 지평선에 따른 오차 증가 차수를 실험으로 분리 |
+| `c8-offline-rl` 오프라인 RL 과 분포 이동 | 외삽 오차와 보수성(pessimism)의 하한 보장 **[D3]**; 행동 정규화 vs 가치 보수성 **[D2]**; 오프라인 평가(OPE)의 분산 **[D2]** | `jin2021-pessimism`, `levine2020-offline-rl`, `kumar2020-cql` | CS285 W9 | R2: D4RL 류 소형 데이터셋에서 BC·CQL 을 비교해 데이터 품질에 따른 역전 현상을 재현 |
 | `c8-control-as-inference` 제어로서의 추론 | 최대 엔트로피 RL 과 soft Bellman **[D3]**; 변분 추론과의 동등성 **[D3]**; MPPI·경로 적분 제어의 유도 **[D2]** | `levine2018-control-as-inference`, `haarnoja2018-sac`, `williams2017-mppi` | CS285 W6–7, UA ch.11 | R2: MPPI 와 iLQR 로 같은 과제를 풀어 비용·샘플 수 교환을 도표화 |
-| `c8-generalization-sim2real` 일반화와 sim-to-real 이론 | 도메인 랜덤화의 암묵적 목적함수 **[D2]**; 분포 이동 하 일반화 한계 **[D2]**; 특권 학습·교사-학생의 정보 격차 **[D2]** | `tobin2017-domain-randomization`, `chen2020-learning-by-cheating` | CS285 W13 | R2: 랜덤화 폭을 바꿔 보이지 않는 매개변수에서의 성능 곡선을 그림(과도 랜덤화의 손해 확인) |
+| `c8-generalization-sim2real` 일반화와 sim-to-real 이론 | 도메인 랜덤화의 암묵적 목적함수 **[D2]**; 분포 이동 하 일반화 한계 **[D2]**; 특권 학습·교사-학생의 정보 격차 **[D2]** | `tobin2017-domain-randomization`, `rajeswaran2017-epopt`, `chen2020-learning-by-cheating` | CS285 W13 | R2: 랜덤화 폭을 바꿔 보이지 않는 매개변수에서의 성능 곡선을 그림(과도 랜덤화의 손해 확인) |
 
 **열린 문제**: 로봇 규모 데이터에서의 표본 복잡도 이론; 오프라인 RL 의 실기 보장; 평가의 재현성
 (CS285 W13 이 "Challenges and Open Problems" 로 한 주를 쓰는 이유); 접촉·비매끄러운 동역학에서

@@ -1,0 +1,96 @@
+# English text of the structured fields of two-view-geometry.md (activity titles, resource
+# notes, quiz items). The prose lives in two-view-geometry.en.md.
+id: c7-two-view-geometry
+lang: en
+activities:
+  c7-two-view-geometry-reading: Read the lesson and follow the derivations
+  c7-two-view-geometry-papers: Read the two must-read papers and write a one-page note on each
+  c7-two-view-geometry-problems: "Problem set (1 derivation, 1 proof, 3 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  c7-two-view-geometry-reproduction: "Reproduction task: the eight- and five-point algorithms and degenerate configurations (R2)"
+  c7-two-view-geometry-quiz: Concept-check quiz
+resources:
+  "Hartley & Zisserman, Multiple View Geometry in Computer Vision (2nd ed.)":
+    note: >-
+      ch.9 (epipolar geometry and the fundamental matrix), ch.11 (computing the fundamental
+      matrix), ch.12 (triangulation), ch.22 (degenerate configurations). The primary textbook for
+      this lesson; three sample chapters, MATLAB code and an errata list are public.
+  "Szeliski, Computer Vision: Algorithms and Applications (2nd ed., 2022)":
+    note: >-
+      ch.11 (structure from motion and SLAM). The whole-algorithm picture and practical judgement.
+      Free personal-use PDF.
+  "UZH/ETH 151-0632 Vision Algorithms for Mobile Robotics (Scaramuzza)":
+    note: "Lecture slides and exercises. Lectures 5-9 cover the scope of this lesson."
+quiz:
+  - id: q1
+    prompt: >-
+      Why does the eight-point algorithm return a wrong pose even without noise when all 3D points
+      lie on one plane?
+    choices:
+      - "Because $\\operatorname{cond}(A)$ grows and amplifies numerical error"
+      - "Because $\\operatorname{rank}A = 6$, so the null space is three-dimensional and the solution is not unique"
+      - "Because the rank-2 projection is undefined for a coplanar configuration"
+      - "Because the epipolar constraint itself does not hold for coplanar points"
+    explanation: >-
+      For coplanar points the set of $F$ satisfying (1) is the whole three-parameter family
+      $\\hat{e}_2H + e_2a^\\top$, and the singular vector of $\\sigma_9$ picks an arbitrary member
+      of it. The residual stays small, so the residual cannot detect this; you have to look at
+      $\\sigma_7(A)/\\sigma_6(A)$.
+    concept:
+      front: How the eight-point algorithm breaks on a coplanar scene
+      back: >-
+        $\\operatorname{rank}A=6$, so the null space is three-dimensional: small residual, wrong
+        pose. Diagnose with $\\sigma_7/\\sigma_6$
+  - id: q2
+    prompt: >-
+      Applying Hartley coordinate normalisation also improves the condition number substantially
+      when solving for $E$ with the eight-point algorithm in the normalized image coordinates of a
+      calibrated camera.
+    explanation: >-
+      The entries of normalized image coordinates are already $O(1)$, so the column scales of $A$
+      are balanced. Measurements with and without normalisation came out identical. Hartley
+      normalisation is needed when solving for $F$ in pixel coordinates (condition number
+      $9.8\\times10^5 \\to 3.8\\times10^2$).
+    concept:
+      front: Where Hartley normalisation is needed
+      back: "For $F$ in pixels. It does nothing for $E$ in normalized coordinates, which is already $O(1)$"
+  - id: q3
+    prompt: How many degrees of freedom do the essential matrix $E$ and the fundamental matrix $F$ have?
+    choices: ["$E$: 5, $F$: 7", "$E$: 6, $F$: 8", "$E$: 5, $F$: 8", "$E$: 7, $F$: 7"]
+    explanation: >-
+      $E$ has the 6 parameters of $(R,t)$ minus one scale, so 5. $F$ has the 8 of a $3\\times3$
+      matrix up to scale minus the single condition $\\det F = 0$, so 7. Each correspondence gives
+      one linear constraint, which is why five and seven points are the minimal configurations.
+    concept:
+      front: Degrees of freedom of $E$ and $F$
+      back: "$E$ has 5 (6 minus scale), $F$ has 7 (8 minus the det condition); minimal sets are 5 and 7 points"
+  - id: q4
+    prompt: >-
+      In a rectified stereo pair, does $\hat{Z} = fb/\hat{d}$ overestimate or underestimate the
+      true $Z$ on average? (one word)
+    answers: ["overestimate", "overestimates", "overestimated", "too large"]
+    explanation: >-
+      Since $1/x$ is strictly convex, Jensen's inequality gives $\\mathbb{E}[1/\\hat{d}] > 1/d$,
+      and the relative bias $\\sigma_d^2/d^2$ grows with the square of depth. The statement is
+      about a tail-truncated conditional expectation, though: with a true Gaussian,
+      $\\mathbb{E}[\\hat{Z}]$ diverges. The inverse depth $\\hat{\\rho}$ and the median are
+      unbiased.
+    concept:
+      front: Direction of the bias of a depth estimator
+      back: "Overestimation, with relative bias $\\approx \\sigma_d^2/d^2$. Inverse depth and the median are unbiased"
+  - id: q5
+    prompt: >-
+      What happens to the epipolar constraint $x_2^\top Ex_1 = 0$ when there is no translation
+      between the two views ($t = 0$)?
+    choices:
+      - "It fails - the correspondences violate the constraint"
+      - "$E = 0$, so every correspondence satisfies it automatically and the constraint is vacuous"
+      - "The singular values of $E$ become $(\\sigma, \\sigma, \\sigma)$"
+      - "It holds for $F$ but not for $E$"
+    explanation: >-
+      $E = \\hat{t}R = 0$, so the left-hand side vanishes identically. The rotation therefore
+      cannot be recovered from $E$ and one has to use the infinite homography
+      $\\tilde{x}_2 = K_2RK_1^{-1}\\tilde{x}_1$. During estimation it shows up as
+      $\\sigma_1(E^\\star)$ becoming small.
+    concept:
+      front: The epipolar constraint under pure rotation ($t=0$)
+      back: "$E=0$, so the constraint is vacuous; recover the rotation from the infinite homography $K_2RK_1^{-1}$"

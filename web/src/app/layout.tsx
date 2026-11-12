@@ -5,6 +5,7 @@ import { getLocale, getMessages, getTranslations } from 'next-intl/server'
 
 import { SkipLink } from '@/components/SkipLink'
 import { TopNav } from '@/components/TopNav'
+import { siteUrl } from '@/lib/api/config'
 import { THEME_INIT_SCRIPT } from '@/lib/theme'
 import { NONCE_HEADER } from '@/middleware'
 
@@ -13,8 +14,14 @@ import './globals.css'
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('app')
   return {
+    // Canonical and OpenGraph URLs resolve against this; without it Next emits relative
+    // ones, which a crawler cannot use.
+    metadataBase: new URL(siteUrl()),
     title: { default: t('title'), template: `%s · ${t('shortTitle')}` },
-    robots: { index: false },
+    description: t('description'),
+    // noindex is the default for the whole app; a published page asks out of it through
+    // `pageSeo` (ADR 0016). A page indexed by accident cannot be un-indexed by a later fix.
+    robots: { index: false, follow: false },
   }
 }
 

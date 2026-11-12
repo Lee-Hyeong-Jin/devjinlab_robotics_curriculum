@@ -1,0 +1,11 @@
+id: c7-perception-3d-representations
+lang: en
+title: "C7 Perception and 3D representations"
+summary: >-
+  From two-view geometry through bundle adjustment, robust fitting, learned correspondence,
+  neural fields and 3D Gaussian splatting, to event and tactile sensing: which mathematical
+  representations a robot recovers the world in, and when each of them breaks. The graduate
+  courses behind it are CMU 16-822, UZH/ETH 151-0632 Vision Algorithms, MIT 16.485 L11-15,
+  Stanford CS231A and TUM IN2228; the textbooks are Hartley-Zisserman, Multiple View Geometry,
+  and Szeliski, Computer Vision 2e. The design calls for six lessons (the C7 section of
+  research_notes/연구 트랙 설계/blueprint.md).

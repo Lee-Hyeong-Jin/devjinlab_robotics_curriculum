@@ -1,0 +1,16 @@
+id: c5-state-estimation-manifolds
+title: C5 상태 추정
+summary: >-
+  로봇의 상태 추정을 필터가 아니라 인자 그래프(factor graph) 위의 MAP 추론으로 세운다.
+  MAP = 비선형 최소제곱 동등성, 가우시안 변수 소거와 Schur 보완, 희소성과 증분 추론(iSAM2),
+  매니폴드 위 추정과 불변 EKF, IMU 선적분, 관측가능성과 추정 일관성, 강건·전역 추정까지 간다.
+  근거가 되는 대학원 과목은 CMU 16-833, MIT 16.485 L16-30, UPenn ESE 650 M1 이고 교재는
+  Barfoot SER(3-5, 7-9장)이다. 설계상 레슨은 6개다(blueprint.md 의 C5 절).
+level: 연구
+lessons:
+  - factor-graphs-map
+  - sparsity-isam
+  - manifold-estimation
+  - imu-preintegration
+  - observability-consistency
+  - robust-global-estimation

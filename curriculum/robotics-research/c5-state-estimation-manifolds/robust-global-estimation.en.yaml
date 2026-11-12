@@ -1,0 +1,96 @@
+# English text of the structured fields of robust-global-estimation.md (activity titles,
+# resource notes, quiz). The prose lives in robust-global-estimation.en.md.
+id: c5-robust-global-estimation
+lang: en
+activities:
+  c5-robust-global-estimation-reading: Read the lesson and follow the derivations
+  c5-robust-global-estimation-papers: Read the three must-read papers + a one-page note each
+  c5-robust-global-estimation-problems: "Problem set (1 derivation, 1 proof, 2 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  c5-robust-global-estimation-reproduction: "Reproduction task - a pose graph with 20% outliers, the global optimality certificate, breakdown (R2)"
+  c5-robust-global-estimation-quiz: Concept check quiz
+resources:
+  "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
+    note: ch.5.3 (Outliers). The way into the textbook treatment of M-estimators and RANSAC; the full PDF is free.
+quiz:
+  - id: q1
+    prompt: >-
+      Given a loss function $\rho$ and its influence function $\psi = \rho'$, write the IRLS weight
+      $w(r)$.
+    answers: ["psi(r)/r", "rho'(r)/r", "psi/r", "psi(r) / r"]
+    explanation: >-
+      From (3), $\nabla F = \sum_k \frac{\psi(n_k)}{n_k}J_k^\top r_k$, so $w(r) = \psi(r)/r$.
+      Holding that weight fixed makes the gradient **literally** the gradient of weighted least
+      squares, which is why an IRLS fixed point is a stationary point of the M-estimator.
+    concept:
+      front: The IRLS weight
+      back: >-
+        $w(r) = \psi(r)/r = \rho'(r)/r$ - with the weight held fixed, the M-estimator's gradient
+        equals that of weighted least squares
+  - id: q2
+    prompt: Why does the Huber kernel collapse as outliers accumulate?
+    choices:
+      - Because $\rho$ is non-convex and it falls into a local minimum
+      - Because the influence function is bounded but not zero, so outliers keep pulling with a constant force
+      - Because IRLS does not converge
+      - Because the weights can become negative
+    explanation: >-
+      Huber's $\psi = \min(r, c)$ is bounded but **converges to $c$** as $r\to\infty$ — it is not
+      zero. The force of a single outlier is limited, but the sum over $m$ outliers grows as $mc$.
+      In the reproduction task Huber's ATE jumps from $0.298$ to $0.882$ at 40% outliers while the
+      redescending kernel (TLS) stays around $0.16$. Option 1 is wrong because Huber is convex.
+    concept:
+      front: Huber's breakdown
+      back: >-
+        $\psi$ is bounded but not zero - the force accumulates with the number of outliers. A
+        redescending kernel has $\psi\to0$ and holds up (at the cost of non-convexity)
+  - id: q3
+    prompt: >-
+      In $SO(2)$ synchronization, what is the key step that makes $S = \Lambda - C \succeq 0$ prove
+      global optimality?
+    choices:
+      - That $S$ is sparse
+      - That $x^*\Lambda x = \operatorname{tr}\Lambda$ is constant for every feasible $x$
+      - That $C$ is Hermitian
+      - That $\hat x$ is the leading eigenvector of $C$
+    explanation: >-
+      Because $\lvert x_k\rvert = 1$, the quantity $x^*\Lambda x = \sum_k\Lambda_{kk}$ does not
+      depend on $x$. That lets one rewrite $-x^*Cx = x^*Sx - \operatorname{tr}\Lambda$ **exactly**,
+      and $S\succeq0$ then gives the bound immediately. $\hat x$ is not an eigenvector of $C$ but an
+      element of the null space of $S$.
+    concept:
+      front: The heart of the certificate proof
+      back: >-
+        $\lvert x_k\rvert=1$ makes $x^*\Lambda x$ constant, so
+        $-x^*Cx = x^*Sx - \operatorname{tr}\Lambda$, and $S\succeq0$ is the bound
+  - id: q4
+    prompt: >-
+      An SE-Sync style global optimality certificate guarantees global optimality even on a pose
+      graph contaminated by outliers.
+    explanation: >-
+      The certificate proves global optimality of **the objective it is given** (usually
+      outlier-free least squares). Once outliers are mixed in, the tightness of the relaxation
+      breaks, $\lambda_{\min}(S) < 0$, and the certificate itself fails — in the reproduction task
+      a mere 10% of outliers gives $-6.8\times10^{-3}$. More fundamentally, even a globally optimal
+      objective value says nothing about **whether that objective is the right model**.
+    concept:
+      front: What a certificate does not guarantee
+      back: >-
+        With outliers the tightness breaks and the certificate fails. And global optimality of an
+        objective is not the same as choosing the right model
+  - id: q5
+    prompt: What does TEASER's TIM/TRIM decomposition accomplish?
+    choices:
+      - It removes outliers directly
+      - It eliminates translation and then rotation so each subproblem becomes small enough to certify
+      - It reduces the noise
+      - It recomputes the correspondences
+    explanation: >-
+      The difference of two correspondences eliminates $t$ (TIM) and its norm eliminates $R$ (TRIM),
+      leaving a one-dimensional problem in the scale $s$ alone. The point is not that the
+      decomposition confers robustness but that it makes each subproblem **small enough to solve
+      globally and certify**. Removing outliers is what the maximum clique step does.
+    concept:
+      front: The purpose of the TIM/TRIM decomposition
+      back: >-
+        Eliminate $t$ then $R$ down to a one-dimensional problem. It creates **certifiability**,
+        not robustness

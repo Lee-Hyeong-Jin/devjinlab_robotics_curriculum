@@ -9,7 +9,7 @@
  * `level` is the stable id the API groups by, the same in every language; the
  * reader is shown `levelLabel`, which the API translates (FR-9).
  */
-import type { Roadmap } from './api/types'
+import type { Course, Roadmap } from './api/types'
 import { doneCount, normalizeState, type LockState } from './progress'
 
 export interface RoadmapLessonView {
@@ -25,6 +25,12 @@ export interface RoadmapModuleView {
   progress: number
   state: LockState
   lessons: RoadmapLessonView[]
+  /**
+   * How many lessons the module has. Usually `lessons.length`, but an anonymous reader is
+   * served the course structure instead of the roadmap (ADR 0016) and that carries the count
+   * without the per-lesson list.
+   */
+  lessonsTotal: number
 }
 
 export interface RoadmapStageView {
@@ -53,6 +59,7 @@ export function toStageViews(roadmap: Roadmap | null): RoadmapStageView[] {
         title: lesson.title,
         state: normalizeState(lesson.state),
       })),
+      lessonsTotal: module.lessons.length,
     }))
     const lessons = modules.flatMap((module) => module.lessons)
     return {
@@ -61,6 +68,36 @@ export function toStageViews(roadmap: Roadmap | null): RoadmapStageView[] {
       progress: stage.progress,
       lessonsDone: doneCount(lessons.map((lesson) => lesson.state)),
       lessonsTotal: lessons.length,
+      modules,
+    }
+  })
+}
+
+/**
+ * The same view model built from `GET /courses/{id}` instead of `GET /roadmap`.
+ *
+ * An anonymous reader may read the curriculum but not the roadmap, which carries the
+ * caller's own progress (ADR 0016). The course gives the stage → module structure — which is
+ * what a first-time visitor and a crawler need — so the page shows that rather than nothing.
+ * Every state is `available` and every progress 0, because there is no reader to have any.
+ */
+export function toStageViewsFromCourse(course: Course | null): RoadmapStageView[] {
+  if (!course) return []
+  return (course.stages ?? []).map((stage) => {
+    const modules: RoadmapModuleView[] = (stage.modules ?? []).map((module) => ({
+      id: module.id,
+      title: module.title,
+      progress: 0,
+      state: 'available' as const,
+      lessons: [],
+      lessonsTotal: module.lesson_count,
+    }))
+    return {
+      level: stage.level ?? '',
+      levelLabel: stage.level_label ?? stage.level ?? '',
+      progress: 0,
+      lessonsDone: 0,
+      lessonsTotal: modules.reduce((sum, module) => sum + module.lessonsTotal, 0),
       modules,
     }
   })

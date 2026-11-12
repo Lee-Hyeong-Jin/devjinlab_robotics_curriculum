@@ -1,0 +1,102 @@
+# English text of the structured fields of imu-preintegration.md (activity titles, resource
+# notes, quiz). The prose lives in imu-preintegration.en.md.
+id: c5-imu-preintegration
+lang: en
+activities:
+  c5-imu-preintegration-reading: Read the lesson and follow the derivations
+  c5-imu-preintegration-papers: Read the three must-read papers + a one-page note each
+  c5-imu-preintegration-problems: "Problem set (1 proof, 1 derivation, 2 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  c5-imu-preintegration-reproduction: "Reproduction task - the preintegration identity, bias correction, covariance, scale ambiguity (R2)"
+  c5-imu-preintegration-quiz: Concept check quiz
+resources:
+  "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
+    note: ch.9 (Pose Estimation). The way into the textbook treatment of inertial fusion; the full PDF is free.
+quiz:
+  - id: q1
+    prompt: >-
+      Why are $-v_i\Delta t_{ij} - \tfrac12 g\Delta t_{ij}^2$ subtracted in the definition of
+      $\Delta p_{ij}$?
+    choices:
+      - To make the units agree
+      - Because those two terms are determined by the initial state and gravity rather than by the IMU, so removing them leaves a quantity that depends on the IMU alone
+      - To compensate gravity and recover the accelerometer reading
+      - For numerical stability
+    explanation: >-
+      In the arithmetic of (7b) the gravity term collapses to exactly $\tfrac12 g\Delta t_{ij}^2$
+      and $v_i\Delta t_{ij}$ separates out as well. Subtracting both in the definition makes the
+      remaining $\Delta p_{ij}$ a function of the measurements and the bias alone, so no
+      re-integration is needed when the keyframe states change.
+    concept:
+      front: The gravity and velocity terms in the definition of $\Delta p$
+      back: >-
+        They remove the part determined by the initial state and gravity, making the preintegrated
+        quantity a function of the IMU alone - the whole point of avoiding re-integration
+  - id: q2
+    prompt: >-
+      The preintegration identity is a first-order approximation of the continuous kinematics, so
+      it only becomes accurate as $\Delta t$ shrinks.
+    explanation: >-
+      The identity is exact for the **discrete** model (2) - which is why Part A of the
+      reproduction task agrees to $10^{-15}$. What shrinking $\Delta t$ reduces is the
+      discretization error of (2) against the continuous model, and that is a **different** thing
+      (R5).
+    concept:
+      front: Preintegration error vs discretization error
+      back: >-
+        The identity is exact in the discrete model (machine precision). Discretization error is
+        separate and shrinks with $\Delta t$
+  - id: q3
+    prompt: >-
+      When the bias estimate changes by $\delta b$ and the first-order correction of (8) is used,
+      how does the error grow?
+    choices:
+      - $O(\lVert\delta b\rVert)$
+      - $O(\lVert\delta b\rVert^2)$
+      - $O(\lVert\delta b\rVert)\cdot\Delta t_{ij}$, proportional to the interval length
+      - It does not grow - the correction is exact
+    explanation: >-
+      It is a first-order Taylor expansion, so the residual is second order. The reproduction task
+      measures this across four decades - a tenfold change in $\lVert\delta b\rVert$ gives a
+      hundredfold error, with a quadratic constant of 0.1642 for $\Delta v$. That is why a large
+      move in the bias calls for re-integration.
+    concept:
+      front: Error of the first-order bias correction
+      back: >-
+        $O(\lVert\delta b\rVert^2)$ - a tenfold change gives a hundredfold error. A large move means
+        re-integrate (the same judgement as iSAM2's relinearization threshold)
+  - id: q4
+    prompt: >-
+      Over an interval where the world-frame acceleration is constant, what happens to the scale of
+      monocular visual-inertial fusion?
+    choices:
+      - It is always observable, because the IMU supplies absolute acceleration
+      - Knowing the gravity magnitude leaves two possible values; knowing the direction as well makes it unique
+      - It is completely undetermined
+      - It is determined by the bearings alone
+    explanation: >-
+      Equation (18) requires $(\lambda-1)a_k = g^\ast - g$ for every $k$, so a constant $a_k$ frees
+      $\lambda$. Fixing $\lVert g\rVert$ leaves only the two roots of (20), and fixing the
+      direction too gives $\lambda = 1$. In the reproduction task's setting the second root is
+      $\lambda^\ast = 14.23$ - a scale wrong by a factor of 14 that reproduces the measurements
+      perfectly.
+    concept:
+      front: Scale ambiguity over a constant-acceleration interval
+      back: >-
+        $\lambda^\ast = 1 - 2g^\top c/\lVert c\rVert^2$ - two solutions if only the gravity
+        magnitude is known, unique if the direction is too. At rest ($c=0$) it is entirely
+        undetermined
+  - id: q5
+    prompt: >-
+      With a gyroscope noise of $\sigma_g$ (per sample, rad/s), write the standard deviation of the
+      rotation error of an $n$-sample preintegration in terms of $\sigma_g$, $\Delta t$ and $n$.
+    answers: ["sigma_g * dt * sqrt(n)", "sigma_g dt sqrt(n)", "sigma_g*dt*sqrt(n)", "sigma_g dt n^(1/2)"]
+    explanation: >-
+      For small steps where $J_r \approx I$ we have $\delta\phi \approx \sum_k \eta^g_k\Delta t$,
+      so the standard deviation of that independent sum is $\sigma_g\Delta t\sqrt n$. In the
+      reproduction task $0.004\cdot0.005\cdot10 = 2\times10^{-4}$, and the analytic covariance gives
+      exactly that value - use it as a first-order sanity check on the covariance code.
+    concept:
+      front: Magnitude of the preintegrated rotation error
+      back: >-
+        $\sigma_g\Delta t\sqrt n$, for per-sample discrete noise. If given as a density, convert
+        with $\sigma_g = \sigma^{cont}/\sqrt{\Delta t}$

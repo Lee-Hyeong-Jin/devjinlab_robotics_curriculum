@@ -1,0 +1,104 @@
+# English text of the structured fields of bundle-adjustment.md (activity titles, resource
+# notes, quiz items). The prose lives in bundle-adjustment.en.md.
+id: c7-bundle-adjustment
+lang: en
+activities:
+  c7-bundle-adjustment-reading: Read the lesson and follow the derivations
+  c7-bundle-adjustment-papers: Read the two must-read papers and write a one-page note on each
+  c7-bundle-adjustment-problems: "Problem set (2 derivations, 1 proof, 2 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  c7-bundle-adjustment-reproduction: "Reproduction task: Schur-complement LM bundle adjustment on a BAL dataset (R3)"
+  c7-bundle-adjustment-quiz: Concept-check quiz
+resources:
+  "Hartley & Zisserman, Multiple View Geometry in Computer Vision (2nd ed.)":
+    note: >-
+      ch.18 (N-view computational methods), ch.19 (auto-calibration), App. 6 (iterative
+      estimation). The primary textbook for this lesson.
+  "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
+    note: >-
+      ch.10 (pose-and-point estimation). The same sparse structure and Schur complement in
+      estimation-theoretic notation. Free full PDF.
+  "Bundle Adjustment in the Large datasets (BAL)":
+    note: The input data for the reproduction task. The camera model and the file format are defined on this page.
+  "Ceres Solver":
+    note: >-
+      Recommended baseline. `examples/bundle_adjuster.cc` takes the same BAL files, and its cost
+      definition is $\frac{1}{2}\sum\lVert r\rVert^2$, the same as this lesson's.
+  "GTSAM":
+    note: Recommended. The factor-graph implementation; use it to compare the same problem under a different elimination ordering.
+quiz:
+  - id: q1
+    prompt: Why is the camera block $B$ of the bundle-adjustment normal equations block diagonal?
+    choices:
+      - "Because the cameras move independently of each other"
+      - "Because each residual depends on a single camera, so every term of a cross-camera partial-derivative product vanishes"
+      - "Because it is the result of applying the Schur complement"
+      - "Because the LM damping erases the off-diagonal entries"
+    explanation: >-
+      $r_{ij}$ depends only on $\\theta_i$ and $X_j$. Every term of
+      $(J^\\top J)_{\\theta_i\\theta_k}$ would require one residual to depend on two cameras at
+      once, so it vanishes for $i \\ne k$. Adding inter-camera factors (IMU preintegration, say)
+      destroys this structure.
+    concept:
+      front: Why $B$ and $C$ are block diagonal
+      back: >-
+        One residual touches one camera and one point, so the cross partial-derivative products
+        vanish. Inter-camera factors break it
+  - id: q2
+    prompt: >-
+      The Schur complement is an approximation that ignores the point parameters, so it gives a
+      lower-quality step than the exact Gauss-Newton step.
+    explanation: >-
+      The Schur complement is the **exact** elimination coming out of the block LDL factorisation.
+      Combining $S\\delta_c = v - EC^{-1}w$ with $\\delta_p = C^{-1}(w - E^\\top\\delta_c)$ gives
+      exactly the solution of the original linear system (measured: relative difference
+      $2\\times10^{-10}$). $S$ is the Hessian of the reduced cost after the points have been
+      **exactly minimised**.
+    concept:
+      front: Is the Schur complement an approximation
+      back: >-
+        No - block LDL elimination gives exactly the same solution. $S$ is the Hessian of the cost
+        after exact minimisation over the points
+  - id: q3
+    prompt: What is the dimension of the null space of $J$ (the gauge freedom) in bundle adjustment? (number only)
+    answers: ["7", "seven"]
+    explanation: >-
+      A similarity transform of the world frame - 3 rotation plus 3 translation plus 1 scale = 7 -
+      does not change any reprojection. Leaving the intrinsics free keeps the similarity gauge at
+      7. Measured: $\\sigma_{n-7}/\\sigma_{n-6} = 1.08\\times10^8$ on the synthetic problem.
+    concept:
+      front: Gauge freedom of bundle adjustment
+      back: "7 = 3 rotation + 3 translation + 1 scale (a similarity transform of the world frame)"
+  - id: q4
+    prompt: What does the sparsity pattern of the reduced camera matrix $S = B - EC^{-1}E^\top$ equal?
+    choices:
+      - "The pattern of the camera-point observation matrix"
+      - "The adjacency matrix of the camera co-visibility graph (non-zero when two cameras see a common point)"
+      - "The pattern of the point block $C$"
+      - "It is always dense"
+    explanation: >-
+      Since $S_{ik} = B_{ik} - \\sum_j E_{ij}C_{jj}^{-1}E_{kj}^\\top$ and
+      $E_{ij} \\ne 0 \\iff (i,j)$ is an observation, an off-diagonal block is non-zero only when the
+      two cameras share a point. Measured (BAL-49): co-visibility density 0.835 = density of $S$,
+      0.835.
+    concept:
+      front: Sparsity pattern of $S$
+      back: The camera co-visibility graph. At large scale that sparsity is what the preconditioner is built on
+  - id: q5
+    prompt: >-
+      For a camera with zero skew, unit aspect ratio and a principal point at the origin, how many
+      views does the linear count demand for self-calibration, and what is the limit of that count?
+    choices:
+      - "2 views. The count is a sufficient condition"
+      - "3 views. The count is only necessary - on a critical motion sequence the rank saturates at 8 however many views are added"
+      - "5 views. Critical motion sequences do not exist"
+      - "9 views. Zero skew alone gives the same number"
+    explanation: >-
+      Four linear constraints per view against nine unknowns (ten entries of $\\Omega^*$ less one
+      scale) gives $4N \\ge 9$, so $N \\ge 3$. Measured: general motion reaches rank 9 at $N=3$.
+      But pure translation and fixed-axis rotation stay at rank 8 even at $N=6$, and pure rotation
+      gives rank 5.
+    concept:
+      front: The view count for self-calibration
+      back: >-
+        4 equations per view against 9 unknowns, so $N \\ge 3$ - necessary only. Planar driving and
+        fixed-axis turning are critical motion sequences

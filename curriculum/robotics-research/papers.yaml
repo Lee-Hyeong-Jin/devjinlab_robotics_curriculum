@@ -18,7 +18,8 @@
 #
 # ── 저자 경계 (AUTHORING §9-1) ─────────────────────────────────────────────────
 # 각 저자는 **자기 모듈 블록 안에서만** 추가·수정한다. 다른 모듈 항목은 읽기 전용이며,
-# 같은 논문을 쓰려면 **id 를 재사용**하고 그 항목의 lessons[] 에 자기 레슨 id 만 더한다.
+# 같은 논문을 쓰려면 **id 만 재사용**하고 자기 레슨의 papers[] 에만 쓴다(이 레지스트리의 그
+# 항목은 손대지 않는다 — 위의 lessons[] 미사용 규칙과 같은 이유다).
 # 블록이 없으면 아래 구분선 형식으로 자기 모듈 블록을 만든다. 헤더(이 주석)는 공유 구역이므로
 # 건드리지 않는다 — 편수는 하드코딩하지 않고 필요할 때 센다:
 #   grep -c '^  - id:' curriculum/robotics-research/papers.yaml
@@ -128,7 +129,150 @@ papers:
     verified: true
     role: survey
   # ── C2 다물체 동역학 ──────────────────────────────────────────────
-  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+  # part1·part2 는 C1 블록의 id 를 재사용한다(c1-twists-wrenches-adjoint 와 공유).
+  - id: featherstone2006-plucker-basis
+    title: "Plücker basis vectors"
+    authors: ["R. Featherstone"]
+    year: 2006
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ROBOT.2006.1641982"
+    note: "Crossref 에 게재 연도가 비어 있다(ICRA 2006 프로시딩)"
+    verified: true
+    role: standard
+  - id: luh1980-rnea
+    title: "On-line computational scheme for mechanical manipulators"
+    authors: ["J. Y. S. Luh", "M. W. Walker", "R. P. C. Paul"]
+    year: 1980
+    venue: "ASME J. Dynamic Systems, Measurement, and Control"
+    url: "https://doi.org/10.1115/1.3149599"
+    note: "제1저자만 레코드로 확인. 정오표(10.1115/1.3139629)는 쓰지 않는다"
+    verified: true
+    role: seminal
+  - id: featherstone2000-dynamics-equations-algorithms
+    title: "Robot dynamics: equations and algorithms"
+    authors: ["R. Featherstone", "D. Orin"]
+    year: 2000
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ROBOT.2000.844153"
+    note: "Crossref 에 게재 연도가 비어 있다(ICRA 2000 프로시딩, San Francisco)"
+    verified: true
+    role: survey
+  - id: walker1982-crba
+    title: "Efficient dynamic computer simulation of robotic mechanisms"
+    authors: ["M. W. Walker", "D. E. Orin"]
+    year: 1982
+    venue: "ASME J. Dynamic Systems, Measurement, and Control"
+    url: "https://doi.org/10.1115/1.3139699"
+    note: "제2저자 Orin 은 레코드로 확인되지 않았다"
+    verified: true
+    role: seminal
+  - id: featherstone1983-aba
+    title: "The calculation of robot dynamics using articulated-body inertias"
+    authors: ["R. Featherstone"]
+    year: 1983
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/027836498300200102"
+    verified: true
+    role: seminal
+  - id: khatib1987-operational-space
+    title: "A unified approach for motion and force control of robot manipulators: the operational space formulation"
+    authors: ["O. Khatib"]
+    year: 1987
+    venue: "IEEE J. Robotics and Automation"
+    url: "https://doi.org/10.1109/JRA.1987.1087068"
+    verified: true
+    role: seminal
+  - id: udwadia1992-constrained-motion
+    title: "A new perspective on constrained motion"
+    authors: ["F. E. Udwadia", "R. E. Kalaba"]
+    year: 1992
+    venue: "Proc. Royal Society A"
+    url: "https://doi.org/10.1098/rspa.1992.0158"
+    verified: true
+    role: standard
+  - id: baumgarte1972-constraint-stabilization
+    title: "Stabilization of constraints and integrals of motion in dynamical systems"
+    authors: ["J. Baumgarte"]
+    year: 1972
+    venue: "Computer Methods in Applied Mechanics and Engineering"
+    url: "https://doi.org/10.1016/0045-7825(72)90018-7"
+    verified: true
+    role: seminal
+
+  - id: stewart1996-implicit-timestepping
+    title: "An implicit time-stepping scheme for rigid body dynamics with inelastic collisions and Coulomb friction"
+    authors: ["D. E. Stewart", "J. C. Trinkle"]
+    year: 1996
+    venue: "Int. J. Numerical Methods in Engineering"
+    url: "https://doi.org/10.1002/(SICI)1097-0207(19960815)39:15<2673::AID-NME972>3.0.CO;2-I"
+    verified: true
+    role: seminal
+  - id: anitescu1997-lcp-contact
+    title: "Formulating dynamic multi-rigid-body contact problems with friction as solvable linear complementarity problems"
+    authors: ["M. Anitescu", "F. A. Potra"]
+    year: 1997
+    venue: "Nonlinear Dynamics"
+    url: "https://doi.org/10.1023/A:1008292328909"
+    verified: true
+    role: standard
+  - id: todorov2014-convex-contact
+    title: "Convex and analytically-invertible dynamics with contacts and constraints: theory and implementation in MuJoCo"
+    authors: ["E. Todorov"]
+    year: 2014
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ICRA.2014.6907751"
+    verified: true
+    role: standard
+  - id: stewart2000-rigid-body-friction-impact
+    title: "Rigid-body dynamics with friction and impact"
+    authors: ["D. E. Stewart"]
+    year: 2000
+    venue: "SIAM Review"
+    url: "https://doi.org/10.1137/S0036144599360110"
+    verified: true
+    role: survey
+  - id: genot1999-painleve
+    title: "New results on Painlevé paradoxes"
+    authors: ["F. Génot", "B. Brogliato"]
+    year: 1999
+    venue: "European Journal of Mechanics A/Solids"
+    url: "https://doi.org/10.1016/S0997-7538(99)00144-8"
+    verified: true
+    role: standard
+
+  - id: atkeson1986-inertial-parameters
+    title: "Estimation of inertial parameters of manipulator loads and links"
+    authors: ["C. G. Atkeson", "C. H. An", "J. M. Hollerbach"]
+    year: 1986
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/027836498600500306"
+    verified: true
+    role: seminal
+  - id: gautier1990-minimal-inertial-parameters
+    title: "Direct calculation of minimum set of inertial parameters of serial robots"
+    authors: ["M. Gautier", "W. Khalil"]
+    year: 1990
+    venue: "IEEE Trans. Robotics and Automation"
+    url: "https://doi.org/10.1109/70.56655"
+    verified: true
+    role: standard
+  - id: wensing2018-lmi-inertial
+    title: "Linear matrix inequalities for physically consistent inertial parameter identification: a statistical perspective on the mass distribution"
+    authors: ["P. M. Wensing", "S. Kim", "J.-J. E. Slotine"]
+    year: 2018
+    venue: "IEEE RA-L 3(1)"
+    url: "https://doi.org/10.1109/LRA.2017.2729659"
+    note: "Crossref 의 게재 연도는 2018(RA-L 3권 1호), 온라인 선공개는 2017"
+    verified: true
+    role: standard
+  - id: carpentier2018-pinocchio
+    title: "Analytical derivatives of rigid body dynamics algorithms"
+    authors: ["J. Carpentier", "N. Mansard"]
+    year: 2018
+    venue: "RSS"
+    url: "https://doi.org/10.15607/RSS.2018.XIV.038"
+    verified: true
+    role: standard
 
   # ── C3 비선형·강건 제어 ────────────────────────────────────────────
   - id: sontag1989-coprime-factorization
@@ -332,7 +476,199 @@ papers:
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
   # ── C5 상태 추정 ────────────────────────────────────────────────
-  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+  - id: dellaert2006-square-root-sam
+    title: "Square Root SAM: simultaneous localization and mapping via square root information smoothing"
+    authors: ["F. Dellaert", "M. Kaess"]
+    year: 2006
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364906072768"
+    verified: true
+    role: seminal
+  - id: rose1976-vertex-elimination
+    title: "Algorithmic aspects of vertex elimination on graphs"
+    authors: ["D. J. Rose", "R. E. Tarjan", "G. S. Lueker"]
+    year: 1976
+    venue: "SIAM J. Comput."
+    url: "https://doi.org/10.1137/0205021"
+    verified: true
+    role: seminal
+  - id: carlevaris-bianco2014-node-removal
+    title: "Generic node removal for factor-graph SLAM"
+    authors: ["N. Carlevaris-Bianco", "M. Kaess", "R. M. Eustice"]
+    year: 2014
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2014.2347571"
+    verified: true
+    role: standard
+  - id: kaess2012-isam2
+    title: "iSAM2: incremental smoothing and mapping using the Bayes tree"
+    authors: ["M. Kaess", "H. Johannsson", "R. Roberts", "et al."]
+    year: 2012
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364911430419"
+    note: "Crossref 등록 연도 2011(온라인 선공개), 지면 2012"
+    verified: true
+    role: seminal
+  - id: yannakakis1981-min-fill-in
+    title: "Computing the minimum fill-in is NP-complete"
+    authors: ["M. Yannakakis"]
+    year: 1981
+    venue: "SIAM J. Alg. Disc. Meth."
+    url: "https://doi.org/10.1137/0602010"
+    verified: true
+    role: seminal
+  - id: lipton1979-nested-dissection
+    title: "Generalized nested dissection"
+    authors: ["R. J. Lipton", "D. J. Rose", "R. E. Tarjan"]
+    year: 1979
+    venue: "SIAM J. Numer. Anal."
+    url: "https://doi.org/10.1137/0716027"
+    verified: true
+    role: standard
+  - id: kaess2008-isam
+    title: "iSAM: incremental smoothing and mapping"
+    authors: ["M. Kaess", "A. Ranganathan", "F. Dellaert"]
+    year: 2008
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2008.2006706"
+    verified: true
+    role: seminal
+  - id: barrau2017-invariant-ekf
+    title: "The invariant extended Kalman filter as a stable observer"
+    authors: ["A. Barrau", "S. Bonnabel"]
+    year: 2017
+    venue: "IEEE T-AC"
+    url: "https://arxiv.org/abs/1410.1465"
+    note: "arXiv 2014 게재, T-AC 2017"
+    verified: true
+    role: seminal
+  - id: hartley2020-contact-inekf
+    title: "Contact-aided invariant extended Kalman filtering for robot state estimation"
+    authors: ["R. Hartley", "M. Ghaffari", "R. M. Eustice", "J. W. Grizzle"]
+    year: 2020
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364919894385"
+    verified: true
+    role: standard
+  - id: lupton2012-preintegration
+    title: "Visual-inertial-aided navigation for high-dynamic motion in built environments without initial conditions"
+    authors: ["T. Lupton", "S. Sukkarieh"]
+    year: 2012
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2011.2170332"
+    verified: true
+    role: seminal
+  - id: martinelli2012-closed-form-scale
+    title: "Vision and IMU data fusion: closed-form solutions for attitude, speed, absolute scale, and bias determination"
+    authors: ["A. Martinelli"]
+    year: 2012
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2011.2160468"
+    verified: true
+    role: standard
+  - id: qin2018-vins-mono
+    title: "VINS-Mono: a robust and versatile monocular visual-inertial state estimator"
+    authors: ["T. Qin", "P. Li", "S. Shen"]
+    year: 2018
+    venue: "IEEE T-RO"
+    url: "https://arxiv.org/abs/1708.03852"
+    note: "arXiv v1 2017, T-RO 2018"
+    verified: true
+    role: standard
+  - id: mourikis2007-msckf
+    title: "A multi-state constraint Kalman filter for vision-aided inertial navigation"
+    authors: ["A. I. Mourikis", "S. I. Roumeliotis"]
+    year: 2007
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ROBOT.2007.364024"
+    verified: true
+    role: seminal
+  - id: huang2010-fej
+    title: "Observability-based rules for designing consistent EKF SLAM estimators"
+    authors: ["G. P. Huang", "A. I. Mourikis", "S. I. Roumeliotis"]
+    year: 2010
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364909353640"
+    note: "Crossref 등록 연도 2009(온라인 선공개), 지면 2010"
+    verified: true
+    role: seminal
+  - id: li2013-vio-observability
+    title: "High-precision, consistent EKF-based visual-inertial odometry"
+    authors: ["M. Li", "A. I. Mourikis"]
+    year: 2013
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364913481251"
+    verified: true
+    role: standard
+  - id: hermann1977-observability
+    title: "Nonlinear controllability and observability"
+    authors: ["R. Hermann", "A. Krener"]
+    year: 1977
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.1977.1101601"
+    verified: true
+    role: seminal
+  - id: hesch2014-vio-observability
+    title: "Camera-IMU-based localization: observability analysis and consistency improvement"
+    authors: ["J. A. Hesch", "D. G. Kottas", "S. L. Bowman", "S. I. Roumeliotis"]
+    year: 2014
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364913509675"
+    note: "온라인 선공개 2013-11-13, 지면 2014"
+    verified: true
+    role: standard
+  - id: rosen2019-se-sync
+    title: "SE-Sync: a certifiably correct algorithm for synchronization over the special Euclidean group"
+    authors: ["D. M. Rosen", "L. Carlone", "A. S. Bandeira", "J. J. Leonard"]
+    year: 2019
+    venue: "IJRR"
+    url: "https://arxiv.org/abs/1612.07386"
+    note: "arXiv 2016 게재, IJRR 2019"
+    verified: true
+    role: seminal
+  - id: yang2021-teaser
+    title: "TEASER: fast and certifiable point cloud registration"
+    authors: ["H. Yang", "J. Shi", "L. Carlone"]
+    year: 2021
+    venue: "IEEE T-RO"
+    url: "https://arxiv.org/abs/2001.07715"
+    note: "arXiv 2020 게재; arXiv journal_ref 는 T-RO 2020, 지면 2021"
+    verified: true
+    role: standard
+  - id: sunderhauf2012-switchable
+    title: "Switchable constraints for robust pose graph SLAM"
+    authors: ["N. Sunderhauf", "P. Protzel"]
+    year: 2012
+    venue: "IROS"
+    url: "https://doi.org/10.1109/IROS.2012.6385590"
+    verified: true
+    role: standard
+  - id: carlone2015-lagrangian-duality
+    title: "Lagrangian duality in 3D SLAM: verification techniques and optimal solutions"
+    authors: ["L. Carlone", "D. M. Rosen", "G. Calafiore", "J. J. Leonard", "F. Dellaert"]
+    year: 2015
+    venue: "IROS"
+    url: "https://arxiv.org/abs/1506.00746"
+    verified: true
+    role: standard
+  - id: fischler1981-ransac
+    title: "Random sample consensus: a paradigm for model fitting with applications to image analysis and automated cartography"
+    authors: ["M. A. Fischler", "R. C. Bolles"]
+    year: 1981
+    venue: "Communications of the ACM"
+    url: "https://doi.org/10.1145/358669.358692"
+    note: "1987 재수록판 DOI(10.1016/b978-0-08-051581-6.50070-2)는 쓰지 않는다"
+    verified: true
+    role: seminal
+  - id: cadena2016-slam-survey
+    title: "Past, present, and future of simultaneous localization and mapping: towards the robust-perception age"
+    authors: ["C. Cadena", "L. Carlone", "H. Carrillo", "et al."]
+    year: 2016
+    venue: "IEEE T-RO"
+    url: "https://arxiv.org/abs/1606.05830"
+    note: "journal_ref: IEEE T-RO 32(6), 1309-1332, 2016"
+    verified: true
+    role: survey
 
   # ── C6 동작 계획 이론 ─────────────────────────────────────────────
   - id: reif1979-complexity
@@ -760,10 +1096,443 @@ papers:
     note: "2026-11-12 Crossref 확인."
 
   # ── C7 지각과 3D 표현 ────────────────────────────────────────────
+  - id: longuet-higgins1981-essential
+    title: "A computer algorithm for reconstructing a scene from two projections"
+    authors: ["H. C. Longuet-Higgins"]
+    year: 1981
+    venue: "Nature"
+    url: "https://doi.org/10.1038/293133a0"
+    verified: true
+    role: seminal
+    note: "2 pages; the origin of the essential matrix and the linear eight-point solution"
+  - id: nister2004-five-point
+    title: "An efficient solution to the five-point relative pose problem"
+    authors: ["D. Nister"]
+    year: 2004
+    venue: "IEEE T-PAMI"
+    url: "https://doi.org/10.1109/TPAMI.2004.17"
+    verified: true
+    role: standard
+    note: "earlier CVPR 2003 version: 10.1109/CVPR.2003.1211470"
+  - id: huang-faugeras1989-e-matrix
+    title: "Some properties of the E matrix in two-view motion estimation"
+    authors: ["T. S. Huang", "O. D. Faugeras"]
+    year: 1989
+    venue: "IEEE T-PAMI"
+    url: "https://doi.org/10.1109/34.41368"
+    verified: true
+    role: seminal
+    note: "2.5 pages; the origin of the singular-value characterisation"
+  - id: hartley1997-eight-point
+    title: "In defense of the eight-point algorithm"
+    authors: ["R. I. Hartley"]
+    year: 1997
+    venue: "IEEE T-PAMI"
+    url: "https://doi.org/10.1109/34.601246"
+    verified: true
+    role: standard
+    note: "coordinate normalisation and the condition number"
+  - id: hartley-sturm1997-triangulation
+    title: "Triangulation"
+    authors: ["R. I. Hartley", "P. Sturm"]
+    year: 1997
+    venue: "Computer Vision and Image Understanding"
+    url: "https://doi.org/10.1006/cviu.1997.0547"
+    verified: true
+    role: standard
+    note: "optimal two-view triangulation closes in a degree-six polynomial"
+  - id: stewenius2006-relative-orientation
+    title: "Recent developments on direct relative orientation"
+    authors: ["H. Stewenius", "C. Engels", "D. Nister"]
+    year: 2006
+    venue: "ISPRS Journal of Photogrammetry and Remote Sensing"
+    url: "https://doi.org/10.1016/j.isprsjprs.2006.03.005"
+    verified: true
+    role: standard
+    note: "the action-matrix (Groebner) five-point solver; shorter to implement than Nister 2004"
+  - id: lee-civera2019-triangulation
+    title: "Triangulation: why optimize?"
+    authors: ["S. H. Lee", "J. Civera"]
+    year: 2019
+    venue: "BMVC"
+    url: "https://arxiv.org/abs/1907.11917"
+    verified: true
+    role: critique
+    note: "how little optimal triangulation actually buys"
+  - id: gallego2020-event-survey
+    title: "Event-based vision: a survey"
+    authors: ["G. Gallego", "T. Delbruck", "G. Orchard", "C. Bartolozzi", "et al."]
+    year: 2020
+    venue: "IEEE T-PAMI"
+    url: "https://arxiv.org/abs/1904.08405"
+    verified: true
+    role: survey
+    note: "arXiv v1 2019-04-17, journal_ref T-PAMI 2020; sec. 2-4 and the contrast maximisation part"
+  - id: yuan2017-gelsight
+    title: "GelSight: high-resolution robot tactile sensors for estimating geometry and force"
+    authors: ["W. Yuan", "S. Dong", "E. H. Adelson"]
+    year: 2017
+    venue: "Sensors"
+    url: "https://doi.org/10.3390/s17122762"
+    verified: true
+    role: seminal
+    note: "the photometric-stereo pipeline and the force calibration"
+  - id: gallego2018-contrast-maximization
+    title: "A unifying contrast maximization framework for event cameras"
+    authors: ["G. Gallego", "H. Rebecq", "D. Scaramuzza"]
+    year: 2018
+    venue: "CVPR"
+    url: "https://arxiv.org/abs/1804.01306"
+    verified: true
+    role: seminal
+    note: "arXiv v1 2018-04-04; the full title ends \"with Applications to Motion, Depth, and Optical Flow Estimation\""
+  - id: shiba2022-event-collapse
+    title: "Event collapse in contrast maximization frameworks"
+    authors: ["S. Shiba", "Y. Aoki", "G. Gallego"]
+    year: 2022
+    venue: "Sensors"
+    url: "https://arxiv.org/abs/2207.04007"
+    verified: true
+    role: critique
+    note: "arXiv v1 2022-07-08, journal_ref Sensors 22(14) 5190; the degeneracy of richer warp families"
+  - id: mildenhall2020-nerf
+    title: "NeRF: representing scenes as neural radiance fields for view synthesis"
+    authors: ["B. Mildenhall", "P. P. Srinivasan", "M. Tancik", "J. T. Barron", "R. Ramamoorthi", "R. Ng"]
+    year: 2020
+    venue: "ECCV"
+    url: "https://arxiv.org/abs/2003.08934"
+    verified: true
+    role: seminal
+    note: "arXiv v1 2020-03-19; sec. 4 has the discrete volume rendering and the positional encoding"
+  - id: kerbl2023-3dgs
+    title: "3D Gaussian splatting for real-time radiance field rendering"
+    authors: ["B. Kerbl", "G. Kopanas", "T. Leimkuhler", "G. Drettakis"]
+    year: 2023
+    venue: "ACM TOG (SIGGRAPH)"
+    url: "https://arxiv.org/abs/2308.04079"
+    verified: true
+    role: frontier
+    note: "ACM TOG 42(4), 2023-07; sec. 4-6 cover the splatting and the tile rasteriser"
+  - id: max1995-optical-models
+    title: "Optical models for direct volume rendering"
+    authors: ["N. Max"]
+    year: 1995
+    venue: "IEEE TVCG"
+    url: "https://doi.org/10.1109/2945.468400"
+    verified: true
+    role: seminal
+    note: "the absorption-emission model behind the volume rendering integral"
+  - id: zwicker2002-ewa-splatting
+    title: "EWA splatting"
+    authors: ["M. Zwicker", "H. Pfister", "J. van Baar", "M. Gross"]
+    year: 2002
+    venue: "IEEE TVCG"
+    url: "https://doi.org/10.1109/TVCG.2002.1021576"
+    verified: true
+    role: seminal
+    note: "the affine approximation of the projective map that 3DGS reuses"
+  - id: tancik2020-fourier-features
+    title: "Fourier features let networks learn high frequency functions in low dimensional domains"
+    authors: ["M. Tancik", "P. P. Srinivasan", "B. Mildenhall", "S. Fridovich-Keil", "et al."]
+    year: 2020
+    venue: "NeurIPS"
+    url: "https://arxiv.org/abs/2006.10739"
+    verified: true
+    role: standard
+    note: "arXiv v1 2020-06-18; the kernel view of the spectral bias of positional encoding"
+  - id: sarlin2020-superglue
+    title: "SuperGlue: learning feature matching with graph neural networks"
+    authors: ["P.-E. Sarlin", "D. DeTone", "T. Malisiewicz", "A. Rabinovich"]
+    year: 2020
+    venue: "CVPR"
+    url: "https://arxiv.org/abs/1911.11763"
+    verified: true
+    role: standard
+    note: "arXiv v1 2019-11-26, CVPR 2020; the matching layer is an entropic optimal transport solver"
+  - id: teed2021-droid-slam
+    title: "DROID-SLAM: deep visual SLAM for monocular, stereo, and RGB-D cameras"
+    authors: ["Z. Teed", "J. Deng"]
+    year: 2021
+    venue: "NeurIPS"
+    url: "https://arxiv.org/abs/2108.10869"
+    verified: true
+    role: frontier
+    note: "the dense bundle adjustment layer with learned weights"
+  - id: wang2024-dust3r
+    title: "DUSt3R: geometric 3D vision made easy"
+    authors: ["S. Wang", "V. Leroy", "Y. Cabon", "B. Chidlovskii", "J. Revaud"]
+    year: 2024
+    venue: "arXiv"
+    url: "https://arxiv.org/abs/2312.14132"
+    verified: true
+    role: frontier
+    note: "arXiv v1 2023-12-21; the arXiv record carries no journal_ref, so the venue is unverified"
+  - id: barath2020-magsac
+    title: "MAGSAC++, a fast, reliable and accurate robust estimator"
+    authors: ["D. Barath", "J. Noskova", "M. Ivashechkin", "J. Matas"]
+    year: 2020
+    venue: "CVPR"
+    url: "https://arxiv.org/abs/1912.05909"
+    verified: true
+    role: frontier
+    note: "arXiv v1 2019, CVPR 2020; marginalises the inlier threshold away"
+  - id: chin2018-robust-fitting
+    title: "Robust fitting in computer vision: easy or hard?"
+    authors: ["T.-J. Chin", "Z. Cai", "F. Neumann"]
+    year: 2018
+    venue: "ECCV"
+    url: "https://arxiv.org/abs/1802.06464"
+    verified: true
+    role: standard
+    note: "the complexity of consensus maximisation; exponential in the model dimension"
+  - id: yang2016-go-icp
+    title: "Go-ICP: a globally optimal solution to 3D ICP point-set registration"
+    authors: ["J. Yang", "H. Li", "D. Campbell", "Y. Jia"]
+    year: 2016
+    venue: "IEEE T-PAMI"
+    url: "https://arxiv.org/abs/1605.03344"
+    verified: true
+    role: standard
+    note: "branch and bound over SO(3) with the angular-distance bound"
+  - id: triggs2000-bundle-adjustment
+    title: "Bundle adjustment -- a modern synthesis"
+    authors: ["B. Triggs", "P. F. McLauchlan", "R. I. Hartley", "A. W. Fitzgibbon"]
+    year: 2000
+    venue: "Vision Algorithms: Theory and Practice (LNCS)"
+    url: "https://doi.org/10.1007/3-540-44480-7_21"
+    verified: true
+    role: standard
+    note: "sec. 4 sparsity and the Schur complement, sec. 9 gauge freedom and uncertainty"
+  - id: agarwal2010-rome
+    title: "Bundle adjustment in the large"
+    authors: ["S. Agarwal", "N. Snavely", "S. M. Seitz", "R. Szeliski"]
+    year: 2010
+    venue: "ECCV"
+    url: "https://doi.org/10.1007/978-3-642-15552-9_3"
+    verified: true
+    role: standard
+    note: "explicit vs implicit Schur and visibility-based preconditioners; source of the BAL datasets"
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
   # ── C8 의사결정·학습 이론 ───────────────────────────────────────────
-  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+  - id: ross2010-efficient-reductions
+    title: "Efficient reductions for imitation learning"
+    authors: ["S. Ross", "J. A. Bagnell"]
+    year: 2010
+    venue: "AISTATS"
+    url: "https://proceedings.mlr.press/v9/ross10a.html"
+    verified: true
+    role: seminal
+    note: "DOI 없음 — PMLR v9 페이지에서 제목 확인"
+  - id: ross2011-dagger
+    title: "A reduction of imitation learning and structured prediction to no-regret online learning"
+    authors: ["S. Ross", "G. J. Gordon", "J. A. Bagnell"]
+    year: 2011
+    venue: "AISTATS"
+    url: "https://arxiv.org/abs/1011.0686"
+    verified: true
+    role: seminal
+    note: "arXiv v1 2010, AISTATS 2011"
+  - id: ziebart2008-maxent-irl
+    title: "Maximum entropy inverse reinforcement learning"
+    authors: ["B. D. Ziebart", "A. Maas", "J. A. Bagnell", "A. K. Dey"]
+    year: 2008
+    venue: "AAAI"
+    url: "https://cdn.aaai.org/AAAI/2008/AAAI08-227.pdf"
+    verified: true
+    role: seminal
+    note: "DOI·arXiv 없음 — 메타데이터는 Semantic Scholar 로 확인"
+
+  - id: jin2021-pessimism
+    title: "Is pessimism provably efficient for offline RL?"
+    authors: ["Y. Jin", "Z. Yang", "Z. Wang"]
+    year: 2021
+    venue: "ICML"
+    url: "https://arxiv.org/abs/2012.15085"
+    verified: true
+    role: seminal
+    note: "arXiv v1 2020"
+  - id: levine2020-offline-rl
+    title: "Offline reinforcement learning: tutorial, review, and perspectives on open problems"
+    authors: ["S. Levine", "A. Kumar", "G. Tucker", "J. Fu"]
+    year: 2020
+    venue: "arXiv"
+    url: "https://arxiv.org/abs/2005.01643"
+    verified: true
+    role: survey
+  - id: kumar2020-cql
+    title: "Conservative Q-learning for offline reinforcement learning"
+    authors: ["A. Kumar", "A. Zhou", "G. Tucker", "S. Levine"]
+    year: 2020
+    venue: "NeurIPS"
+    url: "https://arxiv.org/abs/2006.04779"
+    verified: true
+    role: standard
+
+  - id: levine2018-control-as-inference
+    title: "Reinforcement learning and control as probabilistic inference: tutorial and review"
+    authors: ["S. Levine"]
+    year: 2018
+    venue: "arXiv"
+    url: "https://arxiv.org/abs/1805.00909"
+    verified: true
+    role: survey
+  - id: haarnoja2018-sac
+    title: "Soft actor-critic: off-policy maximum entropy deep reinforcement learning with a stochastic actor"
+    authors: ["T. Haarnoja", "A. Zhou", "P. Abbeel", "S. Levine"]
+    year: 2018
+    venue: "ICML"
+    url: "https://arxiv.org/abs/1801.01290"
+    verified: true
+    role: standard
+  - id: williams2017-mppi
+    title: "Model predictive path integral control: from theory to parallel computation"
+    authors: ["G. Williams", "A. Aldrich", "E. A. Theodorou"]
+    year: 2017
+    venue: "AIAA J. Guidance, Control, and Dynamics"
+    url: "https://doi.org/10.2514/1.G001921"
+    verified: true
+    role: standard
+
+  - id: tobin2017-domain-randomization
+    title: "Domain randomization for transferring deep neural networks from simulation to the real world"
+    authors: ["J. Tobin", "R. Fong", "A. Ray", "et al."]
+    year: 2017
+    venue: "IROS"
+    url: "https://arxiv.org/abs/1703.06907"
+    verified: true
+    role: seminal
+  - id: rajeswaran2017-epopt
+    title: "EPOpt: learning robust neural network policies using model ensembles"
+    authors: ["A. Rajeswaran", "S. Ghotra", "B. Ravindran", "S. Levine"]
+    year: 2017
+    venue: "ICLR"
+    url: "https://arxiv.org/abs/1610.01283"
+    verified: true
+    role: standard
+    note: "arXiv v1 2016"
+  - id: chen2020-learning-by-cheating
+    title: "Learning by cheating"
+    authors: ["D. Chen", "B. Zhou", "V. Koltun", "P. Krahenbuhl"]
+    year: 2020
+    venue: "CoRL"
+    url: "https://arxiv.org/abs/1912.12294"
+    verified: true
+    role: standard
+    note: "arXiv v1 2019"
+
+  - id: blackwell1965-discounted-dp
+    title: "Discounted dynamic programming"
+    authors: ["D. Blackwell"]
+    year: 1965
+    venue: "The Annals of Mathematical Statistics"
+    url: "https://doi.org/10.1214/aoms/1177700285"
+    verified: true
+    role: seminal
+    note: "Crossref 로 제목·제1저자·연도·저널 확인. 할인 DP 의 수축 사상 논증과 최적 정책 존재의 원전"
+  - id: smallwood1973-pomdp-pwlc
+    title: "The optimal control of partially observable Markov processes over a finite horizon"
+    authors: ["R. D. Smallwood", "E. J. Sondik"]
+    year: 1973
+    venue: "Operations Research"
+    url: "https://doi.org/10.1287/opre.21.5.1071"
+    verified: true
+    role: seminal
+    note: "Crossref 로 제목·저자·연도·저널 확인. 유한 지평 POMDP 가치함수의 PWLC 성질과 알파 벡터의 원전"
+  - id: kaelbling1998-pomdp
+    title: "Planning and acting in partially observable stochastic domains"
+    authors: ["L. P. Kaelbling", "M. L. Littman", "A. R. Cassandra"]
+    year: 1998
+    venue: "Artificial Intelligence"
+    url: "https://doi.org/10.1016/S0004-3702(98)00023-X"
+    verified: true
+    role: seminal
+  - id: sutton2000-policy-gradient
+    title: "Policy gradient methods for reinforcement learning with function approximation"
+    authors: ["R. S. Sutton", "D. McAllester", "S. Singh", "Y. Mansour"]
+    year: 2000
+    venue: "NIPS"
+    url: "https://papers.nips.cc/paper_files/paper/1999/hash/464d828b85b0bed98e80ade0a5c43b0f-Abstract.html"
+    verified: true
+    role: seminal
+    note: "NIPS 12 — 학회는 1999-12, 프로시딩 권 표기는 2000"
+  - id: schulman2015-trpo
+    title: "Trust region policy optimization"
+    authors: ["J. Schulman", "S. Levine", "P. Abbeel", "et al."]
+    year: 2015
+    venue: "ICML"
+    url: "https://arxiv.org/abs/1502.05477"
+    verified: true
+    role: seminal
+  - id: schulman2017-ppo
+    title: "Proximal policy optimization algorithms"
+    authors: ["J. Schulman", "F. Wolski", "P. Dhariwal", "et al."]
+    year: 2017
+    venue: "arXiv"
+    url: "https://arxiv.org/abs/1707.06347"
+    verified: true
+    role: standard
+  - id: baird1995-residual
+    title: "Residual algorithms: reinforcement learning with function approximation"
+    authors: ["L. C. Baird"]
+    year: 1995
+    venue: "ICML"
+    url: "https://doi.org/10.1016/B978-1-55860-377-6.50013-X"
+    verified: true
+    role: seminal
+    note: "Crossref 로 제목·제1저자·연도·프로시딩 확인. Baird 반례와 잔차 경사법의 원전"
+  - id: tsitsiklis1997-td-function-approx
+    title: "An analysis of temporal-difference learning with function approximation"
+    authors: ["J. N. Tsitsiklis", "B. Van Roy"]
+    year: 1997
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/9.580874"
+    verified: true
+    role: seminal
+    note: "Crossref 로 확인. on-policy 선형 TD 의 수렴과 투영 Bellman 오차 한계의 원전"
+  - id: mnih2015-dqn
+    title: "Human-level control through deep reinforcement learning"
+    authors: ["V. Mnih", "K. Kavukcuoglu", "D. Silver", "et al."]
+    year: 2015
+    venue: "Nature"
+    url: "https://doi.org/10.1038/nature14236"
+    verified: true
+    role: seminal
+  - id: vanhasselt2016-double-q
+    title: "Deep reinforcement learning with double Q-learning"
+    authors: ["H. van Hasselt", "A. Guez", "D. Silver"]
+    year: 2016
+    venue: "AAAI"
+    url: "https://arxiv.org/abs/1509.06461"
+    verified: true
+    role: standard
+    note: "arXiv v1 2015, AAAI 2016"
+  - id: kearns2002-near-optimal
+    title: "Near-optimal reinforcement learning in polynomial time"
+    authors: ["M. Kearns", "S. Singh"]
+    year: 2002
+    venue: "Machine Learning"
+    url: "https://doi.org/10.1023/A:1017984413808"
+    verified: true
+    role: seminal
+    note: "Crossref 로 확인. 시뮬레이션 보조정리(모델 오차의 가치 오차 전파)의 원전"
+  - id: janner2019-mbpo
+    title: "When to trust your model: model-based policy optimization"
+    authors: ["M. Janner", "J. Fu", "M. Zhang", "S. Levine"]
+    year: 2019
+    venue: "NeurIPS"
+    url: "https://arxiv.org/abs/1906.08253"
+    verified: true
+    role: standard
+  - id: hafner2023-dreamerv3
+    title: "Mastering diverse domains through world models"
+    authors: ["D. Hafner", "J. Pasukonis", "J. Ba", "T. Lillicrap"]
+    year: 2023
+    venue: "arXiv (Nature 2025)"
+    url: "https://arxiv.org/abs/2301.04104"
+    verified: true
+    role: frontier
+    note: "arXiv v1 2023. Nature 2025 게재는 미확인"
 
   # ── S1 SLAM·공간 지능 ───────────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)

@@ -122,6 +122,100 @@ papers:
     lessons: [c2-dynamics-derivatives-sysid]
     role: standard
 
+  - id: featherstone2006-plucker-basis
+    title: "Plücker basis vectors"
+    authors: ["R. Featherstone"]
+    year: 2006
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ROBOT.2006.1641982"
+    note: "Crossref 에 게재 연도가 비어 있다(ICRA 2006 프로시딩). 권장 자료."
+    verified: true
+    lessons: [c2-spatial-vector-algebra]
+    role: standard
+  - id: featherstone2000-dynamics-equations-algorithms
+    title: "Robot dynamics: equations and algorithms"
+    authors: ["R. Featherstone", "D. Orin"]
+    year: 2000
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ROBOT.2000.844153"
+    note: "Crossref 에 게재 연도가 비어 있다(ICRA 2000 프로시딩, San Francisco)."
+    verified: true
+    lessons: [c2-rnea-inverse-dynamics]
+    role: survey
+  - id: udwadia1992-constrained-motion
+    title: "A new perspective on constrained motion"
+    authors: ["F. E. Udwadia", "R. E. Kalaba"]
+    year: 1992
+    venue: "Proc. Royal Society A"
+    url: "https://doi.org/10.1098/rspa.1992.0158"
+    verified: true
+    lessons: [c2-constrained-dynamics]
+    role: standard
+  - id: baumgarte1972-constraint-stabilization
+    title: "Stabilization of constraints and integrals of motion in dynamical systems"
+    authors: ["J. Baumgarte"]
+    year: 1972
+    venue: "Computer Methods in Applied Mechanics and Engineering"
+    url: "https://doi.org/10.1016/0045-7825(72)90018-7"
+    verified: true
+    lessons: [c2-constrained-dynamics]
+    role: seminal
+  - id: anitescu1997-lcp-contact
+    title: "Formulating dynamic multi-rigid-body contact problems with friction as solvable linear complementarity problems"
+    authors: ["M. Anitescu", "F. A. Potra"]
+    year: 1997
+    venue: "Nonlinear Dynamics"
+    url: "https://doi.org/10.1023/A:1008292328909"
+    verified: true
+    lessons: [c2-contact-dynamics]
+    role: standard
+  - id: stewart2000-rigid-body-friction-impact
+    title: "Rigid-body dynamics with friction and impact"
+    authors: ["D. E. Stewart"]
+    year: 2000
+    venue: "SIAM Review"
+    url: "https://doi.org/10.1137/S0036144599360110"
+    verified: true
+    lessons: [c2-contact-dynamics]
+    role: survey
+  - id: genot1999-painleve
+    title: "New results on Painlevé paradoxes"
+    authors: ["F. Génot", "B. Brogliato"]
+    year: 1999
+    venue: "European Journal of Mechanics A/Solids"
+    url: "https://doi.org/10.1016/S0997-7538(99)00144-8"
+    verified: true
+    lessons: [c2-contact-dynamics]
+    role: standard
+  - id: atkeson1986-inertial-parameters
+    title: "Estimation of inertial parameters of manipulator loads and links"
+    authors: ["C. G. Atkeson", "C. H. An", "J. M. Hollerbach"]
+    year: 1986
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/027836498600500306"
+    verified: true
+    lessons: [c2-dynamics-derivatives-sysid]
+    role: seminal
+  - id: gautier1990-minimal-inertial-parameters
+    title: "Direct calculation of minimum set of inertial parameters of serial robots"
+    authors: ["M. Gautier", "W. Khalil"]
+    year: 1990
+    venue: "IEEE Trans. Robotics and Automation"
+    url: "https://doi.org/10.1109/70.56655"
+    verified: true
+    lessons: [c2-dynamics-derivatives-sysid]
+    role: standard
+  - id: wensing2018-lmi-inertial
+    title: "Linear matrix inequalities for physically consistent inertial parameter identification: a statistical perspective on the mass distribution"
+    authors: ["P. M. Wensing", "S. Kim", "J.-J. E. Slotine"]
+    year: 2018
+    venue: "IEEE RA-L 3(1)"
+    url: "https://doi.org/10.1109/LRA.2017.2729659"
+    note: "Crossref 의 게재 연도는 2018(RA-L 3권 1호), 온라인 선공개는 2017."
+    verified: true
+    lessons: [c2-dynamics-derivatives-sysid]
+    role: standard
+
   # ── C3 비선형·강건 제어 ──────────────────────────────────────────────
   - id: murray1993-steering-sinusoids
     title: "Nonholonomic motion planning: steering using sinusoids"
@@ -521,6 +615,97 @@ papers:
     verified: true
     lessons: [s1-certifiable-slam]
     role: standard
+  - id: rose1976-vertex-elimination
+    title: "Algorithmic aspects of vertex elimination on graphs"
+    authors: ["D. J. Rose", "R. E. Tarjan", "G. S. Lueker"]
+    year: 1976
+    venue: "SIAM J. Comput."
+    url: "https://doi.org/10.1137/0205021"
+    verified: true
+    lessons: [c5-sparsity-isam]
+    role: seminal
+  - id: yannakakis1981-min-fill-in
+    title: "Computing the minimum fill-in is NP-complete"
+    authors: ["M. Yannakakis"]
+    year: 1981
+    venue: "SIAM J. Alg. Disc. Meth."
+    url: "https://doi.org/10.1137/0602010"
+    verified: true
+    lessons: [c5-sparsity-isam]
+    role: seminal
+  - id: lipton1979-nested-dissection
+    title: "Generalized nested dissection"
+    authors: ["R. J. Lipton", "D. J. Rose", "R. E. Tarjan"]
+    year: 1979
+    venue: "SIAM J. Numer. Anal."
+    url: "https://doi.org/10.1137/0716027"
+    verified: true
+    lessons: [c5-sparsity-isam]
+    role: standard
+  - id: kaess2008-isam
+    title: "iSAM: incremental smoothing and mapping"
+    authors: ["M. Kaess", "A. Ranganathan", "F. Dellaert"]
+    year: 2008
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2008.2006706"
+    verified: true
+    lessons: [c5-sparsity-isam]
+    role: seminal
+  - id: carlevaris-bianco2014-node-removal
+    title: "Generic node removal for factor-graph SLAM"
+    authors: ["N. Carlevaris-Bianco", "M. Kaess", "R. M. Eustice"]
+    year: 2014
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2014.2347571"
+    verified: true
+    lessons: [c5-sparsity-isam]
+    role: standard
+  - id: hartley2020-contact-inekf
+    title: "Contact-aided invariant extended Kalman filtering for robot state estimation"
+    authors: ["R. Hartley", "M. Ghaffari", "R. M. Eustice", "J. W. Grizzle"]
+    year: 2020
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364919894385"
+    verified: true
+    lessons: [c5-manifold-estimation]
+    role: standard
+  - id: lupton2012-preintegration
+    title: "Visual-inertial-aided navigation for high-dynamic motion in built environments without initial conditions"
+    authors: ["T. Lupton", "S. Sukkarieh"]
+    year: 2012
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2011.2170332"
+    verified: true
+    lessons: [c5-imu-preintegration]
+    role: seminal
+  - id: martinelli2012-closed-form-scale
+    title: "Vision and IMU data fusion: closed-form solutions for attitude, speed, absolute scale, and bias determination"
+    authors: ["A. Martinelli"]
+    year: 2012
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2011.2160468"
+    verified: true
+    lessons: [c5-imu-preintegration]
+    role: standard
+  - id: hermann1977-observability
+    title: "Nonlinear controllability and observability"
+    authors: ["R. Hermann", "A. Krener"]
+    year: 1977
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.1977.1101601"
+    verified: true
+    lessons: [c5-observability-consistency]
+    role: seminal
+  - id: hesch2014-vio-observability
+    title: "Camera-IMU-based localization: observability analysis and consistency improvement"
+    authors: ["J. A. Hesch", "D. G. Kottas", "S. L. Bowman", "S. I. Roumeliotis"]
+    year: 2014
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364913509675"
+    note: "온라인 선공개 2013-11-13, 지면 2014"
+    verified: true
+    lessons: [c5-observability-consistency]
+    role: standard
 
   # ── C6 동작 계획 이론 ────────────────────────────────────────────────
   - id: reif1979-complexity
@@ -798,6 +983,26 @@ papers:
     verified: true
     lessons: [c8-mdp-pomdp-bellman]
     role: seminal
+  - id: blackwell1965-discounted-dp
+    title: "Discounted dynamic programming"
+    authors: ["D. Blackwell"]
+    year: 1965
+    venue: "The Annals of Mathematical Statistics"
+    url: "https://doi.org/10.1214/aoms/1177700285"
+    note: "c8 저자 세션이 추가(2026-11-12). Crossref 로 제목·제1저자·연도·저널 확인. 할인 DP 의 수축 사상 논증과 최적 정책 존재의 원전"
+    verified: true
+    lessons: [c8-mdp-pomdp-bellman]
+    role: seminal
+  - id: smallwood1973-pomdp-pwlc
+    title: "The optimal control of partially observable Markov processes over a finite horizon"
+    authors: ["R. D. Smallwood", "E. J. Sondik"]
+    year: 1973
+    venue: "Operations Research"
+    url: "https://doi.org/10.1287/opre.21.5.1071"
+    note: "c8 저자 세션이 추가(2026-11-12). Crossref 로 제목·저자·연도·저널 확인. 유한 지평 POMDP 가치함수의 PWLC 성질과 알파 벡터의 원전"
+    verified: true
+    lessons: [c8-mdp-pomdp-bellman]
+    role: seminal
   - id: sutton2000-policy-gradient
     title: "Policy gradient methods for reinforcement learning with function approximation"
     authors: ["R. S. Sutton", "D. McAllester", "S. Singh", "Y. Mansour"]
@@ -826,6 +1031,26 @@ papers:
     verified: true
     lessons: [c8-policy-gradient]
     role: standard
+  - id: baird1995-residual
+    title: "Residual algorithms: reinforcement learning with function approximation"
+    authors: ["L. C. Baird"]
+    year: 1995
+    venue: "ICML"
+    url: "https://doi.org/10.1016/B978-1-55860-377-6.50013-X"
+    note: "c8 저자 세션이 추가(2026-11-12). Crossref 로 제목·제1저자·연도·프로시딩 확인. Baird 반례와 잔차 경사법의 원전"
+    verified: true
+    lessons: [c8-value-based-rl]
+    role: seminal
+  - id: tsitsiklis1997-td-function-approx
+    title: "An analysis of temporal-difference learning with function approximation"
+    authors: ["J. N. Tsitsiklis", "B. Van Roy"]
+    year: 1997
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/9.580874"
+    note: "c8 저자 세션이 추가(2026-11-12). Crossref 로 확인. on-policy 선형 TD 의 수렴과 투영 Bellman 오차 한계의 원전"
+    verified: true
+    lessons: [c8-value-based-rl]
+    role: seminal
   - id: mnih2015-dqn
     title: "Human-level control through deep reinforcement learning"
     authors: ["V. Mnih", "K. Kavukcuoglu", "D. Silver", "et al."]
@@ -845,6 +1070,16 @@ papers:
     verified: true
     lessons: [c8-value-based-rl]
     role: standard
+  - id: kearns2002-near-optimal
+    title: "Near-optimal reinforcement learning in polynomial time"
+    authors: ["M. Kearns", "S. Singh"]
+    year: 2002
+    venue: "Machine Learning"
+    url: "https://doi.org/10.1023/A:1017984413808"
+    note: "c8 저자 세션이 추가(2026-11-12). Crossref 로 확인. 시뮬레이션 보조정리(모델 오차의 가치 오차 전파)의 원전"
+    verified: true
+    lessons: [c8-model-based-world-models]
+    role: seminal
   - id: janner2019-mbpo
     title: "When to trust your model: model-based policy optimization"
     authors: ["M. Janner", "J. Fu", "M. Zhang", "S. Levine"]
@@ -864,6 +1099,16 @@ papers:
     verified: true
     lessons: [c8-model-based-world-models]
     role: frontier
+  - id: ross2010-efficient-reductions
+    title: "Efficient reductions for imitation learning"
+    authors: ["S. Ross", "J. A. Bagnell"]
+    year: 2010
+    venue: "AISTATS"
+    url: "https://proceedings.mlr.press/v9/ross10a.html"
+    note: "c8 저자 세션이 추가(2026-11-12). PMLR 페이지에서 제목 확인(DOI 없음). BC 복합 오차 O(eps T^2) 한계와 하한 구성의 원전"
+    verified: true
+    lessons: [c8-imitation-learning]
+    role: seminal
   - id: ross2011-dagger
     title: "A reduction of imitation learning and structured prediction to no-regret online learning"
     authors: ["S. Ross", "G. J. Gordon", "J. A. Bagnell"]
@@ -883,6 +1128,16 @@ papers:
     note: "URL 은 응답했으나 PDF 본문 확인 실패 — 메타데이터(제목·제1저자·연도·AAAI)는 Semantic Scholar 로만 확인. DOI/arXiv 없음"
     verified: true
     lessons: [c8-imitation-learning]
+    role: seminal
+  - id: jin2021-pessimism
+    title: "Is pessimism provably efficient for offline RL?"
+    authors: ["Y. Jin", "Z. Yang", "Z. Wang"]
+    year: 2021
+    venue: "ICML"
+    url: "https://arxiv.org/abs/2012.15085"
+    note: "c8 저자 세션이 추가(2026-11-12). arXiv API 로 제목·제1저자 확인(v1 2020). 단일 정책 집중성 하 보수성의 차선성 한계의 원전"
+    verified: true
+    lessons: [c8-offline-rl]
     role: seminal
   - id: levine2020-offline-rl
     title: "Offline reinforcement learning: tutorial, review, and perspectives on open problems"
@@ -928,6 +1183,16 @@ papers:
     url: "https://doi.org/10.2514/1.G001921"
     verified: true
     lessons: [c8-control-as-inference]
+    role: standard
+  - id: rajeswaran2017-epopt
+    title: "EPOpt: learning robust neural network policies using model ensembles"
+    authors: ["A. Rajeswaran", "S. Ghotra", "B. Ravindran", "S. Levine"]
+    year: 2017
+    venue: "ICLR"
+    url: "https://arxiv.org/abs/1610.01283"
+    note: "c8 저자 세션이 추가(2026-11-12). arXiv API 로 제목·제1저자 확인(v1 2016). 평균 대신 CVaR 꼬리를 최적화하는 강건 목적함수의 대표"
+    verified: true
+    lessons: [c8-generalization-sim2real]
     role: standard
   - id: tobin2017-domain-randomization
     title: "Domain randomization for transferring deep neural networks from simulation to the real world"
