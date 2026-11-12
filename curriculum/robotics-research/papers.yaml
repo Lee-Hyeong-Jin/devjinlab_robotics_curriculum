@@ -1543,6 +1543,23 @@ papers:
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
   # ── S4 로봇 학습·파운데이션 모델 ───────────────────────────────────────
+  - id: kaplan2020-scaling-laws
+    title: "Scaling laws for neural language models"
+    authors: ["J. Kaplan", "S. McCandlish", "T. Henighan", "et al."]
+    year: 2020
+    venue: "arXiv"
+    url: "https://arxiv.org/abs/2001.08361"
+    verified: true
+    role: standard
+  - id: oxe2023-open-x-embodiment
+    title: "Open X-Embodiment: robotic learning datasets and RT-X models"
+    authors: ["Open X-Embodiment Collaboration"]
+    year: 2023
+    venue: "ICRA 2024"
+    url: "https://arxiv.org/abs/2310.08864"
+    verified: true
+    role: frontier
+    note: "arXiv 2023; ICRA 2024 게재는 미확인"
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
   # ── S5 다중 로봇·필드 로보틱스 ────────────────────────────────────────

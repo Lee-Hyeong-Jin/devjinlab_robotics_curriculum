@@ -1,0 +1,60 @@
+id: s4-robot-data-scaling
+lang: en
+activities:
+  s4-robot-data-scaling-reading: Read the text and follow the derivations
+  s4-robot-data-scaling-papers: Read the two must-read papers + a one-page note each
+  s4-robot-data-scaling-problems: Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample, 1 paper)
+  s4-robot-data-scaling-reproduction: Reproduction task - the performance-data curve and the mixture bias floor (R2)
+  s4-robot-data-scaling-quiz: Concept-check quiz
+resources:
+  "Hastie, Tibshirani & Friedman, The Elements of Statistical Learning (2nd ed.)":
+    note: ch.3 (bias-variance for linear regression), ch.7 (model assessment). Full PDF free.
+  "Open X-Embodiment 데이터셋":
+    title: The Open X-Embodiment dataset
+    note: The public robot data mixture (about 60 datasets) used in this lesson's optional extension.
+  "Hoffmann et al. — Training compute-optimal large language models (2022)":
+    note: Recommended. Allocating model size against data volume under a compute budget (Chinchilla).
+  "Hestness et al. — Deep learning scaling is predictable, empirically (2017)":
+    note: Recommended. The first systematic measurement of power laws and an "irreducible error floor".
+quiz:
+  - id: q1
+    prompt: "In the scaling law (1), what is the flattening of the log-log curve at large $N$ showing?"
+    choices:
+      - "That the model capacity has saturated"
+      - "The existence of an irreducible floor $\\sigma^2$, e.g. label noise"
+      - "That optimization failed to converge"
+      - "That the samples are correlated with each other"
+    explanation: "(1) is $\\sigma^2 + \\sigma^2 p/(N-p-1)$, so once the second term dies as $N^{-1}$ only $\\sigma^2$ is left. The **height** of the bend is the floor and the **slope before** it reads off the effective degrees of freedom. With misspecification, though, approximation error is mixed into the floor, so it cannot simply be called $\\sigma^2$."
+    concept:
+      front: "What the log-log bend means"
+      back: "The existence of a floor $L_\\infty$ - its height is noise (plus misspecification), the slope before it is effective degrees of freedom"
+  - id: q2
+    prompt: "The loss increase caused by mixing domains that disagree goes away if you collect enough samples."
+    explanation: "The solution (2) of the weighted normal equations (5) contains no $N$. The estimator converges not to $w_A$ but to $w_A + \\gamma\\beta M^{-1}\\Sigma_B\\Delta$, so the excess loss (3) **remains as a floor**. In the measurement, at $\\beta=0.5$ a sixteenfold increase in $N$ bought only 22% and then stuck to the floor."
+    concept:
+      front: "The mixture bias floor"
+      back: "There is no $N$ in (2) - data volume cannot erase it; only weights or distributions can"
+  - id: q3
+    prompt: "In which situation does the domain weight $\\gamma^\\star$ become **smaller**?"
+    choices:
+      - "When there is less target-domain data"
+      - "When the domain disagreement $\\lVert\\Delta\\rVert$ grows"
+      - "When the off-domain sample count $N_B$ grows"
+      - "When the label noise $\\sigma^2$ grows"
+    explanation: "In (8) the left side (the bias side) is proportional to $\\lVert\\Sigma_B\\Delta\\rVert^2$, so a larger disagreement shrinks $\\gamma^\\star$. Less target data or more noise enlarges the variance term and therefore **increases** $\\gamma^\\star$. Measured: disagreement 0.08 with $N_A=60$ gives $\\gamma^\\star=0.4$ (a 3.16x gain), while disagreement 0.6 with $N_A=400$ gives $\\gamma^\\star=0$."
+    concept:
+      front: "What $\\gamma^\\star$ depends on"
+      back: "Disagreement up → $\\gamma^\\star$ down; target data up → $\\gamma^\\star$ down; noise up → $\\gamma^\\star$ up"
+  - id: q4
+    prompt: "Write the condition under which the mixture bias is exactly zero, in terms of $\\Sigma_B$ and $\\Delta$ (as an equation)."
+    answers: ["Sigma_B Delta = 0", "Sigma_B * Delta = 0", "\\Sigma_B \\Delta = 0", "SigmaB Delta = 0"]
+    explanation: "The bias in (3) is $(\\gamma\\beta M^{-1}\\Sigma_B\\Delta)^\\top \\Sigma_A (\\cdot)$, and since $\\Sigma_A \\succ 0$ and $M \\succ 0$ it vanishes, for $\\gamma\\beta>0$, only when $\\Sigma_B\\Delta = 0$. That is, mixing is free only when **the disagreement is invisible in that domain's feature space** - a different condition from $\\Delta$ merely being small."
+    concept:
+      front: "When mixing is free"
+      back: "$\\Sigma_B\\Delta = 0$ - when the disagreement is invisible in that domain's feature space"
+  - id: q5
+    prompt: "The height of the floor measured on a log-log plot equals the label noise $\\sigma^2$."
+    explanation: "If the model is misspecified the floor is $\\sigma^2 +$ approximation error. The two components are not separated by varying $N$, so one must sweep the model capacity $p$ and see whether the floor moves (if it does, misspecification is mixed in). That is why a scaling study must sweep **capacity as well**, not only data volume."
+    concept:
+      front: "The components of the floor"
+      back: "Label noise + misspecification (+ multi-modality, quantization) - only sweeping capacity separates them"

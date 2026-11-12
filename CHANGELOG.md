@@ -36,6 +36,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `docs/curriculum/GLOSSARY.md`: the ko ↔ en term list every translation follows.
 - `scripts/i18n/audit.py` and `docs/reviews/i18n-gap-audit.md`: the English build is driven
   end to end (API, static site, CLI) and every Korean string that is left is reported.
+- Research-track specialization module `s4-robot-learning-foundation-models` (S4, robot
+  learning and foundation models) at `level: 연구`. Every reproduction task is judged on a CPU
+  without a GPU; large-scale fine-tuning is an optional extension. Lessons so far:
+  `s4-robot-data-scaling`.
 - Research-track module `c8-decision-making-learning-theory` (C8, decision making and
   learning theory) at `level: 연구`, complete with all eight lessons in Korean and English:
   `c8-mdp-pomdp-bellman`, `c8-policy-gradient`, `c8-value-based-rl`,
