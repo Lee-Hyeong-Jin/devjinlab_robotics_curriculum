@@ -11,3 +11,4 @@ level: 연구
 lessons:
   - hybrid-limit-cycles
   - hzd-gait-generation
+  - centroidal-mpc

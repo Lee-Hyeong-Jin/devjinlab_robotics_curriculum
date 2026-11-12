@@ -287,6 +287,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   from the hip torque having no moment about the stance foot, and a reproduction task in which the
   reduced model's predicted rate matches the four-state model's dominant Poincare eigenvalue to
   eight digits.
+- Research-track lesson 3 of module S3, centroidal dynamics and MPC walking, in Korean and
+  English: the centroidal dynamics derived from whole-body Newton-Euler (and verified on a
+  point-footed walker while the hip torque is swung), the CoP/ZMP equation, the LIPM and the DCM in
+  closed form, and a reproduction task that measures the recovery limit $\omega p_{\max}$ and shows
+  an MPC without a terminal constraint reporting "optimal" with a 39 m terminal DCM.
 - Module C3 moved onto the schema the paper registry added (AUTHORING §8-1): its 22 papers are
   registered in `curriculum/robotics-research/papers.yaml` (all with verified URLs), each lesson
   references them from front-matter `papers[]` with `required`/`role` and a language-neutral
