@@ -252,6 +252,10 @@ papers:
     note: "§3 의 2차 전개"
 ```
 
+번역: `<lesson>.<lang>.yaml` 의 `papers: {<논문 id>: "번역된 note"}` 로 **note 만** 옮긴다.
+제목·저자·venue 는 발표된 서지 정보이고 `role`·`required` 는 구조라서 번역 대상이 아니다.
+레슨이 지정하지 않은 논문 id 를 번역하면 오류다(규칙 9).
+
 표시: `rc papers <lesson_id>`, 정적 사이트 레슨 하단의 "필독 논문" 절, `GET /lessons/{id}` 의
 `papers[]`(필독 먼저 정렬, 한 줄 서지 `citation` 포함), web 레슨 화면의 사이드바.
 `verified: false` 인 논문은 어디서나 "미확인"으로 표시한다.
@@ -259,6 +263,35 @@ papers:
 **원본은 레슨이다.** 어떤 논문을 필독으로 지정하는가는 교육적 결정이므로 레슨에 있고, 레지스트리는
 그 논문이 무엇인지만 말한다. 같은 논문이 레슨에 따라 `seminal` 이기도 `critique` 이기도 하므로
 레슨의 `role` 이 레지스트리 값을 덮어쓴다. 출력은 `rc papers <lesson_id>`.
+
+## ` ```problemset ` 본문 블록 (선택)
+
+유도·증명처럼 **자동 채점할 수 없는** 문제는 퀴즈 블록에 넣지 않는다(채점이 깨지고 복습 카드가
+오염된다). 대신 본문에 ` ```problemset ` 블록을 둔다. 채점하지 않고 SM-2 카드도 만들지 않으며,
+구조만 검증한다.
+
+```yaml
+# ```problemset
+activity: m-oc-ilqr-exercise   # 이 블록이 속한 `kind: exercise` 활동
+                               # (레슨에 exercise 활동이 하나면 생략 가능)
+problems:
+  - id: p1
+    type: derivation           # derivation | proof | numerical | implementation |
+                               # counterexample | paper
+    stars: 2                   # 1(기본) | 2 | 3(연구 수준)
+    prompt: "..."              # Markdown
+    refers_to: ["R2"]          # 본문 "핵심 결과" 번호
+    solution_policy: sketch    # sketch | full | rubric | answer
+    solution: "..."            # policy 가 약속한 내용 (없으면 미공개)
+    tolerance: 1.0e-6          # numerical 전용: 정답으로 인정할 오차
+```
+
+`numerical` 문제는 `solution`(기댓값)과 `tolerance` 가 **둘 다** 필요하다 — 없으면 독자가 자기 답이
+맞는지 알 수 없고, 그것이 수치 문제의 유일한 목적이다. `tolerance` 는 `numerical` 외의 type 에 쓰면
+오류다. 문항 수 4–8개, 유형 3종 이상은 **경고**다(짧은 세트도 온전한 레슨이다).
+
+표시: 정적 사이트와 web 레슨 화면이 문항을 보여 주고 해답은 접어 둔다(`<details>`),
+`GET /lessons/{id}` 의 `problems[]`.
 
 ## 검증 규칙 (`rc validate [PATH]`)
 
@@ -284,6 +317,8 @@ papers:
 | 11 | 레슨이 참조한 논문 id 가 `papers.yaml` 에 있고, 레지스트리 id 가 유일하고, 레지스트리 `url` 이 http(s) 이고, 한 레슨이 같은 논문을 두 번 나열하지 않고, 논문을 지정한 레슨은 `required: true` 를 1개 이상 가짐 (ADR 0014) | validate |
 | 12 | 레슨 본문(과 그 번역)의 링크가 http(s) URL, 앵커(`#...`), 또는 자료 파일 상대 경로다. **다른 레슨의 `.md` 파일을 가리키는 링크는 금지** — 사이트는 레슨을 다른 구조로 생성하므로 그 경로가 깨진 링크가 된다. 레슨을 가리킬 때는 레슨 id 를 백틱으로 쓴다(`` `m1-vectors-matrices` ``) | validate |
 | 11w | **경고**: 아무 레슨도 참조하지 않는 레지스트리 논문 / 레지스트리 `lessons[]` 가 실제 참조와 다름 | validate |
+| 13 | 본문 ` ```problemset ` 블록이 파싱되고 레슨의 `kind: exercise` 활동을 참조함: 모르는 `type`·`solution_policy`, `numerical` 의 `solution`+`tolerance` 누락, 다른 type 의 `tolerance`, 문항 `id` 중복 | validate |
+| 13w | **경고**: 문항이 4개 미만·8개 초과이거나 유형이 3종 미만 | validate |
 
 성공 시 `OK: N lessons in M modules`(경고가 있으면 `(N warning(s))` 가 붙는다).
 

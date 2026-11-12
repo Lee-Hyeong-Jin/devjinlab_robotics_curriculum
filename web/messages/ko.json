@@ -43,6 +43,11 @@
     "weeklySessions": "세션 {count}회",
     "unavailable": "API 서버에서 진행 상황을 받아오지 못했습니다."
   },
+  "course": {
+    "switcher": "코스 선택",
+    "lessonCount": "레슨 {count}개",
+    "progressHeading": "코스별 진행률"
+  },
   "roadmap": {
     "title": "로드맵",
     "subtitle": "단계 → 모듈 → 레슨 순서와 선수지식 흐름입니다.",
@@ -122,6 +127,27 @@
       "frontier": "최신",
       "critique": "비판",
       "survey": "서베이"
+    }
+  },
+  "problem": {
+    "heading": "문제 세트 ({count}문항)",
+    "hint": "채점하지 않습니다. 직접 풀고 해답을 펼쳐 비교하세요.",
+    "refersTo": "관련 결과",
+    "tolerance": "허용 오차",
+    "stars": "난이도 {count}/3",
+    "type": {
+      "derivation": "유도",
+      "proof": "증명",
+      "numerical": "수치",
+      "implementation": "구현",
+      "counterexample": "반례",
+      "paper": "논문"
+    },
+    "policy": {
+      "sketch": "해답 스케치 보기",
+      "full": "전체 해답 보기",
+      "rubric": "채점 기준 보기",
+      "answer": "정답 보기"
     }
   },
   "activityKind": {

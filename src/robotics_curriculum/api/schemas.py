@@ -118,6 +118,29 @@ class Paper(Schema):
         return cls(**row.model_dump(), citation=content.citation(row))
 
 
+class LessonProblem(Schema):
+    """One problem of a lesson's problem set (ADR 0014's sibling, lesson-standard.md §11-3).
+
+    Never graded and never turned into a flashcard, unlike a quiz question: a derivation or a
+    proof cannot be marked automatically. `solution` is whatever `solution_policy` promises.
+    """
+
+    id: str
+    type: content.ProblemType
+    stars: int = Field(ge=1, le=3, description="1 routine, 2 substantial, 3 research-level.")
+    prompt: str = Field(description="Markdown.")
+    refers_to: list[str] = Field(description='"핵심 결과" numbers the problem builds on.')
+    solution_policy: content.SolutionPolicy = Field(
+        description="How much of the solution is published: sketch | full | rubric | answer."
+    )
+    solution: str | None = Field(description="Markdown; null when none is published.")
+    tolerance: float | None = Field(description="`numerical` only: how close counts as right.")
+    activity_id: str | None = Field(description="The `kind: exercise` activity it belongs to.")
+    # Named LessonProblem, not Problem: `api/problems.py` already owns that name for the
+    # RFC 9457 error body, and two schemas with one name silently collide in the OpenAPI
+    # document — the error shape won and this one vanished from the contract.
+
+
 class Lesson(LessonSummary):
     objectives: list[str]
     activities: list[Activity]
@@ -126,6 +149,11 @@ class Lesson(LessonSummary):
         default_factory=list,
         description="Assigned papers, required reading first; empty unless the course has a "
         "papers.yaml registry (ADR 0014).",
+    )
+    problems: list[LessonProblem] = Field(
+        default_factory=list,
+        description="The lesson's problem set, parsed out of the body's ```problemset blocks. "
+        "Not graded and not scheduled for review, unlike the quiz.",
     )
     content_format: Literal["markdown"] = Field(
         default="markdown", description="Format of `body` and `study_method`."

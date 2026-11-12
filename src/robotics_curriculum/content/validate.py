@@ -24,6 +24,10 @@ Rules:
     resolves such a path against the *generated* project, where lessons live elsewhere, so
     it silently becomes a broken link on the site.
 
+13. ` ```problemset ` blocks parse and reference an exercise activity of the lesson
+    (see :mod:`robotics_curriculum.content.problem_set`). Its size and variety are a
+    *warning*: a short set is a complete lesson, just not the shape the standard asks for.
+
 Some rules only warn (:attr:`ContentError.severity`). :func:`blocking` filters those out
 for callers that must refuse invalid content.
 """
@@ -38,6 +42,11 @@ from urllib.parse import urlsplit
 from robotics_curriculum.content.loader import ContentError, LoadError, load_courses
 from robotics_curriculum.content.models import Course, Lesson, Paper
 from robotics_curriculum.content.papers import paper_index
+from robotics_curriculum.content.problem_set import (
+    ProblemSetParseError,
+    parse_problem_sets,
+    shape_advice,
+)
 from robotics_curriculum.content.quiz_block import QuizParseError, parse_quiz
 
 
@@ -73,6 +82,7 @@ def validate_course(course: Course) -> list[ContentError]:
             errors.extend(_check_resources(lesson, lesson_path))
             errors.extend(_check_body_links(lesson, lesson_path))
             errors.extend(_check_quiz(lesson, lesson_path))
+            errors.extend(_check_problem_sets(lesson, lesson_path))
             errors.extend(_check_translations(lesson))
             errors.extend(_check_meta_translations(lesson, lesson_path))
 
@@ -257,6 +267,18 @@ def _check_quiz(lesson: Lesson, path: Path) -> list[ContentError]:
     return []
 
 
+def _check_problem_sets(lesson: Lesson, path: Path) -> list[ContentError]:
+    """Rule 13: every problem-set block parses; its shape is only advice."""
+    try:
+        sets = parse_problem_sets(lesson)
+    except ProblemSetParseError as exc:
+        return [ContentError(path, f"lesson '{lesson.id}': {m}") for m in exc.messages]
+    return [
+        ContentError(path, f"lesson '{lesson.id}' {note}", severity="warning")
+        for note in shape_advice(sets)
+    ]
+
+
 def _check_translations(lesson: Lesson) -> list[ContentError]:
     """Rule 8: a translation must actually carry text."""
     errors: list[ContentError] = []
@@ -291,6 +313,8 @@ def _check_meta_translations(lesson: Lesson, lesson_path: Path) -> list[ContentE
             errors.append(ContentError(path, f"{where}: no activity '{activity_id}'"))
         for title in sorted(set(meta.resources) - resource_titles):
             errors.append(ContentError(path, f"{where}: no resource titled '{title}'"))
+        for paper_id in sorted(set(meta.papers) - {ref.id for ref in lesson.papers}):
+            errors.append(ContentError(path, f"{where}: the lesson assigns no paper '{paper_id}'"))
         seen: set[str] = set()
         for question in meta.quiz:
             if question.id in seen:

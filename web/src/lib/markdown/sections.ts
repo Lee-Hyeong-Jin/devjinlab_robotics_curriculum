@@ -3,16 +3,16 @@
  *
  * `GET /lessons/{id}` returns the whole Markdown in `body` *and* the pieces the
  * screen needs separately (`study_method`, the quiz, the resources). The lesson
- * screen renders the study method in its highlighted card and links to the quiz
- * screen, so leaving those sections in the body showed the study method twice
- * and printed the quiz's YAML source as a code block.
+ * screen renders the study method in its highlighted card, links to the quiz screen and
+ * lays the problem set out itself, so leaving those sections in the body showed the study
+ * method twice and printed the blocks' YAML source as code.
  *
  * `rc site build` does the same thing differently: one page shows everything, so
  * it turns the quiz fence into a readable question list instead of removing it.
  */
 const HEADING = /^##\s+\S/
 const FENCE = /^\s{0,3}(`{3,}|~{3,})/
-const QUIZ_FENCE = /^\s{0,3}(`{3,}|~{3,})\s*quiz\s*$/
+const BLOCK_FENCE = /^\s{0,3}(`{3,}|~{3,})\s*(quiz|problemset)\s*$/
 
 interface Section {
   /** The `## …` line, or `undefined` for the text before the first heading. */
@@ -40,8 +40,8 @@ function split(markdown: string): Section[] {
   return sections
 }
 
-/** The section's text with every ```` ```quiz ```` fence taken out. */
-function withoutQuizFences(lines: readonly string[]): { kept: string[]; removed: boolean } {
+/** The section's text with every ```` ```quiz ```` / ```` ```problemset ```` fence taken out. */
+function withoutBlockFences(lines: readonly string[]): { kept: string[]; removed: boolean } {
   const kept: string[] = []
   let fence: string | null = null
   let removed = false
@@ -51,9 +51,9 @@ function withoutQuizFences(lines: readonly string[]): { kept: string[]; removed:
       if (FENCE.exec(line)?.[1]?.[0] === fence) fence = null
       continue
     }
-    const quiz = QUIZ_FENCE.exec(line)
-    if (quiz) {
-      fence = (quiz[1] ?? '')[0] ?? null
+    const block = BLOCK_FENCE.exec(line)
+    if (block) {
+      fence = (block[1] ?? '')[0] ?? null
       removed = true
       continue
     }
@@ -76,10 +76,10 @@ export function stripLessonSections(
   const out: string[] = []
 
   for (const section of split(body)) {
-    const { kept, removed } = withoutQuizFences(section.lines)
+    const { kept, removed } = withoutBlockFences(section.lines)
     const text = kept.slice(section.heading ? 1 : 0).join('\n')
 
-    // The quiz section is nothing but its fence once the fence is gone.
+    // A section that was nothing but its block (the quiz, the problem set) is now empty.
     if (removed && text.trim() === '') continue
     // The study method is already in the card above; compare the text, not the
     // heading, so a translated lesson needs no heading table.

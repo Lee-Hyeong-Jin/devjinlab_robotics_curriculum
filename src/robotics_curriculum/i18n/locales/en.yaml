@@ -37,6 +37,21 @@ cli:
   export: "exported {lessons} lesson rows, {sessions} sessions to {path}"
   import: "imported {lessons} lesson rows, {sessions} sessions"
 
+problem:
+  refers_to: "Builds on"
+  tolerance: "Tolerance"
+  type:
+    derivation: "derivation"
+    proof: "proof"
+    numerical: "numerical"
+    implementation: "implementation"
+    counterexample: "counterexample"
+    paper: "paper"
+  policy:
+    sketch: "Solution sketch"
+    full: "Full solution"
+    rubric: "Marking rubric"
+    answer: "Answer"
 quiz:
   intro: "Quiz: {title} ({lesson_id}) — {count} questions"
   nothing_to_ask: "nothing to ask (every question was correct last time)"
@@ -147,6 +162,7 @@ site:
     roadmap_page: "Roadmap"
     resources_page: "Resources"
     papers: "Papers"
+    problem_set: "Problem set ({count} problems)"
   state:
     done: "done"
     in_progress: "in progress"

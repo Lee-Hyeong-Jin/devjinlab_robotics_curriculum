@@ -8,7 +8,10 @@ import { ModuleCard } from '@/components/ModuleCard'
 import { PageHeader } from '@/components/PageHeader'
 import { ProgressBar } from '@/components/ProgressBar'
 import { StatusDot } from '@/components/StatusDot'
-import { getRoadmap } from '@/lib/api/queries'
+import { CourseTabs } from '@/components/CourseTabs'
+import { getCourses, getRoadmap } from '@/lib/api/queries'
+import { defaultCourseId } from '@/lib/api/config'
+import { selectedCourseId } from '@/lib/courses'
 import { formatPercent } from '@/lib/format'
 import type { LockState } from '@/lib/progress'
 import { doneCount } from '@/lib/progress'
@@ -26,19 +29,27 @@ interface TableRow {
   progress: number
 }
 
+interface Props {
+  searchParams: Promise<{ course?: string }>
+}
+
 /** Roadmap — stage → module cards plus a text alternative table (AC-WEB.3, AC-A11Y.3). */
-export default async function RoadmapPage() {
-  const [t, tState, locale] = await Promise.all([
+export default async function RoadmapPage({ searchParams }: Props) {
+  const [t, tState, locale, params, courses] = await Promise.all([
     getTranslations('roadmap'),
     getTranslations('state'),
     getLocale(),
+    searchParams,
+    getCourses(),
   ])
-  const stages = await getRoadmap()
+  const courseId = selectedCourseId(courses, params.course, defaultCourseId())
+  const stages = await getRoadmap(courseId)
 
   if (stages.length === 0) {
     return (
       <>
         <PageHeader title={t('title')} subtitle={t('subtitle')} />
+        <CourseTabs courses={courses} selected={courseId} basePath="/roadmap" />
         <EmptyState title={t('empty')} />
       </>
     )
@@ -72,6 +83,7 @@ export default async function RoadmapPage() {
   return (
     <>
       <PageHeader title={t('title')} subtitle={t('subtitle')} />
+      <CourseTabs courses={courses} selected={courseId} basePath="/roadmap" />
 
       <div className="flex flex-col gap-8">
         {stages.map((stage, index) => (

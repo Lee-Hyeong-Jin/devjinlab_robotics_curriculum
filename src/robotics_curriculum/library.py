@@ -106,7 +106,7 @@ def papers(
     course = _course_of(courses, lesson_id)
     _, lesson = _find_lesson(courses, lesson_id)
     text = lesson.localized(t.lang)
-    rows = resolve_lesson_papers(lesson, paper_index(course))
+    rows = resolve_lesson_papers(lesson, paper_index(course), t.lang)
     out = [f"{text.title} ({lesson.id})", ""]
     if not rows:
         out.append(t("paper.none"))

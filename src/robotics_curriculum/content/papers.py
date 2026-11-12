@@ -19,14 +19,19 @@ def paper_index(course: Course) -> dict[str, Paper]:
     return index
 
 
-def resolve_lesson_papers(lesson: Lesson, index: dict[str, Paper]) -> list[LessonPaper]:
+def resolve_lesson_papers(
+    lesson: Lesson, index: dict[str, Paper], lang: str | None = None
+) -> list[LessonPaper]:
     """The lesson's papers in its own order, required ones first within that order.
 
-    A reference whose id is not in the registry is skipped — ``rc validate`` reports it as an
+    ``lang`` picks the translated ``note`` from ``<lesson>.<lang>.yaml`` when there is one.
+    Nothing else is translated — the title, authors and venue are the published bibliography.
+
+    A reference whose id is not in the registry is skipped: ``rc validate`` reports it as an
     error, and a half-built row with no title would be worse than leaving it out.
     """
     rows: list[LessonPaper] = []
-    for ref in lesson.papers:
+    for ref in lesson.localized_papers(lang):
         paper = index.get(ref.id)
         if paper is None:
             continue

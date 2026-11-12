@@ -10,6 +10,7 @@ import { defaultCourseId } from './config'
 import type {
   AuthProvider,
   Course,
+  CourseSummary,
   Lesson,
   LessonProgress,
   Module,
@@ -40,6 +41,19 @@ export function getStatus(): Promise<Status | null> {
 /** `GET /api/v1/progress/next` — the next-lesson recommendations (FR-3.4). */
 export function getNextLessons(): Promise<NextLesson[] | null> {
   return apiGetOrNull('/api/v1/progress/next')
+}
+
+/**
+ * `GET /api/v1/courses` — every course in the curriculum.
+ *
+ * More than one means the reader needs a way to switch; a deployment with one keeps the
+ * screens exactly as they were (`<CourseTabs>` renders nothing).
+ */
+export function getCourses(): Promise<CourseSummary[]> {
+  return apiGetOrNull('/api/v1/courses', {
+    cache: 'content',
+    tags: ['content', 'courses'],
+  }).then((courses) => courses ?? [])
 }
 
 /** `GET /api/v1/courses/{course_id}` — stages and module summaries. */

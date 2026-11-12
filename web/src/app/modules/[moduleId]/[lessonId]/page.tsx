@@ -10,6 +10,7 @@ import { LessonRow } from '@/components/LessonRow'
 import { MarkdownBody } from '@/components/MarkdownBody'
 import { PageHeader } from '@/components/PageHeader'
 import { PaperList } from '@/components/PaperList'
+import { ProblemSet, type RenderedProblem } from '@/components/ProblemSet'
 import { ResourceRow } from '@/components/ResourceRow'
 import { StudyPanel } from '@/components/StudyPanel'
 import { isNotFound } from '@/lib/api/errors'
@@ -53,13 +54,14 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
  */
 export default async function LessonPage({ params }: Params) {
   const { moduleId, lessonId } = await params
-  const [t, tState, tKind, tActivity, tQuiz, tPaper, locale] = await Promise.all([
+  const [t, tState, tKind, tActivity, tQuiz, tPaper, tProblem, locale] = await Promise.all([
     getTranslations('lesson'),
     getTranslations('state'),
     getTranslations('kind'),
     getTranslations('activityKind'),
     getTranslations('quiz'),
     getTranslations('paper'),
+    getTranslations('problem'),
     getLocale(),
   ])
   const [lesson, progress, mod, status] = await Promise.all([
@@ -79,6 +81,13 @@ export default async function LessonPage({ params }: Params) {
   const siblings = mod?.lessons ?? []
   // Advice, not a gate: every lesson is reachable regardless (ADR 0015). `GET /progress/status`
   // already carries this per lesson, so the screen needs no extra request.
+  // Prompts and solutions carry KaTeX, so they go through the lesson pipeline here, on the
+  // server, and reach the client as React trees — the same as the quiz screen does.
+  const problems: RenderedProblem[] = (lesson.problems ?? []).map((problem) => ({
+    ...problem,
+    prompt: renderMarkdown(problem.prompt, { headingOffset: 3 }).content,
+    solution: renderMarkdown(problem.solution ?? undefined, { headingOffset: 3 }).content,
+  }))
   const missingPrerequisites =
     status?.lessons.find((row) => row.lesson.id === lessonId)?.missing_prerequisites ?? []
   // `##` in the body renders as <h3> after the shift under the page's <h1>.
@@ -171,6 +180,16 @@ export default async function LessonPage({ params }: Params) {
               {body.content}
             </MarkdownBody>
           </Card>
+
+          {problems.length > 0 ? (
+            <Card as="section" aria-labelledby="problem-set-heading">
+              <h2 id="problem-set-heading" className="text-primary mb-1 font-semibold">
+                {tProblem('heading', { count: problems.length })}
+              </h2>
+              <p className="text-muted mb-4 text-sm">{tProblem('hint')}</p>
+              <ProblemSet problems={problems} />
+            </Card>
+          ) : null}
 
           <nav
             aria-label={`${t('prev')} / ${t('next')}`}

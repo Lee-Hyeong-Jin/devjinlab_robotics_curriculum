@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { getLocale, getTranslations } from 'next-intl/server'
 
 import { ButtonLink } from '@/components/Button'
@@ -9,7 +10,7 @@ import { PageHeader } from '@/components/PageHeader'
 import { ProgressBar } from '@/components/ProgressBar'
 import { StageProgress } from '@/components/StageProgress'
 import { StatTile } from '@/components/StatTile'
-import { getNextLessons, getRoadmap, getStatus } from '@/lib/api/queries'
+import { getCourses, getNextLessons, getRoadmap, getStatus } from '@/lib/api/queries'
 import { formatDateTime, formatMinutes, formatPercent } from '@/lib/format'
 import { courseProgress, lessonLockState, type LockState } from '@/lib/progress'
 
@@ -25,12 +26,18 @@ export async function generateMetadata(): Promise<Metadata> {
  * study streak, cards due today and the next-lesson recommendation.
  */
 export default async function DashboardPage() {
-  const [t, tState, locale] = await Promise.all([
+  const [t, tState, tCourse, locale] = await Promise.all([
     getTranslations('dashboard'),
     getTranslations('state'),
+    getTranslations('course'),
     getLocale(),
   ])
-  const [status, stages, next] = await Promise.all([getStatus(), getRoadmap(), getNextLessons()])
+  const [status, stages, next, courses] = await Promise.all([
+    getStatus(),
+    getRoadmap(),
+    getNextLessons(),
+    getCourses(),
+  ])
 
   if (!status && stages.length === 0) {
     return (
@@ -43,6 +50,15 @@ export default async function DashboardPage() {
 
   const lessons = status?.lessons ?? []
   const progress = courseProgress(lessons)
+  // With more than one course the single course-progress tile would mix the tracks, so each
+  // course gets its own row. `GET /progress/status` covers every course at once.
+  const perCourse =
+    courses.length > 1
+      ? courses.map((course) => {
+          const own = lessons.filter((row) => row.lesson.course_id === course.id)
+          return { course, progress: courseProgress(own), lessonsTotal: own.length }
+        })
+      : []
   const week = status?.week
   const openSession = status?.open_session
   const recommended = next?.[0]
@@ -122,6 +138,36 @@ export default async function DashboardPage() {
               </div>
             ) : null}
           </Card>
+
+          {perCourse.length > 0 ? (
+            <Card as="section" aria-labelledby="courses-heading">
+              <h2 id="courses-heading" className="text-primary mb-3 font-semibold">
+                {tCourse('progressHeading')}
+              </h2>
+              <ul className="flex flex-col gap-4">
+                {perCourse.map((row) => (
+                  <li key={row.course.id} className="flex flex-col gap-1">
+                    <div className="flex flex-wrap items-baseline justify-between gap-2">
+                      <Link
+                        href={`/roadmap?course=${encodeURIComponent(row.course.id)}`}
+                        className="text-accent text-sm font-medium underline underline-offset-2"
+                      >
+                        {row.course.title}
+                      </Link>
+                      <span className="text-muted text-xs tabular-nums">
+                        {tCourse('lessonCount', { count: row.lessonsTotal })}
+                      </span>
+                    </div>
+                    <ProgressBar
+                      value={row.progress}
+                      label={`${row.course.title} ${t('courseProgress')}`}
+                      showValue
+                    />
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          ) : null}
 
           {stages.length > 0 ? (
             <StageProgress

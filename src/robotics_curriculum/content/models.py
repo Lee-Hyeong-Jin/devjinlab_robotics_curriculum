@@ -235,6 +235,14 @@ class LessonMetaTranslation(ContentModel):
     quiz: list[QuestionText] = Field(
         default_factory=list, description="Quiz questions, matched by question id."
     )
+    papers: dict[str, str] = Field(
+        default_factory=dict,
+        description=(
+            "Paper id -> translated `note` (what to read of it). Only the note is "
+            "translatable: a paper's title, authors and venue are its published bibliography "
+            "and the role/required flags are structure (ADR 0014)."
+        ),
+    )
 
     # Filled by the loader, not by front matter.
     path: Path | None = Field(default=None, exclude=True)
@@ -316,6 +324,18 @@ class Lesson(ContentModel):
             if activity.id in titles
             else activity
             for activity in self.activities
+        ]
+
+    def localized_papers(self, lang: str | None = None) -> list[PaperRef]:
+        """Paper references with their ``note`` in ``lang``; untranslated ones keep the base.
+
+        Only the note moves: the title, authors and venue live in the course registry and are
+        the paper's published bibliography, not prose to translate (ADR 0014).
+        """
+        notes = self.meta_translations[lang].papers if lang in self.meta_translations else {}
+        return [
+            ref.model_copy(update={"note": notes[ref.id]}) if notes.get(ref.id) else ref
+            for ref in self.papers
         ]
 
     def localized_resources(self, lang: str | None = None) -> list[Resource]:

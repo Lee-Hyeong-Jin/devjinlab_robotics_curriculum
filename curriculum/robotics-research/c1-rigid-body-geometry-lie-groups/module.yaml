@@ -11,3 +11,5 @@ lessons:
   - so3-se3-exponential
   - twists-wrenches-adjoint
   - lie-group-derivatives
+  - poe-analytic-ik
+  - manifold-optimization

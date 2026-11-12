@@ -53,6 +53,17 @@ const DYNAMIC_KEYS = new Set([
   'paper.role.frontier',
   'paper.role.critique',
   'paper.role.survey',
+  // `t(`type.${problem.type}`)` / `t(`policy.${problem.solution_policy}`)` in `<ProblemSet>`.
+  'problem.type.derivation',
+  'problem.type.proof',
+  'problem.type.numerical',
+  'problem.type.implementation',
+  'problem.type.counterexample',
+  'problem.type.paper',
+  'problem.policy.sketch',
+  'problem.policy.full',
+  'problem.policy.rubric',
+  'problem.policy.answer',
 ])
 
 const SOURCE_ROOT = join(process.cwd(), 'src')

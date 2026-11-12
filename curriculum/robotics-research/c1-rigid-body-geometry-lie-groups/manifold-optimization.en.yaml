@@ -1,0 +1,78 @@
+# English text of the structured fields of manifold-optimization.md (activity titles,
+# resource notes, quiz). The prose lives in manifold-optimization.en.md.
+id: c1-manifold-optimization
+lang: en
+activities:
+  c1-manifold-optimization-reading: Read the lesson and follow the derivations
+  c1-manifold-optimization-papers: Read the two must-read papers + a one-page note each
+  c1-manifold-optimization-problems: "Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample)"
+  c1-manifold-optimization-reproduction: "Reproduction task - SE(3) pose registration, manifold GN versus over-parameterisation (R2)"
+  c1-manifold-optimization-quiz: Concept check quiz
+resources:
+  "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
+    note: ch.7-8. The standard treatment of Gauss-Newton on manifolds and of estimation on Lie groups.
+  "Nocedal & Wright, Numerical Optimization (2nd ed.)":
+    note: ch.10 (Least-Squares Problems), for the convergence analysis of Euclidean Gauss-Newton. (official URL unverified)
+  "GTSAM":
+    note: Reference implementation of retraction-based optimization and of gauge handling (prior factors); the baseline for the reproduction task.
+quiz:
+  - id: q1
+    prompt: Select every condition a retraction must satisfy.
+    choices:
+      - $\mathrm{R}_X(0) = X$
+      - $\mathrm{D}\mathrm{R}_X(0) = \mathrm{id}$ (local rigidity)
+      - It must be a geodesic
+      - It must be globally bijective
+    explanation: >-
+      A retraction only has to match the value and the first derivative at the origin. It need be
+      neither a geodesic nor globally bijective - which is why quaternion normalisation is also a
+      retraction, and why the **order** of convergence does not depend on the choice (only the
+      constants do).
+    concept:
+      front: The conditions for a retraction
+      back: >-
+        Only $\mathrm{R}_X(0)=X$ and $\mathrm{D}\mathrm{R}_X(0)=\mathrm{id}$; being a geodesic or
+        globally bijective is not required
+  - id: q2
+    prompt: What is the tangent-space Jacobian of the residual $e(X) = \mathrm{Log}(Z^{-1}X)$?
+    choices:
+      - $I$ (the identity)
+      - $J_r^{-1}(e(X))$
+      - $J_l(e(X))$
+      - $\mathrm{Ad}_X$
+    explanation: >-
+      $\mathrm{Log}(\mathrm{Exp}(e)\mathrm{Exp}(\delta)) = e + J_r^{-1}(e)\delta +
+      O(\lVert\delta\rVert^2)$ (the first BCH term), so $J = J_r^{-1}(e(X))$. Because it **depends
+      on the current error** it must be recomputed every iteration; approximating it by $I$ slows
+      convergence once the error is large.
+    concept:
+      front: The tangent-space Jacobian of a $\mathrm{Log}(Z^{-1}X)$ residual
+      back: $J_r^{-1}(e(X))$ - it depends on the current error, so recompute it every iteration
+  - id: q3
+    prompt: >-
+      If a quaternion is carried as 7 variables with normalisation imposed by a penalty, the data
+      term of the normal equations has a null space along $q$.
+    explanation: >-
+      Since $R(sq) = R(q)$, a perturbation along $q$ does not change the rotation, so every
+      residual Jacobian vanishes in that direction. Only the penalty supplies curvature there, so
+      small $\mu$ gives ill-conditioning and large $\mu$ slows the other directions. A local
+      parameterisation never creates that direction.
+    concept:
+      front: The problem with over-parameterisation plus a penalty
+      back: >-
+        The data term has a null space along $q$, so it cannot be solved without damping or a
+        penalty; a local parameterisation removes that direction from the coordinates
+  - id: q4
+    prompt: >-
+      In an $SE(3)$ pose graph built only from relative measurements, what is the dimension of the
+      null space of the information matrix $\Lambda$?
+    choices: ["0", "3", "6", "Proportional to the number of poses"]
+    explanation: >-
+      Rigidly transforming the whole trajectory leaves every relative measurement unchanged, so
+      $\dim SE(3) = 6$ directions of gauge freedom remain. Fixing one pose or adding a prior makes
+      the solution unique. In monocular vision the scale is unobservable too, making it 7.
+    concept:
+      front: Dimension of the gauge null space of a pose graph
+      back: >-
+        6 for $SE(3)$ relative measurements only (7 for monocular vision, with scale); removed by
+        fixing a pose or adding a prior
