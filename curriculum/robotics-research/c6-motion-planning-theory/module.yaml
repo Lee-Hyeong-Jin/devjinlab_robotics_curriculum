@@ -16,3 +16,4 @@ lessons:
   - sampling-completeness
   - asymptotic-optimality
   - search-based-planning
+  - kinodynamic-planning

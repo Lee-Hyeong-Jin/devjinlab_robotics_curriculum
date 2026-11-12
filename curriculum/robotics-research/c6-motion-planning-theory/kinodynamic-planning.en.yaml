@@ -1,0 +1,136 @@
+id: c6-kinodynamic-planning
+lang: en
+activities:
+  c6-kinodynamic-planning-reading: Read the lesson and follow the derivations
+  c6-kinodynamic-planning-papers: >-
+    Read the three must-read papers and write a one-page note on each
+  c6-kinodynamic-planning-problems: >-
+    Problem set (2 derivations, 2 proofs, 2 numerical, 1 implementation, 1 counterexample)
+  c6-kinodynamic-planning-reproduction: >-
+    Reproduction task - convergence of a double-integrator kinodynamic RRT* (R2)
+  c6-kinodynamic-planning-quiz: Concept-check quiz
+resources:
+  "LaValle, Planning Algorithms":
+    note: >-
+      ch.13 (differential models) and ch.14 (sampling-based planning under differential constraints)
+      - the reachability graph of 14.2 and the lattices of 14.4.
+  "Webb & van den Berg — Kinodynamic RRT*: optimal motion planning for systems with linear differential constraints (2013)":
+    note: Must-read 1. The Gramian steering of R1 and the stationarity condition for $\tau^\ast$ come from here.
+  "Pivtoraiko, Knepper & Kelly — Differentially constrained mobile robot motion planning in state lattices (2009)":
+    note: Must-read 2. State lattices and motion primitives, and removing redundancy from the path set.
+  "Karaman & Frazzoli — Optimal kinodynamic motion planning using incremental sampling-based methods (2010)":
+    note: >-
+      Must-read 3. The assumptions needed to extend RRT* to differential constraints (weak local
+      controllability) and the modified radius rule.
+  "Li, Littlefield & Bekris — Asymptotically optimal sampling-based kinodynamic planning (2016)":
+    note: Optional. SST - (near-)optimality from forward propagation plus pruning, with no steering. The source of R4.
+  "Hauser & Zhou — Asymptotically optimal planning by feasible kinodynamic planning in a state-cost space (2016)":
+    note: Optional. Folding the cost into the state reduces optimal planning to feasibility planning.
+  "Dubins — On curves of minimal length with a constraint on average curvature (1957)":
+    note: >-
+      Optional. The primary source for the classification of curvature-constrained shortest paths into
+      a finite set of arc-line-arc words.
+  "Reeds & Shepp — Optimal paths for a car that goes both forwards and backwards (1990)":
+    note: Optional. The extension of Dubins allowing reverse - the classification into 48 words.
+quiz:
+  - id: q1
+    prompt: Why does the fixed-time optimal steering problem for a linear system solve without calculus of variations?
+    choices:
+      - Because the cost is quadratic
+      - >-
+        Because the terminal state is **linear** in the control, reducing it to a minimum-norm
+        (pseudo-inverse) problem
+      - Because the dynamics are time-invariant
+      - Because the Gramian is symmetric
+    explanation: >-
+      In $x(\tau) = e^{A\tau}x_0 + \mathcal{L}_\tau u$ the operator $\mathcal{L}_\tau$ is linear, so
+      the steering condition is the linear equation $\mathcal{L}_\tau u = d$. Its minimum-norm
+      solution is $\mathcal{L}_\tau^\ast(\mathcal{L}_\tau\mathcal{L}_\tau^\ast)^{-1}d$ with
+      $\mathcal{L}_\tau\mathcal{L}_\tau^\ast = G(\tau)$, the Gramian. The quadratic cost matters too,
+      but the essence is the **linearity of the constraint**.
+    concept:
+      front: Why linear steering is closed-form
+      back: The constraint $\mathcal{L}_\tau u = d$ is linear → minimum-norm solution plus the Gramian
+  - id: q2
+    prompt: >-
+      For rest-to-rest steering of the double integrator, what is the relation between the optimal
+      cost and the optimal steering time?
+    choices:
+      - $c^\ast = \tau^\ast$
+      - $c^\ast = \frac{4}{3}\tau^\ast$
+      - $c^\ast = 2\tau^\ast$
+      - It depends on the displacement
+    explanation: >-
+      From $c(\tau) = \tau + K/\tau^3$, $\dot c = 1 - 3K/\tau^4 = 0$ gives $K = \tau^{\ast4}/3$ and
+      hence $c^\ast = \tau^\ast + \tau^\ast/3 = \frac43\tau^\ast$. At the optimum the effort cost is
+      exactly one third of the time cost, and that ratio is **independent** of the displacement,
+      which enters only through $K$.
+    concept:
+      front: The optimum of rest-to-rest double-integrator steering
+      back: $c^\ast = \frac43\tau^\ast$ - effort:time = 1:3, independent of the displacement
+  - id: q3
+    prompt: What breaks in kinodynamic RRT* if neighbours are defined by Euclidean balls?
+    choices:
+      - Collision checking becomes wrong
+      - >-
+        At the same Euclidean distance the steering cost has different orders (position
+        $\epsilon^{1/2}$, velocity $\epsilon$), so most neighbours do not connect cheaply and the
+        covering-connection argument fails
+      - The Gramian becomes singular
+      - Rewiring creates cycles
+    explanation: >-
+      For the double integrator the cost from $x=(0,0)$ to a state differing only in position by
+      $\epsilon$ is $\frac43\sqrt{6\epsilon} \propto \epsilon^{1/2}$, while to a state differing only
+      in velocity by $\epsilon$ it is $4\epsilon$. As $\epsilon \to 0$ the ratio diverges like
+      $\epsilon^{-1/2}$, so a Euclidean ball is unboundedly anisotropic with respect to the cost.
+      Neighbours must therefore be cost sublevel sets.
+    concept:
+      front: Defining kinodynamic neighbourhoods
+      back: >-
+        The cost sublevel set $\{x' : c(x',x) \le r_n\}$ - a Euclidean ball is anisotropic in the cost
+  - id: q4
+    prompt: A state lattice can be built with equispaced headings ($2\pi/N_\theta$) and an arbitrary curvature radius.
+    explanation: >-
+      A left arc displaces by $\Delta p = \rho(\sin\theta_j - \sin\theta_i,\ \cos\theta_i -
+      \cos\theta_j)$, and if the position lattice is $\mathbb{Z}^2$ that must be an **integer
+      vector** for the primitive to close the lattice. Equispaced headings generally give irrational
+      displacements and do not close; implementations then snap the terminal state, and at that
+      moment the trajectory violates the dynamics. Hence lattices use Pythagorean headings with
+      rational $\sin$ and $\cos$.
+    concept:
+      front: The closure condition of a state lattice
+      back: >-
+        A primitive's displacement must match a lattice vector exactly → Pythagorean headings and the
+        radius designed together
+  - id: q5
+    prompt: >-
+      Select everything from the RRT* argument of the previous lesson that carries over **unchanged**
+      once differential constraints are present.
+    choices:
+      - The structure of requirement 1, covering the neighbourhood of the optimal trajectory
+      - The computation that a Euclidean ball has volume $r^d$
+      - The Borel–Cantelli argument that $np_n \propto \log n$ is needed for summability
+      - The triangle inequality for the cost
+    explanation: >-
+      The covering structure and the Borel–Cantelli argument carry over unchanged. The ball-volume
+      computation must become the volume $r^{d_{\mathrm{eff}}}$ of a cost sublevel set (with
+      $d_{\mathrm{eff}} \ne n$), and the cost is not a metric - neither symmetry nor the triangle
+      inequality holds in general, so the connection step must be rebuilt from a Lipschitz property.
+    concept:
+      front: What survives of the RRT* argument under differential constraints
+      back: Covering and Borel–Cantelli survive; the volume exponent and the triangle inequality do not
+  - id: q6
+    prompt: >-
+      What structure recovers asymptotic (near-)optimality on a nonlinear system where steering
+      cannot be computed?
+    answers: ["forward propagation and pruning", "forward propagation plus pruning", "SST", "propagation with pruning", "random control propagation with domination pruning"]
+    explanation: >-
+      Grow the tree by integrating random controls (forward propagation) and cull bad branches by a
+      domination relation within $\delta$-neighbourhoods of the cost-state space. No steering is
+      needed, and the price is that the guarantee weakens to "near-optimality plus resolution"
+      (Li, Littlefield & Bekris 2016).
+    concept:
+      front: Kinodynamic planning without steering
+      back: >-
+        Forward propagation plus $\delta$-neighbourhood domination pruning (SST) - no steering, but a
+        near-optimal guarantee
