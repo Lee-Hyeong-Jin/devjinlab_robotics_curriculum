@@ -24,7 +24,7 @@ from robotics_curriculum.api.schemas import (
     Stage,
 )
 from robotics_curriculum.content import Course as CourseModel
-from robotics_curriculum.content import ResourceKind
+from robotics_curriculum.content import ResourceKind, level_label
 from robotics_curriculum.content.search import search
 from robotics_curriculum.content.sections import extract_study_guide
 
@@ -37,19 +37,12 @@ router = APIRouter(
 
 
 def _summary(course: CourseModel) -> CourseSummary:
-    return CourseSummary(
-        id=course.id,
-        title=course.title,
-        summary=course.summary,
-        tags=course.tags,
-        module_count=len(course.modules),
-        lesson_count=len(course.iter_lessons()),
-    )
+    return CourseSummary.of(course, lang_var.get())
 
 
 @router.get("/courses", response_model=list[CourseSummary])
 def list_courses(index: Index) -> list[CourseSummary]:
-    """Every course in the curriculum."""
+    """Every course in the curriculum, with its text in the requested language."""
     return [_summary(course) for course in index.courses]
 
 
@@ -57,11 +50,13 @@ def list_courses(index: Index) -> list[CourseSummary]:
 def get_course(course_id: str, index: Index) -> Course:
     """One course with its modules grouped by level (consecutive modules of one level)."""
     course = index.course(course_id)
+    lang = lang_var.get()
     stages: list[Stage] = []
     for module in course.modules:
         if not stages or stages[-1].level != module.level:
-            stages.append(Stage(level=module.level, modules=[]))
-        stages[-1].modules.append(ModuleSummary.of(course, module))
+            label = level_label(module.level, lang) if module.level else None
+            stages.append(Stage(level=module.level, level_label=label, modules=[]))
+        stages[-1].modules.append(ModuleSummary.of(course, module, lang))
     return Course(**_summary(course).model_dump(), stages=stages)
 
 
@@ -72,7 +67,7 @@ def get_module(module_id: str, index: Index) -> Module:
     course, module = entry.course, entry.module
     lang = lang_var.get()
     return Module(
-        **ModuleSummary.of(course, module).model_dump(),
+        **ModuleSummary.of(course, module, lang).model_dump(),
         lessons=[LessonSummary.of(course, module, les, lang) for les in module.lessons],
     )
 
@@ -92,8 +87,8 @@ def get_lesson(lesson_id: str, index: Index) -> Lesson:
     return Lesson(
         **LessonSummary.of(entry.course, entry.module, lesson, lang_var.get()).model_dump(),
         objectives=text.objectives,
-        activities=lesson.activities,
-        resources=[Resource.model_validate(r.model_dump()) for r in lesson.resources],
+        activities=text.activities,
+        resources=[Resource.model_validate(r.model_dump()) for r in text.resources],
         body=text.body,
         study_method=extract_study_guide(text.body, text.lang),
         prev_lesson_id=order[pos - 1] if pos > 0 else None,
@@ -114,6 +109,7 @@ def list_resources(
         index.module(module_id)
     if lesson_id is not None:
         index.lesson(lesson_id)
+    lang = lang_var.get()
     merged: dict[tuple[str, str | None], ResourceRef] = {}
     for course in index.courses:
         for module in course.modules:
@@ -122,7 +118,7 @@ def list_resources(
             for lesson in module.lessons:
                 if lesson_id is not None and lesson.id != lesson_id:
                     continue
-                for res in lesson.resources:
+                for res in lesson.localized_resources(lang):
                     if kind is not None and (res.kind or ResourceKind.OTHER) is not kind:
                         continue
                     key = (res.title, res.url)
@@ -145,7 +141,7 @@ def search_content(
     """
     return [
         SearchHit(kind=h.kind, id=h.id, title=h.title, snippet=h.snippet, lesson_id=h.lesson_id)
-        for h in search(index.courses, q, limit=limit)
+        for h in search(index.courses, q, limit=limit, lang=lang_var.get())
     ]
 
 

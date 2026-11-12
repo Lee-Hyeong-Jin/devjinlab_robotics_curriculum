@@ -12,10 +12,10 @@ from typing import Literal, cast
 from pydantic import BaseModel, ConfigDict, Field
 
 from robotics_curriculum import content
-from robotics_curriculum.content import Activity, ResourceKind
-from robotics_curriculum.i18n import DEFAULT_LANG
+from robotics_curriculum.content import Activity, ResourceKind, level_label
+from robotics_curriculum.i18n import DEFAULT_LANG, get_translator
 from robotics_curriculum.learn import AnswerFeedback, CardView, QuestionView, SubmissionResult
-from robotics_curriculum.learn.stats import StageProgress, WeekStats
+from robotics_curriculum.learn.stats import StageProgress, WeekStats, stage_label
 from robotics_curriculum.progress import CardState, LessonProgress, LessonStatus, Session
 from robotics_curriculum.progress import LessonSummary as Summary
 from robotics_curriculum.report import ModuleReport, WeeklyReport
@@ -102,7 +102,7 @@ class Lesson(LessonSummary):
     )
     body: str = Field(description="Markdown body without front matter.")
     study_method: str | None = Field(
-        description='Markdown of the "## 이 단계 공부법" section, if the lesson has one.'
+        description="Markdown of the study-guide section, if the lesson has one."
     )
     prev_lesson_id: str | None = Field(description="Previous lesson in course order.")
     next_lesson_id: str | None = Field(description="Next lesson in course order.")
@@ -112,21 +112,32 @@ class ModuleSummary(Schema):
     id: str
     title: str
     summary: str
-    level: content.models.Level | None
+    level: content.models.Level | None = Field(
+        description="Stable level id, the same in every language (null when unset)."
+    )
+    level_label: str | None = Field(
+        default=None, description="`level` as it should be shown, in the requested language."
+    )
     course_id: str
     lesson_count: int
     estimated_minutes: int = Field(description="Sum over the module's lessons.")
+    lang: str = Field(default=DEFAULT_LANG, description="Language of `title` and `summary`.")
 
     @classmethod
-    def of(cls, course: content.Course, module: content.Module) -> ModuleSummary:
+    def of(
+        cls, course: content.Course, module: content.Module, lang: str | None = None
+    ) -> ModuleSummary:
+        text = module.localized(lang)
         return cls(
             id=module.id,
-            title=module.title,
-            summary=module.summary,
+            title=text.title,
+            summary=text.summary,
             level=module.level,
+            level_label=text.level_label or None,
             course_id=course.id,
             lesson_count=len(module.lessons),
             estimated_minutes=sum(lesson.estimated_minutes for lesson in module.lessons),
+            lang=text.lang,
         )
 
 
@@ -141,10 +152,27 @@ class CourseSummary(Schema):
     tags: list[str]
     module_count: int
     lesson_count: int
+    lang: str = Field(default=DEFAULT_LANG, description="Language of `title` and `summary`.")
+
+    @classmethod
+    def of(cls, course: content.Course, lang: str | None = None) -> CourseSummary:
+        text = course.localized(lang)
+        return cls(
+            id=course.id,
+            title=text.title,
+            summary=text.summary,
+            tags=text.tags,
+            module_count=len(course.modules),
+            lesson_count=len(course.iter_lessons()),
+            lang=text.lang,
+        )
 
 
 class Stage(Schema):
     level: content.models.Level | None = Field(description="null for modules without a level.")
+    level_label: str | None = Field(
+        default=None, description="`level` as it should be shown, in the requested language."
+    )
     modules: list[ModuleSummary]
 
 
@@ -202,10 +230,10 @@ class LessonState(Schema):
     note: str | None
 
     @classmethod
-    def of(cls, s: Summary) -> LessonState:
+    def of(cls, s: Summary, lang: str | None = None) -> LessonState:
         p = s.progress
         return cls(
-            lesson=LessonSummary.of(s.course, s.module, s.lesson),
+            lesson=LessonSummary.of(s.course, s.module, s.lesson, lang),
             status=p.status,
             locked=s.locked,
             total_seconds=p.total_seconds,
@@ -217,18 +245,20 @@ class LessonState(Schema):
 
 
 class StageStat(Schema):
-    """One level (기초 / 중급 / 고급) with its lesson counts."""
+    """One level (foundation / intermediate / advanced) with its lesson counts."""
 
-    level: str
+    level: str = Field(description="Stable level id, the same in every language.")
+    label: str = Field(default="", description="`level` as it should be shown.")
     progress: int = Field(ge=0, le=100, description="Percent of the level's lessons done.")
     lessons_done: int
     lessons_total: int
     module_ids: list[str]
 
     @classmethod
-    def of(cls, stage: StageProgress) -> StageStat:
+    def of(cls, stage: StageProgress, lang: str | None = None) -> StageStat:
         return cls(
             level=stage.stage,
+            label=stage_label(stage.stage, lang),
             progress=stage.progress.percent,
             lessons_done=stage.progress.done,
             lessons_total=stage.progress.total,
@@ -263,12 +293,13 @@ class NextLesson(Schema):
     reason: str = Field(description="Why it is recommended.")
 
     @classmethod
-    def of(cls, s: Summary) -> NextLesson:
-        reason = "in progress" if s.status is LessonStatus.IN_PROGRESS else "prerequisites done"
+    def of(cls, s: Summary, lang: str | None = None) -> NextLesson:
+        t = get_translator(lang)
+        key = "in_progress" if s.status is LessonStatus.IN_PROGRESS else "prerequisites_done"
         return cls(
-            lesson=LessonSummary.of(s.course, s.module, s.lesson),
+            lesson=LessonSummary.of(s.course, s.module, s.lesson, lang),
             status=s.status,
-            reason=reason,
+            reason=t(f"api.next_reason.{key}"),
         )
 
 
@@ -369,7 +400,7 @@ class ModuleReportSummary(Schema):
     lessons: list[LessonState]
 
     @classmethod
-    def of(cls, r: ModuleReport) -> ModuleReportSummary:
+    def of(cls, r: ModuleReport, lang: str | None = None) -> ModuleReportSummary:
         return cls(
             course_title=r.course_title,
             module_id=r.module_id,
@@ -377,7 +408,7 @@ class ModuleReportSummary(Schema):
             done_count=r.done_count,
             lesson_count=len(r.lessons),
             total_seconds=r.total_seconds,
-            lessons=[LessonState.of(s) for s in r.lessons],
+            lessons=[LessonState.of(s, lang or r.lang) for s in r.lessons],
         )
 
 
@@ -603,7 +634,7 @@ class RoadmapModule(Schema):
         done = sum(1 for st in states if st == "done")
         return cls(
             id=module.id,
-            title=module.title,
+            title=module.localized(lang).title,
             progress=done / len(states) if states else 0.0,
             state=state,
             lessons=[
@@ -615,7 +646,12 @@ class RoadmapModule(Schema):
 
 class RoadmapStage(Schema):
     course_id: str
-    level: content.models.Level | None
+    level: content.models.Level | None = Field(
+        description="Stable level id, the same in every language (null when unset)."
+    )
+    level_label: str | None = Field(
+        default=None, description="`level` as it should be shown, in the requested language."
+    )
     progress: float = Field(ge=0, le=1, description="Mean of the module progress values.")
     modules: list[RoadmapModule]
 
@@ -641,7 +677,13 @@ class Roadmap(Schema):
             last = stages[-1] if stages else None
             if last is None or last.course_id != course.id or last.level != module.level:
                 stages.append(
-                    RoadmapStage(course_id=course.id, level=module.level, progress=0.0, modules=[])
+                    RoadmapStage(
+                        course_id=course.id,
+                        level=module.level,
+                        level_label=level_label(module.level, lang) if module.level else None,
+                        progress=0.0,
+                        modules=[],
+                    )
                 )
             stages[-1].modules.append(item)
         for stage in stages:

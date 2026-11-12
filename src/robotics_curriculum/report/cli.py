@@ -64,7 +64,10 @@ def weekly(
         iso = IsoWeek.parse(week) if week else IsoWeek.of(today)
     except ValueError as exc:
         raise _fail(str(exc)) from None
-    text = _generate(ctx, lambda s: render_weekly(build_weekly_report(s, iso, today=today)))
+    lang = getattr(ctx.obj, "lang", None)
+    text = _generate(
+        ctx, lambda s: render_weekly(build_weekly_report(s, iso, today=today, lang=lang))
+    )
     if out is None and not stdout:
         out = find_repo_root() / "reports" / "weekly" / f"{iso}.md"
     _emit(text, out, stdout)
@@ -79,5 +82,6 @@ def module(
     ] = None,
 ) -> None:
     """Per-module progress table and understanding distribution."""
-    text = _generate(ctx, lambda s: render_module(build_module_report(s, module_id)))
+    lang = getattr(ctx.obj, "lang", None)
+    text = _generate(ctx, lambda s: render_module(build_module_report(s, module_id, lang)))
     _emit(text, out, stdout=False)

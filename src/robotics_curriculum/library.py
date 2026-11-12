@@ -11,7 +11,7 @@ from typing import Annotated
 import typer
 
 from robotics_curriculum.content.models import Course, Lesson, Module, Resource, ResourceKind
-from robotics_curriculum.content.sections import STUDY_GUIDE_HEADING, extract_section
+from robotics_curriculum.content.sections import extract_study_guide
 from robotics_curriculum.i18n import Translator, get_translator
 from robotics_curriculum.progress import (
     DB_FILENAME,
@@ -86,31 +86,39 @@ def resources(
     ] = None,
     all_: Annotated[bool, typer.Option("--all", help="Library view of every resource.")] = False,
 ) -> None:
-    """Show study materials by kind and the lesson's "이 단계 공부법" section."""
+    """Show study materials by kind and the lesson's study-guide section."""
     t = _t(ctx)
+    lang = t.lang
     if sum([lesson_id is not None, module is not None, all_]) != 1:
         raise _fail("give exactly one of LESSON_ID, --module MODULE_ID or --all")
     courses = _courses(ctx)
     out: list[str] = []
     if lesson_id is not None:
         _, lesson = _find_lesson(courses, lesson_id)
-        out += [f"{lesson.title} ({lesson.id})", ""]
-        out += _by_kind([(r, "") for r in lesson.resources], t)
-        guide = extract_section(lesson.body, STUDY_GUIDE_HEADING)
+        text = lesson.localized(lang)
+        out += [f"{text.title} ({lesson.id})", ""]
+        out += _by_kind([(r, "") for r in text.resources], t)
+        guide = extract_study_guide(text.body, text.lang)
         if guide:
             out += ["", f"## {t('lesson.study_guide')}", "", guide]
     elif module is not None:
         found = [m for m in _modules(courses) if m.id == module]
         if not found:
             raise _fail(f"unknown module '{module}'")
-        out.append(f"{found[0].title} ({found[0].id})")
+        out.append(f"{found[0].localized(lang).title} ({found[0].id})")
         for lesson in found[0].lessons:
-            out += ["", f"{lesson.title} ({lesson.id})"]
-            out += _by_kind([(r, "") for r in lesson.resources], t)
+            text = lesson.localized(lang)
+            out += ["", f"{text.title} ({lesson.id})"]
+            out += _by_kind([(r, "") for r in text.resources], t)
     else:
         for course in courses:
-            entries = [(r, f"  [{les.id}]") for les in course.iter_lessons() for r in les.resources]
-            out += [t("resource.library_title", course=course.title, count=len(entries)), ""]
+            entries = [
+                (r, f"  [{les.id}]")
+                for les in course.iter_lessons()
+                for r in les.localized_resources(lang)
+            ]
+            title = course.localized(lang).title
+            out += [t("resource.library_title", course=title, count=len(entries)), ""]
             out += _by_kind(entries, t)
     typer.echo("\n".join(out))
 
@@ -135,13 +143,18 @@ def show(
 ) -> None:
     """Print a lesson's summary (objectives, prerequisites, time) and its Markdown body."""
     t = _t(ctx)
+    lang = t.lang
     courses = _courses(ctx)
     module, lesson = _find_lesson(courses, lesson_id)
     statuses = _statuses(ctx, courses)
-    level = t("lesson.level_suffix", level=module.level) if module.level else ""
+    text = lesson.localized(lang)
+    module_text = module.localized(lang)
+    level = (
+        t("lesson.level_suffix", level=module_text.level_label) if module_text.level_label else ""
+    )
     out = [
-        f"# {lesson.title} ({lesson.id})",
-        t("lesson.module_line", module=module.title) + level,
+        f"# {text.title} ({lesson.id})",
+        t("lesson.module_line", module=module_text.title) + level,
         t(
             "lesson.estimate_line",
             minutes=lesson.estimated_minutes,
@@ -149,7 +162,7 @@ def show(
         ),
         "",
         t("lesson.objectives"),
-        *(f"  - {objective}" for objective in lesson.objectives),
+        *(f"  - {objective}" for objective in text.objectives),
         "",
         t("lesson.prerequisites")
         + ("" if lesson.prerequisites else t("lesson.prerequisites_none")),
@@ -160,5 +173,5 @@ def show(
         else:
             mark = "[x]" if statuses.get(prereq) == LessonStatus.DONE else "[ ]"
         out.append(f"  {mark} {prereq}")
-    out += ["", "---", "", lesson.body.strip()]
+    out += ["", "---", "", text.body.strip()]
     typer.echo("\n".join(out))

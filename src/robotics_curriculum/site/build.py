@@ -199,14 +199,9 @@ def _nav(model: SiteModel) -> list[Any]:
             items: list[Any] = [model.module_page(module)]
             for summary in model.module_summaries(module):
                 symbol = STATE_SYMBOLS[state_of(summary)]
-                items.append(
-                    {
-                        f"{symbol} {html.escape(summary.lesson.title)}": model.lesson_page(
-                            summary.lesson
-                        )
-                    }
-                )
-            stage_items.append({html.escape(module.title): items})
+                title = html.escape(model.text(summary.lesson).title)
+                items.append({f"{symbol} {title}": model.lesson_page(summary.lesson)})
+            stage_items.append({html.escape(model.module_text(module).title): items})
         nav.append({html.escape(stage_text(stage, t)): stage_items})
     nav.append({html.escape(t("site.nav.resources")): RESOURCES_PAGE})
     return nav
@@ -217,9 +212,7 @@ def mkdocs_config(model: SiteModel) -> str:
         # mkdocs-material writes nav titles and site_name into HTML unescaped, so
         # they are escaped here (AC-SEC.1).
         "site_name": html.escape(model.title),
-        "site_description": html.escape(
-            model.courses[0].summary if len(model.courses) == 1 else ""
-        ),
+        "site_description": html.escape(model.description),
         "docs_dir": DOCS_DIR,
         # Plain .html links so the built site also works when opened from disk (file://).
         "use_directory_urls": False,
@@ -243,14 +236,20 @@ def mkdocs_config(model: SiteModel) -> str:
                     "scheme": "default",
                     "primary": "indigo",
                     "accent": "indigo",
-                    "toggle": {"icon": "material/weather-night", "name": "다크 모드로 전환"},
+                    "toggle": {
+                        "icon": "material/weather-night",
+                        "name": model.t("site.theme.dark"),
+                    },
                 },
                 {
                     "media": "(prefers-color-scheme: dark)",
                     "scheme": "slate",
                     "primary": "indigo",
                     "accent": "indigo",
-                    "toggle": {"icon": "material/weather-sunny", "name": "라이트 모드로 전환"},
+                    "toggle": {
+                        "icon": "material/weather-sunny",
+                        "name": model.t("site.theme.light"),
+                    },
                 },
             ],
         },

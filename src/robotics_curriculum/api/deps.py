@@ -15,7 +15,7 @@ from typing import Annotated
 
 from fastapi import Depends, HTTPException, Request
 
-from robotics_curriculum.api.log import request_id_var
+from robotics_curriculum.api.log import lang_var, request_id_var
 from robotics_curriculum.api.settings import Settings
 from robotics_curriculum.auth.models import Role, Scope, User
 from robotics_curriculum.auth.oidc import OidcClient
@@ -145,6 +145,7 @@ def request_context(request: Request) -> Context:
         ip=request.client.host if request.client else None,
         user_agent=request.headers.get("user-agent"),
         request_id=request_id_var.get(),
+        lang=lang_var.get(),
     )
 
 

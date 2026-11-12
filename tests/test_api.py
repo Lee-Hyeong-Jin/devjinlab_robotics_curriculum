@@ -22,6 +22,7 @@ from robotics_curriculum.api.log import JsonFormatter, configure_logging, reques
 from robotics_curriculum.api.settings import Settings, SettingsError
 from robotics_curriculum.cli import app as cli_app
 from robotics_curriculum.content import load_courses
+from robotics_curriculum.i18n import translator
 from robotics_curriculum.progress import ProgressError
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -123,6 +124,7 @@ def test_courses_and_course_stages(client: TestClient) -> None:
             "tags": courses[0]["tags"],
             "module_count": 2,
             "lesson_count": 3,
+            "lang": "ko",
         }
     ]
     detail = client.get(f"/api/v1/courses/{COURSE}").json()
@@ -231,7 +233,11 @@ def test_log_done_unlocks_and_next(client: TestClient) -> None:
     assert logged.json()["seconds"] == 45 * 60
 
     nxt = client.get("/api/v1/progress/next").json()
-    assert [(n["lesson"]["id"], n["reason"]) for n in nxt] == [(VECTORS, "in progress")]
+    # `reason` follows Accept-Language; the default is the authoring language.
+    assert [n["lesson"]["id"] for n in nxt] == [VECTORS]
+    assert nxt[0]["reason"] == translator("ko")("api.next_reason.in_progress")
+    english = client.get("/api/v1/progress/next", headers={"Accept-Language": "en"}).json()
+    assert english[0]["reason"] == "in progress"
 
     done = client.post(
         "/api/v1/progress/done", json={"lesson_id": VECTORS, "understanding": 4, "note": "ok"}
@@ -243,7 +249,7 @@ def test_log_done_unlocks_and_next(client: TestClient) -> None:
 
     nxt = client.get("/api/v1/progress/next", params={"n": 1}).json()
     assert [n["lesson"]["id"] for n in nxt] == [ROTATION]
-    assert nxt[0]["reason"] == "prerequisites done"
+    assert nxt[0]["reason"] == translator("ko")("api.next_reason.prerequisites_done")
 
     status = client.get("/api/v1/progress/status", params={"course": COURSE}).json()
     assert status["open_session"] is None

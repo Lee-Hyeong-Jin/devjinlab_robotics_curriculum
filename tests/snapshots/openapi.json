@@ -113,7 +113,7 @@
           "content"
         ],
         "summary": "List Courses",
-        "description": "Every course in the curriculum.",
+        "description": "Every course in the curriculum, with its text in the requested language.",
         "operationId": "list_courses_api_v1_courses_get",
         "responses": {
           "200": {
@@ -4433,6 +4433,12 @@
             "type": "integer",
             "title": "Lesson Count"
           },
+          "lang": {
+            "type": "string",
+            "title": "Lang",
+            "description": "Language of `title` and `summary`.",
+            "default": "ko"
+          },
           "stages": {
             "items": {
               "$ref": "#/components/schemas/Stage"
@@ -4483,6 +4489,12 @@
           "lesson_count": {
             "type": "integer",
             "title": "Lesson Count"
+          },
+          "lang": {
+            "type": "string",
+            "title": "Lang",
+            "description": "Language of `title` and `summary`.",
+            "default": "ko"
           }
         },
         "additionalProperties": false,
@@ -4747,7 +4759,7 @@
               }
             ],
             "title": "Study Method",
-            "description": "Markdown of the \"## 이 단계 공부법\" section, if the lesson has one."
+            "description": "Markdown of the study-guide section, if the lesson has one."
           },
           "prev_lesson_id": {
             "anyOf": [
@@ -5149,7 +5161,20 @@
                 "type": "null"
               }
             ],
-            "title": "Level"
+            "title": "Level",
+            "description": "Stable level id, the same in every language (null when unset)."
+          },
+          "level_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Level Label",
+            "description": "`level` as it should be shown, in the requested language."
           },
           "course_id": {
             "type": "string",
@@ -5163,6 +5188,12 @@
             "type": "integer",
             "title": "Estimated Minutes",
             "description": "Sum over the module's lessons."
+          },
+          "lang": {
+            "type": "string",
+            "title": "Lang",
+            "description": "Language of `title` and `summary`.",
+            "default": "ko"
           },
           "lessons": {
             "items": {
@@ -5261,7 +5292,20 @@
                 "type": "null"
               }
             ],
-            "title": "Level"
+            "title": "Level",
+            "description": "Stable level id, the same in every language (null when unset)."
+          },
+          "level_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Level Label",
+            "description": "`level` as it should be shown, in the requested language."
           },
           "course_id": {
             "type": "string",
@@ -5275,6 +5319,12 @@
             "type": "integer",
             "title": "Estimated Minutes",
             "description": "Sum over the module's lessons."
+          },
+          "lang": {
+            "type": "string",
+            "title": "Lang",
+            "description": "Language of `title` and `summary`.",
+            "default": "ko"
           }
         },
         "additionalProperties": false,
@@ -6203,7 +6253,20 @@
                 "type": "null"
               }
             ],
-            "title": "Level"
+            "title": "Level",
+            "description": "Stable level id, the same in every language (null when unset)."
+          },
+          "level_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Level Label",
+            "description": "`level` as it should be shown, in the requested language."
           },
           "progress": {
             "type": "number",
@@ -6415,6 +6478,18 @@
             "title": "Level",
             "description": "null for modules without a level."
           },
+          "level_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Level Label",
+            "description": "`level` as it should be shown, in the requested language."
+          },
           "modules": {
             "items": {
               "$ref": "#/components/schemas/ModuleSummary"
@@ -6435,7 +6510,14 @@
         "properties": {
           "level": {
             "type": "string",
-            "title": "Level"
+            "title": "Level",
+            "description": "Stable level id, the same in every language."
+          },
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "description": "`level` as it should be shown.",
+            "default": ""
           },
           "progress": {
             "type": "integer",
@@ -6470,7 +6552,7 @@
           "module_ids"
         ],
         "title": "StageStat",
-        "description": "One level (기초 / 중급 / 고급) with its lesson counts."
+        "description": "One level (foundation / intermediate / advanced) with its lesson counts."
       },
       "StartRequest": {
         "properties": {

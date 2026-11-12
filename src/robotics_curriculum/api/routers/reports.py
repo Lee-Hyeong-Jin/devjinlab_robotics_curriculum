@@ -10,6 +10,7 @@ from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from fastapi.responses import PlainTextResponse
 
 from robotics_curriculum.api.deps import Index, Progress, State, get_principal
+from robotics_curriculum.api.log import lang_var
 from robotics_curriculum.api.problems import problem_responses
 from robotics_curriculum.api.schemas import ModuleReportSummary, Report, WeeklySummary
 from robotics_curriculum.report import (
@@ -70,8 +71,9 @@ def weekly(
         iso = IsoWeek.parse(week) if week else IsoWeek.of(today)
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from None
+    lang = lang_var.get()
     with progress.open() as service:
-        data = build_weekly_report(service, iso, today=today)
+        data = build_weekly_report(service, iso, today=today, lang=lang)
     report = Report(
         kind="weekly",
         period=str(iso),
@@ -88,8 +90,9 @@ def module(
 ) -> Report | MarkdownResponse:
     """Per-module report (``rc report module``): lesson table, understanding distribution."""
     index.module(module_id)
+    lang = lang_var.get()
     with progress.open() as service:
-        data = build_module_report(service, module_id)
+        data = build_module_report(service, module_id, lang)
     report = Report(
         kind="module",
         period=module_id,
