@@ -69,6 +69,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and `Strict-Transport-Security` only when the request arrived over HTTPS.
 - `docs/adr/0013-signup-policy.md` (proposed, not implemented): `RC_AUTH_SIGNUP`
   (`open` | `closed` | `invite`) and how invitations would work.
+- `scripts/perf/api_load.py`: measures the read endpoints' latency percentiles with asyncio
+  and the `httpx` already in the package (no new dependency). Baseline recorded in
+  `docs/operations/perf-baseline.md`: every read endpoint's p95 is under the PRD's 300 ms
+  target in both local and server mode, with the slowest at 158 ms.
+- `docs/operations/lighthouse.md`: why Lighthouse was not run (not installed; adding it is a
+  dependency decision), plus LCP/FCP/CLS measured with the Chromium already present — the
+  slowest page's LCP is 420 ms against the PRD's 2.5 s target, CLS 0.
 - `scripts/ops/deploy_pull.sh`: pull-based continuous deployment for a single host (deploys only commits with a green CI run, backs up first, rolls back on failure).
 
 ### Fixed
