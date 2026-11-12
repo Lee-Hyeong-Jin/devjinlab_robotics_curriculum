@@ -1,0 +1,75 @@
+id: m4-object-detection-intro
+lang: en
+activities:
+  m4-object-detection-intro-reading: Read the lesson
+  m4-object-detection-intro-quiz: "Quiz: IoU, NMS, precision and recall"
+  m4-object-detection-intro-exercise: >-
+    Implement detection post-processing and estimate a 3D position
+resources:
+  "Robotic Manipulation (Russ Tedrake)":
+    note: >-
+      Chapter 9, Object Detection and Segmentation, and chapter 10, Deep Perception.
+      Perception from a robot's point of view. Read this first.
+  "First Principles of Computer Vision (Shree Nayar)":
+    note: Optional, for more on the pre-neural-network foundations of perception.
+  "Physical AI 입문 All-In-One (패스트캠퍼스)":
+    note: >-
+      Part 2, perception (YOLO, OpenCV). Released in stages from December 2026; paid
+      (from KRW 303,000). In Korean; optional.
+quiz:
+  - id: q1
+    prompt: >-
+      What goes wrong when the IoU threshold of non-maximum suppression (NMS) is set too
+      **low**?
+    choices:
+      - Several boxes survive on the same object
+      - Boxes belonging to different objects standing close together are deleted too
+      - The confidence scores fall
+      - Recall always rises
+    explanation: >-
+      A low threshold deletes boxes that barely overlap, so boxes of genuinely different
+      objects - people standing side by side, say - are suppressed and missed, lowering
+      recall. Too high a threshold does the opposite and leaves duplicate boxes on one
+      object.
+    concept:
+      front: The NMS IoU threshold trade-off
+      back: Too low deletes nearby objects; too high leaves duplicate boxes
+  - id: q2
+    prompt: >-
+      Which measure matters most for a detector used to avoid obstacles?
+    choices:
+      - Recall - a missed obstacle means a collision
+      - Precision - plenty of false positives are safe
+      - Only the inference speed matters
+      - Neither matters
+    explanation: >-
+      Missing an obstacle (a false negative) means a collision, so recall comes first; a
+      false positive costs no more than an unnecessary slowdown. A detector for grasping is
+      the opposite: it must not pick up the wrong thing, so precision matters more.
+    concept:
+      front: Which of precision and recall comes first, by use
+      back: >-
+        Obstacle avoidance = recall (a miss means a collision); grasping = precision (the
+        wrong object means failure)
+  - id: q3
+    prompt: >-
+      Select everything that is true of turning a 2D detection box into a 3D position a
+      robot can use.
+    choices:
+      - >-
+        Back-projecting with the depth $Z$ and the intrinsics $K$ gives a 3D point in
+        camera coordinates
+      - >-
+        A point in camera coordinates is moved into robot and world coordinates by the
+        homogeneous transforms of M1
+      - >-
+        For reflective or transparent objects the median of the depth inside the box is
+        safer than the mean
+      - >-
+        Knowing only the pixel size of the box fixes the position in metres, with no depth
+        sensor
+    explanation: >-
+      Back-projection $P_c = Z K^{-1}[u, v, 1]^\top$ gives the 3D point, and a transform
+      moves it into robot coordinates. Where depth values are missing, the median resists
+      the outliers. The pixel size of the box alone cannot give depth unless the object's
+      real size is known - that is scale ambiguity.

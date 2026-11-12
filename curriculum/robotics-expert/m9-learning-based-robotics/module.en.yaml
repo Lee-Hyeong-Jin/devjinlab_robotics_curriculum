@@ -1,0 +1,12 @@
+id: m9-learning-based-robotics
+lang: en
+title: "M9 Learning-based robotics"
+summary: >-
+  Starting with the decision making and MDPs (value and policy iteration) that M6 left out,
+  this module covers an overview of robot learning, the basics of reinforcement learning
+  (Q-learning, policy gradients, PPO), imitation learning (behaviour cloning, DAgger, ACT,
+  Diffusion Policy), simulation-based RL and sim-to-real (domain randomisation), VLA and
+  robot foundation models (RT-2, OpenVLA, pi0, SmolVLA), and LeRobot datasets, benchmarks
+  and safe evaluation.
+  It uses numpy examples and document reading rather than simulator exercises, and leads
+  into the learning-based track of the M10 capstone.

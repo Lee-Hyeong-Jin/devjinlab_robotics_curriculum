@@ -1,0 +1,14 @@
+# English text of course.yaml. Structure (modules, order, ids) stays in course.yaml.
+id: robotics-expert
+lang: en
+title: Robotics Expert Course
+summary: >-
+  A single ten-module course that takes you from the foundations to expert-level robotics
+  along a staged path.
+  Foundation (M1-M4): maths and physics, robot kinematics, mobile robots and control,
+  sensing and perception.
+  Intermediate (M8, M5-M7): an overview of ROS 2 and its tooling first, then state
+  estimation and SLAM, navigation and path planning, manipulation and motion planning.
+  Advanced (M9-M10): learning-based robotics, system integration and a capstone project.
+  The recommended order is M1 -> M2 -> M3 -> M4 -> M8 -> M5 -> M6 -> M7 -> M9 -> M10.
+tags: [robotics, fundamentals]

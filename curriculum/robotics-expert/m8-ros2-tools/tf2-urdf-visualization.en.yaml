@@ -1,0 +1,17 @@
+id: m8-tf2-urdf-visualization
+lang: en
+activities:
+  m8-tf2-urdf-visualization-reading: Read the lesson and the Intermediate tf2 and URDF tutorials
+  m8-tf2-urdf-visualization-quiz: "Quiz: the frame tree, and picking a tool"
+  m8-tf2-urdf-visualization-exercise: Record, replay and visualise the turtlesim tf demo
+resources:
+  "ROS 2 for Beginners Level 2 (TF, URDF, RViz, Gazebo) (Renard, Udemy)":
+    note: "About 14 hours, rated 4.8 from 1,818 ratings. Paid."
+  "Foxglove ROS 2 docs":
+    note: >-
+      Foxglove Bridge and MCAP (the rosbag2 default since Iron); the free plan covers
+      3 seats.
+  "Visualizing ROS 2 data with Foxglove (ROS 2 docs)":
+    note: >-
+      The official guide to connecting Foxglove. Written for Lyrical, but the steps are
+      the same on Jazzy.

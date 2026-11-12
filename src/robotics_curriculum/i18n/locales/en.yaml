@@ -50,6 +50,8 @@ quiz:
   wrong: "wrong (answer: {answer})"
   explanation: "  why: {text}"
   score: "score {correct}/{total} ({percent}%)  wrong {wrong}"
+  answer_true: "O (true)"
+  answer_false: "X (false)"
   kind:
     single: "single choice"
     multiple: "multiple choice"
@@ -207,6 +209,9 @@ site:
     intro: "All {count} study resources of the course, grouped by kind. The lesson links next to each one show when and how to use it."
     lessons_suffix: " · lessons: {lessons}"
     empty: "No resources listed."
+  theme:
+    dark: "Switch to dark mode"
+    light: "Switch to light mode"
 api:
   problem:
     "400": "Bad Request"
@@ -221,3 +226,87 @@ api:
     "500": "Internal Server Error"
     "503": "Service Unavailable"
   validation: "{count} invalid field(s)"
+  next_reason:
+    in_progress: "in progress"
+    prerequisites_done: "prerequisites done"
+
+level:
+  foundation: "Foundation"
+  intermediate: "Intermediate"
+  advanced: "Advanced"
+  none: "No stage"
+
+duration:
+  hours_minutes: "{hours}h {minutes}m"
+  hours: "{hours}h"
+  minutes: "{minutes}m"
+  zero: "0m"
+  under_minute: "under a minute"
+
+report:
+  state:
+    done: "done"
+    in_progress: "in progress"
+    not_started: "not started"
+    locked: "locked"
+  stuck:
+    days: "in progress for {days} days"
+    understanding: "understanding {value}/5"
+    again_cards: "review card rated again {count} times"
+  next_detail: "{state}, about {minutes} min"
+  weekly:
+    title: "Weekly report {week}"
+    period: "Period: {start} - {end} (as of {as_of})"
+    summary: "Summary"
+    study_time: "- Study time: {time}"
+    sessions: "- Sessions: {count} (on {days} day(s))"
+    completed_count: "- Lessons completed: {count}"
+    in_progress_count: "- Lessons in progress: {count}"
+    module_time: "Study time per module"
+    col_module: "module"
+    col_time: "time"
+    no_records: "Nothing was studied this week."
+    completed: "Lessons completed"
+    col_lesson: "lesson"
+    col_week_time: "time this week"
+    col_understanding: "understanding"
+    no_completed: "No lesson was completed this week."
+    in_progress: "Lessons in progress"
+    in_progress_line: "- {lesson}: {time} this week"
+    none: "none"
+    quiz_review: "Quiz and review"
+    quiz_rate: "- Quiz accuracy: {percent}% ({correct}/{attempts} questions over {runs} run(s))"
+    quiz_rate_none: "- Quiz accuracy: no record"
+    cards: "- Review cards: {count} ({ratings})"
+    cards_none: "- Review cards: no record"
+    notes: "Notes"
+    note_line: "- {day} `{lesson_id}`: {text}"
+    no_notes: "No notes this week."
+    stuck: "Where you are stuck"
+    stuck_line: "- {lesson}: {detail}"
+    next: "Suggested for next week"
+    next_line: "{number}. {lesson}: {detail}"
+    start_hint: "Start: `rc start {lesson_id}`"
+    all_done: "Every lesson is done."
+  module:
+    title: "Module report: {title} (`{module_id}`)"
+    course: "- Course: {title}"
+    progress: "- Progress: {done}/{total} lessons ({percent}%)"
+    total_time: "- Total study time: {time}"
+    lessons: "Lessons"
+    col_lesson: "lesson"
+    col_state: "state"
+    col_time: "time"
+    col_understanding: "understanding"
+    col_completed: "completed"
+    understanding: "Understanding"
+    understanding_line: "- {score}/5: {count} lesson(s)"
+    no_understanding: "No understanding has been recorded yet."
+
+auth:
+  email:
+    subject:
+      verify_email: "Please confirm your e-mail address"
+      reset_password: "Reset your password"
+      invite: "You have been invited"
+    expiry: "This link works once and expires in {minutes} minutes. If you did not ask for it, ignore this message."

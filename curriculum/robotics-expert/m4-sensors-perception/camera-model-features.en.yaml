@@ -1,0 +1,63 @@
+id: m4-camera-model-features
+lang: en
+activities:
+  m4-camera-model-features-reading: Read the lesson
+  m4-camera-model-features-quiz: "Quiz: computing a projection"
+  m4-camera-model-features-exercise: >-
+    Implement projection, a miniature calibration, and the Harris corner detector
+resources:
+  "First Principles of Computer Vision (Shree Nayar)":
+    note: "The Camera & Imaging and Features & Boundaries series. Watch these first."
+  "Cyrill Stachniss, Homogeneous Coordinates":
+    note: A refresher on the homogeneous coordinates that make projection a single matrix product.
+  "QUT Robot Academy (Peter Corke)":
+    note: "Optional lessons in the 3D Vision and Visual Servoing topics."
+  "Computer Vision: Algorithms and Applications (Richard Szeliski)":
+    note: The chapters on camera calibration and feature detection (advanced reference).
+quiz:
+  - id: q1
+    prompt: >-
+      Why can a single pixel from one camera not fix the position of a 3D point?
+    choices:
+      - Because lens distortion makes the pixel coordinates inaccurate
+      - >-
+        Because dividing by $Z$ during projection discards depth, so every point along one
+        ray lands on the same pixel
+      - 'Because the principal point $(c_x, c_y)$ is unknown'
+      - Because the image sensor has finite resolution
+    explanation: >-
+      The moment you divide, as in $(x, y) = (X/Z, Y/Z)$, the depth information is gone.
+      One pixel corresponds to a single **ray** out of the camera origin, so recovering
+      depth needs something extra: stereo, motion, or a depth sensor.
+    concept:
+      front: The limit of a single camera
+      back: >-
+        Dividing by $Z$ loses depth - one pixel tells you a ray and no more
+  - id: q2
+    prompt: >-
+      In the Harris detector, what is a region whose gradient covariance matrix $M$ has
+      eigenvalues (large, small)?
+    choices:
+      - A flat region
+      - An edge
+      - A corner
+      - Noise
+    explanation: >-
+      Brightness changing sharply in only one direction makes just one eigenvalue large -
+      that is an edge. Both large means a corner (the position is pinned down); both small
+      means a flat region. The Harris response
+      $R = \det M - k(\operatorname{tr}M)^2$ summarises that test as a single number.
+    concept:
+      front: Harris eigenvalues and what the region is
+      back: >-
+        (large, large) = corner, (large, small) = edge, (small, small) = flat
+  - id: q3
+    prompt: >-
+      Taking several pictures of a checkerboard from one angle is enough to obtain $K$ and
+      the distortion coefficients reliably.
+    explanation: >-
+      From one pose, parameters that trade off against each other - focal length and
+      distance (scale) - are not separated, and the edges of the image are not filled
+      variously enough to pin the distortion coefficients down. Shooting from several
+      angles and distances adds the constraints that make minimising the reprojection
+      error converge on a unique solution.

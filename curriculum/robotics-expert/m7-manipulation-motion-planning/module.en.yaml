@@ -1,0 +1,12 @@
+id: m7-manipulation-motion-planning
+lang: en
+title: "M7 Manipulation and motion planning"
+summary: >-
+  Widening the kinematics of M2 to velocities and forces, this module implements the
+  Jacobian and singularities, Lagrangian dynamics and computed-torque control, and
+  joint- and task-space trajectory generation (cubic and quintic polynomials, velocity and
+  acceleration limits) as numpy examples; it then covers grasping, contact and impedance
+  control, configuration-space obstacles and sampling-based manipulator motion planning,
+  and reads the structure of MoveIt 2 (move_group, the planning scene, OMPL, ros2_control).
+  It builds on the sampling-based planning of M6 and on tf2 and URDF from M8, and leads
+  into the learning-based manipulation of M9.

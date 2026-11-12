@@ -1,0 +1,19 @@
+id: m6-costmap-global-planning
+lang: en
+activities:
+  m6-costmap-global-planning-reading: Read the lesson and the Nav2 Navigation Concepts
+  m6-costmap-global-planning-quiz: "Quiz: costmap layers and cost values"
+  m6-costmap-global-planning-exercise: Experiment with inflation parameters and cost-weighted A*
+resources:
+  "Nav2 Documentation":
+    note: >-
+      Navigation Concepts (Costmap 2D and the planner server), and the Costmap 2D,
+      Inflation Layer and planner-plugin entries of the Configuration Guide.
+  "A* Planning (Stachniss)":
+    note: "A review of lesson 1, seen again as search over a costmap."
+  "PythonRobotics (Sakai)":
+    note: "Read the code of the Path Planning module (grid-based planners, Hybrid A*, ...)."
+  "Planning Algorithms (LaValle)":
+    note: >-
+      Chapter 4, configuration space (why obstacles are inflated), and chapter 2, search
+      (optional).

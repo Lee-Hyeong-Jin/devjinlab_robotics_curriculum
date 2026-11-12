@@ -1,0 +1,21 @@
+id: m8-stacks-dev-environment
+lang: en
+activities:
+  m8-stacks-dev-environment-reading: Read the lesson and the ros2_control and Docker guides
+  m8-stacks-dev-environment-quiz: "Quiz: filling in the map of the stack"
+  m8-stacks-dev-environment-exercise: "Set up a ros:jazzy development container and run colcon test"
+resources:
+  "ros2_control Getting Started":
+    note: >-
+      The architecture, plus ros2_control_demos example_1 (RRBot)
+      https://github.com/ros-controls/ros2_control_demos
+  "Introduction to ROS 2 Development with Docker":
+    note: "The ros:jazzy image and a Compose development container. Prefer native Ubuntu 24.04."
+  "What is the hardest part of learning ROS 2 as a beginner (ROS Discourse)":
+    note: >-
+      Practice at breaking and repairing workspaces and sourcing, and why to state the
+      distribution you are on.
+  "micro_ros_setup":
+    note: >-
+      The micro-ROS build tooling for microcontrollers. Supports Humble, Jazzy, Kilted and
+      Lyrical.

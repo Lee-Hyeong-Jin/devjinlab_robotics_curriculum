@@ -1,0 +1,68 @@
+id: m3-differential-drive
+lang: en
+activities:
+  m3-differential-drive-reading: Read the lesson
+  m3-differential-drive-quiz: "Quiz: converting between wheel speeds and robot velocity"
+  m3-differential-drive-exercise: >-
+    Plot a circle and a figure-of-eight from an odometry simulation
+resources:
+  "Modern Robotics, 13장 Wheeled Mobile Robots (Lynch & Park)":
+    title: "Modern Robotics, chapter 13: Wheeled Mobile Robots (Lynch & Park)"
+    note: >-
+      Sections 13.2-13.3, differential-drive kinematics and the nonholonomic constraint.
+      Free preprint.
+  "Modern Robotics 강의 영상 (13장)":
+    title: "Modern Robotics lecture videos (chapter 13)"
+    note: The videos for the wheeled-mobile-robot chapter.
+  "Introduction to Autonomous Mobile Robots, 2nd ed. (Siegwart, Nourbakhsh, Scaramuzza)":
+    note: >-
+      Chapter 3, mobile-robot kinematics. It works through the constraints of each wheel
+      type systematically.
+  "Probabilistic Robotics (Thrun, Burgard, Fox)":
+    note: >-
+      Chapter 5, Robot Motion - the velocity and odometry models and their uncertainty
+      (optional, advanced).
+quiz:
+  - id: q1
+    prompt: >-
+      How does a differential-drive robot move when $\omega_R = -\omega_L$ (equal in
+      magnitude, opposite in direction)?
+    choices:
+      - It drives straight ahead
+      - It turns in place about the midpoint between the two wheels
+      - It turns about one of the wheels
+      - It stops
+    explanation: >-
+      $v = r(\omega_R + \omega_L)/2 = 0$ while $\omega = r(\omega_R - \omega_L)/L \neq 0$,
+      so it rotates without advancing. The centre of rotation is the midpoint between the
+      wheels, which is the centre of the robot.
+    concept:
+      front: 'The motion when $\omega_R = -\omega_L$'
+      back: >-
+        $v = 0$, $\omega \neq 0$ - it turns in place about the midpoint between the wheels
+  - id: q2
+    prompt: >-
+      Because of the nonholonomic constraint, there are poses on the plane a
+      differential-drive robot cannot reach.
+    explanation: >-
+      The constraint only forbids **instantaneous** sideways motion. Combining driving and
+      turning - as in parallel parking - reaches any $(x, y, \theta)$ on the plane. Being
+      harder to control is a separate matter from being reachable.
+    concept:
+      front: What the nonholonomic constraint means
+      back: >-
+        Only instantaneous sideways motion is impossible - combining driving and turning
+        reaches any pose
+  - id: q3
+    prompt: >-
+      Select every reason the error of odometry (dead reckoning) grows over time.
+    choices:
+      - Wheel slip
+      - Errors in the measured wheel radius and wheel separation
+      - The approximation error of discrete integration itself
+      - A higher wheel-encoder resolution makes the error larger
+    explanation: >-
+      Slip, errors in the mechanical parameters ($r$ and $L$) and the approximation error
+      of Euler integration all accumulate. Encoder resolution is better when higher, so it
+      is not a source of error. Correcting this accumulated error with external sensors is
+      what M4 and state estimation are for.

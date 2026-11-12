@@ -64,8 +64,14 @@ def _score(words: list[str], title: str, tags: list[str], rest: list[str]) -> in
     return total
 
 
-def search(courses: list[Course], query: str, *, limit: int = 20) -> list[SearchHit]:
-    """Lessons (title, summary, objectives, tags) and resources (title, note, kind)."""
+def search(
+    courses: list[Course], query: str, *, limit: int = 20, lang: str | None = None
+) -> list[SearchHit]:
+    """Lessons (title, summary, objectives, tags) and resources (title, note, kind).
+
+    Searching and the hits both use the text in ``lang``, so a reader never gets a result
+    in a language they cannot read, and never fails to find a lesson by its own title.
+    """
     words = _words(query)
     if not words:
         return []
@@ -73,20 +79,21 @@ def search(courses: list[Course], query: str, *, limit: int = 20) -> list[Search
     for course in courses:
         for module in course.modules:
             for lesson in module.lessons:
-                rest = [lesson.summary, *lesson.objectives, lesson.id]
-                score = _score(words, lesson.title, lesson.tags, rest)
+                text = lesson.localized(lang)
+                rest = [text.summary, *text.objectives, lesson.id]
+                score = _score(words, text.title, text.tags, rest)
                 if score is not None:
                     hits.append(
                         SearchHit(
                             kind="lesson",
                             id=lesson.id,
-                            title=lesson.title,
-                            snippet=_snippet([lesson.summary, *lesson.objectives], words),
+                            title=text.title,
+                            snippet=_snippet([text.summary, *text.objectives], words),
                             lesson_id=lesson.id,
                             score=score,
                         )
                     )
-                for i, res in enumerate(lesson.resources):
+                for i, res in enumerate(text.resources):
                     kind = res.kind.value if res.kind else ""
                     rest = [res.note or "", res.url or "", kind]
                     score = _score(words, res.title, [], rest)

@@ -14,7 +14,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import date, datetime
 
-from robotics_curriculum.content import Lesson, LessonQuiz, QuizQuestion, parse_quiz
+from robotics_curriculum.content import Lesson, LessonQuiz, QuizQuestion, localized_quiz
 from robotics_curriculum.learn.quiz import (
     GradedAnswer,
     InvalidAnswer,
@@ -50,11 +50,11 @@ class QuestionView:
     choices: list[str]
 
     @classmethod
-    def of(cls, question: QuizQuestion) -> QuestionView:
+    def of(cls, question: QuizQuestion, lang: str | None = None) -> QuestionView:
         return cls(
             id=question.id,
             type=question.type,
-            type_label=question.type_label,
+            type_label=question.type_label(lang),
             prompt=question.prompt,
             choices=list(question.choices),
         )
@@ -71,12 +71,12 @@ class AnswerFeedback:
     explanation: str
 
     @classmethod
-    def of(cls, graded: GradedAnswer) -> AnswerFeedback:
+    def of(cls, graded: GradedAnswer, lang: str | None = None) -> AnswerFeedback:
         return cls(
             question_id=graded.question.id,
             given=graded.given,
             correct=graded.correct,
-            answer=graded.question.answer_text(),
+            answer=graded.question.answer_text(lang),
             explanation=graded.question.explanation,
         )
 
@@ -124,17 +124,17 @@ class CardView:
         )
 
 
-def lesson_quiz(lesson: Lesson) -> LessonQuiz:
-    """Parse a lesson's quiz, raising :class:`QuizSubmissionError` when it has none."""
-    quiz = parse_quiz(lesson)
+def lesson_quiz(lesson: Lesson, lang: str | None = None) -> LessonQuiz:
+    """Parse a lesson's quiz in ``lang``, raising :class:`QuizSubmissionError` when it has none."""
+    quiz = localized_quiz(lesson, lang)
     if not quiz.questions:
         raise QuizSubmissionError(f"lesson '{lesson.id}' has no quiz block")
     return quiz
 
 
-def question_views(quiz: LessonQuiz) -> list[QuestionView]:
+def question_views(quiz: LessonQuiz, lang: str | None = None) -> list[QuestionView]:
     """The quiz without answers or explanations (what a GET endpoint may return)."""
-    return [QuestionView.of(q) for q in quiz.questions]
+    return [QuestionView.of(q, lang) for q in quiz.questions]
 
 
 def grade_submission(
@@ -184,9 +184,10 @@ def submit_quiz(
     finished_at: datetime,
     user_id: int = DEFAULT_USER,
     partial: bool = False,
+    lang: str | None = None,
 ) -> SubmissionResult:
     """Grade a submission and record it (run, attempts, cards, activity) in one transaction."""
-    quiz = lesson_quiz(lesson)
+    quiz = lesson_quiz(lesson, lang)
     result = grade_submission(
         quiz,
         answers,
@@ -198,7 +199,7 @@ def submit_quiz(
     recorded: RecordedRun = record_quiz_run(store, lesson, result, user_id=user_id)
     return SubmissionResult(
         lesson_id=lesson.id,
-        feedback=[AnswerFeedback.of(g) for g in result.graded],
+        feedback=[AnswerFeedback.of(g, lang) for g in result.graded],
         correct=result.correct_count,
         total=result.total,
         seconds=recorded.run.seconds,

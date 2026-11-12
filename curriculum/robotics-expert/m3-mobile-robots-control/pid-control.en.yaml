@@ -1,0 +1,64 @@
+id: m3-pid-control
+lang: en
+activities:
+  m3-pid-control-reading: Read the lesson
+  m3-pid-control-quiz: "Quiz: what the P, I and D terms do"
+  m3-pid-control-exercise: >-
+    Tune the gains and provoke windup in a heading-control simulation
+resources:
+  "Brian Douglas / MATLAB Tech Talks: Control Systems":
+    note: >-
+      Short videos that build intuition for PID and feedback control. Watch these first.
+  "Feedback Systems: An Introduction for Scientists and Engineers (Åström & Murray)":
+    note: >-
+      The PID chapter (integral windup, gain tuning). The authors publish a free edition
+      online.
+  "Modern Robotics, 11장 Robot Control (Lynch & Park)":
+    title: "Modern Robotics, chapter 11: Robot Control (Lynch & Park)"
+    note: "Sections 11.2-11.3, error dynamics and PID-shaped motion control."
+  "QUT Robot Academy (Peter Corke)":
+    note: Optional joint-control lectures in the Dynamics & Control area.
+quiz:
+  - id: q1
+    prompt: >-
+      Why does P control alone leave a steady-state error when there is a constant
+      disturbance such as friction?
+    choices:
+      - 'Because $K_p$ is negative'
+      - Because an error of zero gives an output of zero, which cannot cancel the disturbance
+      - Because the P term amplifies sensor noise
+      - Because integral windup occurs
+    explanation: >-
+      With $u = K_p e$, zero error means zero output. Resisting the disturbance needs a
+      non-zero output, so the system settles where a little error remains. The I term,
+      which accumulates past error, removes what is left.
+    concept:
+      front: The steady-state error of P control
+      back: >-
+        Zero error gives zero output, which cannot cancel a disturbance - this is why the
+        I term exists
+  - id: q2
+    prompt: Select everything that is true of integral windup.
+    choices:
+      - It happens because the integral keeps accumulating while the actuator is saturated
+      - Clamping the integral term to an upper and lower bound prevents it
+      - Stopping the accumulation while saturated (conditional integration) prevents it
+      - Raising the gain of the D term prevents it at the root
+    explanation: >-
+      If the integral keeps growing while the output is already at its limit and cannot
+      push any harder, the accumulated integral holds the output too high even after the
+      target is reached, producing a large overshoot. Clamping the integral, or suspending
+      it while saturated, is the standard remedy; the D term does not fix it.
+    concept:
+      front: Integral windup and what to do about it
+      back: >-
+        Accumulating while saturated causes overshoot. Clamp the integral, or suspend it
+        while saturated
+  - id: q3
+    prompt: >-
+      With a target of $170^\circ$ and a current heading of $-170^\circ$, what is the
+      correctly wrapped angle error in degrees? (with its sign, the number only)
+    explanation: >-
+      Wrapping $170 - (-170) = 340^\circ$ into $(-180^\circ, 180^\circ]$ gives
+      $-20^\circ$. Without wrapping, the robot tries to turn $340^\circ$ the long way round
+      instead of $20^\circ$ the short way.

@@ -1,0 +1,22 @@
+id: m9-datasets-benchmarks-evaluation
+lang: en
+activities:
+  m9-datasets-benchmarks-evaluation-reading: >-
+    Read the lesson and the LeRobot and Open X-Embodiment documentation
+  m9-datasets-benchmarks-evaluation-quiz: "Quiz: datasets and evaluation protocols"
+  m9-datasets-benchmarks-evaluation-exercise: >-
+    Compute a confidence interval for a success rate and write an evaluation plan
+resources:
+  "LeRobot":
+    note: >-
+      Pin v0.7.0, the version current when this was written. Dataset recording and
+      visualisation, the ACT, Diffusion and VLA policies, and LIBERO and MetaWorld
+      evaluation.
+  "Open X-Embodiment":
+    note: >-
+      Over a million real trajectories across 22 embodiments, in RLDS format. Licences
+      differ per dataset. A mirrored subset exists in LeRobot.
+  "Vision-Language-Action in Robotics: A Survey of Datasets, Benchmarks, and Data Engines":
+    note: "April 2026. Evaluation protocols and data engines. Worth reading before you fine-tune."
+  "Sim-to-Real with SO-101 (NVIDIA Physical AI Learning)":
+    note: "A worked example of the whole path: collect data, train, then evaluate in simulation and on hardware."

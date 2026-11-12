@@ -1,0 +1,71 @@
+id: m4-point-clouds-icp-ransac
+lang: en
+activities:
+  m4-point-clouds-icp-ransac-reading: Read the lesson
+  m4-point-clouds-icp-ransac-quiz: "Quiz: RANSAC iteration count and ICP convergence"
+  m4-point-clouds-icp-ransac-exercise: >-
+    Remove the ground plane and register two point clouds
+resources:
+  "Cyrill Stachniss, ICP":
+    note: "The Robotics block, through the SVD-based derivation of the alignment. Watch this first."
+  "Cyrill Stachniss, RANSAC":
+    note: "The Robotics block, including the formula for the number of iterations."
+  "Cyrill Stachniss, Least Squares – An Informal Introduction":
+    title: "Cyrill Stachniss, Least Squares - An Informal Introduction"
+    note: The Basics block. A refresher on seeing registration as a least-squares problem.
+  "Open3D Getting Started":
+    note: >-
+      v0.19. Work on real data with the Geometry (point cloud, KDTree) and Pipelines (ICP
+      registration) tutorials.
+quiz:
+  - id: q1
+    prompt: >-
+      Why is RANSAC better than least squares for finding the ground plane in a point
+      cloud that contains outliers?
+    choices:
+      - Because it always does less computation
+      - >-
+        Because instead of summing the error of every point it picks the model with the
+        most inliers within a threshold
+      - Because it is more accurate even on data with no outliers
+      - Because it needs no iteration
+    explanation: >-
+      Least squares sums the squared error of every point, so a single distant outlier
+      drags the solution a long way. RANSAC scores a model by its number of inliers, so
+      outliers barely influence the result. With no outliers, least squares is both more
+      accurate and faster.
+    concept:
+      front: Why RANSAC resists outliers
+      back: >-
+        It picks a model by the **count** of inliers within a threshold, not by a sum of
+        squared errors
+  - id: q2
+    prompt: >-
+      ICP converges on the global optimum even when the initial guess is far from the true
+      transform.
+    explanation: >-
+      ICP **assumes** nearest neighbours are the correspondences and iterates. A bad
+      initial guess produces wrong correspondences from the start and converges on the
+      local minimum that fits them. This is why the initial guess usually comes from
+      odometry or from a coarse alignment.
+    concept:
+      front: Why ICP is sensitive to its initial guess
+      back: >-
+        It assumes nearest-neighbour correspondences - a bad guess falls into the local
+        minimum of wrong correspondences
+  - id: q3
+    prompt: >-
+      What can happen in Kabsch alignment if you drop the correction term of
+      $R = V\,\mathrm{diag}(1, 1, \det(VU^\top))\,U^\top$?
+    choices:
+      - The rotation always becomes the identity matrix
+      - >-
+        You can get a reflection with $\det R = -1$, which flips the point cloud like a
+        mirror
+      - 'The translation vector $t$ cannot be found'
+      - It makes no difference
+    explanation: >-
+      The $VU^\top$ that SVD gives is orthogonal, but its determinant may be $-1$. That
+      makes it a reflection rather than a rotation, and the point cloud is mirrored.
+      Correcting the sign of the component belonging to the last singular value with
+      $\det(VU^\top)$ guarantees an element of $SO(3)$, with $\det R = +1$.

@@ -9,6 +9,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Translations for the content that had nowhere to hold them: `course.<lang>.yaml` and
+  `module.<lang>.yaml` carry a course's and a module's title and summary, and
+  `<lesson>.<lang>.yaml` carries activity titles, resource titles and notes, and the quiz
+  (matched by question id, so `type` and `answer` are never translated and grading is
+  identical in every language). This release ships the English course and module metadata,
+  the activity titles and resources of all 50 lessons, and the 42 quiz questions of M1-M4.
+- `level_label` on every API response that carries a module level, and `label` on the
+  dashboard's stage statistics: `level` stays the stable id written in `module.yaml`
+  (`기초`/`중급`/`고급`) and the label is what a reader is shown.
+- `?lang=` on any API request, which wins over `Accept-Language`. A client that caches by
+  URL — the web front-end does — needs the language in the URL so two readers in two
+  languages cannot share one cached body.
+- `docs/curriculum/GLOSSARY.md`: the ko ↔ en term list every translation follows.
+- `scripts/i18n/audit.py` and `docs/reviews/i18n-gap-audit.md`: the English build is driven
+  end to end (API, static site, CLI) and every Korean string that is left is reported.
+
+### Fixed
+
+- The English build showed Korean in places that had no translation at all: course and
+  module titles, activity titles, resource notes, quiz questions, both report renderers,
+  quiz type labels, stage names, duration strings and account e-mails. All of them now
+  follow the requested language and fall back to Korean only where no translation exists.
+- Web: the UI language never reached the API, so picking English left every title, summary,
+  report and stage chip in Korean. The API client now sends the reader's locale, and the
+  stage chips and roadmap headings show the translated label instead of the stored level id.
+- `GET /api/v1/progress/status`, `/progress/next`, `/resources`, `/search` and both report
+  endpoints ignored `Accept-Language` and always answered in Korean. `/search` now also
+  searches the text of the requested language, so an English reader can find a lesson by
+  its English title.
+
+
 - `GET /api/v1/auth/providers`: the external logins configured through `RC_OIDC_PROVIDERS`
   (id, display name, type and the URL that starts the flow), so the sign-in screen can offer
   a button per provider. Unauthenticated, and it never returns client secrets or role maps.

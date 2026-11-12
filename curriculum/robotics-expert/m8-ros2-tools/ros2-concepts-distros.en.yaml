@@ -1,0 +1,17 @@
+id: m8-ros2-concepts-distros
+lang: en
+activities:
+  m8-ros2-concepts-distros-reading: "Read the lesson and the official Beginner: CLI tools tutorials"
+  m8-ros2-concepts-distros-quiz: "Quiz: choosing a communication pattern"
+  m8-ros2-concepts-distros-exercise: Dissect the turtlesim graph from the CLI
+resources:
+  "ROS 2 Releases":
+    note: "The distribution and EOL table (Jazzy 2029-05, Lyrical 2031-05)."
+  "ROS 2 Jazzy Tutorials":
+    note: >-
+      Beginner: CLI tools (configuring the environment, turtlesim, nodes, topics,
+      services, parameters, actions, rqt_console, launch, rosbag).
+  "ROS 2 Jazzy 문서 한국어판 (위키독스)":
+    note: >-
+      A Korean translation of the concepts and tutorials, with the same table of contents
+      as docs.ros.org/en/jazzy. In Korean.

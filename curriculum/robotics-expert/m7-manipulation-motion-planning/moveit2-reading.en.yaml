@@ -1,0 +1,24 @@
+id: m7-moveit2-reading
+lang: en
+activities:
+  m7-moveit2-reading-reading: >-
+    Read the lesson and the MoveIt 2 Tutorials (Getting Started to Quickstart in RViz)
+  m7-moveit2-reading-quiz: "Quiz: the parts of MoveIt 2 and how data flows between them"
+  m7-moveit2-reading-exercise: Time-parameterise a set of waypoints and inspect the trajectory
+resources:
+  "MoveIt 2 Tutorials":
+    note: >-
+      Getting Started, then Quickstart in RViz, First C++ Project, Planning Around Objects
+      and Pick and Place with MTC. Jazzy recommended.
+  "MoveIt 2 binary install":
+    note: >-
+      Install the `ros-jazzy-moveit` binaries; building from source takes over 20 minutes
+      and a lot of memory. CycloneDDS recommended.
+  "ros2_control documentation (control.ros.org) - Getting Started":
+    note: "The controller manager, the hardware interface and the trajectory controllers."
+  "ROS 2로 시작하는 로보틱스 Motion Planning (패스트캠퍼스, 이성원)":
+    note: >-
+      Part 4 on motion and path planning, parts 5-6 on ROS 2 practice (MoveIt 2 with a UR
+      arm). Jazzy. Paid; in Korean.
+  "ROS 2 – MoveIt 2 – Control a Robotic Arm (Renard, Udemy)":
+    note: "7 hours over 53 lectures. Paid; in English."

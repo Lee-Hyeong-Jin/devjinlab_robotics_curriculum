@@ -36,6 +36,7 @@ from robotics_curriculum.auth.models import (
 )
 from robotics_curriculum.auth.oidc import Claims
 from robotics_curriculum.auth.store import AuthStore
+from robotics_curriculum.i18n import DEFAULT_LANG, normalize_lang, translator
 
 logger = logging.getLogger("robotics_curriculum.api")
 
@@ -134,6 +135,8 @@ class Context:
     ip: str | None = None
     user_agent: str | None = None
     request_id: str | None = None
+    lang: str | None = None
+    """Language the caller asked for; account e-mails are written in it."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -291,15 +294,17 @@ class AuthService:
         token = new_token()
         now = self.clock()
         self.store.create_one_time(user.id, kind, token_hash(token), now, now + ttl)
-        path, subject = {
-            TokenKind.VERIFY_EMAIL: ("verify-email", "이메일 주소를 확인해 주세요"),
-            TokenKind.RESET_PASSWORD: ("reset-password", "비밀번호 재설정"),
-            TokenKind.INVITE: ("accept-invite", "초대"),
+        path, subject_key = {
+            TokenKind.VERIFY_EMAIL: ("verify-email", "verify_email"),
+            TokenKind.RESET_PASSWORD: ("reset-password", "reset_password"),
+            TokenKind.INVITE: ("accept-invite", "invite"),
         }[kind]
+        t = translator(normalize_lang(ctx.lang) or DEFAULT_LANG)
+        subject = t(f"auth.email.subject.{subject_key}")
         minutes = int(ttl.total_seconds() // 60)
         body = (
             f"{self.config.public_url}/{path}?token={token}\n\n"
-            f"이 링크는 {minutes}분 동안 한 번만 쓸 수 있습니다. 요청하지 않았다면 무시하세요.\n"
+            f"{t('auth.email.expiry', minutes=minutes)}\n"
         )
         try:
             self.mailer.send(Mail(to=user.email, subject=subject, body=body))

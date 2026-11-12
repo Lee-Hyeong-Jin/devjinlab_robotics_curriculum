@@ -1,0 +1,54 @@
+id: m2-forward-kinematics
+lang: en
+activities:
+  m2-forward-kinematics-reading: Read the lesson
+  m2-forward-kinematics-quiz: "Quiz: computing forward kinematics"
+  m2-forward-kinematics-exercise: >-
+    Implement forward kinematics for a 2-link and a 3-link arm and plot the workspace
+resources:
+  "Modern Robotics, 4장 Forward Kinematics (Lynch & Park)":
+    title: "Modern Robotics, chapter 4: Forward Kinematics (Lynch & Park)"
+    note: Forward kinematics with the product of exponentials.
+  "Modern Robotics 강의 영상 (4장)":
+    title: "Modern Robotics lecture videos (chapter 4)"
+    note: The videos on forward kinematics.
+  "Robot Modeling and Control, 2nd ed. (Spong, Hutchinson, Vidyasagar)":
+    note: "Chapter 3, worked DH-based forward-kinematics examples."
+  "ModernRobotics 공식 코드 라이브러리":
+    title: The official ModernRobotics code library
+    note: Optional, compare your results against FKinSpace.
+quiz:
+  - id: q1
+    prompt: >-
+      Forward kinematics always has exactly one solution once the joint values are given.
+    explanation: >-
+      FK is a function from joint space to task space, and the product of the link
+      transforms is computed uniquely. Inverse kinematics is the other way round: several
+      joint configurations (elbow-up, elbow-down and so on) can produce the same
+      end-effector pose.
+    concept:
+      front: How many solutions forward kinematics has
+      back: Always exactly one - it is a function. Inverse kinematics can have several
+  - id: q2
+    prompt: >-
+      For a planar 2-link arm with $L_1 = L_2 = 1$ reaching the base origin, what is
+      $\theta_2$?
+    choices:
+      - '$0$'
+      - '$\pi/2$'
+      - '$\pi$ (fully folded)'
+      - It cannot reach it
+    explanation: >-
+      The workspace is the annulus $|L_1 - L_2| \le r \le L_1 + L_2$. With $L_1 = L_2$ the
+      inner radius is 0, so the origin is reachable, and getting there means folding the
+      two links exactly onto each other, so $\theta_2 = \pi$.
+  - id: q3
+    prompt: >-
+      What is the largest end-effector distance $r$ a planar 2-link arm with $L_1 = 2$ and
+      $L_2 = 1$ can reach? (the number only)
+    explanation: >-
+      $r \le L_1 + L_2 = 3$, with the links stretched into a straight line. The minimum is
+      $|L_1 - L_2| = 1$, so the workspace is the annulus between radius 1 and radius 3.
+    concept:
+      front: The workspace of a planar 2-link arm
+      back: 'The annulus $|L_1 - L_2| \le r \le L_1 + L_2$'

@@ -1,0 +1,17 @@
+id: m6-configuration-space-graph-search
+lang: en
+activities:
+  m6-configuration-space-graph-search-reading: Read the lesson and the A* lecture
+  m6-configuration-space-graph-search-quiz: "Quiz: configuration space and heuristics"
+  m6-configuration-space-graph-search-exercise: Implement grid A* and experiment with heuristics
+resources:
+  "Planning Algorithms (LaValle)":
+    note: >-
+      Part I, chapter 2, Discrete Planning (Dijkstra and A*), and chapter 4, configuration
+      space. Free HTML and PDF.
+  "A* Planning (Stachniss)":
+    note: "Online Training - Mobile Robotics, the Robotics block."
+  "PythonRobotics (Sakai)":
+    note: "The Dijkstra and A* sample code and animations in the Path Planning module."
+  "MIT OCW 16.410 Principles of Autonomy and Decision Making":
+    note: "The heuristic-search lectures (2010). Optional, for more theory."

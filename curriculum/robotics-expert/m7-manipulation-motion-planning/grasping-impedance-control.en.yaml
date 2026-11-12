@@ -1,0 +1,21 @@
+id: m7-grasping-impedance-control
+lang: en
+activities:
+  m7-grasping-impedance-control-reading: "Read the lesson and Robotic Manipulation ch. 3"
+  m7-grasping-impedance-control-quiz: "Quiz: friction cones, force closure and impedance"
+  m7-grasping-impedance-control-exercise: >-
+    Decide whether a grasp holds, and experiment with 1-DOF impedance control
+resources:
+  "Robotic Manipulation (Tedrake)":
+    note: >-
+      Chapter 3, Basic Pick and Place, chapter 5, Bin Picking (choosing grasp candidates),
+      and chapter 8, Manipulator Control (force and impedance).
+  "Modern Robotics: Mechanics, Planning, and Control (Lynch, Park)":
+    note: >-
+      Sections 11.5-11.6, force and impedance control, and chapter 12, Grasping and
+      Manipulation (friction cones, force closure).
+  "Modern Robotics Ch. 11 Robot Control 영상":
+    title: "Modern Robotics ch. 11, Robot Control (videos)"
+    note: The videos on force control, hybrid control and impedance control.
+  "MIT OCW 6.4210 Robotic Manipulation":
+    note: "The Fall 2022 lecture videos and assignments (pick and place, grasping)."

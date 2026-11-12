@@ -335,3 +335,32 @@ def test_delete_user_removes_only_that_user(tmp_path: Path) -> None:
         service = ProgressService(store, ProgressService.load_curriculum(CURRICULUM))
         assert service.delete_user_data() == (1, 0)  # defaults to its own user
         assert store.is_empty()
+
+
+def test_concurrent_opens_do_not_fail_on_the_journal_mode_switch(tmp_path: Path) -> None:
+    """Many requests opening the same database at once (server mode on SQLite) must all succeed."""
+    import threading
+
+    path = tmp_path / "progress.db"
+    SqliteProgressStore(path).close()
+    errors: list[Exception] = []
+    start = threading.Barrier(16)
+
+    def open_and_write(n: int) -> None:
+        try:
+            start.wait(timeout=10)
+            store = SqliteProgressStore(path)
+            try:
+                with store.transaction():
+                    pass
+            finally:
+                store.close()
+        except Exception as exc:  # noqa: BLE001 - the test reports every failure
+            errors.append(exc)
+
+    threads = [threading.Thread(target=open_and_write, args=(n,)) for n in range(16)]
+    for th in threads:
+        th.start()
+    for th in threads:
+        th.join(timeout=30)
+    assert errors == []

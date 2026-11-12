@@ -12,6 +12,7 @@ from typing import Annotated, get_args
 
 import typer
 
+from robotics_curriculum.content import level_label
 from robotics_curriculum.content.models import Level
 from robotics_curriculum.i18n import get_translator
 from robotics_curriculum.progress import (
@@ -55,13 +56,14 @@ def render_roadmap(
         rows = [s for s in summaries if s.course.id == course_id]
         course = rows[0].course
         n_done = sum(1 for s in rows if s.status is LessonStatus.DONE)
-        out += ["", f"{course.title} ({course.id})  {n_done}/{len(rows)} lessons done"]
+        title = course.localized(lang).title
+        out += ["", f"{title} ({course.id})  {n_done}/{len(rows)} lessons done"]
         groups = [lv for lv in (*LEVELS, None) if level is None or lv == level]
         for lv in groups:
             in_level = [s for s in rows if s.module.level == lv]
             if not in_level:
                 continue
-            out += ["", f"== {lv or t('roadmap.no_level')} =="]
+            out += ["", f"== {level_label(lv, lang) if lv else t('roadmap.no_level')} =="]
             module_ids = list(dict.fromkeys(s.module.id for s in in_level))
             for module_id in module_ids:
                 lessons = [s for s in in_level if s.module.id == module_id]
@@ -69,13 +71,13 @@ def render_roadmap(
                 done = sum(1 for s in lessons if s.status is LessonStatus.DONE)
                 minutes = sum(s.lesson.estimated_minutes for s in lessons)
                 out.append(
-                    f"  {module.title} ({module.id})  {done}/{len(lessons)} done, "
-                    f"est {_fmt_minutes(minutes)}"
+                    f"  {module.localized(lang).title} ({module.id})  "
+                    f"{done}/{len(lessons)} done, est {_fmt_minutes(minutes)}"
                 )
                 for s in lessons:
                     prereqs = ", ".join(s.lesson.prerequisites) or "-"
                     out.append(
-                        f"    {marker(s)} {s.lesson.id}  {s.lesson.title}  "
+                        f"    {marker(s)} {s.lesson.id}  {s.lesson.localized(lang).title}  "
                         f"({_fmt_minutes(s.lesson.estimated_minutes)}; prereq: {prereqs})"
                     )
         if level is not None and not any(s.module.level == level for s in rows):
@@ -92,7 +94,8 @@ def roadmap(
     ctx: typer.Context,
     course: Annotated[str | None, typer.Option("--course", help="Only this course id.")] = None,
     level: Annotated[
-        str | None, typer.Option("--level", help="Only modules of this level: 기초|중급|고급.")
+        str | None,
+        typer.Option("--level", help="Only modules of this level (the value in module.yaml)."),
     ] = None,
 ) -> None:
     """Show the course roadmap by level and module with done/in-progress/locked markers."""

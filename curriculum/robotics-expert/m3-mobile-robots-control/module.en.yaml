@@ -1,0 +1,6 @@
+id: m3-mobile-robots-control
+lang: en
+title: "M3 Mobile robots and control"
+summary: >-
+  The kinematic model of a differential-drive robot, PID feedback control, and controllers
+  for reaching a goal point and following a path.

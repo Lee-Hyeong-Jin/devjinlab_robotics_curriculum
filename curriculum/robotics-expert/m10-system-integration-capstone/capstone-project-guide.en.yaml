@@ -1,0 +1,24 @@
+id: m10-capstone-project-guide
+lang: en
+activities:
+  m10-capstone-project-guide-reading: Read the lesson and the example briefs
+  m10-capstone-project-guide-quiz: "Quiz: judging scope and risk"
+  m10-capstone-project-guide-exercise: >-
+    Write your own capstone proposal (brief, milestones, self-assessment)
+resources:
+  "Andino (Ekumen-OS)":
+    note: >-
+      The whole stack, from assembling the hardware (andino_hardware, firmware) through
+      ros2_control and SLAM to Nav2. The reference design for brief A.
+  "TurtleBot 4 User Manual Tutorials":
+    note: "The Generating a map, Navigation and Navigator tutorials (Jazzy). The steps brief A follows."
+  "LeRobot SO-101 docs":
+    note: >-
+      The whole path: teleoperation, recording data, training a policy, evaluating it. The
+      reference procedure for brief B.
+  "Train an ACT Policy for an SO-101 Robot (Trelis)":
+    note: "A hands-on record of training ACT. Useful for episode counts and failure cases."
+  "Open X-Embodiment":
+    note: >-
+      Over a million trajectories, 22 embodiments, RLDS. For the dataset variant of brief C
+      (analysing manipulation data).

@@ -51,6 +51,8 @@ quiz:
   wrong: "오답 (정답: {answer})"
   explanation: "  해설: {text}"
   score: "결과 {correct}/{total} ({percent}%)  오답 {wrong}"
+  answer_true: "O (참)"
+  answer_false: "X (거짓)"
   kind:
     single: "객관식"
     multiple: "다중선택"
@@ -208,6 +210,9 @@ site:
     intro: "코스 전체 학습 자료 {count}개를 유형별로 모았습니다. 각 자료 옆의 레슨 링크에서 언제 어떻게 쓰는지 확인하세요."
     lessons_suffix: " · 레슨: {lessons}"
     empty: "등록된 자료가 없습니다."
+  theme:
+    dark: "다크 모드로 전환"
+    light: "라이트 모드로 전환"
 api:
   problem:
     "400": "잘못된 요청"
@@ -222,3 +227,87 @@ api:
     "500": "서버 내부 오류"
     "503": "서비스를 사용할 수 없습니다"
   validation: "{count}개 필드가 올바르지 않습니다"
+  next_reason:
+    in_progress: "진행 중"
+    prerequisites_done: "선수 레슨 완료"
+
+level:
+  foundation: "기초"
+  intermediate: "중급"
+  advanced: "고급"
+  none: "단계 미지정"
+
+duration:
+  hours_minutes: "{hours}시간 {minutes}분"
+  hours: "{hours}시간"
+  minutes: "{minutes}분"
+  zero: "0분"
+  under_minute: "1분 미만"
+
+report:
+  state:
+    done: "완료"
+    in_progress: "진행 중"
+    not_started: "시작 전"
+    locked: "잠김"
+  stuck:
+    days: "{days}일째 진행 중"
+    understanding: "이해도 {value}/5"
+    again_cards: "복습 카드 again {count}회"
+  next_detail: "{state}, 예상 {minutes}분"
+  weekly:
+    title: "주간 리포트 {week}"
+    period: "기간: {start} ~ {end} (기준일 {as_of})"
+    summary: "요약"
+    study_time: "- 학습 시간: {time}"
+    sessions: "- 세션: {count}회 (학습한 날 {days}일)"
+    completed_count: "- 완료한 레슨: {count}개"
+    in_progress_count: "- 진행 중인 레슨: {count}개"
+    module_time: "모듈별 학습 시간"
+    col_module: "모듈"
+    col_time: "시간"
+    no_records: "이번 주 학습 기록이 없습니다."
+    completed: "완료한 레슨"
+    col_lesson: "레슨"
+    col_week_time: "이번 주 시간"
+    col_understanding: "이해도"
+    no_completed: "이번 주 완료한 레슨이 없습니다."
+    in_progress: "진행 중인 레슨"
+    in_progress_line: "- {lesson}: 이번 주 {time}"
+    none: "없음"
+    quiz_review: "퀴즈·복습"
+    quiz_rate: "- 퀴즈 정답률: {percent}% ({correct}/{attempts} 문항, {runs}회 응시)"
+    quiz_rate_none: "- 퀴즈 정답률: 기록 없음"
+    cards: "- 복습 카드: {count}장 ({ratings})"
+    cards_none: "- 복습 카드: 기록 없음"
+    notes: "메모 요약"
+    note_line: "- {day} `{lesson_id}`: {text}"
+    no_notes: "이번 주 메모가 없습니다."
+    stuck: "막힌 지점"
+    stuck_line: "- {lesson}: {detail}"
+    next: "다음 주 제안"
+    next_line: "{number}. {lesson}: {detail}"
+    start_hint: "시작: `rc start {lesson_id}`"
+    all_done: "모든 레슨을 완료했습니다."
+  module:
+    title: "모듈 리포트: {title} (`{module_id}`)"
+    course: "- 코스: {title}"
+    progress: "- 진도: {done}/{total} 레슨 ({percent}%)"
+    total_time: "- 누적 학습 시간: {time}"
+    lessons: "레슨"
+    col_lesson: "레슨"
+    col_state: "상태"
+    col_time: "시간"
+    col_understanding: "이해도"
+    col_completed: "완료일"
+    understanding: "이해도 분포"
+    understanding_line: "- {score}점: {count}개"
+    no_understanding: "아직 이해도 기록이 없습니다."
+
+auth:
+  email:
+    subject:
+      verify_email: "이메일 주소를 확인해 주세요"
+      reset_password: "비밀번호 재설정"
+      invite: "초대"
+    expiry: "이 링크는 {minutes}분 동안 한 번만 쓸 수 있습니다. 요청하지 않았다면 무시하세요."

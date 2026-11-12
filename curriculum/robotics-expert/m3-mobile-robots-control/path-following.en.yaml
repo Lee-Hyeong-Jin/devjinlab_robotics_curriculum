@@ -1,0 +1,68 @@
+id: m3-path-following
+lang: en
+activities:
+  m3-path-following-reading: Read the lesson
+  m3-path-following-quiz: "Quiz: path-following error and the look-ahead distance"
+  m3-path-following-exercise: >-
+    Implement a waypoint follower and measure the final position error
+resources:
+  "Robotics, Vision and Control, 3rd ed. (Peter Corke)":
+    note: >-
+      Chapter 4, mobile robots - moving to a point, line and path following, and pure
+      pursuit, all in Python.
+  "Implementation of the Pure Pursuit Path Tracking Algorithm (R. Craig Coulter, CMU Robotics Institute, 1992)":
+    note: >-
+      The original technical report on pure pursuit, with the curvature derivation and a
+      discussion of the look-ahead distance.
+  "Introduction to Autonomous Mobile Robots, 2nd ed. (Siegwart, Nourbakhsh, Scaramuzza)":
+    note: >-
+      The motion-control section at the end of chapter 3 (goal-point control in polar
+      coordinates).
+  "Modern Robotics, 13장 Wheeled Mobile Robots (Lynch & Park)":
+    title: "Modern Robotics, chapter 13: Wheeled Mobile Robots (Lynch & Park)"
+    note: "Section 13.3, motion planning and feedback control for nonholonomic robots (advanced)."
+quiz:
+  - id: q1
+    prompt: >-
+      What happens in pure pursuit when the look-ahead distance $L_d$ is set too **small**?
+    choices:
+      - It follows the path smoothly but cuts corners badly
+      - It hugs the path but oscillates from side to side
+      - The robot ignores the path completely
+      - The cross-track error becomes zero at all times
+    explanation: >-
+      In $\kappa = 2\sin\alpha / L_d$, a small $L_d$ gives a large curvature for the same
+      heading error. The robot hugs the path but oversteers and oscillates. A large $L_d$
+      is the opposite: smooth, but it cuts corners. That is why the practical rule is to
+      scale $L_d$ with speed.
+    concept:
+      front: 'The $L_d$ trade-off in pure pursuit'
+      back: Too small hugs the path but oscillates; too large is smooth but cuts corners
+  - id: q2
+    prompt: >-
+      Setting the waypoint acceptance radius $\varepsilon$ close to zero raises the
+      following accuracy, so it is always the better choice.
+    explanation: >-
+      A nonholonomic robot struggles to pass exactly through a point. If $\varepsilon$ is
+      too small it never "arrives", never advances to the next waypoint, and circles around
+      the target. The acceptance radius has to account for the robot's turning radius and
+      its control period.
+    concept:
+      front: When the acceptance radius is too small
+      back: >-
+        Arrival is never detected and the robot circles the target - size it against the
+        turning radius
+  - id: q3
+    prompt: >-
+      In go-to-goal control, what happens if the heading error $\alpha$ is not wrapped
+      into $(-\pi, \pi]$?
+    choices:
+      - The robot may turn the long way round instead of the short way
+      - 'The distance error $\rho$ becomes negative'
+      - The linear-velocity limit is ignored
+      - Nothing goes wrong
+    explanation: >-
+      Subtracting $\theta$ from the result of $\operatorname{atan2}$ can leave a value
+      outside $\pm 2\pi$. Without wrapping, $\omega = k_\alpha \alpha$ points away from the
+      shorter direction of rotation and the robot takes the long way round. It is the same
+      angle wrapping as in the PID lesson of M3.

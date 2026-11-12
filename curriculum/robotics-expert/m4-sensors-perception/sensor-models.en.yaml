@@ -1,0 +1,72 @@
+id: m4-sensor-models
+lang: en
+activities:
+  m4-sensor-models-reading: Read the lesson
+  m4-sensor-models-quiz: "Quiz: where each sensor's error comes from"
+  m4-sensor-models-exercise: Simulate encoder, gyroscope and LiDAR noise
+resources:
+  "Cyrill Stachniss, Observation Models":
+    note: >-
+      The Robotics block: beam models and observation models from a likelihood point of
+      view. Watch this first.
+  "Cyrill Stachniss, Probability Primer":
+    note: >-
+      The Basics block. Watch it first if Gaussians and conditional probability are new.
+  "Kalman and Bayesian Filters in Python (Labbe)":
+    note: "Chapters 1-3 (the g-h filter, discrete Bayes, Gaussians). Jupyter notebooks."
+  "현직자가 알려주는 로보틱스 시스템 완전 해부 (인프런, jelly)":
+    note: >-
+      17 lectures, 58 minutes. Sensors, motor drivers, Serial/CAN/EtherCAT. In Korean;
+      paid (KRW 29,700); optional.
+  "awesome-2d-lidars":
+    note: >-
+      A list of 2D LiDARs with ROS support (LD19, RPLIDAR A1). Useful for practising
+      reading real datasheets.
+quiz:
+  - id: q1
+    prompt: >-
+      What is the best reason to use proprioceptive and exteroceptive sensors together?
+    choices:
+      - Proprioceptive sensors are always more accurate than exteroceptive ones
+      - >-
+        Proprioceptive error accumulates through integration while exteroceptive sensors
+        give an absolute reference, so their weaknesses are complementary
+      - A robot's pose cannot be known at all from exteroceptive sensors alone
+      - Using both kinds makes the sensor noise disappear
+    explanation: >-
+      Encoders and gyroscopes are fast and barely affected by the environment, but
+      integrating them accumulates error. LiDAR and cameras give an absolute reference such
+      as a wall or a landmark, but they are slow and full of outliers. Fusion pays off
+      precisely because their weaknesses differ.
+    concept:
+      front: Proprioceptive vs exteroceptive
+      back: >-
+        Proprioceptive: fast but drifts. Exteroceptive: an absolute reference but slow and
+        noisy - complementary, so they are fused
+  - id: q2
+    prompt: >-
+      When heading is obtained by integrating a gyroscope, how does the heading error
+      caused by a **bias** $b$ grow with time $t$?
+    choices:
+      - 'Linearly, in proportion to $t$'
+      - 'In proportion to $\sqrt{t}$'
+      - 'In proportion to $t^2$'
+      - It does not grow
+    explanation: >-
+      Integrating a constant bias gives $bt$, so the error accumulates linearly - that is
+      drift. Integrating white noise, by contrast, gives a random walk whose standard
+      deviation grows as $\sqrt{t}$. This is why estimating and correcting the bias is at
+      the heart of using an IMU.
+    concept:
+      front: How the error of an integrated gyroscope grows
+      back: >-
+        Bias grows with $t$ (drift); white noise grows with $\sqrt{t}$ (random walk)
+  - id: q3
+    prompt: >-
+      Modelling the distribution of LiDAR measurements as a single Gaussian accounts
+      properly for the outliers caused by failed reflections and by objects in the way.
+    explanation: >-
+      Failed reflections (the maximum range), occlusions (short values) and random values
+      are not explained by the tail of a Gaussian. That is why a beam model is used - a
+      mixture of a correct reflection (Gaussian), occlusion, maximum range and a random
+      value - or why the median is used instead of the mean, being robust to outliers.

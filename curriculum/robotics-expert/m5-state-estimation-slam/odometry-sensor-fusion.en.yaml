@@ -1,0 +1,19 @@
+id: m5-odometry-sensor-fusion
+lang: en
+activities:
+  m5-odometry-sensor-fusion-reading: Read the lesson and the Nav2 robot_localization guide
+  m5-odometry-sensor-fusion-quiz: "Quiz: choosing what to fuse, and the frames"
+  m5-odometry-sensor-fusion-exercise: Tune an EKF that fuses wheel odometry with an IMU
+resources:
+  "Nav2 First-Time Robot Setup Guide: Setting Up Odometry (robot_localization)":
+    note: "ekf.yaml and odom -> base_link. The official setup guide."
+  "robot_localization 패키지 공식 문서 (ROS 2 Rolling)":
+    title: "The official robot_localization package documentation (ROS 2 Rolling)"
+    note: The ekf_node parameter reference. Look here when the configuration fights you.
+  "Sensor Fusion and Robot Localization Using ROS 2 Jazzy (Automatic Addison)":
+    note: "Configuring ekf_filter_node, on Jazzy."
+  "ROS2로 배우는 자율주행 로봇 센서 융합과 SLAM (최종명, 위키독스)":
+    note: >-
+      LiDAR, camera and IMU into an EKF and then SLAM Toolbox. In Korean (October 2025).
+  "Kalman and Bayesian Filters in Python (Labbe)":
+    note: "The Kalman Filter Design and Extended Kalman Filters chapters: sequential updates and tuning Q."

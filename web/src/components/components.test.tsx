@@ -231,6 +231,7 @@ describe('StageProgress', () => {
         stages={[
           {
             level: '기초',
+            levelLabel: 'Foundation',
             progress: 0.5,
             lessonsDone: 1,
             lessonsTotal: 2,
@@ -242,7 +243,8 @@ describe('StageProgress', () => {
         ]}
       />,
     )
-    expect(screen.getByRole('heading', { name: '기초' })).toBeInTheDocument()
+    // the heading shows the translated label, never the stored level id (FR-9)
+    expect(screen.getByRole('heading', { name: 'Foundation' })).toBeInTheDocument()
     expect(screen.getByText('모듈 1')).toBeInTheDocument()
     expect(screen.getByText('모듈 2')).toBeInTheDocument()
     expect(screen.getAllByRole('progressbar').length).toBe(3)

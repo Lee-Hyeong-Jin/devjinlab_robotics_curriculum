@@ -1,0 +1,22 @@
+id: m9-reinforcement-learning-basics
+lang: en
+activities:
+  m9-reinforcement-learning-basics-reading: >-
+    Read the lesson and the CS 285 policy-gradient and Q-learning lectures
+  m9-reinforcement-learning-basics-quiz: "Quiz: TD learning, policy gradients and PPO"
+  m9-reinforcement-learning-basics-exercise: Tabular Q-learning, and experiments with exploration
+resources:
+  "Berkeley CS 285 Deep Reinforcement Learning":
+    note: >-
+      The Fall 2023 lectures on YouTube, plus HW2 (Policy Gradients) and HW3
+      (Q-Learning / Actor-Critic). Offered again in Spring 2026.
+  "DeepMind x UCL RL Lecture Series 2021":
+    note: >-
+      13 lectures. Start at lecture 1, Introduction to RL, then MDPs, dynamic programming
+      and model-free prediction and control.
+  "Underactuated Robotics (Tedrake)":
+    note: "Chapter 20, Model-Free Policy Search: RL from a robot's point of view."
+  "CleanRL":
+    note: >-
+      One algorithm per file (PPO, DQN, SAC). As of 2026 use this rather than Spinning Up
+      as an implementation reference.
