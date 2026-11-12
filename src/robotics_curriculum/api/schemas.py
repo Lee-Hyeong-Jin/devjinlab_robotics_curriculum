@@ -93,10 +93,40 @@ class Resource(content.Resource):
     """A study resource as written in lesson front matter."""
 
 
+class Paper(Schema):
+    """A paper this lesson assigns: the course registry's bibliography merged with the
+    lesson's own role, required flag and note (ADR 0014)."""
+
+    id: str
+    title: str
+    authors: list[str]
+    year: int | None
+    venue: str | None
+    url: str | None
+    verified: bool = Field(
+        description="False when nobody has opened the url yet; clients mark it as unchecked."
+    )
+    role: content.models.PaperRole | None = Field(
+        description="seminal | standard | frontier | critique | survey, in this lesson."
+    )
+    required: bool = Field(description="Required reading for this lesson.")
+    note: str | None = Field(description='What to read, e.g. "§3 only".')
+    citation: str = Field(description="One-line form: `Mayne et al. (1966), IJC`.")
+
+    @classmethod
+    def of(cls, row: content.LessonPaper) -> Paper:
+        return cls(**row.model_dump(), citation=content.citation(row))
+
+
 class Lesson(LessonSummary):
     objectives: list[str]
     activities: list[Activity]
     resources: list[Resource]
+    papers: list[Paper] = Field(
+        default_factory=list,
+        description="Assigned papers, required reading first; empty unless the course has a "
+        "papers.yaml registry (ADR 0014).",
+    )
     content_format: Literal["markdown"] = Field(
         default="markdown", description="Format of `body` and `study_method`."
     )

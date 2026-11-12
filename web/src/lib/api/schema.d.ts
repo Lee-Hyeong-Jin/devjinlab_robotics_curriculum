@@ -1486,6 +1486,11 @@ export interface components {
             /** Resources */
             resources: components["schemas"]["Resource"][];
             /**
+             * Papers
+             * @description Assigned papers, required reading first; empty unless the course has a papers.yaml registry (ADR 0014).
+             */
+            papers?: components["schemas"]["Paper"][];
+            /**
              * Content Format
              * @description Format of `body` and `study_method`.
              * @default markdown
@@ -1744,6 +1749,50 @@ export interface components {
              * @description Why it is recommended.
              */
             reason: string;
+        };
+        /**
+         * Paper
+         * @description A paper this lesson assigns: the course registry's bibliography merged with the
+         *     lesson's own role, required flag and note (ADR 0014).
+         */
+        Paper: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Authors */
+            authors: string[];
+            /** Year */
+            year: number | null;
+            /** Venue */
+            venue: string | null;
+            /** Url */
+            url: string | null;
+            /**
+             * Verified
+             * @description False when nobody has opened the url yet; clients mark it as unchecked.
+             */
+            verified: boolean;
+            /**
+             * Role
+             * @description seminal | standard | frontier | critique | survey, in this lesson.
+             */
+            role: ("seminal" | "standard" | "frontier" | "critique" | "survey") | null;
+            /**
+             * Required
+             * @description Required reading for this lesson.
+             */
+            required: boolean;
+            /**
+             * Note
+             * @description What to read, e.g. "§3 only".
+             */
+            note: string | null;
+            /**
+             * Citation
+             * @description One-line form: `Mayne et al. (1966), IJC`.
+             */
+            citation: string;
         };
         /** PasswordChange */
         PasswordChange: {
