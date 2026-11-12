@@ -915,8 +915,33 @@ papers:
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
   # ── S3 보행·언더액추에이티드 ──────────────────────────────────────────
-  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
-
+  - id: grizzle2001-asymptotically-stable-walking
+    title: "Asymptotically stable walking for biped robots: analysis via systems with impulse effects"
+    authors: ["J. W. Grizzle", "G. Abba", "F. Plestan"]
+    year: 2001
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/9.898695"
+    note: "Crossref 확인(2001). 같은 해의 정정(erratum)은 10.1109/TAC.2001.911439 다"
+    verified: true
+    role: seminal
+  - id: garcia1998-simplest-walker
+    title: "The simplest walking model: stability, complexity, and scaling"
+    authors: ["M. Garcia", "A. Chatterjee", "A. Ruina", "et al."]
+    year: 1998
+    venue: "ASME J. Biomechanical Engineering"
+    url: "https://doi.org/10.1115/1.2798313"
+    note: "Crossref 확인(1998-04). 제4저자 M. Coleman"
+    verified: true
+    role: seminal
+  - id: goswami1998-compass-gait
+    title: "A study of the passive gait of a compass-like biped robot: symmetry and chaos"
+    authors: ["A. Goswami", "B. Thuilot", "B. Espiau"]
+    year: 1998
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/027836499801701202"
+    note: "Crossref 확인(1998-12). 레코드의 제목에는 부제가 없다"
+    verified: true
+    role: standard
   # ── S4 로봇 학습·파운데이션 모델 ───────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 

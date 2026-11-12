@@ -1,0 +1,12 @@
+id: s3-legged-underactuated
+title: S3 보행·언더액추에이티드
+summary: >-
+  다리로 걷는 로봇을 하이브리드 동역학으로 다룬다. 충격이 있는 주기 궤도의 안정성을 푸앵카레
+  사상과 살토 행렬로 판정하고(HZD 로 보행을 설계하고), 중심 동역학과 MPC 로 전신 운동을
+  계획하고, 계층 QP 로 과제 우선순위를 지키고, 강화학습 파이프라인이 무엇을 주고 무엇을 주지
+  않는지 본 뒤, 거친 지형에서의 동적 기동을 실기 평가 설계까지 포함해 다룬다. 권장 선수는
+  C1-C4 이고 근거가 되는 대학원 과목은 CMU 16-745, MIT 6.8210, ETH Robot Dynamics 이며
+  교재는 Westervelt et al. 과 Tedrake Underactuated Robotics ch.4·ch.17 이다.
+level: 연구
+lessons:
+  - hybrid-limit-cycles
