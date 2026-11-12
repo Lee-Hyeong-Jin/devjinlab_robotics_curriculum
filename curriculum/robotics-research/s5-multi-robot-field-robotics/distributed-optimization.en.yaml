@@ -1,0 +1,96 @@
+# English text of the structured fields of distributed-optimization.md (activity titles, resource
+# notes, quiz). The prose lives in distributed-optimization.en.md.
+id: s5-distributed-optimization
+lang: en
+activities:
+  s5-distributed-optimization-reading: Read the lesson and follow the derivations
+  s5-distributed-optimization-papers: Read the three must-read papers + a one-page note each
+  s5-distributed-optimization-problems: "Problem set (2 proofs, 1 derivation, 1 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  s5-distributed-optimization-reproduction: "Reproduction task - a two-robot distributed pose graph, Gauss-Seidel and ADMM, the communication trade-off (R2)"
+  s5-distributed-optimization-quiz: Concept check quiz
+resources:
+  "Boyd & Vandenberghe, Convex Optimization":
+    note: ch.5 (duality) and ch.9-10. Background for the augmented Lagrangian and dual ascent. The full PDF is free.
+  "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
+    note: ch.3-4. The information matrix of a linearized pose graph - where this lesson's quadratic problem comes from.
+quiz:
+  - id: q1
+    prompt: Which assumption does the two-block ADMM convergence theorem **not** use?
+    choices:
+      - $f_1, f_2$ are convex
+      - $f_1, f_2$ are strongly convex and smooth
+      - The Lagrangian has a saddle point
+      - $f_1, f_2$ are closed proper functions
+    explanation: >-
+      Closed proper convexity plus the existence of a saddle point already give residual $\to 0$
+      and convergence of the objective (`boyd2011-admm` §3.2). Strong convexity and smoothness are
+      **not needed**, and the price is that the theorem **gives no rate**. Claiming a rate requires
+      adding those assumptions.
+    concept:
+      front: The assumptions of the ADMM convergence theorem
+      back: >-
+        Closed proper convex plus a saddle point suffices. Strong convexity and smoothness are
+        unnecessary, but then **no rate is guaranteed**
+  - id: q2
+    prompt: Write the error iteration matrix $M$ of block Gauss-Seidel in terms of the blocks of $\Lambda$.
+    answers: ["Lambda22^-1 Lambda21 Lambda11^-1 Lambda12", "L22^-1 L21 L11^-1 L12", "inv(L22) L21 inv(L11) L12"]
+    explanation: >-
+      From (9), $e_2^{k+1} = \Lambda_{22}^{-1}\Lambda_{21}\Lambda_{11}^{-1}\Lambda_{12}e_2^k$. It
+      follows directly from minimizing the two blocks in turn and subtracting the optimality
+      condition. The rate is $\rho(M)$, and through the Schur complement it can also be written
+      $M = I - \Lambda_{22}^{-1}S$.
+    concept:
+      front: The iteration matrix of block Gauss-Seidel
+      back: >-
+        $M = \Lambda_{22}^{-1}\Lambda_{21}\Lambda_{11}^{-1}\Lambda_{12} = I - \Lambda_{22}^{-1}S$,
+        with rate $\rho(M)$
+  - id: q3
+    prompt: Why does block Gauss-Seidel always converge when $\Lambda \succ 0$?
+    choices:
+      - Because $M$ is symmetric
+      - Because $M = I - \Lambda_{22}^{-1}S$ with $S \succ 0$ and $S \preceq \Lambda_{22}$, so $\mathrm{spec}(M) \subset [0,1)$
+      - Because $\Lambda_{12}$ is sparse
+      - Because the objective decreases every round (which alone suffices)
+    explanation: >-
+      The Schur complement $S$ is positive definite (from $\Lambda\succ0$) and
+      $\Lambda_{21}\Lambda_{11}^{-1}\Lambda_{12}\succeq0$ gives $S\preceq\Lambda_{22}$. Hence
+      $\mathrm{spec}(\Lambda_{22}^{-1}S)\subset(0,1]$ and $\mathrm{spec}(M)\subset[0,1)$. A monotone
+      decrease of the objective guarantees neither convergence nor a **rate** (it can stall).
+    concept:
+      front: Unconditional convergence of block Gauss-Seidel
+      back: >-
+        $M = I-\Lambda_{22}^{-1}S$ with $0 \prec S \preceq \Lambda_{22}$ gives
+        $\mathrm{spec}(M)\subset[0,1)$, and $\rho(M)=1-\lambda_{\min}(\Lambda_{22}^{-1}S)$
+  - id: q4
+    prompt: >-
+      Sharing more inter-robot measurements makes distributed pose-graph optimization converge
+      faster.
+    explanation: >-
+      The opposite. More sharing makes $\Lambda_{12}$ larger, so $S$ shrinks and
+      $\rho(M) = 1-\lambda_{\min}(\Lambda_{22}^{-1}S)$ approaches 1. As measured in the
+      reproduction task, inter-robot edges $1 \to 3 \to 5 \to 13$ give $\rho(M)$ of
+      $0.0047 \to 0.954 \to 0.969 \to 0.990$. Accuracy improves, but **both** the round count and
+      the per-round volume grow.
+    concept:
+      front: Sharing versus convergence rate
+      back: >-
+        More sharing improves accuracy but pushes $\rho(M)$ towards 1 - the round count and the
+        per-round volume worsen in the same direction
+  - id: q5
+    prompt: What does convergence of a distributed solver to the centralized solution guarantee?
+    choices:
+      - That the global minimum of the original non-convex problem was reached
+      - Only that the unique solution of the linearized quadratic problem was reached; global optimality needs a separate certificate
+      - That every robot now holds the same information
+      - That the communication volume was minimal
+    explanation: >-
+      Equations (2) and (3) are statements about the **linearized** problem. Global optimality of the
+      original problem on $SE(d)$ needs the dual certificate of R3 in
+      `c5-robust-global-estimation`, and distributing that certificate is yet another problem
+      (`tian2021-distributed-certifiable`). When a paper writes both "distributed" and "certifiably
+      correct", check which it claims.
+    concept:
+      front: Distributed convergence vs global optimality
+      back: >-
+        Distributed convergence = the solution of the linearized problem. Global optimality is a
+        separate certificate ($S\succeq0$), and distributing that certificate is separate again

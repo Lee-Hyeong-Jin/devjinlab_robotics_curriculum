@@ -1669,6 +1669,15 @@ papers:
     role: critique
 
   # ── S5 다중 로봇·필드 로보틱스 ──────────────────────────────────────
+  - id: tian2021-distributed-certifiable
+    title: "Distributed certifiably correct pose-graph optimization"
+    authors: ["Y. Tian", "K. Khosoussi", "D. M. Rosen", "J. P. How"]
+    year: 2021
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2021.3072346"
+    verified: true
+    lessons: [s5-distributed-optimization]
+    role: seminal
   - id: fiedler1973-algebraic-connectivity
     title: "Algebraic connectivity of graphs"
     authors: ["M. Fiedler"]

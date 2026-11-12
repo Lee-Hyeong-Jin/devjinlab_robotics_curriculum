@@ -1572,6 +1572,32 @@ papers:
     verified: true
     role: seminal
 
+  - id: boyd2011-admm
+    title: "Distributed optimization and statistical learning via the alternating direction method of multipliers"
+    authors: ["S. Boyd", "N. Parikh", "E. Chu", "et al."]
+    year: 2011
+    venue: "Foundations and Trends in Machine Learning"
+    url: "https://doi.org/10.1561/9781601984616"
+    note: "널리 쓰이는 저널 DOI 10.1561/2200000016 은 이 조사에서 확인하지 못했다. 확인된 것은 단행본 레코드(Crossref year 2010)이고 저널 권호는 FnT ML 3(1), 2011"
+    verified: true
+    role: standard
+  - id: choudhary2017-distributed-slam
+    title: "Distributed mapping with privacy and communication constraints: lightweight algorithms and object-based models"
+    authors: ["S. Choudhary", "L. Carlone", "C. Nieto", "et al."]
+    year: 2017
+    venue: "IJRR"
+    url: "https://arxiv.org/abs/1702.03435"
+    note: "IJRR 게재는 미확인"
+    verified: true
+    role: standard
+  - id: tian2021-distributed-certifiable
+    title: "Distributed certifiably correct pose-graph optimization"
+    authors: ["Y. Tian", "K. Khosoussi", "D. M. Rosen", "J. P. How"]
+    year: 2021
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2021.3072346"
+    verified: true
+    role: seminal
   # ── R0 수학·수치 기초 (브리지) ───────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
