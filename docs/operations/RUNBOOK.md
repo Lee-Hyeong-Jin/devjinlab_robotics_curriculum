@@ -240,9 +240,18 @@ SMTP 를 설정하지 않은 서버는 인증 링크를 **보낼 수 없다**. �
 공개 배포는 `RC_AUTH_MODE=server` 라서 크롤러가 로그인 화면만 본다. 커리큘럼을 검색·링크 가능하게
 하려면:
 
-1. **api 와 web 양쪽에** `RC_PUBLIC_CONTENT=1` 과 `RC_PUBLIC_URL=https://<공개 주소>` 를 준다.
-   api 는 익명 읽기를 열고, web 은 그 페이지를 색인 가능하게 만들고 canonical·사이트맵을 그 주소로
-   만든다. 한쪽만 주면 어긋난다(web 만 주면 색인 허용인데 API 가 401, api 만 주면 그 반대).
+1. `.env` 에 `RC_PUBLIC_CONTENT=1` 과 `RC_PUBLIC_URL=https://<공개 주소>` 를 넣는다.
+   `docker-compose.yml` 이 **두 값을 api 와 web 양쪽에** 넘긴다 — api 는 익명 읽기를 열고, web 은
+   그 페이지를 색인 가능하게 만들고 canonical·hreflang·사이트맵을 그 주소로 만든다. 한쪽만 받으면
+   어긋나므로(web 만 → 색인 허용인데 API 가 401), compose 를 쓰지 않고 직접 띄울 때는 **두 프로세스
+   모두에** 두 변수를 주어야 한다. compose 전달은
+   `tests/test_server_review.py::test_compose_passes_the_public_content_settings_to_api_and_web`
+   가 고정한다.
+   다음 명령으로 실제로 전달되는지 확인할 수 있다(컨테이너를 띄우지 않는다):
+
+   ```bash
+   docker compose config | grep -E 'RC_PUBLIC_(CONTENT|URL)'   # api·web 각각 한 줄씩, 총 4줄
+   ```
 2. 확인:
 
    ```bash
