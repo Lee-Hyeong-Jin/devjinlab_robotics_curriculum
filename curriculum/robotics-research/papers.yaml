@@ -49,6 +49,23 @@ papers:
     note: "제1저자만 레코드로 확인. 정오표(10.1115/1.3139629)는 쓰지 않는다"
     verified: true
     role: seminal
+  - id: walker1982-crba
+    title: "Efficient dynamic computer simulation of robotic mechanisms"
+    authors: ["M. W. Walker", "D. E. Orin"]
+    year: 1982
+    venue: "ASME J. Dynamic Systems, Measurement, and Control"
+    url: "https://doi.org/10.1115/1.3139699"
+    note: "논문의 Method 3 이 CRBA. 제2저자 Orin 은 레코드로 확인되지 않았다"
+    verified: true
+    role: seminal
+  - id: featherstone1983-aba
+    title: "The calculation of robot dynamics using articulated-body inertias"
+    authors: ["R. Featherstone"]
+    year: 1983
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/027836498300200102"
+    verified: true
+    role: seminal
   - id: featherstone2000-dynamics-equations-algorithms
     title: "Robot dynamics: equations and algorithms"
     authors: ["R. Featherstone", "D. Orin"]
