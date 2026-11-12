@@ -179,6 +179,8 @@ curl -fsS localhost:8000/version                     # 4. 확인
 | `RC_AUTH_COOKIE_SECURE` | `1` | 세션 쿠키 `Secure`. `0` 은 HTTP 개발 전용 |
 | `RC_SMTP_HOST` 외 `RC_SMTP_*` | 비어 있음 | 메일. 없으면 비밀번호 재설정·인증 메일 재전송 503, 이메일 인증 상태는 `unavailable` (§8.1) |
 | `RC_AUTH_REQUIRE_VERIFIED_EMAIL` | `0` | `1` 이면 미인증 계정은 로그인·조회는 되고 학습 데이터 쓰기·PAT 발급이 403. SMTP 없이 `1` 이면 기동을 거부 |
+| `RC_PUBLIC_CONTENT` | `0` | `1` 이면 커리큘럼(코스·모듈·레슨·자료·검색)의 GET 을 익명에 공개(ADR 0016). 진행도·노트·퀴즈·리포트·`/me`·`/admin`·`/roadmap`·모든 쓰기는 계속 세션 필요. 웹의 색인 허용도 이 값을 따른다 |
+| `RC_PUBLIC_URL` (web 에도) | `http://localhost:3000` | canonical·hreflang·`sitemap.xml`·`robots.txt`·OpenGraph 의 기준 주소. api 와 web 양쪽에 같은 값을 준다 |
 | `RC_OIDC_PROVIDERS` | 비어 있음 | OIDC 제공자 JSON(ADR 0010) |
 | `RC_CURRICULUM_DIR` | 이미지의 `/app/curriculum` | 콘텐츠 경로 |
 | `RC_DATA_DIR` | `/data` | 로컬 모드 데이터 디렉터리 |
@@ -232,6 +234,28 @@ SMTP 를 설정하지 않은 서버는 인증 링크를 **보낼 수 없다**. �
 4. (선택) 인증을 **강제**하려면 `RC_AUTH_REQUIRE_VERIFIED_EMAIL=1` 을 켠다. 미인증 계정은 로그인과
    조회는 되지만 학습 데이터 쓰기와 PAT 발급이 403(problem+json, 재전송 안내 포함)이 된다.
    SMTP 없이 이 값을 `1` 로 두면 아무도 통과할 수 없으므로 서버가 기동을 거부한다.
+
+## 8.2 커리큘럼 공개하기 (SEO)
+
+공개 배포는 `RC_AUTH_MODE=server` 라서 크롤러가 로그인 화면만 본다. 커리큘럼을 검색·링크 가능하게
+하려면:
+
+1. **api 와 web 양쪽에** `RC_PUBLIC_CONTENT=1` 과 `RC_PUBLIC_URL=https://<공개 주소>` 를 준다.
+   api 는 익명 읽기를 열고, web 은 그 페이지를 색인 가능하게 만들고 canonical·사이트맵을 그 주소로
+   만든다. 한쪽만 주면 어긋난다(web 만 주면 색인 허용인데 API 가 401, api 만 주면 그 반대).
+2. 확인:
+
+   ```bash
+   curl -s https://<주소>/robots.txt          # Disallow: / 가 아니어야 한다
+   curl -s https://<주소>/sitemap.xml | grep -c '<url>'   # 0 이 아니어야 한다
+   curl -s https://<주소>/api/v1/progress/status -o /dev/null -w '%{http_code}\n'  # 401 이어야 한다
+   ```
+
+   마지막 줄이 200 이면 **개인 데이터가 공개된 것**이므로 즉시 `RC_PUBLIC_CONTENT` 를 내린다.
+3. 끄려면 `RC_PUBLIC_CONTENT=0` 으로 되돌리고 재시작한다. `robots.txt` 가 `Disallow: /` 로 돌아가고
+   모든 페이지가 `noindex` 가 된다. 이미 색인된 페이지는 검색 엔진이 다시 크롤링할 때까지 남는다.
+
+API·`/metrics`·DB 는 이 플래그와 무관하게 계속 비공개다. 브라우저는 API 를 직접 부르지 않는다.
 
 ## 9. 자주 겪는 문제
 

@@ -5,10 +5,16 @@ import { EmptyState } from '@/components/EmptyState'
 import { PageHeader } from '@/components/PageHeader'
 import { ResourceExplorer } from '@/components/ResourceExplorer'
 import { getResources } from '@/lib/api/queries'
+import { pageSeo } from '@/lib/seo'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('resources')
-  return { title: t('title') }
+  return pageSeo({
+    path: '/resources',
+    title: t('title'),
+    description: t('subtitle'),
+    publishable: true,
+  })
 }
 
 /** Resources — `GET /resources`, filtered client-side by kind and search (AC-WEB.5). */

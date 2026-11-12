@@ -186,7 +186,33 @@ API는 **Markdown 원문**을 준다(`GET /api/v1/lessons/{id}` → `body`, `stu
   본문에서는 ` ```problemset ` 펜스를 제거한다(`markdown/sections.ts`) — 안 그러면 YAML 원문이
   코드 블록으로 찍힌다.
 
-## 5.2 보안 헤더
+## 5.2 SEO (ADR 0016)
+
+공개 배포에서 크롤러와 처음 온 사람이 커리큘럼을 볼 수 있어야 한다. `RC_PUBLIC_CONTENT=1` 이면
+API 가 커리큘럼 읽기를 익명에게 열고, 웹은 그 페이지를 색인 가능하게 만든다.
+
+- **noindex 가 기본값**이다(`layout.tsx`). 공개 페이지가 `pageSeo({ publishable: true })` 로
+  빠져나오고, 그것도 `RC_PUBLIC_CONTENT` 가 켜져 있을 때만 `index` 가 된다. 실수로 색인된 페이지는
+  나중에 코드를 고쳐도 색인에서 빠지지 않으므로 방향을 이렇게 잡았다.
+- **색인 대상**: `/roadmap`(코스별), `/modules/{id}`, `/modules/{id}/{lesson}`, `/resources`.
+  대시보드·복습·리포트·검색·프로필·관리자·퀴즈는 개인 데이터이거나 정답을 담으므로 제외한다.
+- **언어는 `?lang=` 로 고정한다.** URL 에 로케일 세그먼트가 없어서 영어판에 **주소가 없었다** —
+  `hreflang` 과 사이트맵은 언어마다 URL 이 하나씩 있어야 성립한다. `?lang=` 은 그 요청에 대해
+  쿠키를 덮어쓰고, 미들웨어가 publish 하는 `x-current-path` 헤더에서 읽는다(`i18n/request.ts` 는
+  searchParams 에 접근할 수 없다). canonical 은 항상 `?lang=` 없는 주소다.
+- **`robots.txt`·`sitemap.xml` 은 요청마다 생성한다**(`dynamic = 'force-dynamic'`).
+  `RC_PUBLIC_CONTENT`·`RC_PUBLIC_URL` 은 런타임 설정이고 사이트맵은 API 를 읽는다. 처음에
+  정적으로 프리렌더돼서 빌드 환경의 값(= 비공개)이 굳어 `Disallow: /` 가 배포된 적이 있다.
+- **JSON-LD** 는 `<JsonLd>` 가 **nonce 를 붙여** 넣는다. CSP 가 nonce 기반이고 브라우저는 type 이
+  무엇이든 `<script>` 에 `script-src` 를 적용하므로, nonce 가 없으면 블록이 통째로 사라진다.
+  타입: 코스 = `Course`, 모듈·레슨 = `LearningResource`, 모든 페이지 = `BreadcrumbList`.
+- **익명 독자의 진행도 호출은 리다이렉트하지 않는다.** `apiGetOrNull` 은 세션 쿠키가 없을 때 401 을
+  `null` 로 바꾼다 — 공개 페이지를 읽는 사람에게 진행도가 없는 것은 오류가 아니다. 세션이 있는데
+  만료된 경우는 그대로 로그인으로 보낸다(그래서 쿠키 유무로 판단한다).
+- `/roadmap` 은 익명일 때 `/courses/{id}`(구조만)로 만든다 — 로드맵 자체는 호출자의 진행도를 담아
+  익명에 열리지 않는다(`toStageViewsFromCourse`).
+
+## 5.3 보안 헤더
 
 API 가 자기 응답에 붙이는 헤더(`api/middleware.py`)는 브라우저가 받는 페이지에는 닿지 않는다
 (nginx 가 `web` 을 직접 서빙한다). 그래서 web 이 자기 몫을 붙인다 — `lib/security-headers.ts` 에
