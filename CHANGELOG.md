@@ -87,6 +87,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   elimination derived as the Schur complement, the Kalman filter re-derived from the normal
   equations, and a two-lap SE(2) pose graph reproduction task with machine-checkable acceptance
   criteria.
+- Research track module C5: the `c5-sparsity-isam` lesson in Korean and English — the fill-path
+  theorem proved in both directions, the locality of iSAM2's incremental re-elimination derived
+  from the Bayes tree's conditional factorization, incremental QR by Givens rotations with its
+  cost shown to be distance in the variable order, and KL-optimal sparsification derived as
+  moment matching. Adds five verified papers to the C5 block of the reading-list registry.
 
 ### Fixed
 

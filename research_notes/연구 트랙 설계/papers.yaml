@@ -468,6 +468,51 @@ papers:
     verified: true
     lessons: [s1-certifiable-slam]
     role: standard
+  - id: rose1976-vertex-elimination
+    title: "Algorithmic aspects of vertex elimination on graphs"
+    authors: ["D. J. Rose", "R. E. Tarjan", "G. S. Lueker"]
+    year: 1976
+    venue: "SIAM J. Comput."
+    url: "https://doi.org/10.1137/0205021"
+    verified: true
+    lessons: [c5-sparsity-isam]
+    role: seminal
+  - id: yannakakis1981-min-fill-in
+    title: "Computing the minimum fill-in is NP-complete"
+    authors: ["M. Yannakakis"]
+    year: 1981
+    venue: "SIAM J. Alg. Disc. Meth."
+    url: "https://doi.org/10.1137/0602010"
+    verified: true
+    lessons: [c5-sparsity-isam]
+    role: seminal
+  - id: lipton1979-nested-dissection
+    title: "Generalized nested dissection"
+    authors: ["R. J. Lipton", "D. J. Rose", "R. E. Tarjan"]
+    year: 1979
+    venue: "SIAM J. Numer. Anal."
+    url: "https://doi.org/10.1137/0716027"
+    verified: true
+    lessons: [c5-sparsity-isam]
+    role: standard
+  - id: kaess2008-isam
+    title: "iSAM: incremental smoothing and mapping"
+    authors: ["M. Kaess", "A. Ranganathan", "F. Dellaert"]
+    year: 2008
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2008.2006706"
+    verified: true
+    lessons: [c5-sparsity-isam]
+    role: seminal
+  - id: carlevaris-bianco2014-node-removal
+    title: "Generic node removal for factor-graph SLAM"
+    authors: ["N. Carlevaris-Bianco", "M. Kaess", "R. M. Eustice"]
+    year: 2014
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2014.2347571"
+    verified: true
+    lessons: [c5-sparsity-isam]
+    role: standard
 
   # ── C6 동작 계획 이론 ────────────────────────────────────────────────
   - id: reif1979-complexity
