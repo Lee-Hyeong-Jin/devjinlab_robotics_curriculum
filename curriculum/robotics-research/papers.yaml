@@ -1559,6 +1559,33 @@ papers:
     note: "Crossref 확인(1998-04). 제4저자 M. Coleman"
     verified: true
     role: seminal
+  - id: sentis2005-wbc
+    title: "Synthesis of whole-body behaviors through hierarchical control of behavioral primitives"
+    authors: ["L. Sentis", "O. Khatib"]
+    year: 2005
+    venue: "Int. J. Humanoid Robotics"
+    url: "https://doi.org/10.1142/S0219843605000594"
+    note: "Crossref 확인(2005-12). 레코드의 제목은 전부 대문자로 저장되어 있다"
+    verified: true
+    role: seminal
+  - id: escande2014-hierarchical-qp
+    title: "Hierarchical quadratic programming: fast online humanoid-robot motion generation"
+    authors: ["A. Escande", "N. Mansard", "P.-B. Wieber"]
+    year: 2014
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364914521306"
+    note: "Crossref 확인(2014-05)"
+    verified: true
+    role: standard
+  - id: herzog2016-momentum-wbc
+    title: "Momentum control with hierarchical inverse dynamics on a torque-controlled humanoid"
+    authors: ["A. Herzog", "N. Rotella", "S. Mason", "et al."]
+    year: 2016
+    venue: "Autonomous Robots"
+    url: "https://doi.org/10.1007/s10514-015-9476-6"
+    note: "Crossref 확인. online-first 는 2015-08-04 이고 지면 게재는 Autonomous Robots 40 (2016). 공저자 F. Grimminger, S. Schaal, L. Righetti"
+    verified: true
+    role: standard
   - id: kajita2003-zmp-preview
     title: "Biped walking pattern generation by using preview control of zero-moment point"
     authors: ["S. Kajita", "F. Kanehiro", "K. Kaneko", "et al."]

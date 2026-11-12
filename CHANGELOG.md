@@ -292,6 +292,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   point-footed walker while the hip torque is swung), the CoP/ZMP equation, the LIPM and the DCM in
   closed form, and a reproduction task that measures the recovery limit $\omega p_{\max}$ and shows
   an MPC without a terminal constraint reporting "optimal" with a 39 m terminal DCM.
+- Research-track lesson 4 of module S3, whole-body control and hierarchical QPs, in Korean and
+  English: the null-space projection hierarchy and its priority-preservation proof, the equivalence
+  with a lexicographic QP for equality tasks, measurements showing that clipping a projection
+  solution destroys the priority while a weighted sum leaks in proportion to its weight, and what a
+  lexicographic QP guarantees when the top level is infeasible.
 - Module C3 moved onto the schema the paper registry added (AUTHORING §8-1): its 22 papers are
   registered in `curriculum/robotics-research/papers.yaml` (all with verified URLs), each lesson
   references them from front-matter `papers[]` with `required`/`role` and a language-neutral

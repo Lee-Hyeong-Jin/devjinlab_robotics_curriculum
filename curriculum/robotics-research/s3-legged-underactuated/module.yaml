@@ -12,3 +12,4 @@ lessons:
   - hybrid-limit-cycles
   - hzd-gait-generation
   - centroidal-mpc
+  - whole-body-control
