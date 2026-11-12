@@ -12,7 +12,8 @@ Rules:
 8. quiz blocks in the lesson body parse and reference a quiz activity of the lesson
    (see :mod:`robotics_curriculum.content.quiz_block`)
 9. a ``<lesson>.<lang>.yaml`` translation only names activities, resources and quiz
-   questions that the lesson actually has, with the same number of choices
+   questions that the lesson actually has, with the same number of choices, and only
+   gives ``answers`` for a ``short`` question
 """
 
 from __future__ import annotations
@@ -149,6 +150,20 @@ def _check_meta_translations(lesson: Lesson, lesson_path: Path) -> list[ContentE
                         path,
                         f"{where}: question '{question.id}' has {len(question.choices)} "
                         f"choices but the lesson has {len(original.choices)}",
+                    )
+                )
+            if question.answers is not None and original.type != "short":
+                errors.append(
+                    ContentError(
+                        path,
+                        f"{where}: question '{question.id}' is a '{original.type}' question, "
+                        f"so 'answers' does not apply (only 'short' questions have them)",
+                    )
+                )
+            if question.answers is not None and any(not a.strip() for a in question.answers):
+                errors.append(
+                    ContentError(
+                        path, f"{where}: question '{question.id}' has an empty accepted answer"
                     )
                 )
     return errors

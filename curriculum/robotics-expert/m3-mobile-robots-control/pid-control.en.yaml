@@ -55,6 +55,7 @@ quiz:
         Accumulating while saturated causes overshoot. Clamp the integral, or suspend it
         while saturated
   - id: q3
+    answers: ["-20", "-20 deg"]
     prompt: >-
       With a target of $170^\circ$ and a current heading of $-170^\circ$, what is the
       correctly wrapped angle error in degrees? (with its sign, the number only)

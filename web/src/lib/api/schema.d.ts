@@ -1780,9 +1780,15 @@ export interface components {
             given: string;
             /** Correct */
             correct: boolean;
-            /** Correct Answer */
+            /**
+             * Correct Answer
+             * @description The correct answer as it should be shown. Localized by `Accept-Language` (or `?lang=`); for a short question only the spellings of that language are listed, while grading accepts every language's.
+             */
             correct_answer: string;
-            /** Explanation */
+            /**
+             * Explanation
+             * @description Localized by `Accept-Language` (or `?lang=`).
+             */
             explanation: string;
         };
         /**
@@ -1838,11 +1844,14 @@ export interface components {
              * @enum {string}
              */
             type: "single" | "multiple" | "truefalse" | "short";
-            /** Prompt */
+            /**
+             * Prompt
+             * @description Localized by `Accept-Language` (or `?lang=`).
+             */
             prompt: string;
             /**
              * Choices
-             * @description Empty for short / true-false.
+             * @description Empty for short / true-false. Localized by `Accept-Language` (or `?lang=`).
              */
             choices?: string[];
         };
