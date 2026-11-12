@@ -124,6 +124,27 @@
       "survey": "서베이"
     }
   },
+  "problem": {
+    "heading": "문제 세트 ({count}문항)",
+    "hint": "채점하지 않습니다. 직접 풀고 해답을 펼쳐 비교하세요.",
+    "refersTo": "관련 결과",
+    "tolerance": "허용 오차",
+    "stars": "난이도 {count}/3",
+    "type": {
+      "derivation": "유도",
+      "proof": "증명",
+      "numerical": "수치",
+      "implementation": "구현",
+      "counterexample": "반례",
+      "paper": "논문"
+    },
+    "policy": {
+      "sketch": "해답 스케치 보기",
+      "full": "전체 해답 보기",
+      "rubric": "채점 기준 보기",
+      "answer": "정답 보기"
+    }
+  },
   "activityKind": {
     "reading": "읽기",
     "quiz": "퀴즈",

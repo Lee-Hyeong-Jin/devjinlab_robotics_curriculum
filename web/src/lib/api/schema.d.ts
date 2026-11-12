@@ -1491,6 +1491,11 @@ export interface components {
              */
             papers?: components["schemas"]["Paper"][];
             /**
+             * Problems
+             * @description The lesson's problem set, parsed out of the body's ```problemset blocks. Not graded and not scheduled for review, unlike the quiz.
+             */
+            problems?: components["schemas"]["LessonProblem"][];
+            /**
              * Content Format
              * @description Format of `body` and `study_method`.
              * @default markdown
@@ -1517,6 +1522,58 @@ export interface components {
              * @description Next lesson in course order.
              */
             next_lesson_id: string | null;
+        };
+        /**
+         * LessonProblem
+         * @description One problem of a lesson's problem set (ADR 0014's sibling, lesson-standard.md §11-3).
+         *
+         *     Never graded and never turned into a flashcard, unlike a quiz question: a derivation or a
+         *     proof cannot be marked automatically. `solution` is whatever `solution_policy` promises.
+         */
+        LessonProblem: {
+            /** Id */
+            id: string;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "derivation" | "proof" | "numerical" | "implementation" | "counterexample" | "paper";
+            /**
+             * Stars
+             * @description 1 routine, 2 substantial, 3 research-level.
+             */
+            stars: number;
+            /**
+             * Prompt
+             * @description Markdown.
+             */
+            prompt: string;
+            /**
+             * Refers To
+             * @description "핵심 결과" numbers the problem builds on.
+             */
+            refers_to: string[];
+            /**
+             * Solution Policy
+             * @description How much of the solution is published: sketch | full | rubric | answer.
+             * @enum {string}
+             */
+            solution_policy: "sketch" | "full" | "rubric" | "answer";
+            /**
+             * Solution
+             * @description Markdown; null when none is published.
+             */
+            solution: string | null;
+            /**
+             * Tolerance
+             * @description `numerical` only: how close counts as right.
+             */
+            tolerance: number | null;
+            /**
+             * Activity Id
+             * @description The `kind: exercise` activity it belongs to.
+             */
+            activity_id: string | null;
         };
         /**
          * LessonProgress

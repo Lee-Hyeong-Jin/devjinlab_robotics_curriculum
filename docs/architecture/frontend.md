@@ -165,6 +165,13 @@ API는 **Markdown 원문**을 준다(`GET /api/v1/lessons/{id}` → `body`, `stu
   `note`. `verified: false` 이고 링크가 있으면 "링크 미확인" Chip 을 붙인다 — 확인하지 않은 링크가
   확인된 것과 같아 보이면 안 된다. 코스에 `papers.yaml` 이 없으면 절 자체가 없다(ADR 0014).
 
+- **문제 세트**: `GET /lessons/{id}` 의 `problems[]` 를 `<ProblemSet>` 이 본문 아래에 그린다.
+  prompt·solution 은 서버에서 레슨 파이프라인으로 렌더해 React 트리로 넘기고(퀴즈 화면과 같은
+  방식), 해답은 `<details>` 안에 둔다 — summary 가 무엇이 들어 있는지(스케치/전체/채점 기준) 말한다.
+  난이도는 `★★☆` 와 텍스트 라벨을 함께 쓴다(색·기호만으로 상태를 전달하지 않는다, §6).
+  본문에서는 ` ```problemset ` 펜스를 제거한다(`markdown/sections.ts`) — 안 그러면 YAML 원문이
+  코드 블록으로 찍힌다.
+
 ## 5.2 보안 헤더
 
 API 가 자기 응답에 붙이는 헤더(`api/middleware.py`)는 브라우저가 받는 페이지에는 닿지 않는다

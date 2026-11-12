@@ -124,6 +124,27 @@
       "survey": "Survey"
     }
   },
+  "problem": {
+    "heading": "Problem set ({count})",
+    "hint": "Nothing here is graded. Work it through, then open the solution to compare.",
+    "refersTo": "Builds on",
+    "tolerance": "Tolerance",
+    "stars": "Difficulty {count} of 3",
+    "type": {
+      "derivation": "Derivation",
+      "proof": "Proof",
+      "numerical": "Numerical",
+      "implementation": "Implementation",
+      "counterexample": "Counterexample",
+      "paper": "Paper"
+    },
+    "policy": {
+      "sketch": "Show the solution sketch",
+      "full": "Show the full solution",
+      "rubric": "Show the marking rubric",
+      "answer": "Show the answer"
+    }
+  },
   "activityKind": {
     "reading": "Reading",
     "quiz": "Quiz",

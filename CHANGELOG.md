@@ -93,6 +93,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and `Strict-Transport-Security` only when the request arrived over HTTPS.
 - `docs/adr/0013-signup-policy.md` (proposed, not implemented): `RC_AUTH_SIGNUP`
   (`open` | `closed` | `invite`) and how invitations would work.
+- ` ```problemset ` blocks: a lesson can carry derivations, proofs, numerical and
+  implementation problems that are **not** graded and never become flashcards, unlike quiz
+  questions (lesson-standard.md §11-3). `rc validate` gains rule 13 for their structure —
+  including that a `numerical` problem must publish both its expected value and a tolerance —
+  and warns when a set is outside 4-8 problems or uses fewer than three types. The static
+  site and the web lesson screen show the problems with each solution behind a disclosure
+  that says whether it is a sketch, a full solution or a rubric; `GET /lessons/{id}` carries
+  them as `problems[]`.
+- `<lesson>.<lang>.yaml` can translate a paper reference's `note` (`papers: {<id>: "..."}`).
+  Only the note: a paper's title, authors and venue are its published bibliography.
 - Assigned papers are shown: `GET /lessons/{id}` carries `papers[]` (required reading first,
   with a one-line citation), the static site gets a "필독 논문" section, and the web lesson
   screen lists them in the sidebar. A paper whose link nobody has checked says so.

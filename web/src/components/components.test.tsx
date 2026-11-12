@@ -13,6 +13,7 @@ import { LessonRow } from './LessonRow'
 import { ModuleCard } from './ModuleCard'
 import { ProgressBar } from './ProgressBar'
 import { PaperList } from './PaperList'
+import { ProblemSet, type RenderedProblem } from './ProblemSet'
 import { ProviderButtons } from './ProviderButtons'
 import { ResourceExplorer } from './ResourceExplorer'
 import { ResourceRow } from './ResourceRow'
@@ -398,5 +399,68 @@ describe('PaperList', () => {
     expect(screen.queryByText('링크 미확인')).toBeNull()
     expect(screen.queryByRole('link')).toBeNull()
     expect(screen.getByText('T')).toBeInTheDocument()
+  })
+})
+
+describe('ProblemSet', () => {
+  const problem = (over: Partial<RenderedProblem> & { id: string }): RenderedProblem => ({
+    type: 'derivation',
+    stars: 2,
+    prompt: <p>유도하라.</p>,
+    refers_to: [],
+    solution_policy: 'sketch',
+    solution: null,
+    tolerance: null,
+    activity_id: null,
+    ...over,
+  })
+
+  it('renders nothing when the lesson has no problem set', () => {
+    const { container } = renderWithIntl(<ProblemSet problems={[]} />)
+    expect(container).toBeEmptyDOMElement()
+  })
+
+  it('shows the type, the difficulty and the rendered prompt', () => {
+    renderWithIntl(<ProblemSet problems={[problem({ id: 'p1', stars: 2 })]} />)
+    expect(screen.getByText('유도')).toBeInTheDocument()
+    expect(screen.getByText('유도하라.')).toBeInTheDocument()
+    // Difficulty is a rating with a text label, never colour or a bare glyph alone.
+    expect(screen.getByLabelText('난이도 2/3')).toHaveTextContent('★★☆')
+  })
+
+  it('keeps the solution behind a disclosure that says what is inside', () => {
+    const { container } = renderWithIntl(
+      <ProblemSet
+        problems={[problem({ id: 'p1', solution: <p>적분한다.</p>, solution_policy: 'full' })]}
+      />,
+    )
+    const details = container.querySelector('details')
+    expect(details).not.toBeNull()
+    expect(details?.open).toBe(false)
+    expect(screen.getByText('전체 해답 보기')).toBeInTheDocument()
+  })
+
+  it('shows the tolerance only for a numerical problem that has one', () => {
+    renderWithIntl(
+      <ProblemSet
+        problems={[
+          problem({
+            id: 'p1',
+            type: 'numerical',
+            solution: <p>4.2</p>,
+            solution_policy: 'answer',
+            tolerance: 0.001,
+          }),
+          problem({ id: 'p2', solution: <p>sketch</p> }),
+        ]}
+      />,
+    )
+    expect(screen.getAllByText('0.001')).toHaveLength(1)
+    expect(screen.getByText('수치')).toBeInTheDocument()
+  })
+
+  it('offers no disclosure when no solution is published', () => {
+    const { container } = renderWithIntl(<ProblemSet problems={[problem({ id: 'p1' })]} />)
+    expect(container.querySelector('details')).toBeNull()
   })
 })

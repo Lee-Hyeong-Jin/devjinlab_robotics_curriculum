@@ -38,6 +38,21 @@ cli:
   export: "레슨 {lessons}행, 세션 {sessions}개를 {path} 에 내보냈습니다"
   import: "레슨 {lessons}행, 세션 {sessions}개를 가져왔습니다"
 
+problem:
+  refers_to: "관련 결과"
+  tolerance: "허용 오차"
+  type:
+    derivation: "유도"
+    proof: "증명"
+    numerical: "수치"
+    implementation: "구현"
+    counterexample: "반례"
+    paper: "논문"
+  policy:
+    sketch: "해답 스케치"
+    full: "전체 해답"
+    rubric: "채점 기준"
+    answer: "정답"
 quiz:
   intro: "퀴즈: {title} ({lesson_id}) — {count}문항"
   nothing_to_ask: "풀 문항이 없습니다 (마지막 시도에서 모두 정답)"
@@ -148,6 +163,7 @@ site:
     roadmap_page: "로드맵"
     resources_page: "자료실"
     papers: "필독 논문"
+    problem_set: "문제 세트 ({count}문항)"
   state:
     done: "완료"
     in_progress: "진행 중"
