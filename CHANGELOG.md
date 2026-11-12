@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `scripts/ops/deploy_pull.sh`: pull-based continuous deployment for a single host (deploys only commits with a green CI run, backs up first, rolls back on failure).
+- Robotics researcher track: a new course under `curriculum/robotics-research/` with the first
+  reference lesson (SO(3)/SE(3) and exponential coordinates) in Korean and English, plus the
+  authoring guide `docs/curriculum/AUTHORING_RESEARCH_TRACK.md`. The track design (benchmark of
+  graduate courses, 97-lesson blueprint, lesson standard, 134-paper reading list) is under
+  `research_notes/연구 트랙 설계/`.
 
 ### Fixed
 
