@@ -874,6 +874,16 @@ papers:
     verified: true
     lessons: [c8-imitation-learning]
     role: seminal
+  - id: jin2021-pessimism
+    title: "Is pessimism provably efficient for offline RL?"
+    authors: ["Y. Jin", "Z. Yang", "Z. Wang"]
+    year: 2021
+    venue: "ICML"
+    url: "https://arxiv.org/abs/2012.15085"
+    note: "c8 저자 세션이 추가(2026-11-12). arXiv API 로 제목·제1저자 확인(v1 2020). 단일 정책 집중성 하 보수성의 차선성 한계의 원전"
+    verified: true
+    lessons: [c8-offline-rl]
+    role: seminal
   - id: levine2020-offline-rl
     title: "Offline reinforcement learning: tutorial, review, and perspectives on open problems"
     authors: ["S. Levine", "A. Kumar", "G. Tucker", "J. Fu"]

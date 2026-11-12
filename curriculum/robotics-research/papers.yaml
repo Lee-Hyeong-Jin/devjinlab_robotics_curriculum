@@ -156,6 +156,32 @@ papers:
     role: seminal
     note: "DOI·arXiv 없음 — 메타데이터는 Semantic Scholar 로 확인"
 
+  - id: jin2021-pessimism
+    title: "Is pessimism provably efficient for offline RL?"
+    authors: ["Y. Jin", "Z. Yang", "Z. Wang"]
+    year: 2021
+    venue: "ICML"
+    url: "https://arxiv.org/abs/2012.15085"
+    verified: true
+    role: seminal
+    note: "arXiv v1 2020"
+  - id: levine2020-offline-rl
+    title: "Offline reinforcement learning: tutorial, review, and perspectives on open problems"
+    authors: ["S. Levine", "A. Kumar", "G. Tucker", "J. Fu"]
+    year: 2020
+    venue: "arXiv"
+    url: "https://arxiv.org/abs/2005.01643"
+    verified: true
+    role: survey
+  - id: kumar2020-cql
+    title: "Conservative Q-learning for offline reinforcement learning"
+    authors: ["A. Kumar", "A. Zhou", "G. Tucker", "S. Levine"]
+    year: 2020
+    venue: "NeurIPS"
+    url: "https://arxiv.org/abs/2006.04779"
+    verified: true
+    role: standard
+
   # ── S1 SLAM·공간 지능 ───────────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 

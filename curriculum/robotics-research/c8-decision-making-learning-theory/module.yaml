@@ -16,3 +16,4 @@ lessons:
   - value-based-rl
   - model-based-world-models
   - imitation-learning
+  - offline-rl
