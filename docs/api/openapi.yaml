@@ -3350,6 +3350,13 @@ components:
             $ref: '#/components/schemas/Resource'
           type: array
           title: Resources
+        papers:
+          items:
+            $ref: '#/components/schemas/Paper'
+          type: array
+          title: Papers
+          description: Assigned papers, required reading first; empty unless the course has a papers.yaml
+            registry (ADR 0014).
         content_format:
           type: string
           const: markdown
@@ -3796,6 +3803,82 @@ components:
       - status
       - reason
       title: NextLesson
+    Paper:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        authors:
+          items:
+            type: string
+          type: array
+          title: Authors
+        year:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Year
+        venue:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Venue
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+        verified:
+          type: boolean
+          title: Verified
+          description: False when nobody has opened the url yet; clients mark it as unchecked.
+        role:
+          anyOf:
+          - type: string
+            enum:
+            - seminal
+            - standard
+            - frontier
+            - critique
+            - survey
+          - type: 'null'
+          title: Role
+          description: seminal | standard | frontier | critique | survey, in this lesson.
+        required:
+          type: boolean
+          title: Required
+          description: Required reading for this lesson.
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+          description: What to read, e.g. "§3 only".
+        citation:
+          type: string
+          title: Citation
+          description: 'One-line form: `Mayne et al. (1966), IJC`.'
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - title
+      - authors
+      - year
+      - venue
+      - url
+      - verified
+      - role
+      - required
+      - note
+      - citation
+      title: Paper
+      description: |-
+        A paper this lesson assigns: the course registry's bibliography merged with the
+        lesson's own role, required flag and note (ADR 0014).
     PasswordChange:
       properties:
         current_password:

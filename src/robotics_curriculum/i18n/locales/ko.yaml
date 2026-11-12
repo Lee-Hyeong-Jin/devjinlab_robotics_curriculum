@@ -147,6 +147,7 @@ site:
     answer: "정답·해설"
     roadmap_page: "로드맵"
     resources_page: "자료실"
+    papers: "필독 논문"
   state:
     done: "완료"
     in_progress: "진행 중"

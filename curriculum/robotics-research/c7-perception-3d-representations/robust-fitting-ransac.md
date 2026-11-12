@@ -17,10 +17,10 @@ difficulty: 5
 estimated_minutes: 600
 tags: [perception, ransac, robust-estimation, consensus-maximization, branch-and-bound, research]
 papers:                                # 서지는 curriculum/robotics-research/papers.yaml
-  - { id: fischler1981-ransac,      required: true, role: seminal,  note: "all of it; the 1981 framing" }
-  - { id: barath2020-magsac,        required: true, role: frontier, note: "sec. 3 (the sigma-marginalised score)" }
-  - { id: chin2018-robust-fitting,                  role: standard, note: "why the hardness is in the dimension" }
-  - { id: yang2016-go-icp,                          role: standard, note: "the SO(3) branch-and-bound bound" }
+  - { id: fischler1981-ransac,      required: true, role: seminal  }
+  - { id: barath2020-magsac,        required: true, role: frontier, note: "§3" }
+  - { id: chin2018-robust-fitting,                  role: standard }
+  - { id: yang2016-go-icp,                          role: standard }
 activities:
   - id: c7-robust-fitting-ransac-reading
     kind: reading

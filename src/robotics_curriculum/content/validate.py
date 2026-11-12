@@ -19,12 +19,18 @@ Rules:
     as required (ADR 0014). Two *warnings*: a registry paper no lesson references, and a
     registry ``lessons[]`` that disagrees with the lessons' own references.
 
+12. links in a lesson body (and in its translations) are either http(s) URLs, anchors, or
+    relative paths to a real asset — never a path to another lesson's file. ``mkdocs``
+    resolves such a path against the *generated* project, where lessons live elsewhere, so
+    it silently becomes a broken link on the site.
+
 Some rules only warn (:attr:`ContentError.severity`). :func:`blocking` filters those out
 for callers that must refuse invalid content.
 """
 
 from __future__ import annotations
 
+import re
 from collections.abc import Iterator
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -65,6 +71,7 @@ def validate_course(course: Course) -> list[ContentError]:
             for activity in lesson.activities:
                 claim(activity.id, lesson_path)
             errors.extend(_check_resources(lesson, lesson_path))
+            errors.extend(_check_body_links(lesson, lesson_path))
             errors.extend(_check_quiz(lesson, lesson_path))
             errors.extend(_check_translations(lesson))
             errors.extend(_check_meta_translations(lesson, lesson_path))
@@ -170,6 +177,74 @@ def _check_resources(lesson: Lesson, path: Path) -> list[ContentError]:
         if resource.url is not None and not is_http_url(resource.url):
             msg = f"resource '{resource.title}' has invalid url '{resource.url}' (need http(s))"
             errors.append(ContentError(path, msg))
+    return errors
+
+
+#: A Markdown inline link or image: ``[text](target "title")``, ``![alt](target)``.
+_LINK = re.compile(r"!?\[[^\]]*\]\(\s*<?([^)\s<>]+)>?(?:\s+[\"'][^\"']*[\"'])?\s*\)")
+_FENCE = re.compile(r"^\s{0,3}(`{3,}|~{3,})")
+#: Schemes an external link may use. Anything else is almost always a typo.
+_ALLOWED_SCHEMES = ("http", "https", "mailto")
+
+
+def _link_targets(markdown: str) -> Iterator[str]:
+    """Link targets outside fenced code blocks (a quiz block is one, and holds no links)."""
+    fence: str | None = None
+    for line in markdown.split("\n"):
+        marker = _FENCE.match(line)
+        if marker:
+            char = (marker.group(1) or "")[0]
+            if fence is None:
+                fence = char
+            elif char == fence:
+                fence = None
+            continue
+        if fence is not None:
+            continue
+        for match in _LINK.finditer(line):
+            yield match.group(1)
+
+
+def _check_body_links(lesson: Lesson, path: Path) -> list[ContentError]:
+    """Rule 12: body links are URLs, anchors or assets — never another lesson's file.
+
+    Checks the translations too: a ``<lesson>.<lang>.md`` can introduce its own bad link.
+    """
+    errors: list[ContentError] = []
+    bodies = [("", lesson.body)] + [
+        (f" ({lang})", translation.body)
+        for lang, translation in sorted(lesson.translations.items())
+    ]
+    for suffix, body in bodies:
+        if not body:
+            continue
+        for target in _link_targets(body):
+            where = f"lesson '{lesson.id}'{suffix}"
+            scheme = urlsplit(target).scheme.lower()
+            if target.startswith("#"):
+                continue
+            if scheme in ("http", "https"):
+                if not is_http_url(target):
+                    errors.append(ContentError(path, f"{where} has a malformed link '{target}'"))
+                continue
+            if scheme == "mailto":
+                continue
+            if scheme:
+                msg = (
+                    f"{where} links with the '{scheme}:' scheme ('{target}'); "
+                    f"only {', '.join(_ALLOWED_SCHEMES)} are allowed"
+                )
+                errors.append(ContentError(path, msg))
+                continue
+            # A relative path. Pointing at a Markdown file is the mistake worth catching:
+            # the site generates its own tree, so the path cannot resolve there.
+            if target.split("#", 1)[0].endswith(".md"):
+                msg = (
+                    f"{where} links to a lesson file ('{target}'). Lesson files are not laid "
+                    f"out the same way on the site, so this becomes a broken link; write the "
+                    f"lesson id in backticks instead, e.g. `m1-vectors-matrices`"
+                )
+                errors.append(ContentError(path, msg))
     return errors
 
 

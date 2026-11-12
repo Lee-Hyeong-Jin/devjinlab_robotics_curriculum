@@ -38,13 +38,13 @@ activities:
     title: 개념 점검 퀴즈
     estimated_minutes: 20
 papers:                                # 서지는 curriculum/robotics-research/papers.yaml
-  - { id: longuet-higgins1981-essential, required: true, role: seminal,  note: "all of it (2 pages)" }
-  - { id: nister2004-five-point,         required: true, role: standard, note: "sec. 3-4" }
-  - { id: huang-faugeras1989-e-matrix,                   role: seminal,  note: "the proof behind R2" }
-  - { id: hartley1997-eight-point,                       role: standard, note: "normalisation, behind R3" }
-  - { id: hartley-sturm1997-triangulation,               role: standard, note: "optimal triangulation, behind R5" }
-  - { id: stewenius2006-relative-orientation,            role: standard, note: "implement the five-point solver from here" }
-  - { id: lee-civera2019-triangulation,                  role: critique, note: "open problem 1" }
+  - { id: longuet-higgins1981-essential, required: true, role: seminal  }
+  - { id: nister2004-five-point,         required: true, role: standard, note: "§3-4" }
+  - { id: huang-faugeras1989-e-matrix,                   role: seminal  }
+  - { id: hartley1997-eight-point,                       role: standard }
+  - { id: hartley-sturm1997-triangulation,               role: standard }
+  - { id: stewenius2006-relative-orientation,            role: standard }
+  - { id: lee-civera2019-triangulation,                  role: critique }
 resources:
   - title: "Hartley & Zisserman, Multiple View Geometry in Computer Vision (2nd ed.)"
     url: https://www.robots.ox.ac.uk/~vgg/hzbook/

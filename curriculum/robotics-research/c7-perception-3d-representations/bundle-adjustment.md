@@ -38,10 +38,10 @@ activities:
     title: 개념 점검 퀴즈
     estimated_minutes: 20
 papers:                                # 서지는 curriculum/robotics-research/papers.yaml
-  - { id: triggs2000-bundle-adjustment, required: true, role: standard, note: "sec. 4 and sec. 9" }
-  - { id: agarwal2010-rome,             required: true, role: standard, note: "all of it" }
-  - { id: rosen2019-se-sync,                            role: seminal,  note: "open problem 1" }
-  - { id: kaess2012-isam2,                              role: seminal,  note: "open problems 2 and 3" }
+  - { id: triggs2000-bundle-adjustment, required: true, role: standard, note: "§4, §9" }
+  - { id: agarwal2010-rome,             required: true, role: standard }
+  - { id: rosen2019-se-sync,                            role: seminal  }
+  - { id: kaess2012-isam2,                              role: seminal  }
 resources:
   - title: "Hartley & Zisserman, Multiple View Geometry in Computer Vision (2nd ed.)"
     url: https://www.robots.ox.ac.uk/~vgg/hzbook/
