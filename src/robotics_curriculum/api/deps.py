@@ -206,6 +206,22 @@ def optional_principal(request: Request, state: State) -> Principal | None:
     return state.auth.authenticate_session(cookie) if cookie else None
 
 
+def allow_public_read(
+    request: Request,
+    state: State,
+    principal: Annotated[Principal | None, Depends(optional_principal)],
+) -> None:
+    """Let an anonymous reader GET the curriculum when ``RC_PUBLIC_CONTENT=1`` (ADR 0016).
+
+    Only the content router uses this, and only for safe methods: nothing personal is
+    reachable without a session, because every endpoint that touches a user's data keeps
+    :func:`get_principal`. With the flag off this is exactly :func:`get_principal`.
+    """
+    if state.settings.public_content and request.method in SAFE_METHODS:
+        return
+    get_principal(request, state, principal)
+
+
 def get_principal(
     request: Request,
     state: State,

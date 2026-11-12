@@ -7,7 +7,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query
 
-from robotics_curriculum.api.deps import Index, Progress, get_principal
+from robotics_curriculum.api.deps import Index, Progress, allow_public_read, get_principal
 from robotics_curriculum.api.log import lang_var
 from robotics_curriculum.api.problems import problem_responses
 from robotics_curriculum.api.schemas import (
@@ -34,8 +34,10 @@ from robotics_curriculum.content.problem_set import resolve_activity as resolve_
 from robotics_curriculum.content.search import search
 from robotics_curriculum.content.sections import extract_study_guide
 
+# Anonymous readers may GET these when RC_PUBLIC_CONTENT=1 (ADR 0016); `/roadmap` opts back
+# out below, because it carries the caller's own progress.
 router = APIRouter(
-    dependencies=[Depends(get_principal)],
+    dependencies=[Depends(allow_public_read)],
     prefix="/api/v1",
     tags=["content"],
     responses=problem_responses(503),
@@ -173,7 +175,12 @@ def search_content(
     ]
 
 
-@router.get("/roadmap", response_model=Roadmap, responses=problem_responses(404))
+@router.get(
+    "/roadmap",
+    response_model=Roadmap,
+    responses=problem_responses(404),
+    dependencies=[Depends(get_principal)],
+)
 def get_roadmap(
     index: Index,
     progress: Progress,
