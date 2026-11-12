@@ -1,0 +1,10 @@
+id: c1-rigid-body-geometry-lie-groups
+lang: en
+title: "C1 Rigid-body geometry and Lie groups"
+summary: >-
+  Describe rigid-body motion with the matrix Lie groups SO(3) and SE(3): the exponential and
+  logarithm maps and their differentials, the adjoint representation, the product of exponentials,
+  and optimization on manifolds. Every later module of the research track uses the notation and
+  results fixed here. The graduate courses behind it are MIT 16.485 L4-5 and L18-19, CMU 16-711
+  ch.1-2 and CMU 16-745 week 9; the textbooks are Barfoot ch.7-8 and Murray-Li-Sastry ch.2.
+  The module is designed as five lessons.
