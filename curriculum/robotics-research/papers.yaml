@@ -1826,6 +1826,60 @@ papers:
     verified: true
     role: standard
     note: "arXiv 2022. journal_ref 없음 — 게재 venue(ICML 2022)는 arXiv 로 확인되지 않았다."
+  - id: aydinoglu2024-contact-implicit-mpc
+    title: "Consensus Complementarity Control for Multicontact MPC"
+    authors: ["A. Aydinoglu", "A. Wei", "W.-C. Huang", "M. Posa"]
+    year: 2024
+    venue: "T-RO"
+    url: "https://doi.org/10.1109/TRO.2024.3435423"
+    verified: true
+    role: frontier
+    note: "2026-11-13 Crossref 확인. 프리프린트는 arXiv:2304.11259."
+  - id: aydinoglu2021-admm-contact-mpc
+    title: "Real-Time Multi-Contact Model Predictive Control via ADMM"
+    authors: ["A. Aydinoglu", "M. Posa"]
+    year: 2021
+    venue: "arXiv"
+    url: "https://arxiv.org/abs/2109.07076"
+    verified: true
+    role: standard
+    note: "2026-11-13 arXiv API 확인(제목·저자·2021-09-15). journal_ref 가 없어 게재 venue 는 확인되지 않았다."
+  - id: graesdal2024-tight-relaxations
+    title: "Towards Tight Convex Relaxations for Contact-Rich Manipulation"
+    authors: ["B. P. Graesdal", "S. Y. Chew Chia", "T. Marcucci", "S. Morozov", "A. Amice", "P. A. Parrilo", "R. Tedrake"]
+    year: 2024
+    venue: "arXiv"
+    url: "https://arxiv.org/abs/2402.10312"
+    verified: true
+    role: frontier
+    note: "2026-11-13 arXiv API 확인(제목·저자 7인·2024-02-15). journal_ref 가 없어 게재 venue 는 확인되지 않았다."
+  - id: posa2014-contact-implicit
+    title: "A direct method for trajectory optimization of rigid bodies through contact"
+    authors: ["M. Posa", "C. Cantu", "R. Tedrake"]
+    year: 2014
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364913506757"
+    verified: true
+    role: seminal
+    note: "2026-11-13 Crossref 확인(제목·제1저자). 온라인 선공개 2013-10, 지면 IJRR 33(1) 2014."
+  - id: scholtes2001-regularization
+    title: "Convergence Properties of a Regularization Scheme for Mathematical Programs with Complementarity Constraints"
+    authors: ["S. Scholtes"]
+    year: 2001
+    venue: "SIAM Journal on Optimization"
+    url: "https://doi.org/10.1137/S1052623499361233"
+    verified: true
+    role: seminal
+    note: "2026-11-13 Crossref 확인."
+  - id: venkatesh2025-global-contact-implicit
+    title: "Approximating Global Contact-Implicit MPC via Sampling and Local Complementarity"
+    authors: ["S. Venkatesh", "B. Bianchini", "A. Aydinoglu", "W. Yang", "M. Posa"]
+    year: 2025
+    venue: "RA-L"
+    url: "https://doi.org/10.1109/LRA.2025.3615030"
+    verified: true
+    role: frontier
+    note: "2026-11-13 Crossref 확인(RA-L, 2025-11)."
 
   # ── S3 보행·언더액추에이티드 ──────────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
