@@ -1,0 +1,65 @@
+id: c8-control-as-inference
+lang: en
+activities:
+  c8-control-as-inference-reading: Read the text and follow the derivations
+  c8-control-as-inference-papers: Read the three must-read papers + a one-page note each
+  c8-control-as-inference-problems: Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample, 1 paper)
+  c8-control-as-inference-reproduction: Reproduction task - the cost-versus-sample trade-off of MPPI and iLQR (R2)
+  c8-control-as-inference-quiz: Concept-check quiz
+resources:
+  "Tedrake, Underactuated Robotics":
+    note: ch.11 (LQR and DP) and ch.8 (trajectory optimization). Secondary textbook for the iLQR side; full text free.
+  "Sutton & Barto, Reinforcement Learning: An Introduction (2nd ed.)":
+    note: ch.13.5-13.7 (entropy regularization and actor-critic). Secondary textbook. (official URL unverified)
+  "Todorov — Efficient computation of optimal actions (2009)":
+    note: Recommended. Linearly-solvable MDPs - the structure in which the soft-max backup becomes a linear equation.
+  "Kappen — Linear theory for control of nonlinear stochastic systems (2005)":
+    note: Recommended. The physics-side origin of path-integral control (the Feynman-Kac transform).
+  "Theodorou, Buchli & Schaal — A generalized path integral control approach to RL (2010)":
+    note: Recommended. PI^2 - path integrals turned into policy improvement.
+  "Haarnoja et al. — Reinforcement learning with deep energy-based policies (2017)":
+    note: Recommended. Soft Q-learning - representing the Boltzmann policy of (2) with a deep network.
+  "Tassa, Erez & Todorov — Synthesis and stabilization of complex behaviors through online trajectory optimization (2012)":
+    note: Recommended. The practice of regularization and line search in iLQR/iLQG.
+quiz:
+  - id: q1
+    prompt: "Why is the optimal policy of the entropy-regularized objective a Boltzmann distribution?"
+    choices:
+      - "Because the policy was assumed to be in an exponential family"
+      - "Because the first-order condition of the entropy-regularized linear problem on the simplex gives $\\pi \\propto e^{Q/\\alpha}$"
+      - "Because the $\\max$ is not differentiable"
+      - "Because the Boltzmann distribution has the smallest variance"
+    explanation: "It is a **result**, not an assumption. The Lagrange first-order condition for maximizing $\\sum_a \\pi Q + \\alpha H(\\pi)$ on the simplex gives $Q(a) - \\alpha\\log\\pi(a) = \\text{const}$, and normalizing yields (1). The attained maximum is the log-sum-exp of (2)."
+    concept:
+      front: "Where the Boltzmann policy comes from"
+      back: "The first-order condition of the entropy-regularized problem on the simplex - derived, not assumed"
+  - id: q2
+    prompt: "What makes the soft Bellman operator $\\mathcal{T}_\\alpha$ a $\\gamma$-contraction?"
+    choices:
+      - "That $\\alpha$ is sufficiently small"
+      - "That the gradient of $\\operatorname{softmax}$ is a probability vector, hence it is 1-Lipschitz in the sup norm"
+      - "That the entropy is bounded"
+      - "That $\\log$ is concave"
+    explanation: "$\\partial(\\alpha\\log\\sum e^{Q/\\alpha})/\\partial Q(a) = \\pi_\\alpha(a)$ is a probability vector, so the mean value theorem gives 1-Lipschitzness. The rest is literally the $\\max$ contraction argument of `c8-mdp-pomdp-bellman`. The size of $\\alpha$ is irrelevant."
+    concept:
+      front: "The ground for the soft contraction"
+      back: "The softmax gradient is the Boltzmann policy (a probability vector) → 1-Lipschitz → $\\gamma$-contraction"
+  - id: q3
+    prompt: "Leaving the state transitions free in the variational distribution gives a better (tighter) lower bound, so one should do it."
+    explanation: "The bound does get larger, but its optimum $q^\\star(s'\\mid s,a) \\propto P e^{V/\\alpha}$ **bends the dynamics to be optimistic**. The result is a risk-seeking bias and systematic overestimation in a stochastic environment. This is a rare case where the looser bound, pinned to the true dynamics, is the correct choice."
+    concept:
+      front: "State transitions in the variational distribution"
+      back: "Pin them to the true dynamics - leaving them free gives an optimistic-dynamics (risk-seeking) bias"
+  - id: q4
+    prompt: "Write MPPI's weight $w_k$ in terms of the cost $S_k$ and the temperature $\\lambda$ (as a proportionality)."
+    answers: ["exp(-S_k/lambda)", "exp(-S/lambda)", "e^{-S_k/\\lambda}", "\\exp(-S_k/\\lambda)"]
+    explanation: "Reading $q^\\star \\propto p\\,e^{-S/\\lambda}$ of (6) as an importance weight gives $w_k \\propto \\exp(-S_k/\\lambda)$. Implementations subtract $S_{\\min}$ for stability, which does not change $w$. As $\\lambda\\to0$ only the lowest-cost sample survives, and as $\\lambda\\to\\infty$ the update goes to zero."
+    concept:
+      front: "MPPI's weights"
+      back: "$w_k \\propto \\exp(-S_k/\\lambda)$ - the importance weight of the free-energy optimal distribution (6)"
+  - id: q5
+    prompt: "MPPI always finds a better solution when the sample count $K$ is increased."
+    explanation: "If $\\lambda$ is small relative to the cost scale, the weights collapse onto the single lowest-cost sample and the effective sample size approaches one. In the reproduction task, raising $K$ from $64$ to $1024$ at $\\lambda=5$ made the final cost **worse** ($119.0 \\to 162.9$) while the mean ESS stayed below 1% of $K$. The prescription is to match $\\lambda$ to the cost variance, not to raise $K$."
+    concept:
+      front: "Raising $K$ in MPPI"
+      back: "With a small $\\lambda$ the ESS collapses, so it does not help (and can hurt) - match $\\lambda$ to the cost variance"

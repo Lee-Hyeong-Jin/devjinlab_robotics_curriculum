@@ -1,0 +1,66 @@
+id: r0-numerical-optimization
+lang: en
+activities:
+  r0-numerical-optimization-reading: Read the lesson and follow the derivations
+  r0-numerical-optimization-textbook: "Textbook reading (Nocedal-Wright ch.3, 6, 18, 19) + a one-page note"
+  r0-numerical-optimization-problems: "Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample)"
+  r0-numerical-optimization-reproduction: "Reproduction task - separate the convergence orders on a log plot (R2)"
+  r0-numerical-optimization-quiz: Concept check quiz
+resources:
+  "Nocedal & Wright, Numerical Optimization (2nd ed.)":
+    note: ch.3 (line search), 6 (quasi-Newton), 10 (least squares), 18 (SQP), 19 (interior point). The primary source. (official URL unverified)
+  "Boyd & Vandenberghe, Convex Optimization":
+    note: ch.9-11 (unconstrained, equality-constrained, interior point); the same algorithms from the convex viewpoint.
+  "SciPy optimize 문서":
+    title: SciPy optimize documentation
+    note: minimize (BFGS, trust-constr, SLSQP) and least_squares (trf, lm) - the baselines for the reproduction task.
+quiz:
+  - id: q1
+    prompt: Which assumption is **not** needed for the local quadratic convergence of Newton's method?
+    choices:
+      - $H$ is Lipschitz near the solution
+      - $H(x^\star) \succ 0$ (positive definite)
+      - $f$ is convex
+      - The initial point is close enough to the solution
+    explanation: >-
+      Convexity is not needed - a positive definite, Lipschitz Hessian near a local minimum
+      suffices. Conversely, when $H^\star \succ 0$ fails (as for $f=x^4$) quadratic convergence
+      drops to linear.
+    concept:
+      front: Assumptions for Newton's quadratic convergence
+      back: $H$ Lipschitz, $H^\star \succ 0$, and a close enough start; convexity is not required
+  - id: q2
+    prompt: What is the name of the condition a quasi-Newton approximation must satisfy ($B_{k+1}s_k = y_k$)?
+    explanation: >-
+      The secant condition. The mean value theorem for gradients gives $y_k \approx H_{k+1}s_k$, so
+      the approximation must satisfy the same relation. With only $n$ equations there are
+      infinitely many solutions, and BFGS picks the "least-change" one.
+    answers: ["secant condition", "secant", "quasi-Newton condition"]
+    concept:
+      front: The secant condition
+      back: $B_{k+1}s_k = y_k$ - a Hessian approximation consistent with the observed gradient change; infinitely many solutions
+  - id: q3
+    prompt: What is the precise interpretation of the Levenberg-Marquardt damping $\lambda$?
+    choices:
+      - An arbitrarily chosen regularisation constant
+      - The dual variable of the trust-region constraint $\lVert p\rVert \le \Delta$
+      - A learning rate
+      - The reciprocal of the condition number
+    explanation: >-
+      The KKT conditions of the trust-region subproblem give
+      $(J^\top J+\lambda I)p=-J^\top r$ together with $\lambda(\lVert p\rVert-\Delta)=0$. So
+      $\lambda$ is a dual variable and damping is **step-length control**, not arbitrary regularisation.
+    concept:
+      front: What LM damping means
+      back: The dual variable of the trust-region constraint; when inactive the step is pure Gauss-Newton
+  - id: q4
+    prompt: >-
+      Raising the damping enough also resolves the non-uniqueness caused by gauge deficiency (a
+      structural null space).
+    explanation: >-
+      Damping only puts **artificial** curvature in that direction so the system becomes solvable;
+      it does not change the fact that the data cannot determine it, and the solution then depends
+      on the damping. Gauge must be removed with a prior or by fixing a reference.
+    concept:
+      front: What damping cannot fix
+      back: A structural null space (gauge); damping only makes it solvable and the answer depends on the damping - a prior or a fixed reference is needed

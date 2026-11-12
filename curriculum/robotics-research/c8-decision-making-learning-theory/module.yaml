@@ -1,0 +1,19 @@
+id: c8-decision-making-learning-theory
+title: C8 의사결정·학습 이론
+summary: >-
+  순차 의사결정과 로봇 학습의 이론을 다룬다. Bellman 최적성과 수축 사상에서 출발해 정책 경사
+  정리, 함수 근사에서의 발산과 수렴 조건, 모델 기반 RL 의 오차 전파, 모방학습의 공변량 이동,
+  오프라인 RL 의 보수성 보장, 제어로서의 추론, sim-to-real 일반화까지 간다. 각 레슨은 핵심
+  정리를 직접 유도하고 원 논문을 읽고 수치로 재현한다. 근거가 되는 대학원 과목은
+  Berkeley CS285 전체, Stanford AA274B/CS237B, AA203 W7-10, CMU 16-831, UPenn ESE 650 M3 이고
+  교재는 Sutton-Barto 와 Tedrake Underactuated Robotics ch.11, 20-21 이다.
+level: 연구
+lessons:
+  - mdp-pomdp-bellman
+  - policy-gradient
+  - value-based-rl
+  - model-based-world-models
+  - imitation-learning
+  - offline-rl
+  - control-as-inference
+  - generalization-sim2real

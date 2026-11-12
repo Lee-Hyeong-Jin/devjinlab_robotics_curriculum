@@ -1,0 +1,61 @@
+id: c8-imitation-learning
+lang: en
+activities:
+  c8-imitation-learning-reading: Read the text and follow the derivations
+  c8-imitation-learning-papers: Read the three must-read papers + a one-page note each
+  c8-imitation-learning-problems: Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample, 1 paper)
+  c8-imitation-learning-reproduction: Reproduction task - separating the horizon exponents of BC and DAgger (R2)
+  c8-imitation-learning-quiz: Concept-check quiz
+resources:
+  "Sutton & Barto, Reinforcement Learning: An Introduction (2nd ed.)":
+    note: ch.13 (policy gradients) and ch.17.4 (reward design). Secondary textbook. (official URL unverified)
+  "Ho & Ermon — Generative adversarial imitation learning (2016)":
+    note: Recommended. Imitation learning seen as occupancy matching.
+  "Abbeel & Ng — Apprenticeship learning via inverse reinforcement learning (2004)":
+    note: Recommended. The prototype of feature-expectation matching and the ambiguity discussion.
+  "Chi et al. — Diffusion policy (2023)":
+    note: Recommended. How modern BC handles multi-modal action distributions.
+  "Zhao et al. — Learning fine-grained bimanual manipulation with low-cost hardware (2023)":
+    note: Recommended. The effect of action chunking on compound error.
+quiz:
+  - id: q1
+    prompt: "In BC's bound (1), the $T^2$ is the product of which two factors?"
+    choices:
+      - "Number of states × number of actions"
+      - "The probability of erring at least once, $O(\\epsilon T)$, × the cost remaining after the error, $O(T)$"
+      - "The supervised error $\\epsilon$ × the number of expert queries $T$"
+      - "The square of the discount factor $1/(1-\\gamma)$"
+    explanation: "Decomposing by the first disagreement time gives probability $\\epsilon_t$ at each step and at most $T-t$ cost afterwards. The sum $\\sum_t \\epsilon_t(T-t) \\le \\epsilon T^2$ is the product of the two factors. Removing either makes it linear, and DAgger removes the second."
+    concept:
+      front: "Where BC's $T^2$ comes from"
+      back: "Probability of erring $O(\\epsilon T)$ × unrecovered residual cost $O(T)$ - DAgger removes the latter"
+  - id: q2
+    prompt: "BC's $O(\\epsilon T^2)$ is an artifact of a loose proof technique and can be improved to $O(\\epsilon T)$ by a tighter analysis."
+    explanation: "The lower-bound construction of R2 (a two-state MDP whose off-track state is absorbing) **attains** that order. So the $T^2$ is not a product of the analysis but a property of the BC algorithm (together with an irrecoverable task structure). In a task where recovery is cheap the actual cost can be linear, but that is a changed task assumption."
+    concept:
+      front: "Tightness of $O(\\epsilon T^2)$"
+      back: "Attained by a two-state MDP with an absorbing off-track state - a property of the algorithm, not slack in the analysis"
+  - id: q3
+    prompt: "What is the one-line reason DAgger beats BC?"
+    choices:
+      - "Because it queries the expert more often"
+      - "Because it measures the loss on the learner's own state distribution and so learns the recovery action at off-track states"
+      - "Because it makes the policy stochastic and explores"
+      - "Because it learns a reward function as well"
+    explanation: "The query budget can be matched - the difference is **where** the queries happen. Because the loss $\\ell_i$ is defined under $d_{\\pi_i}$, the off-track states the learner actually visits enter the data, and the step that multiplies by $(T-t)$ disappears in (2)."
+    concept:
+      front: "The core of DAgger"
+      back: "Query on its own distribution → learn recovery at off-track states. A question of where the queries are, not how many"
+  - id: q4
+    prompt: "Observing the optimal policy perfectly determines the reward function uniquely."
+    explanation: "Positive scaling $r \\mapsto \\alpha r$ and potential shaping $r + \\gamma\\Phi(s') - \\Phi(s)$ both preserve the optimal policy, leaving at least $\\lvert\\mathcal{S}\\rvert+1$ degrees of freedom. IRL must introduce an extra principle (maximum margin, maximum entropy) to pick one point of that manifold."
+    concept:
+      front: "Ambiguity in IRL"
+      back: "Scaling plus potential shaping already leave $\\lvert\\mathcal{S}\\rvert+1$ degrees of freedom - underdetermined without an extra principle"
+  - id: q5
+    prompt: "The log-likelihood gradient of MaxEnt IRL is the difference between the data features and what? (one phrase)"
+    answers: ["the model's feature expectation", "feature expectation", "the model feature expectation", "E_{p_theta}[f]"]
+    explanation: "$\\nabla_\\theta \\log p_\\theta(\\tau) = f(\\tau) - \\mathbb{E}_{p_\\theta}[f(\\tau)]$. The stationary point is feature-expectation matching, and since the Hessian of the dual $\\log Z(\\theta) - \\theta^\\top\\tilde{f}$ is $\\mathrm{Cov}_{p_\\theta}(f) \\succeq 0$ the problem is convex. The difficulty is computing $\\mathbb{E}_{p_\\theta}[f]$."
+    concept:
+      front: "The MaxEnt IRL gradient"
+      back: "Data features − the model's feature expectation. Convex, with the partition function as the difficulty"
