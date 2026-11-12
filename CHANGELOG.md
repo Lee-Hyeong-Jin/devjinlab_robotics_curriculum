@@ -98,6 +98,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and `Strict-Transport-Security` only when the request arrived over HTTPS.
 - `docs/adr/0013-signup-policy.md` (proposed, not implemented): `RC_AUTH_SIGNUP`
   (`open` | `closed` | `invite`) and how invitations would work.
+- `scripts/perf/api_load.py` reports the machine's CPU count and load average, and warns when
+  the control endpoint (`healthz`, which does no work) is itself slow — that is the signal
+  that a run measured a busy machine rather than the API, which is otherwise easy to read as
+  a performance regression. `docs/operations/perf-baseline.md` and `lighthouse.md` gain a
+  second dated measurement, taken with two courses and 53 lessons.
 - Web: a course switcher. With more than one course the roadmap shows a tab per course and
   the dashboard a progress row per course, each linking to that course's roadmap. The
   selection travels in `?course=`, so it works without JavaScript and can be bookmarked.
