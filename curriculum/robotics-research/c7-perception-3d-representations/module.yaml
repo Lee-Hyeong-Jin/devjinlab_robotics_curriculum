@@ -7,9 +7,7 @@ summary: >-
   Algorithms, MIT 16.485 L11-15, Stanford CS231A, TUM IN2228 이고 교재는 Hartley-Zisserman
   Multiple View Geometry 와 Szeliski Computer Vision 2e 다.
   설계상 레슨은 6개다(research_notes/연구 트랙 설계/blueprint.md 의 C7 절).
-# 설계상의 수준은 "연구"(research)다. Level 리터럴에 "연구"가 추가되기 전까지 "고급"으로 둔다
-# (research_notes/연구 트랙 설계/lesson-standard.md §11-4).
-level: 고급
+level: 연구
 lessons:
   - two-view-geometry
   - bundle-adjustment

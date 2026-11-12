@@ -134,6 +134,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the seven gauge generators, and the solvability of self-calibration with its critical motion
   sequences. The reproduction task converges a Schur-complement LM bundle adjuster on the public
   BAL `problem-49-7776` and matches measured reference costs.
+- `c7-robust-fitting-ransac`: the RANSAC iteration count derived from the hypergeometric
+  distribution (and why the $w^m$ form is optimistic), the gap between what that formula
+  guarantees and what RANSAC delivers, the inlier threshold as a $\chi^2$ quantile, and branch
+  and bound for globally optimal maximum consensus checked against exhaustive enumeration.
 - `curriculum/robotics-research/papers.yaml`: the course paper registry (ADR 0014) with the
   eleven papers the C7 lessons assign; both C7 lessons reference them through front-matter
   `papers:` and `rc papers <lesson_id>` lists them.
