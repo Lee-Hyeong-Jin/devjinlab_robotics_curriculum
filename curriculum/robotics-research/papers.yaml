@@ -1152,6 +1152,33 @@ papers:
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
   # ── S1 SLAM·공간 지능 ───────────────────────────────────────────
+  - id: galvez-lopez2012-dbow2
+    title: "Bags of binary words for fast place recognition in image sequences"
+    authors: ["D. Galvez-Lopez", "J. D. Tardos"]
+    year: 2012
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2012.2197158"
+    verified: true
+    role: seminal
+    note: "the binary bag-of-words place recogniser and its verification stages"
+  - id: sunderhauf2012-switchable
+    title: "Switchable constraints for robust pose graph SLAM"
+    authors: ["N. Sunderhauf", "P. Protzel"]
+    year: 2012
+    venue: "IROS"
+    url: "https://doi.org/10.1109/IROS.2012.6385590"
+    verified: true
+    role: standard
+    note: "switch variables that let the back end reject a loop closure"
+  - id: yang2020-gnc
+    title: "Graduated non-convexity for robust spatial perception: from non-minimal solvers to global outlier rejection"
+    authors: ["H. Yang", "P. Antonante", "V. Tzoumas", "L. Carlone"]
+    year: 2020
+    venue: "IEEE RA-L"
+    url: "https://arxiv.org/abs/1909.08605"
+    verified: true
+    role: standard
+    note: "arXiv v1 2019-09-18, journal_ref RA-L 2020"
   - id: mourikis2007-msckf
     title: "A multi-state constraint Kalman filter for vision-aided inertial navigation"
     authors: ["A. I. Mourikis", "S. I. Roumeliotis"]

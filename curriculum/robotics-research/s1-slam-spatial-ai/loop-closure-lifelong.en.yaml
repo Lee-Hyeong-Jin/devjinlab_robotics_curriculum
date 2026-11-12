@@ -1,0 +1,99 @@
+# English text of the structured fields of loop-closure-lifelong.md (activity titles, resource
+# notes, quiz items). The prose lives in loop-closure-lifelong.en.md.
+id: s1-loop-closure-lifelong
+lang: en
+activities:
+  s1-loop-closure-lifelong-reading: Read the lesson and follow the derivations
+  s1-loop-closure-lifelong-papers: Read the two must-read papers and write a one-page note on each
+  s1-loop-closure-lifelong-problems: "Problem set (2 derivations, 1 proof, 2 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  s1-loop-closure-lifelong-reproduction: "Reproduction task: injecting false loops with robust back ends, and the KLD of sparsification (R2)"
+  s1-loop-closure-lifelong-quiz: Concept-check quiz
+resources:
+  "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
+    note: >-
+      ch.5 (robust estimation) and ch.10. The source of the robust-kernel and information-matrix
+      notation. Free full PDF.
+  "DBoW2":
+    note: >-
+      Recommended. The reference implementation of must-read 1; the vocabulary tree and the direct
+      index are right there in the code.
+  "GTSAM":
+    note: >-
+      Recommended baseline. Compare your own implementation against its robust kernels
+      (`noiseModel::Robust`) and its GNC.
+  "g2o 포즈 그래프 데이터셋 모음 (Luca Carlone, dataset collection)":
+    title: "Pose graph dataset collection (Luca Carlone)"
+    note: The input for the optional extension; public pose graphs such as sphere, torus and city10000 in g2o format.
+quiz:
+  - id: q1
+    prompt: What happens at a fixed threshold as the place database size $N$ grows?
+    choices:
+      - "The recall falls"
+      - "The expected number of false accepts grows in proportion to $N$, so the precision falls"
+      - "Both precision and recall are maintained"
+      - "The score distribution shifts and the threshold adjusts itself"
+    explanation: >-
+      Since $P(\\tau) = R/(R + N\\bar{F}_n)$, the $N$ in the denominator grows linearly. Holding the
+      precision means raising $\\tau$, and the price is a recall that collapses with the Gaussian
+      tail. Measured: the recall at 99% precision is 0.5545 at $N{=}10^2$ and 0.0086 at $10^6$, a
+      factor of 64.
+    concept:
+      front: Database size and precision
+      back: Expected false accepts $= N\bar{F}_n$, linear in $N$. Holding precision costs recall
+  - id: q2
+    prompt: >-
+      By what factor did the least-squares ATE grow when **one** false loop was added to a pose graph
+      with 12 true loops? (number only, to the nearest integer)
+    answers: ["22", "about 22", "~22", "20"]
+    explanation: >-
+      Measured: the ATE went from 0.0976 m to 2.1837 m, about 22 times. The cost is a sum of squared
+      residuals and the influence function is unbounded, so a single false loop drags the whole
+      trajectory. On the same graph Huber gave 0.1012 and GNC 0.0975 — no effect.
+    concept:
+      front: The destructive power of one false loop
+      back: Least-squares ATE up 22x (0.098 to 2.18 m). Robust kernels are unaffected
+  - id: q3
+    prompt: Why is the Huber kernel eventually dragged as the contamination rate grows?
+    choices:
+      - "Because the transition point $\\delta$ is taken too large"
+      - "Because its weight $\\delta/\\lVert e\\rVert$ never reaches zero, so the small forces of many outliers add up"
+      - "Because it is non-convex and falls into a local minimum"
+      - "Because it cannot handle angular residuals"
+    explanation: >-
+      Huber's influence function is bounded but its weight is not zero — an edge with a 100 m
+      residual still pulls with force $\\delta/100$. Measured: it holds at an ATE of 0.3775 m up to
+      $\\rho = 0.455$ and collapses to 6.79 m at $\\rho = 0.625$. GNC's weight decays as
+      $\\mathcal{O}(\\mu^2/u^4)$ at large residuals and held 0.098 m at the same contamination.
+    concept:
+      front: The limit of Huber
+      back: The weight never reaches zero - a crowd of outliers wins. A redescending kernel (GNC) is needed
+  - id: q4
+    prompt: >-
+      Zeroing the off-diagonal blocks of an information matrix to sparsify it discards information,
+      so the result is conservative (underconfident).
+    explanation: >-
+      The opposite. Since
+      $\\Sigma_{11} = (\\Lambda_{11} - \\Lambda_{12}\\Lambda_{22}^{-1}\\Lambda_{21})^{-1}$, taking
+      $\\Lambda_{12} \\to 0$ **increases** the bracket and so shrinks the variance — it is
+      **overconfident**. Measured: both the spanning-tree and the block-diagonal approximations have
+      $\\lambda_{\\min}(\\Lambda_{\\mathrm{marg}} - \\Lambda_s) < 0$ ($-5.0\\times10^2$ and
+      $-8.8\\times10^3$). Making it conservative requires shaving by $\\alpha = 0.53$, which raises
+      the KLD from 0.267 to 9.88, a factor of 37.
+    concept:
+      front: Which way naive sparsification errs
+      back: Overconfident - erasing a correlation shrinks the conditional variance. Conservativeness costs information
+  - id: q5
+    prompt: What happens to the structure of the graph when old poses are removed by marginalisation?
+    choices:
+      - "There are fewer edges, so it becomes sparser"
+      - "The nodes that observed the removed node together become connected, making it **denser** (fill-in)"
+      - "The structure is unchanged and only the values change"
+      - "It becomes a tree"
+    explanation: >-
+      The Schur complement creates new edges among the neighbours of the removed node. Measured:
+      marginalising the first 20 of 60 nodes takes the block density from 0.0561 to 0.1388, a factor
+      of 2.5 — a third of the nodes are gone and the density has risen. That is why sparsification is
+      needed, and sparsification in turn brings the overconfidence problem.
+    concept:
+      front: The side effect of marginalisation
+      back: Fill-in - fewer nodes but higher density (measured 2.5x). The reason sparsification becomes necessary

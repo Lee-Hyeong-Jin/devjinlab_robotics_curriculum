@@ -10,3 +10,4 @@ summary: >-
 level: 연구
 lessons:
   - vio-systems
+  - loop-closure-lifelong
