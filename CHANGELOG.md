@@ -31,6 +31,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `docs/curriculum/GLOSSARY.md`: the ko ↔ en term list every translation follows.
 - `scripts/i18n/audit.py` and `docs/reviews/i18n-gap-audit.md`: the English build is driven
   end to end (API, static site, CLI) and every Korean string that is left is reported.
+- Research-track module `c8-decision-making-learning-theory` (C8, decision making and
+  learning theory), research-grade lessons in Korean and English with derivations, problem
+  sets, must-read papers, reproduction tasks and open problems. Lessons so far:
+  `c8-mdp-pomdp-bellman`.
 
 ### Fixed
 

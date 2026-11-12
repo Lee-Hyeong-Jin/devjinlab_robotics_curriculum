@@ -1,0 +1,67 @@
+id: c8-mdp-pomdp-bellman
+lang: en
+activities:
+  c8-mdp-pomdp-bellman-reading: Read the text and follow the derivations
+  c8-mdp-pomdp-bellman-papers: Read the three must-read papers + a one-page note each
+  c8-mdp-pomdp-bellman-problems: Problem set (1 derivation, 1 proof, 2 numerical, 1 implementation, 1 counterexample, 1 paper)
+  c8-mdp-pomdp-bellman-reproduction: "Reproduction task - verify the $\\gamma^k$ error decay of value iteration (R1)"
+  c8-mdp-pomdp-bellman-quiz: Concept-check quiz
+resources:
+  "Sutton & Barto, Reinforcement Learning: An Introduction (2nd ed.)":
+    note: ch.3 (finite MDPs), ch.4 (dynamic programming). The primary textbook for this lesson. (official URL unverified)
+  "LaValle, Planning Algorithms":
+    note: ch.10 (sequential decision making under uncertainty), ch.11 (sensors and information spaces), ch.12. Full text free.
+  "Blackwell — Discounted dynamic programming (1965)":
+    note: Must-read 1. The origin of the contraction argument for discounted DP and of the existence of an optimal policy.
+  "Smallwood & Sondik — The optimal control of partially observable Markov processes over a finite horizon (1973)":
+    note: Must-read 2. The origin of the PWLC value function and of alpha vectors.
+  "Kaelbling, Littman & Cassandra — Planning and acting in partially observable stochastic domains (1998)":
+    note: Must-read 3. The standard reference for the belief-MDP conversion and POMDP planning.
+  "Papadimitriou & Tsitsiklis — The complexity of Markov decision processes (1987)":
+    note: Recommended. The complexity classification of MDPs and POMDPs (finite-horizon POMDPs are PSPACE-complete).
+  "Madani, Hanks & Condon — On the undecidability of probabilistic planning (2003)":
+    note: Recommended. Undecidability for infinite-horizon POMDPs.
+  "Sunberg & Kochenderfer — Online algorithms for POMDPs with continuous spaces (2017)":
+    note: Recommended. Online planning for continuous-state, continuous-observation POMDPs (POMCPOW) and the particle-collapse problem.
+quiz:
+  - id: q1
+    prompt: "Which property of the transition kernel is actually used to show that $T^\\*$ is a $\\gamma$-contraction in the sup norm?"
+    choices:
+      - "The transition matrix is symmetric"
+      - "Each row sums to one and the entries are non-negative"
+      - "The transition matrix is invertible"
+      - "The stationary distribution is unique"
+    explanation: "Only $\\sum_{s'} P(s' \\mid s,a) = 1$ and non-negativity are used, which is what turns $\\max_a \\gamma \\sum_{s'} P \\lVert u-v \\rVert_\\infty$ into $\\gamma \\lVert u-v \\rVert_\\infty$. Symmetry, invertibility and ergodicity are never needed."
+    concept:
+      front: "What the Bellman contraction uses about transitions"
+      back: "Only that it is a non-negative matrix with unit row sums (a stochastic matrix) - ergodicity and symmetry are irrelevant"
+  - id: q2
+    prompt: "Write the stopping threshold that guarantees an $\\epsilon$-optimal policy in value iteration, in terms of $\\epsilon$ and $\\gamma$ (as a fraction)."
+    answers: ["eps(1-gamma)/(2gamma)", "epsilon(1-gamma)/(2gamma)", "\\epsilon(1-\\gamma)/(2\\gamma)"]
+    explanation: "If $\\lVert V_{k+1}-V_k \\rVert_\\infty < \\epsilon(1-\\gamma)/(2\\gamma)$ then the policy greedy with respect to $V_k$ is $\\epsilon$-optimal. The derivation adds (a) $\\lVert V^{\\pi_k}-V_{k+1}\\rVert \\le \\gamma d_k/(1-\\gamma)$ and (b) $\\lVert V_{k+1}-V^\\*\\rVert \\le \\gamma d_k/(1-\\gamma)$."
+    concept:
+      front: "The stopping rule of value iteration"
+      back: "$d_k < \\epsilon(1-\\gamma)/(2\\gamma)$ - and the greedy policy is read off $V_k$"
+  - id: q3
+    prompt: "The optimal value function of an infinite-horizon POMDP is also exactly representable by finitely many alpha vectors."
+    explanation: "The PWLC property (6) yields a finite $\\Gamma_h$ only for a finite horizon. In the infinite-horizon case convexity survives but exact representation by finitely many linear pieces does not, so only $\\epsilon$-approximation is treated - and even deciding $\\epsilon$-optimality is in general undecidable."
+    concept:
+      front: "Where PWLC holds"
+      back: "Finite horizon only - the infinite-horizon value function is convex but not exactly representable by finitely many alpha vectors"
+  - id: q4
+    prompt: "What is the upper bound on the size of the alpha-vector set in (14)?"
+    choices:
+      - "$\\lvert \\mathcal{A} \\rvert \\cdot \\lvert \\Gamma_{h-1} \\rvert$"
+      - "$\\lvert \\mathcal{A} \\rvert \\cdot \\lvert \\Gamma_{h-1} \\rvert^{\\lvert \\mathcal{O} \\rvert}$"
+      - "$\\lvert \\mathcal{O} \\rvert \\cdot \\lvert \\Gamma_{h-1} \\rvert^{\\lvert \\mathcal{A} \\rvert}$"
+      - "$\\lvert \\mathcal{S} \\rvert \\cdot \\lvert \\mathcal{A} \\rvert \\cdot \\lvert \\mathcal{O} \\rvert$"
+    explanation: "For each action one alpha vector is chosen from $\\Gamma_{h-1}$ independently per observation, giving $\\lvert \\mathcal{A} \\rvert \\lvert \\Gamma_{h-1} \\rvert^{\\lvert \\mathcal{O} \\rvert}$. This double exponential is what makes pruning mandatory."
+    concept:
+      front: "Growth rate of the alpha-vector backup"
+      back: "$\\lvert \\mathcal{A} \\rvert \\lvert \\Gamma_{h-1} \\rvert^{\\lvert \\mathcal{O} \\rvert}$ - doubly exponential per horizon step"
+  - id: q5
+    prompt: "With approximate policy evaluation, the monotone improvement (9) of policy iteration is no longer guaranteed."
+    explanation: "(9) follows from $T^{\\pi'}V^\\pi \\ge V^\\pi$, which assumes $V^\\pi$ is known exactly. With an evaluation error $\\epsilon_{\\text{eval}}$ the inequality can fail, some iterations make the policy worse, and the performance bound degrades to the $(1-\\gamma)^{-2}$ form."
+    concept:
+      front: "Why approximate policy iteration is not monotone"
+      back: "(9) needs the exact $V^\\pi$ - evaluation error is amplified as $2\\gamma\\epsilon/(1-\\gamma)^2$"

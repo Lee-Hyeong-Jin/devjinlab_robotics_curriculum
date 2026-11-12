@@ -617,6 +617,26 @@ papers:
     verified: true
     lessons: [c8-mdp-pomdp-bellman]
     role: seminal
+  - id: blackwell1965-discounted-dp
+    title: "Discounted dynamic programming"
+    authors: ["D. Blackwell"]
+    year: 1965
+    venue: "The Annals of Mathematical Statistics"
+    url: "https://doi.org/10.1214/aoms/1177700285"
+    note: "c8 저자 세션이 추가(2026-11-12). Crossref 로 제목·제1저자·연도·저널 확인. 할인 DP 의 수축 사상 논증과 최적 정책 존재의 원전"
+    verified: true
+    lessons: [c8-mdp-pomdp-bellman]
+    role: seminal
+  - id: smallwood1973-pomdp-pwlc
+    title: "The optimal control of partially observable Markov processes over a finite horizon"
+    authors: ["R. D. Smallwood", "E. J. Sondik"]
+    year: 1973
+    venue: "Operations Research"
+    url: "https://doi.org/10.1287/opre.21.5.1071"
+    note: "c8 저자 세션이 추가(2026-11-12). Crossref 로 제목·저자·연도·저널 확인. 유한 지평 POMDP 가치함수의 PWLC 성질과 알파 벡터의 원전"
+    verified: true
+    lessons: [c8-mdp-pomdp-bellman]
+    role: seminal
   - id: sutton2000-policy-gradient
     title: "Policy gradient methods for reinforcement learning with function approximation"
     authors: ["R. S. Sutton", "D. McAllester", "S. Singh", "Y. Mansour"]

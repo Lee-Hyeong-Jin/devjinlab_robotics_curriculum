@@ -250,7 +250,7 @@ UA ch.11,20–21, S&B.
 
 | 레슨 | 유도해야 할 핵심 결과 | 필독 | 교재 | 재현 과제 |
 |---|---|---|---|---|
-| `c8-mdp-pomdp-bellman` MDP·POMDP 와 Bellman 최적성 | 수축 사상으로서의 Bellman 연산자와 유일 고정점 **[D3]**; 가치·정책 반복의 수렴률 **[D3]**; POMDP 의 신념 MDP 변환과 PWLC 가치함수 **[D2]** | `kaelbling1998-pomdp` | S&B ch.3–4, PA ch.10–12 | R1: 가치 반복의 오차가 $\gamma^k$ 로 감소함을 수치로 확인(이론 상한 내) |
+| `c8-mdp-pomdp-bellman` MDP·POMDP 와 Bellman 최적성 | 수축 사상으로서의 Bellman 연산자와 유일 고정점 **[D3]**; 가치·정책 반복의 수렴률 **[D3]**; POMDP 의 신념 MDP 변환과 PWLC 가치함수 **[D2]** | `kaelbling1998-pomdp`, `blackwell1965-discounted-dp`, `smallwood1973-pomdp-pwlc` | S&B ch.3–4, PA ch.10–12 | R1: 가치 반복의 오차가 $\gamma^k$ 로 감소함을 수치로 확인(이론 상한 내) |
 | `c8-policy-gradient` 정책 경사 정리 | 정책 경사 정리 **[D3]**; 기저선과 분산 감소의 불편성 **[D3]**; 자연 경사·TRPO 의 신뢰영역과 단조 개선 한계 **[D3]** | `sutton2000-policy-gradient`, `schulman2015-trpo`, `schulman2017-ppo` | S&B ch.13, CS285 W3,5 | R2: REINFORCE/기저선/PPO 를 CartPole 에 구현, 분산 감소와 표본 효율 차이를 5시드 평균으로 보임 |
 | `c8-value-based-rl` 가치 기반 RL 과 함수 근사 | 선형 함수 근사에서 발산 예(Baird) **[D3]**; 수렴 조건(on-policy, 투영 Bellman) **[D2]**; 과대추정과 이중 Q **[D2]** | `mnih2015-dqn`, `vanhasselt2016-double-q` | S&B ch.9–11 | R1: Baird 반례를 재현해 TD 가 발산하고 잔차 경사법은 수렴함을 보임 |
 | `c8-model-based-world-models` 모델 기반 RL 과 세계 모델 | 모델 오차의 가치 오차 전파 한계(시뮬레이션 보조정리) **[D3]**; Dyna 류의 편향 **[D2]**; 잠재 공간 세계 모델의 학습 목표 **[D2]** | `janner2019-mbpo`, `hafner2023-dreamerv3` | S&B ch.8, CS285 W8 | R2: 간단한 모델 기반 롤아웃 길이를 바꿔 성능-편향 곡선을 재현 |

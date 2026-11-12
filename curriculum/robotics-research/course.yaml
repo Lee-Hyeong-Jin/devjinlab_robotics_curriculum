@@ -10,3 +10,4 @@ summary: >-
 tags: [robotics, research, graduate]
 modules:
   - c1-rigid-body-geometry-lie-groups
+  - c8-decision-making-learning-theory
