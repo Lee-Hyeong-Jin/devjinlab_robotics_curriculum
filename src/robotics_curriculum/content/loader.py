@@ -15,7 +15,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import yaml
 from pydantic import BaseModel, ValidationError
@@ -30,23 +30,40 @@ from robotics_curriculum.content.models import (
     Module,
     ModuleMeta,
     ModuleTranslation,
+    Paper,
+    PapersFile,
 )
 from robotics_curriculum.i18n import DEFAULT_LANG, LANGS
 
 COURSE_FILE = "course.yaml"
 MODULE_FILE = "module.yaml"
+PAPERS_FILE = "papers.yaml"
 FRONT_MATTER_DELIM = "---"
+
+
+Severity = Literal["error", "warning"]
 
 
 @dataclass(frozen=True, slots=True)
 class ContentError:
-    """A problem in one content file."""
+    """A problem in one content file.
+
+    A ``warning`` is an editorial smell rather than a broken file: it is reported but does
+    not fail ``rc validate`` or stop the API loading the content. Everything the loader
+    itself produces is an ``error`` — a file that will not parse is never a warning.
+    """
 
     path: Path
     message: str
+    severity: Severity = "error"
+
+    @property
+    def blocking(self) -> bool:
+        return self.severity == "error"
 
     def __str__(self) -> str:
-        return f"{self.path}: {self.message}"
+        prefix = "" if self.blocking else "warning: "
+        return f"{self.path}: {prefix}{self.message}"
 
 
 class LoadError(Exception):
@@ -437,6 +454,7 @@ def _load_course(course_dir: Path, errors: _Collector) -> Course | None:
         module = load_module(module_dir, errors, course_dir)
         if module is not None:
             modules.append(module)
+    papers = _load_papers(course_dir, errors)
     course_files = _collect_translation_files(course_dir, "*.yaml", errors)
     translations = _attach_yaml_translations(
         CourseTranslation,
@@ -455,9 +473,28 @@ def _load_course(course_dir: Path, errors: _Collector) -> Course | None:
         summary=meta.summary,
         tags=meta.tags,
         modules=modules,
+        papers=papers,
         path=course_dir,
         translations=translations,
     )
+
+
+def _load_papers(course_dir: Path, errors: _Collector) -> list[Paper]:
+    """The course's ``papers.yaml`` bibliography, or ``[]`` when it has none (ADR 0014).
+
+    Optional on purpose: the courses that predate the research track have no registry and
+    must keep loading unchanged.
+    """
+    path = course_dir / PAPERS_FILE
+    # `is_file` first: the guard reports a missing file as a broken link, and a course with
+    # no registry is the normal case, not a problem.
+    if not path.is_file() or not _check_inside(path, course_dir, errors):
+        return []
+    data = _read_yaml(path, errors)
+    if data is None:
+        return []
+    parsed = _parse_model(PapersFile, data, path, errors)
+    return list(parsed.papers) if parsed is not None else []
 
 
 def find_course_dirs(root: Path) -> list[Path]:

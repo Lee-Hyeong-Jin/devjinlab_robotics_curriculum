@@ -7,8 +7,9 @@ summary: >-
   CMU 16-745 W9, 교재는 Barfoot ch.7-8 과 Murray-Li-Sastry ch.2 다.
   설계상 레슨은 5개다.
 # 설계상의 수준은 "연구"(research)다. Level 리터럴에 "연구"가 추가되기 전까지 "고급"으로 둔다
-# (research_notes/연구 트랙 설계/lesson-standard.md §11-4).
+# (연구 트랙 설계 노트의 lesson-standard §11-4).
 level: 고급
 lessons:
   - so3-se3-exponential
   - twists-wrenches-adjoint
+  - lie-group-derivatives

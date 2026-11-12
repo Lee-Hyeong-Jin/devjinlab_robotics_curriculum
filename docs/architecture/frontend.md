@@ -205,9 +205,11 @@ API 가 자기 응답에 붙이는 헤더(`api/middleware.py`)는 브라우저�
 4. ~~쓰기: 타이머·완료·퀴즈·복습.~~ 완료
 5. ~~자료실·검색·리포트(모듈 리포트 화면 포함).~~ 완료
 6. 관리자: ~~사용자·감사~~ 완료 / 콘텐츠·시스템 미구현
-7. 다크 모드·i18n ~~기본~~ 완료 / Lighthouse·부하 테스트 미실행
+7. 다크 모드·i18n ~~기본~~ 완료 / ~~부하 테스트~~ 완료(docs/operations/perf-baseline.md) /
+   Lighthouse 는 도구 미설치로 생략, LCP·CLS 는 Chromium 으로 직접 측정
+   (docs/operations/lighthouse.md)
 
-남은 것: `/admin/content`·`/admin/system`, Lighthouse·부하 테스트.
+남은 것: `/admin/content`·`/admin/system`, Lighthouse 도구 도입(의존성 추가 결정 필요).
 
 완료된 것 중 설계가 바뀐 것: OIDC 로그인 버튼은 `GET /api/v1/auth/providers`(설정된 제공자
 목록)를 계약에 넣어 해결했고, 퀴즈 해설 Markdown 은 Server Action 이 렌더한 React 트리를
