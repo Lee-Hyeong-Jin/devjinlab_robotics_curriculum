@@ -13,3 +13,4 @@ lessons:
   - factor-graphs-map
   - sparsity-isam
   - manifold-estimation
+  - imu-preintegration

@@ -138,6 +138,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   right uncertainty derived, the group-affine cancellation that makes the invariant error dynamics
   autonomous derived line by line, and a 3000-run Monte Carlo NEES comparison of a standard EKF
   against an invariant EKF on SE(3).
+- Research track module C5: the `c5-imu-preintegration` lesson in Korean and English — the
+  preintegration identity proved exactly for the stated discretization (including the gravity
+  bookkeeping that makes it work), the bias-relinearization Jacobian recursions and the
+  nine-dimensional noise covariance derived, and the two-fold scale/gravity ambiguity of monocular
+  visual-inertial fusion under constant acceleration derived in closed form and confirmed
+  numerically.
 
 ### Fixed
 
