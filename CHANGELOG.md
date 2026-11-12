@@ -150,6 +150,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   derivation of $\dot V = -s^\top K_D s$, persistent excitation as the necessary and sufficient
   boundary of parameter convergence, and a reproduction task where tracking reaches $5\cdot10^{-14}$
   at a set-point while the inertial parameters stay 34% wrong.
+- Research-track lesson 6 of module C3, CBF and CLF safety filters, in Korean and English,
+  completing the module: forward invariance proved with the comparison lemma, the closed form of
+  the minimum-intervention QP from the KKT conditions, the exponential CBF chain for a
+  relative-degree-two constraint, and a reproduction task that measures how input limits break the
+  guarantee (95 of 189 runs saturate at $u_{\max}=2$, worst $h = -0.138$).
 
 ### Fixed
 

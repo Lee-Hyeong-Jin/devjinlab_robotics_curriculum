@@ -1,0 +1,85 @@
+# English text of the structured fields of cbf-safety-filter.md (activity titles,
+# resource notes, quiz). The prose lives in cbf-safety-filter.en.md.
+id: c3-cbf-safety-filter
+lang: en
+activities:
+  c3-cbf-safety-filter-reading: Read the lesson and follow the derivations
+  c3-cbf-safety-filter-papers: Read the three must-read papers + a one-page note each
+  c3-cbf-safety-filter-problems: "Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample)"
+  c3-cbf-safety-filter-reproduction: "Reproduction task - a double-integrator safety filter and its feasibility boundary (R2)"
+  c3-cbf-safety-filter-quiz: Concept check quiz
+resources:
+  "Ames, Xu, Grizzle & Tabuada — Control barrier function based quadratic programs for safety critical systems (2017)":
+    note: Must-read 1. The original source for the CBF-QP formulation; §II and §III (definitions, forward invariance, the QP).
+  "Ames, Coogan, Egerstedt, Notomista, Sreenath & Tabuada — Control barrier functions: theory and applications (2019)":
+    note: Must-read 2. The map of the field up to 2019 - extended class-K, robust CBFs, applications.
+  "Nguyen & Sreenath — Exponential control barrier functions for enforcing high relative-degree safety-critical constraints (2016)":
+    note: Must-read 3. Handling constraints of relative degree two or more; the source of R3 in this lesson.
+  "Khalil, Nonlinear Systems (3rd ed., 2002)":
+    note: ch.3.4 (the comparison lemma) - the tool of the R1 proof. (official URL unverified)
+  "Boyd & Vandenberghe, Convex Optimization":
+    note: ch.5 (duality and KKT) - used to derive the closed form in R2. Free in full.
+  "CVXPY":
+    note: The QP solver used to check the closed form in the reproduction task. Any solver will do.
+quiz:
+  - id: q1
+    prompt: >-
+      What is the key step in the proof that the CBF condition $\dot h \ge -\alpha(h)$ gives forward
+      invariance?
+    choices:
+      - "That $h$ is a Lyapunov function, so $h \\to 0$"
+      - "That a solution of the comparison ODE $\\dot y = -\\alpha(y)$ with $y(0)\\ge0$ cannot go below zero, and the comparison lemma gives $h \\ge y$"
+      - "That $\\alpha$ is bounded"
+      - "That the QP is always feasible"
+    explanation: >-
+      Since $\alpha(0)=0$, $y\equiv0$ solves the comparison ODE, and uniqueness forbids any other
+      solution from crossing zero. The comparison lemma then gives $h(x(t)) \ge y(t) \ge 0$. Drop
+      the Lipschitz property of $\alpha$ and uniqueness fails, and with it the conclusion.
+    concept:
+      front: Proof strategy for CBF forward invariance
+      back: >-
+        Solutions of $\dot y=-\alpha(y)$ cannot cross zero, plus the comparison lemma
+  - id: q2
+    prompt: >-
+      Why does the single-constraint minimum-intervention QP (2) return **exactly** the nominal
+      control when the constraint is inactive?
+    choices:
+      - Because the objective is linear
+      - "Because KKT complementarity is satisfied by $\\mu=0$ whenever $\\lambda \\ge 0$"
+      - "Because $L_gh$ is zero"
+      - Because the QP solver's numerical error is small
+    explanation: >-
+      If the margin $\lambda = L_fh + L_ghu_{\mathrm{nom}} + \alpha(h) \ge 0$ then $\mu=0$ satisfies
+      stationarity, complementarity, feasibility and the sign condition, and the solution is
+      $u_{\mathrm{nom}}$. That is why the filter intervenes **only when needed**.
+    concept:
+      front: Transparency of the minimum-intervention filter
+      back: >-
+        $\lambda\ge0$ gives $\mu=0$ and $u^\star = u_{\mathrm{nom}}$ - when active it pushes
+        minimally along $L_gh$
+  - id: q3
+    prompt: >-
+      For the double integrator $\ddot x = u$ with $h = x_{\max}-x$ and linear $\alpha_i$, what input
+      bound does the exponential CBF condition give? (in terms of $\alpha_1,\alpha_2,x,\dot x$)
+    answers: ["-(a1+a2) xdot + a1 a2 (xmax - x)", "-(alpha1+alpha2)*xdot + alpha1*alpha2*(xmax-x)", "u <= -(a1+a2)v + a1a2(xmax-x)"]
+    explanation: >-
+      With $\psi_1 = -\dot x + \alpha_1(x_{\max}-x)$, imposing
+      $\dot\psi_1 + \alpha_2\psi_1 \ge 0$ gives
+      $u \le -(\alpha_1+\alpha_2)\dot x + \alpha_1\alpha_2(x_{\max}-x)$. The constraint reduces to a
+      single upper bound, so the filter is one $\min$.
+    concept:
+      front: Exponential CBF bound for a double integrator
+      back: "$u \\le -(\\alpha_1+\\alpha_2)\\dot x + \\alpha_1\\alpha_2(x_{\\max}-x)$"
+  - id: q4
+    prompt: >-
+      A CBF-QP filter still guarantees safety when the input is limited by $|u| \le u_{\max}$.
+    explanation: >-
+      If the braking required exceeds $u_{\max}$ the constraint cannot be met and the guarantee is
+      gone. Measured: with $\alpha_1=\alpha_2=3$ and $x_{\max}=1$, at $u_{\max}=2$ 95 of 189 runs
+      saturate and the worst $\min_t h$ is $-0.138$, a **violation**. At $u_{\max}=20$ there is no
+      saturation.
+    concept:
+      front: Input limits and the CBF guarantee
+      back: >-
+        Once saturation occurs the guarantee is gone - the safe set must be shrunk in advance
+        (input-constrained or backup CBFs)

@@ -16,3 +16,4 @@ lessons:
   - contraction-incremental
   - passivity-impedance
   - adaptive-control
+  - cbf-safety-filter
