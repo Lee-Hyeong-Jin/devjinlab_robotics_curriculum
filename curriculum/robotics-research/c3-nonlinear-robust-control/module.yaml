@@ -14,3 +14,4 @@ lessons:
   - lyapunov-stability
   - feedback-linearization
   - contraction-incremental
+  - passivity-impedance

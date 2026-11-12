@@ -129,6 +129,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the disturbance tube $\sup\lVert\Theta d\rVert/\lambda$, why a control contraction metric is
   convex in the dual metric, and a reproduction task that measures how conservative the
   certificate is (certified 0.49 against a measured rate of 1.00).
+- Research-track lesson 4 of module C3, passivity, energy shaping and impedance control, in
+  Korean and English: manipulator passivity from the skew symmetry of $\tfrac12\dot M - C$,
+  the passivity theorem for feedback interconnections, energy shaping with damping injection, and
+  a closed-form per-cycle energy of a sampled virtual wall that reproduces the Colgate-Schenkel
+  passivity condition in the limit and quantifies where it is conservative.
 
 ### Fixed
 
