@@ -161,8 +161,6 @@ def _table(headers: list[str], rows: list[list[str]]) -> str:
 
 
 def _status_label(summary: LessonSummary, t: Translator) -> str:
-    if summary.status == "not_started" and summary.locked:
-        return t("cli.state.locked")
     return t(f"cli.state.{summary.status.value}")
 
 
@@ -190,11 +188,11 @@ def _review_header(service: ProgressService, now: datetime, t: Translator) -> st
     return t("cli.review_line", due=due, rate=rate)
 
 
-def _warn_locked(service: ProgressService, lesson_id: str, t: Translator) -> None:
-    """Forced open of a locked lesson: warn on stderr but carry on."""
+def _note_prerequisites(service: ProgressService, lesson_id: str, t: Translator) -> None:
+    """Mention unfinished recommended prerequisites. Informational — nothing is blocked."""
     missing = service.missing_prerequisites(lesson_id)
     if missing:
-        typer.echo(t("cli.warn_prereq", ids=", ".join(missing)), err=True)
+        typer.echo(t("cli.note_prereq", ids=", ".join(missing)), err=True)
 
 
 @app.command()
@@ -299,7 +297,7 @@ def start(
     t = _t(ctx)
     with _service(ctx) as service:
         session = service.start(lesson_id)
-        _warn_locked(service, lesson_id, t)
+        _note_prerequisites(service, lesson_id, t)
         title = service.lesson(lesson_id).title
     at = f"{session.started_at:%Y-%m-%d %H:%M}"
     typer.echo(t("cli.start", lesson_id=lesson_id, title=title, at=at))
@@ -335,7 +333,7 @@ def log(
     with _service(ctx) as service:
         minutes = parse_duration(duration)
         service.log(lesson_id, minutes, note)
-        _warn_locked(service, lesson_id, t)
+        _note_prerequisites(service, lesson_id, t)
     typer.echo(t("cli.logged", lesson_id=lesson_id, time=_fmt_seconds(minutes * 60)))
 
 
@@ -352,8 +350,8 @@ def done(
     """Mark a lesson done (stops its running timer, if any)."""
     t = _t(ctx)
     with _service(ctx) as service:
-        progress, unlocked = service.done(lesson_id, understanding=understanding, note=note)
-        _warn_locked(service, lesson_id, t)
+        progress, now_recommended = service.done(lesson_id, understanding=understanding, note=note)
+        _note_prerequisites(service, lesson_id, t)
         title = service.lesson(lesson_id).title
     extra = (
         t("cli.done_understanding", value=progress.understanding) if progress.understanding else ""
@@ -367,8 +365,14 @@ def done(
             extra=extra,
         )
     )
-    for lesson in unlocked:
-        typer.echo(t("cli.unlocked", lesson_id=lesson.id, title=lesson.localized(_lang(ctx)).title))
+    for lesson in now_recommended:
+        typer.echo(
+            t(
+                "cli.now_recommended",
+                lesson_id=lesson.id,
+                title=lesson.localized(_lang(ctx)).title,
+            )
+        )
 
 
 @app.command("next")

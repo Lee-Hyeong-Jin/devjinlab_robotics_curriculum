@@ -80,7 +80,9 @@
     "onThisPage": "On this page",
     "empty": "This lesson has no body.",
     "difficulty": "Difficulty {level}/5",
-    "prerequisites": "Prerequisites"
+    "prerequisites": "Prerequisites",
+    "prereqPendingTitle": "Recommended first",
+    "prereqPendingBody": "These lessons make this one easier. They are not required — you can carry on here."
   },
   "resources": {
     "title": "Resources",
@@ -120,8 +122,7 @@
   "state": {
     "done": "Done",
     "in_progress": "In progress",
-    "available": "Available",
-    "locked": "Locked"
+    "available": "Available"
   },
   "error": {
     "title": "This page could not be loaded",

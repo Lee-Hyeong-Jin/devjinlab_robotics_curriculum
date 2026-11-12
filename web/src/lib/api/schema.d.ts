@@ -224,9 +224,10 @@ export interface paths {
          * Get Roadmap
          * @description Level -> module -> lesson tree with the caller's states (``rc roadmap``).
          *
-         *     Lesson state: done, in_progress, locked (a prerequisite is not done) or available. Module
-         *     state: done if every lesson is done, in_progress if any is started or done, locked if every
-         *     lesson is locked, else available. Progress values are fractions (0-1).
+         *     Lesson state: done, in_progress or available. Module state: done if every lesson is done,
+         *     in_progress if any is started or done, else available. Progress values are fractions (0-1).
+         *     Nothing is ever `locked` — lessons are not gated on finishing other lessons (ADR 0015);
+         *     the value stays in the enum so an existing client keeps parsing.
          */
         get: operations["get_roadmap_api_v1_roadmap_get"];
         put?: never;
@@ -392,7 +393,10 @@ export interface paths {
         put?: never;
         /**
          * Done
-         * @description Mark a lesson done (stops its running timer); lists the lessons it unlocked.
+         * @description Mark a lesson done (stops its running timer).
+         *
+         *     ``unlocked_lesson_ids`` names the lessons whose last unfinished prerequisite was this one,
+         *     so they are now next in the recommended order. They were never blocked (ADR 0015).
          */
         post: operations["done_api_v1_progress_done_post"];
         delete?: never;
@@ -1406,7 +1410,7 @@ export interface components {
             progress: components["schemas"]["LessonProgress"];
             /**
              * Unlocked Lesson Ids
-             * @description Lessons this completion unlocked.
+             * @description Lessons whose last unfinished prerequisite was this one, so they are now next in the recommended order. They were never blocked (ADR 0015).
              */
             unlocked_lesson_ids: string[];
         };
@@ -1549,9 +1553,16 @@ export interface components {
             status: components["schemas"]["LessonStatus"];
             /**
              * Locked
-             * @description Some prerequisite is not done yet.
+             * @deprecated
+             * @description Always false. Lessons are never locked (ADR 0015); kept so existing clients keep parsing. Read `missing_prerequisites` instead.
+             * @default false
              */
             locked: boolean;
+            /**
+             * Missing Prerequisites
+             * @description Prerequisite lesson ids that are not done yet. Advice about order, not a gate: the lesson can be started, logged and completed regardless.
+             */
+            missing_prerequisites?: string[];
             /** Total Seconds */
             total_seconds: number;
             /** Started At */

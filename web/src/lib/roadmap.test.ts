@@ -56,7 +56,12 @@ describe('toStageViews', () => {
     const [basic] = toStageViews(ROADMAP)
     expect(basic?.progress).toBe(0.25)
     expect(basic?.modules[0]?.progress).toBe(0.5)
-    expect(basic?.modules[1]?.state).toBe('locked')
+  })
+
+  it("reads an old server's `locked` as available, so no screen renders a lock (ADR 0015)", () => {
+    const [basic] = toStageViews(ROADMAP)
+    expect(basic?.modules[1]?.state).toBe('available')
+    expect(basic?.modules[1]?.lessons[0]?.state).toBe('available')
   })
 
   it('adds the per-stage lesson counts the API does not carry', () => {

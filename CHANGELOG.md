@@ -32,6 +32,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `scripts/i18n/audit.py` and `docs/reviews/i18n-gap-audit.md`: the English build is driven
   end to end (API, static site, CLI) and every Korean string that is left is reported.
 
+### Changed
+
+- Nothing in a course is locked any more (ADR 0015). Prerequisites are advice about order:
+  every lesson can be opened, started and completed at any time, which the core always
+  allowed — only the display pretended otherwise. `rc next` now ranks instead of filtering,
+  the `[-]` / `▨` / 🔒 markers are gone, and the lesson screen lists unfinished prerequisites
+  as links. `LessonState.locked` stays in the API, always false and deprecated; read the new
+  `missing_prerequisites` instead.
+
 ### Fixed
 
 - The English build showed Korean in places that had no translation at all: course and

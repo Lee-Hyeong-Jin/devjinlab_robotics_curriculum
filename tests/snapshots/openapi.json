@@ -523,7 +523,7 @@
           "content"
         ],
         "summary": "Get Roadmap",
-        "description": "Level -> module -> lesson tree with the caller's states (``rc roadmap``).\n\nLesson state: done, in_progress, locked (a prerequisite is not done) or available. Module\nstate: done if every lesson is done, in_progress if any is started or done, locked if every\nlesson is locked, else available. Progress values are fractions (0-1).",
+        "description": "Level -> module -> lesson tree with the caller's states (``rc roadmap``).\n\nLesson state: done, in_progress or available. Module state: done if every lesson is done,\nin_progress if any is started or done, else available. Progress values are fractions (0-1).\nNothing is ever `locked` — lessons are not gated on finishing other lessons (ADR 0015);\nthe value stays in the enum so an existing client keeps parsing.",
         "operationId": "get_roadmap_api_v1_roadmap_get",
         "parameters": [
           {
@@ -1209,7 +1209,7 @@
           "progress"
         ],
         "summary": "Done",
-        "description": "Mark a lesson done (stops its running timer); lists the lessons it unlocked.",
+        "description": "Mark a lesson done (stops its running timer).\n\n``unlocked_lesson_ids`` names the lessons whose last unfinished prerequisite was this one,\nso they are now next in the recommended order. They were never blocked (ADR 0015).",
         "operationId": "done_api_v1_progress_done_post",
         "requestBody": {
           "content": {
@@ -4886,7 +4886,7 @@
             },
             "type": "array",
             "title": "Unlocked Lesson Ids",
-            "description": "Lessons this completion unlocked."
+            "description": "Lessons whose last unfinished prerequisite was this one, so they are now next in the recommended order. They were never blocked (ADR 0015)."
           }
         },
         "additionalProperties": false,
@@ -5208,7 +5208,17 @@
           "locked": {
             "type": "boolean",
             "title": "Locked",
-            "description": "Some prerequisite is not done yet."
+            "description": "Always false. Lessons are never locked (ADR 0015); kept so existing clients keep parsing. Read `missing_prerequisites` instead.",
+            "default": false,
+            "deprecated": true
+          },
+          "missing_prerequisites": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing Prerequisites",
+            "description": "Prerequisite lesson ids that are not done yet. Advice about order, not a gate: the lesson can be started, logged and completed regardless."
           },
           "total_seconds": {
             "type": "integer",
@@ -5266,7 +5276,6 @@
         "required": [
           "lesson",
           "status",
-          "locked",
           "total_seconds",
           "started_at",
           "completed_at",

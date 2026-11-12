@@ -80,7 +80,9 @@
     "onThisPage": "이 페이지 목차",
     "empty": "본문이 없습니다.",
     "difficulty": "난이도 {level}/5",
-    "prerequisites": "선수지식"
+    "prerequisites": "선수지식",
+    "prereqPendingTitle": "권장 선수 레슨",
+    "prereqPendingBody": "먼저 보면 이해가 쉬운 레슨입니다. 필수는 아니고, 지금 이 레슨을 진행해도 됩니다."
   },
   "resources": {
     "title": "자료실",
@@ -120,8 +122,7 @@
   "state": {
     "done": "완료",
     "in_progress": "진행 중",
-    "available": "학습 가능",
-    "locked": "잠김"
+    "available": "학습 가능"
   },
   "error": {
     "title": "화면을 불러오지 못했습니다",
