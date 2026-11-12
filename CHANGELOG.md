@@ -93,6 +93,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   dynamics and the forward-point output of a differential-drive robot, the second-order Lie
   bracket motion derived from a composition of flows, the chained form with steering by sinusoids
   ($\Delta z_3 = \pi ab/\omega^2$), and Brockett's obstruction shown concretely.
+- Research-track lesson 3 of module C3, contraction theory and incremental stability, in Korean
+  and English: the contraction condition derived from virtual displacements up to finite
+  Riemannian distance, constant metrics found by LMI where the Euclidean metric certifies nothing,
+  the disturbance tube $\sup\lVert\Theta d\rVert/\lambda$, why a control contraction metric is
+  convex in the dual metric, and a reproduction task that measures how conservative the
+  certificate is (certified 0.49 against a measured rate of 1.00).
 
 ### Fixed
 

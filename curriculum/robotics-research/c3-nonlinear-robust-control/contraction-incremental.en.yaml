@@ -1,0 +1,86 @@
+# English text of the structured fields of contraction-incremental.md (activity titles,
+# resource notes, quiz). The prose lives in contraction-incremental.en.md.
+id: c3-contraction-incremental
+lang: en
+activities:
+  c3-contraction-incremental-reading: Read the lesson and follow the derivations
+  c3-contraction-incremental-papers: Read the three must-read papers + a one-page note each
+  c3-contraction-incremental-problems: "Problem set (2 derivations, 1 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  c3-contraction-incremental-reproduction: "Reproduction task - certified versus measured convergence rate (R1)"
+  c3-contraction-incremental-quiz: Concept check quiz
+resources:
+  "Lohmiller & Slotine — On contraction analysis for non-linear systems (1998)":
+    note: Must-read 1. The original source for contraction analysis; §2 (the basic result) and §3 (general metrics) are R1 and R2 of this lesson.
+  "Manchester & Slotine — Control contraction metrics (2017)":
+    note: Must-read 2. The condition that turns controller design into a convex problem; read §III and §IV.
+  "Tsukamoto, Chung & Slotine — Contraction theory for nonlinear stability analysis and learning-based control: a tutorial overview (2021)":
+    note: Must-read 3. The map of the field up to 2021; look at the contact with learning-based control (§5-6). Annual Reviews in Control 52:135-169.
+  "Khalil, Nonlinear Systems (3rd ed., 2002)":
+    note: >-
+      ch.9 (comparison and perturbation analysis) and ch.3.4 (the comparison lemma). It does not
+      cover contraction theory, but the tool used in R3 is here. (official URL unverified)
+  "CVXPY":
+    note: The tool that solves the LMI of the reproduction task. Any solver will do - SCS or Clarabel.
+quiz:
+  - id: q1
+    prompt: >-
+      The Jacobian of (1) has eigenvalues with real part $-1$ at both vertices, and yet
+      $\lambda_{\max}(J^\top+J) \ge 0$ in the Euclidean metric. What does that mean?
+    choices:
+      - The system is unstable
+      - The distance can grow transiently — contraction is a property asserted together with a metric, and another metric can certify it
+      - The Jacobian was computed wrongly
+      - Contraction theory cannot be used
+    explanation: >-
+      Eigenvalues describe asymptotic behaviour; the symmetric part describes the **instantaneous**
+      one. A positive eigenvalue of $J^\top+J$ means the distance grows instantaneously in that
+      direction. Changing the constant metric $M$ can satisfy (4), and for (1) a rate of about
+      $\lambda \approx 0.49$ is certified.
+    concept:
+      front: Eigenvalues versus the symmetric part of the Jacobian
+      back: >-
+        Eigenvalues are asymptotic, the symmetric part is instantaneous. Growth in the Euclidean
+        distance is compatible with contraction in another metric.
+  - id: q2
+    prompt: >-
+      Given a contraction rate $\lambda$ and a disturbance bound $\sup\lVert\Theta d\rVert$, what is
+      the asymptotic tube radius? (as a formula)
+    answers: ["sup|Theta d|/lambda", "sup||Theta d||/lambda", "||Theta d||/lambda", "sup norm Theta d over lambda"]
+    explanation: >-
+      Applying the comparison lemma to (15) gives
+      $R(t) \le R(0)e^{-\lambda t} + \sup\lVert\Theta d\rVert/\lambda$. The contraction rate is the
+      inverse of the disturbance gain, so doubling $\lambda$ halves the tube.
+    concept:
+      front: Disturbance tube radius of a contracting system
+      back: "$\\sup\\lVert\\Theta d\\rVert/\\lambda$ - the contraction rate is the inverse disturbance gain"
+  - id: q3
+    prompt: >-
+      A time-invariant system that contracts on a region may have two or more equilibria there.
+    explanation: >-
+      Equilibria are constant trajectories, so the distance between two of them never changes, while
+      contraction says that distance decays like $e^{-\lambda t}$. The contradiction leaves at most
+      one equilibrium. A system with three equilibria such as $\dot x = x - x^3$ does not contract
+      globally.
+    concept:
+      front: Contraction and the number of equilibria
+      back: >-
+        At most one equilibrium in a contracting region - a system with several equilibria is not
+        globally contracting
+  - id: q4
+    prompt: >-
+      What is the key reason the CCM condition (17) becomes convex when written in the dual metric
+      $W = M^{-1}$?
+    choices:
+      - Because $W$ is smaller than $M$ and so numerically better conditioned
+      - Because the constraint $\delta x^\top MB = 0$ becomes $\eta^\top B = 0$ in $W$ coordinates, independent of the metric, and the $B_\perp$ projection eliminates the existence of the input
+      - Because the $\dot{W}$ term disappears
+      - Because input constraints are ignored
+    explanation: >-
+      Substituting $\delta x = W\eta$ turns the constraint into $\eta^\top B = 0$, which no longer
+      depends on $M$. Projected with $B_\perp$, condition (8) is then linear (an LMI) in $W$. The
+      $\dot W$ term does not disappear; its sign flips.
+    concept:
+      front: Why a CCM is convex
+      back: >-
+        In $W=M^{-1}$ the constraint $\eta^\top B=0$ is metric-independent and the $B_\perp$
+        projection eliminates the existence of $u$
