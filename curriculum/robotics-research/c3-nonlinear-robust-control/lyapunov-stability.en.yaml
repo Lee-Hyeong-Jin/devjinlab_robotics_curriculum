@@ -1,0 +1,93 @@
+# English text of the structured fields of lyapunov-stability.md (activity titles,
+# resource notes, quiz). The prose lives in lyapunov-stability.en.md.
+id: c3-lyapunov-stability
+lang: en
+activities:
+  c3-lyapunov-stability-reading: Read the lesson and follow the derivations
+  c3-lyapunov-stability-papers: Read the three must-read papers + a one-page note each
+  c3-lyapunov-stability-problems: "Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  c3-lyapunov-stability-reproduction: "Reproduction task - certify a region of attraction with SOS (R1)"
+  c3-lyapunov-stability-quiz: Concept check quiz
+resources:
+  "Khalil, Nonlinear Systems (3rd ed., 2002)":
+    note: >-
+      All of ch.4 (stability, invariant sets, comparison functions, ISS); ch.4.9 is ISS. The
+      primary textbook of this module. (official URL unverified)
+  "Tedrake, Underactuated Robotics":
+    note: >-
+      ch.9 (Lyapunov analysis) - the robotics-side entry point to searching for Lyapunov
+      functions with SOS. Free in full.
+  "Sontag — Smooth stabilization implies coprime factorization (1989)":
+    note: Must-read 1. The paper where ISS was first defined; read only §I and §III, the definition and the main theorem.
+  "Papachristodoulou & Prajna — On the construction of Lyapunov functions using the sum of squares decomposition (2002)":
+    note: Must-read 2. The standard formulation of searching for a Lyapunov function with SOS.
+  "Topcu, Packard & Seiler — Local stability analysis using simulations and sum-of-squares programming (2008)":
+    note: Must-read 3. The reproduction task is a scaled-down version of this paper's procedure (simulation for the outer bound, SOS for the inner one).
+  "Sontag & Wang — On characterizations of the input-to-state stability property (1995)":
+    note: Recommended. Gives the converse direction, the equivalence of ISS and ISS-Lyapunov functions.
+  "CVXPY":
+    note: The tool that solves the SDP of the reproduction task. Any solver will do - SCS or Clarabel.
+quiz:
+  - id: q1
+    prompt: >-
+      $V$ is positive definite, $\dot{V} \le 0$ and $D = \mathbb{R}^n$, yet global asymptotic
+      stability still does not follow. Which statement is the most accurate reason?
+    choices:
+      - "$\\dot{V} \\le 0$ is weaker than $\\dot{V} < 0$ and gives no convergence, and unless $V$ is radially unbounded its sublevel sets are unbounded"
+      - "Because $V$ may fail to be differentiable"
+      - "Because solutions need not be unique unless $f$ is locally Lipschitz"
+      - "Because the eigenvalues of the linearisation were not checked"
+    explanation: >-
+      Two different things block two different conclusions. $\dot V \le 0$ only gives stability,
+      so asymptotic behaviour needs LaSalle or $\dot V<0$; globality comes from boundedness of the
+      sublevel sets, that is from radial unboundedness. Equation (16) is the counterexample to the
+      latter - solutions diverge even though $\dot V<0$.
+    concept:
+      front: Why a global conclusion needs radial unboundedness
+      back: >-
+        The sublevel set $\Omega_c$ must be bounded to trap the solution. A bounded $V$ such as
+        $x_1^2/(1+x_1^2)+x_2^2$ admits diverging solutions.
+  - id: q2
+    prompt: >-
+      In the ISS-Lyapunov condition $\dot V \le -\alpha_3(|x|) + \sigma(|u|)$, when the input term
+      is absorbed into half of $\alpha_3$, what multiple of $-\alpha_3$ is the decay rate outside
+      that region? (number only)
+    answers: ["0.5", "1/2", "half", "a half", "one half"]
+    explanation: >-
+      Where $\alpha_3(|x|) \ge 2\sigma(|u|)$ we get $\dot V \le -\alpha_3 + \sigma \le
+      -\tfrac12\alpha_3$. That $1/2$ is equation (5); in general it becomes $-(1-\theta)\alpha_3$
+      for $\theta \in (0,1)$.
+    concept:
+      front: The gain margin in the ISS derivation
+      back: >-
+        In the region $\alpha_3 \ge 2\sigma$ we have $\dot V \le -\tfrac12 \alpha_3$ - the input
+        term is absorbed into half of the decay term.
+  - id: q3
+    prompt: >-
+      If the SOS program (4) is infeasible, the system is unstable on that sublevel set.
+    explanation: >-
+      (4) is only a sufficient condition. Infeasibility may mean ⓐ the degree is too low,
+      ⓑ the multiplier structure is too poor, or ⓒ the solver failed numerically. The root reason
+      is that nonnegative polynomials that are not SOS exist (the degree gap in the
+      Positivstellensatz).
+    concept:
+      front: What a failed SOS certificate means
+      back: >-
+        It is not evidence of instability - it can be a matter of degree, multipliers or numerics.
+        SOS is a sufficient condition for nonnegativity.
+  - id: q4
+    prompt: "Why is $\\dot{x} = -x + x^2 u$ not ISS?"
+    choices:
+      - "Because it is unstable even for $u \\equiv 0$"
+      - "Because for a constant input $u \\equiv \\mu$ any $x_0 > 1/\\mu$ escapes in finite time, which breaks the conclusion that bounded inputs give bounded states"
+      - "Because $\\sigma$ cannot be chosen in class $\\mathcal{K}$"
+      - "Because $V = x^2/2$ is not radially unbounded"
+    explanation: >-
+      For $u \equiv 0$ the system is GAS (0-GAS). But for $u \equiv \mu$ the point $x = 1/\mu$ is
+      an unstable equilibrium and any larger initial value diverges, so no $\gamma$ can satisfy
+      (3). Restricting the input to small values does give local ISS.
+    concept:
+      front: The standard example that is 0-GAS but not ISS
+      back: >-
+        $\dot x = -x + x^2u$ - with constant $u=\mu$, any $x_0 > 1/\mu$ escapes in finite time.
+        Local ISS does hold.

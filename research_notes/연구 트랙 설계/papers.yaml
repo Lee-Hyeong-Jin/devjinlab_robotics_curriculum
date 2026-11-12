@@ -120,6 +120,26 @@ papers:
     role: standard
 
   # ── C3 비선형·강건 제어 ──────────────────────────────────────────────
+  - id: topcu2008-local-stability-sos
+    title: "Local stability analysis using simulations and sum-of-squares programming"
+    authors: ["U. Topcu", "A. Packard", "P. Seiler"]
+    year: 2008
+    venue: "Automatica"
+    url: "https://doi.org/10.1016/j.automatica.2008.03.010"
+    note: "Crossref 로 확인(2008-10). c3-lyapunov-stability 의 재현 과제가 이 절차(시뮬레이션 상한 + SOS 하한)의 축소판이다"
+    verified: true
+    lessons: [c3-lyapunov-stability]
+    role: standard
+  - id: sontag1995-iss-characterizations
+    title: "On characterizations of the input-to-state stability property"
+    authors: ["E. D. Sontag", "Y. Wang"]
+    year: 1995
+    venue: "Systems & Control Letters"
+    url: "https://doi.org/10.1016/0167-6911(94)00050-6"
+    note: "Crossref 로 확인(1995-04). ISS 와 ISS-Lyapunov 함수의 동등성(역방향)을 준다"
+    verified: true
+    lessons: [c3-lyapunov-stability]
+    role: standard
   - id: brockett1983-nonholonomic
     title: "Asymptotic stability and feedback stabilization"
     authors: ["R. W. Brockett"]

@@ -82,6 +82,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   authoring guide `docs/curriculum/AUTHORING_RESEARCH_TRACK.md`. The track design (benchmark of
   graduate courses, 97-lesson blueprint, lesson standard, 134-paper reading list) is under
   `research_notes/연구 트랙 설계/`.
+- Research-track module C3 (nonlinear and robust control) under
+  `curriculum/robotics-research/c3-nonlinear-robust-control/`: lesson 1, Lyapunov stability and
+  ISS, in Korean and English — the Lyapunov theorem, its converse for exponential stability and
+  LaSalle's invariance principle as proof sketches, the ISS estimate derived from an
+  ISS-Lyapunov function, and a sum-of-squares certificate for a region of attraction with a
+  numerically checkable reproduction task.
 
 ### Fixed
 
