@@ -1,0 +1,105 @@
+# English text of the structured fields of graph-consensus.md (activity titles, resource notes,
+# quiz). The prose lives in graph-consensus.en.md.
+id: s5-graph-consensus
+lang: en
+activities:
+  s5-graph-consensus-reading: Read the lesson and follow the derivations
+  s5-graph-consensus-papers: Read the three must-read papers + a one-page note each
+  s5-graph-consensus-problems: "Problem set (2 proofs, 1 derivation, 2 numerical, 1 implementation, 1 counterexample)"
+  s5-graph-consensus-reproduction: "Reproduction task - rate = lambda_2, the optimal step size, directed and time-varying graphs (R1)"
+  s5-graph-consensus-quiz: Concept check quiz
+resources:
+  "Mesbahi & Egerstedt, Graph Theoretic Methods in Multiagent Networks (2010)":
+    note: ch.2-3 (graphs and the Laplacian) and ch.3.3 (consensus). The primary textbook for this lesson.
+  "Boyd & Vandenberghe, Convex Optimization":
+    note: ch.2-4. Background for why maximizing lambda_2 is a convex problem (problem P6). The full PDF is free.
+quiz:
+  - id: q1
+    prompt: >-
+      On a connected undirected graph, the disagreement of continuous-time consensus
+      $\dot x = -Lx$ decays with an exponent that is which quantity of the Laplacian? Give the
+      symbol.
+    answers: ["lambda_2", "λ2", "λ_2", "lambda2", "second smallest eigenvalue", "algebraic connectivity"]
+    explanation: >-
+      It is $\lambda_2$, the algebraic connectivity. The disagreement $\delta$ stays in
+      $\mathbf{1}^\perp$, and on that subspace the smallest eigenvalue of $L$ is $\lambda_2$, so
+      $\lVert\delta(t)\rVert \le e^{-\lambda_2 t}\lVert\delta(0)\rVert$ — with equality along the
+      Fiedler vector, which makes it an exponent that **cannot be improved**.
+    concept:
+      front: The rate of continuous-time consensus
+      back: >-
+        $\lambda_2$ (algebraic connectivity). Equality along the Fiedler vector - not an upper bound
+        but the exact worst-case exponent
+  - id: q2
+    prompt: >-
+      At the optimal step size of discrete-time consensus $x_{k+1} = (I-\epsilon L)x_k$, which
+      quantity governs the rate?
+    choices:
+      - $\lambda_2$ alone
+      - $\lambda_n$ alone
+      - The ratio $\kappa = \lambda_n/\lambda_2$ - the rate is $(\kappa-1)/(\kappa+1)$
+      - The node count $n$ alone
+    explanation: >-
+      At $\epsilon^\ast = 2/(\lambda_2+\lambda_n)$ the rate is
+      $r^\ast = (\lambda_n-\lambda_2)/(\lambda_n+\lambda_2) = (\kappa-1)/(\kappa+1)$. Continuous
+      time sees only $\lambda_2$ but **discrete time sees the ratio** — a star graph with a single
+      hub has a large $\lambda_2 = 1$ yet $\lambda_n = n$, so $\kappa = n$ makes it slow.
+    concept:
+      front: The rate of discrete consensus
+      back: >-
+        $r^\ast = (\kappa-1)/(\kappa+1)$ with $\kappa = \lambda_n/\lambda_2$. A different quantity
+        governs than in continuous time ($\lambda_2$)
+  - id: q3
+    prompt: >-
+      On a directed graph, what is the condition for the consensus value to be the **average** of
+      the initial values?
+    choices:
+      - Strong connectivity suffices
+      - The graph must be balanced (in-degree = out-degree)
+      - A rooted spanning out-branching suffices
+      - On a directed graph it is always the average
+    explanation: >-
+      The consensus value is the left-null-vector weighted $w^\top x(0)$, and $w = \mathbf{1}/n$ is
+      equivalent to $\mathbf{1}^\top L = 0$, that is balancedness. An out-branching is the condition
+      for **convergence**, not for the average — in the reproduction task, adding one chord to a
+      directed cycle leaves it strongly connected yet the consensus value is $6/7$, not the average
+      $0.9$.
+    concept:
+      front: Average consensus on a directed graph
+      back: >-
+        Balanced (in-deg = out-deg) $\iff \mathbf{1}^\top L = 0 \iff w = \mathbf{1}/n$. Strong
+        connectivity and out-branchings are only convergence conditions
+  - id: q4
+    prompt: >-
+      For consensus to be reached on a time-varying graph, a connected graph must appear at least
+      occasionally.
+    explanation: >-
+      All that is needed is **joint connectivity** — that the union of the graphs over every
+      bounded interval is connected. In the reproduction task, merely alternating two graphs with
+      $\lambda_2 = 0$ (neither connected) drives the disagreement down to $2.2\times10^{-16}$,
+      because it is the **product** of the stochastic matrices that mixes.
+    concept:
+      front: The condition for time-varying consensus
+      back: >-
+        Joint connectivity (the union over each interval is connected) is all that is needed. It
+        converges even with $\lambda_2 = 0$ at every instant - the instantaneous $\lambda_2$ has no
+        predictive power
+  - id: q5
+    prompt: >-
+      What justifies the heuristic of adding an edge between the extremes of the Fiedler vector
+      $f$?
+    choices:
+      - There is a theorem that it always maximizes $\lambda_2$
+      - To first order $\Delta\lambda_2 \approx (f_i-f_j)^2$, so the pair with the largest difference is first-order optimal
+      - Because the communication distance is shortest
+      - Because nodes with the same sign of $f$ should be joined
+    explanation: >-
+      Adding an edge sends $L \to L + (e_i-e_j)(e_i-e_j)^\top$, and the first-order eigenvalue
+      perturbation is $(f_i-f_j)^2$. On the barbell graph of the reproduction task this heuristic
+      matches the exhaustive optimum ($0.62772$), but it is **not guaranteed** — if $\lambda_2$ is
+      repeated the first-order perturbation cannot be used at all.
+    concept:
+      front: Fiedler greedy edge addition
+      back: >-
+        The first-order perturbation $\Delta\lambda_2 \approx (f_i-f_j)^2$. A heuristic with no
+        guarantee - invalid when $\lambda_2$ is repeated

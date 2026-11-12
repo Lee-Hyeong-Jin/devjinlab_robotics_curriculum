@@ -17,3 +17,4 @@ modules:
   - c6-motion-planning-theory
   - c7-perception-3d-representations
   - c8-decision-making-learning-theory
+  - s5-multi-robot-field-robotics

@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- 연구원 트랙에 S5 다중 로봇·필드 로보틱스 모듈을 시작했다 — `s5-graph-consensus`(그래프
+  이론과 합의, ko/en). 연속시간 합의의 수렴률이 정확히 대수적 연결성 λ₂ 임을 증명하고, 이산시간
+  합의의 최적 보폭 2/(λ₂+λₙ)과 그 수렴률 (κ−1)/(κ+1)을 닫힌 형태로 유도하고, 방향 그래프의
+  합의값이 좌 영벡터 가중 평균임을 보이고, 시변 그래프에서는 결합 연결성만이 문제임을
+  (각각 λ₂ = 0 인 두 그래프를 번갈아 써도 합의에 도달함을) 수치로 확인했다.
 - 연구원 트랙에 C6 동작 계획 이론 모듈을 추가했다 — `c6-cspace-complexity`(구성공간과 복잡도),
   `c6-combinatorial-gcs`(조합적 계획과 볼록 분해), `c6-sampling-completeness`(샘플링 기반과
   확률적 완전성), `c6-asymptotic-optimality`(점근 최적성),

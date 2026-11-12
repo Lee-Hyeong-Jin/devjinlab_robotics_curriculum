@@ -1546,7 +1546,31 @@ papers:
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
   # ── S5 다중 로봇·필드 로보틱스 ────────────────────────────────────────
-  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+  - id: olfati-saber2007-consensus
+    title: "Consensus and cooperation in networked multi-agent systems"
+    authors: ["R. Olfati-Saber", "J. A. Fax", "R. M. Murray"]
+    year: 2007
+    venue: "Proceedings of the IEEE"
+    url: "https://doi.org/10.1109/JPROC.2006.887293"
+    verified: true
+    role: survey
+  - id: jadbabaie2003-coordination
+    title: "Coordination of groups of mobile autonomous agents using nearest neighbor rules"
+    authors: ["A. Jadbabaie", "J. Lin", "A. S. Morse"]
+    year: 2003
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.2003.812781"
+    note: "CDC 2002 학회판(10.1109/CDC.2002.1184304)은 다른 레코드이므로 쓰지 않는다"
+    verified: true
+    role: seminal
+  - id: fiedler1973-algebraic-connectivity
+    title: "Algebraic connectivity of graphs"
+    authors: ["M. Fiedler"]
+    year: 1973
+    venue: "Czechoslovak Mathematical Journal"
+    url: "https://doi.org/10.21136/CMJ.1973.101168"
+    verified: true
+    role: seminal
 
   # ── R0 수학·수치 기초 (브리지) ───────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)

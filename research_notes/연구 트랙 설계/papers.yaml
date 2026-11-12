@@ -1669,6 +1669,15 @@ papers:
     role: critique
 
   # ── S5 다중 로봇·필드 로보틱스 ──────────────────────────────────────
+  - id: fiedler1973-algebraic-connectivity
+    title: "Algebraic connectivity of graphs"
+    authors: ["M. Fiedler"]
+    year: 1973
+    venue: "Czechoslovak Mathematical Journal"
+    url: "https://doi.org/10.21136/CMJ.1973.101168"
+    verified: true
+    lessons: [s5-graph-consensus]
+    role: seminal
   - id: olfati-saber2007-consensus
     title: "Consensus and cooperation in networked multi-agent systems"
     authors: ["R. Olfati-Saber", "J. A. Fax", "R. M. Murray"]

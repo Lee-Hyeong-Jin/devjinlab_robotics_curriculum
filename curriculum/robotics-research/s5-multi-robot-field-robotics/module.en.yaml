@@ -1,0 +1,12 @@
+id: s5-multi-robot-field-robotics
+lang: en
+title: "S5 Multi-robot and field robotics"
+summary: >-
+  How several robots estimate, plan and explore together under communication constraints. Covers
+  the graph Laplacian and the rate of consensus, distributed optimization and distributed SLAM,
+  the complexity of multi-agent path finding and the optimality of CBS, the submodularity of
+  mutual-information objectives and the greedy guarantee, the overconfidence that communication
+  constraints and ignored correlations create and covariance intersection as a response, and
+  the reliability engineering of field deployment. The prerequisite modules are C5 (state
+  estimation), C6 (motion planning) and C8 (decision making); the module is designed as six
+  lessons (the S5 section of blueprint.md).
