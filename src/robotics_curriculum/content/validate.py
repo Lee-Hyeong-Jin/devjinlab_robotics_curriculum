@@ -14,6 +14,13 @@ Rules:
 9. a ``<lesson>.<lang>.yaml`` translation only names activities, resources and quiz
    questions that the lesson actually has, with the same number of choices, and only
    gives ``answers`` for a ``short`` question
+10. a lesson's ``papers[]`` ids exist in the course's ``papers.yaml``, registry ids are
+    unique, registry urls are http(s), and a lesson that assigns papers marks at least one
+    as required (ADR 0014). Two *warnings*: a registry paper no lesson references, and a
+    registry ``lessons[]`` that disagrees with the lessons' own references.
+
+Some rules only warn (:attr:`ContentError.severity`). :func:`blocking` filters those out
+for callers that must refuse invalid content.
 """
 
 from __future__ import annotations
@@ -23,7 +30,8 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 from robotics_curriculum.content.loader import ContentError, LoadError, load_courses
-from robotics_curriculum.content.models import Course, Lesson
+from robotics_curriculum.content.models import Course, Lesson, Paper
+from robotics_curriculum.content.papers import paper_index
 from robotics_curriculum.content.quiz_block import QuizParseError, parse_quiz
 
 
@@ -74,6 +82,79 @@ def validate_course(course: Course) -> list[ContentError]:
 
     # Rule 3: cycles (only over edges that resolve, so rule 2 errors are not duplicated).
     errors.extend(_find_cycles(lessons, course_dir))
+    # Rule 10: the paper registry and the lessons that reference it.
+    errors.extend(_check_papers(course, lessons, course_dir))
+    return errors
+
+
+def blocking(problems: list[ContentError]) -> list[ContentError]:
+    """Only the problems that must stop the content being used (warnings dropped)."""
+    return [problem for problem in problems if problem.blocking]
+
+
+def _check_papers(
+    course: Course, lessons: dict[str, Lesson], course_dir: Path
+) -> list[ContentError]:
+    """Rule 10. A course with no ``papers.yaml`` and no lesson references is silent."""
+    errors: list[ContentError] = []
+    papers_path = course_dir / "papers.yaml"
+
+    seen: dict[str, Paper] = {}
+    for paper in course.papers:
+        if paper.id in seen:
+            errors.append(ContentError(papers_path, f"duplicate paper id '{paper.id}'"))
+            continue
+        seen[paper.id] = paper
+        if paper.url is not None and not is_http_url(paper.url):
+            msg = f"paper '{paper.id}' has invalid url '{paper.url}' (need http(s))"
+            errors.append(ContentError(papers_path, msg))
+
+    index = paper_index(course)
+    referenced: dict[str, set[str]] = {paper_id: set() for paper_id in index}
+    for lesson in lessons.values():
+        path = lesson.path if lesson.path is not None else course_dir
+        ids: set[str] = set()
+        for ref in lesson.papers:
+            if ref.id in ids:
+                errors.append(
+                    ContentError(path, f"lesson '{lesson.id}' lists paper '{ref.id}' twice")
+                )
+            ids.add(ref.id)
+            if ref.id not in index:
+                msg = (
+                    f"lesson '{lesson.id}' references paper '{ref.id}', which is not in "
+                    f"{papers_path.name}"
+                )
+                errors.append(ContentError(path, msg))
+            else:
+                referenced[ref.id].add(lesson.id)
+        if lesson.papers and not any(ref.required for ref in lesson.papers):
+            msg = (
+                f"lesson '{lesson.id}' assigns {len(lesson.papers)} paper(s) but marks none "
+                f"'required: true'; a lesson with papers needs at least one required reading"
+            )
+            errors.append(ContentError(path, msg))
+
+    for paper_id, lesson_ids in referenced.items():
+        if not lesson_ids:
+            errors.append(
+                ContentError(
+                    papers_path,
+                    f"paper '{paper_id}' is in the registry but no lesson references it",
+                    severity="warning",
+                )
+            )
+            continue
+        declared = seen[paper_id].lessons
+        if declared is not None and set(declared) != lesson_ids:
+            errors.append(
+                ContentError(
+                    papers_path,
+                    f"paper '{paper_id}' lists lessons {sorted(declared)} but is referenced by "
+                    f"{sorted(lesson_ids)}; the lessons' own `papers` win",
+                    severity="warning",
+                )
+            )
     return errors
 
 

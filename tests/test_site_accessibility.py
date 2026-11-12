@@ -249,5 +249,5 @@ def test_links_have_discernible_text(site: Path, rel: str) -> None:
 def test_status_badges_do_not_rely_on_colour_alone(site: Path) -> None:
     """Each state shows a symbol and a word, so colour is never the only signal."""
     roadmap = (site / "roadmap.html").read_text(encoding="utf-8")
-    for symbol, word in (("■", "완료"), ("□", "시작 전"), ("▨", "잠김")):
+    for symbol, word in (("■", "완료"), ("□", "시작 전"), ("▣", "진행 중")):
         assert f"{symbol} {word}" in roadmap

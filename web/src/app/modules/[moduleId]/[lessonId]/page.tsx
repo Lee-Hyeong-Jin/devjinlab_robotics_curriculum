@@ -75,6 +75,10 @@ export default async function LessonPage({ params }: Params) {
   )
   const studyMethod = renderMarkdown(lesson.study_method ?? undefined)
   const siblings = mod?.lessons ?? []
+  // Advice, not a gate: every lesson is reachable regardless (ADR 0015). `GET /progress/status`
+  // already carries this per lesson, so the screen needs no extra request.
+  const missingPrerequisites =
+    status?.lessons.find((row) => row.lesson.id === lessonId)?.missing_prerequisites ?? []
   // `##` in the body renders as <h3> after the shift under the page's <h1>.
   const sectionHeadings = body.headings.filter((heading) => heading.depth === 3)
 
@@ -109,6 +113,26 @@ export default async function LessonPage({ params }: Params) {
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
         <div className="flex min-w-0 flex-col gap-6">
+          {missingPrerequisites.length > 0 ? (
+            <Card as="section" aria-labelledby="prereq-heading">
+              <h2 id="prereq-heading" className="text-primary mb-1 font-semibold">
+                {t('prereqPendingTitle')}
+              </h2>
+              <p className="text-muted mb-2 text-sm">{t('prereqPendingBody')}</p>
+              <ul className="flex flex-wrap gap-2">
+                {missingPrerequisites.map((id) => (
+                  <li key={id}>
+                    <Link
+                      href={`/lessons/${encodeURIComponent(id)}`}
+                      className="bg-subtle text-primary border-border-default hover:bg-surface inline-flex rounded-lg border px-3 py-1.5 font-mono text-xs"
+                    >
+                      {id}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          ) : null}
           {studyMethod.content ? (
             <Card
               as="section"

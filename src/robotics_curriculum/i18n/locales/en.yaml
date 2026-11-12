@@ -3,7 +3,7 @@
 
 cli:
   error_prefix: "error: {message}"
-  warn_prereq: "warning: prerequisites not done: {ids}"
+  note_prereq: "note: recommended prerequisites are not done yet: {ids} (you can still go ahead)"
   timer:
     none: "Running timer: none"
     running: "Running timer: {lesson_id} (since {since} UTC)"
@@ -24,14 +24,13 @@ cli:
     done: "done"
     in_progress: "in progress"
     not_started: "not started"
-    locked: "locked"
   start: "started {lesson_id} ({title}) at {at} UTC"
   stop: "stopped {lesson_id}: {time}"
   stop_discarded: "discarded session for {lesson_id}"
   logged: "logged {time} on {lesson_id}"
   done_line: "done {lesson_id} ({title}), time {time}{extra}"
   done_understanding: ", understanding {value}"
-  unlocked: "  unlocked: {lesson_id} ({title})"
+  now_recommended: "  now next in the recommended order: {lesson_id} ({title})"
   next:
     empty: "nothing to do: every available lesson is done"
     hint: "start: rc start {lesson_id}"
@@ -88,12 +87,27 @@ review:
     source: "source"
     due: "due"
 
+paper:
+  none: "  (no papers assigned)"
+  required: "required"
+  optional: "optional"
+  unverified: "(unverified)"
+  role:
+    seminal: "seminal"
+    standard: "standard"
+    frontier: "frontier"
+    critique: "critique"
+    survey: "survey"
 resource:
   kind:
     book: "Books"
     course: "Courses"
     video: "Videos"
     article: "Articles"
+    paper: "Papers"
+    dataset: "Datasets"
+    code: "Code"
+    notes: "Notes"
     other: "Other"
   none: "  (no resources listed)"
   library_title: "{course} resource library ({count})"
@@ -109,7 +123,7 @@ lesson:
 
 roadmap:
   no_level: "(no level)"
-  legend: "[x] done  [>] in progress  [ ] not started  [-] locked (prerequisites pending)"
+  legend: "[x] done  [>] in progress  [ ] not started"
 
 site:
   title_fallback: "Robotics curriculum"
@@ -136,7 +150,6 @@ site:
     done: "done"
     in_progress: "in progress"
     not_started: "not started"
-    locked: "locked"
   card:
     week_time: "Study time this week"
     week_time_sub: "{sessions} session(s) · {start}~"
@@ -170,6 +183,9 @@ site:
     reading: "Reading"
     quiz: "Quiz"
     exercise: "Exercise"
+    paper: "Paper"
+    reproduction: "Reproduction"
+    project: "Project"
   dashboard:
     module_progress: "({done}/{total} lessons done)"
     study_guide_link: "How to study it"
@@ -186,8 +202,8 @@ site:
     meta: "**{stage_label}**: {stage} · **{lessons_label}** {count} · **{time_label}** {time} · {back}"
     back_to_roadmap: "Back to the roadmap"
   lesson:
-    locked_title: "Locked"
-    locked_body: "Finish the prerequisite lessons to unlock this one."
+    prereq_pending_title: "Recommended first"
+    prereq_pending_body: "These lessons make this one easier, but are not required:"
     study_tip: "Study it like this"
     study_missing: "No study guide yet"
     study_missing_body: "Read the objectives and the lesson, then fill the gaps with the resources below."
@@ -234,6 +250,7 @@ level:
   foundation: "Foundation"
   intermediate: "Intermediate"
   advanced: "Advanced"
+  research: "Research"
   none: "No stage"
 
 duration:
@@ -248,7 +265,6 @@ report:
     done: "done"
     in_progress: "in progress"
     not_started: "not started"
-    locked: "locked"
   stuck:
     days: "in progress for {days} days"
     understanding: "understanding {value}/5"
