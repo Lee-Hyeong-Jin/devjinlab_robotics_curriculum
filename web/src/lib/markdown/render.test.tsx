@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 
 import { MarkdownBody } from '@/components/MarkdownBody'
 
-import { renderMarkdown } from './render'
+import { renderInlineMarkdown, renderMarkdown } from './render'
 import { slugify } from './slug'
 
 function renderBody(markdown: string) {
@@ -181,5 +181,39 @@ describe('display math written the way the curriculum writes it', () => {
   it('renders display math inside a table cell and after a matrix', () => {
     const { container } = renderBody('| 기호 | 뜻 |\n|---|---|\n| $K_p$ | 비례 이득 |\n')
     expect(container.querySelectorAll('td math').length).toBe(1)
+  })
+})
+
+describe('renderInlineMarkdown', () => {
+  it('renders inline math without wrapping the result in a paragraph', () => {
+    const { container } = render(
+      <MarkdownBody>{renderInlineMarkdown('잡음은 $1/\\sqrt{N}$ 로 감소')}</MarkdownBody>,
+    )
+    expect(container.querySelectorAll('math').length).toBe(1)
+    // A nested <p> inside the caller's <p>/<li> would be invalid HTML.
+    expect(container.querySelector('p')).toBeNull()
+    const visible = container.cloneNode(true) as HTMLElement
+    visible.querySelectorAll('annotation').forEach((node) => node.remove())
+    expect(visible.textContent).not.toContain('$')
+  })
+
+  it('keeps emphasis and inline code', () => {
+    const { container } = render(
+      <MarkdownBody>{renderInlineMarkdown('**중요**: `rc validate`')}</MarkdownBody>,
+    )
+    expect(container.querySelector('strong')?.textContent).toBe('중요')
+    expect(container.querySelector('code')?.textContent).toBe('rc validate')
+  })
+
+  it('keeps a paragraph when there is more than one block', () => {
+    const { container } = render(
+      <MarkdownBody>{renderInlineMarkdown('첫 줄\n\n둘째 줄')}</MarkdownBody>,
+    )
+    expect(container.querySelectorAll('p').length).toBe(2)
+  })
+
+  it('returns null for empty input', () => {
+    expect(renderInlineMarkdown(undefined)).toBeNull()
+    expect(renderInlineMarkdown('  ')).toBeNull()
   })
 })

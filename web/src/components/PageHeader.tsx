@@ -2,7 +2,8 @@ import type { ReactNode } from 'react'
 
 export interface PageHeaderProps {
   title: string
-  subtitle?: string
+  /** May be a rendered Markdown tree: lesson summaries carry inline KaTeX. */
+  subtitle?: ReactNode
   /** Breadcrumb or back link, rendered above the title. */
   eyebrow?: ReactNode
   /** Actions aligned to the right of the title row. */

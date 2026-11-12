@@ -150,7 +150,10 @@ API는 **Markdown 원문**을 준다(`GET /api/v1/lessons/{id}` → `body`, `stu
 - **하이라이트는 `rehype-pretty-code`(인라인 style) 대신 `rehype-highlight`**(클래스)를 쓰고, `hljs-*` 클래스를 디자인 토큰으로 칠한다. 같은 이유로 sanitize 를 느슨하게 할 필요가 없다.
 - `rehype-sanitize`는 MathML 태그·속성과 `hljs-*`·`language-*` 클래스를 허용 목록에 넣는다. `style` 은 어디에도 허용하지 않는다.
 - **콘텐츠 헤딩은 한 단계 내린다**(본문 `#` → `<h2>`). 레슨 본문과 주간 리포트가 자체 `#` 제목을 갖고 있어서, 그대로 두면 페이지에 `<h1>` 이 둘이 되어 헤딩 계층(§6)이 깨진다.
-- 커리큘럼은 표시 수식을 한 줄(`$$x = y$$`)로 쓴다. 정적 사이트의 KaTeX auto-render 는 이를 display 로 보지만 `remark-math` 는 inline 으로 보므로, 파싱 전에 한 줄 `$$…$$` 를 블록으로 정규화해 두 렌더링을 맞춘다(AC-WEB.2).
+- 커리큘럼은 표시 수식의 `$$` 마커를 내용과 같은 줄에 쓴다 — 한 줄(`$$x = y$$`)이거나 여러 줄(`$$A = B,` … `C = D$$`). 정적 사이트의 KaTeX auto-render 는 둘 다 display 로 보지만, `remark-math` 는 math 를 코드 펜스처럼 파싱해서 여는 `$$` 뒤의 글자를 **메타로 버리고** 끝에 `$$` 가 붙은 줄은 닫는 펜스로 보지 않는다. 그러면 블록이 닫히지 않아 레슨 나머지가 통째로 raw TeX 로 나간다. 그래서 파싱 전에 모든 `$$` 마커를 자기 줄로 분리한다(`markdown/normalize.ts`, AC-WEB.2).
+- 짧은 필드(레슨 `summary`·`objectives`, 플래시카드 앞/뒤면, 퀴즈 해설)도 인라인 수식을 담으므로 같은 파이프라인의 `renderInlineMarkdown` 으로 렌더한다(단일 문단이면 바깥 `<p>` 를 벗긴다). **자료 `note` 는 제외**한다 — `팔로워 $121.94 / 리더 $229.88` 처럼 `$` 가 가격이라서 수식으로 읽으면 깨진다.
+- 가로로 스크롤되는 부분(`pre`, `table`, `math[display=block]`)에는 sanitize 뒤에 `tabindex="0"` 을 붙인다. 마우스 없이 닿을 수 없는 스크롤 영역은 axe 의 `scrollable-region-focusable`(serious, AC-A11Y.1)이다.
+- 레슨 화면은 자기 UI 로 이미 보여 주는 절을 본문에서 뺀다(`markdown/sections.ts`): 공부법 절(상단 강조 카드)과 ```` ```quiz ```` 펜스(퀴즈 화면). 빼지 않으면 공부법이 두 번 나오고 퀴즈 YAML 원문이 코드 블록으로 찍힌다. `rc site build` 는 한 페이지에 다 보여 주므로 대신 퀴즈 펜스를 읽을 수 있는 문항 목록으로 바꾼다.
 - Mermaid 코드 블록은 클라이언트 전용 컴포넌트로 동적 import(`next/dynamic`, `ssr: false`).
 - `study_method`는 같은 파이프라인으로 렌더해 레슨 상단 강조 카드에 넣는다(Figma `11-307`의 "이 단계 공부법").
 - 변환 결과는 레슨 ID + 콘텐츠 SHA로 캐시한다(콘텐츠는 재배포 때만 바뀐다).
@@ -178,13 +181,15 @@ API는 **Markdown 원문**을 준다(`GET /api/v1/lessons/{id}` → `body`, `stu
 2. ~~읽기 화면: 대시보드 → 로드맵 → 모듈 → 레슨(본문·공부법·자료).~~ 완료
 3. ~~인증: 로그인·회원가입·이메일 인증·비밀번호 재설정·프로필.~~ 완료
 4. ~~쓰기: 타이머·완료·퀴즈·복습.~~ 완료
-5. ~~자료실·검색·리포트.~~ 완료 (모듈 리포트 화면은 미구현)
+5. ~~자료실·검색·리포트(모듈 리포트 화면 포함).~~ 완료
 6. 관리자: ~~사용자·감사~~ 완료 / 콘텐츠·시스템 미구현
 7. 다크 모드·i18n ~~기본~~ 완료 / Lighthouse·부하 테스트 미실행
 
-남은 것: `/admin/content`·`/admin/system`, 모듈 리포트 화면, OIDC 로그인 버튼
-(설정된 제공자를 알려 주는 엔드포인트가 계약에 없다), 퀴즈 채점 결과의 해설
-Markdown 렌더(Server Action 이 React 트리를 반환해야 한다), Lighthouse·부하 테스트.
+남은 것: `/admin/content`·`/admin/system`, 보안 헤더(CSP·HSTS 등), Lighthouse·부하 테스트.
+
+완료된 것 중 설계가 바뀐 것: OIDC 로그인 버튼은 `GET /api/v1/auth/providers`(설정된 제공자
+목록)를 계약에 넣어 해결했고, 퀴즈 해설 Markdown 은 Server Action 이 렌더한 React 트리를
+상태로 돌려주는 방식으로 해결했다(RSC 가 직렬화한다).
 
 테스트: Vitest 단위·컴포넌트와 Playwright 두 스펙. `e2e/smoke.spec.ts` 는 **local**
 모드 API 로(비로그인 화면 + axe), `e2e/journey.spec.ts` 는 **server** 모드 API 로

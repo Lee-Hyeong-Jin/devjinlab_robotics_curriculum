@@ -75,6 +75,45 @@ test('opening a module leads to a lesson with its study-method card', async ({ p
   expect(await blockingViolations(page), 'axe violations on the lesson screen').toEqual([])
 })
 
+/**
+ * Regression for the display-math break: a `$$` block written with content on the
+ * marker line used to leave the rest of the lesson as raw TeX on the page.
+ */
+test('every "핵심 수식" lesson renders its formulas, with no TeX left on the page', async ({
+  page,
+}) => {
+  const lessons = [
+    'm1-coordinate-transforms',
+    'm2-inverse-kinematics',
+    'm3-pid-control',
+    'm5-kalman-filter-ekf',
+  ]
+  for (const lessonId of lessons) {
+    await page.goto(`/lessons/${lessonId}`)
+    const body = page.locator('.markdown-body').last()
+    await expect(body).toBeVisible()
+
+    // KaTeX renders to MathML; a failed formula would carry `katex-error`.
+    expect(await page.locator('.katex-error').count(), `${lessonId}: katex errors`).toBe(0)
+    expect(await body.locator('math').count(), `${lessonId}: formulas`).toBeGreaterThan(5)
+    expect(
+      await body.locator('math[display="block"]').count(),
+      `${lessonId}: display formulas`,
+    ).toBeGreaterThan(0)
+
+    // Visible text, with the MathML TeX annotation (never displayed) removed.
+    const leftover = await body.evaluate((node) => {
+      const clone = node.cloneNode(true) as HTMLElement
+      clone.querySelectorAll('annotation, annotation-xml, pre').forEach((n) => n.remove())
+      const text = clone.textContent ?? ''
+      return [...text.matchAll(/\$[^$\n]{1,60}\$|\\(begin|end|frac|qquad|mathbf)/g)].map(
+        (m) => m[0],
+      )
+    })
+    expect(leftover, `${lessonId}: raw TeX on the page`).toEqual([])
+  }
+})
+
 test('the lesson screen passes axe in dark mode too', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'dark' })
   await page.goto('/roadmap')

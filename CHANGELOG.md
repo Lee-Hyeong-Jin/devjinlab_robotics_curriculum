@@ -28,6 +28,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   fence with meta, so the block never closed and swallowed the rest of the lesson. The
   Markdown normaliser now puts every `$$` marker on its own line; 12 of the 40 lessons were
   affected. The static site (`rc site build`, pymdownx.arithmatex) was never affected.
+- Web: lesson `summary`, `objectives` and flashcard sides printed their inline TeX as text;
+  they now go through the same Markdown pipeline. Resource notes deliberately do not — their
+  `$` are prices.
+- Web: the lesson body repeated the study-method section (the card above already shows it) and
+  printed the quiz block's YAML source as a code block. Both sections are now dropped from the
+  body, as `rc site build` already did in its own way.
+- Web: long formulas, code blocks and wide tables scroll sideways but could not be reached
+  without a mouse (axe `scrollable-region-focusable`); they now carry `tabindex="0"`.
 - CI: restore-drill teardown now passes the required compose secrets; e2e jobs pin `ubuntu-24.04` for the Playwright browser install; generated web API types are back in step with the OpenAPI schema.
 
 ## [0.2.0] - 2026-11-12

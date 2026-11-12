@@ -3,8 +3,9 @@ import { getTranslations } from 'next-intl/server'
 
 import { EmptyState } from '@/components/EmptyState'
 import { PageHeader } from '@/components/PageHeader'
-import { ReviewDeck } from '@/components/ReviewDeck'
+import { ReviewDeck, type DeckCard } from '@/components/ReviewDeck'
 import { getDueCards } from '@/lib/api/queries'
+import { renderInlineMarkdown } from '@/lib/markdown/render'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('review')
@@ -25,10 +26,16 @@ export default async function ReviewPage() {
     )
   }
 
+  const deck: DeckCard[] = cards.map((card) => ({
+    ...card,
+    frontBody: renderInlineMarkdown(card.front),
+    backBody: renderInlineMarkdown(card.back),
+  }))
+
   return (
     <>
       <PageHeader title={t('title')} subtitle={t('subtitle')} />
-      <ReviewDeck cards={cards} />
+      <ReviewDeck cards={deck} />
     </>
   )
 }

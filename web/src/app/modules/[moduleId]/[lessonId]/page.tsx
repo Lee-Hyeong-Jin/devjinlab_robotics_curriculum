@@ -15,7 +15,8 @@ import { isNotFound } from '@/lib/api/errors'
 import { getLesson, getLessonProgress, getModule, getStatus } from '@/lib/api/queries'
 import type { Lesson, Module } from '@/lib/api/types'
 import { formatMinutes } from '@/lib/format'
-import { renderMarkdown } from '@/lib/markdown/render'
+import { renderInlineMarkdown, renderMarkdown } from '@/lib/markdown/render'
+import { stripLessonSections } from '@/lib/markdown/sections'
 import { lockStateFromStatus } from '@/lib/progress'
 
 interface Params {
@@ -66,7 +67,12 @@ export default async function LessonPage({ params }: Params) {
     getStatus(),
   ])
 
-  const body = renderMarkdown(lesson.body)
+  // The body carries the whole lesson, including the sections this screen shows as
+  // their own UI (the study-method card, the quiz screen); rendering them again
+  // repeated the study method and printed the quiz's YAML source.
+  const body = renderMarkdown(
+    stripLessonSections(lesson.body, { studyMethod: lesson.study_method }),
+  )
   const studyMethod = renderMarkdown(lesson.study_method ?? undefined)
   const siblings = mod?.lessons ?? []
   // `##` in the body renders as <h3> after the shift under the page's <h1>.
@@ -76,7 +82,7 @@ export default async function LessonPage({ params }: Params) {
     <>
       <PageHeader
         title={lesson.title ?? lessonId}
-        subtitle={lesson.summary}
+        subtitle={renderInlineMarkdown(lesson.summary)}
         eyebrow={
           <Link href={`/modules/${moduleId}`} className="text-accent underline underline-offset-2">
             ← {mod?.title ?? t('toModule')}
@@ -123,7 +129,9 @@ export default async function LessonPage({ params }: Params) {
               </h2>
               <ul className="text-primary list-disc pl-5 text-sm">
                 {lesson.objectives.map((objective, index) => (
-                  <li key={index}>{objective}</li>
+                  <li key={index} className="markdown-body">
+                    {renderInlineMarkdown(objective)}
+                  </li>
                 ))}
               </ul>
             </Card>

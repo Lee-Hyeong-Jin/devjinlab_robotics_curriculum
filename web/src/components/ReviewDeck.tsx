@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
-import { useActionState, useState } from 'react'
+import { useActionState, useState, type ReactNode } from 'react'
 
 import { rateCard, type ReviewState } from '@/lib/actions/quiz'
 import type { Rating, ReviewCard } from '@/lib/api/types'
@@ -12,6 +12,16 @@ import { Card } from './Card'
 import { Chip } from './Chip'
 import { EmptyState } from './EmptyState'
 import { FormMessage } from './form/FormMessage'
+import { MarkdownBody } from './MarkdownBody'
+
+/**
+ * A due card whose two sides were rendered on the server with the lesson
+ * Markdown pipeline — they carry inline KaTeX (`잡음은 $1/\sqrt{N}$ 로 감소`).
+ */
+export interface DeckCard extends ReviewCard {
+  frontBody: ReactNode
+  backBody: ReactNode
+}
 
 const EMPTY: ReviewState = {}
 
@@ -29,7 +39,7 @@ const TONE: Record<Rating, string> = {
  * The due list is fetched on the server; rating advances to the next card here
  * so the reader is not re-rendered back to the top of the deck each time.
  */
-export function ReviewDeck({ cards }: { cards: ReviewCard[] }) {
+export function ReviewDeck({ cards }: { cards: DeckCard[] }) {
   const t = useTranslations('review')
   const [rated, setRated] = useState<string[]>([])
   const [revealedId, setRevealedId] = useState<string | null>(null)
@@ -88,12 +98,12 @@ export function ReviewDeck({ cards }: { cards: ReviewCard[] }) {
         <h2 id="review-card-front" className="text-muted text-xs font-semibold">
           {t('front')}
         </h2>
-        <p className="text-primary mt-1 text-lg">{card.front}</p>
+        <MarkdownBody className="mt-1 text-lg">{card.frontBody ?? card.front}</MarkdownBody>
 
         {revealed ? (
           <>
             <h3 className="text-muted mt-5 text-xs font-semibold">{t('back')}</h3>
-            <p className="text-primary mt-1">{card.back}</p>
+            <MarkdownBody className="mt-1">{card.backBody ?? card.back}</MarkdownBody>
           </>
         ) : null}
 

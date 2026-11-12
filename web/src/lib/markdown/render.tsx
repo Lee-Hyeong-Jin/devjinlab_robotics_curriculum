@@ -14,7 +14,9 @@ import { unified } from 'unified'
 
 import { normalizeDisplayMath } from './normalize'
 import { lessonSanitizeSchema } from './sanitize'
+import { rehypeFocusableScrollers } from './scroll'
 import { rehypeHeadingIds, rehypeShiftHeadings, type Heading } from './slug'
+import { rehypeUnwrapParagraph } from './unwrap'
 
 export type { Heading } from './slug'
 
@@ -83,8 +85,36 @@ export function renderMarkdown(
     // must not pick up its `user-content-` clobber prefix (the "on this page"
     // links target them directly).
     .use(rehypeHeadingIds(headings))
+    .use(rehypeFocusableScrollers)
     .use(rehypeReact, { Fragment, jsx, jsxs, components })
     .processSync(normalizeDisplayMath(markdown))
 
   return { content: file.result as ReactElement, headings }
+}
+
+/**
+ * Render a short, single-paragraph string — a lesson summary or objective, a
+ * flashcard side — with the same pipeline, minus the wrapping `<p>`.
+ *
+ * These fields carry inline KaTeX (`관성 모멘트 $I = mr^2$`), so printing them
+ * as text showed the TeX source. The paragraph is unwrapped because the result
+ * goes inside an element that is already a `<p>` or an `<li>`.
+ *
+ * Not for free text that merely contains `$`: a resource note like
+ * `팔로워 $121.94 / 리더 $229.88` is prices, not math, and must stay text.
+ */
+export function renderInlineMarkdown(markdown: string | null | undefined): ReactNode {
+  if (!markdown || markdown.trim() === '') return null
+  const file = unified()
+    .use(remarkParse)
+    .use(remarkMath)
+    .use(remarkGfm)
+    .use(remarkRehype)
+    .use(rehypeKatex, { output: 'mathml', throwOnError: false, strict: false })
+    .use(rehypeSanitize, lessonSanitizeSchema)
+    .use(rehypeUnwrapParagraph)
+    .use(rehypeFocusableScrollers)
+    .use(rehypeReact, { Fragment, jsx, jsxs, components })
+    .processSync(normalizeDisplayMath(markdown))
+  return file.result as ReactElement
 }
