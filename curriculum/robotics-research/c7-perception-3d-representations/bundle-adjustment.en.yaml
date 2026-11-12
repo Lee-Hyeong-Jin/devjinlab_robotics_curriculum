@@ -17,12 +17,6 @@ resources:
     note: >-
       ch.10 (pose-and-point estimation). The same sparse structure and Schur complement in
       estimation-theoretic notation. Free full PDF.
-  "Triggs, McLauchlan, Hartley & Fitzgibbon — Bundle adjustment: a modern synthesis (2000)":
-    note: "Must-read 1, role `standard`. §4 (sparsity and the Schur complement) and §9 (gauge freedom and uncertainty) are the core of this lesson."
-  "Agarwal, Snavely, Seitz & Szeliski — Bundle adjustment in the large (2010)":
-    note: >-
-      Must-read 2, role `standard`. Explicit against implicit Schur, and visibility-based
-      preconditioners. The source of the BAL datasets.
   "Bundle Adjustment in the Large datasets (BAL)":
     note: The input data for the reproduction task. The camera model and the file format are defined on this page.
   "Ceres Solver":
@@ -31,10 +25,6 @@ resources:
       definition is $\frac{1}{2}\sum\lVert r\rVert^2$, the same as this lesson's.
   "GTSAM":
     note: Recommended. The factor-graph implementation; use it to compare the same problem under a different elimination ordering.
-  "Rosen, Carlone, Bandeira & Leonard — SE-Sync (2019)":
-    note: Recommended. The current approach for open problem 1 (certified global optimality) - but only for pose graphs without points.
-  "Kaess, Johannsson, Roberts et al. — iSAM2 (2012)":
-    note: Recommended. Incremental elimination; the starting point for open problem 3.
 quiz:
   - id: q1
     prompt: Why is the camera block $B$ of the bundle-adjustment normal equations block diagonal?

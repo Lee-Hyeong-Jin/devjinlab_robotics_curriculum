@@ -22,7 +22,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 110
   - id: c7-bundle-adjustment-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 2편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 130
   - id: c7-bundle-adjustment-problems
@@ -30,13 +30,18 @@ activities:
     title: 문제 세트 (유도 2 · 증명 1 · 계산 2 · 구현 1 · 반례 1 · 논문 1)
     estimated_minutes: 180
   - id: c7-bundle-adjustment-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — BAL 데이터셋에서 Schur 보완 LM 번들 조정 (R3)
     estimated_minutes: 280
   - id: c7-bundle-adjustment-quiz
     kind: quiz
     title: 개념 점검 퀴즈
     estimated_minutes: 20
+papers:                                # 서지는 curriculum/robotics-research/papers.yaml
+  - { id: triggs2000-bundle-adjustment, required: true, role: standard, note: "sec. 4 and sec. 9" }
+  - { id: agarwal2010-rome,             required: true, role: standard, note: "all of it" }
+  - { id: rosen2019-se-sync,                            role: seminal,  note: "open problem 1" }
+  - { id: kaess2012-isam2,                              role: seminal,  note: "open problems 2 and 3" }
 resources:
   - title: "Hartley & Zisserman, Multiple View Geometry in Computer Vision (2nd ed.)"
     url: https://www.robots.ox.ac.uk/~vgg/hzbook/
@@ -48,36 +53,20 @@ resources:
     url: https://asrl.utias.utoronto.ca/~tdb/bib/barfoot_ser24.pdf
     kind: book
     note: ch.10 (pose-and-point estimation). 희소 구조와 Schur 보완을 추정 이론 쪽 표기로 본다. 전문 PDF 무료.
-  - title: "Triggs, McLauchlan, Hartley & Fitzgibbon — Bundle adjustment: a modern synthesis (2000)"
-    url: https://doi.org/10.1007/3-540-44480-7_21
-    kind: article
-    note: 필독 1 · 역할 `표준(standard)`. §4(희소성·Schur), §9(게이지 자유도와 불확실성)가 이 레슨의 중심.
-  - title: "Agarwal, Snavely, Seitz & Szeliski — Bundle adjustment in the large (2010)"
-    url: https://doi.org/10.1007/978-3-642-15552-9_3
-    kind: article
-    note: 필독 2 · 역할 `표준(standard)`. 명시적/암시적 Schur 와 공동가시성 전처리자. BAL 데이터셋의 출처.
   - title: "Bundle Adjustment in the Large datasets (BAL)"
     url: https://grail.cs.washington.edu/projects/bal/
-    kind: other
+    kind: dataset
     note: 재현 과제의 입력 데이터. 카메라 모델과 파일 포맷이 이 페이지에 정의되어 있다.
   - title: "Ceres Solver"
     url: https://github.com/ceres-solver/ceres-solver
-    kind: other
+    kind: code
     note: >-
       권장 비교 대상. `examples/bundle_adjuster.cc` 가 같은 BAL 파일을 받는다. 비용 정의는
       $\frac{1}{2}\sum\lVert r\rVert^2$ 로 이 레슨과 같다.
   - title: "GTSAM"
     url: https://github.com/borglab/gtsam
-    kind: other
+    kind: code
     note: 권장. 팩터 그래프 쪽 구현. 같은 문제를 다른 소거 순서로 푸는 비교에 쓴다.
-  - title: "Rosen, Carlone, Bandeira & Leonard — SE-Sync (2019)"
-    url: https://arxiv.org/abs/1612.07386
-    kind: article
-    note: 권장. 열린 문제 1(전역 최적성 인증)의 현재 접근 — 단 점이 없는 포즈 그래프에 한한다.
-  - title: "Kaess, Johannsson, Roberts et al. — iSAM2 (2012)"
-    url: https://doi.org/10.1177/0278364911430419
-    kind: article
-    note: 권장. 점증적 소거. 열린 문제 3 의 출발점.
 ---
 
 # N-view 와 번들 조정
@@ -443,6 +432,8 @@ $n_c$ 가 $10^5$ 급이 되면 이 레슨의 (7)이 왜 더 이상 쓸 수 없�
 
 **필독 2편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
 (`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+서지와 권장 논문 전체 목록은 `rc papers c7-bundle-adjustment` 로 본다(코스 레지스트리
+`curriculum/robotics-research/papers.yaml`, ADR 0014).
 
 1. **Triggs, McLauchlan, Hartley & Fitzgibbon, "Bundle adjustment: a modern synthesis"
    (2000, Vision Algorithms: Theory and Practice)** — 역할: `표준(standard)`.

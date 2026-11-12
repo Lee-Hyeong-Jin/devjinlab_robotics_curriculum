@@ -1,0 +1,125 @@
+# 연구원 트랙 코스 논문 서지 (ADR 0014).
+#
+# `note` 는 영어로 쓴다 — 이 파일에는 번역 파일이 없어서 한국어를 쓰면 영어 빌드로 새어 나간다.
+#
+# 레지스트리는 "그 논문이 무엇인가"만 말한다 — 어떤 논문을 필독으로 지정하는가는 레슨
+# front matter 의 `papers:` 가 정한다. 설계상의 필독 목록은
+# research_notes/연구 트랙 설계/papers.yaml 이고 이 파일은 그중 실제로 집필된 레슨이
+# 참조하는 항목만 담는다(참조 없는 항목은 `rc validate` 가 경고한다).
+#
+# 규약: 모듈 블록(`# ── Cn …`) 안에 자기 모듈 레슨이 쓰는 항목만 추가한다. 다른 모듈의
+# 항목은 읽기 전용이고, 같은 논문이면 id 를 재사용하고 `lessons[]` 에 자기 레슨만 더한다.
+# `verified: true` 는 URL 을 실제로 열어 제목·제1저자·연도를 확인했다는 뜻이다.
+
+papers:
+  # ── C7 지각과 3D 표현 ──────────────────────────────────────────────────────
+  - id: longuet-higgins1981-essential
+    title: "A computer algorithm for reconstructing a scene from two projections"
+    authors: ["H. C. Longuet-Higgins"]
+    year: 1981
+    venue: "Nature"
+    url: "https://doi.org/10.1038/293133a0"
+    verified: true
+    role: seminal
+    note: "2 pages; the origin of the essential matrix and the linear eight-point solution"
+    lessons: [c7-two-view-geometry]
+  - id: nister2004-five-point
+    title: "An efficient solution to the five-point relative pose problem"
+    authors: ["D. Nister"]
+    year: 2004
+    venue: "IEEE T-PAMI"
+    url: "https://doi.org/10.1109/TPAMI.2004.17"
+    verified: true
+    role: standard
+    note: "earlier CVPR 2003 version: 10.1109/CVPR.2003.1211470"
+    lessons: [c7-two-view-geometry]
+  - id: huang-faugeras1989-e-matrix
+    title: "Some properties of the E matrix in two-view motion estimation"
+    authors: ["T. S. Huang", "O. D. Faugeras"]
+    year: 1989
+    venue: "IEEE T-PAMI"
+    url: "https://doi.org/10.1109/34.41368"
+    verified: true
+    role: seminal
+    note: "2.5 pages; the origin of the singular-value characterisation"
+    lessons: [c7-two-view-geometry]
+  - id: hartley1997-eight-point
+    title: "In defense of the eight-point algorithm"
+    authors: ["R. I. Hartley"]
+    year: 1997
+    venue: "IEEE T-PAMI"
+    url: "https://doi.org/10.1109/34.601246"
+    verified: true
+    role: standard
+    note: "coordinate normalisation and the condition number"
+    lessons: [c7-two-view-geometry]
+  - id: hartley-sturm1997-triangulation
+    title: "Triangulation"
+    authors: ["R. I. Hartley", "P. Sturm"]
+    year: 1997
+    venue: "Computer Vision and Image Understanding"
+    url: "https://doi.org/10.1006/cviu.1997.0547"
+    verified: true
+    role: standard
+    note: "optimal two-view triangulation closes in a degree-six polynomial"
+    lessons: [c7-two-view-geometry]
+  - id: stewenius2006-relative-orientation
+    title: "Recent developments on direct relative orientation"
+    authors: ["H. Stewenius", "C. Engels", "D. Nister"]
+    year: 2006
+    venue: "ISPRS Journal of Photogrammetry and Remote Sensing"
+    url: "https://doi.org/10.1016/j.isprsjprs.2006.03.005"
+    verified: true
+    role: standard
+    note: "the action-matrix (Groebner) five-point solver; shorter to implement than Nister 2004"
+    lessons: [c7-two-view-geometry]
+  - id: lee-civera2019-triangulation
+    title: "Triangulation: why optimize?"
+    authors: ["S. H. Lee", "J. Civera"]
+    year: 2019
+    venue: "BMVC"
+    url: "https://arxiv.org/abs/1907.11917"
+    verified: true
+    role: critique
+    note: "how little optimal triangulation actually buys"
+    lessons: [c7-two-view-geometry]
+  - id: triggs2000-bundle-adjustment
+    title: "Bundle adjustment -- a modern synthesis"
+    authors: ["B. Triggs", "P. F. McLauchlan", "R. I. Hartley", "A. W. Fitzgibbon"]
+    year: 2000
+    venue: "Vision Algorithms: Theory and Practice (LNCS)"
+    url: "https://doi.org/10.1007/3-540-44480-7_21"
+    verified: true
+    role: standard
+    note: "sec. 4 sparsity and the Schur complement, sec. 9 gauge freedom and uncertainty"
+    lessons: [c7-bundle-adjustment]
+  - id: agarwal2010-rome
+    title: "Bundle adjustment in the large"
+    authors: ["S. Agarwal", "N. Snavely", "S. M. Seitz", "R. Szeliski"]
+    year: 2010
+    venue: "ECCV"
+    url: "https://doi.org/10.1007/978-3-642-15552-9_3"
+    verified: true
+    role: standard
+    note: "explicit vs implicit Schur and visibility-based preconditioners; source of the BAL datasets"
+    lessons: [c7-bundle-adjustment]
+  - id: rosen2019-se-sync
+    title: "SE-Sync: a certifiably correct algorithm for synchronization over the special Euclidean group"
+    authors: ["D. M. Rosen", "L. Carlone", "A. S. Bandeira", "J. J. Leonard"]
+    year: 2019
+    venue: "IJRR"
+    url: "https://arxiv.org/abs/1612.07386"
+    verified: true
+    role: seminal
+    note: "arXiv 2016, IJRR 2019; a global-optimality certificate for pose graphs without points"
+    lessons: [c7-bundle-adjustment]
+  - id: kaess2012-isam2
+    title: "iSAM2: incremental smoothing and mapping using the Bayes tree"
+    authors: ["M. Kaess", "H. Johannsson", "R. Roberts", "et al."]
+    year: 2012
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364911430419"
+    verified: true
+    role: seminal
+    note: "Crossref year 2011 (online first), in print 2012; incremental elimination and marginalisation"
+    lessons: [c7-bundle-adjustment]

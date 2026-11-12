@@ -18,30 +18,6 @@ resources:
     note: >-
       ch.11 (structure from motion and SLAM). The whole-algorithm picture and practical judgement.
       Free personal-use PDF.
-  "Longuet-Higgins — A computer algorithm for reconstructing a scene from two projections (1981)":
-    note: >-
-      Must-read 1, role `seminal`. The origin of the essential matrix and of the linear eight-point
-      solution. Two pages.
-  "Nistér — An efficient solution to the five-point relative pose problem (2004)":
-    note: "Must-read 2, role `standard`. The degree-ten solution of the five-point problem; §3-4 is the core."
-  "Huang & Faugeras — Some properties of the E matrix in two-view motion estimation (1989)":
-    note: >-
-      Recommended. The origin of the singular-value characterisation in R2. Two and a half pages
-      with a short proof.
-  "Hartley — In defense of the eight-point algorithm (1997)":
-    note: >-
-      Recommended. Why coordinate normalisation changes accuracy through the condition number. The
-      source of the normalisation discussion in R3.
-  "Hartley & Sturm — Triangulation (1997)":
-    note: Recommended. The paper that showed optimal two-view triangulation closes in a degree-six polynomial.
-  "Stewénius, Engels & Nistér — Recent developments on direct relative orientation (2006)":
-    note: >-
-      Recommended. The action-matrix (Gröbner) solver for the five-point problem, easier to
-      implement than Nistér 2004.
-  "Lee & Civera — Triangulation: why optimize? (2019)":
-    note: >-
-      Recommended. Why optimal triangulation buys less than you would expect - the current
-      approach for open problem 1.
   "UZH/ETH 151-0632 Vision Algorithms for Mobile Robotics (Scaramuzza)":
     note: "Lecture slides and exercises. Lectures 5-9 cover the scope of this lesson."
 quiz:

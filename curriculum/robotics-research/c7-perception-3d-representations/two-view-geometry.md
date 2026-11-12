@@ -22,7 +22,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 100
   - id: c7-two-view-geometry-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 2편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 120
   - id: c7-two-view-geometry-problems
@@ -30,13 +30,21 @@ activities:
     title: 문제 세트 (유도 1 · 증명 1 · 계산 3 · 구현 1 · 반례 1 · 논문 1)
     estimated_minutes: 180
   - id: c7-two-view-geometry-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — 8점·5점 알고리즘과 퇴화 구성 (R2)
     estimated_minutes: 180
   - id: c7-two-view-geometry-quiz
     kind: quiz
     title: 개념 점검 퀴즈
     estimated_minutes: 20
+papers:                                # 서지는 curriculum/robotics-research/papers.yaml
+  - { id: longuet-higgins1981-essential, required: true, role: seminal,  note: "all of it (2 pages)" }
+  - { id: nister2004-five-point,         required: true, role: standard, note: "sec. 3-4" }
+  - { id: huang-faugeras1989-e-matrix,                   role: seminal,  note: "the proof behind R2" }
+  - { id: hartley1997-eight-point,                       role: standard, note: "normalisation, behind R3" }
+  - { id: hartley-sturm1997-triangulation,               role: standard, note: "optimal triangulation, behind R5" }
+  - { id: stewenius2006-relative-orientation,            role: standard, note: "implement the five-point solver from here" }
+  - { id: lee-civera2019-triangulation,                  role: critique, note: "open problem 1" }
 resources:
   - title: "Hartley & Zisserman, Multiple View Geometry in Computer Vision (2nd ed.)"
     url: https://www.robots.ox.ac.uk/~vgg/hzbook/
@@ -48,34 +56,6 @@ resources:
     url: https://szeliski.org/Book/
     kind: book
     note: ch.11 (Structure from motion and SLAM). 알고리즘 전체 그림과 실무 감각. 개인용 PDF 무료.
-  - title: "Longuet-Higgins — A computer algorithm for reconstructing a scene from two projections (1981)"
-    url: https://doi.org/10.1038/293133a0
-    kind: article
-    note: 필독 1 · 역할 `원전(seminal)`. 본질행렬과 8점 선형 해법의 원전. 두 쪽이다.
-  - title: "Nistér — An efficient solution to the five-point relative pose problem (2004)"
-    url: https://doi.org/10.1109/TPAMI.2004.17
-    kind: article
-    note: 필독 2 · 역할 `표준(standard)`. 5점 문제의 10차 다항식 해법. §3-4 가 핵심.
-  - title: "Huang & Faugeras — Some properties of the E matrix in two-view motion estimation (1989)"
-    url: https://doi.org/10.1109/34.41368
-    kind: article
-    note: 권장. R2 의 특이값 특성화 원전. 두 쪽 반이고 증명이 짧다.
-  - title: "Hartley — In defense of the eight-point algorithm (1997)"
-    url: https://doi.org/10.1109/34.601246
-    kind: article
-    note: 권장. 좌표 정규화가 조건수를 통해 정확도를 바꾸는 이유. R3 의 정규화 절의 출처.
-  - title: "Hartley & Sturm — Triangulation (1997)"
-    url: https://doi.org/10.1006/cviu.1997.0547
-    kind: article
-    note: 권장. 2시점 최적 삼각측량이 6차 다항식으로 닫힘을 보인 논문.
-  - title: "Stewénius, Engels & Nistér — Recent developments on direct relative orientation (2006)"
-    url: https://doi.org/10.1016/j.isprsjprs.2006.03.005
-    kind: article
-    note: 권장. 5점 문제의 작용행렬(Gröbner) 해법 — Nistér 2004 보다 구현하기 쉽다.
-  - title: "Lee & Civera — Triangulation: why optimize? (2019)"
-    url: https://arxiv.org/abs/1907.11917
-    kind: article
-    note: 권장. 최적 삼각측량이 왜 생각만큼 이득이 아닌지 — 열린 문제 1의 현재 접근.
   - title: "UZH/ETH 151-0632 Vision Algorithms for Mobile Robotics (Scaramuzza)"
     url: https://rpg.ifi.uzh.ch/teaching.html
     kind: course
@@ -530,6 +510,8 @@ $< 0.05\%$, 중앙값의 상대 편향 $< 0.1\%$. 검산: 표본을 $\hat{d} > 3
 
 **필독 2편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
 (`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+서지와 권장 논문 전체 목록은 `rc papers c7-two-view-geometry` 로 본다(코스 레지스트리
+`curriculum/robotics-research/papers.yaml`, ADR 0014).
 
 1. **Longuet-Higgins, "A computer algorithm for reconstructing a scene from two projections"
    (1981, Nature)** — 역할: `원전(seminal)`. <https://doi.org/10.1038/293133a0>

@@ -524,6 +524,9 @@ polynomial (real roots, chirality, degeneracy handling) — passes. "There is no
 
 **Two must-reads.** Write a one-page note on each, using the ten fixed questions
 (`lesson-standard.md` §5). Read in three passes, and attack questions 4, 5, 6 and 7 in the third.
+For the full bibliography, including the recommended papers, run
+`rc papers c7-two-view-geometry` (the course registry
+`curriculum/robotics-research/papers.yaml`, ADR 0014).
 
 1. **Longuet-Higgins, "A computer algorithm for reconstructing a scene from two projections"
    (1981, Nature)** — role: `seminal`. <https://doi.org/10.1038/293133a0>

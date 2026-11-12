@@ -425,6 +425,9 @@ specific: hardware, BLAS, the convergence criterion, or how the initial values w
 
 **Two must-reads.** Write a one-page note on each, using the ten fixed questions
 (`lesson-standard.md` §5). Read in three passes, and attack questions 4, 5, 6 and 7 in the third.
+For the full bibliography, including the recommended papers, run
+`rc papers c7-bundle-adjustment` (the course registry
+`curriculum/robotics-research/papers.yaml`, ADR 0014).
 
 1. **Triggs, McLauchlan, Hartley & Fitzgibbon, "Bundle adjustment: a modern synthesis"
    (2000, Vision Algorithms: Theory and Practice)** — role: `standard`.

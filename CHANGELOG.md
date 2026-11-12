@@ -118,6 +118,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   directions, the eight-point and five-point algorithms, and the optimality and bias of
   triangulation — with an eight-item problem set, a measured reproduction task (eight- against
   five-point, plus the planar degeneracy) and four open problems, in Korean and English.
+- `c7-bundle-adjustment`: the sparse normal equations of the reprojection error, the Schur
+  complement proved exact through the block LDL factorisation and Sylvester's law of inertia,
+  the seven gauge generators, and the solvability of self-calibration with its critical motion
+  sequences. The reproduction task converges a Schur-complement LM bundle adjuster on the public
+  BAL `problem-49-7776` and matches measured reference costs.
+- `curriculum/robotics-research/papers.yaml`: the course paper registry (ADR 0014) with the
+  eleven papers the C7 lessons assign; both C7 lessons reference them through front-matter
+  `papers:` and `rc papers <lesson_id>` lists them.
 
 ### Fixed
 
