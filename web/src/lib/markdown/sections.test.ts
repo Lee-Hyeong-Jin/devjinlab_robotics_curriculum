@@ -77,3 +77,37 @@ describe('stripLessonSections', () => {
     expect(stripLessonSections(null)).toBe('')
   })
 })
+
+describe('stripLessonSections with a problem set', () => {
+  const BODY = [
+    '## 개념',
+    '',
+    '본문.',
+    '',
+    '## 문제',
+    '',
+    '```problemset',
+    'problems:',
+    '  - id: p1',
+    '    type: proof',
+    '```',
+  ].join('\n')
+
+  it('removes the problem-set block, which the screen lays out itself', () => {
+    const out = stripLessonSections(BODY)
+    expect(out).not.toContain('type: proof')
+    expect(out).not.toContain('problems:')
+  })
+
+  it('removes a section that held nothing but the block', () => {
+    expect(stripLessonSections(BODY)).not.toContain('## 문제')
+  })
+
+  it('keeps prose that shares the section with the block', () => {
+    const body = '## 문제\n\n먼저 읽어라.\n\n```problemset\nproblems:\n  - id: p1\n```\n'
+    const out = stripLessonSections(body)
+    expect(out).toContain('## 문제')
+    expect(out).toContain('먼저 읽어라.')
+    expect(out).not.toContain('id: p1')
+  })
+})

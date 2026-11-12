@@ -378,3 +378,69 @@ def test_the_site_omits_the_section_for_a_course_without_papers(tmp_path: Path) 
     assert result.exit_code == 0, result.output
     page = (out / "modules" / "mod" / "l1.html").read_text("utf-8")
     assert "필독 논문" not in page
+
+
+# -- the note is translatable, the bibliography is not ---
+
+
+def test_the_note_comes_from_the_language_file(tmp_path: Path) -> None:
+    course_dir = write_course(tmp_path, lesson_front=ASSIGNS_BOTH)
+    (course_dir / "mod" / "l1.en.yaml").write_text(
+        yaml.safe_dump(
+            {"id": "l1", "lang": "en", "papers": {"mayne-1966": "section 3 only"}},
+            allow_unicode=True,
+        ),
+        encoding="utf-8",
+    )
+    course = load_course(course_dir)
+    lesson = course.iter_lessons()[0]
+    index = paper_index(course)
+
+    assert resolve_lesson_papers(lesson, index)[0].note == "§3 only"
+    english = resolve_lesson_papers(lesson, index, "en")[0]
+    assert english.note == "section 3 only"
+    # The bibliography is published text, not prose: it does not move.
+    assert english.title.startswith("A second-order")
+    assert english.authors == ["D. Q. Mayne"] and english.venue is not None
+
+
+def test_an_untranslated_note_keeps_the_original(tmp_path: Path) -> None:
+    course_dir = write_course(tmp_path, lesson_front=ASSIGNS_BOTH)
+    (course_dir / "mod" / "l1.en.yaml").write_text(
+        yaml.safe_dump({"id": "l1", "lang": "en", "papers": {}}, allow_unicode=True),
+        encoding="utf-8",
+    )
+    course = load_course(course_dir)
+    rows = resolve_lesson_papers(course.iter_lessons()[0], paper_index(course), "en")
+    assert rows[0].note == "§3 only"
+
+
+def test_translating_a_paper_the_lesson_does_not_assign_is_an_error(tmp_path: Path) -> None:
+    course_dir = write_course(tmp_path, lesson_front=ASSIGNS_BOTH)
+    (course_dir / "mod" / "l1.en.yaml").write_text(
+        yaml.safe_dump({"id": "l1", "lang": "en", "papers": {"ghost": "x"}}, allow_unicode=True),
+        encoding="utf-8",
+    )
+    course = load_course(course_dir)
+    assert any("assigns no paper 'ghost'" in p.message for p in validate_course(course))
+
+
+def test_the_api_serves_the_translated_note(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    from robotics_curriculum.api.app import create_app
+    from robotics_curriculum.api.settings import Settings
+
+    course_dir = write_course(tmp_path / "content", lesson_front=ASSIGNS_BOTH)
+    (course_dir / "mod" / "l1.en.yaml").write_text(
+        yaml.safe_dump(
+            {"id": "l1", "lang": "en", "papers": {"mayne-1966": "section 3 only"}},
+            allow_unicode=True,
+        ),
+        encoding="utf-8",
+    )
+    app_ = create_app(Settings(curriculum_dir=course_dir.parent, data_dir=tmp_path / "data"))
+    client = TestClient(app_)
+    assert client.get("/api/v1/lessons/l1").json()["papers"][0]["note"] == "§3 only"
+    english = client.get("/api/v1/lessons/l1", headers={"Accept-Language": "en"}).json()
+    assert english["papers"][0]["note"] == "section 3 only"

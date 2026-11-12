@@ -109,11 +109,367 @@ papers:
     verified: true
     role: standard
 
+  - id: husty2007-6r-ik
+    title: "A new and efficient algorithm for the inverse kinematics of a general serial 6R manipulator"
+    authors: ["M. L. Husty", "M. Pfurner", "H.-P. Schröcker"]
+    year: 2007
+    venue: "Mechanism and Machine Theory"
+    url: "https://doi.org/10.1016/j.mechmachtheory.2006.02.001"
+    note: "2005 DETC 학회판(10.1115/DETC2005-84745)은 쓰지 않는다"
+    verified: true
+    role: standard
+  - id: dellaert2017-factor-graphs
+    title: "Factor Graphs for Robot Perception"
+    authors: ["F. Dellaert", "M. Kaess"]
+    year: 2017
+    venue: "Foundations and Trends in Robotics"
+    note: "단행본 판 DOI 10.1561/9781680833270 도 있다"
+    url: "https://doi.org/10.1561/2300000043"
+    verified: true
+    role: survey
   # ── C2 다물체 동역학 ──────────────────────────────────────────────
-  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+  # part1·part2 는 C1 블록의 id 를 재사용한다(c1-twists-wrenches-adjoint 와 공유).
+  - id: featherstone2006-plucker-basis
+    title: "Plücker basis vectors"
+    authors: ["R. Featherstone"]
+    year: 2006
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ROBOT.2006.1641982"
+    note: "Crossref 에 게재 연도가 비어 있다(ICRA 2006 프로시딩)"
+    verified: true
+    role: standard
+  - id: luh1980-rnea
+    title: "On-line computational scheme for mechanical manipulators"
+    authors: ["J. Y. S. Luh", "M. W. Walker", "R. P. C. Paul"]
+    year: 1980
+    venue: "ASME J. Dynamic Systems, Measurement, and Control"
+    url: "https://doi.org/10.1115/1.3149599"
+    note: "제1저자만 레코드로 확인. 정오표(10.1115/1.3139629)는 쓰지 않는다"
+    verified: true
+    role: seminal
+  - id: featherstone2000-dynamics-equations-algorithms
+    title: "Robot dynamics: equations and algorithms"
+    authors: ["R. Featherstone", "D. Orin"]
+    year: 2000
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ROBOT.2000.844153"
+    note: "Crossref 에 게재 연도가 비어 있다(ICRA 2000 프로시딩, San Francisco)"
+    verified: true
+    role: survey
+  - id: walker1982-crba
+    title: "Efficient dynamic computer simulation of robotic mechanisms"
+    authors: ["M. W. Walker", "D. E. Orin"]
+    year: 1982
+    venue: "ASME J. Dynamic Systems, Measurement, and Control"
+    url: "https://doi.org/10.1115/1.3139699"
+    note: "제2저자 Orin 은 레코드로 확인되지 않았다"
+    verified: true
+    role: seminal
+  - id: featherstone1983-aba
+    title: "The calculation of robot dynamics using articulated-body inertias"
+    authors: ["R. Featherstone"]
+    year: 1983
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/027836498300200102"
+    verified: true
+    role: seminal
+  - id: khatib1987-operational-space
+    title: "A unified approach for motion and force control of robot manipulators: the operational space formulation"
+    authors: ["O. Khatib"]
+    year: 1987
+    venue: "IEEE J. Robotics and Automation"
+    url: "https://doi.org/10.1109/JRA.1987.1087068"
+    verified: true
+    role: seminal
+  - id: udwadia1992-constrained-motion
+    title: "A new perspective on constrained motion"
+    authors: ["F. E. Udwadia", "R. E. Kalaba"]
+    year: 1992
+    venue: "Proc. Royal Society A"
+    url: "https://doi.org/10.1098/rspa.1992.0158"
+    verified: true
+    role: standard
+  - id: baumgarte1972-constraint-stabilization
+    title: "Stabilization of constraints and integrals of motion in dynamical systems"
+    authors: ["J. Baumgarte"]
+    year: 1972
+    venue: "Computer Methods in Applied Mechanics and Engineering"
+    url: "https://doi.org/10.1016/0045-7825(72)90018-7"
+    verified: true
+    role: seminal
+
+  - id: stewart1996-implicit-timestepping
+    title: "An implicit time-stepping scheme for rigid body dynamics with inelastic collisions and Coulomb friction"
+    authors: ["D. E. Stewart", "J. C. Trinkle"]
+    year: 1996
+    venue: "Int. J. Numerical Methods in Engineering"
+    url: "https://doi.org/10.1002/(SICI)1097-0207(19960815)39:15<2673::AID-NME972>3.0.CO;2-I"
+    verified: true
+    role: seminal
+  - id: anitescu1997-lcp-contact
+    title: "Formulating dynamic multi-rigid-body contact problems with friction as solvable linear complementarity problems"
+    authors: ["M. Anitescu", "F. A. Potra"]
+    year: 1997
+    venue: "Nonlinear Dynamics"
+    url: "https://doi.org/10.1023/A:1008292328909"
+    verified: true
+    role: standard
+  - id: todorov2014-convex-contact
+    title: "Convex and analytically-invertible dynamics with contacts and constraints: theory and implementation in MuJoCo"
+    authors: ["E. Todorov"]
+    year: 2014
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ICRA.2014.6907751"
+    verified: true
+    role: standard
+  - id: stewart2000-rigid-body-friction-impact
+    title: "Rigid-body dynamics with friction and impact"
+    authors: ["D. E. Stewart"]
+    year: 2000
+    venue: "SIAM Review"
+    url: "https://doi.org/10.1137/S0036144599360110"
+    verified: true
+    role: survey
+  - id: genot1999-painleve
+    title: "New results on Painlevé paradoxes"
+    authors: ["F. Génot", "B. Brogliato"]
+    year: 1999
+    venue: "European Journal of Mechanics A/Solids"
+    url: "https://doi.org/10.1016/S0997-7538(99)00144-8"
+    verified: true
+    role: standard
+
+  - id: atkeson1986-inertial-parameters
+    title: "Estimation of inertial parameters of manipulator loads and links"
+    authors: ["C. G. Atkeson", "C. H. An", "J. M. Hollerbach"]
+    year: 1986
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/027836498600500306"
+    verified: true
+    role: seminal
+  - id: gautier1990-minimal-inertial-parameters
+    title: "Direct calculation of minimum set of inertial parameters of serial robots"
+    authors: ["M. Gautier", "W. Khalil"]
+    year: 1990
+    venue: "IEEE Trans. Robotics and Automation"
+    url: "https://doi.org/10.1109/70.56655"
+    verified: true
+    role: standard
+  - id: wensing2018-lmi-inertial
+    title: "Linear matrix inequalities for physically consistent inertial parameter identification: a statistical perspective on the mass distribution"
+    authors: ["P. M. Wensing", "S. Kim", "J.-J. E. Slotine"]
+    year: 2018
+    venue: "IEEE RA-L 3(1)"
+    url: "https://doi.org/10.1109/LRA.2017.2729659"
+    note: "Crossref 의 게재 연도는 2018(RA-L 3권 1호), 온라인 선공개는 2017"
+    verified: true
+    role: standard
+  - id: carpentier2018-pinocchio
+    title: "Analytical derivatives of rigid body dynamics algorithms"
+    authors: ["J. Carpentier", "N. Mansard"]
+    year: 2018
+    venue: "RSS"
+    url: "https://doi.org/10.15607/RSS.2018.XIV.038"
+    verified: true
+    role: standard
 
   # ── C3 비선형·강건 제어 ────────────────────────────────────────────
-  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+  - id: sontag1989-coprime-factorization
+    title: "Smooth stabilization implies coprime factorization"
+    authors: ["E. D. Sontag"]
+    year: 1989
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/9.28018"
+    note: "Crossref 확인(1989-04). 입력-상태 안정성(ISS)이 처음 정의된 논문 — 제목은 coprime factorization 이므로 id 에 iss 를 쓰지 않았다"
+    verified: true
+    role: seminal
+  - id: sontag1995-iss-characterizations
+    title: "On characterizations of the input-to-state stability property"
+    authors: ["E. D. Sontag", "Y. Wang"]
+    year: 1995
+    venue: "Systems & Control Letters"
+    url: "https://doi.org/10.1016/0167-6911(94)00050-6"
+    note: "Crossref 확인(1995-04). ISS 와 ISS-Lyapunov 함수의 동등성(역방향)"
+    verified: true
+    role: standard
+  - id: papachristodoulou2002-sos
+    title: "On the construction of Lyapunov functions using the sum of squares decomposition"
+    authors: ["A. Papachristodoulou", "S. Prajna"]
+    year: 2002
+    venue: "IEEE CDC"
+    url: "https://doi.org/10.1109/CDC.2002.1184414"
+    note: "Crossref 확인. date 필드가 비어 있어 연도는 프로시딩 제목에서 읽었고 제2저자는 레코드로 확인되지 않았다"
+    verified: true
+    role: standard
+  - id: topcu2008-local-stability-sos
+    title: "Local stability analysis using simulations and sum-of-squares programming"
+    authors: ["U. Topcu", "A. Packard", "P. Seiler"]
+    year: 2008
+    venue: "Automatica"
+    url: "https://doi.org/10.1016/j.automatica.2008.03.010"
+    note: "Crossref 확인(2008-10)"
+    verified: true
+    role: standard
+  - id: murray1993-steering-sinusoids
+    title: "Nonholonomic motion planning: steering using sinusoids"
+    authors: ["R. M. Murray", "S. S. Sastry"]
+    year: 1993
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/9.277235"
+    note: "Crossref 확인(1993-05). Brockett 1983(책 챕터)은 DOI·영구 URL 이 없어 레지스트리에 넣지 않았고 이 논문으로 대체했다"
+    verified: true
+    role: seminal
+  - id: hauser1992-nonminimum-phase
+    title: "Nonlinear control design for slightly non-minimum phase systems: application to V/STOL aircraft"
+    authors: ["J. Hauser", "S. Sastry", "G. Meyer"]
+    year: 1992
+    venue: "Automatica"
+    url: "https://doi.org/10.1016/0005-1098(92)90029-F"
+    note: "Crossref 확인(1992-07)"
+    verified: true
+    role: standard
+  - id: devasia1996-inversion
+    title: "Nonlinear inversion-based output tracking"
+    authors: ["S. Devasia", "D. Chen", "B. Paden"]
+    year: 1996
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/9.508898"
+    note: "Crossref 확인(1996-07)"
+    verified: true
+    role: standard
+  - id: lohmiller1998-contraction
+    title: "On contraction analysis for non-linear systems"
+    authors: ["W. Lohmiller", "J.-J. E. Slotine"]
+    year: 1998
+    venue: "Automatica"
+    url: "https://doi.org/10.1016/S0005-1098(98)00019-3"
+    verified: true
+    role: seminal
+  - id: manchester2017-ccm
+    title: "Control contraction metrics: convex and intrinsic criteria for nonlinear feedback design"
+    authors: ["I. R. Manchester", "J.-J. E. Slotine"]
+    year: 2017
+    venue: "IEEE T-AC"
+    url: "https://arxiv.org/abs/1503.03144"
+    note: "arXiv 2015 게재, T-AC 2017"
+    verified: true
+    role: standard
+  - id: tsukamoto2021-contraction-tutorial
+    title: "Contraction theory for nonlinear stability analysis and learning-based control: a tutorial overview"
+    authors: ["H. Tsukamoto", "S.-J. Chung", "J.-J. E. Slotine"]
+    year: 2021
+    venue: "Annual Reviews in Control"
+    url: "https://arxiv.org/abs/2110.00675"
+    note: "arXiv API 확인(2021-10). journal_ref: Annual Reviews in Control 52:135-169"
+    verified: true
+    role: survey
+  - id: hogan1985-impedance
+    title: "Impedance control: an approach to manipulation (Part II: Implementation)"
+    authors: ["N. Hogan"]
+    year: 1985
+    venue: "ASME J. Dynamic Systems, Measurement, and Control"
+    url: "https://doi.org/10.1115/1.3140713"
+    note: "확인된 것은 Part II/III 의 1985 JDSMC 판이다. Part I 은 ACC 1984 (10.23919/ACC.1984.4788393), Part III 은 10.1115/1.3140701"
+    verified: true
+    role: seminal
+  - id: colgate1988-coupled-stability
+    title: "Robust control of dynamically interacting systems"
+    authors: ["J. E. Colgate", "N. Hogan"]
+    year: 1988
+    venue: "Int. J. Control"
+    url: "https://doi.org/10.1080/00207178808906161"
+    note: "Crossref 확인(1988-07). 결합 안정성(coupled stability)과 포트 수동성"
+    verified: true
+    role: seminal
+  - id: colgate1997-sampled-passivity
+    title: "Passivity of a class of sampled-data systems: application to haptic interfaces"
+    authors: ["J. E. Colgate", "G. G. Schenkel"]
+    year: 1997
+    venue: "J. Robotic Systems"
+    url: "https://doi.org/10.1002/(SICI)1097-4563(199701)14:1<37::AID-ROB4>3.0.CO;2-V"
+    note: "Crossref 확인(1997-01). ACC 1994 판은 10.1109/ACC.1994.735172"
+    verified: true
+    role: standard
+  - id: ortega2002-ida-pbc
+    title: "Stabilization of a class of underactuated mechanical systems via interconnection and damping assignment"
+    authors: ["R. Ortega", "M. W. Spong", "F. Gómez-Estern", "et al."]
+    year: 2002
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.2002.800770"
+    note: "Crossref 확인(2002-08). 제4저자 G. Blankenstein"
+    verified: true
+    role: standard
+  - id: colgate1994-zwidth
+    title: "Factors affecting the Z-Width of a haptic display"
+    authors: ["J. E. Colgate", "J. M. Brown"]
+    year: 1994
+    venue: "IEEE ICRA"
+    url: "https://doi.org/10.1109/ROBOT.1994.351077"
+    note: "Crossref 확인. date 필드가 비어 있어 연도는 프로시딩 제목에서 읽었다"
+    verified: true
+    role: standard
+  - id: slotine1987-adaptive-manipulator
+    title: "On the adaptive control of robot manipulators"
+    authors: ["J.-J. E. Slotine", "W. Li"]
+    year: 1987
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/027836498700600303"
+    verified: true
+    role: seminal
+  - id: boyd1986-pe
+    title: "Necessary and sufficient conditions for parameter convergence in adaptive control"
+    authors: ["S. Boyd", "S. S. Sastry"]
+    year: 1986
+    venue: "Automatica"
+    url: "https://doi.org/10.1016/0005-1098(86)90002-6"
+    note: "Crossref 확인(1986-11). 1983 Systems & Control Letters 판(10.1016/0167-6911(83)90071-3)과 다른 논문이다"
+    verified: true
+    role: standard
+  - id: rohrs1985-unmodeled-dynamics
+    title: "Robustness of continuous-time adaptive control algorithms in the presence of unmodeled dynamics"
+    authors: ["C. E. Rohrs", "L. Valavani", "M. Athans", "et al."]
+    year: 1985
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.1985.1104070"
+    note: "Crossref 확인(1985-09). 제4저자 G. Stein. 같은 호에 Åström 의 논평(10.1109/TAC.1985.1104066)이 있다"
+    verified: true
+    role: critique
+  - id: cao2006-l1-adaptive
+    title: "Design and analysis of a novel L1 adaptive controller, Part II: Guaranteed transient performance"
+    authors: ["C. Cao", "N. Hovakimyan"]
+    year: 2006
+    venue: "ACC"
+    url: "https://doi.org/10.1109/ACC.2006.1657244"
+    note: "Crossref 확인(2006)"
+    verified: true
+    role: standard
+  - id: ames2017-cbf
+    title: "Control barrier function based quadratic programs for safety critical systems"
+    authors: ["A. D. Ames", "X. Xu", "J. W. Grizzle", "et al."]
+    year: 2017
+    venue: "IEEE T-AC"
+    url: "https://arxiv.org/abs/1609.06408"
+    note: "arXiv 2016 게재, T-AC 2017. 제4저자 P. Tabuada"
+    verified: true
+    role: seminal
+  - id: ames2019-cbf-survey
+    title: "Control barrier functions: theory and applications"
+    authors: ["A. D. Ames", "S. Coogan", "M. Egerstedt", "et al."]
+    year: 2019
+    venue: "ECC"
+    url: "https://arxiv.org/abs/1903.11199"
+    note: "arXiv API 확인(2019-03). 공저자 G. Notomista, K. Sreenath, P. Tabuada"
+    verified: true
+    role: survey
+  - id: nguyen2016-ecbf
+    title: "Exponential control barrier functions for enforcing high relative-degree safety-critical constraints"
+    authors: ["Q. Nguyen", "K. Sreenath"]
+    year: 2016
+    venue: "ACC"
+    url: "https://doi.org/10.1109/ACC.2016.7524935"
+    note: "Crossref 확인(2016-07)"
+    verified: true
+    role: standard
 
   # ── C4 최적 제어·궤적 최적화 ─────────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
@@ -122,7 +478,429 @@ papers:
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
   # ── C6 동작 계획 이론 ─────────────────────────────────────────────
-  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+  - id: reif1979-complexity
+    title: "Complexity of the mover's problem and generalizations"
+    authors: ["J. H. Reif"]
+    year: 1979
+    venue: "FOCS"
+    url: "https://doi.org/10.1109/SFCS.1979.10"
+    verified: true
+    role: seminal
+    note: "2026-11-12 Crossref 로 제목·제1저자·연도·venue 확인."
+  - id: canny1988-complexity
+    title: "The Complexity of Robot Motion Planning"
+    authors: ["J. F. Canny"]
+    year: 1988
+    venue: "MIT Press (book)"
+    url: "https://openlibrary.org/works/OL4626080W"
+    verified: true
+    role: seminal
+    note: "MIT Press 단행본. DOI 없음 — Open Library 레코드로 건다."
+  - id: schwartz1983-piano-movers
+    title: "On the \"piano movers\" problem. II. General techniques for computing topological properties of real algebraic manifolds"
+    authors: ["J. T. Schwartz", "M. Sharir"]
+    year: 1983
+    venue: "Advances in Applied Mathematics"
+    url: "https://doi.org/10.1016/0196-8858(83)90014-3"
+    verified: true
+    role: seminal
+    note: "2026-11-12 Crossref 확인. 원통형 대수 분해(CAD)와 이중 지수 상한."
+  - id: hopcroft1984-warehouseman
+    title: "On the Complexity of Motion Planning for Multiple Independent Objects; PSPACE-Hardness of the \"Warehouseman's Problem\""
+    authors: ["J. E. Hopcroft", "J. T. Schwartz", "M. Sharir"]
+    year: 1984
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/027836498400300405"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인. 직사각형 평행이동만으로도 PSPACE-hard."
+  - id: lozanoperez1979-visibility
+    title: "An algorithm for planning collision-free paths among polyhedral obstacles"
+    authors: ["T. Lozano-Pérez", "M. A. Wesley"]
+    year: 1979
+    venue: "CACM"
+    url: "https://doi.org/10.1145/359156.359164"
+    verified: true
+    role: seminal
+    note: "2026-11-12 Crossref 확인. 가시성 그래프(VGRAPH)와 C-space 부풀리기가 같은 논문에 있다."
+  - id: marcucci2023-gcs
+    title: "Motion planning around obstacles with convex optimization"
+    authors: ["T. Marcucci", "M. Petersen", "D. von Wrangel", "et al."]
+    year: 2023
+    venue: "Science Robotics"
+    url: "https://arxiv.org/abs/2205.04422"
+    verified: true
+    role: frontier
+    note: "arXiv 2022 게재, Science Robotics 2023 (DOI 10.1126/scirobotics.adf7843). 2026-11-12 확인."
+  - id: marcucci2024-spp-gcs
+    title: "Shortest Paths in Graphs of Convex Sets"
+    authors: ["T. Marcucci", "J. Umenberger", "P. A. Parrilo", "et al."]
+    year: 2024
+    venue: "SIAM J. Optimization"
+    url: "https://arxiv.org/abs/2101.11565"
+    verified: true
+    role: standard
+    note: "arXiv 2021 게재, journal_ref = SIAM J. Optim. 34(1):507-532 (2024). 2026-11-12 arXiv API 확인."
+  - id: deits2015-iris
+    title: "Computing Large Convex Regions of Obstacle-Free Space Through Semidefinite Programming"
+    authors: ["R. Deits", "R. Tedrake"]
+    year: 2015
+    venue: "WAFR (Springer STAR)"
+    url: "https://doi.org/10.1007/978-3-319-16595-0_7"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인. IRIS — GCS 의 볼록 집합을 어디서 얻는가."
+  - id: canny1987-lower-bounds
+    title: "New lower bound techniques for robot motion planning problems"
+    authors: ["J. Canny", "J. Reif"]
+    year: 1987
+    venue: "FOCS"
+    url: "https://doi.org/10.1109/SFCS.1987.42"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인. 3차원 유클리드 최단경로의 NP-hardness."
+  - id: kavraki1996-prm
+    title: "Probabilistic roadmaps for path planning in high-dimensional configuration spaces"
+    authors: ["L. E. Kavraki", "P. Svestka", "J.-C. Latombe", "et al."]
+    year: 1996
+    venue: "IEEE T-RA"
+    url: "https://doi.org/10.1109/70.508439"
+    verified: true
+    role: seminal
+    note: "2026-11-12 Crossref 확인."
+  - id: lavalle2001-rrt
+    title: "Randomized Kinodynamic Planning"
+    authors: ["S. M. LaValle", "J. J. Kuffner"]
+    year: 2001
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/02783640122067453"
+    verified: true
+    role: seminal
+    note: "1999 ICRA 선행판 10.1109/ROBOT.1999.770022. 2026-11-12 Crossref 로 둘 다 확인."
+  - id: hsu1999-expansive
+    title: "Path planning in expansive configuration spaces"
+    authors: ["D. Hsu", "J.-C. Latombe", "R. Motwani"]
+    year: 1999
+    venue: "IJCGA"
+    url: "https://doi.org/10.1142/S0218195999000285"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인. $\\epsilon$-good 과 $(\\epsilon,\\alpha,\\beta)$-확장성."
+  - id: kleinbort2019-rrt-completeness
+    title: "Probabilistic Completeness of RRT for Geometric and Kinodynamic Planning With Forward Propagation"
+    authors: ["M. Kleinbort", "K. Solovey", "Z. Littlefield", "et al."]
+    year: 2019
+    venue: "IEEE RA-L"
+    url: "https://doi.org/10.1109/LRA.2018.2888947"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인. 완전성 증명의 빈틈을 메우고 한계를 개선한다."
+  - id: hsu2003-bridge-test
+    title: "The bridge test for sampling narrow passages with probabilistic roadmaps"
+    authors: ["D. Hsu", "T. Jiang", "J. Reif", "et al."]
+    year: 2003
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ROBOT.2003.1242285"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인(등록 연도 누락, 프로시딩은 ICRA 2003)."
+  - id: ladd2004-measure-theoretic
+    title: "Measure theoretic analysis of probabilistic path planning"
+    authors: ["A. M. Ladd", "L. E. Kavraki"]
+    year: 2004
+    venue: "IEEE T-RA"
+    url: "https://doi.org/10.1109/TRA.2004.824649"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인."
+  - id: kuffner2000-rrt-connect
+    title: "RRT-connect: An efficient approach to single-query path planning"
+    authors: ["J. J. Kuffner", "S. M. LaValle"]
+    year: 2000
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ROBOT.2000.844730"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인."
+  - id: karaman2011-rrtstar
+    title: "Sampling-based algorithms for optimal motion planning"
+    authors: ["S. Karaman", "E. Frazzoli"]
+    year: 2011
+    venue: "IJRR"
+    url: "https://arxiv.org/abs/1105.1186"
+    verified: true
+    role: seminal
+    note: "arXiv 2011. 지면판 DOI 10.1177/0278364911406761 도 2026-11-12 Crossref 확인."
+  - id: gammell2015-bitstar
+    title: "Batch Informed Trees (BIT*): Sampling-based optimal planning via the heuristically guided search of implicit random geometric graphs"
+    authors: ["J. D. Gammell", "S. S. Srinivasa", "T. D. Barfoot"]
+    year: 2015
+    venue: "ICRA"
+    url: "https://arxiv.org/abs/1405.5848"
+    verified: true
+    role: standard
+    note: "arXiv 2014 게재, journal_ref = ICRA 2015. 2026-11-12 arXiv API 확인."
+  - id: gammell2014-informed-rrtstar
+    title: "Informed RRT*: Optimal Sampling-based Path Planning Focused via Direct Sampling of an Admissible Ellipsoidal Heuristic"
+    authors: ["J. D. Gammell", "S. S. Srinivasa", "T. D. Barfoot"]
+    year: 2014
+    venue: "IROS"
+    url: "https://arxiv.org/abs/1404.2334"
+    verified: true
+    role: standard
+    note: "arXiv 2014, journal_ref = IROS 2014. 2026-11-12 arXiv API 확인."
+  - id: solovey2020-revisiting-ao
+    title: "Revisiting the Asymptotic Optimality of RRT*"
+    authors: ["K. Solovey", "L. Janson", "E. Schmerling", "et al."]
+    year: 2020
+    venue: "ICRA"
+    url: "https://arxiv.org/abs/1909.09688"
+    verified: true
+    role: critique
+    note: "arXiv 2019. journal_ref 없음 — 게재 venue(ICRA 2020)는 arXiv 로 확인되지 않았다."
+  - id: janson2015-fmt
+    title: "Fast Marching Tree: a Fast Marching Sampling-Based Method for Optimal Motion Planning in Many Dimensions"
+    authors: ["L. Janson", "E. Schmerling", "A. Clark", "et al."]
+    year: 2015
+    venue: "IJRR"
+    url: "https://arxiv.org/abs/1306.3532"
+    verified: true
+    role: standard
+    note: "arXiv 2013 게재. journal_ref 없음 — 지면(IJRR 2015)은 arXiv 로 확인되지 않았다."
+  - id: janson2018-deterministic-sampling
+    title: "Deterministic Sampling-Based Motion Planning: Optimality, Complexity, and Performance"
+    authors: ["L. Janson", "B. Ichter", "M. Pavone"]
+    year: 2018
+    venue: "IJRR"
+    url: "https://arxiv.org/abs/1505.00023"
+    verified: true
+    role: critique
+    note: "arXiv 2015 게재. journal_ref 없음 — 지면(IJRR 2018)은 arXiv 로 확인되지 않았다."
+  - id: strub2020-abit
+    title: "Advanced BIT* (ABIT*): Sampling-Based Planning with Advanced Graph-Search Techniques"
+    authors: ["M. P. Strub", "J. D. Gammell"]
+    year: 2020
+    venue: "ICRA"
+    url: "https://arxiv.org/abs/2002.06589"
+    verified: true
+    role: standard
+    note: "arXiv 2020. journal_ref 없음 — 게재 venue 는 arXiv 로 확인되지 않았다."
+  - id: hart1968-astar
+    title: "A Formal Basis for the Heuristic Determination of Minimum Cost Paths"
+    authors: ["P. E. Hart", "N. J. Nilsson", "B. Raphael"]
+    year: 1968
+    venue: "IEEE T-SSC"
+    url: "https://doi.org/10.1109/TSSC.1968.300136"
+    verified: true
+    role: seminal
+    note: "2026-11-12 Crossref 확인."
+  - id: likhachev2003-ara
+    title: "ARA*: anytime A* with provable bounds on sub-optimality"
+    authors: ["M. Likhachev", "G. Gordon", "S. Thrun"]
+    year: 2003
+    venue: "NIPS"
+    url: "https://papers.nips.cc/paper_files/paper/2003/hash/ee8fe9093fbbb687bef15a38facc44d2-Abstract.html"
+    verified: true
+    role: seminal
+    note: "NIPS 2003 프로시딩 페이지."
+  - id: aine2016-mha
+    title: "Multi-Heuristic A*"
+    authors: ["S. Aine", "S. Swaminathan", "V. Narayanan", "et al."]
+    year: 2016
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364915594029"
+    verified: true
+    role: standard
+    note: "Crossref 등록 연도 2015(온라인 선공개), 지면 2016. RSS 2014 학회판 10.15607/RSS.2014.X.056."
+  - id: pohl1970-weighted-astar
+    title: "Heuristic search viewed as path finding in a graph"
+    authors: ["I. Pohl"]
+    year: 1970
+    venue: "Artificial Intelligence"
+    url: "https://doi.org/10.1016/0004-3702(70)90007-X"
+    verified: true
+    role: seminal
+    note: "2026-11-12 Crossref 확인. weighted A* ($\\epsilon$-허용 탐색)의 원전."
+  - id: dechter1985-astar-optimality
+    title: "Generalized best-first search strategies and the optimality of A*"
+    authors: ["R. Dechter", "J. Pearl"]
+    year: 1985
+    venue: "JACM"
+    url: "https://doi.org/10.1145/3828.3830"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인."
+  - id: likhachev2008-anytime-dynamic-astar
+    title: "Anytime search in dynamic graphs"
+    authors: ["M. Likhachev", "D. Ferguson", "G. Gordon", "et al."]
+    year: 2008
+    venue: "Artificial Intelligence"
+    url: "https://doi.org/10.1016/j.artint.2007.11.009"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 로 제목·제1저자·연도·venue 확인. Anytime D*."
+  - id: koenig2005-dstar-lite
+    title: "Fast replanning for navigation in unknown terrain"
+    authors: ["S. Koenig", "M. Likhachev"]
+    year: 2005
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/tro.2004.838026"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인. D* Lite."
+  - id: stentz1997-dstar
+    title: "Optimal and Efficient Path Planning for Partially Known Environments"
+    authors: ["A. Stentz"]
+    year: 1997
+    venue: "Intelligent Unmanned Ground Vehicles (Springer)"
+    url: "https://doi.org/10.1007/978-1-4615-6325-9_11"
+    verified: true
+    role: seminal
+    note: "2026-11-12 Crossref 확인. D* 의 원전(1994 ICRA 판의 확장)."
+  - id: webb2013-kinodynamic-rrtstar
+    title: "Kinodynamic RRT*: Optimal Motion Planning for Systems with Linear Differential Constraints"
+    authors: ["D. J. Webb", "J. van den Berg"]
+    year: 2013
+    venue: "ICRA"
+    url: "https://arxiv.org/abs/1205.5088"
+    verified: true
+    role: standard
+    note: "arXiv 2012 게재, ICRA 2013. journal_ref 없음."
+  - id: pivtoraiko2009-lattice
+    title: "Differentially constrained mobile robot motion planning in state lattices"
+    authors: ["M. Pivtoraiko", "R. A. Knepper", "A. Kelly"]
+    year: 2009
+    venue: "J. Field Robotics"
+    url: "https://doi.org/10.1002/rob.20285"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인."
+  - id: karaman2010-kinodynamic
+    title: "Optimal kinodynamic motion planning using incremental sampling-based methods"
+    authors: ["S. Karaman", "E. Frazzoli"]
+    year: 2010
+    venue: "CDC"
+    url: "https://doi.org/10.1109/CDC.2010.5717430"
+    verified: true
+    role: seminal
+    note: "2026-11-12 Crossref 확인. 약 국소 가제어성 가정과 반경 규칙의 변형."
+  - id: li2016-sst
+    title: "Asymptotically optimal sampling-based kinodynamic planning"
+    authors: ["Y. Li", "Z. Littlefield", "K. E. Bekris"]
+    year: 2016
+    venue: "IJRR"
+    url: "https://arxiv.org/abs/1407.2896"
+    verified: true
+    role: standard
+    note: "arXiv 2014 게재. journal_ref 없음 — 지면(IJRR 2016)은 arXiv 로 확인되지 않았다. SST."
+  - id: hauser2016-state-cost-space
+    title: "Asymptotically Optimal Planning by Feasible Kinodynamic Planning in a State-Cost Space"
+    authors: ["K. Hauser", "Y. Zhou"]
+    year: 2016
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/tro.2016.2602363"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인."
+  - id: dubins1957-minimal-curves
+    title: "On Curves of Minimal Length with a Constraint on Average Curvature, and with Prescribed Initial and Terminal Positions and Tangents"
+    authors: ["L. E. Dubins"]
+    year: 1957
+    venue: "American Journal of Mathematics"
+    url: "https://doi.org/10.2307/2372560"
+    verified: true
+    role: seminal
+    note: "2026-11-12 Crossref 확인."
+  - id: reedsshepp1990-optimal-paths
+    title: "Optimal paths for a car that goes both forwards and backwards"
+    authors: ["J. A. Reeds", "L. A. Shepp"]
+    year: 1990
+    venue: "Pacific Journal of Mathematics"
+    url: "https://doi.org/10.2140/pjm.1990.145.367"
+    verified: true
+    role: seminal
+    note: "2026-11-12 Crossref 확인."
+  - id: garrett2021-tamp-survey
+    title: "Integrated Task and Motion Planning"
+    authors: ["C. R. Garrett", "R. Chitnis", "R. Holladay", "et al."]
+    year: 2021
+    venue: "Annual Review of Control, Robotics, and Autonomous Systems"
+    url: "https://arxiv.org/abs/2010.01083"
+    verified: true
+    role: survey
+    note: "arXiv 2020 게재, Annual Review 2021."
+  - id: toussaint2015-lgp
+    title: "Logic-Geometric Programming: An Optimization-Based Approach to Combined Task and Motion Planning"
+    authors: ["M. Toussaint"]
+    year: 2015
+    venue: "IJCAI"
+    url: "https://www.ijcai.org/Proceedings/15/Papers/274.pdf"
+    verified: true
+    role: standard
+    note: "IJCAI 2015 프로시딩 PDF. arXiv 판 없음."
+  - id: garrett2020-pddlstream
+    title: "PDDLStream: Integrating Symbolic Planners and Blackbox Samplers via Optimistic Adaptive Planning"
+    authors: ["C. R. Garrett", "T. Lozano-Pérez", "L. P. Kaelbling"]
+    year: 2020
+    venue: "ICAPS"
+    url: "https://arxiv.org/abs/1802.08705"
+    verified: true
+    role: standard
+    note: "arXiv 2018 게재. journal_ref 없음 — 게재 venue(ICAPS 2020)는 arXiv 로 확인되지 않았다."
+  - id: lozanoperez2014-constraint-based
+    title: "A constraint-based method for solving sequential manipulation planning problems"
+    authors: ["T. Lozano-Pérez", "L. P. Kaelbling"]
+    year: 2014
+    venue: "IROS"
+    url: "https://doi.org/10.1109/IROS.2014.6943079"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인."
+  - id: dantam2016-incremental-tamp
+    title: "Incremental Task and Motion Planning: A Constraint-Based Approach"
+    authors: ["N. T. Dantam", "Z. K. Kingston", "S. Chaudhuri", "et al."]
+    year: 2016
+    venue: "RSS"
+    url: "https://doi.org/10.15607/RSS.2016.XII.002"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인(등록 연도 누락, 프로시딩은 RSS XII, 2016)."
+  - id: srivastava2014-interface-layer
+    title: "Combined task and motion planning through an extensible planner-independent interface layer"
+    authors: ["S. Srivastava", "E. Fang", "L. Riano", "et al."]
+    year: 2014
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ICRA.2014.6906922"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인."
+  - id: toussaint2018-stable-modes
+    title: "Differentiable Physics and Stable Modes for Tool-Use and Manipulation Planning"
+    authors: ["M. Toussaint", "K. Allen", "K. Smith", "et al."]
+    year: 2018
+    venue: "RSS"
+    url: "https://doi.org/10.15607/RSS.2018.XIV.044"
+    verified: true
+    role: frontier
+    note: "2026-11-12 Crossref 확인."
+  - id: henzinger1995-hybrid-decidable
+    title: "What's decidable about hybrid automata?"
+    authors: ["T. A. Henzinger", "P. W. Kopke", "A. Puri", "et al."]
+    year: 1995
+    venue: "STOC"
+    url: "https://doi.org/10.1145/225058.225162"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인. 하이브리드 계통 도달가능성의 결정가능 경계."
+  - id: vegabrown2020-piecewise-analytic
+    title: "Asymptotically Optimal Planning under Piecewise-Analytic Constraints"
+    authors: ["W. Vega-Brown", "N. Roy"]
+    year: 2020
+    venue: "WAFR (Springer SPAR)"
+    url: "https://doi.org/10.1007/978-3-030-43089-4_34"
+    verified: true
+    role: frontier
+    note: "2026-11-12 Crossref 확인."
 
   # ── C7 지각과 3D 표현 ────────────────────────────────────────────
   - id: longuet-higgins1981-essential

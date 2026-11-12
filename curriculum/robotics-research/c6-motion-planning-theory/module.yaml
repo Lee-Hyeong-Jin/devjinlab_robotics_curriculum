@@ -1,0 +1,18 @@
+id: c6-motion-planning-theory
+title: C6 동작 계획 이론
+summary: >-
+  동작 계획(motion planning)을 이론으로 다룬다. 구성공간의 위상과 일반 운동 계획의
+  PSPACE-완전성에서 시작해, 조합적 완전 계획과 볼록 분해, 샘플링 기반 계획의 확률적 완전성과
+  점근 최적성 증명, 허용 휴리스틱 탐색의 준최적 한계, 미분 제약 하 계획, 마지막으로 기호와
+  연속을 결합하는 TAMP 까지 간다. 근거가 되는 대학원 과목은 CMU 16-782 전체와 MIT 16.410,
+  교재는 LaValle "Planning Algorithms"(PA) 와 Tedrake "Underactuated Robotics" ch.12 다.
+  이 모듈의 결과는 S2 조작·접촉, S5 다중 로봇, C8 학습 기반 제어에서 다시 쓰인다.
+level: 연구
+lessons:
+  - cspace-complexity
+  - combinatorial-gcs
+  - sampling-completeness
+  - asymptotic-optimality
+  - search-based-planning
+  - kinodynamic-planning
+  - tamp

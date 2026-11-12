@@ -141,6 +141,20 @@ Figma 컬렉션 `Tokens`(22개, Light/Dark 모드)를 CSS 변수로 내보낸다
 
 > 진행률 바는 Figma에서 인스턴스가 아니라 분리된 프레임이다(플러그인 API 제약). 구현에서는 `<ProgressBar>` 하나로 만든다.
 
+## 4.1 코스가 여럿일 때
+
+커리큘럼에 코스가 둘 이상이면(전문가 코스 + 연구원 트랙) 읽는 사람이 전환할 수 있어야 한다.
+`RC_DEFAULT_COURSE_ID` 는 고정된 id 하나라서, 그것만 쓰면 두 번째 코스에 **도달할 경로가 없다**.
+
+- 선택은 `?course=<id>` 로 옮긴다. 탭은 평범한 링크라서 JS 없이도 동작하고, 읽는 사람이 자기
+  트랙을 북마크·공유할 수 있다.
+- `<CourseTabs>` 는 코스가 하나면 **아무것도 그리지 않는다**(탭 하나짜리 탭바는 잡음이다).
+- `selectedCourseId()`: 요청한 코스 → 설정된 기본값 → API 가 준 첫 코스. 마지막 폴백이 필요한
+  이유는 `RC_DEFAULT_COURSE_ID` 가 존재하지 않는 id 일 때 빈 로드맵을 보여 주지 않기 위해서다.
+- 대시보드는 코스가 여럿일 때 코스별 진행률 행을 보여 준다(한 타일에 섞으면 두 트랙의 진행률이
+  뭉개진다). 각 행은 그 코스의 로드맵으로 링크되므로 탭이 유일한 입구가 아니다.
+  `GET /progress/status` 가 모든 코스를 한 번에 주므로 추가 요청은 없다.
+
 ## 5. 콘텐츠 렌더링
 
 API는 **Markdown 원문**을 준다(`GET /api/v1/lessons/{id}` → `body`, `study_method`, `content_format: "markdown"`). HTML 변환은 프론트엔드 책임이다.
@@ -164,6 +178,13 @@ API는 **Markdown 원문**을 준다(`GET /api/v1/lessons/{id}` → `body`, `stu
   `<PaperList>` 가 사이드바에 그린다. 역할(`seminal` 등)과 필독/선택은 Chip, 무엇을 읽는가는
   `note`. `verified: false` 이고 링크가 있으면 "링크 미확인" Chip 을 붙인다 — 확인하지 않은 링크가
   확인된 것과 같아 보이면 안 된다. 코스에 `papers.yaml` 이 없으면 절 자체가 없다(ADR 0014).
+
+- **문제 세트**: `GET /lessons/{id}` 의 `problems[]` 를 `<ProblemSet>` 이 본문 아래에 그린다.
+  prompt·solution 은 서버에서 레슨 파이프라인으로 렌더해 React 트리로 넘기고(퀴즈 화면과 같은
+  방식), 해답은 `<details>` 안에 둔다 — summary 가 무엇이 들어 있는지(스케치/전체/채점 기준) 말한다.
+  난이도는 `★★☆` 와 텍스트 라벨을 함께 쓴다(색·기호만으로 상태를 전달하지 않는다, §6).
+  본문에서는 ` ```problemset ` 펜스를 제거한다(`markdown/sections.ts`) — 안 그러면 YAML 원문이
+  코드 블록으로 찍힌다.
 
 ## 5.2 보안 헤더
 

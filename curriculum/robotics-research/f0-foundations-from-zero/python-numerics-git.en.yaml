@@ -1,0 +1,84 @@
+id: f0-python-numerics-git
+lang: en
+activities:
+  f0-python-numerics-git-diagnostic: "Self-diagnosis before starting (pass and skip this lesson)"
+  f0-python-numerics-git-reading: Read the NumPy user guide, the Scientific Python Lectures and Pro Git
+  f0-python-numerics-git-exercise: Numerical verification exercises (finite differences, condition numbers, accumulated error) plus Git practice
+resources:
+  "NumPy user guide":
+    note: A primary source. Array creation, indexing, broadcasting, dtypes, ufuncs, copies and views. Read it end to end.
+  "Scientific Python Lectures":
+    note: A primary source. Python, numpy, matplotlib, scipy, numerical optimization, debugging and performance. Free.
+  "Pro Git (2nd edition, 무료 전문)":
+    title: "Pro Git (2nd edition, full text free)"
+    note: A primary source. Chapters 1-3 and 7. Full text free under CC BY-NC-SA, including PDF and EPUB.
+  "SciPy linalg / optimize 문서":
+    title: SciPy linalg / optimize documentation
+    note: Learn solve, lstsq, svd, least_squares and solve_ivp.
+quiz:
+  - id: q1
+    prompt: "If `a` has shape `(3, 1)` and `b` has shape `(1, 4)`, what is the shape of `a + b`?"
+    choices: ["(3, 1)", "(1, 4)", "(3, 4)", "It raises an error"]
+    explanation: >-
+      Broadcasting stretches the size-1 axis on each side, giving `(3, 4)`. Not knowing this rule
+      lets an unintended large array be created silently, making both memory use and the result wrong.
+    concept:
+      front: NumPy broadcasting
+      back: An axis of size 1 stretches to the other operand's size; `(3,1)+(1,4)` gives `(3,4)`
+  - id: q2
+    prompt: Double-precision machine epsilon is about $2.2 \times 10^{-k}$. What is $k$?
+    explanation: >-
+      $\epsilon \approx 2.22\times10^{-16}$ (`np.finfo(float).eps`), about 16 significant digits.
+      That value sets the lower bound on finite-difference step sizes and convergence tolerances.
+    answers: ["16", "-16"]
+    concept:
+      front: Double-precision machine epsilon
+      back: $\approx 2.2\times10^{-16}$, about 16 significant digits - never demand a tolerance below it
+  - id: q3
+    prompt: >-
+      For the central difference $\frac{f(x+h)-f(x-h)}{2h}$, roughly what size of $h$ minimises the
+      total error?
+    choices:
+      - $h \sim \epsilon$ (machine epsilon)
+      - $h \sim \epsilon^{1/2}$
+      - $h \sim \epsilon^{1/3} \approx 6\times10^{-6}$
+      - As small as possible
+    explanation: >-
+      The truncation error is $O(h^2)$ and the round-off error $O(\epsilon/h)$, so minimising the
+      sum gives $h \sim \epsilon^{1/3}$. Shrinking $h$ blindly lets round-off dominate - every
+      Jacobian check in the research track requires this choice.
+    concept:
+      front: Optimal step size for a central difference
+      back: $h \sim \epsilon^{1/3} \approx 6\times10^{-6}$ (balancing $O(h^2)$ truncation against $O(\epsilon/h)$ round-off)
+  - id: q4
+    prompt: What is the safest way to solve $\min\lVert Ax-b\rVert$ in numpy?
+    choices:
+      - "`np.linalg.inv(A.T @ A) @ A.T @ b`"
+      - "`np.linalg.solve(A.T @ A, A.T @ b)`"
+      - "`np.linalg.lstsq(A, b)`"
+      - All three are equivalent
+    explanation: >-
+      `lstsq` is QR/SVD based and does not square the condition number. The first two form the
+      normal equations and suffer $\kappa(A)^2$, and the one using `inv` is the worst.
+    concept:
+      front: Numerically safe least squares
+      back: "`lstsq` (QR/SVD); the normal equations square the condition number and `inv` is worse still"
+  - id: q5
+    prompt: "Modifying an array obtained as `a = b[:, 0]` can change the original `b`."
+    explanation: >-
+      Basic slicing returns a **view**, so the original changes. Use `.copy()` when you need an
+      independent array. Missing this distinction silently corrupts state inside a loop.
+    concept:
+      front: NumPy views versus copies
+      back: Basic slicing gives a view - modifying it changes the original; use `.copy()` for an independent array
+  - id: q6
+    prompt: >-
+      Which Git command discards working-tree changes to a single file `f.py` while keeping the
+      last commit?
+    explanation: >-
+      `git restore f.py` (older versions: `git checkout -- f.py`) returns the working tree to HEAD.
+      This repository blocks destructive undo commands with a hook and uses WIP commits instead.
+    answers: ["git restore f.py", "git checkout -- f.py", "git restore", "git checkout f.py"]
+    concept:
+      front: Discarding working-tree changes
+      back: "`git restore <file>`; a WIP commit is safer than destructive commands"

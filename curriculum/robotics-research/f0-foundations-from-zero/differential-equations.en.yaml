@@ -1,0 +1,81 @@
+id: f0-differential-equations
+lang: en
+activities:
+  f0-differential-equations-diagnostic: "Self-diagnosis before starting (pass and skip this lesson)"
+  f0-differential-equations-lectures: Watch the MIT 18.03 lectures and read the notes
+  f0-differential-equations-problems: Work the problem sets (self-marked) and compare with numerical solutions in scipy
+resources:
+  "MIT 18.03 Differential Equations (Spring 2010)":
+    note: The primary source. Lecture videos, lecture notes, and problem sets with solutions.
+  "SciPy integrate 문서 (solve_ivp)":
+    title: SciPy integrate documentation (solve_ivp)
+    note: For comparing closed-form and numerical solutions; look at integrator choice (RK45 vs Radau) and stiffness.
+quiz:
+  - id: q1
+    prompt: The solution of $\dot{x} = ax$ with $x(0)=x_0$ is $x(t) = x_0 e^{kt}$. What is $k$?
+    explanation: >-
+      $k=a$. Extending this simplest ODE to matrices gives $\dot{x}=Ax \Rightarrow x(t)=e^{At}x_0$,
+      the starting point of the exponential map in C1 and of LQR in C4.
+    answers: ["a", "a t", "at"]
+    concept:
+      front: The solution of $\dot{x}=ax$
+      back: $x(t) = x_0e^{at}$; the matrix version is $x(t)=e^{At}x_0$
+  - id: q2
+    prompt: How does $\ddot{y} + 2\dot{y} + 5y = 0$ behave?
+    choices: ["Overdamped (no oscillation)", "Critically damped", "Underdamped (damped oscillation)", "Divergent"]
+    explanation: >-
+      The roots of $s^2+2s+5=0$ are $s = -1 \pm 2i$ - complex with negative real part, so it
+      oscillates while decaying. This is where a feel for choosing PID gains comes from.
+    concept:
+      front: Classifying a second-order constant-coefficient ODE
+      back: Complex roots mean oscillation; the sign of the real part gives stability; a repeated root is critical damping
+  - id: q3
+    prompt: What is the condition for $\dot{x} = Ax$ to be asymptotically stable?
+    choices:
+      - Every eigenvalue of $A$ has negative real part
+      - Every eigenvalue of $A$ is real
+      - $\det A > 0$
+      - $A$ is symmetric
+    explanation: >-
+      Since $x(t)=e^{At}x_0$ and $e^{\lambda t}$ grows or decays according to the real part of
+      $\lambda$, every eigenvalue must have negative real part. Lyapunov stability in C3 extends
+      this to the nonlinear case.
+    concept:
+      front: Stability condition for a linear system
+      back: All eigenvalues have negative real part (in discrete time, all have modulus below 1)
+  - id: q4
+    prompt: >-
+      Solving the first-order linear ODE $\dot{x} + p(t)x = q(t)$ uses an integrating factor
+      $\mu(t) = e^{?}$ (the expression in the exponent)
+    explanation: >-
+      Multiplying by $\mu = e^{\int p\,dt}$ turns the left side into $(\mu x)'$, which integrates
+      directly. Duhamel's formula in C1 is the same integrating-factor technique.
+    answers: ["int p dt", "integral of p", "\\int p(t)dt", "int p(t) dt"]
+    concept:
+      front: The integrating factor of a first-order linear ODE
+      back: $\mu = e^{\int p\,dt}$ - multiplying makes the left side the exact derivative $(\mu x)'$
+  - id: q5
+    prompt: With a small enough step size, forward Euler can integrate any problem stably.
+    explanation: >-
+      Theoretically true - but the stability region of forward Euler is finite, so a stiff problem
+      forces an **extremely** small step, at which point round-off error and cost explode. In
+      practice it therefore behaves as if false, which is why implicit integrators exist; the
+      integrator lesson of R0 covers this.
+    concept:
+      front: Forward Euler and stiff problems
+      back: >-
+        Its finite stability region forces an extremely small step on stiff problems - in practice
+        one uses an implicit integrator
+  - id: q6
+    prompt: >-
+      In the phase plane, an equilibrium whose Jacobian has eigenvalues $+1$ and $-2$ is what kind
+      of point?
+    choices: ["A stable node", "An unstable node", "A saddle point", "A centre"]
+    explanation: >-
+      Mixed signs mean a saddle point: attracting along one direction and repelling along the
+      other. This classification is used in the limit-cycle analysis of legged robots (S3).
+    concept:
+      front: Classifying equilibria
+      back: >-
+        By eigenvalue signs: all negative = stable node, all positive = unstable, mixed = saddle,
+        purely imaginary = centre

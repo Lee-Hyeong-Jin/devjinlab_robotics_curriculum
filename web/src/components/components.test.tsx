@@ -2,17 +2,19 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 
-import type { AuthProvider, Paper, ResourceRef } from '@/lib/api/types'
+import type { AuthProvider, CourseSummary, Paper, ResourceRef } from '@/lib/api/types'
 import { resource } from '@/test/factories'
 import { renderWithIntl } from '@/test/render'
 
 import { Chip } from './Chip'
+import { CourseTabs } from './CourseTabs'
 import { DataTable, type Column } from './DataTable'
 import { EmptyState } from './EmptyState'
 import { LessonRow } from './LessonRow'
 import { ModuleCard } from './ModuleCard'
 import { ProgressBar } from './ProgressBar'
 import { PaperList } from './PaperList'
+import { ProblemSet, type RenderedProblem } from './ProblemSet'
 import { ProviderButtons } from './ProviderButtons'
 import { ResourceExplorer } from './ResourceExplorer'
 import { ResourceRow } from './ResourceRow'
@@ -398,5 +400,105 @@ describe('PaperList', () => {
     expect(screen.queryByText('링크 미확인')).toBeNull()
     expect(screen.queryByRole('link')).toBeNull()
     expect(screen.getByText('T')).toBeInTheDocument()
+  })
+})
+
+describe('ProblemSet', () => {
+  const problem = (over: Partial<RenderedProblem> & { id: string }): RenderedProblem => ({
+    type: 'derivation',
+    stars: 2,
+    prompt: <p>유도하라.</p>,
+    refers_to: [],
+    solution_policy: 'sketch',
+    solution: null,
+    tolerance: null,
+    activity_id: null,
+    ...over,
+  })
+
+  it('renders nothing when the lesson has no problem set', () => {
+    const { container } = renderWithIntl(<ProblemSet problems={[]} />)
+    expect(container).toBeEmptyDOMElement()
+  })
+
+  it('shows the type, the difficulty and the rendered prompt', () => {
+    renderWithIntl(<ProblemSet problems={[problem({ id: 'p1', stars: 2 })]} />)
+    expect(screen.getByText('유도')).toBeInTheDocument()
+    expect(screen.getByText('유도하라.')).toBeInTheDocument()
+    // Difficulty is a rating with a text label, never colour or a bare glyph alone.
+    expect(screen.getByLabelText('난이도 2/3')).toHaveTextContent('★★☆')
+  })
+
+  it('keeps the solution behind a disclosure that says what is inside', () => {
+    const { container } = renderWithIntl(
+      <ProblemSet
+        problems={[problem({ id: 'p1', solution: <p>적분한다.</p>, solution_policy: 'full' })]}
+      />,
+    )
+    const details = container.querySelector('details')
+    expect(details).not.toBeNull()
+    expect(details?.open).toBe(false)
+    expect(screen.getByText('전체 해답 보기')).toBeInTheDocument()
+  })
+
+  it('shows the tolerance only for a numerical problem that has one', () => {
+    renderWithIntl(
+      <ProblemSet
+        problems={[
+          problem({
+            id: 'p1',
+            type: 'numerical',
+            solution: <p>4.2</p>,
+            solution_policy: 'answer',
+            tolerance: 0.001,
+          }),
+          problem({ id: 'p2', solution: <p>sketch</p> }),
+        ]}
+      />,
+    )
+    expect(screen.getAllByText('0.001')).toHaveLength(1)
+    expect(screen.getByText('수치')).toBeInTheDocument()
+  })
+
+  it('offers no disclosure when no solution is published', () => {
+    const { container } = renderWithIntl(<ProblemSet problems={[problem({ id: 'p1' })]} />)
+    expect(container.querySelector('details')).toBeNull()
+  })
+})
+
+describe('CourseTabs', () => {
+  const course = (id: string, title: string, lessons = 3): CourseSummary => ({
+    id,
+    title,
+    summary: '',
+    tags: [],
+    module_count: 1,
+    lesson_count: lessons,
+    lang: 'ko',
+  })
+
+  it('renders nothing for a single course, where a one-tab bar is just noise', () => {
+    const { container } = renderWithIntl(
+      <CourseTabs courses={[course('a', '코스 A')]} selected="a" basePath="/roadmap" />,
+    )
+    expect(container).toBeEmptyDOMElement()
+  })
+
+  it('links each course and marks the one being shown', () => {
+    renderWithIntl(
+      <CourseTabs
+        courses={[course('expert', '전문가 코스'), course('research', '연구 코스', 12)]}
+        selected="research"
+        basePath="/roadmap"
+      />,
+    )
+    const expert = screen.getByRole('link', { name: /전문가 코스/ })
+    expect(expert).toHaveAttribute('href', '/roadmap?course=expert')
+    expect(expert).not.toHaveAttribute('aria-current')
+
+    const research = screen.getByRole('link', { name: /연구 코스/ })
+    expect(research).toHaveAttribute('href', '/roadmap?course=research')
+    expect(research).toHaveAttribute('aria-current', 'page')
+    expect(research).toHaveTextContent('레슨 12개')
   })
 })
