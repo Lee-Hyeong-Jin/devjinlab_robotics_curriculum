@@ -933,6 +933,24 @@ papers:
     note: "Crossref 확인(1998-04). 제4저자 M. Coleman"
     verified: true
     role: seminal
+  - id: westervelt2003-hzd
+    title: "Hybrid zero dynamics of planar biped walkers"
+    authors: ["E. R. Westervelt", "J. W. Grizzle", "D. E. Koditschek"]
+    year: 2003
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.2002.806653"
+    note: "Crossref 확인(2003-01). 2002 IFAC 판(10.3182/20020721-6-es-1901.00904)과 다른 논문이다"
+    verified: true
+    role: seminal
+  - id: ames2014-hzd-experimental
+    title: "Human-inspired control of bipedal walking robots"
+    authors: ["A. D. Ames"]
+    year: 2014
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.2014.2299342"
+    note: "Crossref 확인(2014-05). 사람 데이터에서 가상 제약을 만들어 NAO 에서 실기 검증한 사례"
+    verified: true
+    role: standard
   - id: goswami1998-compass-gait
     title: "A study of the passive gait of a compass-like biped robot: symmetry and chaos"
     authors: ["A. Goswami", "B. Thuilot", "B. Espiau"]

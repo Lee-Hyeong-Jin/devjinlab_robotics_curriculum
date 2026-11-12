@@ -187,6 +187,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   equations of motion and impact map derived from scratch, and a reproduction task whose numbers
   (limit cycle, eigenvalues, energy balance, second-order saltation check) cross-validate each
   other. It is the first lesson to use the structured ```problemset block.
+- Research-track lesson 2 of module S3, hybrid zero dynamics and gait generation, in Korean and
+  English: virtual constraints and the zero dynamics surface, impact invariance as the boundary
+  conditions of a Bezier virtual constraint, the one-dimensional affine return map that follows
+  from the hip torque having no moment about the stance foot, and a reproduction task in which the
+  reduced model's predicted rate matches the four-state model's dominant Poincare eigenvalue to
+  eight digits.
 - Module C3 moved onto the schema the paper registry added (AUTHORING §8-1): its 22 papers are
   registered in `curriculum/robotics-research/papers.yaml` (all with verified URLs), each lesson
   references them from front-matter `papers[]` with `required`/`role` and a language-neutral
