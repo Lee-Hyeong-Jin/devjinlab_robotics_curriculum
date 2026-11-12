@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `module.<lang>.yaml` carry a course's and a module's title and summary, and
   `<lesson>.<lang>.yaml` carries activity titles, resource titles and notes, and the quiz
   (matched by question id, so `type` and `answer` are never translated and grading is
-  identical in every language). English course and module metadata ship with this release.
+  identical in every language). This release ships the English course and module metadata,
+  the activity titles and resources of all 50 lessons, and the 42 quiz questions of M1-M4.
 - `level_label` on every API response that carries a module level, and `label` on the
   dashboard's stage statistics: `level` stays the stable id written in `module.yaml`
   (`기초`/`중급`/`고급`) and the label is what a reader is shown.

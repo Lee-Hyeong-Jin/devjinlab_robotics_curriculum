@@ -21,3 +21,39 @@ resources:
   "QUT Robot Academy (Peter Corke) — Spatial Maths":
     title: "QUT Robot Academy (Peter Corke) - Spatial Maths"
     note: Optional lectures that visualise 3D rotations.
+quiz:
+  - id: q1
+    prompt: "When does gimbal lock occur in ZYX Euler angles (yaw-pitch-roll)?"
+    choices:
+      - When yaw is $0^\circ$
+      - When pitch is $\pm 90^\circ$
+      - When roll passes $180^\circ$
+      - When all three angles are equal
+    explanation: >-
+      At a pitch of $\pm 90^\circ$ the first (yaw) and third (roll) rotation axes line up
+      and one degree of freedom disappears. Near that point the angle values jump around
+      and interpolation breaks down.
+    concept:
+      front: The gimbal-lock condition of ZYX Euler angles
+      back: >-
+        A pitch of $\pm 90^\circ$ - the yaw and roll axes coincide and one degree of
+        freedom is lost
+  - id: q2
+    prompt: "The unit quaternions $q$ and $-q$ represent different rotations."
+    explanation: >-
+      Quaternions double-cover the rotations: $q$ and $-q$ are the same rotation, so you
+      have to match their signs before comparing two orientations or interpolating between
+      them with SLERP.
+    concept:
+      front: The double cover of quaternions
+      back: >-
+        $q$ and $-q$ are the same rotation - match the signs before comparing or
+        interpolating
+  - id: q3
+    prompt: >-
+      What is the rotation angle, in degrees, of a rotation matrix with
+      $\operatorname{tr}(R) = 3$? (the number only)
+    explanation: >-
+      From $\operatorname{tr}(R) = 1 + 2\cos\theta = 3$ we get $\cos\theta = 1$, so
+      $\theta = 0^\circ$. A rotation matrix with trace 3 is the identity and rotates
+      nothing.

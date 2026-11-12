@@ -16,3 +16,46 @@ resources:
     note: The free preprint and its linear-algebra refresher.
   "MIT 18.06SC Linear Algebra (Gilbert Strang)":
     note: Optional, for more on determinants and inverses.
+quiz:
+  - id: q1
+    prompt: >-
+      If the dot product of two vectors is negative, what does that tell you about the
+      angle $\theta$ between them?
+    choices:
+      - '$\theta = 0^\circ$'
+      - '$\theta < 90^\circ$'
+      - '$\theta > 90^\circ$'
+      - One of the two vectors is the zero vector
+    explanation: >-
+      In $\mathbf{a}\cdot\mathbf{b} = |\mathbf{a}||\mathbf{b}|\cos\theta$ the magnitudes
+      are always positive, so the sign is decided by $\cos\theta$. A negative dot product
+      means $\cos\theta < 0$, that is, an obtuse angle (over $90^\circ$).
+    concept:
+      front: What the sign of a dot product tells you
+      back: >-
+        Positive means acute, zero means perpendicular, negative means obtuse (over
+        $90^\circ$)
+  - id: q2
+    prompt: "Select everything that is **always** true of a rotation matrix $R$."
+    choices:
+      - "$R^T R = I$"
+      - '$\det R = 0$'
+      - "$R^{-1} = R^T$"
+      - Two columns of $R$ are parallel to each other
+    explanation: >-
+      A rotation matrix is orthogonal, so $R^TR = I$ and therefore its inverse equals its
+      transpose ($R^{-1} = R^T$). Its determinant is $1$, so it is not zero, and its
+      columns are mutually orthogonal unit vectors, so they cannot be parallel.
+    concept:
+      front: Properties of a rotation matrix
+      back: >-
+        $R^TR = I$, $R^{-1} = R^T$, $\det R = 1$, and the columns are orthogonal unit
+        vectors
+  - id: q3
+    prompt: >-
+      The matrix product $AB$ is the transformation that applies $A$ to a vector first and
+      then $B$.
+    explanation: >-
+      Since $(AB)\mathbf{x} = A(B\mathbf{x})$, the rightmost factor $B$ is applied first.
+      That the result changes when the order changes is exactly why "rotate then
+      translate" differs from "translate then rotate".

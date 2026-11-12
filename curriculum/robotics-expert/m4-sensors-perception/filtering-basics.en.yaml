@@ -19,3 +19,42 @@ resources:
     note: >-
       Preparation for the next step (M5): skim chapters 2-3 on the Bayes filter and the
       Kalman filter.
+quiz:
+  - id: q1
+    prompt: >-
+      If you double the window size $N$ of a moving average, what happens to the white
+      noise and to the lag?
+    choices:
+      - 'The noise standard deviation halves; the lag is unchanged'
+      - 'The noise standard deviation is multiplied by $1/\sqrt{2}$; the lag roughly doubles'
+      - Both the noise and the lag double
+      - The noise is unchanged and only the lag doubles
+    explanation: >-
+      The standard deviation of independent white noise falls as $1/\sqrt{N}$, so doubling
+      $N$ multiplies it by $1/\sqrt{2}$. The lag is about $(N-1)/2$ samples, so it nearly
+      doubles. Smoothness and responsiveness trade against each other.
+    concept:
+      front: 'The $N$ trade-off of a moving average'
+      back: >-
+        Noise falls as $1/\sqrt{N}$; lag rises to about $(N-1)/2$ samples
+  - id: q2
+    prompt: >-
+      What is $\alpha$ for a first-order low-pass filter with $\Delta t = 0.01$ s and a
+      time constant $\tau = 0.1$ s? (to two decimal places)
+    explanation: >-
+      $\alpha = \tau / (\tau + \Delta t) = 0.1 / 0.11 \approx 0.909$. The cutoff frequency
+      is $f_c = 1/(2\pi\tau) \approx 1.6$ Hz.
+  - id: q3
+    prompt: >-
+      In a complementary filter the gyroscope term handles the low-frequency content and
+      the accelerometer term the high-frequency content.
+    explanation: >-
+      It is the other way round. An integrated gyroscope is accurate over short times
+      (high frequency) and drifts at low frequency, so it is used **high-pass**. An
+      accelerometer does not drift but shakes with vibration, so it is used **low-pass**.
+      When the two weights sum to 1 the true signal passes through undistorted.
+    concept:
+      front: Who does what in a complementary filter
+      back: >-
+        Gyroscope = high-pass (accurate short-term, drifts long-term); accelerometer =
+        low-pass (stable long-term, noisy short-term)

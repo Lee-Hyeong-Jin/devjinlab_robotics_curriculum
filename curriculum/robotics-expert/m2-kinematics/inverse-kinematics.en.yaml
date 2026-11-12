@@ -20,3 +20,51 @@ resources:
   "ModernRobotics 공식 코드 라이브러리":
     title: The official ModernRobotics code library
     note: Optional, compare your results against IKinSpace.
+quiz:
+  - id: q1
+    prompt: >-
+      For a planar 2-link arm, at which target positions do the elbow-up and elbow-down
+      solutions collapse into one?
+    choices:
+      - At the base origin
+      - 'On the workspace boundary ($r = L_1 + L_2$ or $r = |L_1 - L_2|$)'
+      - At the end of the first link
+      - They never collapse
+    explanation: >-
+      In $\theta_2 = \operatorname{atan2}(\pm\sqrt{1-\cos^2\theta_2},\ \cos\theta_2)$ the
+      two solutions coincide when $\sin\theta_2 = 0$, that is at $\theta_2 = 0$ or $\pi$.
+      Those are the fully stretched and fully folded poses, which are both the workspace
+      boundary and a singularity.
+    concept:
+      front: Where the two 2-link IK solutions collapse
+      back: >-
+        On the workspace boundary ($\theta_2 = 0$ or $\pi$) - which is also a singularity
+  - id: q2
+    prompt: >-
+      Select everything that is true of a 2-link arm whose
+      $\det J = L_1 L_2 \sin\theta_2$.
+    choices:
+      - 'It is singular at $\theta_2 = 0$ and at $\theta_2 = \pi$'
+      - In a singular pose the end-effector cannot be moved in any direction at all
+      - Numerical IK demands very large joint velocities near a singularity
+      - Damped least squares eases the behaviour near a singularity
+    explanation: >-
+      $\det J = 0$ where $\sin\theta_2 = 0$, that is at $\theta_2 = 0$ and $\pi$. What a
+      singular pose loses is motion along **one particular direction** (a fully stretched
+      arm cannot go any further radially); it can still move tangentially. Near that pose
+      $J^{-1}$ grows and the joint velocities blow up, which is why damped least squares
+      is used.
+  - id: q3
+    prompt: >-
+      Unlike analytic IK, numerical IK (Newton-Raphson) finds every solution for a target
+      in one go.
+    explanation: >-
+      It is the other way round. The analytic method gives every solution at once; the
+      numerical one finds a single solution near its starting guess, and is not even
+      guaranteed to converge. What it gives you instead is that it works on a general arm,
+      for which no closed form exists.
+    concept:
+      front: Analytic IK vs numerical IK
+      back: >-
+        Analytic: fast and complete, but only for certain structures. Numerical: works on
+        any arm, but gives one solution near the initial guess
