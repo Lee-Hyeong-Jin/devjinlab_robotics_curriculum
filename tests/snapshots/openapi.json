@@ -5782,11 +5782,13 @@
           },
           "correct_answer": {
             "type": "string",
-            "title": "Correct Answer"
+            "title": "Correct Answer",
+            "description": "The correct answer as it should be shown. Localized by `Accept-Language` (or `?lang=`); for a short question only the spellings of that language are listed, while grading accepts every language's."
           },
           "explanation": {
             "type": "string",
-            "title": "Explanation"
+            "title": "Explanation",
+            "description": "Localized by `Accept-Language` (or `?lang=`)."
           }
         },
         "additionalProperties": false,
@@ -5907,7 +5909,8 @@
           },
           "prompt": {
             "type": "string",
-            "title": "Prompt"
+            "title": "Prompt",
+            "description": "Localized by `Accept-Language` (or `?lang=`)."
           },
           "choices": {
             "items": {
@@ -5915,7 +5918,7 @@
             },
             "type": "array",
             "title": "Choices",
-            "description": "Empty for short / true-false."
+            "description": "Empty for short / true-false. Localized by `Accept-Language` (or `?lang=`)."
           }
         },
         "additionalProperties": false,

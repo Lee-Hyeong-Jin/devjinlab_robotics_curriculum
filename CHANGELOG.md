@@ -21,6 +21,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `?lang=` on any API request, which wins over `Accept-Language`. A client that caches by
   URL — the web front-end does — needs the language in the URL so two readers in two
   languages cannot share one cached body.
+- `answers` on a translated quiz question (`<lesson>.<lang>.yaml`, `short` questions only):
+  accepted answers written in that language. They are *added* to the ones in the lesson
+  body and never substituted for them, so what counts as correct is the union over every
+  language and grading does not depend on the language a learner reads in; only the
+  answer that is *shown* follows the request. `rc validate` rejects `answers` on a
+  question that is not `short`, and rejects `display_answers` in a quiz block, since it
+  is derived and never graded.
 - `docs/curriculum/GLOSSARY.md`: the ko ↔ en term list every translation follows.
 - `scripts/i18n/audit.py` and `docs/reviews/i18n-gap-audit.md`: the English build is driven
   end to end (API, static site, CLI) and every Korean string that is left is reported.

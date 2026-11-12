@@ -105,6 +105,16 @@ class QuestionText(ContentModel):
     choices: list[str] | None = None
     explanation: str = Field(min_length=1)
     concept: ConceptText | None = None
+    answers: list[str] | None = Field(
+        default=None,
+        min_length=1,
+        description=(
+            "Accepted answers of a `short` question, written in this language. They are "
+            "*added* to the ones in the lesson body, never substituted for them, so a "
+            "question is graded the same way in every language; only what is shown as the "
+            "correct answer follows the reader's language."
+        ),
+    )
 
 
 class LessonMetaTranslation(ContentModel):
