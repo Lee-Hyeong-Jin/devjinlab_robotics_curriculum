@@ -23,7 +23,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 100
   - id: c6-sampling-completeness-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 3편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 120
   - id: c6-sampling-completeness-problems
@@ -31,7 +31,7 @@ activities:
     title: 문제 세트 (유도 2 · 증명 2 · 계산 1 · 구현 1 · 반례 1 · 논문 1)
     estimated_minutes: 150
   - id: c6-sampling-completeness-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — 좁은 통로 폭 대비 성공률과 지수 감소율 측정 (R2)
     estimated_minutes: 90
   - id: c6-sampling-completeness-quiz
@@ -45,31 +45,31 @@ resources:
     note: ch.5 (샘플링 기반 동작 계획) — 5.2 샘플링 이론과 분산(dispersion), 5.4 PRM, 5.5 RRT. 전문 무료.
   - title: "Kavraki, Svestka, Latombe & Overmars — Probabilistic roadmaps for path planning in high-dimensional configuration spaces (1996)"
     url: https://doi.org/10.1109/70.508439
-    kind: article
+    kind: paper
     note: 필독 1. PRM 의 원전. 로드맵 구성과 최초의 확률적 완전성 논증.
   - title: "LaValle & Kuffner — Randomized kinodynamic planning (2001)"
     url: https://doi.org/10.1177/02783640122067453
-    kind: article
+    kind: paper
     note: 필독 2. RRT 의 원전(IJRR 판). Voronoi 편향과 미분 제약으로의 확장.
   - title: "Hsu, Latombe & Motwani — Path planning in expansive configuration spaces (1999)"
     url: https://doi.org/10.1142/S0218195999000285
-    kind: article
+    kind: paper
     note: 필독 3. $\epsilon$-good 과 $(\epsilon,\alpha,\beta)$-확장성 — 좁은 통로를 정량화하는 유일한 틀.
   - title: "Kleinbort, Solovey, Littlefield, Bekris & Halperin — Probabilistic completeness of RRT for geometric and kinodynamic planning (2019)"
     url: https://doi.org/10.1109/LRA.2018.2888947
-    kind: article
+    kind: paper
     note: 권장. RRT 완전성 증명의 빈틈을 메우고 한계를 개선한다. 이 레슨의 R1 은 이 논문의 구성을 따른다.
   - title: "Hsu, Jiang, Reif & Sun — The bridge test for sampling narrow passages with probabilistic roadmaps (2003)"
     url: https://doi.org/10.1109/ROBOT.2003.1242285
-    kind: article
+    kind: paper
     note: 권장. 좁은 통로를 노리는 샘플러. 균등 샘플링의 $\delta^d$ 장벽을 우회하는 실무적 방법.
   - title: "Ladd & Kavraki — Measure theoretic analysis of probabilistic path planning (2004)"
     url: https://doi.org/10.1109/TRA.2004.824649
-    kind: article
+    kind: paper
     note: 권장. 완전성 논증을 측도론으로 다시 세워 가정을 분리한다.
   - title: "Kuffner & LaValle — RRT-Connect (2000)"
     url: https://doi.org/10.1109/ROBOT.2000.844730
-    kind: article
+    kind: paper
     note: 권장. 양방향 RRT. 완전성은 같고 상수가 달라지는 전형적 예.
 ---
 

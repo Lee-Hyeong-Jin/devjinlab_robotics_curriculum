@@ -22,7 +22,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 90
   - id: c6-cspace-complexity-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 2편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 120
   - id: c6-cspace-complexity-problems
@@ -30,7 +30,7 @@ activities:
     title: 문제 세트 (유도 1 · 증명 2 · 계산 1 · 구현 1 · 반례 1 · 논문 1)
     estimated_minutes: 120
   - id: c6-cspace-complexity-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — 2-링크 팔 C-space 의 면적과 위상 (R1)
     estimated_minutes: 75
   - id: c6-cspace-complexity-quiz
@@ -48,7 +48,7 @@ resources:
     note: 이 모듈 전체의 기준 과목. 강의 슬라이드와 과제가 공개되어 있다.
   - title: "Reif — Complexity of the mover's problem and generalizations (1979)"
     url: https://doi.org/10.1109/SFCS.1979.10
-    kind: article
+    kind: paper
     note: 필독 1. 일반 운동 계획의 PSPACE-hardness 원전.
   - title: "Canny — The Complexity of Robot Motion Planning (1988)"
     url: https://openlibrary.org/works/OL4626080W
@@ -56,11 +56,11 @@ resources:
     note: 필독 2. 로드맵 알고리즘과 단일 지수 상한. MIT Press 단행본.
   - title: "Schwartz & Sharir — On the piano movers' problem II (1983)"
     url: https://doi.org/10.1016/0196-8858(83)90014-3
-    kind: article
+    kind: paper
     note: 권장. 원통형 대수 분해(CAD)로 얻은 최초의 완전 알고리즘과 이중 지수 상한.
   - title: "Hopcroft, Schwartz & Sharir — PSPACE-hardness of the warehouseman's problem (1984)"
     url: https://doi.org/10.1177/027836498400300405
-    kind: article
+    kind: paper
     note: 권장. 직사각형 평행이동만으로도 PSPACE-hard 임을 보인다 — 관절 사슬이 본질이 아니라는 증거.
 ---
 

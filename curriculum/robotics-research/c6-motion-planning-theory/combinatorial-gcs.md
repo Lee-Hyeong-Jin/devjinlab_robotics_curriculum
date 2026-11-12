@@ -23,7 +23,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 100
   - id: c6-combinatorial-gcs-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 3편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 140
   - id: c6-combinatorial-gcs-problems
@@ -31,7 +31,7 @@ activities:
     title: 문제 세트 (유도 2 · 증명 2 · 계산 1 · 구현 1 · 반례 1 · 논문 1)
     estimated_minutes: 150
   - id: c6-combinatorial-gcs-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — 가시성 그래프 최단경로 대 샘플링 500회 (R2)
     estimated_minutes: 75
   - id: c6-combinatorial-gcs-quiz
@@ -45,23 +45,23 @@ resources:
     note: ch.6 (조합적 계획) — 6.2 다각형 환경, 6.3 셀 분해, 6.2.4 최단경로 로드맵. 전문 무료.
   - title: "Lozano-Pérez & Wesley — An algorithm for planning collision-free paths among polyhedral obstacles (1979)"
     url: https://doi.org/10.1145/359156.359164
-    kind: article
+    kind: paper
     note: 필독 1. 가시성 그래프의 원전. C-space 부풀리기와 VGRAPH 가 같은 논문에 있다.
   - title: "Marcucci, Petersen, von Wrangel & Tedrake — Motion planning around obstacles with convex optimization (2023)"
     url: https://arxiv.org/abs/2205.04422
-    kind: article
+    kind: paper
     note: 필독 2. GCS 를 동작 계획에 적용한 논문. Science Robotics 2023.
   - title: "Marcucci, Umenberger, Parrilo & Tedrake — Shortest Paths in Graphs of Convex Sets (2024)"
     url: https://arxiv.org/abs/2101.11565
-    kind: article
+    kind: paper
     note: 필독 3. GCS 최단경로의 이론 편 — perspective 재정식화와 완화의 타이트성. SIAM J. Optim. 34(1).
   - title: "Deits & Tedrake — Computing large convex regions of obstacle-free space through semidefinite programming (2015)"
     url: https://doi.org/10.1007/978-3-319-16595-0_7
-    kind: article
+    kind: paper
     note: 권장. IRIS — 자유공간의 볼록 영역을 찾는 방법. GCS 의 집합 $X_v$ 를 어디서 얻는지에 대한 답.
   - title: "Canny & Reif — New lower bound techniques for robot motion planning problems (1987)"
     url: https://doi.org/10.1109/SFCS.1987.42
-    kind: article
+    kind: paper
     note: 권장. 3차원 다면체 사이의 최단 경로가 NP-hard 임을 보인다 — R4 의 근거.
 ---
 
