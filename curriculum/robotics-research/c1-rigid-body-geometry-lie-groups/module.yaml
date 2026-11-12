@@ -12,3 +12,4 @@ lessons:
   - twists-wrenches-adjoint
   - lie-group-derivatives
   - poe-analytic-ik
+  - manifold-optimization
