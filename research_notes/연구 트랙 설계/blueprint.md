@@ -140,7 +140,7 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 
 | 레슨 | 유도해야 할 핵심 결과 | 필독 | 교재 | 재현 과제 |
 |---|---|---|---|---|
-| `c1-so3-se3-exponential` SO(3)·SE(3)와 지수 좌표 | Rodrigues 공식 **[D3]**; $\mathfrak{so}(3)\to SO(3)$ 전사성과 로그의 특이점 **[D3]**; 4원수 이중 피복 **[D2]** | — | MR ch.3, MLS ch.2, SER ch.7 | R1: 지수·로그 왕복 오차 < 1e-12, $\theta\to\pi$ 근방에서 수치 붕괴 지점을 실험적으로 찾음 |
+| `c1-so3-se3-exponential` SO(3)·SE(3)와 지수 좌표 | Rodrigues 공식 **[D3]**; $\mathfrak{so}(3)\to SO(3)$ 전사성과 로그의 특이점 **[D3]**; 4원수 이중 피복 **[D2]** | `sola2018-micro-lie-theory`, `forster2017-preintegration` (권장 `grassia1998-exp-map`, `shoemake1985-quaternion-curves`) | MR ch.3, MLS ch.2, SER ch.7 | R1: 지수·로그 왕복 오차 < 1e-12, $\theta\to\pi$ 근방에서 수치 붕괴 지점을 실험적으로 찾음 |
 | `c1-twists-wrenches-adjoint` 트위스트·렌치와 수반 표현 | 좌표 변환 하의 트위스트 변환 $\mathrm{Ad}$ **[D2]**; 렌치의 쌍대 변환 $\mathrm{Ad}^{\!*}$ **[D2]**; 나선 운동(screw) 분해 **[D2]** | — | MR ch.3.3, MLS ch.2.5 | R1: 임의 변환에서 $\mathrm{Ad}$ 로 옮긴 트위스트가 수치 미분한 속도와 1e-10 이내 일치 |
 | `c1-lie-group-derivatives` 리 군 위의 미분 | 좌/우 야코비안 $J_l, J_r$ 과 $\exp$ 의 미분 **[D3]**; BCH 와 선형화 오차 차수 **[D2]**; 불변 거리와 평균(Fréchet mean) **[D2]** | `forster2017-preintegration` | SER ch.7.1–7.3 | R1: $SO(3)$ 평균을 리만 경사하강으로 계산, 재시작 100회에서 동일 해 수렴 확인 |
 | `c1-poe-analytic-ik` Product of exponentials 와 해석적 IK | PoE 정기구학 **[D2]**; Paden–Kahan 부문제 1–3 **[D3]**; 6R 역기구학의 해 개수와 분기 **[D2]** | — | MLS ch.3, MR ch.4,6 | R2: 6R 팔의 해석적 IK 를 구현, 1e4 무작위 포즈에서 모든 해가 정기구학을 1e-9 이내 만족 |

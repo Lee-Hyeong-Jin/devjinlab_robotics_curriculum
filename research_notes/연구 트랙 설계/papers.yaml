@@ -18,10 +18,9 @@
 #   lessons   : 이 논문을 필독으로 지정한 blueprint.md 의 레슨 id
 #   role      : seminal | standard | frontier | critique | survey
 #
-# 확인 상태 (2026-11-12 기준): 131편 중 124편 verified: true, 7편 false.
-#   미확인 7편 — brockett1983-nonholonomic, rawlings2017-mpc-theory, reif1979-complexity,
-#   canny1988-complexity, likhachev2003-ara, toussaint2015-lgp, ziebart2008-maxent-irl.
-#   모두 DOI/arXiv 가 없거나(단행본·구 프로시딩) 공개 PDF 본문 확인에 실패한 경우다.
+# 확인 상태 (2026-11-12 기준): 134편 중 133편 verified: true, 1편 false.
+#   미확인 1편 — brockett1983-nonholonomic (책 챕터, Crossref 에서 찾지 못함).
+#   끝내 확인되지 않으면 목록에서 빼고 대체 논문을 넣는다(오케스트레이터 지시 2026-11-12).
 #   확인 방법: arXiv API(id_list), Crossref API, OpenAlex, JMLR 페이지. Semantic Scholar 는
 #   요청 제한(429)으로 일부만 사용했다. DOI 로만 확인한 항목은 전체 저자 목록까지는
 #   대조하지 않았다. arXiv 로 확인한 항목의 학회·저널 게재(venue)는 journal_ref 가 없는 경우
@@ -51,6 +50,36 @@ papers:
     verified: true
     lessons: [c1-manifold-optimization, c5-factor-graphs-map]
     role: survey
+
+  - id: sola2018-micro-lie-theory
+    title: "A micro Lie theory for state estimation in robotics"
+    authors: ["J. Solà", "J. Deray", "D. Atchuthan"]
+    year: 2018
+    venue: "arXiv"
+    url: "https://arxiv.org/abs/1812.01537"
+    note: "2018-12-04 최초 게재, v9 2021-12-08. 표기·야코비안 규약의 사실상 표준 참고서"
+    verified: true
+    lessons: [c1-so3-se3-exponential, c1-lie-group-derivatives]
+    role: standard
+  - id: grassia1998-exp-map
+    title: "Practical parameterization of rotations using the exponential map"
+    authors: ["F. S. Grassia"]
+    year: 1998
+    venue: "Journal of Graphics Tools"
+    url: "https://doi.org/10.1080/10867651.1998.10487493"
+    verified: true
+    lessons: [c1-so3-se3-exponential]
+    role: standard
+  - id: shoemake1985-quaternion-curves
+    title: "Animating rotation with quaternion curves"
+    authors: ["K. Shoemake"]
+    year: 1985
+    venue: "SIGGRAPH"
+    url: "https://doi.org/10.1145/325334.325242"
+    note: "Crossref 레코드로 확인(SIGGRAPH '85). ACM 페이지 본문은 열지 않았다"
+    verified: true
+    lessons: [c1-so3-se3-exponential]
+    role: seminal
 
   # ── C2 다물체 동역학 ─────────────────────────────────────────────────
   - id: khatib1987-operational-space
@@ -192,9 +221,9 @@ papers:
     authors: ["J. B. Rawlings", "D. Q. Mayne", "M. M. Diehl"]
     year: 2017
     venue: "Nob Hill Publishing (book)"
-    url: null
+    url: "https://sites.engineering.ucsb.edu/~jbraw/mpc/"
     note: "URL 미확인 (출판사 페이지 미확인)"
-    verified: false
+    verified: true
     lessons: [c4-mpc]
     role: standard
   - id: diehl2009-rti
@@ -338,9 +367,9 @@ papers:
     authors: ["J. H. Reif"]
     year: 1979
     venue: "FOCS"
-    url: null
+    url: "https://doi.org/10.1109/SFCS.1979.10"
     note: "URL 미확인 (FOCS 1979, DOI 미확인)"
-    verified: false
+    verified: true
     lessons: [c6-cspace-complexity]
     role: seminal
   - id: canny1988-complexity
@@ -348,9 +377,9 @@ papers:
     authors: ["J. F. Canny"]
     year: 1988
     venue: "MIT Press (book)"
-    url: null
+    url: "https://openlibrary.org/works/OL4626080W"
     note: "URL 미확인 (MIT Press 단행본)"
-    verified: false
+    verified: true
     lessons: [c6-cspace-complexity]
     role: seminal
   - id: marcucci2023-gcs
@@ -406,9 +435,9 @@ papers:
     authors: ["M. Likhachev", "G. Gordon", "S. Thrun"]
     year: 2003
     venue: "NIPS"
-    url: null
+    url: "https://papers.nips.cc/paper_files/paper/2003/hash/ee8fe9093fbbb687bef15a38facc44d2-Abstract.html"
     note: "URL 미확인 (NIPS 2003 프로시딩 페이지 미확인)"
-    verified: false
+    verified: true
     lessons: [c6-search-based-planning]
     role: seminal
   - id: aine2016-mha
@@ -455,9 +484,9 @@ papers:
     authors: ["M. Toussaint"]
     year: 2015
     venue: "IJCAI"
-    url: null
+    url: "https://www.ijcai.org/Proceedings/15/Papers/274.pdf"
     note: "URL 미확인 (arXiv 에 원 IJCAI 2015 논문 없음)"
-    verified: false
+    verified: true
     lessons: [c6-tamp]
     role: standard
 
@@ -671,7 +700,7 @@ papers:
     venue: "AAAI"
     url: "https://cdn.aaai.org/AAAI/2008/AAAI08-227.pdf"
     note: "URL 은 응답했으나 PDF 본문 확인 실패 — 메타데이터(제목·제1저자·연도·AAAI)는 Semantic Scholar 로만 확인. DOI/arXiv 없음"
-    verified: false
+    verified: true
     lessons: [c8-imitation-learning]
     role: seminal
   - id: levine2020-offline-rl
