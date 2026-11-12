@@ -83,6 +83,46 @@ papers:
     role: critique
     note: "how little optimal triangulation actually buys"
     lessons: [c7-two-view-geometry]
+  - id: fischler1981-ransac
+    title: "Random sample consensus: a paradigm for model fitting with applications to image analysis and automated cartography"
+    authors: ["M. A. Fischler", "R. C. Bolles"]
+    year: 1981
+    venue: "Communications of the ACM"
+    url: "https://doi.org/10.1145/358669.358692"
+    verified: true
+    role: seminal
+    note: "do not use the 1987 reprint DOI (10.1016/b978-0-08-051581-6.50070-2)"
+    lessons: [c7-robust-fitting-ransac]
+  - id: barath2020-magsac
+    title: "MAGSAC++, a fast, reliable and accurate robust estimator"
+    authors: ["D. Barath", "J. Noskova", "M. Ivashechkin", "J. Matas"]
+    year: 2020
+    venue: "CVPR"
+    url: "https://arxiv.org/abs/1912.05909"
+    verified: true
+    role: frontier
+    note: "arXiv v1 2019, CVPR 2020; marginalises the inlier threshold away"
+    lessons: [c7-robust-fitting-ransac]
+  - id: chin2018-robust-fitting
+    title: "Robust fitting in computer vision: easy or hard?"
+    authors: ["T.-J. Chin", "Z. Cai", "F. Neumann"]
+    year: 2018
+    venue: "ECCV"
+    url: "https://arxiv.org/abs/1802.06464"
+    verified: true
+    role: standard
+    note: "the complexity of consensus maximisation; exponential in the model dimension"
+    lessons: [c7-robust-fitting-ransac]
+  - id: yang2016-go-icp
+    title: "Go-ICP: a globally optimal solution to 3D ICP point-set registration"
+    authors: ["J. Yang", "H. Li", "D. Campbell", "Y. Jia"]
+    year: 2016
+    venue: "IEEE T-PAMI"
+    url: "https://arxiv.org/abs/1605.03344"
+    verified: true
+    role: standard
+    note: "branch and bound over SO(3) with the angular-distance bound"
+    lessons: [c7-robust-fitting-ransac]
   - id: triggs2000-bundle-adjustment
     title: "Bundle adjustment -- a modern synthesis"
     authors: ["B. Triggs", "P. F. McLauchlan", "R. I. Hartley", "A. W. Fitzgibbon"]
