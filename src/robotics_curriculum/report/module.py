@@ -66,10 +66,7 @@ def render_module(report: ModuleReport, lang: str | None = None) -> str:
     ]
     rows = []
     for s in report.lessons:
-        if s.status == "not_started" and s.locked:
-            status = t("report.state.locked")
-        else:
-            status = t(f"report.state.{s.status.value}")
+        status = t(f"report.state.{s.status.value}")
         p = s.progress
         rows.append(
             [

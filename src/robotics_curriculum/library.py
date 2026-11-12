@@ -1,4 +1,5 @@
-"""`rc resources` / `rc show`: per-lesson study materials and study method (FR-6).
+"""`rc resources` / `rc show` / `rc papers`: per-lesson study materials, study method (FR-6)
+and assigned papers (ADR 0014).
 
 Kept out of ``cli.py`` so the CLI module only registers these commands.
 """
@@ -11,6 +12,7 @@ from typing import Annotated
 import typer
 
 from robotics_curriculum.content.models import Course, Lesson, Module, Resource, ResourceKind
+from robotics_curriculum.content.papers import citation, paper_index, resolve_lesson_papers
 from robotics_curriculum.content.sections import extract_study_guide
 from robotics_curriculum.i18n import Translator, get_translator
 from robotics_curriculum.progress import (
@@ -29,6 +31,10 @@ KIND_KEYS: dict[ResourceKind, str] = {
     ResourceKind.COURSE: "course",
     ResourceKind.VIDEO: "video",
     ResourceKind.ARTICLE: "article",
+    ResourceKind.PAPER: "paper",
+    ResourceKind.DATASET: "dataset",
+    ResourceKind.CODE: "code",
+    ResourceKind.NOTES: "notes",
     ResourceKind.OTHER: "other",
 }
 
@@ -62,6 +68,14 @@ def _find_lesson(courses: list[Course], lesson_id: str) -> tuple[Module, Lesson]
     raise _fail(f"unknown lesson '{lesson_id}'")
 
 
+def _course_of(courses: list[Course], lesson_id: str) -> Course:
+    """The course a lesson belongs to — needed to reach that course's paper registry."""
+    for course in courses:
+        if any(lesson.id == lesson_id for lesson in course.iter_lessons()):
+            return course
+    raise _fail(f"unknown lesson '{lesson_id}'")
+
+
 def _by_kind(entries: list[tuple[Resource, str]], t: Translator) -> list[str]:
     """Group ``(resource, suffix)`` pairs under the per-kind headers of the catalogue."""
     lines: list[str] = []
@@ -76,6 +90,39 @@ def _by_kind(entries: list[tuple[Resource, str]], t: Translator) -> list[str]:
             if resource.url:
                 lines.append(f"    {resource.url}")
     return lines or [t("resource.none")]
+
+
+def papers(
+    ctx: typer.Context,
+    lesson_id: Annotated[str, typer.Argument(help="Lesson id.")],
+) -> None:
+    """List the papers a lesson assigns, required reading first (ADR 0014).
+
+    The bibliography comes from the course's ``papers.yaml``; the lesson decides which papers
+    it assigns, whether each is required, and what to read of it.
+    """
+    t = _t(ctx)
+    courses = _courses(ctx)
+    course = _course_of(courses, lesson_id)
+    _, lesson = _find_lesson(courses, lesson_id)
+    text = lesson.localized(t.lang)
+    rows = resolve_lesson_papers(lesson, paper_index(course))
+    out = [f"{text.title} ({lesson.id})", ""]
+    if not rows:
+        out.append(t("paper.none"))
+    for row in rows:
+        mark = t("paper.required") if row.required else t("paper.optional")
+        role = f" [{t(f'paper.role.{row.role}')}]" if row.role else ""
+        unverified = f" {t('paper.unverified')}" if row.url and not row.verified else ""
+        out.append(f"  - ({mark}){role} {row.title}")
+        line = citation(row)
+        if line:
+            out.append(f"    {line}")
+        if row.note:
+            out.append(f"    {row.note}")
+        if row.url:
+            out.append(f"    {row.url}{unverified}")
+    typer.echo("\n".join(out))
 
 
 def resources(

@@ -19,6 +19,7 @@ from robotics_curriculum.content import (
     Lesson,
     LoadError,
     Module,
+    blocking,
     load_courses,
     validate_courses,
 )
@@ -89,17 +90,27 @@ def _utcnow() -> datetime:
 
 @dataclass(frozen=True, slots=True)
 class LessonSummary:
-    """One lesson in teaching order with its progress (or a default ``not_started``)."""
+    """One lesson in teaching order with its progress (or a default ``not_started``).
+
+    Nothing is locked: ``missing_prerequisites`` is advice, not a gate (ADR 0015). Every
+    lesson can be started, logged and completed at any time; a non-empty list only means the
+    recommended order has not been followed yet.
+    """
 
     course: Course
     module: Module
     lesson: Lesson
     progress: LessonProgress
-    locked: bool
+    missing_prerequisites: tuple[str, ...] = ()
 
     @property
     def status(self) -> LessonStatus:
         return self.progress.status
+
+    @property
+    def recommended(self) -> bool:
+        """True when every prerequisite is done, so this lesson is next in the order."""
+        return not self.missing_prerequisites
 
 
 @dataclass(frozen=True, slots=True)
@@ -148,7 +159,8 @@ class ProgressService:
             courses = load_courses(path)
         except LoadError as exc:
             raise ProgressError(f"cannot load curriculum (run `rc validate`):\n{exc}") from exc
-        problems = validate_courses(courses)
+        # Warnings are editorial smells; only blocking problems may stop the service.
+        problems = blocking(validate_courses(courses))
         if problems:
             listed = "\n".join(str(problem) for problem in problems[:10])
             more = "" if len(problems) <= 10 else f"\n... and {len(problems) - 10} more"
@@ -182,7 +194,10 @@ class ProgressService:
         return progress
 
     def missing_prerequisites(self, lesson_id: str) -> list[str]:
-        """Prerequisite lesson ids of ``lesson_id`` that are not done yet (empty = unlocked)."""
+        """Prerequisite lesson ids of ``lesson_id`` that are not done yet.
+
+        Advisory only — nothing refuses a lesson because this is non-empty (ADR 0015).
+        """
         lesson = self._entry(lesson_id).lesson
         done = {
             p.lesson_id
@@ -255,12 +270,14 @@ class ProgressService:
     ) -> tuple[LessonProgress, list[Lesson]]:
         """Mark a lesson done (closing its running session, if any).
 
-        Returns the saved progress and the lessons this completion newly unlocked.
+        Returns the saved progress and the lessons this completion newly brought into the
+        recommended order (their last missing prerequisite was this one). Nothing was ever
+        blocked — those lessons were startable before too (ADR 0015).
         """
         self._entry(lesson_id)
         if understanding is not None and not 1 <= understanding <= 5:
             raise ProgressError("understanding must be between 1 and 5")
-        locked_before = {s.lesson.id for s in self.status() if s.locked}
+        waiting_before = {s.lesson.id for s in self.status() if not s.recommended}
         with self.store.transaction():
             open_ = self.store.open_session(self.user_id)
             if open_ is not None and open_.lesson_id == lesson_id:
@@ -278,10 +295,10 @@ class ProgressService:
                 update["note"] = note
             progress = progress.model_copy(update=update)
             self.store.save_lesson(progress)
-        unlocked = [
-            s.lesson for s in self.status() if s.lesson.id in locked_before and not s.locked
+        now_recommended = [
+            s.lesson for s in self.status() if s.lesson.id in waiting_before and s.recommended
         ]
-        return progress, unlocked
+        return progress, now_recommended
 
     def status(self, course_id: str | None = None) -> list[LessonSummary]:
         """Every lesson (optionally of one course) in teaching order with its progress."""
@@ -294,19 +311,21 @@ class ProgressService:
                     progress = stored.get(lesson.id) or LessonProgress(
                         user_id=self.user_id, lesson_id=lesson.id
                     )
-                    locked = any(p not in done for p in lesson.prerequisites)
-                    result.append(LessonSummary(course, module, lesson, progress, locked))
+                    missing = tuple(p for p in lesson.prerequisites if p not in done)
+                    result.append(LessonSummary(course, module, lesson, progress, missing))
         return result
 
     def next_lessons(
         self, course_id: str | None = None, limit: int | None = None
     ) -> list[LessonSummary]:
-        """Not-done lessons whose prerequisites are all done.
+        """Every not-done lesson, in recommended order.
 
-        In-progress lessons come first, then teaching order (course -> module -> lesson).
+        Nothing is filtered out (ADR 0015): a lesson whose prerequisites are unfinished is
+        ranked lower, not hidden. Order: in progress, then prerequisites done, then the rest —
+        stable, so teaching order (course -> module -> lesson) survives inside each group.
         """
-        candidates = [s for s in self.status(course_id) if s.status != "done" and not s.locked]
-        candidates.sort(key=lambda s: s.status != "in_progress")  # stable: keeps teaching order
+        candidates = [s for s in self.status(course_id) if s.status != "done"]
+        candidates.sort(key=lambda s: (s.status != "in_progress", not s.recommended))
         return candidates if limit is None else candidates[:limit]
 
     def _courses(self, course_id: str | None) -> list[Course]:

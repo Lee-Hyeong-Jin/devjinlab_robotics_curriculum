@@ -130,10 +130,14 @@ def log(body: LogRequest, index: Index, progress: Progress) -> StudySession:
 
 @router.post("/done", response_model=DoneResult)
 def done(body: DoneRequest, index: Index, progress: Progress) -> DoneResult:
-    """Mark a lesson done (stops its running timer); lists the lessons it unlocked."""
+    """Mark a lesson done (stops its running timer).
+
+    ``unlocked_lesson_ids`` names the lessons whose last unfinished prerequisite was this one,
+    so they are now next in the recommended order. They were never blocked (ADR 0015).
+    """
     index.lesson(body.lesson_id)
     with progress.open() as service:
-        saved, unlocked = service.done(
+        saved, now_recommended = service.done(
             body.lesson_id, understanding=body.understanding, note=body.note
         )
-    return DoneResult(progress=saved, unlocked_lesson_ids=[les.id for les in unlocked])
+    return DoneResult(progress=saved, unlocked_lesson_ids=[les.id for les in now_recommended])
