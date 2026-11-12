@@ -63,8 +63,9 @@ uv run rc validate                 # 시작 시점이 깨끗한지 확인
 
 ## 2. 레슨 스켈레톤
 
-front matter 는 **현재 스키마에 있는 필드만** 쓴다. 스키마 확장(papers[], problemset 블록,
-`kind: paper`/`reproduction`, `level: 연구`)이 들어오기 전까지는 아래 임시 형태를 쓴다.
+front matter 는 코드의 스키마를 따른다(`docs/curriculum/CONTENT_MODEL.md` 가 기준). 논문
+레지스트리와 활동·자료 kind, `level: 연구` 는 **이미 들어와 있다**(ADR 0014·0015). 아직 없는 것은
+` ```problemset ` 블록뿐이므로 문제 세트는 본문 Markdown 으로 쓴다.
 
 ```yaml
 ---
@@ -81,21 +82,26 @@ difficulty: 5                        # 연구 트랙은 트랙 내 상대값 3�
 estimated_minutes: 480               # 연구 레슨은 300–900
 tags: [optimal-control, ddp, research]
 activities:
-  - { id: c4-ilqr-ddp-reading,      kind: reading,  title: 본문 읽기와 유도 따라가기, estimated_minutes: 90 }
-  - { id: c4-ilqr-ddp-papers,       kind: reading,  title: 필독 논문 2편 + 논문별 1페이지 노트, estimated_minutes: 120 }
-  - { id: c4-ilqr-ddp-problems,     kind: exercise, title: 문제 세트, estimated_minutes: 150 }
-  - { id: c4-ilqr-ddp-reproduction, kind: exercise, title: 재현 과제, estimated_minutes: 90 }
-  - { id: c4-ilqr-ddp-quiz,         kind: quiz,     title: 개념 점검 퀴즈, estimated_minutes: 15 }
-resources:                           # 필독 논문도 당분간 여기에 (kind: article)
+  - { id: c4-ilqr-ddp-reading,      kind: reading,      title: 본문 읽기와 유도 따라가기, estimated_minutes: 90 }
+  - { id: c4-ilqr-ddp-papers,       kind: paper,        title: 필독 논문 2편 + 논문별 1페이지 노트, estimated_minutes: 120 }
+  - { id: c4-ilqr-ddp-problems,     kind: exercise,     title: 문제 세트, estimated_minutes: 150 }
+  - { id: c4-ilqr-ddp-reproduction, kind: reproduction, title: 재현 과제, estimated_minutes: 90 }
+  - { id: c4-ilqr-ddp-quiz,         kind: quiz,         title: 개념 점검 퀴즈, estimated_minutes: 15 }
+resources:                           # 교재·데이터셋·코드. 논문은 papers[] 로 (중복 기재하지 않는다)
   - title: "Tedrake, Underactuated Robotics"
     url: https://underactuated.csail.mit.edu/
-    kind: book
+    kind: book                       # book | course | video | article | paper | dataset | code | notes | other
     note: ch.10 (Trajectory Optimization).
+papers:                              # 코스 papers.yaml 의 id 참조. 최소 1개는 required: true
+  - id: mayne1966-ddp
+    required: true
+    role: seminal                    # seminal | standard | frontier | critique | survey
+    note: "§3"                       # 언어 중립 위치표시만 — 아직 번역되지 않는다(§8-1)
 ---
 ```
 
-> **활동 kind 임시 규약**: 논문 읽기는 `reading`(제목에 "논문"을 넣는다), 문제 세트와 재현
-> 과제는 `exercise`. `paper`/`reproduction`/`project` kind 가 추가되면 일괄 전환한다.
+> **활동 kind**: 논문 읽기 `paper`, 재현 과제 `reproduction`, 캡스톤 `project`, 문제 세트
+> `exercise`, 본문 읽기 `reading`, 개념 점검 `quiz`.
 
 본문 섹션은 **이 순서, 이 제목**으로 고정한다(lesson-standard.md §1):
 
@@ -138,8 +144,12 @@ resources:                           # 필독 논문도 당분간 여기에 (kin
 
 ## 4. 논문 인용 규칙
 
-1. **레지스트리가 원본이다.** 필독 논문은 `research_notes/연구 트랙 설계/papers.yaml` 에 있다.
-   그 id 를 쓰고, 없으면 **항목을 먼저 추가**한다.
+1. **서지는 코스 레지스트리, 지정은 레슨.** 서지(제목·저자·연도·venue·url·verified)는
+   `curriculum/robotics-research/papers.yaml` 에 한 번만 쓰고, **어떤 논문을 필독으로 지정하는가는
+   레슨 front matter 의 `papers[]` 가 원본**이다(ADR 0014). 레슨 참조의 `role`·`note` 가 레지스트리
+   값을 덮어쓰고 `required` 는 레슨에만 있다. 레지스트리에 없는 논문이면 **자기 모듈 블록에**
+   항목을 먼저 추가한다 — 단, **그것을 참조하는 레슨과 같은 커밋에서**(§8-1).
+   설계 단계의 전체 서지 145편은 연구 트랙 설계 노트의 `papers.yaml` 에 있으니 거기서 가져온다.
 2. **확인되지 않은 URL 은 쓰지 않는다.** 새 항목은 `verified: true` 로 올리기 전에 실제로 열어
    제목·제1저자·연도가 맞는지 확인한다. 확인 방법(권장 순서):
    - arXiv: `http://export.arxiv.org/api/query?id_list=XXXX.XXXXX`
