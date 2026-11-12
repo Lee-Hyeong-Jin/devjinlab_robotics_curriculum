@@ -892,6 +892,26 @@ papers:
     verified: true
     lessons: [c8-mdp-pomdp-bellman]
     role: seminal
+  - id: blackwell1965-discounted-dp
+    title: "Discounted dynamic programming"
+    authors: ["D. Blackwell"]
+    year: 1965
+    venue: "The Annals of Mathematical Statistics"
+    url: "https://doi.org/10.1214/aoms/1177700285"
+    note: "c8 저자 세션이 추가(2026-11-12). Crossref 로 제목·제1저자·연도·저널 확인. 할인 DP 의 수축 사상 논증과 최적 정책 존재의 원전"
+    verified: true
+    lessons: [c8-mdp-pomdp-bellman]
+    role: seminal
+  - id: smallwood1973-pomdp-pwlc
+    title: "The optimal control of partially observable Markov processes over a finite horizon"
+    authors: ["R. D. Smallwood", "E. J. Sondik"]
+    year: 1973
+    venue: "Operations Research"
+    url: "https://doi.org/10.1287/opre.21.5.1071"
+    note: "c8 저자 세션이 추가(2026-11-12). Crossref 로 제목·저자·연도·저널 확인. 유한 지평 POMDP 가치함수의 PWLC 성질과 알파 벡터의 원전"
+    verified: true
+    lessons: [c8-mdp-pomdp-bellman]
+    role: seminal
   - id: sutton2000-policy-gradient
     title: "Policy gradient methods for reinforcement learning with function approximation"
     authors: ["R. S. Sutton", "D. McAllester", "S. Singh", "Y. Mansour"]
@@ -920,6 +940,26 @@ papers:
     verified: true
     lessons: [c8-policy-gradient]
     role: standard
+  - id: baird1995-residual
+    title: "Residual algorithms: reinforcement learning with function approximation"
+    authors: ["L. C. Baird"]
+    year: 1995
+    venue: "ICML"
+    url: "https://doi.org/10.1016/B978-1-55860-377-6.50013-X"
+    note: "c8 저자 세션이 추가(2026-11-12). Crossref 로 제목·제1저자·연도·프로시딩 확인. Baird 반례와 잔차 경사법의 원전"
+    verified: true
+    lessons: [c8-value-based-rl]
+    role: seminal
+  - id: tsitsiklis1997-td-function-approx
+    title: "An analysis of temporal-difference learning with function approximation"
+    authors: ["J. N. Tsitsiklis", "B. Van Roy"]
+    year: 1997
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/9.580874"
+    note: "c8 저자 세션이 추가(2026-11-12). Crossref 로 확인. on-policy 선형 TD 의 수렴과 투영 Bellman 오차 한계의 원전"
+    verified: true
+    lessons: [c8-value-based-rl]
+    role: seminal
   - id: mnih2015-dqn
     title: "Human-level control through deep reinforcement learning"
     authors: ["V. Mnih", "K. Kavukcuoglu", "D. Silver", "et al."]
@@ -939,6 +979,16 @@ papers:
     verified: true
     lessons: [c8-value-based-rl]
     role: standard
+  - id: kearns2002-near-optimal
+    title: "Near-optimal reinforcement learning in polynomial time"
+    authors: ["M. Kearns", "S. Singh"]
+    year: 2002
+    venue: "Machine Learning"
+    url: "https://doi.org/10.1023/A:1017984413808"
+    note: "c8 저자 세션이 추가(2026-11-12). Crossref 로 확인. 시뮬레이션 보조정리(모델 오차의 가치 오차 전파)의 원전"
+    verified: true
+    lessons: [c8-model-based-world-models]
+    role: seminal
   - id: janner2019-mbpo
     title: "When to trust your model: model-based policy optimization"
     authors: ["M. Janner", "J. Fu", "M. Zhang", "S. Levine"]
@@ -958,6 +1008,16 @@ papers:
     verified: true
     lessons: [c8-model-based-world-models]
     role: frontier
+  - id: ross2010-efficient-reductions
+    title: "Efficient reductions for imitation learning"
+    authors: ["S. Ross", "J. A. Bagnell"]
+    year: 2010
+    venue: "AISTATS"
+    url: "https://proceedings.mlr.press/v9/ross10a.html"
+    note: "c8 저자 세션이 추가(2026-11-12). PMLR 페이지에서 제목 확인(DOI 없음). BC 복합 오차 O(eps T^2) 한계와 하한 구성의 원전"
+    verified: true
+    lessons: [c8-imitation-learning]
+    role: seminal
   - id: ross2011-dagger
     title: "A reduction of imitation learning and structured prediction to no-regret online learning"
     authors: ["S. Ross", "G. J. Gordon", "J. A. Bagnell"]
@@ -977,6 +1037,16 @@ papers:
     note: "URL 은 응답했으나 PDF 본문 확인 실패 — 메타데이터(제목·제1저자·연도·AAAI)는 Semantic Scholar 로만 확인. DOI/arXiv 없음"
     verified: true
     lessons: [c8-imitation-learning]
+    role: seminal
+  - id: jin2021-pessimism
+    title: "Is pessimism provably efficient for offline RL?"
+    authors: ["Y. Jin", "Z. Yang", "Z. Wang"]
+    year: 2021
+    venue: "ICML"
+    url: "https://arxiv.org/abs/2012.15085"
+    note: "c8 저자 세션이 추가(2026-11-12). arXiv API 로 제목·제1저자 확인(v1 2020). 단일 정책 집중성 하 보수성의 차선성 한계의 원전"
+    verified: true
+    lessons: [c8-offline-rl]
     role: seminal
   - id: levine2020-offline-rl
     title: "Offline reinforcement learning: tutorial, review, and perspectives on open problems"
@@ -1022,6 +1092,16 @@ papers:
     url: "https://doi.org/10.2514/1.G001921"
     verified: true
     lessons: [c8-control-as-inference]
+    role: standard
+  - id: rajeswaran2017-epopt
+    title: "EPOpt: learning robust neural network policies using model ensembles"
+    authors: ["A. Rajeswaran", "S. Ghotra", "B. Ravindran", "S. Levine"]
+    year: 2017
+    venue: "ICLR"
+    url: "https://arxiv.org/abs/1610.01283"
+    note: "c8 저자 세션이 추가(2026-11-12). arXiv API 로 제목·제1저자 확인(v1 2016). 평균 대신 CVaR 꼬리를 최적화하는 강건 목적함수의 대표"
+    verified: true
+    lessons: [c8-generalization-sim2real]
     role: standard
   - id: tobin2017-domain-randomization
     title: "Domain randomization for transferring deep neural networks from simulation to the real world"

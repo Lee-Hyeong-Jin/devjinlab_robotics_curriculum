@@ -1,0 +1,13 @@
+id: c8-decision-making-learning-theory
+lang: en
+title: C8 Decision making and learning theory
+summary: >-
+  The theory of sequential decision making and robot learning. It starts from Bellman
+  optimality and the contraction mapping argument and goes through the policy gradient
+  theorem, divergence and convergence conditions under function approximation, error
+  propagation in model-based RL, covariate shift in imitation learning, pessimism
+  guarantees in offline RL, control as inference, and sim-to-real generalization. Every
+  lesson derives its central theorem, reads the primary papers, and reproduces a numerical
+  result. The graduate courses behind it are Berkeley CS285, Stanford AA274B/CS237B,
+  AA203 W7-10, CMU 16-831 and UPenn ESE 650 M3; the textbooks are Sutton-Barto and
+  Tedrake, Underactuated Robotics ch.11, 20-21.

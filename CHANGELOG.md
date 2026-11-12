@@ -36,6 +36,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `docs/curriculum/GLOSSARY.md`: the ko ↔ en term list every translation follows.
 - `scripts/i18n/audit.py` and `docs/reviews/i18n-gap-audit.md`: the English build is driven
   end to end (API, static site, CLI) and every Korean string that is left is reported.
+- Research-track module `c8-decision-making-learning-theory` (C8, decision making and
+  learning theory) at `level: 연구`, complete with all eight lessons in Korean and English:
+  `c8-mdp-pomdp-bellman`, `c8-policy-gradient`, `c8-value-based-rl`,
+  `c8-model-based-world-models`, `c8-imitation-learning`, `c8-offline-rl`,
+  `c8-control-as-inference` and `c8-generalization-sim2real`. Each derives its central
+  results to the depth the blueprint asks for, names a failure mode per D2/D3 result, and
+  carries a problem set, two to four must-read papers (resolved through the course registry),
+  a reproduction task whose acceptance criteria were checked by running the code, and open
+  problems.
 
 ### Changed
 
