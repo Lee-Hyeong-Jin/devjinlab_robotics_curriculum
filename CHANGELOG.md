@@ -82,6 +82,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   authoring guide `docs/curriculum/AUTHORING_RESEARCH_TRACK.md`. The track design (benchmark of
   graduate courses, 97-lesson blueprint, lesson standard, 134-paper reading list) is under
   `research_notes/연구 트랙 설계/`.
+- Research track module C2 (multibody dynamics) under
+  `curriculum/robotics-research/c2-multibody-dynamics/`: six research-grade lessons in Korean and
+  English on spatial vector algebra, RNEA, CRBA/ABA, constrained dynamics, contact dynamics and
+  the derivatives of dynamics with inertial parameter identification. Each lesson derives its key
+  results at depth D2-D3, sets 4-8 problems, assigns 2-4 verified must-read papers and a
+  reproduction task with machine-checkable acceptance criteria.
 
 ### Fixed
 

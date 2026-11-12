@@ -12,7 +12,7 @@ objectives:
   - 운동 외적 $v\times$ 와 힘 외적 $v\times^{*}$ 의 관계를 쓰고 변환 행렬의 시간 미분을 계산할 수 있다.
   - $\dot{I} = v\times^{*} I - I\, v\times$ 를 증명하고 여기서 Newton-Euler 의 편향 항을 분리할 수 있다.
   - 공간 가속도와 물체 고정점의 고전 가속도의 차이를 설명하고 혼동이 만드는 오류를 지목할 수 있다.
-prerequisites: [c1-so3-se3-exponential]
+prerequisites: [c1-twists-wrenches-adjoint]
 difficulty: 4
 estimated_minutes: 420
 tags: [multibody-dynamics, spatial-vectors, plucker, rigid-body, research]
@@ -68,31 +68,18 @@ resources:
 
 ## 전제와 기호
 
-### 모듈 자가 진단 (self-diagnostic)
-
-C2 는 C1 을 **권장** 선수로 둔다(플랫폼이 잠그지는 않는다). 아래 6문항을 종이에서 10분 안에
-답할 수 없으면 해당 자료를 먼저 보라 — 이 모듈의 유도는 전부 이 여섯 가지를 조합한 것이다.
-
-1. $\hat{\omega}x = \omega \times x$ 일 때 $\hat{\omega}^\top$ 과 $\widehat{R\omega}$ 를
-   $\hat{\omega}$, $R$ 로 각각 쓰라. (→ `c1-so3-se3-exponential`, 식 (1) 주변)
-2. $R(t) \in SO(3)$ 일 때 $\dot{R}R^\top$ 이 반대칭임을 보이라. 그 반대칭 행렬의 벡터는 무엇인가?
-3. 질량 $m$, 질량중심 $c$, 질량중심 기준 관성 $\bar{I}_C$ 인 강체의 원점 기준 관성행렬을
-   평행축 정리로 쓰라. (→ `robotics-expert` M7 또는 MR ch.8.2)
-4. 강체 위의 두 점 $P$, $Q$ 의 속도 관계 $v_P = v_Q + \omega \times (p - q)$ 를 유도하라.
-5. 라그랑지안 $L = T - V$ 에서 Euler-Lagrange 식을 쓰고, $T = \frac{1}{2}\dot{q}^\top M(q)\dot{q}$
-   일 때 $\frac{d}{dt}\frac{\partial T}{\partial \dot{q}}$ 를 전개하라.
-6. $A \in \mathbb{R}^{6\times6}$ 가 가역일 때 $\frac{d}{dt}(A^{-1}) = -A^{-1}\dot{A}A^{-1}$ 을 유도하라.
-
-이 레슨 자체는 2·6 번을 집중적으로 쓴다. 1·3·4 는 유도 안에서 다시 등장하고, 5 는 다음 레슨
-(`c2-rnea-inverse-dynamics`)에서 RNEA 와 Lagrange 유도의 동등성을 볼 때 쓴다.
-
-### 기호
+전제: $A$, $B$ 는 둘 다 **동일한 순간에** 정의된 좌표계이고, 물체는 질량 분포가 변하지 않는
+강체다. 변형체·가변 질량은 이 모듈 밖이다. 권장 선수는 C1 모듈
+(`c1-so3-se3-exponential`, `c1-twists-wrenches-adjoint`)이고, 잠겨 있지 않다 —
+아래 자가 진단으로 바로 판단하라.
 
 모듈 전체에서 **Featherstone 규약**을 쓴다(RBDA ch.2). 가장 중요한 선택 두 가지:
 
-- **6D 벡터의 성분 순서는 각(angular) 먼저**다: $v = (\omega; v_O)$, $f = (n_O; f)$.
-  Modern Robotics 의 트위스트 $\mathcal{V} = (\omega, v)$ 와 같은 순서이고,
-  일부 문헌(특히 수치 라이브러리)은 선형 먼저를 쓴다 — 외부 코드와 맞출 때 **가장 먼저 확인할 것**.
+- **6D 벡터의 성분 순서는 각(angular) 먼저**다: $v = (\omega; v_O)$, $f = (n_O; f_\ell)$.
+  Featherstone 의 RBDA·spatial_v2 와 Modern Robotics 의 트위스트
+  $\mathcal{V} = (\omega, v)$ 가 모두 이 순서이므로 C1 과도 그대로 이어진다.
+  반면 **Pinocchio 는 선형 먼저**($v$, $\omega$)를 쓴다 — 외부 코드와 수치를 맞출 때
+  **가장 먼저 확인할 것**이고, 재현 과제의 비교 대상에서 이 변환을 명시적으로 쓴다.
 - **운동과 힘은 서로 다른 벡터공간**이다. 같은 $\mathbb{R}^6$ 으로 구현하지만 변환 규칙이 다르다.
 
 | 기호 | 뜻 |
@@ -111,12 +98,39 @@ C2 는 C1 을 **권장** 선수로 둔다(플랫폼이 잠그지는 않는다). 
 | $v\times$, $v\times^{*}$ | 운동 외적과 힘 외적 ($6\times6$ 행렬, §R3) |
 | $\mathbb{1}_3$ | $3\times3$ 단위행렬 |
 
-전제: $A$, $B$ 는 둘 다 **동일한 순간에** 정의된 좌표계이고, 물체는 질량 분포가 변하지 않는
-강체다. 변형체·가변 질량은 이 모듈 밖이다.
-
 C1 에서 쓴 두 항등식을 계속 쓴다(직접 전개해 확인하라):
 
 $$\hat{x}\hat{x}^\top = -\hat{x}^2 = \lVert x \rVert^2 \mathbb{1}_3 - xx^\top, \qquad \widehat{Rx} = R\hat{x}R^\top \;\; (R \in SO(3)). \tag{1}$$
+
+## 시작 전 자가 진단
+
+이 모듈의 첫 레슨이므로 준비 상태를 먼저 점검한다. **선수 레슨은 잠겨 있지 않다** — 아래를 전부
+풀 수 있으면 권장 선수(C1 모듈, `robotics-expert` 코스의 M7)를 건너뛰고 바로 시작해도 된다.
+**두 문항 이상 막히면** 괄호 안의 선수 레슨으로 돌아가는 편이 빠르다. 이 레슨의 유도는 전부
+아래 다섯 가지를 조합한 것이다.
+
+1. $x = (1, -2, 2)$ 에 대해 $\hat{x}\hat{x}^\top$ 를 숫자 행렬로 쓰라.
+   (`c1-so3-se3-exponential`)
+   **정답** (허용오차 $10^{-12}$): $\hat{x}\hat{x}^\top = \lVert x\rVert^2\mathbb{1} - xx^\top
+   = \begin{bmatrix} 8 & 2 & -2 \\ 2 & 5 & 4 \\ -2 & 4 & 5\end{bmatrix}$.
+   검산: 대각합이 $2\lVert x\rVert^2 = 18$, $\hat{x}\hat{x}^\top x = 0$.
+2. $R(t) \in SO(3)$ 일 때 $S = \dot{R}R^\top$ 가 반대칭임을 보이고, $S$ 에 대응하는 벡터가
+   무엇인지 말하라. (`c1-so3-se3-exponential`)
+   **정답**: $RR^\top = \mathbb{1}$ 을 미분하면 $\dot{R}R^\top + R\dot{R}^\top = 0$, 즉
+   $S + S^\top = 0$. $S = \hat{\omega}$ 이고 $\omega$ 는 **고정 좌표계로 표현한 각속도**다
+   (물체 좌표 각속도는 $R^\top\dot{R}$ 쪽이다 — 이 구분이 이 레슨 전체에서 부호를 결정한다).
+3. $m = 3$, 질량중심 $c = (0, 0, 0.5)$, 질량중심 기준 관성 $\bar{I}_C = \mathrm{diag}(0.2, 0.2, 0.1)$
+   인 강체의 **원점 기준** 회전 관성 $I_O$ 를 구하라. (`robotics-expert` 코스 M7, 또는 MR ch.8.2)
+   **정답** (허용오차 $10^{-12}$): $I_O = \bar{I}_C + m(\lVert c\rVert^2\mathbb{1} - cc^\top)
+   = \mathrm{diag}(0.95,\ 0.95,\ 0.1)$. $z$ 성분이 변하지 않는 것이 평행축 정리의 요점이다.
+4. 동차변환 $T = (R, p)$ 에 대해 트위스트 $(\omega; v)$ 에 작용하는 수반 표현 $\mathrm{Ad}_T$ 를
+   $6\times6$ 블록 행렬로 쓰라. (`c1-twists-wrenches-adjoint`)
+   **정답**: $\mathrm{Ad}_T = \begin{bmatrix} R & 0 \\ \hat{p}R & R\end{bmatrix}$ (각 성분 먼저 순서).
+   이 레슨의 $^AX_B$ 가 바로 이 행렬이고, $\mathrm{Ad}_T^{-\top}$ 가 렌치에 작용하는 $\mathrm{Ad}_T^{*}$ 다.
+5. 가역 행렬값 함수 $A(t)$ 에 대해 $\frac{d}{dt}(A^{-1})$ 를 $A$, $\dot{A}$ 로 쓰라.
+   (`r0-linear-algebra-decompositions`)
+   **정답**: $AA^{-1} = \mathbb{1}$ 을 미분해 $\dot{A}A^{-1} + A\frac{d}{dt}(A^{-1}) = 0$,
+   따라서 $\frac{d}{dt}(A^{-1}) = -A^{-1}\dot{A}A^{-1}$. 이 한 줄이 (5)의 두 번째 식을 만든다.
 
 ## 핵심 결과
 
@@ -203,7 +217,7 @@ $$
 즉 (2)다. 마지막 등호는 $\big({}^BX_A\big)^{-1} = {}^AX_B$ 에서 나온다.
 
 이제 (3)의 왼쪽 식을 세운다. 프레임 $B$ 의 원점은 $A$ 좌표로 $p$ 에 있고 자세는 $E = {}^BR_A$ 다.
-자가 진단 4번(강체 위 두 점의 속도 관계)으로
+강체 위 두 점의 속도 관계 $v_P = v_Q + \omega \times (p - q)$ 로
 
 $$
 \omega_B = E\,\omega_A, \qquad
@@ -232,7 +246,7 @@ $p = f^\top \Sigma v$ ($\Sigma$ 는 블록 교환 행렬)가 된다. 외부 코�
 
 ### R2 — 공간 관성의 조립과 변환
 
-운동량의 정의에서 직접 조립한다. 질량중심의 속도는 자가 진단 4번으로
+운동량의 정의에서 직접 조립한다. 질량중심의 속도는 같은 관계로
 $v_C = v_O + \omega \times c = v_O - \hat{c}\,\omega$ 이므로 선운동량은
 
 $$
@@ -274,7 +288,7 @@ $v\times$ 의 정의는 "운동 벡터를 움직이는 좌표계에서 미분할
 (5)의 첫 식에서 시작하는 것이 가장 짧다. $^AX_B(t)$ 를 성분으로 쓰고 $E(t) = {}^BR_A(t)$,
 $p(t)$ 를 미분한다. $^AR_B = E^\top \equiv R$ 로 두면 C1 에서 $\dot{R} = \hat{\omega}R$
 ($\omega$ 는 $A$ 좌표의 각속도)이고, 프레임 $B$ 원점의 속도는 $\dot{p} = v_O + \omega \times p$
-(원점이 물체에 고정되어 있을 때 — 자가 진단 4번)다. 이제
+(원점이 물체에 고정되어 있을 때 — 강체 위 두 점의 속도 관계)다. 이제
 
 $$
 {}^AX_B = \begin{bmatrix} R & 0 \\ \hat{p}R & R \end{bmatrix}
@@ -297,7 +311,7 @@ $$
 \begin{bmatrix} R & 0 \\ \hat{p}R & R\end{bmatrix} = (v\times)\,{}^AX_B,
 $$
 
-이것이 (5)의 첫 식이고 동시에 (6)의 $v\times$ 의 **정의**다. 자가 진단 6번($\frac{d}{dt}A^{-1} = -A^{-1}\dot{A}A^{-1}$)
+이것이 (5)의 첫 식이고 동시에 (6)의 $v\times$ 의 **정의**다. 자가 진단 5번($\frac{d}{dt}A^{-1} = -A^{-1}\dot{A}A^{-1}$)
 을 $^BX_A = ({}^AX_B)^{-1}$ 에 쓰면 둘째 식
 
 $$
@@ -618,8 +632,8 @@ questions:
 
 ## 이 단계 공부법
 
-1. **자가 진단으로 시작한다 (20분)** — 위 6문항을 먼저 푼다. 2번과 6번에서 막히면 이 레슨의
-   유도를 따라갈 수 없으니 C1 과 선형대수를 먼저 보라. 나머지는 막혀도 진행 가능하다.
+1. **자가 진단으로 시작한다 (20분)** — 위 5문항을 먼저 푼다. 2번과 5번에서 막히면 이 레슨의
+   유도를 따라가기 어려우니 C1 과 선형대수를 먼저 보라. 나머지는 막혀도 진행할 수 있다.
 2. **성분 순서를 종이에 못 박는다 (20분)** — $(\omega; v_O)$, $(n_O; f_\ell)$ 를 쓰고, (3)과 (6)의
    네 행렬을 손으로 적어 벽에 붙인다. 이 모듈에서 생기는 버그의 대다수가 순서·부호다.
 3. **R1 을 거꾸로 유도한다 (40분)** — (3)의 $^BX_A$ 를 **먼저 외우지 말고**, 강체 두 점의 속도

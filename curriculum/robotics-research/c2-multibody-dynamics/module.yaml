@@ -6,14 +6,10 @@ summary: >-
   동역학의 해석적 미분과 관성 매개변수 식별까지 유도한다. C3·C4·S2·S3 가 이 모듈의 표기와
   알고리즘을 전제한다. 근거가 되는 대학원 과목은 CMU 16-711 Ch3-4 와 ETH Robot Dynamics,
   교재는 Featherstone RBDA 와 Modern Robotics ch.8, Underactuated ch.17-18 이다.
-  권장 선수 모듈은 C1 이며, 모듈 첫 레슨(c2-spatial-vector-algebra)에 자가 진단 문항이 있다.
+  권장 선수 모듈은 C1 이며, 모듈 첫 레슨(c2-spatial-vector-algebra)에 시작 전 자가 진단이 있다.
+  레슨은 설계상 6개이며 작성된 것부터 순서대로 추가한다.
 # 설계상의 수준은 "연구"(research)다. Level 리터럴에 "연구"가 추가되기 전까지 "고급"으로 둔다
 # (research_notes/연구 트랙 설계/lesson-standard.md §11-4).
 level: 고급
 lessons:
   - spatial-vector-algebra
-  - rnea-inverse-dynamics
-  - crba-aba
-  - constrained-dynamics
-  - contact-dynamics
-  - dynamics-derivatives-sysid
