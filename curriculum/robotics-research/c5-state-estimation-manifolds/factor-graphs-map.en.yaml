@@ -11,10 +11,6 @@ activities:
 resources:
   "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
     note: ch.3 (Linear-Gaussian Estimation) and ch.4 (Nonlinear Non-Gaussian Estimation). The primary textbook for this lesson; the full PDF is free.
-  "Dellaert & Kaess — Factor Graphs for Robot Perception (2017)":
-    note: "Must-read 1, role: survey. Read sections 2-4 (factor graphs, variable elimination, Bayes nets)."
-  "Dellaert & Kaess — Square Root SAM (2006, IJRR)":
-    note: "Must-read 2, role: seminal. Read sections 3-5 (information matrix, square root information, variable ordering)."
   "CMU 16-833 Robot Localization and Mapping (Kaess)":
     note: The reference course for this module. The weekly schedule is not public; only the course description is.
   "MIT 16.485 Visual Navigation for Autonomous Vehicles (OCW)":

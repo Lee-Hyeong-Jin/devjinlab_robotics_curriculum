@@ -23,7 +23,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 105
   - id: c5-manifold-estimation-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 3편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 150
   - id: c5-manifold-estimation-problems
@@ -31,7 +31,7 @@ activities:
     title: 문제 세트 (증명 2 · 유도 1 · 계산 2 · 구현 1 · 반례 1)
     estimated_minutes: 195
   - id: c5-manifold-estimation-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — SE(3) 에서 EKF 와 불변 EKF 의 NEES 비교 (R2)
     estimated_minutes: 195
   - id: c5-manifold-estimation-quiz
@@ -43,26 +43,25 @@ resources:
     url: https://asrl.utias.utoronto.ca/~tdb/bib/barfoot_ser24.pdf
     kind: book
     note: ch.7 (3차원 기하), ch.8 (행렬 리 군). 좌/우 불확실성 표현의 1순위 교재. 전문 PDF 무료.
-  - title: "Barrau & Bonnabel — The invariant extended Kalman filter as a stable observer (2017)"
-    url: https://arxiv.org/abs/1410.1465
-    kind: article
-    note: 필독 1. 역할 원전(seminal). II-III 절(군 아핀 계, 로그-선형 성질, 불변 관측).
-  - title: "Solà, Deray & Atchuthan — A micro Lie theory for state estimation in robotics (2018)"
-    url: https://arxiv.org/abs/1812.01537
-    kind: article
-    note: 필독 2. 역할 표준(standard). 좌/우 야코비안 규약과 ⊕/⊖ 표기. 4-7절.
-  - title: "Absil, Mahony & Sepulchre — Optimization Algorithms on Matrix Manifolds (2008)"
-    url: https://doi.org/10.1515/9781400830244
-    kind: book
-    note: 필독 3. 역할 표준(standard). 재추적(retraction)의 정의와 수렴 정리. ch.4(4.1 재추적)·ch.7.
-  - title: "Hartley, Ghaffari, Eustice & Grizzle — Contact-aided invariant EKF (2020, IJRR)"
-    url: https://doi.org/10.1177/0278364919894385
-    kind: article
-    note: 권장. 불변 EKF 를 다리로봇 상태추정에 적용한 표준 사례. 군 선택과 접촉 인자 처리.
   - title: "MIT 16.485 Visual Navigation for Autonomous Vehicles (OCW)"
     url: https://ocw.mit.edu/courses/16-485-visual-navigation-for-autonomous-vehicles-vnav-fall-2020/
     kind: course
     note: 권장. L18-19 가 매니폴드 위 최적화를 다룬다.
+papers:
+  - id: barrau2017-invariant-ekf
+    required: true
+    role: seminal
+    note: "§II-III"
+  - id: sola2018-micro-lie-theory
+    required: true
+    role: standard
+    note: "§4-7"
+  - id: absil2008-manifold-opt
+    required: true
+    role: standard
+    note: "§4.1, ch.7"
+  - id: hartley2020-contact-inekf
+    role: standard
 ---
 
 # 매니폴드 위 추정과 불변 필터

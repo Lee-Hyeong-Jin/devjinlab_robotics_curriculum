@@ -24,7 +24,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 105
   - id: c5-robust-global-estimation-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 3편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 150
   - id: c5-robust-global-estimation-problems
@@ -32,7 +32,7 @@ activities:
     title: 문제 세트 (유도 1 · 증명 1 · 계산 2 · 구현 1 · 반례 1 · 논문 1)
     estimated_minutes: 180
   - id: c5-robust-global-estimation-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — 이상치 20% 포즈 그래프, 전역 최적성 인증, breakdown (R2)
     estimated_minutes: 210
   - id: c5-robust-global-estimation-quiz
@@ -44,30 +44,25 @@ resources:
     url: https://asrl.utias.utoronto.ca/~tdb/bib/barfoot_ser24.pdf
     kind: book
     note: ch.5.3 (Outliers). M-estimator 와 RANSAC 의 교재 진입로. 전문 PDF 무료.
-  - title: "Rosen, Carlone, Bandeira & Leonard — SE-Sync (2019, IJRR)"
-    url: https://arxiv.org/abs/1612.07386
-    kind: article
-    note: 필독 1. 역할 원전(seminal). 3-5절(볼록 완화, 랭크 계단, 전역 최적성 인증).
-  - title: "Yang, Shi & Carlone — TEASER: fast and certifiable point cloud registration (2021, T-RO)"
-    url: https://arxiv.org/abs/2001.07715
-    kind: article
-    note: 필독 2. 역할 표준(standard). 4-6절(TIM/TRIM 분해, 최대 클리크, GNC).
-  - title: "Sunderhauf & Protzel — Switchable constraints for robust pose graph SLAM (2012, IROS)"
-    url: https://doi.org/10.1109/IROS.2012.6385590
-    kind: article
-    note: 필독 3. 역할 표준(standard). 전환 변수로 이상치를 다루는 접근과 그 한계.
-  - title: "Carlone, Rosen, Calafiore, Leonard & Dellaert — Lagrangian duality in 3D SLAM (2015)"
-    url: https://arxiv.org/abs/1506.00746
-    kind: article
-    note: 권장. 쌍대 인증의 포즈 그래프 적용과 타이트성 조건. 본문 R3 의 3D 판이다.
-  - title: "Fischler & Bolles — RANSAC (1981)"
-    url: https://doi.org/10.1145/358669.358692
-    kind: article
-    note: 권장. 가설-검증식 이상치 처리의 원전. M-estimator 와의 대조로 읽는다.
-  - title: "Cadena et al. — Past, present, and future of SLAM (2016)"
-    url: https://arxiv.org/abs/1606.05830
-    kind: article
-    note: 권장. IV 절이 강건성·인증 쟁점을 정리한다.
+papers:
+  - id: rosen2019-se-sync
+    required: true
+    role: seminal
+    note: "§3-5"
+  - id: yang2021-teaser
+    required: true
+    role: standard
+    note: "§4-6"
+  - id: sunderhauf2012-switchable
+    required: true
+    role: standard
+  - id: carlone2015-lagrangian-duality
+    role: standard
+  - id: fischler1981-ransac
+    role: seminal
+  - id: cadena2016-slam-survey
+    role: survey
+    note: "§IV"
 ---
 
 # 강건 추정과 전역 최적성

@@ -11,16 +11,6 @@ activities:
 resources:
   "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
     note: ch.9 (Pose Estimation). The way into the textbook treatment of inertial fusion; the full PDF is free.
-  "Forster, Carlone, Dellaert & Scaramuzza — On-manifold preintegration (2017, T-RO)":
-    note: "Must-read 1, role: seminal. Sections IV-V and the appendix (the Jacobian and covariance recursions)."
-  "Lupton & Sukkarieh — Visual-inertial-aided navigation for high-dynamic motion (2012, T-RO)":
-    note: "Must-read 2, role: seminal. The original proposal of preintegration. Sections III-IV."
-  "Martinelli — Vision and IMU data fusion: closed-form solutions for attitude, speed, absolute scale, and bias (2012, T-RO)":
-    note: "Must-read 3, role: standard. Closed-form solutions for scale, speed and attitude, and the degenerate conditions."
-  "Qin, Li & Shen — VINS-Mono (2018)":
-    note: Recommended. The standard case study of preintegration in a real system, and its initialization procedure (section V).
-  "Mourikis & Roumeliotis — A multi-state constraint Kalman filter for VIO (2007)":
-    note: Recommended. The filtering-side approach (MSCKF) for contrast; it shows why preintegration belongs to the smoothing side.
 quiz:
   - id: q1
     prompt: >-

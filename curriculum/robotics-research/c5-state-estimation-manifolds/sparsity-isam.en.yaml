@@ -11,18 +11,6 @@ activities:
 resources:
   "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
     note: ch.3.3 (sparsity, batch vs recursive). The way into this lesson's textbook material; the full PDF is free.
-  "Kaess, Johannsson, Roberts et al. — iSAM2 (2012, IJRR)":
-    note: "Must-read 1, role: seminal. Sections 3-5 (the Bayes tree, incremental re-elimination, fluid relinearization)."
-  "Rose, Tarjan & Lueker — Algorithmic aspects of vertex elimination on graphs (1976)":
-    note: "Must-read 2, role: seminal. The fill-path theorem and chordality. Read §2-3 only."
-  "Carlevaris-Bianco, Kaess & Eustice — Generic node removal for factor-graph SLAM (2014, T-RO)":
-    note: "Must-read 3, role: standard. The densification caused by marginalization and its sparse approximation (GLC). §III-IV."
-  "Yannakakis — Computing the minimum fill-in is NP-complete (1981)":
-    note: Recommended. NP-completeness of minimum fill-in. Four pages, so worth reading straight through once.
-  "Lipton, Rose & Tarjan — Generalized nested dissection (1979)":
-    note: Recommended. Fill and flop bounds for graph families with small separators. Explains the measured performance of 2D pose graphs.
-  "Kaess, Ranganathan & Dellaert — iSAM (2008, T-RO)":
-    note: Recommended. The original of updating R incrementally with Givens rotations; the predecessor of iSAM2.
   "CMU 16-833 Robot Localization and Mapping (Kaess)":
     note: The reference course for this module. Its description names "efficient probabilistic inference", the subject of this lesson.
 quiz:

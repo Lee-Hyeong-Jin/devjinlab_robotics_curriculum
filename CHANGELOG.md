@@ -181,6 +181,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   separate bounded from redescending kernels, and a four-line proof of the global optimality
   certificate for SO(2) rotation synchronization (SE-Sync in miniature) together with the measured
   fact that its tightness survives noise but not outliers.
+- Research track module C5 is complete (six lessons) and converted to the landed schema
+  (AUTHORING §8-1): must-read papers moved from `resources[]` into front-matter `papers[]`
+  referencing the course registry, 23 entries added to the registry's C5 block (all with URLs
+  verified against the Crossref or arXiv API), activity kinds `paper` and `reproduction`, and
+  `level: 연구` on the module.
 - Research-track module C3 (nonlinear and robust control) under
   `curriculum/robotics-research/c3-nonlinear-robust-control/`: lesson 1, Lyapunov stability and
   ISS, in Korean and English — the Lyapunov theorem, its converse for exponential stability and

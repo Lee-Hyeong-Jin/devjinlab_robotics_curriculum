@@ -23,7 +23,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 105
   - id: c5-imu-preintegration-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 3편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 150
   - id: c5-imu-preintegration-problems
@@ -31,7 +31,7 @@ activities:
     title: 문제 세트 (증명 1 · 유도 1 · 계산 2 · 구현 1 · 반례 1 · 논문 1)
     estimated_minutes: 180
   - id: c5-imu-preintegration-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — 선적분 항등식, 바이어스 보정, 공분산, 척도 모호성 (R2)
     estimated_minutes: 210
   - id: c5-imu-preintegration-quiz
@@ -43,26 +43,23 @@ resources:
     url: https://asrl.utias.utoronto.ca/~tdb/bib/barfoot_ser24.pdf
     kind: book
     note: ch.9 (Pose Estimation). 관성 융합의 교재 진입로. 전문 PDF 무료.
-  - title: "Forster, Carlone, Dellaert & Scaramuzza — On-manifold preintegration (2017, T-RO)"
-    url: https://arxiv.org/abs/1512.02363
-    kind: article
-    note: 필독 1. 역할 원전(seminal). IV-V 절과 부록(야코비안·공분산 재귀).
-  - title: "Lupton & Sukkarieh — Visual-inertial-aided navigation for high-dynamic motion (2012, T-RO)"
-    url: https://doi.org/10.1109/TRO.2011.2170332
-    kind: article
-    note: 필독 2. 역할 원전(seminal). 선적분의 최초 제안. III-IV 절.
-  - title: "Martinelli — Vision and IMU data fusion: closed-form solutions for attitude, speed, absolute scale, and bias (2012, T-RO)"
-    url: https://doi.org/10.1109/TRO.2011.2160468
-    kind: article
-    note: 필독 3. 역할 표준(standard). 척도·속도·자세의 닫힌 형태 해와 퇴화 조건.
-  - title: "Qin, Li & Shen — VINS-Mono (2018)"
-    url: https://arxiv.org/abs/1708.03852
-    kind: article
-    note: 권장. 선적분을 실제 시스템에 올린 표준 사례와 초기화 절차(V 절).
-  - title: "Mourikis & Roumeliotis — A multi-state constraint Kalman filter for VIO (2007)"
-    url: https://doi.org/10.1109/ROBOT.2007.364024
-    kind: article
-    note: 권장. 필터 쪽 접근(MSCKF)과의 대조. 선적분이 왜 평활 쪽 해법인지 보인다.
+papers:
+  - id: forster2017-preintegration
+    required: true
+    role: seminal
+    note: "§IV-V, App."
+  - id: lupton2012-preintegration
+    required: true
+    role: seminal
+    note: "§III-IV"
+  - id: martinelli2012-closed-form-scale
+    required: true
+    role: standard
+  - id: qin2018-vins-mono
+    role: standard
+    note: "§V"
+  - id: mourikis2007-msckf
+    role: seminal
 ---
 
 # IMU 선적분과 관성 융합

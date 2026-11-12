@@ -23,7 +23,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 105
   - id: c5-observability-consistency-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 3편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 150
   - id: c5-observability-consistency-problems
@@ -31,7 +31,7 @@ activities:
     title: 문제 세트 (증명 2 · 유도 1 · 계산 1 · 구현 1 · 반례 1 · 논문 1)
     estimated_minutes: 180
   - id: c5-observability-consistency-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — VIO 영공간 4차원, FEJ 의 영공간 보존, NEES (R2)
     estimated_minutes: 210
   - id: c5-observability-consistency-quiz
@@ -43,26 +43,24 @@ resources:
     url: https://asrl.utias.utoronto.ca/~tdb/bib/barfoot_ser24.pdf
     kind: book
     note: ch.5 (Biases, Correspondences, and Outliers). 비이상성(nonideality) 논의의 교재 진입로. 전문 PDF 무료.
-  - title: "Huang, Mourikis & Roumeliotis — Observability-based rules for designing consistent EKF SLAM estimators (2010, IJRR)"
-    url: https://doi.org/10.1177/0278364909353640
-    kind: article
-    note: 필독 1. 역할 원전(seminal). 3-5절(영공간 분석, 거짓 정보, FEJ).
-  - title: "Li & Mourikis — High-precision, consistent EKF-based visual-inertial odometry (2013, IJRR)"
-    url: https://doi.org/10.1177/0278364913481251
-    kind: article
-    note: 필독 2. 역할 표준(standard). 3-4절(VIO 의 4차원 불관측 부분공간과 일관성 개선).
-  - title: "Hermann & Krener — Nonlinear controllability and observability (1977, IEEE T-AC)"
-    url: https://doi.org/10.1109/TAC.1977.1101601
-    kind: article
-    note: 필독 3. 역할 원전(seminal). 국소 약관측가능성의 랭크 조건. 정리 3.1과 그 주변만 읽는다.
-  - title: "Hesch, Kottas, Bowman & Roumeliotis — Camera-IMU-based localization: observability analysis and consistency improvement (IJRR)"
-    url: https://doi.org/10.1177/0278364913509675
-    kind: article
-    note: 권장. VIO 관측가능성의 체계적 분석과 일관성 개선. 온라인 선공개 2013, 지면 2014.
-  - title: "Cadena et al. — Past, present, and future of SLAM (2016)"
-    url: https://arxiv.org/abs/1606.05830
-    kind: article
-    note: 권장. III-IV 절이 일관성·강건성 쟁점을 정리한다.
+papers:
+  - id: huang2010-fej
+    required: true
+    role: seminal
+    note: "§3-5"
+  - id: li2013-vio-observability
+    required: true
+    role: standard
+    note: "§3-4"
+  - id: hermann1977-observability
+    required: true
+    role: seminal
+    note: "Thm. 3.1"
+  - id: hesch2014-vio-observability
+    role: standard
+  - id: cadena2016-slam-survey
+    role: survey
+    note: "§III-IV"
 ---
 
 # 관측가능성과 추정 일관성

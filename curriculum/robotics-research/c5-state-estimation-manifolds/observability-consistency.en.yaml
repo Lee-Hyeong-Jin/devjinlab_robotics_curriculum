@@ -11,16 +11,6 @@ activities:
 resources:
   "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
     note: ch.5 (Biases, Correspondences, and Outliers). The way into the textbook discussion of nonidealities; the full PDF is free.
-  "Huang, Mourikis & Roumeliotis — Observability-based rules for designing consistent EKF SLAM estimators (2010, IJRR)":
-    note: "Must-read 1, role: seminal. Sections 3-5 (null space analysis, spurious information, FEJ)."
-  "Li & Mourikis — High-precision, consistent EKF-based visual-inertial odometry (2013, IJRR)":
-    note: "Must-read 2, role: standard. Sections 3-4 (the four-dimensional unobservable subspace of VIO and consistency improvement)."
-  "Hermann & Krener — Nonlinear controllability and observability (1977, IEEE T-AC)":
-    note: "Must-read 3, role: seminal. The rank condition for local weak observability. Read only Theorem 3.1 and its surroundings."
-  "Hesch, Kottas, Bowman & Roumeliotis — Camera-IMU-based localization: observability analysis and consistency improvement (IJRR)":
-    note: Recommended. A systematic analysis of VIO observability and consistency improvement. Published online 2013, in print 2014.
-  "Cadena et al. — Past, present, and future of SLAM (2016)":
-    note: Recommended. Sections III-IV survey the consistency and robustness issues.
 quiz:
   - id: q1
     prompt: >-

@@ -6,9 +6,7 @@ summary: >-
   매니폴드 위 추정과 불변 EKF, IMU 선적분, 관측가능성과 추정 일관성, 강건·전역 추정까지 간다.
   근거가 되는 대학원 과목은 CMU 16-833, MIT 16.485 L16-30, UPenn ESE 650 M1 이고 교재는
   Barfoot SER(3-5, 7-9장)이다. 설계상 레슨은 6개다(blueprint.md 의 C5 절).
-# 설계상의 수준은 "연구"(research)다. Level 리터럴에 "연구"가 추가되기 전까지 "고급"으로 둔다
-# (research_notes/연구 트랙 설계/lesson-standard.md §11-4).
-level: 고급
+level: 연구
 lessons:
   - factor-graphs-map
   - sparsity-isam

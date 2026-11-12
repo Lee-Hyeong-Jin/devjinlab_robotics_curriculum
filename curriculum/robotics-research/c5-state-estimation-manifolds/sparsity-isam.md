@@ -23,7 +23,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 90
   - id: c5-sparsity-isam-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 3편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 150
   - id: c5-sparsity-isam-problems
@@ -31,7 +31,7 @@ activities:
     title: 문제 세트 (증명 1 · 유도 1 · 계산 2 · 구현 1 · 반례 1 · 논문 1)
     estimated_minutes: 180
   - id: c5-sparsity-isam-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — 순서별 fill-in, 증분 QR, 갱신 비용 척도, KL 희소화 (R2)
     estimated_minutes: 165
   - id: c5-sparsity-isam-quiz
@@ -43,34 +43,29 @@ resources:
     url: https://asrl.utias.utoronto.ca/~tdb/bib/barfoot_ser24.pdf
     kind: book
     note: ch.3.3 (희소성과 배치 vs 재귀). 이 레슨의 교재 진입로. 전문 PDF 무료.
-  - title: "Kaess, Johannsson, Roberts et al. — iSAM2 (2012, IJRR)"
-    url: https://doi.org/10.1177/0278364911430419
-    kind: article
-    note: 필독 1. 역할 원전(seminal). 3-5절(Bayes tree, 증분 재소거, fluid relinearization).
-  - title: "Rose, Tarjan & Lueker — Algorithmic aspects of vertex elimination on graphs (1976)"
-    url: https://doi.org/10.1137/0205021
-    kind: article
-    note: 필독 2. 역할 원전(seminal). fill-path 정리와 chordality. §2-3 만 읽는다.
-  - title: "Carlevaris-Bianco, Kaess & Eustice — Generic node removal for factor-graph SLAM (2014, T-RO)"
-    url: https://doi.org/10.1109/TRO.2014.2347571
-    kind: article
-    note: 필독 3. 역할 표준(standard). 주변화의 조밀화와 희소 근사(GLC). III-IV 절.
-  - title: "Yannakakis — Computing the minimum fill-in is NP-complete (1981)"
-    url: https://doi.org/10.1137/0602010
-    kind: article
-    note: 권장. 최소 fill-in 의 NP-완전성. 4쪽짜리 논문이므로 한 번 통독할 가치가 있다.
-  - title: "Lipton, Rose & Tarjan — Generalized nested dissection (1979)"
-    url: https://doi.org/10.1137/0716027
-    kind: article
-    note: 권장. separator 가 작은 그래프족의 fill·flops 상계. 2D 포즈 그래프의 실측 성능을 설명한다.
-  - title: "Kaess, Ranganathan & Dellaert — iSAM (2008, T-RO)"
-    url: https://doi.org/10.1109/TRO.2008.2006706
-    kind: article
-    note: 권장. Givens 회전으로 R 을 증분 갱신하는 원형. iSAM2 의 전신.
   - title: "CMU 16-833 Robot Localization and Mapping (Kaess)"
     url: https://www.cs.cmu.edu/~kaess/teaching/16833/Fall2024
     kind: course
     note: 이 모듈의 기준 과목. 소개문에 "효율적 확률 추론"이 이 레슨의 주제로 명시되어 있다.
+papers:
+  - id: kaess2012-isam2
+    required: true
+    role: seminal
+    note: "§3-5"
+  - id: rose1976-vertex-elimination
+    required: true
+    role: seminal
+    note: "§2-3"
+  - id: carlevaris-bianco2014-node-removal
+    required: true
+    role: standard
+    note: "§III-IV"
+  - id: yannakakis1981-min-fill-in
+    role: seminal
+  - id: lipton1979-nested-dissection
+    role: standard
+  - id: kaess2008-isam
+    role: seminal
 ---
 
 # 희소성과 증분 추론

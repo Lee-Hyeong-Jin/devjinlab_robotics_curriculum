@@ -23,7 +23,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 90
   - id: c5-factor-graphs-map-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 2편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 120
   - id: c5-factor-graphs-map-problems
@@ -31,7 +31,7 @@ activities:
     title: 문제 세트 (유도 1 · 증명 2 · 계산 1 · 구현 1 · 반례 1 · 논문 1)
     estimated_minutes: 180
   - id: c5-factor-graphs-map-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — 2랩 SE(2) 포즈 그래프의 GN 해와 희소·조밀 대조 (R2)
     estimated_minutes: 135
   - id: c5-factor-graphs-map-quiz
@@ -43,14 +43,6 @@ resources:
     url: https://asrl.utias.utoronto.ca/~tdb/bib/barfoot_ser24.pdf
     kind: book
     note: ch.3 (Linear-Gaussian Estimation), ch.4 (Nonlinear Non-Gaussian Estimation). 이 레슨의 1순위 교재. 전문 PDF 무료.
-  - title: "Dellaert & Kaess — Factor Graphs for Robot Perception (2017)"
-    url: https://doi.org/10.1561/2300000043
-    kind: article
-    note: 필독 1. 역할 서베이(survey). 2-4절(인자 그래프, 변수 소거, Bayes net)을 읽는다.
-  - title: "Dellaert & Kaess — Square Root SAM (2006, IJRR)"
-    url: https://doi.org/10.1177/0278364906072768
-    kind: article
-    note: 필독 2. 역할 원전(seminal). 3-5절(정보행렬·제곱근 정보·변수 순서)을 읽는다.
   - title: "CMU 16-833 Robot Localization and Mapping (Kaess)"
     url: https://www.cs.cmu.edu/~kaess/teaching/16833/Fall2024
     kind: course
@@ -59,6 +51,15 @@ resources:
     url: https://ocw.mit.edu/courses/16-485-visual-navigation-for-autonomous-vehicles-vnav-fall-2020/
     kind: course
     note: 권장. L16-20 이 인자 그래프와 SLAM 백엔드를 다룬다.
+papers:
+  - id: dellaert2017-factor-graphs
+    required: true
+    role: survey
+    note: "§2-4"
+  - id: dellaert2006-square-root-sam
+    required: true
+    role: seminal
+    note: "§3-5"
 ---
 
 # 인자 그래프와 MAP 추론

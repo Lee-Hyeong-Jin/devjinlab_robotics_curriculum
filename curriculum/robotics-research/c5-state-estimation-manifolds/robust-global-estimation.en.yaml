@@ -11,18 +11,6 @@ activities:
 resources:
   "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
     note: ch.5.3 (Outliers). The way into the textbook treatment of M-estimators and RANSAC; the full PDF is free.
-  "Rosen, Carlone, Bandeira & Leonard — SE-Sync (2019, IJRR)":
-    note: "Must-read 1, role: seminal. Sections 3-5 (convex relaxation, the Riemannian staircase, the global optimality certificate)."
-  "Yang, Shi & Carlone — TEASER: fast and certifiable point cloud registration (2021, T-RO)":
-    note: "Must-read 2, role: standard. Sections 4-6 (the TIM/TRIM decomposition, maximum clique, GNC)."
-  "Sunderhauf & Protzel — Switchable constraints for robust pose graph SLAM (2012, IROS)":
-    note: "Must-read 3, role: standard. Handling outliers with switch variables, and its limits."
-  "Carlone, Rosen, Calafiore, Leonard & Dellaert — Lagrangian duality in 3D SLAM (2015)":
-    note: Recommended. The dual certificate applied to pose graphs and its tightness conditions - the 3D version of R3 here.
-  "Fischler & Bolles — RANSAC (1981)":
-    note: Recommended. The original of hypothesize-and-verify outlier handling. Read it as a contrast to M-estimators.
-  "Cadena et al. — Past, present, and future of SLAM (2016)":
-    note: Recommended. Section IV surveys the robustness and certification issues.
 quiz:
   - id: q1
     prompt: >-

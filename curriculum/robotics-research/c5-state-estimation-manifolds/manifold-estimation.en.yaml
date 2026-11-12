@@ -11,14 +11,6 @@ activities:
 resources:
   "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
     note: ch.7 (three-dimensional geometry) and ch.8 (matrix Lie groups). The primary textbook for left and right uncertainty representations; the full PDF is free.
-  "Barrau & Bonnabel — The invariant extended Kalman filter as a stable observer (2017)":
-    note: "Must-read 1, role: seminal. Sections II-III (group-affine systems, the log-linear property, invariant observations)."
-  "Solà, Deray & Atchuthan — A micro Lie theory for state estimation in robotics (2018)":
-    note: "Must-read 2, role: standard. Left and right Jacobian conventions and the ⊕/⊖ notation. Sections 4-7."
-  "Absil, Mahony & Sepulchre — Optimization Algorithms on Matrix Manifolds (2008)":
-    note: "Must-read 3, role: standard. The definition of a retraction and the convergence theorems. ch.4 (4.1 retractions) and ch.7."
-  "Hartley, Ghaffari, Eustice & Grizzle — Contact-aided invariant EKF (2020, IJRR)":
-    note: Recommended. The standard case study of applying an invariant EKF to legged-robot state estimation - the choice of group and the handling of contact factors.
   "MIT 16.485 Visual Navigation for Autonomous Vehicles (OCW)":
     note: Recommended. L18-19 cover optimization on manifolds.
 quiz:
