@@ -475,7 +475,199 @@ papers:
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
   # ── C5 상태 추정 ────────────────────────────────────────────────
-  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+  - id: dellaert2006-square-root-sam
+    title: "Square Root SAM: simultaneous localization and mapping via square root information smoothing"
+    authors: ["F. Dellaert", "M. Kaess"]
+    year: 2006
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364906072768"
+    verified: true
+    role: seminal
+  - id: rose1976-vertex-elimination
+    title: "Algorithmic aspects of vertex elimination on graphs"
+    authors: ["D. J. Rose", "R. E. Tarjan", "G. S. Lueker"]
+    year: 1976
+    venue: "SIAM J. Comput."
+    url: "https://doi.org/10.1137/0205021"
+    verified: true
+    role: seminal
+  - id: carlevaris-bianco2014-node-removal
+    title: "Generic node removal for factor-graph SLAM"
+    authors: ["N. Carlevaris-Bianco", "M. Kaess", "R. M. Eustice"]
+    year: 2014
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2014.2347571"
+    verified: true
+    role: standard
+  - id: kaess2012-isam2
+    title: "iSAM2: incremental smoothing and mapping using the Bayes tree"
+    authors: ["M. Kaess", "H. Johannsson", "R. Roberts", "et al."]
+    year: 2012
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364911430419"
+    note: "Crossref 등록 연도 2011(온라인 선공개), 지면 2012"
+    verified: true
+    role: seminal
+  - id: yannakakis1981-min-fill-in
+    title: "Computing the minimum fill-in is NP-complete"
+    authors: ["M. Yannakakis"]
+    year: 1981
+    venue: "SIAM J. Alg. Disc. Meth."
+    url: "https://doi.org/10.1137/0602010"
+    verified: true
+    role: seminal
+  - id: lipton1979-nested-dissection
+    title: "Generalized nested dissection"
+    authors: ["R. J. Lipton", "D. J. Rose", "R. E. Tarjan"]
+    year: 1979
+    venue: "SIAM J. Numer. Anal."
+    url: "https://doi.org/10.1137/0716027"
+    verified: true
+    role: standard
+  - id: kaess2008-isam
+    title: "iSAM: incremental smoothing and mapping"
+    authors: ["M. Kaess", "A. Ranganathan", "F. Dellaert"]
+    year: 2008
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2008.2006706"
+    verified: true
+    role: seminal
+  - id: barrau2017-invariant-ekf
+    title: "The invariant extended Kalman filter as a stable observer"
+    authors: ["A. Barrau", "S. Bonnabel"]
+    year: 2017
+    venue: "IEEE T-AC"
+    url: "https://arxiv.org/abs/1410.1465"
+    note: "arXiv 2014 게재, T-AC 2017"
+    verified: true
+    role: seminal
+  - id: hartley2020-contact-inekf
+    title: "Contact-aided invariant extended Kalman filtering for robot state estimation"
+    authors: ["R. Hartley", "M. Ghaffari", "R. M. Eustice", "J. W. Grizzle"]
+    year: 2020
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364919894385"
+    verified: true
+    role: standard
+  - id: lupton2012-preintegration
+    title: "Visual-inertial-aided navigation for high-dynamic motion in built environments without initial conditions"
+    authors: ["T. Lupton", "S. Sukkarieh"]
+    year: 2012
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2011.2170332"
+    verified: true
+    role: seminal
+  - id: martinelli2012-closed-form-scale
+    title: "Vision and IMU data fusion: closed-form solutions for attitude, speed, absolute scale, and bias determination"
+    authors: ["A. Martinelli"]
+    year: 2012
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2011.2160468"
+    verified: true
+    role: standard
+  - id: qin2018-vins-mono
+    title: "VINS-Mono: a robust and versatile monocular visual-inertial state estimator"
+    authors: ["T. Qin", "P. Li", "S. Shen"]
+    year: 2018
+    venue: "IEEE T-RO"
+    url: "https://arxiv.org/abs/1708.03852"
+    note: "arXiv v1 2017, T-RO 2018"
+    verified: true
+    role: standard
+  - id: mourikis2007-msckf
+    title: "A multi-state constraint Kalman filter for vision-aided inertial navigation"
+    authors: ["A. I. Mourikis", "S. I. Roumeliotis"]
+    year: 2007
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ROBOT.2007.364024"
+    verified: true
+    role: seminal
+  - id: huang2010-fej
+    title: "Observability-based rules for designing consistent EKF SLAM estimators"
+    authors: ["G. P. Huang", "A. I. Mourikis", "S. I. Roumeliotis"]
+    year: 2010
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364909353640"
+    note: "Crossref 등록 연도 2009(온라인 선공개), 지면 2010"
+    verified: true
+    role: seminal
+  - id: li2013-vio-observability
+    title: "High-precision, consistent EKF-based visual-inertial odometry"
+    authors: ["M. Li", "A. I. Mourikis"]
+    year: 2013
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364913481251"
+    verified: true
+    role: standard
+  - id: hermann1977-observability
+    title: "Nonlinear controllability and observability"
+    authors: ["R. Hermann", "A. Krener"]
+    year: 1977
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.1977.1101601"
+    verified: true
+    role: seminal
+  - id: hesch2014-vio-observability
+    title: "Camera-IMU-based localization: observability analysis and consistency improvement"
+    authors: ["J. A. Hesch", "D. G. Kottas", "S. L. Bowman", "S. I. Roumeliotis"]
+    year: 2014
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364913509675"
+    note: "온라인 선공개 2013-11-13, 지면 2014"
+    verified: true
+    role: standard
+  - id: rosen2019-se-sync
+    title: "SE-Sync: a certifiably correct algorithm for synchronization over the special Euclidean group"
+    authors: ["D. M. Rosen", "L. Carlone", "A. S. Bandeira", "J. J. Leonard"]
+    year: 2019
+    venue: "IJRR"
+    url: "https://arxiv.org/abs/1612.07386"
+    note: "arXiv 2016 게재, IJRR 2019"
+    verified: true
+    role: seminal
+  - id: yang2021-teaser
+    title: "TEASER: fast and certifiable point cloud registration"
+    authors: ["H. Yang", "J. Shi", "L. Carlone"]
+    year: 2021
+    venue: "IEEE T-RO"
+    url: "https://arxiv.org/abs/2001.07715"
+    note: "arXiv 2020 게재; arXiv journal_ref 는 T-RO 2020, 지면 2021"
+    verified: true
+    role: standard
+  - id: sunderhauf2012-switchable
+    title: "Switchable constraints for robust pose graph SLAM"
+    authors: ["N. Sunderhauf", "P. Protzel"]
+    year: 2012
+    venue: "IROS"
+    url: "https://doi.org/10.1109/IROS.2012.6385590"
+    verified: true
+    role: standard
+  - id: carlone2015-lagrangian-duality
+    title: "Lagrangian duality in 3D SLAM: verification techniques and optimal solutions"
+    authors: ["L. Carlone", "D. M. Rosen", "G. Calafiore", "J. J. Leonard", "F. Dellaert"]
+    year: 2015
+    venue: "IROS"
+    url: "https://arxiv.org/abs/1506.00746"
+    verified: true
+    role: standard
+  - id: fischler1981-ransac
+    title: "Random sample consensus: a paradigm for model fitting with applications to image analysis and automated cartography"
+    authors: ["M. A. Fischler", "R. C. Bolles"]
+    year: 1981
+    venue: "Communications of the ACM"
+    url: "https://doi.org/10.1145/358669.358692"
+    note: "1987 재수록판 DOI(10.1016/b978-0-08-051581-6.50070-2)는 쓰지 않는다"
+    verified: true
+    role: seminal
+  - id: cadena2016-slam-survey
+    title: "Past, present, and future of simultaneous localization and mapping: towards the robust-perception age"
+    authors: ["C. Cadena", "L. Carlone", "H. Carrillo", "et al."]
+    year: 2016
+    venue: "IEEE T-RO"
+    url: "https://arxiv.org/abs/1606.05830"
+    note: "journal_ref: IEEE T-RO 32(6), 1309-1332, 2016"
+    verified: true
+    role: survey
 
   # ── C6 동작 계획 이론 ─────────────────────────────────────────────
   - id: reif1979-complexity

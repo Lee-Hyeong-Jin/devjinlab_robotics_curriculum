@@ -190,6 +190,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `curriculum/robotics-research/papers.yaml`: the course paper registry (ADR 0014) with the
   eleven papers the C7 lessons assign; both C7 lessons reference them through front-matter
   `papers:` and `rc papers <lesson_id>` lists them.
+- Research track module C5 (state estimation): the `c5-factor-graphs-map` lesson in Korean and
+  English — MAP on a factor graph proved equivalent to nonlinear least squares, Gaussian variable
+  elimination derived as the Schur complement, the Kalman filter re-derived from the normal
+  equations, and a two-lap SE(2) pose graph reproduction task with machine-checkable acceptance
+  criteria.
+- Research track module C5: the `c5-sparsity-isam` lesson in Korean and English — the fill-path
+  theorem proved in both directions, the locality of iSAM2's incremental re-elimination derived
+  from the Bayes tree's conditional factorization, incremental QR by Givens rotations with its
+  cost shown to be distance in the variable order, and KL-optimal sparsification derived as
+  moment matching. Adds five verified papers to the C5 block of the reading-list registry.
+- Research track module C5: the `c5-manifold-estimation` lesson in Korean and English — the
+  retraction invariance of on-manifold Gauss-Newton proved, the Ad transformation between left and
+  right uncertainty derived, the group-affine cancellation that makes the invariant error dynamics
+  autonomous derived line by line, and a 3000-run Monte Carlo NEES comparison of a standard EKF
+  against an invariant EKF on SE(3).
+- Research track module C5: the `c5-imu-preintegration` lesson in Korean and English — the
+  preintegration identity proved exactly for the stated discretization (including the gravity
+  bookkeeping that makes it work), the bias-relinearization Jacobian recursions and the
+  nine-dimensional noise covariance derived, and the two-fold scale/gravity ambiguity of monocular
+  visual-inertial fusion under constant acceleration derived in closed form and confirmed
+  numerically.
+- Research track module C5: the `c5-observability-consistency` lesson in Korean and English — the
+  Hermann-Krener rank condition, the four-dimensional unobservable subspace of monocular
+  visual-inertial estimation derived from its invariance group, the mechanism by which an EKF's
+  linearization points break the null space, and FEJ shown to turn on choosing between two
+  algebraically identical Jacobian expressions. The reproduction task measures all of it by
+  numerical rank, and reports honestly that null-space preservation did not improve NEES in either
+  simulated setting.
+- Research track module C5: the `c5-robust-global-estimation` lesson in Korean and English — the
+  M-estimator / IRLS equivalence proved and verified numerically, influence functions used to
+  separate bounded from redescending kernels, and a four-line proof of the global optimality
+  certificate for SO(2) rotation synchronization (SE-Sync in miniature) together with the measured
+  fact that its tightness survives noise but not outliers.
+- Research track module C5 is complete (six lessons) and converted to the landed schema
+  (AUTHORING §8-1): must-read papers moved from `resources[]` into front-matter `papers[]`
+  referencing the course registry, 23 entries added to the registry's C5 block (all with URLs
+  verified against the Crossref or arXiv API), activity kinds `paper` and `reproduction`, and
+  `level: 연구` on the module.
 - Research-track module C3 (nonlinear and robust control) under
   `curriculum/robotics-research/c3-nonlinear-robust-control/`: lesson 1, Lyapunov stability and
   ISS, in Korean and English — the Lyapunov theorem, its converse for exponential stability and

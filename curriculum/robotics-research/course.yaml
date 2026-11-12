@@ -13,6 +13,7 @@ modules:
   - c1-rigid-body-geometry-lie-groups
   - c2-multibody-dynamics
   - c3-nonlinear-robust-control
+  - c5-state-estimation-manifolds
   - c6-motion-planning-theory
   - c7-perception-3d-representations
   - c8-decision-making-learning-theory

@@ -615,6 +615,97 @@ papers:
     verified: true
     lessons: [s1-certifiable-slam]
     role: standard
+  - id: rose1976-vertex-elimination
+    title: "Algorithmic aspects of vertex elimination on graphs"
+    authors: ["D. J. Rose", "R. E. Tarjan", "G. S. Lueker"]
+    year: 1976
+    venue: "SIAM J. Comput."
+    url: "https://doi.org/10.1137/0205021"
+    verified: true
+    lessons: [c5-sparsity-isam]
+    role: seminal
+  - id: yannakakis1981-min-fill-in
+    title: "Computing the minimum fill-in is NP-complete"
+    authors: ["M. Yannakakis"]
+    year: 1981
+    venue: "SIAM J. Alg. Disc. Meth."
+    url: "https://doi.org/10.1137/0602010"
+    verified: true
+    lessons: [c5-sparsity-isam]
+    role: seminal
+  - id: lipton1979-nested-dissection
+    title: "Generalized nested dissection"
+    authors: ["R. J. Lipton", "D. J. Rose", "R. E. Tarjan"]
+    year: 1979
+    venue: "SIAM J. Numer. Anal."
+    url: "https://doi.org/10.1137/0716027"
+    verified: true
+    lessons: [c5-sparsity-isam]
+    role: standard
+  - id: kaess2008-isam
+    title: "iSAM: incremental smoothing and mapping"
+    authors: ["M. Kaess", "A. Ranganathan", "F. Dellaert"]
+    year: 2008
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2008.2006706"
+    verified: true
+    lessons: [c5-sparsity-isam]
+    role: seminal
+  - id: carlevaris-bianco2014-node-removal
+    title: "Generic node removal for factor-graph SLAM"
+    authors: ["N. Carlevaris-Bianco", "M. Kaess", "R. M. Eustice"]
+    year: 2014
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2014.2347571"
+    verified: true
+    lessons: [c5-sparsity-isam]
+    role: standard
+  - id: hartley2020-contact-inekf
+    title: "Contact-aided invariant extended Kalman filtering for robot state estimation"
+    authors: ["R. Hartley", "M. Ghaffari", "R. M. Eustice", "J. W. Grizzle"]
+    year: 2020
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364919894385"
+    verified: true
+    lessons: [c5-manifold-estimation]
+    role: standard
+  - id: lupton2012-preintegration
+    title: "Visual-inertial-aided navigation for high-dynamic motion in built environments without initial conditions"
+    authors: ["T. Lupton", "S. Sukkarieh"]
+    year: 2012
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2011.2170332"
+    verified: true
+    lessons: [c5-imu-preintegration]
+    role: seminal
+  - id: martinelli2012-closed-form-scale
+    title: "Vision and IMU data fusion: closed-form solutions for attitude, speed, absolute scale, and bias determination"
+    authors: ["A. Martinelli"]
+    year: 2012
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2011.2160468"
+    verified: true
+    lessons: [c5-imu-preintegration]
+    role: standard
+  - id: hermann1977-observability
+    title: "Nonlinear controllability and observability"
+    authors: ["R. Hermann", "A. Krener"]
+    year: 1977
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.1977.1101601"
+    verified: true
+    lessons: [c5-observability-consistency]
+    role: seminal
+  - id: hesch2014-vio-observability
+    title: "Camera-IMU-based localization: observability analysis and consistency improvement"
+    authors: ["J. A. Hesch", "D. G. Kottas", "S. L. Bowman", "S. I. Roumeliotis"]
+    year: 2014
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364913509675"
+    note: "온라인 선공개 2013-11-13, 지면 2014"
+    verified: true
+    lessons: [c5-observability-consistency]
+    role: standard
 
   # ── C6 동작 계획 이론 ────────────────────────────────────────────────
   - id: reif1979-complexity

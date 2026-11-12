@@ -1,0 +1,101 @@
+# English text of the structured fields of factor-graphs-map.md (activity titles, resource
+# notes, quiz). The prose lives in factor-graphs-map.en.md.
+id: c5-factor-graphs-map
+lang: en
+activities:
+  c5-factor-graphs-map-reading: Read the lesson and follow the derivations
+  c5-factor-graphs-map-papers: Read the two must-read papers + a one-page note each
+  c5-factor-graphs-map-problems: "Problem set (1 derivation, 2 proofs, 1 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  c5-factor-graphs-map-reproduction: "Reproduction task - Gauss-Newton on a two-lap SE(2) pose graph, sparse vs dense (R2)"
+  c5-factor-graphs-map-quiz: Concept check quiz
+resources:
+  "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
+    note: ch.3 (Linear-Gaussian Estimation) and ch.4 (Nonlinear Non-Gaussian Estimation). The primary textbook for this lesson; the full PDF is free.
+  "CMU 16-833 Robot Localization and Mapping (Kaess)":
+    note: The reference course for this module. The weekly schedule is not public; only the course description is.
+  "MIT 16.485 Visual Navigation for Autonomous Vehicles (OCW)":
+    note: Recommended. L16-20 cover factor graphs and the SLAM back-end.
+quiz:
+  - id: q1
+    prompt: >-
+      When the measurement covariance depends on the state, $\Sigma_k = \Sigma_k(\mathcal{X})$,
+      which term appears additionally in the correct MAP objective?
+    choices:
+      - $-\log p(\mathcal{Z})$
+      - $\frac{1}{2}\log\det\Sigma_k(\mathcal{X})$
+      - $\frac{p_k}{2}\log 2\pi$
+      - No extra term - only the weights change
+    explanation: >-
+      The $\frac12\log\det\Sigma_k$ that sat inside the constant $c$ of (6) is no longer constant.
+      Minimizing only the sum of squares without it pulls the solution towards reporting a large
+      covariance, the degenerate answer that drives every residual to zero.
+    concept:
+      front: The assumption that breaks MAP = least squares
+      back: >-
+        If $\Sigma$ depends on the state, the term $\frac12\log\det\Sigma(\mathcal{X})$ remains -
+        weighted least squares alone is then wrong
+  - id: q2
+    prompt: >-
+      In a linear-Gaussian system, the Kalman filter's estimate of the last state is exactly the
+      marginal of the last state of the full smoothing (MAP) solution over the same data.
+    explanation: >-
+      In the linear-Gaussian case elimination (marginalization) is exact and there is no
+      linearization error. The filter only discards the conditionals of the past, so the marginal
+      of the last state is the same as the smoother's. What defeats the filter is nonlinearity -
+      it cannot relinearize.
+    concept:
+      front: Filter vs smoother (linear-Gaussian)
+      back: >-
+        The marginal of the last state is identical - the differences are that the past can no
+        longer be corrected and that, in the nonlinear case, the linearization point is frozen
+        forever
+  - id: q3
+    prompt: >-
+      When $x_1$ is eliminated from a Gaussian factor graph, what is the information matrix of the
+      new factor attached to the separator $\mathcal{S}$?
+    choices:
+      - $\Lambda_{\mathcal{S}\mathcal{S}} + \Lambda_{\mathcal{S}1}\Lambda_{11}^{-1}\Lambda_{1\mathcal{S}}$
+      - $\Lambda_{\mathcal{S}\mathcal{S}} - \Lambda_{\mathcal{S}1}\Lambda_{11}^{-1}\Lambda_{1\mathcal{S}}$
+      - $\Lambda_{11} - \Lambda_{1\mathcal{S}}\Lambda_{\mathcal{S}\mathcal{S}}^{-1}\Lambda_{\mathcal{S}1}$
+      - $\Lambda_{\mathcal{S}\mathcal{S}}^{-1} - \Lambda_{11}^{-1}$
+    explanation: >-
+      It is the Schur complement of $\Lambda_{11}$ (equation (4)). It is the quantity subtracted
+      when the $x_1$ terms are split off by completing the square, and it is the same matrix as
+      the information matrix of the marginal obtained by integrating $x_1$ out.
+    concept:
+      front: The new factor from Gaussian elimination
+      back: >-
+        $\Lambda_{\mathcal{S}\mathcal{S}} - \Lambda_{\mathcal{S}1}\Lambda_{11}^{-1}\Lambda_{1\mathcal{S}}$,
+        the Schur complement - the separator becomes a clique, which is fill-in
+  - id: q4
+    prompt: >-
+      What is the numerical reason to obtain the square root information matrix $\mathsf{R}$
+      directly by QR instead of forming $\Lambda = A^\top A$?
+    choices:
+      - QR always costs fewer operations than Cholesky
+      - $\kappa(\Lambda) = \kappa(A)^2$, so forming $\Lambda$ squares the condition number
+      - $\Lambda$ is not sparse while $A$ is
+      - QR does not need the Jacobian
+    explanation: >-
+      The singular values are squared, so $\kappa(\Lambda)=\kappa(A)^2$ (equation (9)). At
+      $\kappa(A)=10^8$, $\Lambda$ is numerically singular in double precision while $A$ is fine.
+      In operation count, sparse Cholesky is often the faster of the two.
+    concept:
+      front: Why use the square root information form
+      back: >-
+        $\kappa(\Lambda)=\kappa(A)^2$ - forming the information matrix halves the number of
+        significant digits
+  - id: q5
+    prompt: >-
+      In an $SE(2)$ pose graph built only from relative measurements, $\Lambda$ is invertible even
+      without an anchor factor, so elimination can proceed.
+    explanation: >-
+      Rigidly transforming the whole graph leaves every relative residual unchanged, so the null
+      space of $\Lambda$ is three-dimensional (the dimension of $SE(2)$). An anchor (prior) factor
+      must fix the gauge, or the system must be solved with a pseudo-inverse. In $SE(3)$ the null
+      space is six-dimensional.
+    concept:
+      front: Gauge freedom of a pose graph
+      back: >-
+        With relative measurements only, the null space of $\Lambda$ is the global rigid transform
+        (3-dimensional in $SE(2)$, 6-dimensional in $SE(3)$) - an anchor factor is needed

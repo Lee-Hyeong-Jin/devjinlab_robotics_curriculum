@@ -1,0 +1,105 @@
+# English text of the structured fields of observability-consistency.md (activity titles,
+# resource notes, quiz). The prose lives in observability-consistency.en.md.
+id: c5-observability-consistency
+lang: en
+activities:
+  c5-observability-consistency-reading: Read the lesson and follow the derivations
+  c5-observability-consistency-papers: Read the three must-read papers + a one-page note each
+  c5-observability-consistency-problems: "Problem set (2 proofs, 1 derivation, 1 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  c5-observability-consistency-reproduction: "Reproduction task - the 4-dimensional VIO null space, FEJ's null-space preservation, NEES (R2)"
+  c5-observability-consistency-quiz: Concept check quiz
+resources:
+  "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
+    note: ch.5 (Biases, Correspondences, and Outliers). The way into the textbook discussion of nonidealities; the full PDF is free.
+quiz:
+  - id: q1
+    prompt: >-
+      In monocular visual-inertial estimation, why is yaw unobservable while roll and pitch are
+      observable?
+    choices:
+      - Because yaw accumulates more integration error
+      - Because only a rotation about gravity satisfies $R_\psi^\top g = g$ and therefore leaves the accelerometer reading unchanged
+      - Because a camera is insensitive to changes in yaw
+      - Because the gyroscope bias is largest about the yaw axis
+    explanation: >-
+      It is the single line of (4) — $R_k'^\top(a_k' - g) = R_k^\top(a_k - R_\psi^\top g)$, and
+      only for a rotation about gravity is $R_\psi^\top g = g$. A rotation off the gravity axis
+      breaks that identity, so the accelerometer observes roll and pitch. It is a **structural**
+      property, unrelated to sensor quality or integration error.
+    concept:
+      front: Why only yaw is unobservable in VIO
+      back: >-
+        $R_\psi^\top g = g$ — only a rotation about gravity preserves the accelerometer reading. A
+        structural property, independent of sensor quality
+  - id: q2
+    prompt: >-
+      If a range measurement (stereo or LiDAR) is added to monocular VIO, what happens to the
+      unobservable subspace?
+    choices:
+      - It disappears entirely
+      - It shrinks from four dimensions to three
+      - The four dimensions - three global translations plus one yaw about gravity - remain
+      - It grows
+    explanation: >-
+      A range measurement fixes the denominator of (5) and so determines the **scale**, but the
+      $R_\psi$ and $t$ of (2) preserve ranges too. The four-dimensional structural unobservability
+      is therefore untouched — only a measurement of absolute position or heading (GPS, a known map,
+      an anchor factor) removes it.
+    concept:
+      front: Range sensors and structural unobservability
+      back: >-
+        The scale becomes observable but the three global translations plus one yaw remain. Only an
+        absolute measurement removes them
+  - id: q3
+    prompt: >-
+      The inconsistency of an EKF is fixed just by evaluating the measurement Jacobian $H$ at the
+      first estimates.
+    explanation: >-
+      In 2D SLAM, $H_kN_k = 0$ holds regardless of the linearization point thanks to
+      $R^\top J = JR^\top$ (equation (12)). What breaks is $\Phi_kN_k = N_{k+1}$, and fixing it
+      requires writing the transition Jacobian block as
+      $J(\hat p_{k+1|k} - \hat p_{k|k-1})$. In the reproduction task, changing only $H$ leaves
+      $\lVert MN\rVert/\lVert N\rVert$ at $4.3\times10^{-2}$.
+    concept:
+      front: What FEJ actually has to fix
+      back: >-
+        The $(1,3)$ block of $\Phi$, as $J(\hat p_{k+1|k}-\hat p_{k|k-1})$. Changing only $H$ does
+        not restore the null space
+  - id: q4
+    prompt: >-
+      Why do the two Jacobian expressions $JR(\theta_k)u_k$ and $J(p_{k+1}-p_k)$, algebraically
+      identical in the true system, give different results in an EKF?
+    choices:
+      - Because floating-point error accumulates differently
+      - Because substituting estimates makes them different values, and only one satisfies the null-space propagation condition (13)
+      - Because one is a first-order and the other a second-order approximation
+      - Because $u_k$ is noisy
+    explanation: >-
+      $p_{k+1} = p_k + R(\theta_k)u_k$ holds **only at the truth**. The estimate
+      $\hat p_{k+1|k}$ is propagated from the updated estimate while $R(\hat\theta_{k|k-1})u_k$
+      uses the pre-update heading, so the two differ by the update correction. Only the
+      position-difference form satisfies (13).
+    concept:
+      front: Algebraic identity is not numerical identity
+      back: >-
+        Two expressions equal at the truth differ at the estimates. One has to **choose** the
+        expression that satisfies the null-space propagation condition
+  - id: q5
+    prompt: >-
+      If a filter's null space is preserved exactly and $\lVert MN\rVert$ is at machine precision,
+      what follows?
+    choices:
+      - The filter is consistent ($\mathbb{E}[\mathrm{NEES}] = \dim$)
+      - That it injected no spurious information into unobservable directions; consistency still has to be measured separately
+      - The filter is optimal
+      - The estimation error is minimal
+    explanation: >-
+      Null space preservation removes **one** cause of inconsistency, the spurious information. The
+      remaining causes are linearization error and a misspecified noise model. Part C of the
+      reproduction task exhibits a setting where FEJ preserves the null space perfectly and yet has
+      a worse ANEES than the standard EKF (1.265 against 0.915).
+    concept:
+      front: What null space preservation guarantees
+      back: >-
+        No spurious information. Consistency and accuracy are separate axes that must be measured
+        and reported on their own
