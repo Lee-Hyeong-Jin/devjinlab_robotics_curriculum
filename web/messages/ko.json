@@ -43,6 +43,11 @@
     "weeklySessions": "세션 {count}회",
     "unavailable": "API 서버에서 진행 상황을 받아오지 못했습니다."
   },
+  "course": {
+    "switcher": "코스 선택",
+    "lessonCount": "레슨 {count}개",
+    "progressHeading": "코스별 진행률"
+  },
   "roadmap": {
     "title": "로드맵",
     "subtitle": "단계 → 모듈 → 레슨 순서와 선수지식 흐름입니다.",

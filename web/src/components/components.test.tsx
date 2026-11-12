@@ -2,11 +2,12 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 
-import type { AuthProvider, Paper, ResourceRef } from '@/lib/api/types'
+import type { AuthProvider, CourseSummary, Paper, ResourceRef } from '@/lib/api/types'
 import { resource } from '@/test/factories'
 import { renderWithIntl } from '@/test/render'
 
 import { Chip } from './Chip'
+import { CourseTabs } from './CourseTabs'
 import { DataTable, type Column } from './DataTable'
 import { EmptyState } from './EmptyState'
 import { LessonRow } from './LessonRow'
@@ -462,5 +463,42 @@ describe('ProblemSet', () => {
   it('offers no disclosure when no solution is published', () => {
     const { container } = renderWithIntl(<ProblemSet problems={[problem({ id: 'p1' })]} />)
     expect(container.querySelector('details')).toBeNull()
+  })
+})
+
+describe('CourseTabs', () => {
+  const course = (id: string, title: string, lessons = 3): CourseSummary => ({
+    id,
+    title,
+    summary: '',
+    tags: [],
+    module_count: 1,
+    lesson_count: lessons,
+    lang: 'ko',
+  })
+
+  it('renders nothing for a single course, where a one-tab bar is just noise', () => {
+    const { container } = renderWithIntl(
+      <CourseTabs courses={[course('a', '코스 A')]} selected="a" basePath="/roadmap" />,
+    )
+    expect(container).toBeEmptyDOMElement()
+  })
+
+  it('links each course and marks the one being shown', () => {
+    renderWithIntl(
+      <CourseTabs
+        courses={[course('expert', '전문가 코스'), course('research', '연구 코스', 12)]}
+        selected="research"
+        basePath="/roadmap"
+      />,
+    )
+    const expert = screen.getByRole('link', { name: /전문가 코스/ })
+    expect(expert).toHaveAttribute('href', '/roadmap?course=expert')
+    expect(expert).not.toHaveAttribute('aria-current')
+
+    const research = screen.getByRole('link', { name: /연구 코스/ })
+    expect(research).toHaveAttribute('href', '/roadmap?course=research')
+    expect(research).toHaveAttribute('aria-current', 'page')
+    expect(research).toHaveTextContent('레슨 12개')
   })
 })

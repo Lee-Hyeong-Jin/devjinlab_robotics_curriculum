@@ -93,6 +93,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and `Strict-Transport-Security` only when the request arrived over HTTPS.
 - `docs/adr/0013-signup-policy.md` (proposed, not implemented): `RC_AUTH_SIGNUP`
   (`open` | `closed` | `invite`) and how invitations would work.
+- Web: a course switcher. With more than one course the roadmap shows a tab per course and
+  the dashboard a progress row per course, each linking to that course's roadmap. The
+  selection travels in `?course=`, so it works without JavaScript and can be bookmarked.
+  Until now `RC_DEFAULT_COURSE_ID` was the only way to pick a course, which left a second
+  one (the research track) with no way in at all. A single-course deployment is unchanged.
 - ` ```problemset ` blocks: a lesson can carry derivations, proofs, numerical and
   implementation problems that are **not** graded and never become flashcards, unlike quiz
   questions (lesson-standard.md §11-3). `rc validate` gains rule 13 for their structure —

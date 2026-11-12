@@ -147,6 +147,34 @@ test('every "핵심 수식" lesson renders its formulas, with no TeX left on the
   }
 })
 
+test('every course is reachable from the roadmap and the dashboard', async ({ page }) => {
+  await page.goto('/roadmap')
+  const tabs = page.locator('a[href^="/roadmap?course="]')
+  const count = await tabs.count()
+  if (count === 0) {
+    // A single-course deployment shows no tab bar; nothing else to check.
+    return
+  }
+  expect(count, 'a tab bar means more than one course').toBeGreaterThan(1)
+  await expect(page.locator('a[aria-current="page"][href^="/roadmap?course="]')).toHaveCount(1)
+
+  // Switching to the last course shows that course's modules, not the default one's.
+  const before = await page.locator('a[href^="/modules/"]').count()
+  await tabs.last().click()
+  await page.waitForURL(/\/roadmap\?course=/)
+  await expect(page.locator('a[aria-current="page"][href^="/roadmap?course="]')).toHaveCount(1)
+  const modules = page.locator('a[href^="/modules/"]')
+  expect(await modules.count(), 'the second course has modules of its own').toBeGreaterThan(0)
+  await modules.first().click()
+  await page.waitForURL(/\/modules\//)
+  await expect(page.locator('h1')).toHaveCount(1)
+  expect(before).toBeGreaterThan(0)
+
+  // The dashboard links each course too, so the switcher is not the only way in.
+  await page.goto('/')
+  expect(await page.locator('a[href^="/roadmap?course="]').count()).toBeGreaterThan(1)
+})
+
 test('no lesson or module is locked: every card links through (ADR 0015)', async ({ page }) => {
   await page.goto('/roadmap')
   // Every module card is a link, including ones nothing has been started in.
