@@ -9,16 +9,35 @@ import { PageHeader } from '@/components/PageHeader'
 import { ProgressBar } from '@/components/ProgressBar'
 import { StatusDot } from '@/components/StatusDot'
 import { CourseTabs } from '@/components/CourseTabs'
-import { getCourses, getRoadmap } from '@/lib/api/queries'
+import { JsonLd } from '@/components/JsonLd'
+import { getCourse, getCourses, getRoadmap } from '@/lib/api/queries'
 import { defaultCourseId } from '@/lib/api/config'
 import { selectedCourseId } from '@/lib/courses'
+import { metaDescription, pageSeo } from '@/lib/seo'
+import { breadcrumbs, courseSchema } from '@/lib/structured-data'
 import { formatPercent } from '@/lib/format'
 import type { LockState } from '@/lib/progress'
 import { doneCount } from '@/lib/progress'
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('roadmap')
-  return { title: t('title') }
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const [t, params, courses] = await Promise.all([
+    getTranslations('roadmap'),
+    searchParams,
+    getCourses(),
+  ])
+  const courseId = selectedCourseId(courses, params.course, defaultCourseId())
+  const course = courses.find((candidate) => candidate.id === courseId)
+  const isDefault = courseId === defaultCourseId()
+  return pageSeo({
+    // The default course lives at the bare `/roadmap`, so the two addresses do not compete
+    // for the same content.
+    path: isDefault ? '/roadmap' : `/roadmap?course=${encodeURIComponent(courseId)}`,
+    // Names the course *and* what the page is: the course title alone would not say that
+    // this is its roadmap, and the bare word "roadmap" says nothing about which course.
+    title: course ? t('courseTitle', { course: course.title }) : t('title'),
+    description: metaDescription(course?.summary) || t('subtitle'),
+    publishable: true,
+  })
 }
 
 interface TableRow {
@@ -44,6 +63,9 @@ export default async function RoadmapPage({ searchParams }: Props) {
   ])
   const courseId = selectedCourseId(courses, params.course, defaultCourseId())
   const stages = await getRoadmap(courseId)
+  const course = await getCourse(courseId)
+  const coursePath =
+    courseId === defaultCourseId() ? '/roadmap' : `/roadmap?course=${encodeURIComponent(courseId)}`
 
   if (stages.length === 0) {
     return (
@@ -82,7 +104,15 @@ export default async function RoadmapPage({ searchParams }: Props) {
 
   return (
     <>
-      <PageHeader title={t('title')} subtitle={t('subtitle')} />
+      {course ? (
+        <JsonLd
+          data={[courseSchema(course, coursePath), breadcrumbs([[course.title, coursePath]])]}
+        />
+      ) : null}
+      <PageHeader
+        title={course ? t('courseTitle', { course: course.title }) : t('title')}
+        subtitle={t('subtitle')}
+      />
       <CourseTabs courses={courses} selected={courseId} basePath="/roadmap" />
 
       <div className="flex flex-col gap-8">
@@ -110,11 +140,11 @@ export default async function RoadmapPage({ searchParams }: Props) {
                     title={module.title}
                     state={module.state}
                     progress={module.progress}
-                    lessonsTotal={module.lessons.length}
+                    lessonsTotal={module.lessonsTotal}
                     lessonsDone={doneCount(module.lessons.map((lesson) => lesson.state))}
                     level={stage.levelLabel}
                     stateLabel={tState(module.state)}
-                    lessonsLabel={t('lessonCount', { count: module.lessons.length })}
+                    lessonsLabel={t('lessonCount', { count: module.lessonsTotal })}
                     progressLabel={t('colProgress')}
                   />
                 </li>

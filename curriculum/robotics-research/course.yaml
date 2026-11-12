@@ -3,13 +3,14 @@ title: 로보틱스 연구원 트랙
 summary: >-
   로보틱스 연구원(researcher)을 목표로 하는 specialization 급 전문 과정. 기준은 세계 최상위
   대학원 과목과 국제 학회(RSS, ICRA, IROS, CoRL, IJRR, T-RO, RA-L)의 연구 수준이며, 레슨마다
-  핵심 결과를 직접 유도하고 원 논문을 읽고 수치적으로 재현한다. 설계안은
-  research_notes/연구 트랙 설계/blueprint.md(97레슨), 레슨 표준은 같은 폴더의 lesson-standard.md.
-  현재는 표준 검증용 기준 레슨(reference lesson) 1개만 들어 있다 — 선수 과정은
-  robotics-expert 코스다.
+  핵심 결과를 직접 유도하고 원 논문을 읽고 수치적으로 재현한다. 경로는 Stage -1 시작 전 기초 →
+  공통 코어 → specialization → 연구 실행이며, 모듈이 완성되는 대로 추가된다(집필 중).
+  로보틱스 선수 과정은 robotics-expert 코스다. 선수는 잠금이 아니라 권장이며, 각 모듈 첫 레슨의
+  자가 진단으로 건너뛸 수 있다. 설계안과 레슨 표준은 research_notes/ 의 연구 트랙 설계 노트에 있다.
 tags: [robotics, research, graduate]
 modules:
   - f0-foundations-from-zero
+  - r0-math-numerical-foundations
   - c1-rigid-body-geometry-lie-groups
   - c2-multibody-dynamics
   - c3-nonlinear-robust-control

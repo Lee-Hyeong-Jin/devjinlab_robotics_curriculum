@@ -308,8 +308,8 @@ Stanford CS231A, TUM IN2228, MVG·CV 교재.
 | `c7-two-view-geometry` 다시점 기하와 에피폴라 | 본질·기본 행렬의 유도와 자유도 **[D3]**; 8점·5점 알고리즘 **[D2]**; 삼각측량의 최적성과 편향 **[D3]** | `nister2004-five-point`, `longuet-higgins1981-essential` | MVG ch.9–11, CV ch.11 | R2: 8점·5점 알고리즘을 구현해 노이즈 대비 회전 오차를 비교(5점이 우수함을 확인) |
 | `c7-bundle-adjustment` N-view 와 번들 조정 | 재투영 오차의 희소 정규방정식과 Schur 보완 **[D3]**; 게이지 자유도와 고정 방법 **[D2]**; 자기 보정의 가해성 **[D2]** | `triggs2000-bundle-adjustment`, `agarwal2010-rome` | MVG ch.18, SER ch.10 | R3: 공개 BAL 데이터셋 1개에서 BA 를 수렴시켜 보고된 최종 비용과 1% 이내 일치 |
 | `c7-robust-fitting-ransac` 강건 적합과 RANSAC 이론 | RANSAC 반복 수 공식과 실패 확률 **[D3]**; 최소 표본 집합과 오염률 한계 **[D2]**; 전역 최적 정합의 분기한정 **[D2]** | `fischler1981-ransac`, `barath2020-magsac` | MVG ch.4.7, CV ch.8 | R1: 오염률 대비 필요한 반복 수를 실험으로 측정해 이론식과 10% 이내 일치 |
-| `c7-learned-correspondence-slam` 학습 기반 대응과 SfM/SLAM | 미분가능 BA 와 학습 가중의 결합 **[D2]**; 특징 대응의 일반화 실패 모드 **[D2]**; 깊이·자세 동시 학습의 척도 모호성 **[D2]** | `teed2021-droid-slam`, `sarlin2020-superglue` | CV ch.11(비교) | R3: 사전학습 DROID-SLAM 류를 TUM RGB-D 1개 시퀀스에 실행해 보고된 ATE 와 20% 이내 일치 |
-| `c7-neural-fields-3dgs` 뉴럴 필드와 3D Gaussian splatting | 볼륨 렌더링 적분과 이산화 **[D3]**; 위치 인코딩의 스펙트럼 편향 **[D2]**; 3DGS 의 스플래팅·미분 가능 래스터화 **[D2]** | `mildenhall2020-nerf`, `kerbl2023-3dgs` | — | R3: 소형 장면에서 NeRF/3DGS 를 학습해 보고된 PSNR 경향(3DGS 가 더 빠름)을 재현 |
+| `c7-learned-correspondence-slam` 학습 기반 대응과 SfM/SLAM | 미분가능 BA 와 학습 가중의 결합 **[D2]**; 특징 대응의 일반화 실패 모드 **[D2]**; 깊이·자세 동시 학습의 척도 모호성 **[D2]** | `teed2021-droid-slam`, `sarlin2020-superglue` | CV ch.11(비교) | R4(선택): 사전학습 DROID-SLAM 류를 TUM RGB-D 1개 시퀀스에 실행해 보고된 ATE 와 20% 이내 일치 — GPU 필요 |
+| `c7-neural-fields-3dgs` 뉴럴 필드와 3D Gaussian splatting | 볼륨 렌더링 적분과 이산화 **[D3]**; 위치 인코딩의 스펙트럼 편향 **[D2]**; 3DGS 의 스플래팅·미분 가능 래스터화 **[D2]** | `mildenhall2020-nerf`, `kerbl2023-3dgs` | — | R4(선택): 소형 장면에서 NeRF/3DGS 를 학습해 보고된 PSNR 경향(3DGS 가 더 빠름)을 재현 — GPU 필요 |
 | `c7-event-tactile-sensing` 이벤트 카메라와 촉각 센싱 | 이벤트 생성 모델과 대비 최대화 **[D2]**; 모션 보상의 최적화 형태 **[D2]**; 촉각 이미지에서 접촉 기하·힘 추정 **[D2]** | `gallego2020-event-survey`, `yuan2017-gelsight` | — | R2: 이벤트 스트림(공개 데이터)에서 대비 최대화로 각속도를 추정, GT 와 10% 이내 일치 |
 
 **열린 문제**: 기하와 학습의 원리적 결합(언제 기하 제약이 손해인가); 뉴럴 표현의 불확실성과

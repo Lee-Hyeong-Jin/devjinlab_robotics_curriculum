@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import type { Roadmap } from './api/types'
 
-import { toStageViews } from './roadmap'
+import { toStageViews, toStageViewsFromCourse } from './roadmap'
 
 const ROADMAP: Roadmap = {
   stages: [
@@ -74,5 +74,67 @@ describe('toStageViews', () => {
     const [, unlabelled] = toStageViews(ROADMAP)
     expect(unlabelled?.level).toBe('')
     expect(unlabelled?.lessonsTotal).toBe(0)
+  })
+})
+
+describe('toStageViewsFromCourse', () => {
+  const COURSE = {
+    id: 'robotics-expert',
+    title: '로보틱스',
+    summary: '',
+    tags: [],
+    module_count: 2,
+    lesson_count: 7,
+    lang: 'ko',
+    stages: [
+      {
+        level: '기초' as const,
+        level_label: 'Foundation',
+        modules: [
+          {
+            id: 'm1',
+            title: '수학',
+            summary: '',
+            level: '기초' as const,
+            level_label: 'Foundation',
+            course_id: 'robotics-expert',
+            lesson_count: 3,
+            estimated_minutes: 90,
+            lang: 'ko',
+          },
+          {
+            id: 'm2',
+            title: '운동학',
+            summary: '',
+            level: '기초' as const,
+            level_label: 'Foundation',
+            course_id: 'robotics-expert',
+            lesson_count: 4,
+            estimated_minutes: 120,
+            lang: 'ko',
+          },
+        ],
+      },
+    ],
+  }
+
+  it('builds the stage structure an anonymous reader may see (ADR 0016)', () => {
+    const [stage] = toStageViewsFromCourse(COURSE)
+    expect(stage?.levelLabel).toBe('Foundation')
+    expect(stage?.modules.map((module) => module.id)).toEqual(['m1', 'm2'])
+    // The lesson count survives even though the per-lesson list does not.
+    expect(stage?.modules.map((module) => module.lessonsTotal)).toEqual([3, 4])
+    expect(stage?.lessonsTotal).toBe(7)
+  })
+
+  it('reports no progress, because there is no reader to have any', () => {
+    const [stage] = toStageViewsFromCourse(COURSE)
+    expect(stage?.progress).toBe(0)
+    expect(stage?.lessonsDone).toBe(0)
+    expect(stage?.modules.every((module) => module.state === 'available')).toBe(true)
+  })
+
+  it('returns nothing for a missing course', () => {
+    expect(toStageViewsFromCourse(null)).toEqual([])
   })
 })

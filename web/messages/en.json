@@ -4,7 +4,8 @@
     "shortTitle": "Robotics Course",
     "skipToContent": "Skip to content",
     "mainNavigation": "Main navigation",
-    "loading": "Loading"
+    "loading": "Loading",
+    "description": "A step-by-step curriculum for becoming a robotics expert: maths, kinematics, control, perception, SLAM and ROS 2, with lessons, study guides and quizzes."
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -59,7 +60,8 @@
     "colState": "State",
     "colProgress": "Progress",
     "empty": "The roadmap could not be loaded.",
-    "stageLessons": "{done}/{total} lessons"
+    "stageLessons": "{done}/{total} lessons",
+    "courseTitle": "{course} roadmap"
   },
   "module": {
     "lessons": "Lessons",
