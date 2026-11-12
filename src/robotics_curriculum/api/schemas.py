@@ -460,8 +460,11 @@ class QuizQuestionPublic(Schema):
 
     id: str
     type: QuestionKind
-    prompt: str
-    choices: list[str] = Field(default_factory=list, description="Empty for short / true-false.")
+    prompt: str = Field(description="Localized by `Accept-Language` (or `?lang=`).")
+    choices: list[str] = Field(
+        default_factory=list,
+        description=("Empty for short / true-false. Localized by `Accept-Language` (or `?lang=`)."),
+    )
 
     @classmethod
     def of(cls, view: QuestionView) -> QuizQuestionPublic:
@@ -496,8 +499,14 @@ class QuizAnswerResult(Schema):
     question_id: str
     given: str
     correct: bool
-    correct_answer: str
-    explanation: str
+    correct_answer: str = Field(
+        description=(
+            "The correct answer as it should be shown. Localized by `Accept-Language` "
+            "(or `?lang=`); for a short question only the spellings of that language are "
+            "listed, while grading accepts every language's."
+        )
+    )
+    explanation: str = Field(description="Localized by `Accept-Language` (or `?lang=`).")
 
     @classmethod
     def of(cls, feedback: AnswerFeedback) -> QuizAnswerResult:

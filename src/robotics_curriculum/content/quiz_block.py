@@ -79,6 +79,31 @@ class QuizQuestion(_QuizModel):
     concept: Concept | None = None
     tags: list[str] = Field(default_factory=list)
 
+    display_answers: list[str] = Field(
+        default_factory=list,
+        exclude=True,
+        description=(
+            "Accepted answers to *show* in the requested language. Set by "
+            "`localized_quiz`, never written by an author: the graded set is `answer`, "
+            "which holds every language's accepted answers."
+        ),
+    )
+
+    @model_validator(mode="before")
+    @classmethod
+    def _reject_derived_keys(cls, data: object) -> object:
+        """``display_answers`` comes from a translation, so a quiz block may not set it.
+
+        Without this an author could write it next to ``answer`` and reasonably expect it
+        to be graded, which it never is.
+        """
+        if isinstance(data, dict) and "display_answers" in data:
+            raise ValueError(
+                "'display_answers' is derived from a translation's 'answers' and may not "
+                "appear in a quiz block"
+            )
+        return data
+
     @field_validator("type", mode="before")
     @classmethod
     def _alias_type(cls, value: object) -> object:
@@ -154,7 +179,7 @@ class QuizQuestion(_QuizModel):
         if self.type == "multiple":
             return ", ".join(f"{i + 1}. {self.choices[i]}" for i in sorted(self.correct_indexes))
         if self.type == "short":
-            return " / ".join(self.accepted_short)
+            return " / ".join(self.display_answers or self.accepted_short)
         return _t(lang)("quiz.answer_true" if self.answer else "quiz.answer_false")
 
     def translated(self, text: QuestionText) -> QuizQuestion:
@@ -169,6 +194,8 @@ class QuizQuestion(_QuizModel):
             update["choices"] = list(text.choices)
         if text.concept is not None:
             update["concept"] = Concept(front=text.concept.front, back=text.concept.back)
+        if text.answers and self.type == "short":
+            update["display_answers"] = list(text.answers)
         return self.model_copy(update=update)
 
 
@@ -226,6 +253,31 @@ def has_quiz(body: str) -> bool:
     return bool(extract_quiz_blocks(body))
 
 
+def _accepted_union(lesson: Lesson, question: QuizQuestion) -> QuizQuestion:
+    """``question`` with every language's accepted answers folded into ``answer``.
+
+    Grading must not depend on the language the learner is reading in, so the accepted set
+    of a ``short`` question is the union of the lesson body and every
+    ``<lesson>.<lang>.yaml``. A union can only ever accept more, so no answer that used to
+    be correct becomes wrong, and the same answer is marked the same way in every language.
+    """
+    if question.type != "short":
+        return question
+    accepted = list(question.accepted_short)
+    for lang in sorted(lesson.meta_translations):
+        text = lesson.meta_translations[lang].question(question.id)
+        if text is None or not text.answers:
+            continue
+        accepted += [answer for answer in text.answers if answer not in accepted]
+    if len(accepted) == len(question.accepted_short):
+        return question
+    # `answer` becomes the union, so pin the display to the body's own answers: a reader of
+    # the language the lesson was written in must not be shown another language's spellings.
+    return question.model_copy(
+        update={"answer": accepted, "display_answers": list(question.accepted_short)}
+    )
+
+
 def parse_quiz(lesson: Lesson) -> LessonQuiz:
     """Parse every quiz block of ``lesson``; raise :class:`QuizParseError` on any problem.
 
@@ -233,6 +285,9 @@ def parse_quiz(lesson: Lesson) -> LessonQuiz:
     shape, missing ``explanation``, duplicate question ids across the lesson, and an
     ``activity`` that is missing (when the lesson has several quiz activities) or does not name
     a ``kind: quiz`` activity of the lesson.
+
+    The accepted answers of a ``short`` question are the union over every language (see
+    :func:`_accepted_union`), so what counts as correct never depends on the language.
     """
     messages: list[str] = []
     blocks: list[QuizBlock] = []
@@ -257,7 +312,11 @@ def parse_quiz(lesson: Lesson) -> LessonQuiz:
             messages.append(
                 f"{where}: activity '{block.activity}' is not a 'kind: quiz' activity of the lesson"
             )
-        blocks.append(block)
+        blocks.append(
+            block.model_copy(
+                update={"questions": [_accepted_union(lesson, q) for q in block.questions]}
+            )
+        )
     if messages:
         raise QuizParseError(messages)
     return LessonQuiz(lesson.id, blocks)

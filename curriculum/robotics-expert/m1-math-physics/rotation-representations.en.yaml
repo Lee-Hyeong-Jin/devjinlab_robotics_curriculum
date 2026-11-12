@@ -50,6 +50,7 @@ quiz:
         $q$ and $-q$ are the same rotation - match the signs before comparing or
         interpolating
   - id: q3
+    answers: ["0", "0 deg", "zero"]
     prompt: >-
       What is the rotation angle, in degrees, of a rotation matrix with
       $\operatorname{tr}(R) = 3$? (the number only)

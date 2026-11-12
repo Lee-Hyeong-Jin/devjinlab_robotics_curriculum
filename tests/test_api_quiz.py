@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import shutil
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -195,3 +196,69 @@ def test_status_course_filter_keeps_dashboard_fields(client: TestClient) -> None
     body = client.get("/api/v1/progress/status", params={"course": "sample-course"}).json()
     assert body["due_cards"] == 0
     assert len(body["stages"]) == 2
+
+
+# -- a short answer is graded the same in every language ------------------------
+
+
+SHORT_Q = "q4"
+EN_ANSWERS = """id: m1-rotation-representations
+lang: en
+quiz:
+  - id: q4
+    prompt: What is the determinant of a 3x3 rotation matrix?
+    explanation: It is an orthogonal matrix with no reflection, so det = +1.
+    answers: ["one", "+1"]
+"""
+
+
+@pytest.fixture
+def translated_client(tmp_path: Path, clock: Clock) -> TestClient:
+    """A client over a copy of the fixture whose short question has English answers."""
+    root = tmp_path / "curriculum"
+    shutil.copytree(CURRICULUM, root)
+    target = root / "sample-course" / "m1-math-physics" / "rotation-representations.en.yaml"
+    target.write_text(EN_ANSWERS, encoding="utf-8")
+    settings = Settings(curriculum_dir=root, data_dir=tmp_path / "data")
+    return TestClient(create_app(settings, clock=clock))
+
+
+@pytest.mark.parametrize("header", [None, "ko", "en"])
+def test_a_short_answer_is_correct_whatever_language_is_requested(
+    translated_client: TestClient, header: str | None
+) -> None:
+    """Translating a question adds accepted answers; it never changes what is correct.
+
+    `one` comes from the English translation and `1` from the lesson body, and both are
+    correct however the caller asks, so two learners reading two languages are graded
+    identically and their runs are comparable rows in the progress store.
+    """
+    headers = {"Accept-Language": header} if header else {}
+    for given in ("one", "1", "+1"):
+        response = translated_client.post(
+            "/api/v1/quiz/runs",
+            json={"lesson_id": ROTATION, "answers": {SHORT_Q: given}, "partial": True},
+            headers=headers,
+        )
+        assert response.status_code == 201, response.text
+        (feedback,) = response.json()["answers"]
+        assert feedback["correct"] is True, f"{given!r} with Accept-Language={header!r}"
+
+
+def test_the_shown_correct_answer_follows_the_requested_language(
+    translated_client: TestClient,
+) -> None:
+    english = translated_client.post(
+        "/api/v1/quiz/runs",
+        json={"lesson_id": ROTATION, "answers": {SHORT_Q: "nope"}, "partial": True},
+        headers={"Accept-Language": "en"},
+    ).json()["answers"][0]
+    korean = translated_client.post(
+        "/api/v1/quiz/runs",
+        json={"lesson_id": ROTATION, "answers": {SHORT_Q: "nope"}, "partial": True},
+    ).json()["answers"][0]
+
+    assert english["correct"] is False and korean["correct"] is False
+    assert english["correct_answer"] == "one / +1"
+    # the authoring language is shown its own spellings, not the translation's
+    assert korean["correct_answer"] == "1 / +1"

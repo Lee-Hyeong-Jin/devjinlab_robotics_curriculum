@@ -215,3 +215,95 @@ def test_an_orphan_translation_is_rejected(root: Path) -> None:
     with pytest.raises(LoadError) as excinfo:
         load_courses(root)
     assert "has no lesson to translate" in str(excinfo.value)
+
+
+# -- accepted answers of a short question --------------------------------------
+
+
+def short_question(root: Path, lesson_id: str = ROTATION):  # noqa: ANN201 - a QuizQuestion
+    quiz = localized_quiz(lesson_of(root, lesson_id))
+    return next((q for q in quiz.questions if q.type == "short"), None)
+
+
+def write_answers(root: Path, question_id: str, answers: str) -> None:
+    write(
+        meta_path(root),
+        f"quiz:\n  - id: {question_id}\n    prompt: Translated\n"
+        f"    explanation: Because.\n    answers: {answers}\n",
+    )
+
+
+def test_a_translation_adds_accepted_answers_instead_of_replacing_them(root: Path) -> None:
+    question = short_question(root)
+    if question is None:
+        pytest.skip("fixture has no short question")
+    before = question.accepted_short
+    write_answers(root, question.id, "['zero', 'nought']")
+
+    graded = localized_quiz(lesson_of(root, ROTATION)).question(question.id)
+    assert graded is not None
+    # every original answer is still accepted, and the new ones are accepted too
+    assert before == graded.accepted_short[: len(before)]
+    assert "zero" in graded.accepted_short
+    assert "nought" in graded.accepted_short
+
+
+def test_grading_a_short_answer_does_not_depend_on_the_language(root: Path) -> None:
+    """The claim worth pinning down: the same answer is correct in every language."""
+    question = short_question(root)
+    if question is None:
+        pytest.skip("fixture has no short question")
+    original = question.accepted_short[0]
+    write_answers(root, question.id, "['zero']")
+
+    lesson = lesson_of(root, ROTATION)
+    for lang in (None, "ko", "en"):
+        accepted = localized_quiz(lesson, lang).question(question.id)
+        assert accepted is not None
+        assert original in accepted.accepted_short, lang
+        assert "zero" in accepted.accepted_short, lang
+
+
+def test_only_the_shown_answer_follows_the_language(root: Path) -> None:
+    question = short_question(root)
+    if question is None:
+        pytest.skip("fixture has no short question")
+    write_answers(root, question.id, "['zero']")
+    lesson = lesson_of(root, ROTATION)
+
+    english = localized_quiz(lesson, "en").question(question.id)
+    korean = localized_quiz(lesson).question(question.id)
+    assert english is not None and korean is not None
+    assert english.answer_text("en") == "zero"
+    # the authoring language keeps its own spellings, not the translation's
+    assert "zero" not in korean.answer_text("ko")
+    assert korean.answer_text("ko") == " / ".join(question.accepted_short)
+
+
+def test_answers_are_rejected_on_a_question_that_is_not_short(root: Path) -> None:
+    quiz = localized_quiz(lesson_of(root, ROTATION))
+    other = next(q for q in quiz.questions if q.type != "short")
+    write_answers(root, other.id, "['anything']")
+    errors = validate_courses(load_courses(root))
+    assert any("'answers' does not apply" in str(e) for e in errors), [str(e) for e in errors]
+
+
+def test_an_empty_accepted_answer_is_rejected(root: Path) -> None:
+    question = short_question(root)
+    if question is None:
+        pytest.skip("fixture has no short question")
+    write_answers(root, question.id, "['  ']")
+    errors = validate_courses(load_courses(root))
+    assert any("empty accepted answer" in str(e) for e in errors), [str(e) for e in errors]
+
+
+def test_a_quiz_block_may_not_set_display_answers(root: Path) -> None:
+    """It is derived from a translation, so an author must not mistake it for the graded set."""
+    lesson_file = root / "sample-course" / "m1-math-physics" / "rotation-representations.md"
+    text = lesson_file.read_text(encoding="utf-8")
+    write(
+        lesson_file,
+        text.replace("    type: single\n", "    type: single\n    display_answers: ['x']\n", 1),
+    )
+    errors = validate_courses(load_courses(root))
+    assert any("'display_answers' is derived" in str(e) for e in errors), [str(e) for e in errors]
