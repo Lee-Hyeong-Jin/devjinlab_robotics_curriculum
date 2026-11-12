@@ -1552,7 +1552,48 @@ papers:
   # ── R0 수학·수치 기초 (브리지) ───────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
-  # ── R1 연구 방법론 / R2 캡스톤 ──────────────────────────────────────
+  # ── R1 연구 방법론 ──────────────────────────────────────────────────
+  - id: agarwal2021-deep-rl-at-the-edge
+    title: "Deep reinforcement learning at the edge of the statistical precipice"
+    authors: ["R. Agarwal", "M. Schwarzer", "P. S. Castro", "et al."]
+    year: 2021
+    venue: "NeurIPS"
+    url: "https://arxiv.org/abs/2108.13264"
+    note: "NeurIPS 게재는 미확인(arXiv 2021 확인)"
+    verified: true
+    role: critique
+
+  - id: zhang2018-trajectory-eval
+    title: "A tutorial on quantitative trajectory evaluation for visual(-inertial) odometry"
+    authors: ["Z. Zhang", "D. Scaramuzza"]
+    year: 2018
+    venue: "IEEE/RSJ IROS"
+    url: "https://doi.org/10.1109/IROS.2018.8593941"
+    note: "IEEE Xplore 가 자동 조회를 차단해 DOI 페이지는 직접 확인 못 함. 제목·저자·연도·학회는 저자 연구실 출판 목록(rpg.ifi.uzh.ch/publications.html)에서 확인"
+    verified: true
+    role: standard
+
+  - id: pineau2021-reproducibility
+    title: "Improving reproducibility in machine learning research (a report from the NeurIPS 2019 reproducibility program)"
+    authors: ["J. Pineau", "P. Vincent-Lamarre", "K. Sinha", "et al."]
+    year: 2021
+    venue: "JMLR"
+    url: "https://arxiv.org/abs/2003.12206"
+    note: "arXiv 페이지의 comments 는 'To appear at JMLR' 로만 표기 — JMLR 최종 게재 권·호는 미확인"
+    verified: true
+    role: standard
+
+  - id: lipton2018-troubling-trends
+    title: "Troubling trends in machine learning scholarship"
+    authors: ["Z. C. Lipton", "J. Steinhardt"]
+    year: 2018
+    venue: "ICML 2018: The Debates"
+    url: "https://arxiv.org/abs/1807.03341"
+    note: "arXiv 페이지의 comments: 'Presented at ICML 2018: The Debates'. 학술지 게재 없음"
+    verified: true
+    role: critique
+
+  # ── R2 캡스톤 ───────────────────────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
   # ── F0 시작 전 기초 ──────────────────────────────────────────────

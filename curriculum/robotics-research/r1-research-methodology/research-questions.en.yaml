@@ -1,0 +1,62 @@
+id: r1-research-questions
+lang: en
+activities:
+  r1-research-questions-reading: Read the lesson and follow the procedure
+  r1-research-questions-cases: "Case study - reverse-engineer the research questions of three papers"
+  r1-research-questions-deliverable: "Deliverable - a two-page research proposal and three hypotheses"
+  r1-research-questions-quiz: Concept check quiz
+resources:
+  "Georgia Tech Robotics PhD 자격시험 절차":
+    title: "The Georgia Tech Robotics PhD qualifying examination process"
+    note: The format basis for this lesson's deliverable - topic assigned three weeks ahead, a two-page written summary, a 15-20 minute talk, a committee of 3-5 faculty.
+  "CMU Robotics Institute PhD Course of Study (AY 2023-24)":
+    note: The four components of the Research Qualifier (research skills, speaking, writing, teaching); the justification for this whole module.
+  "Stanford CS326 실라버스 (연구 제안서 + 동료 리뷰)":
+    title: "Stanford CS326 syllabus (research proposal plus peer review)"
+    note: The schedule of draft proposal, full proposal, peer reviews and presentation; a case of using a proposal as a course deliverable.
+quiz:
+  - id: q1
+    prompt: Which of the following is a **falsifiable** hypothesis?
+    choices:
+      - Does a learned method help SLAM?
+      - Our method will improve performance
+      - A learned front end reduces ATE by at least 30% relative to a geometric one in texture-less environments
+      - Deep learning matters in robotics
+    explanation: >-
+      A falsifiable hypothesis lets you say **which outcome would make it wrong**. The third states
+      the metric (ATE), the condition (texture-less), the baseline (geometric) and the size (30%),
+      so an experiment can refute it. The others are questions or unfalsifiable statements.
+    concept:
+      front: What a falsifiable hypothesis needs
+      back: A metric, a condition, a baseline and a size, so that the refutation condition is visible
+  - id: q2
+    prompt: Which reason for an empty cell in a classification table is **not** a research opportunity?
+    choices:
+      - Nobody has tried it
+      - It was tried and failed, and there is a report
+      - The combination is meaningless (it need not be done)
+      - The combination only recently became feasible
+    explanation: >-
+      Mistaking a meaningless combination for "nobody has tried" is the most common failure. An
+      empty cell with a failure report can in fact be a good opportunity - why it failed is the clue.
+    concept:
+      front: The three reasons a cell is empty
+      back: Untried (opportunity) / tried and failed (a clue) / need not be done (meaningless) - do not mistake the third for the first
+  - id: q3
+    prompt: '"Explaining why existing methods work or fail" is which type of contribution?'
+    choices: ["Theory", "Method", "System", "Analysis"]
+    explanation: >-
+      An analysis contribution, evaluated by controlled experiments and counterexamples. It is a
+      full contribution even without proposing a new algorithm; Agarwal et al. 2021 is an example.
+    concept:
+      front: The four contribution types
+      back: Theory (guarantees), method (metric gains), system (what was impossible), analysis (why it works) - pick one
+  - id: q4
+    prompt: It is always right to narrow the scope of research.
+    explanation: >-
+      Narrowing buys verifiability at the cost of impact, and research that changed a field usually
+      came from a broad question. For **a single project within a degree**, however, narrowing is
+      almost always right - which is the context of this lesson's six-month criterion.
+    concept:
+      front: Scope versus impact
+      back: Narrow is verifiable but lower impact; right for one project but not a general rule

@@ -1,0 +1,70 @@
+id: r1-literature-survey
+lang: en
+activities:
+  r1-literature-survey-reading: Read the lesson and follow the procedure
+  r1-literature-survey-cases: "Case study - read two surveys from the viewpoint of their classification axis"
+  r1-literature-survey-deliverable: "Deliverable - a 30-paper classification table and a survey outline"
+  r1-literature-survey-quiz: Concept check quiz
+resources:
+  "Google Scholar":
+    note: Used to follow citation networks (references and citations). Do not trust the ranking of search results; follow the citation graph.
+  "arXiv 검색 API":
+    title: The arXiv search API
+    note: For systematically pulling recent preprints, filtered by date and category. (URL unverified)
+  "Semantic Scholar API":
+    note: For following citation relations programmatically; it is rate limited.
+  "Stanford CS326 Topics in Advanced Robotic Manipulation 실라버스":
+    title: "Stanford CS326 Topics in Advanced Robotic Manipulation syllabus"
+    note: 14 topics with representative papers; read it as a case where the classification axis is already built.
+quiz:
+  - id: q1
+    prompt: What is the most effective way to collect literature exhaustively in a field whose terminology has changed?
+    choices:
+      - Search repeatedly with many combinations of search terms
+      - Follow the citation graph in both directions from seed papers
+      - Read every proceedings of the last three years
+      - Look only at the references of one survey
+    explanation: >-
+      Search terms depend on the vocabulary the authors used and cannot cross a change in
+      terminology. A citation graph follows the **actual connections of the topic**, linking the
+      same subject under names as different as "visual odometry" and "ego-motion estimation".
+    concept:
+      front: Searching a field whose terminology changed
+      back: Follow the citation graph in both directions (references and citations), not search terms
+  - id: q2
+    prompt: Citing a survey's summary as evidence that "method A is more accurate than B" is an acceptable citation.
+    explanation: >-
+      A survey is a secondary source and its summary is the author's interpretation. To use it as
+      evidence you must read and cite the original. Use surveys to see the landscape and take
+      evidence from primary sources.
+    concept:
+      front: What a survey is for
+      back: A secondary source for seeing the landscape; evidence is always cited from the original paper
+  - id: q3
+    prompt: Select every kind of paper a 30-item list **must** include.
+    choices:
+      - The original (where the idea first appeared)
+      - The best results of the last two years
+      - Rebuttals and failure reports
+      - The least-cited papers
+    explanation: >-
+      The original tells you what the method was invented to solve, the recent work tells you the
+      current level, and rebuttals and failures tell you the limits of the field. Collecting only
+      successes distorts the landscape. Being little cited is not in itself a selection criterion.
+    concept:
+      front: The four kinds in a literature list
+      back: Originals, recent best, rebuttals/failures, surveys - only successes hides the limits
+  - id: q4
+    prompt: What distinguishes a good survey from a summary?
+    choices:
+      - It covers more papers
+      - Its classification axis gives a perspective that helps the reader judge
+      - It covers more recent papers
+      - Its author is better known
+    explanation: >-
+      Building the classification axis is itself the contribution. Using the same axis as an
+      existing survey leaves only a summary - which is why this lesson's rubric demands at least one
+      distinct axis.
+    concept:
+      front: The contribution of a survey
+      back: Its classification axis gives a perspective; copying an existing axis is a summary, not a contribution
