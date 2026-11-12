@@ -1,0 +1,66 @@
+id: r0-estimation-theory
+lang: en
+activities:
+  r0-estimation-theory-reading: Read the lesson and follow the derivations
+  r0-estimation-theory-textbook: "Textbook reading (Barfoot ch.2-3, Thrun ch.2-3) + a one-page note"
+  r0-estimation-theory-problems: "Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample)"
+  r0-estimation-theory-reproduction: "Reproduction task - verify the CRLB and NEES by Monte Carlo (R1)"
+  r0-estimation-theory-quiz: Concept check quiz
+resources:
+  "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
+    note: ch.2 (a primer on probability) and ch.3 (linear-Gaussian estimation). The primary source; full PDF free.
+  "Thrun, Burgard & Fox, Probabilistic Robotics":
+    note: ch.2-3 (recursive state estimation, Gaussian filters). The standard in the robotics context. (official URL unverified)
+  "NumPy random 문서":
+    title: NumPy random documentation
+    note: Used to verify the CRLB and NEES by Monte Carlo.
+quiz:
+  - id: q1
+    prompt: In a linear-Gaussian model, what does MAP estimation equal?
+    choices:
+      - Ordinary least squares (unweighted)
+      - Least squares weighted by inverse covariances, plus a prior term
+      - Maximum-entropy estimation
+      - Median estimation
+    explanation: >-
+      The quadratic form in the exponent of a Gaussian density becomes the cost directly, so the
+      weights are inverse covariances and the prior enters as a term of the same standing. Factor
+      graphs in C5 are this with many more terms.
+    concept:
+      front: MAP in the linear-Gaussian case
+      back: Inverse-covariance-weighted least squares plus a prior term; the weights come from the quadratic form in the exponent
+  - id: q2
+    prompt: >-
+      What is the Fisher information matrix of the linear-Gaussian model ($z=Hx+w$,
+      $w\sim\mathcal{N}(0,R)$)?
+    explanation: >-
+      The score is $s = H^\top R^{-1}(z-Hx)$, so
+      $\mathcal{I} = \mathbb{E}[ss^\top] = H^\top R^{-1}H$. This equals the information matrix
+      $\Lambda$, whose inverse is the smallest achievable covariance.
+    answers: ["H^T R^-1 H", "H^T R^{-1} H", "H' R^-1 H", "H^\\top R^{-1}H"]
+    concept:
+      front: Fisher information in the linear-Gaussian case
+      back: $\mathcal{I} = H^\top R^{-1}H = \Lambda$ (the information matrix); its inverse is the CRLB
+  - id: q3
+    prompt: If an estimator's variance is below the Cramer-Rao bound there must be an error in the computation.
+    explanation: >-
+      The CRLB is a limit for **unbiased** estimators. Allowing bias permits smaller variance (in
+      the extreme a constant estimator has zero variance). So a report of "breaking the bound"
+      should first check unbiasedness.
+    concept:
+      front: The assumptions of the CRLB
+      back: Unbiasedness and regularity; a biased estimator may have variance below the bound
+  - id: q4
+    prompt: In an $n$-dimensional state estimate the mean NEES comes out as $3n$. What does that mean?
+    choices:
+      - The estimate is accurate
+      - The covariance is reported too small (overconfident)
+      - The covariance is reported too large (over-conservative)
+      - The error is not Gaussian
+    explanation: >-
+      If the reported covariance is correct then $\mathbb{E}[\mathrm{NEES}]=n$. A value of $3n$
+      means the actual error exceeds the reported uncertainty, i.e. overconfidence - which is fatal
+      in fusion because it suppresses other observations.
+    concept:
+      front: Reading covariance quality from NEES
+      back: $\mathbb{E}[\mathrm{NEES}]=n$ is correct; $\gg n$ is overconfident and $\ll n$ over-conservative

@@ -1,0 +1,65 @@
+id: r0-manifolds-lie-groups
+lang: en
+activities:
+  r0-manifolds-lie-groups-reading: Read the lesson and follow the derivations
+  r0-manifolds-lie-groups-textbook: "Textbook reading (Barfoot ch.7, MLS ch.2, Solà et al.) + a one-page note"
+  r0-manifolds-lie-groups-problems: "Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample)"
+  r0-manifolds-lie-groups-reproduction: "Reproduction task - verify a constraint manifold and its tangent space numerically (R1)"
+  r0-manifolds-lie-groups-quiz: Concept check quiz
+resources:
+  "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
+    note: ch.7 (a primer on three-dimensional geometry). The primary textbook, written in robotics notation.
+  "Murray, Li & Sastry, A Mathematical Introduction to Robotic Manipulation":
+    note: ch.2 (rigid body motion); the classical account from the Lie group viewpoint. (official URL unverified)
+  "Solà, Deray & Atchuthan — A micro Lie theory for state estimation in robotics (2018)":
+    note: Up to §2. Readable once this lesson is done, and used in earnest in C1.
+  "NumPy linalg 문서":
+    title: NumPy linalg documentation
+    note: expm lives in scipy.linalg; the reproduction task uses the matrix exponential.
+quiz:
+  - id: q1
+    prompt: >-
+      What is the dimension of $\mathcal{M}=\{x\in\mathbb{R}^n : h(x)=0\}$ for
+      $h:\mathbb{R}^n\to\mathbb{R}^m$ of full rank?
+    explanation: >-
+      By the implicit function theorem it is locally the graph of $n-m$ free variables, so the
+      dimension is $n-m$. The tangent space is $\ker Dh$, of the same dimension.
+    answers: ["n-m", "n - m", "n minus m"]
+    concept:
+      front: The dimension of a constraint manifold
+      back: $n-m$ under the full-rank condition; the tangent space is $\ker Dh$
+  - id: q2
+    prompt: $\mathfrak{so}(3)$ (the tangent space of $SO(3)$ at the identity) is the set of which matrices?
+    choices:
+      - Symmetric matrices
+      - Skew-symmetric matrices
+      - Orthogonal matrices
+      - All trace-free matrices
+    explanation: >-
+      Differentiating $R^\top R=I$ and evaluating at $t=0$ gives $\dot{R}^\top+\dot{R}=0$, i.e.
+      skew-symmetry. Its dimension 3 matches the degrees of freedom of rotation.
+    concept:
+      front: What $\mathfrak{so}(3)$ is
+      back: All skew-symmetric matrices (dimension 3), obtained by differentiating $R^\top R=I$
+  - id: q3
+    prompt: For arbitrary matrices $A$ and $B$, $\exp(A)\exp(B) = \exp(A+B)$.
+    explanation: >-
+      It holds only when $AB=BA$. Comparing second-order terms of the series leaves a difference of
+      $\tfrac12[A,B]$. Measuring that gap is the BCH expansion, treated in C1.
+    concept:
+      front: Products of exponentials
+      back: $\exp(A)\exp(B)=\exp(A+B)$ only when $AB=BA$; the difference is the commutator (BCH)
+  - id: q4
+    prompt: What is the **correct** way to apply a small increment to a rotation $R$?
+    choices:
+      - $R + \Omega$ (matrix addition)
+      - $R\exp(\Omega)$ or $\exp(\Omega)R$
+      - $R \cdot \Omega$
+      - $\Omega^{-1}R$
+    explanation: >-
+      $SO(3)$ is not a vector space, so $R+\Omega$ is not a rotation matrix
+      ($R^\top R \ne I$). Combining by the group operation keeps the result inside the group. The
+      choice of left or right leads to the distinction between left and right Jacobians (C1).
+    concept:
+      front: Increments on a manifold
+      back: $R\exp(\Omega)$ (a group operation); addition $R+\Omega$ leaves the group
