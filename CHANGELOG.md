@@ -148,6 +148,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the measured second-order error for smooth density), the spectral bias of positional encoding
   quantified through Gram eigenvalues, and the measured valid regime of the affine (EWA) projection
   used by 3D Gaussian splatting.
+- `c7-event-tactile-sensing`, completing module C7: the event generation model as a threshold
+  crossing of log intensity (and why its rate form overpredicts for short windows), contrast
+  maximisation with a measured angular-velocity estimate on the public ECD dataset, the
+  non-convexity of that objective, and GelSight photometric stereo with the measured failure
+  condition of volume-based force estimation.
 - `curriculum/robotics-research/papers.yaml`: the course paper registry (ADR 0014) with the
   eleven papers the C7 lessons assign; both C7 lessons reference them through front-matter
   `papers:` and `rc papers <lesson_id>` lists them.

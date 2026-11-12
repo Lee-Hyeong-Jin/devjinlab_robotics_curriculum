@@ -188,6 +188,42 @@ papers:
     verified: true
     role: critique
     note: "how little optimal triangulation actually buys"
+  - id: gallego2020-event-survey
+    title: "Event-based vision: a survey"
+    authors: ["G. Gallego", "T. Delbruck", "G. Orchard", "C. Bartolozzi", "et al."]
+    year: 2020
+    venue: "IEEE T-PAMI"
+    url: "https://arxiv.org/abs/1904.08405"
+    verified: true
+    role: survey
+    note: "arXiv v1 2019-04-17, journal_ref T-PAMI 2020; sec. 2-4 and the contrast maximisation part"
+  - id: yuan2017-gelsight
+    title: "GelSight: high-resolution robot tactile sensors for estimating geometry and force"
+    authors: ["W. Yuan", "S. Dong", "E. H. Adelson"]
+    year: 2017
+    venue: "Sensors"
+    url: "https://doi.org/10.3390/s17122762"
+    verified: true
+    role: seminal
+    note: "the photometric-stereo pipeline and the force calibration"
+  - id: gallego2018-contrast-maximization
+    title: "A unifying contrast maximization framework for event cameras"
+    authors: ["G. Gallego", "H. Rebecq", "D. Scaramuzza"]
+    year: 2018
+    venue: "CVPR"
+    url: "https://arxiv.org/abs/1804.01306"
+    verified: true
+    role: seminal
+    note: "arXiv v1 2018-04-04; the full title ends \"with Applications to Motion, Depth, and Optical Flow Estimation\""
+  - id: shiba2022-event-collapse
+    title: "Event collapse in contrast maximization frameworks"
+    authors: ["S. Shiba", "Y. Aoki", "G. Gallego"]
+    year: 2022
+    venue: "Sensors"
+    url: "https://arxiv.org/abs/2207.04007"
+    verified: true
+    role: critique
+    note: "arXiv v1 2022-07-08, journal_ref Sensors 22(14) 5190; the degeneracy of richer warp families"
   - id: mildenhall2020-nerf
     title: "NeRF: representing scenes as neural radiance fields for view synthesis"
     authors: ["B. Mildenhall", "P. P. Srinivasan", "M. Tancik", "J. T. Barron", "R. Ramamoorthi", "R. Ng"]
