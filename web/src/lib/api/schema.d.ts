@@ -648,6 +648,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/providers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Providers
+         * @description External logins configured through ``RC_OIDC_PROVIDERS``, for the sign-in buttons.
+         *
+         *     Unauthenticated on purpose — the login screen is reached without a session. Secrets are
+         *     never included. Empty in local mode, or when no provider is configured, which the
+         *     frontend reads as "show no provider buttons".
+         */
+        get: operations["providers_api_v1_auth_providers_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/oidc/{provider}/start": {
         parameters: {
             query?: never;
@@ -1143,6 +1167,34 @@ export interface components {
             items: components["schemas"]["AuditEntry"][];
             /** Next Cursor */
             next_cursor: string | null;
+        };
+        /**
+         * AuthProvider
+         * @description A configured external login, as the sign-in screen needs it.
+         *
+         *     Public information only: the client secret and the role mapping never leave the server.
+         */
+        AuthProvider: {
+            /**
+             * Id
+             * @description Provider id from `RC_OIDC_PROVIDERS`, e.g. `google`.
+             */
+            id: string;
+            /**
+             * Name
+             * @description Label for the sign-in button.
+             */
+            name: string;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "oidc" | "github";
+            /**
+             * Start Url
+             * @description Where to send the browser to begin the login. Absolute, built from `RC_API_BASE_URL` when set — the same base as the OIDC redirect URI, so a deployment that can complete a login can also start one.
+             */
+            start_url: string;
         };
         /** AuthSession */
         AuthSession: {
@@ -3966,6 +4018,53 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    providers_api_v1_auth_providers_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthProvider"][];
+                };
             };
             /** @description Not Found */
             404: {

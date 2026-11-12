@@ -11,6 +11,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from robotics_curriculum.auth import models
 from robotics_curriculum.auth.models import Role, Scope, UserStatus
+from robotics_curriculum.auth.oidc import ProviderType
 
 
 class Schema(BaseModel):
@@ -207,3 +208,21 @@ class Identity(Schema):
             email=identity.email,
             linked_at=identity.linked_at,
         )
+
+
+class AuthProvider(Schema):
+    """A configured external login, as the sign-in screen needs it.
+
+    Public information only: the client secret and the role mapping never leave the server.
+    """
+
+    id: str = Field(description="Provider id from `RC_OIDC_PROVIDERS`, e.g. `google`.")
+    name: str = Field(description="Label for the sign-in button.")
+    type: ProviderType
+    start_url: str = Field(
+        description=(
+            "Where to send the browser to begin the login. Absolute, built from "
+            "`RC_API_BASE_URL` when set — the same base as the OIDC redirect URI, so a "
+            "deployment that can complete a login can also start one."
+        )
+    )

@@ -6,7 +6,9 @@ import { getTranslations } from 'next-intl/server'
 import { Card } from '@/components/Card'
 import { ActionForm } from '@/components/form/ActionForm'
 import { PageHeader } from '@/components/PageHeader'
+import { ProviderButtons } from '@/components/ProviderButtons'
 import { login } from '@/lib/actions/auth'
+import { getAuthProviders } from '@/lib/api/queries'
 import { getMe } from '@/lib/auth'
 import { safeNext } from '@/lib/next-path'
 
@@ -25,6 +27,9 @@ export default async function LoginPage({ searchParams }: Props) {
   const next = safeNext(params.next)
 
   if (await getMe()) redirect(next)
+
+  // Only after the session check: an anonymous reader is the only one who sees these.
+  const providers = await getAuthProviders()
 
   const notice = params.registered ? t('registered') : params.reset ? t('resetDone') : undefined
 
@@ -56,6 +61,7 @@ export default async function LoginPage({ searchParams }: Props) {
             { name: 'remember', label: t('remember'), kind: 'checkbox' },
           ]}
         />
+        <ProviderButtons providers={providers} returnTo={next} withHeading className="mt-5" />
         <div className="border-border-default mt-5 flex flex-col gap-2 border-t pt-4 text-sm">
           <Link href="/password/forgot" className="text-accent underline underline-offset-2">
             {t('forgot')}

@@ -11,6 +11,7 @@ import type { ReactNode } from 'react'
 
 import { Card } from './Card'
 import { Chip } from './Chip'
+import { MarkdownBody } from './MarkdownBody'
 import { FormMessage } from './form/FormMessage'
 import { SubmitButton } from './form/SubmitButton'
 
@@ -71,6 +72,7 @@ export function QuizForm({ moduleId, lessonId, questions }: QuizFormProps) {
       <ol className="flex flex-col gap-5">
         {questions.map((question, index) => {
           const result = resultFor(question.id)
+          const explanation = state.explanations?.[question.id]
           const name = `q:${question.id}`
           return (
             <li key={question.id}>
@@ -158,10 +160,16 @@ export function QuizForm({ moduleId, lessonId, questions }: QuizFormProps) {
                         <dt className="text-muted">{t('correctAnswer')}</dt>
                         <dd className="text-primary font-mono">{result.correct_answer}</dd>
                       </div>
-                      {result.explanation ? (
+                      {explanation || result.explanation ? (
                         <div className="mt-1">
                           <dt className="text-muted">{t('explanation')}</dt>
-                          <dd className="text-primary">{result.explanation}</dd>
+                          <dd className="text-primary">
+                            {explanation ? (
+                              <MarkdownBody>{explanation}</MarkdownBody>
+                            ) : (
+                              result.explanation
+                            )}
+                          </dd>
                         </div>
                       ) : null}
                     </dl>

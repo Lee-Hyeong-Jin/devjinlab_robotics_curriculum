@@ -140,3 +140,46 @@ describe('heading hierarchy', () => {
     expect(container.querySelector('h1')?.textContent).toBe('제목')
   })
 })
+
+describe('display math written the way the curriculum writes it', () => {
+  // Regression: a `$$` opener with content on the same line used to be parsed as a
+  // math fence with meta, so the block never closed and the rest of the lesson
+  // reached the reader as raw TeX.
+  it('renders a multi-line formula as one display block and keeps the text after it', () => {
+    const { container } = renderBody(
+      '$$T_{ac} = T_{ab}\\,T_{bc}, \\qquad\nT_{ab}^{-1} = T_{ba}$$\n\n그 뒤의 $K_p$ 와 $R$ 도 수식이다.\n',
+    )
+    expect(container.querySelectorAll('math[display="block"]').length).toBe(1)
+    expect(container.querySelectorAll('math').length).toBe(3)
+    const visible = container.cloneNode(true) as HTMLElement
+    visible.querySelectorAll('annotation').forEach((node) => node.remove())
+    expect(visible.textContent).not.toContain('$')
+    expect(visible.textContent).not.toContain('\\qquad')
+  })
+
+  it('renders ten representative formulas without a KaTeX error', () => {
+    const formulas = [
+      '$R \\in SO(3)$',
+      '$\\theta = 90^\\circ$',
+      '$\\mathbf{p} = (2, 1)$',
+      '$\\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$',
+      '$\\operatorname{tr}(R) = 1 + 2\\cos\\theta$',
+      '$J^{\\dagger}$',
+      '$\\frac{\\partial f}{\\partial x}$',
+      '$P \\gg R$',
+      '$\\sum_{i=1}^{n} x_i$',
+      '$\\mathcal{N}(\\mu, \\Sigma)$',
+    ]
+    const { container } = renderBody(formulas.join('\n\n'))
+    expect(container.querySelectorAll('math').length).toBe(formulas.length)
+    expect(container.querySelectorAll('.katex-error').length).toBe(0)
+    const visible = container.cloneNode(true) as HTMLElement
+    visible.querySelectorAll('annotation').forEach((node) => node.remove())
+    expect(visible.textContent).not.toContain('$')
+  })
+
+  it('renders display math inside a table cell and after a matrix', () => {
+    const { container } = renderBody('| 기호 | 뜻 |\n|---|---|\n| $K_p$ | 비례 이득 |\n')
+    expect(container.querySelectorAll('td math').length).toBe(1)
+  })
+})

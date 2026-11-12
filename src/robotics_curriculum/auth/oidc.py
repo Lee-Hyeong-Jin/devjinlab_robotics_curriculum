@@ -26,11 +26,13 @@ import time
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
-from typing import Any
+from typing import Any, Literal
 from urllib.parse import urlencode
 
 import httpx
 import jwt
+
+ProviderType = Literal["oidc", "github"]
 
 ALLOWED_ALGS = ("RS256", "RS384", "RS512", "ES256", "ES384", "PS256")
 FLOW_TTL_SECONDS = 600
@@ -41,6 +43,7 @@ class OidcError(Exception):
 
 
 GITHUB_DEFAULTS: dict[str, str] = {
+    "name": "GitHub",
     "issuer": "https://github.com",
     "authorization_endpoint": "https://github.com/login/oauth/authorize",
     "token_endpoint": "https://github.com/login/oauth/access_token",
@@ -63,7 +66,7 @@ class OidcProvider:
     client_id: str
     client_secret: str | None = field(default=None, repr=False)
     name: str | None = None
-    type: str = "oidc"
+    type: ProviderType = "oidc"
     scopes: str = "openid email profile"
     authorization_endpoint: str | None = None
     token_endpoint: str | None = None

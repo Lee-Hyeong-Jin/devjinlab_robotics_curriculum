@@ -82,6 +82,12 @@ export default async function ModulePage({ params }: Params) {
                 {t('estimated', { minutes: formatMinutes(mod.estimated_minutes, locale) })}
               </Chip>
             ) : null}
+            <Link
+              href={`/reports/modules/${encodeURIComponent(moduleId)}`}
+              className="text-accent text-sm underline underline-offset-2"
+            >
+              {t('report')}
+            </Link>
           </>
         }
       />

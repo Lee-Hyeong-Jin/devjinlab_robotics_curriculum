@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { getLocale, getTranslations } from 'next-intl/server'
 
 import { Card } from '@/components/Card'
@@ -6,7 +7,7 @@ import { EmptyState } from '@/components/EmptyState'
 import { MarkdownBody } from '@/components/MarkdownBody'
 import { PageHeader } from '@/components/PageHeader'
 import { StatTile } from '@/components/StatTile'
-import { getWeeklyReport } from '@/lib/api/queries'
+import { getCourse, getWeeklyReport } from '@/lib/api/queries'
 import { isWeeklySummary } from '@/lib/api/types'
 import { formatDate, formatSeconds } from '@/lib/format'
 import { renderMarkdown } from '@/lib/markdown/render'
@@ -24,7 +25,8 @@ export async function generateMetadata(): Promise<Metadata> {
  */
 export default async function ReportsPage() {
   const [t, locale] = await Promise.all([getTranslations('reports'), getLocale()])
-  const report = await getWeeklyReport()
+  const [report, course] = await Promise.all([getWeeklyReport(), getCourse()])
+  const modules = (course?.stages ?? []).flatMap((stage) => stage.modules ?? [])
 
   if (!report) {
     return (
@@ -76,6 +78,29 @@ export default async function ReportsPage() {
         <MarkdownBody empty={<p className="text-muted text-sm">{t('empty')}</p>}>
           {body.content}
         </MarkdownBody>
+      </Card>
+
+      <Card as="section" className="mt-6" aria-labelledby="module-reports">
+        <h2 id="module-reports" className="text-primary font-semibold">
+          {t('moduleReports')}
+        </h2>
+        <p className="text-muted mt-1 mb-3 text-sm">{t('moduleReportsHint')}</p>
+        {modules.length === 0 ? (
+          <p className="text-muted text-sm">{t('noModules')}</p>
+        ) : (
+          <ul className="flex flex-wrap gap-2">
+            {modules.map((mod) => (
+              <li key={mod.id}>
+                <Link
+                  href={`/reports/modules/${encodeURIComponent(mod.id)}`}
+                  className="bg-subtle text-primary border-border-default hover:bg-surface inline-flex rounded-lg border px-3 py-1.5 text-sm"
+                >
+                  {mod.title ?? mod.id}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
       </Card>
     </>
   )

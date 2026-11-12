@@ -86,6 +86,15 @@ test('a learner signs up, studies a lesson, takes its quiz and reviews', async (
     await firstChoice.check()
     await page.getByRole('button', { name: /^제출$|^Submit$/ }).click()
     await expect(page.getByRole('heading', { name: /채점 결과|Result/ })).toBeVisible()
+
+    // The explanation arrives as a React tree the Server Action rendered with the
+    // lesson Markdown pipeline, so it lands inside `.markdown-body`. The plain-text
+    // fallback does not, which is what makes this worth asserting.
+    const explanation = page.locator('dd .markdown-body').first()
+    if (await explanation.count()) {
+      await expect(explanation).toBeVisible()
+      await expect(explanation).not.toContainText('**')
+    }
   }
 
   // Review: a wrong answer creates a card, so the deck may or may not have one.
@@ -104,6 +113,12 @@ test('a learner signs up, studies a lesson, takes its quiz and reviews', async (
     page.getByRole('heading', { level: 1, name: /주간 리포트|Weekly report/ }).first(),
   ).toBeVisible()
   // The page keeps exactly one level-1 heading (frontend.md §6).
+  await expect(page.locator('h1')).toHaveCount(1)
+
+  // Module report: reachable from the weekly report, same Markdown + tiles shape.
+  await page.locator('a[href^="/reports/modules/"]').first().click()
+  await page.waitForURL(/\/reports\/modules\/[^/]+$/)
+  await expect(page.getByText(/완료한 레슨|Lessons completed/)).toBeVisible()
   await expect(page.locator('h1')).toHaveCount(1)
 
   // Profile, then sign out.

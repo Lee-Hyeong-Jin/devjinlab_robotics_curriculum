@@ -9,6 +9,7 @@ and the scope/CSRF tests next to it.
 |---|---|---|---|---|---|
 | `GET /healthz`, `/readyz`, `/version` | 200 | 200 | 200 | 200 | — |
 | `POST /api/v1/auth/signup`, `/login`, `/verify-email`, `/password/forgot`, `/password/reset` | ✔ | ✔ | ✔ | ✔ | — |
+| `GET /api/v1/auth/providers` (configured external logins, no secrets) | ✔ | ✔ | ✔ | ✔ | — |
 | `GET /api/v1/auth/oidc/{provider}/start`, `/callback` (302) | ✔ | ✔ (links) | ✔ (links) | ✔ (links) | — |
 | `POST /api/v1/auth/logout` | 401 | ✔ | ✔ | ✔ | session |
 | `GET /metrics` (internal network only) | 200 | 200 | 200 | 200 | — |

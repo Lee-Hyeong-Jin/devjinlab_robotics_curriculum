@@ -8,6 +8,7 @@ import { toStageViews, type RoadmapStageView } from '../roadmap'
 import { apiGet, apiGetOrNull } from './client'
 import { defaultCourseId } from './config'
 import type {
+  AuthProvider,
   Course,
   Lesson,
   LessonProgress,
@@ -20,6 +21,16 @@ import type {
   SearchHit,
   Status,
 } from './types'
+
+/**
+ * `GET /api/v1/auth/providers` — the configured external logins.
+ *
+ * Unauthenticated, and `null`/`[]` when the deployment has none, which the
+ * sign-in screens read as "show no provider buttons".
+ */
+export async function getAuthProviders(): Promise<AuthProvider[]> {
+  return (await apiGetOrNull('/api/v1/auth/providers', { redirectOnUnauthorized: false })) ?? []
+}
 
 /** `GET /api/v1/progress/status` — the dashboard payload. */
 export function getStatus(): Promise<Status | null> {
@@ -107,4 +118,11 @@ export function getDueCards(): Promise<ReviewCard[] | null> {
 /** `GET /api/v1/reports/weekly` — the weekly report, as Markdown plus a summary. */
 export function getWeeklyReport(): Promise<Report | null> {
   return apiGetOrNull('/api/v1/reports/weekly')
+}
+
+/** `GET /api/v1/reports/modules/{module_id}` — one module's report (`rc report module`). */
+export function getModuleReport(moduleId: string): Promise<Report> {
+  return apiGet(
+    `/api/v1/reports/modules/${encodeURIComponent(moduleId)}` as '/api/v1/reports/modules/{module_id}',
+  )
 }

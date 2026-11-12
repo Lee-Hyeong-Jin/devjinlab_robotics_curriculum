@@ -2,9 +2,11 @@
 
 import { revalidatePath } from 'next/cache'
 import { getTranslations } from 'next-intl/server'
+import type { ReactNode } from 'react'
 
 import { apiPost } from '../api/client'
 import type { QuizRun, Rating, ReviewResult } from '../api/types'
+import { renderMarkdown } from '../markdown/render'
 import { RATINGS, readAnswers, type AnswerableQuestion } from '../quiz'
 import { toActionState } from './problem'
 import type { ActionState } from './result'
@@ -12,6 +14,13 @@ import type { ActionState } from './result'
 /** A quiz run's outcome, carried back to the screen alongside the form state. */
 export interface QuizState extends ActionState {
   run?: QuizRun
+  /**
+   * Each answered question's explanation, rendered here on the server with the
+   * lesson Markdown pipeline (KaTeX, code, GFM, the same sanitiser) and shipped
+   * as an RSC-serialised React tree — never as HTML the client would have to
+   * trust. Keyed by question id; a question without an explanation is absent.
+   */
+  explanations?: Record<string, ReactNode>
 }
 
 /**
@@ -44,7 +53,16 @@ export async function submitQuiz(_previous: QuizState, form: FormData): Promise<
     })
     revalidatePath(`/modules/${moduleId}/${lessonId}`)
     revalidatePath('/')
-    return { run, message: t('graded', { correct: run.correct, total: run.total }) }
+    const explanations: Record<string, ReactNode> = {}
+    for (const answer of run.answers) {
+      const content = renderMarkdown(answer.explanation ?? undefined).content
+      if (content !== null) explanations[answer.question_id] = content
+    }
+    return {
+      run,
+      explanations,
+      message: t('graded', { correct: run.correct, total: run.total }),
+    }
   } catch (error) {
     return toActionState(error, t('submitFailed'))
   }

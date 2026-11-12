@@ -19,6 +19,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response,
 from fastapi.responses import RedirectResponse
 
 from robotics_curriculum.api.auth_schemas import (
+    AuthProvider,
     ForgotRequest,
     LoginRequest,
     LoginResult,
@@ -153,11 +154,39 @@ def _client(state: AppState, provider: str) -> OidcClient:
     return client
 
 
-def _redirect_uri(request: Request, auth: AuthService, provider: str) -> str:
+def _oidc_url(request: Request, auth: AuthService, provider: str, leg: str) -> str:
+    """Absolute URL of an OIDC leg (``start`` or ``callback``).
+
+    ``RC_API_BASE_URL`` wins when set: behind a proxy the request's own host is the internal
+    one, and the provider has to be given — and later recognise — the public redirect URI.
+    """
     base = auth.config.api_base_url
     if base:
-        return f"{base.rstrip('/')}/api/v1/auth/oidc/{provider}/callback"
-    return str(request.url_for("oidc_callback", provider=provider))
+        return f"{base.rstrip('/')}/api/v1/auth/oidc/{provider}/{leg}"
+    return str(request.url_for(f"oidc_{leg}", provider=provider))
+
+
+def _redirect_uri(request: Request, auth: AuthService, provider: str) -> str:
+    return _oidc_url(request, auth, provider, "callback")
+
+
+@router.get("/providers", response_model=list[AuthProvider])
+def providers(request: Request, state: State, auth: Auth) -> list[AuthProvider]:
+    """External logins configured through ``RC_OIDC_PROVIDERS``, for the sign-in buttons.
+
+    Unauthenticated on purpose — the login screen is reached without a session. Secrets are
+    never included. Empty in local mode, or when no provider is configured, which the
+    frontend reads as "show no provider buttons".
+    """
+    return [
+        AuthProvider(
+            id=pid,
+            name=client.provider.name or pid.replace("-", " ").replace("_", " ").title(),
+            type=client.provider.type,
+            start_url=_oidc_url(request, auth, pid, "start"),
+        )
+        for pid, client in sorted(state.oidc.items())
+    ]
 
 
 @router.get(

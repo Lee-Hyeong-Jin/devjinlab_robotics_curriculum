@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 
-import type { ResourceRef } from '@/lib/api/types'
+import type { AuthProvider, ResourceRef } from '@/lib/api/types'
 import { resource } from '@/test/factories'
 import { renderWithIntl } from '@/test/render'
 
@@ -12,6 +12,7 @@ import { EmptyState } from './EmptyState'
 import { LessonRow } from './LessonRow'
 import { ModuleCard } from './ModuleCard'
 import { ProgressBar } from './ProgressBar'
+import { ProviderButtons } from './ProviderButtons'
 import { ResourceExplorer } from './ResourceExplorer'
 import { ResourceRow } from './ResourceRow'
 import { StageProgress } from './StageProgress'
@@ -294,5 +295,40 @@ describe('ResourceExplorer', () => {
     renderWithIntl(<ResourceExplorer resources={resources} />)
     await user.type(screen.getByLabelText('자료 검색'), 'zzzz')
     expect(screen.getByText('조건에 맞는 자료가 없습니다.')).toBeInTheDocument()
+  })
+})
+
+describe('ProviderButtons', () => {
+  const provider = (id: string, name: string): AuthProvider => ({
+    id,
+    name,
+    type: id === 'github' ? 'github' : 'oidc',
+    start_url: `https://api.test/api/v1/auth/oidc/${id}/start`,
+  })
+
+  it('renders nothing when the deployment has no external login', () => {
+    const { container } = renderWithIntl(<ProviderButtons providers={[]} withHeading />)
+    expect(container).toBeEmptyDOMElement()
+  })
+
+  it('offers one link per provider, carrying the destination', () => {
+    renderWithIntl(
+      <ProviderButtons
+        providers={[provider('univ', '우리대학 SSO'), provider('github', 'GitHub')]}
+        returnTo="/roadmap"
+      />,
+    )
+    const github = screen.getByRole('link', { name: 'GitHub(으)로 계속하기' })
+    expect(github).toHaveAttribute(
+      'href',
+      'https://api.test/api/v1/auth/oidc/github/start?return_to=%2Froadmap',
+    )
+    expect(screen.getByRole('link', { name: '우리대학 SSO(으)로 계속하기' })).toBeInTheDocument()
+  })
+
+  it('says "connect" instead of "continue" on the profile screen', () => {
+    renderWithIntl(<ProviderButtons providers={[provider('github', 'GitHub')]} variant="connect" />)
+    expect(screen.getByRole('link', { name: 'GitHub 연결하기' })).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /계속하기/ })).not.toBeInTheDocument()
   })
 })
