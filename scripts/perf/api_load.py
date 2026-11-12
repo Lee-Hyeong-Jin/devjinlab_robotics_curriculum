@@ -29,6 +29,7 @@ import argparse
 import asyncio
 import json
 import math
+import os
 import platform
 import statistics
 import sys
@@ -56,6 +57,10 @@ DEFAULT_ENDPOINTS: tuple[tuple[str, str], ...] = (
 
 #: PRD §7: p95 of a read must stay under this.
 TARGET_P95_MS = 300.0
+
+#: The control endpoint: it touches no curriculum and no database, so if *it* slows down the
+#: machine was busy and the whole run is not comparable with another one.
+CONTROL = "healthz"
 
 
 @dataclass(slots=True)
@@ -190,14 +195,43 @@ def render_markdown(results: Sequence[Samples], args: argparse.Namespace) -> str
             f"**{s['p95_ms']} ms**{mark} | {s['p99_ms']} ms | {s['max_ms']} ms |"
         )
     worst = max((float(r.summary["p95_ms"]) for r in results), default=math.nan)
+    load = ", ".join(f"{value:.1f}" for value in _load_average())
     header = (
         f"- 측정: {datetime.now(UTC).isoformat(timespec='seconds')} · "
         f"동시 {args.concurrency} · 엔드포인트당 {args.duration}s · "
         f"{platform.python_version()} on {platform.system()} {platform.machine()}\n"
+        f"- 기계: CPU {os.cpu_count()}개 · load average {load}\n"
         f"- 목표(PRD §7): 읽기 p95 ≤ {TARGET_P95_MS:.0f} ms · "
         f"최악 p95 {worst:.1f} ms\n"
     )
     return header + "\n" + "\n".join(rows) + "\n"
+
+
+def _load_average() -> tuple[float, float, float]:
+    try:
+        return os.getloadavg()
+    except (OSError, AttributeError):  # not POSIX
+        return (math.nan, math.nan, math.nan)
+
+
+def control_warning(results: Sequence[Samples]) -> str | None:
+    """A sentence to print when the control endpoint itself was slow.
+
+    ``healthz`` returns a constant, so its latency is the machine's noise floor. When that
+    floor is high, every other number in the run is the machine's, not the API's — saying so
+    is the difference between a regression and a busy laptop.
+    """
+    control = next((r for r in results if r.label == CONTROL), None)
+    if control is None or not control.latencies:
+        return None
+    p95 = control.percentile(0.95)
+    if p95 <= TARGET_P95_MS / 4:
+        return None
+    return (
+        f"the control endpoint ({CONTROL}, which does no work) had p95 {p95:.1f} ms: the "
+        f"machine was busy, so these numbers are not comparable with a quiet run. "
+        f"Re-measure when load average is below the CPU count."
+    )
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -224,6 +258,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     else:
         print(render_markdown(results, args), end="")
 
+    noise = control_warning(results)
+    if noise:
+        print(f"warning: {noise}", file=sys.stderr)
     failures = sum(r.failures for r in results)
     over = [r.label for r in results if float(r.summary["p95_ms"]) > TARGET_P95_MS]
     if failures:
