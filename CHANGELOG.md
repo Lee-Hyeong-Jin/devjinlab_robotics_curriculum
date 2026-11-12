@@ -88,6 +88,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   LaSalle's invariance principle as proof sketches, the ISS estimate derived from an
   ISS-Lyapunov function, and a sum-of-squares certificate for a region of attraction with a
   numerically checkable reproduction task.
+- Research-track lesson 2 of module C3, feedback linearisation and controllability, in Korean and
+  English: the full feedback-linearisation condition reduced to the Frobenius theorem, zero
+  dynamics and the forward-point output of a differential-drive robot, the second-order Lie
+  bracket motion derived from a composition of flows, the chained form with steering by sinusoids
+  ($\Delta z_3 = \pi ab/\omega^2$), and Brockett's obstruction shown concretely.
 
 ### Fixed
 
