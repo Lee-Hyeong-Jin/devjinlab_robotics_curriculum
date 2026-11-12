@@ -69,6 +69,9 @@ services:
       RC_AUTH_ADMIN_EMAIL: ${RC_AUTH_ADMIN_EMAIL:-}
       RC_AUTH_COOKIE_SECURE: ${RC_AUTH_COOKIE_SECURE:-1}
       RC_PUBLIC_URL: ${RC_PUBLIC_URL:-http://localhost:3000}
+      # Anonymous read-only access to the curriculum (ADR 0016). Both api and web need it:
+      # the api decides what it serves, the web decides what may be indexed.
+      RC_PUBLIC_CONTENT: ${RC_PUBLIC_CONTENT:-0}
       RC_OIDC_PROVIDERS: ${RC_OIDC_PROVIDERS:-}
       RC_SMTP_HOST: ${RC_SMTP_HOST:-}
       RC_SMTP_PORT: ${RC_SMTP_PORT:-587}
@@ -138,6 +141,11 @@ services:
       RC_API_BASE_URL: http://api:8000
       RC_DEFAULT_COURSE_ID: ${RC_DEFAULT_COURSE_ID:-robotics-expert}
       RC_API_TIMEOUT_MS: ${RC_API_TIMEOUT_MS:-10000}
+      # Same two values as the api: RC_PUBLIC_CONTENT gates indexing here, and RC_PUBLIC_URL
+      # is the base of every canonical link, hreflang alternate and sitemap entry. Passing
+      # them to only one service leaves the two disagreeing (ADR 0016, RUNBOOK §8.2).
+      RC_PUBLIC_CONTENT: ${RC_PUBLIC_CONTENT:-0}
+      RC_PUBLIC_URL: ${RC_PUBLIC_URL:-http://localhost:3000}
       PORT: "3000"
       HOSTNAME: 0.0.0.0
     ports:

@@ -1,0 +1,69 @@
+id: c8-policy-gradient
+lang: en
+activities:
+  c8-policy-gradient-reading: Read the text and follow the derivations
+  c8-policy-gradient-papers: Read the three must-read papers + a one-page note each
+  c8-policy-gradient-problems: Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample, 1 paper)
+  c8-policy-gradient-reproduction: Reproduction task - estimator variance and sample efficiency (R2)
+  c8-policy-gradient-quiz: Concept-check quiz
+resources:
+  "Sutton & Barto, Reinforcement Learning: An Introduction (2nd ed.)":
+    note: ch.13 (policy gradient methods). The primary textbook for this lesson. (official URL unverified)
+  "Williams — Simple statistical gradient-following algorithms for connectionist RL (1992)":
+    note: Recommended. The origin of REINFORCE.
+  "Baxter & Bartlett — Infinite-horizon policy-gradient estimation (2001)":
+    note: Recommended. GPOMDP and where discounting introduces estimation bias.
+  "Amari — Natural gradient works efficiently in learning (1998)":
+    note: Recommended. The origin of the natural gradient and the Fisher metric.
+  "Kakade — A natural policy gradient (2001)":
+    note: Recommended. The paper that grafted the natural gradient onto policy gradients.
+  "Schulman, Moritz, Levine, Jordan & Abbeel — Generalized advantage estimation (2015)":
+    note: "Recommended. Advantage estimation with $\\lambda$ as a bias-variance knob."
+  "Engstrom et al. — Implementation matters in deep policy gradients (2020)":
+    note: Recommended (critique). Ablations showing PPO's performance comes from implementation details rather than the algorithm.
+  "Henderson et al. — Deep reinforcement learning that matters (2017)":
+    note: Recommended (critique). Comparisons without seeds and variance reporting flip their own conclusions.
+  "Agarwal, Kakade, Lee & Mahajan — On the theory of policy gradient methods (2019)":
+    note: Recommended. Global convergence of policy gradients and the distribution-mismatch term.
+quiz:
+  - id: q1
+    prompt: "What is the 'surprising' part of the policy gradient theorem (1)?"
+    choices:
+      - "That discounting makes the reward bounded"
+      - "That the $\\theta$-dependence of the occupancy $\\rho^\\pi$ survives only undifferentiated in the final expression"
+      - "That the gradient can be computed without knowing $Q^\\pi$"
+      - "That it also holds for deterministic policies"
+    explanation: "$\\Pr(s_t=s)$ does depend on $\\theta$, but solving the value recursion with the Neumann series absorbs the gradient of that dependence into the series, leaving only an undifferentiated $\\rho^\\pi$. That is why the transition model $P$ never has to be differentiated."
+    concept:
+      front: "The core of the policy gradient theorem"
+      back: "The occupancy's $\\theta$-dependence is absorbed, so $P$ need not be differentiated - the gradient is estimable from samples without a model"
+  - id: q2
+    prompt: "The variance-minimizing baseline is always $V^\\pi(s)$."
+    explanation: "The optimal baseline is the average of $Q$ weighted by $\\lVert \\nabla\\log\\pi \\rVert^2$ as in (2), which generally differs from the unweighted $V^\\pi = \\mathbb{E}_a[Q]$. Problem P3 is an instance where the $V^\\pi$ baseline is nine times worse than $b=0$ while the optimal baseline drives the variance to exactly zero."
+    concept:
+      front: "The optimal baseline"
+      back: "$\\mathbb{E}[\\lVert g\\rVert^2 Q]/\\mathbb{E}[\\lVert g\\rVert^2]$ - not $V^\\pi$"
+  - id: q3
+    prompt: "In the performance difference lemma (3), whose occupancy distribution averages the advantage $A^\\pi$? (pi or pi')"
+    answers: ["pi'", "pi prime", "pi-prime", "the new policy"]
+    explanation: "$J(\\pi')-J(\\pi) = \\frac{1}{1-\\gamma}\\mathbb{E}_{s\\sim d^{\\pi'}}[A^\\pi]$ - the advantage belongs to the **old** policy $\\pi$ but the distribution belongs to the **new** policy $\\pi'$. That mismatch is the entire reason a trust region is needed."
+    concept:
+      front: "The distribution in the performance difference lemma"
+      back: "$A^\\pi$ (the old policy's advantage) averaged under $d^{\\pi'}$ (the new policy) - hence the error term when the surrogate swaps $d^{\\pi'}$ for $d^\\pi$"
+  - id: q4
+    prompt: "What disappears when practical TRPO replaces $D_{\\mathrm{KL}}^{\\max}$ with a mean KL?"
+    choices:
+      - "Unbiasedness of the gradient"
+      - "The monotone improvement guarantee"
+      - "Reparameterization invariance of the natural gradient"
+      - "First-order agreement of the surrogate objective"
+    explanation: "The coupling argument behind (4) uses the KL at the worst state, so replacing it with a mean breaks the inequality and the monotone improvement guarantee is gone. Unbiasedness and first-order agreement are unaffected. Practical TRPO is therefore not the algorithm of the theorem but one inspired by it."
+    concept:
+      front: "The gap between practical TRPO and the theorem"
+      back: "The $D^{\\max}_{\\mathrm{KL}} \\to \\bar{D}_{\\mathrm{KL}}$ substitution removes the monotone improvement guarantee; the line search takes its place"
+  - id: q5
+    prompt: "PPO's clipping constrains the KL divergence between the two policies."
+    explanation: "Clipping zeroes the gradient of a sample whose ratio $\\rho_t$ has left $[1-\\epsilon, 1+\\epsilon]$. It does not undo movement that already happened and it does not bound the per-state KL. The premise of (4) therefore fails and there is no monotone improvement guarantee."
+    concept:
+      front: "What PPO's clipping does"
+      back: "Zeroes the gradient of samples whose ratio left the window - not a KL constraint, and no monotone improvement guarantee"

@@ -5,6 +5,7 @@ import { getLocale, getTranslations } from 'next-intl/server'
 
 import { ButtonLink } from '@/components/Button'
 import { Card } from '@/components/Card'
+import { JsonLd } from '@/components/JsonLd'
 import { Chip } from '@/components/Chip'
 import { LessonRow } from '@/components/LessonRow'
 import { MarkdownBody } from '@/components/MarkdownBody'
@@ -19,6 +20,8 @@ import type { Lesson, Module } from '@/lib/api/types'
 import { formatMinutes } from '@/lib/format'
 import { renderInlineMarkdown, renderMarkdown } from '@/lib/markdown/render'
 import { stripLessonSections } from '@/lib/markdown/sections'
+import { metaDescription, pageSeo } from '@/lib/seo'
+import { breadcrumbs, lessonSchema } from '@/lib/structured-data'
 import { lockStateFromStatus } from '@/lib/progress'
 
 interface Params {
@@ -35,11 +38,20 @@ async function loadLesson(lessonId: string): Promise<Lesson> {
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const { lessonId } = await params
+  const { moduleId, lessonId } = await params
+  const path = `/modules/${encodeURIComponent(moduleId)}/${encodeURIComponent(lessonId)}`
   try {
     const lesson = await getLesson(lessonId)
-    return { title: lesson.title ?? lessonId }
+    return pageSeo({
+      path,
+      title: lesson.title ?? lessonId,
+      description: metaDescription(lesson.summary),
+      publishable: true,
+      // A lesson is a written piece, not a landing page.
+      type: 'article',
+    })
   } catch {
+    // Unreadable (not found, or not published): a bare title, and still noindex.
     return { title: lessonId }
   }
 }
@@ -79,6 +91,7 @@ export default async function LessonPage({ params }: Params) {
   )
   const studyMethod = renderMarkdown(lesson.study_method ?? undefined)
   const siblings = mod?.lessons ?? []
+  const lessonPath = `/modules/${encodeURIComponent(moduleId)}/${encodeURIComponent(lessonId)}`
   // Advice, not a gate: every lesson is reachable regardless (ADR 0015). `GET /progress/status`
   // already carries this per lesson, so the screen needs no extra request.
   // Prompts and solutions carry KaTeX, so they go through the lesson pipeline here, on the
@@ -95,6 +108,16 @@ export default async function LessonPage({ params }: Params) {
 
   return (
     <>
+      <JsonLd
+        data={[
+          lessonSchema(lesson, lessonPath, mod?.title ?? null),
+          breadcrumbs([
+            [t('toModule'), '/roadmap'],
+            [mod?.title ?? moduleId, `/modules/${encodeURIComponent(moduleId)}`],
+            [lesson.title ?? lessonId, lessonPath],
+          ]),
+        ]}
+      />
       <PageHeader
         title={lesson.title ?? lessonId}
         subtitle={renderInlineMarkdown(lesson.summary)}

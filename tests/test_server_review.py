@@ -92,6 +92,31 @@ def test_srv01_compose_api_runs_in_server_mode() -> None:
     )
 
 
+def test_compose_passes_the_public_content_settings_to_api_and_web() -> None:
+    """Both services need both values, or publishing half-works (ADR 0016, RUNBOOK §8.2).
+
+    This shipped broken: `RC_PUBLIC_CONTENT` reached neither service and the web had no
+    `RC_PUBLIC_URL`, so turning the flag on in `.env` did nothing and the canonical links and
+    sitemap pointed at `localhost`. The api decides what it serves; the web decides what may
+    be indexed and what address every canonical link, hreflang alternate and sitemap entry
+    uses. One without the other leaves the two disagreeing.
+    """
+    for service in ("api", "web"):
+        env = _compose_service(service).get("environment", {})
+        for name in ("RC_PUBLIC_CONTENT", "RC_PUBLIC_URL"):
+            assert name in env, f"the {service} service does not receive {name}: {sorted(env)}"
+        # Off unless the deployment asks: publishing is a deliberate decision.
+        assert env["RC_PUBLIC_CONTENT"] == "${RC_PUBLIC_CONTENT:-0}", env["RC_PUBLIC_CONTENT"]
+        assert env["RC_PUBLIC_URL"].startswith("${RC_PUBLIC_URL:-"), env["RC_PUBLIC_URL"]
+
+
+def test_compose_gives_api_and_web_the_same_public_url() -> None:
+    """A different default on each side would make canonical links disagree with the API."""
+    api = _compose_service("api")["environment"]["RC_PUBLIC_URL"]
+    web = _compose_service("web")["environment"]["RC_PUBLIC_URL"]
+    assert api == web, f"api={api!r} web={web!r}"
+
+
 # -- SRV-02: anyone can claim the bootstrap admin address ------------------------------
 
 

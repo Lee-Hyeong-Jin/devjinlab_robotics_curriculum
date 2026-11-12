@@ -4,7 +4,7 @@
  */
 import 'server-only'
 
-import { toStageViews, type RoadmapStageView } from '../roadmap'
+import { toStageViews, toStageViewsFromCourse, type RoadmapStageView } from '../roadmap'
 import { apiGet, apiGetOrNull } from './client'
 import { defaultCourseId } from './config'
 import type {
@@ -72,6 +72,14 @@ export function getModule(moduleId: string): Promise<Module> {
   )
 }
 
+/** `GET /api/v1/modules/{module_id}`, or `null` when it cannot be read. */
+export function getModuleOrNull(moduleId: string): Promise<Module | null> {
+  return apiGetOrNull(
+    `/api/v1/modules/${encodeURIComponent(moduleId)}` as '/api/v1/modules/{module_id}',
+    { cache: 'content', tags: ['content', `module:${moduleId}`] },
+  )
+}
+
 /** `GET /api/v1/lessons/{lesson_id}` — lesson body, study method, resources, activities. */
 export function getLesson(lessonId: string): Promise<Lesson> {
   return apiGet(
@@ -108,7 +116,11 @@ export function getResources(scope?: {
 export async function getRoadmap(
   courseId: string = defaultCourseId(),
 ): Promise<RoadmapStageView[]> {
-  return toStageViews(await apiGetOrNull('/api/v1/roadmap', { query: { course: courseId } }))
+  const roadmap = await apiGetOrNull('/api/v1/roadmap', { query: { course: courseId } })
+  if (roadmap) return toStageViews(roadmap)
+  // An anonymous reader is refused the roadmap (it holds their progress) but allowed the
+  // course, so the page falls back to the structure instead of an empty state (ADR 0016).
+  return toStageViewsFromCourse(await getCourse(courseId))
 }
 
 /** `GET /api/v1/search` — lessons and resources matching `q` (min. 2 characters). */
