@@ -472,7 +472,41 @@ papers:
     role: standard
 
   # ── C4 최적 제어·궤적 최적화 ─────────────────────────────────────────
-  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+  - id: hargraves1987-collocation
+    title: "Direct trajectory optimization using nonlinear programming and collocation"
+    authors: ["C. R. Hargraves", "S. W. Paris"]
+    year: 1987
+    venue: "AIAA J. Guidance, Control, and Dynamics"
+    url: "https://doi.org/10.2514/3.20223"
+    verified: true
+  - id: betts1998-survey
+    title: "Survey of numerical methods for trajectory optimization"
+    authors: ["J. T. Betts"]
+    year: 1998
+    venue: "AIAA J. Guidance, Control, and Dynamics"
+    url: "https://doi.org/10.2514/2.4231"
+    verified: true
+  - id: kelly2017-trajopt-tutorial
+    title: "An introduction to trajectory optimization: how to do your own direct collocation"
+    authors: ["M. Kelly"]
+    year: 2017
+    venue: "SIAM Review"
+    url: "https://doi.org/10.1137/16M1062569"
+    verified: true
+  - id: gill2005-snopt
+    title: "SNOPT: an SQP algorithm for large-scale constrained optimization"
+    authors: ["P. E. Gill", "W. Murray", "M. A. Saunders"]
+    year: 2005
+    venue: "SIAM Review"
+    url: "https://doi.org/10.1137/S0036144504446096"
+    verified: true
+  - id: wachter2006-ipopt
+    title: "On the implementation of an interior-point filter line-search algorithm for large-scale nonlinear programming"
+    authors: ["A. Wachter", "L. T. Biegler"]
+    year: 2006
+    venue: "Math. Program."
+    url: "https://doi.org/10.1007/s10107-004-0559-y"
+    verified: true
 
   # ── C5 상태 추정 ────────────────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)

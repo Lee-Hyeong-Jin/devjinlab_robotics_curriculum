@@ -417,6 +417,34 @@ papers:
     verified: true
     lessons: [c4-pontryagin-indirect, c4-direct-collocation-sqp]
     role: survey
+  - id: kelly2017-trajopt-tutorial
+    title: "An introduction to trajectory optimization: how to do your own direct collocation"
+    authors: ["M. Kelly"]
+    year: 2017
+    venue: "SIAM Review"
+    url: "https://doi.org/10.1137/16M1062569"
+    verified: true
+    lessons: [c4-direct-collocation-sqp]
+    role: standard
+  - id: gill2005-snopt
+    title: "SNOPT: an SQP algorithm for large-scale constrained optimization"
+    authors: ["P. E. Gill", "W. Murray", "M. A. Saunders"]
+    year: 2005
+    venue: "SIAM Review"
+    url: "https://doi.org/10.1137/S0036144504446096"
+    verified: true
+    lessons: [c4-direct-collocation-sqp]
+    role: standard
+  - id: wachter2006-ipopt
+    title: "On the implementation of an interior-point filter line-search algorithm for large-scale nonlinear programming"
+    authors: ["A. Wachter", "L. T. Biegler"]
+    year: 2006
+    venue: "Math. Program."
+    url: "https://doi.org/10.1007/s10107-004-0559-y"
+    note: "Crossref 의 published 는 2005-04-28(온라인 선공개), 지면은 Math. Program. 106(1), 2006."
+    verified: true
+    lessons: [c4-direct-collocation-sqp]
+    role: standard
   - id: rawlings2017-mpc-theory
     title: "Model Predictive Control: Theory, Computation, and Design"
     authors: ["J. B. Rawlings", "D. Q. Mayne", "M. M. Diehl"]

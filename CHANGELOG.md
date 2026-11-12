@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Research-track lesson `c4-direct-collocation-sqp`: the exact nonzero count of the
+  transcribed constraint Jacobian and its identity with the Riccati recursion, Hermite-Simpson
+  derived from cubic Hermite interpolation with midpoint collocation (global order four), SQP
+  proved to be Newton's method on the KKT system, and a measurement showing a
+  machine-precision defect alongside an $O(10^2)$ interpolant residual. Korean source plus the
+  English translation.
 - Research-track lesson `c4-ilqr-ddp`: the second-order DDP backward pass derived in full,
   why DDP is Newton on the control sequence (quadratic) and iLQR Gauss-Newton (linear), the
   two regularizations and the merit-ratio line search, exact handling of control box
