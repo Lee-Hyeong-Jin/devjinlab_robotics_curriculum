@@ -12,3 +12,4 @@ summary: >-
 level: 고급
 lessons:
   - mdp-pomdp-bellman
+  - policy-gradient

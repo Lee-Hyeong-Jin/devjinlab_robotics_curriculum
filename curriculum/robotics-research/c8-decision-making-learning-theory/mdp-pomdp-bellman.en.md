@@ -64,7 +64,7 @@ The policy that is greedy with respect to $v$ is the deterministic policy
 $\pi_v(s) \in \arg\max_a [\,\cdot\,]$ attaining the maximum in (2). Ties may be broken
 arbitrarily; nothing below changes.
 
-## Self-diagnostic before starting
+## Self-diagnosis before starting
 
 Since this is the module's first lesson, it checks the background for all of C8. All five items
 are **gradeable** — solve them on paper in ten minutes and compare with the answers. Three or
