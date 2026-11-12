@@ -66,7 +66,7 @@ resources:
 
 ## 전제와 기호
 
-앞 레슨([`c1-so3-se3-exponential`](so3-se3-exponential.md))의 표기를 그대로 쓴다. 추가 기호:
+앞 레슨 `c1-so3-se3-exponential` 의 표기를 그대로 쓴다. 추가 기호:
 
 | 기호 | 뜻 |
 |---|---|

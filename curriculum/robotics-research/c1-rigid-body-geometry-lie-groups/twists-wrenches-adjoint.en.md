@@ -20,8 +20,7 @@ tags: [lie-groups, se3, twist, wrench, screw-theory, research]
 
 ## Setup and notation
 
-The notation of the previous lesson ([`c1-so3-se3-exponential`](so3-se3-exponential.en.md)) carries
-over. Additional symbols:
+The notation of the previous lesson `c1-so3-se3-exponential` carries over. Additional symbols:
 
 | Symbol | Meaning |
 |---|---|

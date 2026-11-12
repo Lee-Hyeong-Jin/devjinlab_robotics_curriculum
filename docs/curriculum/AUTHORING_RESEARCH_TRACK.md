@@ -207,6 +207,11 @@ resources:                           # 필독 논문도 당분간 여기에 (kin
 - `## 전제와 기호` 에 **기호 표**를 둔다(기호 / 뜻). 모듈 안에서 기호를 바꾸지 않는다.
 - 차원과 좌표계를 식에 유지한다(예: $^A R_B \in SO(3)$, $\xi \in \mathbb{R}^6$).
 - 코드 블록은 Python 우선. `uv run ruff format` 을 통과하는 코드만 넣는다(문서의 코드 블록도 대상).
+- **다른 레슨을 가리킬 때 상대 링크를 쓰지 않는다.** 레슨 id 를 코드 서식으로만 쓴다
+  (`` `c1-manifold-optimization` ``). 저장소의 파일 이름은 `so3-se3-exponential.md` 인데 사이트는
+  레슨 id 로 페이지를 만들므로(`c1-so3-se3-exponential.html`), 양쪽에서 동시에 맞는 상대 링크가
+  없다. `.md` 로 링크하면 `rc site build` 가 "target is not found among documentation files"
+  경고를 낸다. 외부 자료는 정상적으로 링크한다.
 - 퀴즈 블록(YAML) 안의 수식은 백슬래시를 **두 번** 쓴다: `"$\\hat{\\omega}^3$"`.
 
 ## 8. 번역 규칙
