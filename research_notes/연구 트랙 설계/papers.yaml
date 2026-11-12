@@ -473,6 +473,43 @@ papers:
     verified: true
     lessons: [c4-mpc]
     role: standard
+  - id: stewart1996-timestepping
+    title: "An implicit time-stepping scheme for rigid body dynamics with inelastic collisions and Coulomb friction"
+    authors: ["D. E. Stewart", "J. C. Trinkle"]
+    year: 1996
+    venue: "Int. J. Numer. Methods Eng."
+    url: "https://doi.org/10.1002/(SICI)1097-0207(19960815)39:15%3C2673::AID-NME972%3E3.0.CO;2-I"
+    note: "DOI 에 괄호·부등호가 있어 URL 은 퍼센트 인코딩했다. doi.org 리다이렉트는 확인되고 Wiley 가 자동 접근을 403 으로 막는다 — 서지는 Crossref 로 확인."
+    verified: true
+    lessons: [c4-contact-implicit-hybrid]
+    role: seminal
+  - id: anitescu1997-lcp
+    title: "Formulating dynamic multi-rigid-body contact problems with friction as solvable linear complementarity problems"
+    authors: ["M. Anitescu", "F. A. Potra"]
+    year: 1997
+    venue: "Nonlinear Dynamics"
+    url: "https://doi.org/10.1023/A:1008292328909"
+    verified: true
+    lessons: [c4-contact-implicit-hybrid]
+    role: standard
+  - id: mordatch2012-cio
+    title: "Discovery of complex behaviors through contact-invariant optimization"
+    authors: ["I. Mordatch", "E. Todorov", "Z. Popovic"]
+    year: 2012
+    venue: "ACM Trans. Graphics (SIGGRAPH)"
+    url: "https://doi.org/10.1145/2185520.2185539"
+    verified: true
+    lessons: [c4-contact-implicit-hybrid]
+    role: standard
+  - id: burden2016-piecewise-flows
+    title: "Event-selected vector field discontinuities yield piecewise-differentiable flows"
+    authors: ["S. A. Burden", "S. Shankar Sastry", "D. E. Koditschek", "S. Revzen"]
+    year: 2016
+    venue: "SIAM J. Applied Dynamical Systems"
+    url: "https://doi.org/10.1137/15M1016588"
+    verified: true
+    lessons: [c4-contact-implicit-hybrid]
+    role: standard
   - id: posa2014-contact-implicit
     title: "A direct method for trajectory optimization of rigid bodies through contact"
     authors: ["M. Posa", "C. Cantu", "R. Tedrake"]

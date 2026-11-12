@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Research-track lesson `c4-contact-implicit-hybrid`: a proof that the complementarity set is
+  non-convex and breaks LICQ at every feasible point, the time-stepping through-contact
+  transcription, the saltation matrix derived from the variation in transition time and
+  verified against finite differences, and a measured relaxation study showing that the
+  relaxation is always tight and falsifies the contact schedule. Korean source plus the
+  English translation.
 - Research-track lesson `c4-mpc`: recursive feasibility from control invariance of the
   terminal set and Lyapunov stability from a terminal cost that is a control Lyapunov
   function, both proved by the shift-and-append construction; a grid study counting the 178

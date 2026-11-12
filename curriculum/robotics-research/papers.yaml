@@ -473,6 +473,48 @@ papers:
     role: standard
 
   # ── C4 최적 제어·궤적 최적화 ─────────────────────────────────────────
+  - id: posa2014-contact-implicit
+    title: "A direct method for trajectory optimization of rigid bodies through contact"
+    authors: ["M. Posa", "C. Cantu", "R. Tedrake"]
+    year: 2014
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364913506757"
+    verified: true
+  - id: stewart1996-timestepping
+    title: "An implicit time-stepping scheme for rigid body dynamics with inelastic collisions and Coulomb friction"
+    authors: ["D. E. Stewart", "J. C. Trinkle"]
+    year: 1996
+    venue: "Int. J. Numer. Methods Eng."
+    url: "https://doi.org/10.1002/(SICI)1097-0207(19960815)39:15%3C2673::AID-NME972%3E3.0.CO;2-I"
+    verified: true
+  - id: howell2019-altro
+    title: "ALTRO: a fast solver for constrained trajectory optimization"
+    authors: ["T. A. Howell", "B. E. Jackson", "Z. Manchester"]
+    year: 2019
+    venue: "IROS"
+    url: "https://doi.org/10.1109/IROS40897.2019.8967788"
+    verified: true
+  - id: anitescu1997-lcp
+    title: "Formulating dynamic multi-rigid-body contact problems with friction as solvable linear complementarity problems"
+    authors: ["M. Anitescu", "F. A. Potra"]
+    year: 1997
+    venue: "Nonlinear Dynamics"
+    url: "https://doi.org/10.1023/A:1008292328909"
+    verified: true
+  - id: mordatch2012-cio
+    title: "Discovery of complex behaviors through contact-invariant optimization"
+    authors: ["I. Mordatch", "E. Todorov", "Z. Popovic"]
+    year: 2012
+    venue: "ACM Trans. Graphics (SIGGRAPH)"
+    url: "https://doi.org/10.1145/2185520.2185539"
+    verified: true
+  - id: burden2016-piecewise-flows
+    title: "Event-selected vector field discontinuities yield piecewise-differentiable flows"
+    authors: ["S. A. Burden", "S. Shankar Sastry", "D. E. Koditschek", "S. Revzen"]
+    year: 2016
+    venue: "SIAM J. Applied Dynamical Systems"
+    url: "https://doi.org/10.1137/15M1016588"
+    verified: true
   - id: hargraves1987-collocation
     title: "Direct trajectory optimization using nonlinear programming and collocation"
     authors: ["C. R. Hargraves", "S. W. Paris"]
