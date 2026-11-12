@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Research-track lesson `c4-dp-lqr-lqg`: the Bellman equation and the HJB, the verification
+  theorem as the sufficient condition the PMP lacks, the costate as the gradient of the value
+  function, LQR derived three ways (DP, PMP, completion of squares), monotone convergence of
+  the Riccati recursion with a worked detectability counterexample, and the LQG separation
+  theorem together with Doyle's margin critique. Korean source plus the English translation.
 - Research-track module C4 (optimal control and trajectory optimization) with its first
   lesson, `c4-pontryagin-indirect`: Pontryagin's minimum principle proved from needle
   variations and a separating hyperplane, the adjoint equation derived as the transpose of
