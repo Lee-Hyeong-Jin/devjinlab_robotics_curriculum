@@ -19,6 +19,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and from the module overview.
 - Web: quiz explanations are rendered with the lesson Markdown pipeline (KaTeX, code, GFM and
   the same sanitiser) instead of being printed as their Markdown source.
+- `email_verification` (`unavailable` | `pending` | `verified`) on the sign-up response,
+  `GET /api/v1/me` and the admin user list. A server with no SMTP configuration can never
+  deliver the link, so clients stop telling the reader to check an inbox: the web shows no
+  verification banner and no resend button, and sign-up says the account is ready.
+- `POST /api/v1/auth/resend-verification`: mail the verification link again to the signed-in
+  account (session only, so there is nothing to enumerate; 503 without SMTP). The previous
+  link stops working. The web offers it on the profile and verify-email screens while the
+  state is `pending`.
+- `RC_AUTH_REQUIRE_VERIFIED_EMAIL` (default `0`): with `1`, an account whose address is not
+  confirmed can sign in and read but gets 403 on learning-data writes and PAT creation.
+  Setting it without SMTP configured refuses to start, since nobody could get past it.
+- `rc api send-test-email <address>`: send one message through the configured SMTP server to
+  check the settings. Writes nothing to the database.
 - `scripts/ops/deploy_pull.sh`: pull-based continuous deployment for a single host (deploys only commits with a green CI run, backs up first, rolls back on failure).
 
 ### Fixed

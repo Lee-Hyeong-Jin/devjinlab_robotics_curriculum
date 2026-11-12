@@ -451,6 +451,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Status'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
         '404':
           description: Not Found
           content:
@@ -514,6 +520,12 @@ paths:
                 items:
                   $ref: '#/components/schemas/NextLesson'
                 title: Response Get Next Api V1 Progress Next Get
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
         '404':
           description: Not Found
           content:
@@ -555,6 +567,12 @@ paths:
                   $ref: '#/components/schemas/LessonProgress'
                 type: array
                 title: Response List Lesson Progress Api V1 Progress Lessons Get
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
         '404':
           description: Not Found
           content:
@@ -600,6 +618,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LessonProgress'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
         '404':
           description: Not Found
           content:
@@ -644,6 +668,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StudySession'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
         '404':
           description: Not Found
           content:
@@ -690,6 +720,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StudySession'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
         '404':
           description: Not Found
           content:
@@ -734,6 +770,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StudySession'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
         '404':
           description: Not Found
           content:
@@ -778,6 +820,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DoneResult'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
         '404':
           description: Not Found
           content:
@@ -823,6 +871,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/QuizPublic'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
         '404':
           description: Not Found
           content:
@@ -871,6 +925,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/robotics_curriculum__api__schemas__QuizRun'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
         '404':
           description: Not Found
           content:
@@ -935,6 +995,12 @@ paths:
                 items:
                   $ref: '#/components/schemas/ReviewCard'
                 title: Response Get Due Api V1 Review Due Get
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
         '404':
           description: Not Found
           content:
@@ -986,6 +1052,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ReviewResult'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
         '404':
           description: Not Found
           content:
@@ -1234,6 +1306,60 @@ paths:
                 $ref: '#/components/schemas/Problem'
         '403':
           description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /api/v1/auth/resend-verification:
+    post:
+      tags:
+      - auth
+      summary: Resend Verification
+      description: |-
+        Send the verification link again to the signed-in account's own address.
+
+        Needs a session, so there is nothing to enumerate and no address to type. 503 when the
+        server has no SMTP configuration — the client reads `email_verification` first and does
+        not offer this at all in that case. Already-verified accounts get 202 and no mail.
+      operationId: resend_verification_api_v1_auth_resend_verification_post
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '429':
+          description: Too Many Requests
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '401':
+          description: Unauthorized
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '503':
+          description: Service Unavailable
           content:
             application/problem+json:
               schema:
@@ -1535,7 +1661,11 @@ paths:
       tags:
       - me
       summary: Get Me
-      description: The signed-in user.
+      description: |-
+        The signed-in user.
+
+        Reads the state rather than depending on ``Auth``, because local mode has no auth
+        service and this endpoint still answers there (with the stand-in user 1).
       operationId: get_me_api_v1_me_get
       responses:
         '200':
@@ -2529,6 +2659,16 @@ components:
         email_verified:
           type: boolean
           title: Email Verified
+        email_verification:
+          type: string
+          enum:
+          - unavailable
+          - pending
+          - verified
+          title: Email Verification
+          description: '`verified`, `pending`, or `unavailable` when this server has no SMTP configuration
+            and so can never deliver the link. A client shows no "check your inbox" notice and no resend
+            button while it is `unavailable`.'
         display_name:
           anyOf:
           - type: string
@@ -2565,6 +2705,7 @@ components:
       - id
       - email
       - email_verified
+      - email_verification
       - display_name
       - locale
       - timezone
@@ -4566,6 +4707,16 @@ components:
         email_verified:
           type: boolean
           title: Email Verified
+        email_verification:
+          type: string
+          enum:
+          - unavailable
+          - pending
+          - verified
+          title: Email Verification
+          description: '`verified`, `pending`, or `unavailable` when this server has no SMTP configuration
+            and so can never deliver the link. A client shows no "check your inbox" notice and no resend
+            button while it is `unavailable`.'
         display_name:
           anyOf:
           - type: string
@@ -4595,6 +4746,7 @@ components:
       - id
       - email
       - email_verified
+      - email_verification
       - display_name
       - locale
       - timezone

@@ -5,6 +5,7 @@ FastAPI / uvicorn are imported inside the commands so ``rc`` works without the e
 
 from __future__ import annotations
 
+import os
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Annotated
@@ -115,6 +116,44 @@ def promote_admin(
     finally:
         auth.store.close()
     typer.echo(f"{user.email} (id {user.id}) is now admin")
+
+
+@api_app.command("send-test-email")
+def send_test_email(
+    to: Annotated[str, typer.Argument(help="Address to send the test message to.")],
+) -> None:
+    """Send one message through the configured SMTP server, to check the settings.
+
+    Reads the same RC_SMTP_* variables the server does, so a success here means sign-up
+    and password-reset mail will go out too. Nothing is written to the database.
+    """
+    try:
+        from robotics_curriculum.auth.mailer import Mail, SmtpConfig, SmtpMailer
+    except ImportError:
+        raise _fail(INSTALL_HINT) from None
+    config = SmtpConfig.from_env(os.environ)
+    if config is None:
+        raise _fail(
+            "no SMTP configuration: set RC_SMTP_HOST (and RC_SMTP_PORT, RC_SMTP_USER, "
+            "RC_SMTP_PASSWORD, RC_SMTP_FROM as your provider needs). "
+            "See docs/operations/RUNBOOK.md"
+        )
+    typer.echo(f"sending through {config.host}:{config.port} as {config.sender} ...")
+    try:
+        SmtpMailer(config).send(
+            Mail(
+                to=to,
+                subject="robotics-curriculum: SMTP test",
+                body=(
+                    "This is a test message from `rc api send-test-email`.\n"
+                    "If you are reading it, sign-up and password-reset mail will be "
+                    "delivered too.\n"
+                ),
+            )
+        )
+    except Exception as exc:  # any SMTP/DNS/TLS failure: report it, do not traceback
+        raise _fail(f"delivery failed: {type(exc).__name__}: {exc}") from None
+    typer.echo(f"sent to {to}")
 
 
 def _now() -> datetime:

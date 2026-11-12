@@ -26,6 +26,7 @@ from robotics_curriculum.auth.models import (
     ApiToken,
     AuditEntry,
     AuthSession,
+    EmailVerification,
     Identity,
     Role,
     Scope,
@@ -96,6 +97,7 @@ class AuthConfig:
     verify_ttl: timedelta = timedelta(hours=24)
     audit_retention: timedelta = timedelta(days=90)
     allow_signup: bool = True
+    require_verified_email: bool = False
     bootstrap_admin_email: str | None = None
     reset_window: timedelta = timedelta(minutes=15)
     max_resets_per_window: int = 3
@@ -117,6 +119,7 @@ class AuthConfig:
             session_idle=days("RC_AUTH_SESSION_DAYS", base.session_idle),
             audit_retention=days("RC_AUTH_AUDIT_RETENTION_DAYS", base.audit_retention),
             allow_signup=env.get("RC_AUTH_ALLOW_SIGNUP", "1") != "0",
+            require_verified_email=env.get("RC_AUTH_REQUIRE_VERIFIED_EMAIL", "0") == "1",
             bootstrap_admin_email=(env.get("RC_AUTH_ADMIN_EMAIL") or "").lower() or None,
             public_url=env.get("RC_PUBLIC_URL") or base.public_url,
             api_base_url=env.get("RC_API_BASE_URL") or None,
@@ -540,6 +543,24 @@ class AuthService:
     @property
     def mail_enabled(self) -> bool:
         return self.mailer is not None
+
+    def verification_state(self, user: User) -> EmailVerification:
+        """``verified``, ``pending``, or ``unavailable`` when this server cannot send mail.
+
+        A server without SMTP can never deliver the link, so telling the reader to check
+        their inbox (or offering to resend) is a dead end — the client hides those.
+        """
+        if user.email_verified_at is not None:
+            return "verified"
+        return "pending" if self.mailer is not None else "unavailable"
+
+    def resend_verification(self, user: User, ctx: Context) -> bool:
+        """Mail the verification link again. False when mail is off or already verified."""
+        if self.mailer is None or user.email_verified_at is not None:
+            return False
+        now = self.clock()
+        self.store.expire_one_time(user.id, TokenKind.VERIFY_EMAIL, now)
+        return self._send_token(user, TokenKind.VERIFY_EMAIL, self.config.verify_ttl, ctx)
 
     def forgot_password(self, email: str, ctx: Context) -> None:
         """Mails a reset link if the account exists. Same answer either way (no enumeration)."""

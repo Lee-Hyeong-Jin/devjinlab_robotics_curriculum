@@ -10,7 +10,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 from robotics_curriculum.auth import models
-from robotics_curriculum.auth.models import Role, Scope, UserStatus
+from robotics_curriculum.auth.models import EmailVerification, Role, Scope, UserStatus
 from robotics_curriculum.auth.oidc import ProviderType
 
 
@@ -59,6 +59,13 @@ class User(Schema):
     id: int
     email: str
     email_verified: bool
+    email_verification: EmailVerification = Field(
+        description=(
+            "`verified`, `pending`, or `unavailable` when this server has no SMTP "
+            "configuration and so can never deliver the link. A client shows no "
+            '"check your inbox" notice and no resend button while it is `unavailable`.'
+        )
+    )
     display_name: str | None
     locale: str | None
     timezone: str | None
@@ -67,11 +74,12 @@ class User(Schema):
     created_at: datetime
 
     @classmethod
-    def of(cls, user: models.User) -> User:
+    def of(cls, user: models.User, verification: EmailVerification = "pending") -> User:
         return cls(
             id=user.id,
             email=user.email,
             email_verified=user.email_verified_at is not None,
+            email_verification=("verified" if user.email_verified_at is not None else verification),
             display_name=user.display_name,
             locale=user.locale,
             timezone=user.timezone,
@@ -86,9 +94,9 @@ class AdminUser(User):
     updated_at: datetime
 
     @classmethod
-    def of(cls, user: models.User) -> AdminUser:
+    def of(cls, user: models.User, verification: EmailVerification = "pending") -> AdminUser:
         return cls(
-            **User.of(user).model_dump(),
+            **User.of(user, verification).model_dump(),
             has_password=user.has_password,
             updated_at=user.updated_at,
         )

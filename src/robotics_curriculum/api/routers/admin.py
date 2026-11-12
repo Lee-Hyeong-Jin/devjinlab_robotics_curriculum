@@ -42,7 +42,9 @@ def list_users(
     users = auth.list_users(limit, _cursor(cursor) or 0)
     auth.record(ctx, "admin.users.viewed", principal.user.id, detail={"count": len(users)})
     nxt = str(users[-1].id) if len(users) == limit else None
-    return UserPage(items=[AdminUser.of(u) for u in users], next_cursor=nxt)
+    return UserPage(
+        items=[AdminUser.of(u, auth.verification_state(u)) for u in users], next_cursor=nxt
+    )
 
 
 @router.get("/users/{user_id}", response_model=AdminUser)
@@ -51,7 +53,7 @@ def get_user(user_id: int, principal: AdminPrincipal, auth: Auth, ctx: Ctx) -> A
     auth.record(
         ctx, "admin.user.viewed", principal.user.id, target_type="user", target_id=str(user_id)
     )
-    return AdminUser.of(user)
+    return AdminUser.of(user, auth.verification_state(user))
 
 
 @router.patch("/users/{user_id}", response_model=AdminUser)
@@ -61,7 +63,7 @@ def update_user(
     """Change role or status. The last admin cannot be demoted or disabled, and admins
     cannot remove their own admin access. Disabling ends the user's sessions and tokens."""
     user = auth.admin_update_user(principal.user, user_id, ctx, role=body.role, status=body.status)
-    return AdminUser.of(user)
+    return AdminUser.of(user, auth.verification_state(user))
 
 
 @router.delete("/users/{user_id}/sessions", status_code=status.HTTP_204_NO_CONTENT)

@@ -105,6 +105,10 @@ docker compose up -d --build --wait web      # db -> migrate -> api -> web
 - `bash scripts/smoke.sh` brings the same stack up, checks it end to end, and tears it down.
 - First admin: set `RC_AUTH_ADMIN_EMAIL` before the first start, or run
   `uv run rc api promote-admin <email>`.
+- Email is optional. Without `RC_SMTP_HOST` the API reports `email_verification: "unavailable"`
+  and the web shows no verification banner, so nobody waits for mail that cannot arrive.
+  To turn it on, see [RUNBOOK §8.1](docs/operations/RUNBOOK.md) and check the settings with
+  `uv run rc api send-test-email <address>`.
 - Backup and restore, including a recovery drill: [docs/operations/RUNBOOK.md](docs/operations/RUNBOOK.md).
 
 ### PostgreSQL without the full stack (optional)

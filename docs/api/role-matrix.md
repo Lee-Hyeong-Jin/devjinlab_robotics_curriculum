@@ -11,6 +11,8 @@ and the scope/CSRF tests next to it.
 | `POST /api/v1/auth/signup`, `/login`, `/verify-email`, `/password/forgot`, `/password/reset` | ✔ | ✔ | ✔ | ✔ | — |
 | `GET /api/v1/auth/providers` (configured external logins, no secrets) | ✔ | ✔ | ✔ | ✔ | — |
 | `GET /api/v1/auth/oidc/{provider}/start`, `/callback` (302) | ✔ | ✔ (links) | ✔ (links) | ✔ (links) | — |
+| `POST /api/v1/auth/resend-verification` | 401 | ✔ | ✔ | ✔ | session |
+| `POST /api/v1/progress/*`, `/quiz/runs`, `/review/*`, `/me/tokens` with `RC_AUTH_REQUIRE_VERIFIED_EMAIL=1` and an unverified address | 401 | 403 | 403 | 403 | `write:progress` |
 | `POST /api/v1/auth/logout` | 401 | ✔ | ✔ | ✔ | session |
 | `GET /metrics` (internal network only) | 200 | 200 | 200 | 200 | — |
 | `GET /api/v1/courses`, `/modules/*`, `/lessons/*`, `/resources` | 401 | ✔ | ✔ | ✔ | `read:progress` |

@@ -31,7 +31,14 @@ export default async function LoginPage({ searchParams }: Props) {
   // Only after the session check: an anonymous reader is the only one who sees these.
   const providers = await getAuthProviders()
 
-  const notice = params.registered ? t('registered') : params.reset ? t('resetDone') : undefined
+  const notice =
+    params.registered === 'verify'
+      ? t('registered')
+      : params.registered
+        ? t('registeredReady')
+        : params.reset
+          ? t('resetDone')
+          : undefined
 
   return (
     <div className="mx-auto max-w-md">

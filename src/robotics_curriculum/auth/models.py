@@ -4,9 +4,13 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import StrEnum
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
+
+EmailVerification = Literal["unavailable", "pending", "verified"]
+"""How far an account's email address has got: ``unavailable`` means this server has no
+SMTP configuration, so the link can never be delivered and asking for it is a dead end."""
 
 
 class Role(StrEnum):

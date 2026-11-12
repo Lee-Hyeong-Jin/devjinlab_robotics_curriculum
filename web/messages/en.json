@@ -147,7 +147,8 @@
     "resetDone": "Your password has changed. Sign in with the new one.",
     "forgot": "Forgot your password?",
     "noAccount": "No account yet?",
-    "signupLink": "Sign up"
+    "signupLink": "Sign up",
+    "registeredReady": "Your account is ready. Sign in below."
   },
   "signup": {
     "title": "Sign up",
@@ -199,7 +200,12 @@
     "submitting": "Verifying…",
     "done": "Your email is verified. You can sign in now.",
     "failed": "Verification failed. The token may have expired.",
-    "toLogin": "Go to sign in"
+    "toLogin": "Go to sign in",
+    "resend": "Send the link again",
+    "resending": "Sending…",
+    "resendHint": "If the message never arrived, send it again. The earlier link stops working.",
+    "resendDone": "The verification email is on its way.",
+    "resendFailed": "The verification email could not be sent."
   },
   "account": {
     "signIn": "Sign in",

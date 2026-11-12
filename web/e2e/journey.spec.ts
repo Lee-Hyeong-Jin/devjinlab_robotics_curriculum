@@ -33,6 +33,9 @@ async function signUpAndIn(page: Page, account: ReturnType<typeof freshAccount>)
   await page.locator('form button[type="submit"]').click()
 
   await page.waitForURL(/\/login/)
+  // Without SMTP the server cannot send a verification link, so sign-up says the account is
+  // ready rather than telling the reader to check their inbox.
+  await expect(page.getByText(/바로 로그인하세요|Your account is ready/)).toBeVisible()
   await page.locator('input[name="email"]').fill(account.email)
   await page.locator('input[name="password"]').fill(account.password)
   await page.locator('form button[type="submit"]').click()
@@ -124,6 +127,13 @@ test('a learner signs up, studies a lesson, takes its quiz and reviews', async (
   // Profile, then sign out.
   await page.goto('/profile')
   await expect(page.getByText(account.email).first()).toBeVisible()
+  // This API runs without SMTP, so the verification link can never arrive: the screen must
+  // not claim the address is unverified nor offer to resend (email_verification =
+  // "unavailable").
+  await expect(page.getByText(/인증되지 않음|Not verified/)).toHaveCount(0)
+  await expect(
+    page.getByRole('button', { name: /인증 메일 다시 받기|Send the link again/ }),
+  ).toHaveCount(0)
   await page.getByRole('button', { name: /로그아웃|Sign out/ }).click()
   await page.waitForURL(/\/login/)
 })
