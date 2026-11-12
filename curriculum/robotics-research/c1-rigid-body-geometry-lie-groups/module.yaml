@@ -6,9 +6,7 @@ summary: >-
   표기와 결과를 쓴다. 근거가 되는 대학원 과목은 MIT 16.485 L4-5·L18-19, CMU 16-711 Ch1-2,
   CMU 16-745 W9, 교재는 Barfoot ch.7-8 과 Murray-Li-Sastry ch.2 다.
   설계상 레슨은 5개다.
-# 설계상의 수준은 "연구"(research)다. Level 리터럴에 "연구"가 추가되기 전까지 "고급"으로 둔다
-# (연구 트랙 설계 노트의 lesson-standard §11-4).
-level: 고급
+level: 연구
 lessons:
   - so3-se3-exponential
   - twists-wrenches-adjoint

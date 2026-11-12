@@ -1,0 +1,156 @@
+# 연구원 트랙 코스 논문 서지 (course paper registry) — ADR 0014
+#
+# 이 파일은 **서지(bibliography)** 다: 누가 무엇을 어디에 썼고 링크를 확인했는지.
+# "어떤 논문을 필독으로 지정하는가"는 레슨의 결정이며 레슨 front matter 의 `papers[]` 가 원본이다.
+# 레슨 참조의 `role`·`note` 가 여기 값을 덮어쓰고, `required` 는 레슨에만 있다.
+# 형식·검증 규칙: docs/adr/0014-paper-registry.md, docs/curriculum/CONTENT_MODEL.md "papers.yaml".
+#
+# 필드: id · title · authors[] · year · venue · url · verified · role · note
+#   verified : 링크를 실제로 열어 제목·제1저자·연도가 맞는지 확인했는가. false 는 사이트에서
+#              "(미확인)" 배지로 표시된다.
+#   role     : seminal | standard | frontier | critique | survey (레슨이 덮어쓸 수 있는 기본값)
+#
+# 선택 필드 `lessons[]`(역색인)는 **이 레지스트리에 쓰지 않는다.** 두 가지 이유다: ① 어느 레슨이
+# 어떤 논문을 지정하는지는 레슨의 papers[] 가 원본이고 역색인은 즉시 어긋난다(rc validate 가
+# 불일치를 경고한다) ② 여러 모듈이 공유하는 논문에 자기 레슨을 적으려면 **남의 모듈 블록을
+# 고쳐야** 해서 저자 경계와 충돌한다. 공유 논문은 id 만 재사용하고 자기 레슨의 papers[] 에만 쓴다.
+# 어느 레슨이 어떤 논문을 왜 지정하는지의 설계 기록은 연구 트랙 설계 노트의 blueprint "필독" 열에 있다.
+#
+# ── 저자 경계 (AUTHORING §9-1) ─────────────────────────────────────────────────
+# 각 저자는 **자기 모듈 블록 안에서만** 추가·수정한다. 다른 모듈 항목은 읽기 전용이며,
+# 같은 논문을 쓰려면 **id 를 재사용**하고 그 항목의 lessons[] 에 자기 레슨 id 만 더한다.
+# 블록이 없으면 아래 구분선 형식으로 자기 모듈 블록을 만든다. 헤더(이 주석)는 공유 구역이므로
+# 건드리지 않는다 — 편수는 하드코딩하지 않고 필요할 때 센다:
+#   grep -c '^  - id:' curriculum/robotics-research/papers.yaml
+#   grep -c 'verified: false' curriculum/robotics-research/papers.yaml
+#
+# URL 확인 방법: arXiv API(id_list), Crossref API, OpenAlex, 학회 프로시딩 페이지
+# (papers.nips.cc, ijcai.org, cdn.aaai.org), 저자·연구실 페이지. DOI 로만 확인한 항목은
+# 제목·제1저자·연도까지 대조했고 전체 저자 목록은 대조하지 않았다. arXiv 로 확인한 항목의
+# 게재 venue 는 journal_ref 가 없으면 확인되지 않았으며 그런 항목은 note 에 적었다.
+# 끝내 확인되지 않는 항목은 목록에서 빼고 대체 논문을 넣는다.
+#
+# ── 항목은 레슨과 **함께** 추가한다 ───────────────────────────────────────────
+# `tests/test_content.py::test_live_curriculum_validates` 와 `rc validate` 의 CLI 테스트는
+# `validate_course(course) == []` 을 요구한다 — **경고도 실패다.** 그리고 "레지스트리에 있는데
+# 아무 레슨도 참조하지 않는 논문"은 경고다. 따라서 **아직 쓰지 않은 레슨을 위해 논문을 미리
+# 넣으면 게이트가 깨진다.** 항목은 그것을 참조하는 레슨과 같은 커밋에 추가한다.
+# 설계 단계의 전체 서지(145편, 레슨별 지정 의도 포함)는 연구 트랙 설계 노트의 papers.yaml 과
+# blueprint 의 "필독" 열에 있다 — 거기서 자기 모듈 몫을 가져와 이 파일에 옮긴다.
+
+papers:
+  # ── C1 강체 기하와 리 군 ─────────────────────────────────────────────
+  - id: sola2018-micro-lie-theory
+    title: "A micro Lie theory for state estimation in robotics"
+    authors: ["J. Solà", "J. Deray", "D. Atchuthan"]
+    year: 2018
+    venue: "arXiv"
+    url: "https://arxiv.org/abs/1812.01537"
+    note: "2018-12-04 최초 게재, v9 2021-12-08. 표기·야코비안 규약의 사실상 표준 참고서"
+    verified: true
+    role: standard
+  - id: forster2017-preintegration
+    title: "On-manifold preintegration for real-time visual-inertial odometry"
+    authors: ["C. Forster", "L. Carlone", "F. Dellaert", "D. Scaramuzza"]
+    year: 2017
+    venue: "IEEE T-RO"
+    url: "https://arxiv.org/abs/1512.02363"
+    verified: true
+    role: seminal
+  - id: grassia1998-exp-map
+    title: "Practical parameterization of rotations using the exponential map"
+    authors: ["F. S. Grassia"]
+    year: 1998
+    venue: "Journal of Graphics Tools"
+    url: "https://doi.org/10.1080/10867651.1998.10487493"
+    verified: true
+    role: standard
+  - id: shoemake1985-quaternion-curves
+    title: "Animating rotation with quaternion curves"
+    authors: ["K. Shoemake"]
+    year: 1985
+    venue: "SIGGRAPH"
+    url: "https://doi.org/10.1145/325334.325242"
+    note: "Crossref 레코드로 확인(SIGGRAPH '85). ACM 페이지 본문은 열지 않았다"
+    verified: true
+    role: seminal
+  - id: featherstone2010-6d-vectors-part1
+    title: "A beginner's guide to 6-D vectors (part 1)"
+    authors: ["R. Featherstone"]
+    year: 2010
+    venue: "IEEE Robotics & Automation Magazine 17(3)"
+    url: "https://doi.org/10.1109/MRA.2010.937853"
+    verified: true
+    role: standard
+  - id: featherstone2010-6d-vectors-part2
+    title: "A beginner's guide to 6-D vectors (part 2)"
+    authors: ["R. Featherstone"]
+    year: 2010
+    venue: "IEEE Robotics & Automation Magazine 17(4)"
+    url: "https://doi.org/10.1109/MRA.2010.939560"
+    note: "Crossref 에 [Tutorial] 로 표기됨"
+    verified: true
+    role: standard
+  - id: brockett1984-poe
+    title: "Robotic manipulators and the product of exponentials formula"
+    authors: ["R. W. Brockett"]
+    year: 1984
+    venue: "Mathematical Theory of Networks and Systems (LNCIS)"
+    url: "https://doi.org/10.1007/BFb0031048"
+    note: "Crossref 의 date 필드가 비어 있어 연도 1984 와 MTNS venue 는 레코드로 확인되지 않았다(LNCIS 수록만 확인)"
+    verified: true
+    role: seminal
+  - id: absil2008-manifold-opt
+    title: "Optimization Algorithms on Matrix Manifolds"
+    authors: ["P.-A. Absil", "R. Mahony", "R. Sepulchre"]
+    year: 2008
+    venue: "Princeton University Press (book)"
+    url: "https://doi.org/10.1515/9781400830244"
+    verified: true
+    role: standard
+
+  # ── C2 다물체 동역학 ──────────────────────────────────────────────
+  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+
+  # ── C3 비선형·강건 제어 ────────────────────────────────────────────
+  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+
+  # ── C4 최적 제어·궤적 최적화 ─────────────────────────────────────────
+  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+
+  # ── C5 상태 추정 ────────────────────────────────────────────────
+  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+
+  # ── C6 동작 계획 이론 ─────────────────────────────────────────────
+  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+
+  # ── C7 지각과 3D 표현 ────────────────────────────────────────────
+  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+
+  # ── C8 의사결정·학습 이론 ───────────────────────────────────────────
+  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+
+  # ── S1 SLAM·공간 지능 ───────────────────────────────────────────
+  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+
+  # ── S2 조작·접촉 ────────────────────────────────────────────────
+  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+
+  # ── S3 보행·언더액추에이티드 ──────────────────────────────────────────
+  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+
+  # ── S4 로봇 학습·파운데이션 모델 ───────────────────────────────────────
+  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+
+  # ── S5 다중 로봇·필드 로보틱스 ────────────────────────────────────────
+  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+
+  # ── R0 수학·수치 기초 (브리지) ───────────────────────────────────────
+  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+
+  # ── R1 연구 방법론 / R2 캡스톤 ──────────────────────────────────────
+  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+
+  # ── F0 시작 전 기초 ──────────────────────────────────────────────
+  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+  # F0 는 가이드형이라 논문을 지정하지 않는다. R0 는 교재가 1차 자료다(레슨 표준 §5).

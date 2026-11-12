@@ -21,7 +21,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 90
   - id: c1-lie-group-derivatives-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 2편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 120
   - id: c1-lie-group-derivatives-problems
@@ -29,7 +29,7 @@ activities:
     title: 문제 세트 (유도 2 · 증명 1 · 계산 1 · 구현 1 · 반례 1)
     estimated_minutes: 150
   - id: c1-lie-group-derivatives-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — 야코비안 검증과 Fréchet 평균 (R1)
     estimated_minutes: 90
   - id: c1-lie-group-derivatives-quiz
@@ -41,22 +41,22 @@ resources:
     url: https://asrl.utias.utoronto.ca/~tdb/bib/barfoot_ser24.pdf
     kind: book
     note: ch.7.1–7.3. 좌·우 야코비안의 닫힌 형태와 그 역행렬, 불확실성의 좌/우 표현.
-  - title: "Solà, Deray & Atchuthan — A micro Lie theory for state estimation in robotics (2018)"
-    url: https://arxiv.org/abs/1812.01537
-    kind: article
-    note: 필독 1. 2–4절. 이 레슨의 표기와 야코비안 규약의 표준 참고서.
-  - title: "Forster, Carlone, Dellaert & Scaramuzza — On-manifold preintegration (2017)"
-    url: https://arxiv.org/abs/1512.02363
-    kind: article
-    note: 필독 2. II·III절과 부록. 우 야코비안이 바이어스 재선형화·불확실성 전파에 쓰이는 실제 자리.
   - title: "Lynch & Park, Modern Robotics"
     url: http://hades.mech.northwestern.edu/index.php/Modern_Robotics
     kind: book
     note: ch.3.3 과 부록 B. SE(3) 지수 사상의 $G(\theta)$ 가 좌 야코비안과 같은 적분에서 나온다.
-  - title: "Absil, Mahony & Sepulchre, Optimization Algorithms on Matrix Manifolds (2008)"
-    url: https://doi.org/10.1515/9781400830244
-    kind: book
-    note: 권장. 4장 리만 경사하강과 수렴. 다음 레슨(매니폴드 위 최적화)의 교재.
+papers:
+  - id: sola2018-micro-lie-theory
+    required: true
+    role: standard
+    note: "§2-4"
+  - id: forster2017-preintegration
+    required: true
+    role: seminal
+    note: "§II-III, App."
+  - id: absil2008-manifold-opt
+    role: standard
+    note: "ch.4"
 ---
 
 # 리 군 위의 미분 — 좌·우 야코비안
