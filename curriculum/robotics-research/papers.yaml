@@ -1599,6 +1599,30 @@ papers:
     url: "https://doi.org/10.1109/TRO.2021.3072346"
     verified: true
     role: seminal
+  - id: sharon2015-cbs
+    title: "Conflict-based search for optimal multi-agent pathfinding"
+    authors: ["G. Sharon", "R. Stern", "A. Felner", "N. R. Sturtevant"]
+    year: 2015
+    venue: "Artificial Intelligence"
+    url: "https://doi.org/10.1016/j.artint.2014.11.006"
+    verified: true
+    role: seminal
+  - id: yu2013-mapf-complexity
+    title: "Structure and intractability of optimal multi-robot path planning on graphs"
+    authors: ["J. Yu", "S. M. LaValle"]
+    year: 2013
+    venue: "AAAI"
+    url: "https://doi.org/10.1609/aaai.v27i1.8541"
+    verified: true
+    role: seminal
+  - id: cap2015-prioritized-planning
+    title: "Prioritized planning algorithms for trajectory coordination of multiple mobile robots"
+    authors: ["M. Cap", "P. Novak", "A. Kleiner", "M. Selecky"]
+    year: 2015
+    venue: "IEEE T-ASE"
+    url: "https://doi.org/10.1109/TASE.2015.2445780"
+    verified: true
+    role: standard
   # ── R0 수학·수치 기초 (브리지) ───────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 

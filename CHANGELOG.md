@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- 연구 트랙 S5 모듈 세 번째 레슨 `s5-multi-agent-planning`(다중 로봇 경로 계획): CBS 의 완전성·최적성 증명, 우선순위 계획이 모든 순서에서 실패하는 반례, 고정 예산 아래 성공률 역전의 실측. 한국어·영어 동시 제공.
 - 연구원 트랙 S5 에 `s5-distributed-optimization`(분산 최적화와 분산 SLAM, ko/en)을 추가했다.
   2블록 ADMM 의 수렴을 증명하고 2차 문제에서 ADMM 이 아핀 반복임을 보여 수렴률을 명시적
   스펙트럼 반경으로 쓰고, 블록 Gauss-Seidel 의 수렴률이 정확히 1 − λ_min(Λ₂₂⁻¹S)(S 는 Schur

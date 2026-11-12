@@ -10,3 +10,4 @@ level: 연구
 lessons:
   - graph-consensus
   - distributed-optimization
+  - multi-agent-planning

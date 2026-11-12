@@ -1669,6 +1669,15 @@ papers:
     role: critique
 
   # ── S5 다중 로봇·필드 로보틱스 ──────────────────────────────────────
+  - id: cap2015-prioritized-planning
+    title: "Prioritized planning algorithms for trajectory coordination of multiple mobile robots"
+    authors: ["M. Cap", "P. Novak", "A. Kleiner", "M. Selecky"]
+    year: 2015
+    venue: "IEEE T-ASE"
+    url: "https://doi.org/10.1109/TASE.2015.2445780"
+    verified: true
+    lessons: [s5-multi-agent-planning]
+    role: standard
   - id: tian2021-distributed-certifiable
     title: "Distributed certifiably correct pose-graph optimization"
     authors: ["Y. Tian", "K. Khosoussi", "D. M. Rosen", "J. P. How"]
