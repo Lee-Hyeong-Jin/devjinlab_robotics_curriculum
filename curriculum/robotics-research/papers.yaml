@@ -966,6 +966,69 @@ papers:
     verified: true
     role: survey
     note: "2026-11-12 Crossref 확인(등록 연도 누락, 프로시딩은 ICRA 2000)."
+  - id: lynch1996-pushing
+    title: "Stable Pushing: Mechanics, Controllability, and Planning"
+    authors: ["K. M. Lynch", "M. T. Mason"]
+    year: 1996
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/027836499601500602"
+    verified: true
+    role: seminal
+    note: "2026-11-12 Crossref 확인. 1995 WAFR 선행판은 DOI 없음."
+  - id: chavan-dafle2014-extrinsic-dexterity
+    title: "Extrinsic dexterity: In-hand manipulation with external forces"
+    authors: ["N. Chavan-Dafle", "A. Rodriguez", "R. Paolini", "et al."]
+    year: 2014
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ICRA.2014.6907062"
+    verified: true
+    role: seminal
+    note: "2026-11-12 Crossref 확인."
+  - id: mason1986-pushing-mechanics
+    title: "Mechanics and Planning of Manipulator Pushing Operations"
+    authors: ["M. T. Mason"]
+    year: 1986
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/027836498600500303"
+    verified: true
+    role: seminal
+    note: "2026-11-12 Crossref 확인. 밀기 역학의 원전(마찰 중심의 회전 방향 판정)."
+  - id: goyal1991-limit-surface
+    title: "Planar sliding with dry friction Part 1. Limit surface and moment function"
+    authors: ["S. Goyal", "A. Ruina", "J. Papadopoulos"]
+    year: 1991
+    venue: "Wear"
+    url: "https://doi.org/10.1016/0043-1648(91)90104-3"
+    verified: true
+    role: seminal
+    note: "2026-11-12 Crossref 확인. limit surface 와 수직성의 1차 자료."
+  - id: howe1996-force-motion-models
+    title: "Practical Force-Motion Models for Sliding Manipulation"
+    authors: ["R. D. Howe", "M. R. Cutkosky"]
+    year: 1996
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/027836499601500603"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인. 타원체 근사의 실무적 근거."
+  - id: zhou2016-convex-force-motion
+    title: "A Convex Polynomial Force-Motion Model for Planar Sliding: Identification and Application"
+    authors: ["J. Zhou", "R. Paolini", "J. A. Bagnell", "et al."]
+    year: 2016
+    venue: "ICRA"
+    url: "https://arxiv.org/abs/1602.06056"
+    verified: true
+    role: standard
+    note: "arXiv 2016. journal_ref 없음 — 게재 venue(ICRA 2016)는 arXiv 로 확인되지 않았다."
+  - id: hogan2020-reactive-pushing
+    title: "Reactive planar non-prehensile manipulation with hybrid model predictive control"
+    authors: ["F. R. Hogan", "A. Rodriguez"]
+    year: 2020
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364920913938"
+    verified: true
+    role: frontier
+    note: "2026-11-12 Crossref 확인."
 
   # ── S3 보행·언더액추에이티드 ──────────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
