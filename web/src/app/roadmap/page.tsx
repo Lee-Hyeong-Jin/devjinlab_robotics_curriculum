@@ -48,7 +48,7 @@ export default async function RoadmapPage() {
     stage.modules.map((module) => ({
       moduleId: module.id,
       title: module.title,
-      level: stage.level,
+      level: stage.levelLabel,
       state: module.state,
       progress: module.progress,
     })),
@@ -78,7 +78,7 @@ export default async function RoadmapPage() {
           <section key={stage.level || index} aria-labelledby={`stage-${index}`}>
             <div className="mb-3 flex flex-wrap items-center gap-4">
               <h2 id={`stage-${index}`} className="text-primary text-lg font-bold">
-                {t('stage', { level: stage.level })}
+                {t('stage', { level: stage.levelLabel })}
               </h2>
               <span className="text-muted text-sm">
                 {t('stageLessons', { done: stage.lessonsDone, total: stage.lessonsTotal })}
@@ -86,7 +86,7 @@ export default async function RoadmapPage() {
               <ProgressBar
                 className="max-w-xs flex-1"
                 value={stage.progress}
-                label={`${stage.level} ${t('colProgress')}`}
+                label={`${stage.levelLabel} ${t('colProgress')}`}
                 showValue
               />
             </div>
@@ -100,7 +100,7 @@ export default async function RoadmapPage() {
                     progress={module.progress}
                     lessonsTotal={module.lessons.length}
                     lessonsDone={doneCount(module.lessons.map((lesson) => lesson.state))}
-                    level={stage.level}
+                    level={stage.levelLabel}
                     stateLabel={tState(module.state)}
                     lessonsLabel={t('lessonCount', { count: module.lessons.length })}
                     progressLabel={t('colProgress')}

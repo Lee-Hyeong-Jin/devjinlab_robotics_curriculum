@@ -12,6 +12,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query, status
 
 from robotics_curriculum.api.deps import Index, Progress, State, get_principal
+from robotics_curriculum.api.log import lang_var
 from robotics_curriculum.api.problems import problem_responses
 from robotics_curriculum.api.schemas import (
     DoneRequest,
@@ -51,14 +52,15 @@ def get_status(
     """
     if course_id is not None:
         index.course(course_id)
+    lang = lang_var.get()
     with progress.open() as service:
         summaries = service.status(course_id)
         running = service.current_session()
         stats = dashboard_stats(service, now=state.clock())
     return Status(
         open_session=StudySession.of(running) if running else None,
-        lessons=[LessonState.of(s) for s in summaries],
-        stages=[StageStat.of(s) for s in stats.stages],
+        lessons=[LessonState.of(s, lang) for s in summaries],
+        stages=[StageStat.of(s, lang) for s in stats.stages],
         week=WeekStat.of(stats.week),
         streak_days=stats.streak_days,
         due_cards=stats.due_today,
@@ -77,7 +79,7 @@ def get_next(
         index.course(course_id)
     with progress.open() as service:
         lessons = service.next_lessons(course_id, limit=n)
-    return [NextLesson.of(s) for s in lessons]
+    return [NextLesson.of(s, lang_var.get()) for s in lessons]
 
 
 @router.get("/lessons", response_model=list[LessonProgress])

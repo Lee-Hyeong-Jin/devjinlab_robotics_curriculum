@@ -1,0 +1,5 @@
+id: m2-kinematics
+lang: en
+title: "M2 Robot kinematics"
+summary: >-
+  Model a manipulator with DH parameters and solve forward and inverse kinematics.

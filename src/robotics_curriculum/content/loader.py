@@ -23,10 +23,13 @@ from pydantic import BaseModel, ValidationError
 from robotics_curriculum.content.models import (
     Course,
     CourseMeta,
+    CourseTranslation,
     Lesson,
+    LessonMetaTranslation,
     LessonTranslation,
     Module,
     ModuleMeta,
+    ModuleTranslation,
 )
 from robotics_curriculum.i18n import DEFAULT_LANG, LANGS
 
@@ -207,6 +210,86 @@ def split_lang_suffix(stem: str) -> tuple[str, str] | None:
     return match["stem"], match["lang"]
 
 
+def _collect_translation_files(
+    directory: Path, pattern: str, errors: _Collector
+) -> dict[str, list[tuple[str, Path]]]:
+    """``{stem: [(lang, path), ...]}`` for ``<stem>.<lang>.<ext>`` files in ``directory``.
+
+    Files without a language suffix are skipped (they are the base content). A suffix that
+    names the authoring language or a language the build does not support is an error.
+    """
+    found: dict[str, list[tuple[str, Path]]] = {}
+    for path in sorted(directory.glob(pattern)):
+        if not path.is_file():
+            continue
+        suffixed = split_lang_suffix(path.stem)
+        if suffixed is None:
+            continue
+        stem, lang = suffixed
+        extension = path.suffix
+        if lang == DEFAULT_LANG:
+            errors.add(
+                path,
+                f"'{DEFAULT_LANG}' is the language content is written in; "
+                f"drop the suffix and use {stem}{extension}",
+            )
+            continue
+        if lang not in LANGS:
+            errors.add(
+                path, f"unsupported translation language '{lang}' (supported: {', '.join(LANGS)})"
+            )
+            continue
+        found.setdefault(stem, []).append((lang, path))
+    return found
+
+
+def _load_yaml_translation[T: BaseModel](
+    model: type[T], path: Path, lang: str, errors: _Collector, root: Path | None = None
+) -> T | None:
+    """Load a ``<name>.<lang>.yaml`` sibling file into ``model``."""
+    if root is not None and not _check_inside(path, root, errors):
+        return None
+    data = _read_yaml(path, errors)
+    if data is None:
+        return None
+    if "path" in data:
+        errors.add(path, "'path' is a reserved key and may not appear in a translation file")
+        return None
+    parsed = _parse_model(model, data, path, errors)
+    if parsed is None:
+        return None
+    declared = getattr(parsed, "lang", None)
+    if declared is not None and declared != lang:
+        errors.add(path, f"file says lang '{declared}' but the file name says '{lang}'")
+        return None
+    for field, value in (("lang", lang), ("path", path)):
+        if hasattr(parsed, field):
+            setattr(parsed, field, value)
+    return parsed
+
+
+def _attach_yaml_translations[T: BaseModel](
+    model: type[T],
+    files: list[tuple[str, Path]],
+    owner_id: str,
+    noun: str,
+    errors: _Collector,
+    root: Path | None = None,
+) -> dict[str, T]:
+    """Load each ``(lang, path)`` and key it by language, checking the declared id."""
+    out: dict[str, T] = {}
+    for lang, path in files:
+        parsed = _load_yaml_translation(model, path, lang, errors, root)
+        if parsed is None:
+            continue
+        declared = getattr(parsed, "id", None)
+        if declared is not None and declared != owner_id:
+            errors.add(path, f"translation id '{declared}' does not match {noun} id '{owner_id}'")
+            continue
+        out[lang] = parsed
+    return out
+
+
 def load_translation(
     path: Path, lang: str, errors: _Collector, root: Path | None = None
 ) -> LessonTranslation | None:
@@ -261,29 +344,21 @@ def load_module(module_dir: Path, errors: _Collector, root: Path | None = None) 
     if meta is None:
         return None
 
-    found: dict[str, Path] = {}
-    translation_files: dict[str, list[tuple[str, Path]]] = {}
-    for path in sorted(module_dir.glob("*.md")):
-        if not path.is_file():
-            continue
-        suffixed = split_lang_suffix(path.stem)
-        if suffixed is None:
-            found[path.stem] = path
-            continue
-        stem, lang = suffixed
-        if lang == DEFAULT_LANG:
-            errors.add(
-                path,
-                f"'{DEFAULT_LANG}' is the language lessons are written in; "
-                f"drop the suffix and use {stem}.md",
-            )
-            continue
-        if lang not in LANGS:
-            errors.add(
-                path, f"unsupported translation language '{lang}' (supported: {', '.join(LANGS)})"
-            )
-            continue
-        translation_files.setdefault(stem, []).append((lang, path))
+    found: dict[str, Path] = {
+        path.stem: path
+        for path in sorted(module_dir.glob("*.md"))
+        if path.is_file() and split_lang_suffix(path.stem) is None
+    }
+    translation_files = _collect_translation_files(module_dir, "*.md", errors)
+    meta_files = _collect_translation_files(module_dir, "*.yaml", errors)
+    module_translations = _attach_yaml_translations(
+        ModuleTranslation,
+        meta_files.pop(Path(MODULE_FILE).stem, []),
+        meta.id,
+        "module",
+        errors,
+        root,
+    )
 
     lessons: list[Lesson] = []
     for lesson_path in _ordered_children(meta.lessons, found, meta_path, "lesson", errors):
@@ -301,8 +376,21 @@ def load_module(module_dir: Path, errors: _Collector, root: Path | None = None) 
                 )
                 continue
             lesson.translations[lang] = translation
+        lesson.meta_translations.update(
+            _attach_yaml_translations(
+                LessonMetaTranslation,
+                meta_files.pop(lesson_path.stem, []),
+                lesson.id,
+                "lesson",
+                errors,
+                root,
+            )
+        )
         lessons.append(lesson)
     for stem, orphans in translation_files.items():
+        for _lang, path in orphans:
+            errors.add(path, f"translation has no lesson to translate ({stem}.md is missing)")
+    for stem, orphans in meta_files.items():
         for _lang, path in orphans:
             errors.add(path, f"translation has no lesson to translate ({stem}.md is missing)")
     return Module(
@@ -312,6 +400,7 @@ def load_module(module_dir: Path, errors: _Collector, root: Path | None = None) 
         level=meta.level,
         lessons=lessons,
         path=module_dir,
+        translations=module_translations,
     )
 
 
@@ -348,6 +437,18 @@ def _load_course(course_dir: Path, errors: _Collector) -> Course | None:
         module = load_module(module_dir, errors, course_dir)
         if module is not None:
             modules.append(module)
+    course_files = _collect_translation_files(course_dir, "*.yaml", errors)
+    translations = _attach_yaml_translations(
+        CourseTranslation,
+        course_files.pop(Path(COURSE_FILE).stem, []),
+        meta.id,
+        "course",
+        errors,
+        course_dir,
+    )
+    for stem, orphans in course_files.items():
+        for _lang, path in orphans:
+            errors.add(path, f"'{stem}' is not translatable here (expected {COURSE_FILE})")
     return Course(
         id=meta.id,
         title=meta.title,
@@ -355,6 +456,7 @@ def _load_course(course_dir: Path, errors: _Collector) -> Course | None:
         tags=meta.tags,
         modules=modules,
         path=course_dir,
+        translations=translations,
     )
 
 

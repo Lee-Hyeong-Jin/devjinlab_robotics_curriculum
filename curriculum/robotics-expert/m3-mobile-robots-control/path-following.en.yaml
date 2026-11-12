@@ -1,0 +1,23 @@
+id: m3-path-following
+lang: en
+activities:
+  m3-path-following-reading: Read the lesson
+  m3-path-following-quiz: "Quiz: path-following error and the look-ahead distance"
+  m3-path-following-exercise: >-
+    Implement a waypoint follower and measure the final position error
+resources:
+  "Robotics, Vision and Control, 3rd ed. (Peter Corke)":
+    note: >-
+      Chapter 4, mobile robots - moving to a point, line and path following, and pure
+      pursuit, all in Python.
+  "Implementation of the Pure Pursuit Path Tracking Algorithm (R. Craig Coulter, CMU Robotics Institute, 1992)":
+    note: >-
+      The original technical report on pure pursuit, with the curvature derivation and a
+      discussion of the look-ahead distance.
+  "Introduction to Autonomous Mobile Robots, 2nd ed. (Siegwart, Nourbakhsh, Scaramuzza)":
+    note: >-
+      The motion-control section at the end of chapter 3 (goal-point control in polar
+      coordinates).
+  "Modern Robotics, 13장 Wheeled Mobile Robots (Lynch & Park)":
+    title: "Modern Robotics, chapter 13: Wheeled Mobile Robots (Lynch & Park)"
+    note: "Section 13.3, motion planning and feedback control for nonholonomic robots (advanced)."

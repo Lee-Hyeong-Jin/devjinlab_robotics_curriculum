@@ -14,7 +14,7 @@ from pydantic import ValidationError
 
 from robotics_curriculum import __version__
 from robotics_curriculum.api.cli import api_app
-from robotics_curriculum.content import QuizParseError, check, parse_quiz
+from robotics_curriculum.content import QuizParseError, check, localized_quiz
 from robotics_curriculum.i18n import LANG_ENV, Translator, get_translator
 from robotics_curriculum.learn.quiz import record_quiz_run, run_quiz, select_questions
 from robotics_curriculum.learn.review import (
@@ -108,6 +108,11 @@ def _t(ctx: typer.Context | None = None) -> Translator:
     """The translator for this invocation (``--lang`` / ``RC_LANG`` / Korean)."""
     lang = getattr(ctx.obj, "lang", None) if ctx is not None else None
     return get_translator(lang)
+
+
+def _lang(ctx: typer.Context | None = None) -> str:
+    """The language this invocation prints in; content is shown in it too."""
+    return _t(ctx).lang
 
 
 def _fail(message: str, ctx: typer.Context | None = None) -> typer.Exit:
@@ -226,6 +231,7 @@ def status(
 ) -> None:
     """Show per-lesson progress, study time, and the running timer."""
     t = _t(ctx)
+    lang = _lang(ctx)
     with _service(ctx) as service:
         summaries = service.status(course)
         running = service.current_session()
@@ -246,7 +252,7 @@ def status(
         typer.echo(
             t(
                 "cli.status.course_line",
-                title=course_obj.title,
+                title=course_obj.localized(lang).title,
                 course_id=course_obj.id,
                 percent=pct,
                 done=n_done,
@@ -258,7 +264,7 @@ def status(
             [
                 s.module.id,
                 s.lesson.id,
-                s.lesson.title,
+                s.lesson.localized(lang).title,
                 _status_label(s, t),
                 _fmt_seconds(s.progress.total_seconds),
                 f"{s.lesson.estimated_minutes}m",
@@ -356,7 +362,7 @@ def done(
         )
     )
     for lesson in unlocked:
-        typer.echo(t("cli.unlocked", lesson_id=lesson.id, title=lesson.title))
+        typer.echo(t("cli.unlocked", lesson_id=lesson.id, title=lesson.localized(_lang(ctx)).title))
 
 
 @app.command("next")
@@ -367,6 +373,7 @@ def next_(
 ) -> None:
     """Recommend lessons whose prerequisites are done (in-progress first, then course order)."""
     t = _t(ctx)
+    lang = _lang(ctx)
     with _service(ctx) as service:
         lessons = service.next_lessons(course, limit=count)
     if not lessons:
@@ -376,7 +383,7 @@ def next_(
         [
             str(i),
             s.lesson.id,
-            s.lesson.title,
+            s.lesson.localized(lang).title,
             t(f"cli.state.{s.status.value}"),
             f"{s.lesson.estimated_minutes}m",
             str(s.lesson.difficulty),
@@ -411,7 +418,7 @@ def quiz(
     with _service(ctx) as service:
         lesson = service.lesson(lesson_id)
         try:
-            lesson_quiz = parse_quiz(lesson)
+            lesson_quiz = localized_quiz(lesson, _lang(ctx))
         except QuizParseError as exc:
             raise _fail(f"quiz of '{lesson_id}' is invalid (run `rc validate`):\n{exc}") from None
         if not lesson_quiz.questions:
@@ -431,7 +438,13 @@ def quiz(
             typer.echo(t("quiz.nothing_to_ask"))
             return
         typer.echo(
-            t("quiz.intro", title=lesson.title, lesson_id=lesson.id, count=len(questions)) + "\n"
+            t(
+                "quiz.intro",
+                title=lesson.localized(_lang(ctx)).title,
+                lesson_id=lesson.id,
+                count=len(questions),
+            )
+            + "\n"
         )
         try:
             result = run_quiz(

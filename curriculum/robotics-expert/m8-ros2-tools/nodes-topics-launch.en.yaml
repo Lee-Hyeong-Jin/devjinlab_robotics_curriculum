@@ -1,0 +1,19 @@
+id: m8-nodes-topics-launch
+lang: en
+activities:
+  m8-nodes-topics-launch-reading: "Read the lesson and the Beginner: Client libraries tutorials"
+  m8-nodes-topics-launch-quiz: "Quiz: workspaces, sourcing and callbacks"
+  m8-nodes-topics-launch-exercise: Write a P-control node for turtlesim and a launch file
+resources:
+  "ROS 2 Jazzy Tutorials":
+    note: >-
+      Beginner: Client libraries (colcon, workspaces, pub/sub, service/client, custom
+      interfaces, parameters, ros2doctor), plus the Intermediate actions and launch
+      tutorials.
+  "ROS 2 from Scratch (Renard, Packt)":
+    note: "The whole book (Python first, Jazzy on Ubuntu 24.04). Paid."
+  "ROS 2 for Beginners (ROS Jazzy) Level 1 (Renard, Udemy)":
+    note: >-
+      13 h 13 min, paid. A Korean alternative is "[R2R] 무작정 따라하는 ROS2 입문과정"
+      (https://www.udemy.com/course/r2r_ros2_bgn/), written for Humble but marked
+      Jazzy-compatible.

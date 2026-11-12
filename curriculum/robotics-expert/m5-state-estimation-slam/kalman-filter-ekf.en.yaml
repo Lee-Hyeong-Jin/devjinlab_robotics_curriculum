@@ -1,0 +1,17 @@
+id: m5-kalman-filter-ekf
+lang: en
+activities:
+  m5-kalman-filter-ekf-reading: "Read the lesson and Labbe ch. 4-6"
+  m5-kalman-filter-ekf-quiz: "Quiz: the Kalman gain and the covariance"
+  m5-kalman-filter-ekf-exercise: Tune a 1D and a constant-velocity Kalman filter
+resources:
+  "Kalman and Bayesian Filters in Python (Labbe)":
+    note: >-
+      Chapters 4-10 (1D and multivariate KF, the KF maths, KF design, nonlinear filtering,
+      UKF, EKF). The examples use filterpy.
+  "Kalman Filter & EKF (Stachniss)":
+    note: "Online Training - Mobile Robotics, the Robotics block."
+  "EKF Localization (Stachniss)":
+    note: An applied EKF that estimates a robot's pose from landmark observations.
+  "Michigan ROB 530 Mobile Robotics":
+    note: "Optional: HW 2-3 (KF and nonlinear filters) for more practice."

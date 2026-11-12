@@ -1,0 +1,16 @@
+id: m4-camera-model-features
+lang: en
+activities:
+  m4-camera-model-features-reading: Read the lesson
+  m4-camera-model-features-quiz: "Quiz: computing a projection"
+  m4-camera-model-features-exercise: >-
+    Implement projection, a miniature calibration, and the Harris corner detector
+resources:
+  "First Principles of Computer Vision (Shree Nayar)":
+    note: "The Camera & Imaging and Features & Boundaries series. Watch these first."
+  "Cyrill Stachniss, Homogeneous Coordinates":
+    note: A refresher on the homogeneous coordinates that make projection a single matrix product.
+  "QUT Robot Academy (Peter Corke)":
+    note: "Optional lessons in the 3D Vision and Visual Servoing topics."
+  "Computer Vision: Algorithms and Applications (Richard Szeliski)":
+    note: The chapters on camera calibration and feature detection (advanced reference).

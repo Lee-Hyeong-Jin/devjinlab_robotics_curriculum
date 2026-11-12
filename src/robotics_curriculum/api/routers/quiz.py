@@ -19,6 +19,7 @@ from robotics_curriculum.api.deps import (
     State,
     get_principal,
 )
+from robotics_curriculum.api.log import lang_var
 from robotics_curriculum.api.problems import problem_responses
 from robotics_curriculum.api.schemas import (
     QuizPublic,
@@ -43,10 +44,14 @@ router = APIRouter(
 
 
 def _quiz_of(lesson_id: str, index: ContentIndex) -> tuple[Lesson, LessonQuiz]:
-    """Parse the lesson's quiz: 404 when it has none, 422 when the block is broken."""
+    """Parse the lesson's quiz: 404 when it has none, 422 when the block is broken.
+
+    The questions come back in the caller's language when the lesson has a translated quiz
+    (``<lesson>.<lang>.yaml``); the answers never do, so grading is language-independent.
+    """
     lesson = index.lesson(lesson_id).lesson
     try:
-        return lesson, lesson_quiz(lesson)
+        return lesson, lesson_quiz(lesson, lang_var.get())
     except QuizSubmissionError as exc:
         raise HTTPException(404, str(exc)) from None
     except QuizParseError as exc:
@@ -61,7 +66,7 @@ def get_lesson_quiz(lesson_id: str, index: Index) -> QuizPublic:
     return QuizPublic(
         lesson_id=lesson.id,
         activity_id=activities[0] if activities else None,
-        questions=[QuizQuestionPublic.of(v) for v in question_views(quiz)],
+        questions=[QuizQuestionPublic.of(v) for v in question_views(quiz, lang_var.get())],
     )
 
 
@@ -84,6 +89,7 @@ def submit_run(body: QuizSubmission, index: Index, progress: Progress, state: St
                 finished_at=finished,
                 user_id=service.user_id,
                 partial=body.partial,
+                lang=lang_var.get(),
             )
         except QuizSubmissionError as exc:
             raise HTTPException(422, str(exc)) from None

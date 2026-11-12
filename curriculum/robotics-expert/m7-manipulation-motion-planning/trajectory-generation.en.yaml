@@ -1,0 +1,21 @@
+id: m7-trajectory-generation
+lang: en
+activities:
+  m7-trajectory-generation-reading: "Read the lesson and Modern Robotics ch. 9"
+  m7-trajectory-generation-quiz: "Quiz: time scaling, and which space to interpolate in"
+  m7-trajectory-generation-exercise: >-
+    Implement cubic, quintic and trapezoidal trajectories and task-space interpolation
+resources:
+  "Modern Robotics: Mechanics, Planning, and Control (Lynch, Park)":
+    note: >-
+      Chapter 9, Trajectory Generation (9.2 point-to-point trajectories, 9.3 polynomial
+      via points, 9.4 time-optimal time scaling).
+  "Modern Robotics 강의 영상":
+    title: Modern Robotics lecture videos
+    note: "The chapter 9 playlist."
+  "Coursera Modern Robotics Specialization":
+    note: "The chapter 9 trajectory-generation assignments of course 3, Robot Dynamics."
+  "Robotics Toolbox for Python (Corke)":
+    note: >-
+      Optional: compare your results with the `jtraj` (quintic, joint space) and `ctraj`
+      (Cartesian) trajectory functions.

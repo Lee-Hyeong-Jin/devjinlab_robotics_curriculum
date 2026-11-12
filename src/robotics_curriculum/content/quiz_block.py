@@ -33,18 +33,17 @@ from typing import Annotated, Literal
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator, model_validator
 
-from robotics_curriculum.content.models import ID_PATTERN, ActivityKind, Lesson
+from robotics_curriculum.content.models import ID_PATTERN, ActivityKind, Lesson, QuestionText
+from robotics_curriculum.i18n import DEFAULT_LANG, Translator, normalize_lang, translator
 
 QUIZ_FENCE = re.compile(r"^(?P<fence>`{3,}|~{3,})\s*quiz\s*$")
 
 QuestionType = Literal["single", "multiple", "truefalse", "short"]
-TYPE_LABELS: dict[str, str] = {
-    "single": "객관식",
-    "multiple": "다중선택",
-    "truefalse": "O/X",
-    "short": "단답",
-}
 _TYPE_ALIASES = {"multi": "multiple"}
+
+
+def _t(lang: str | None) -> Translator:
+    return translator(normalize_lang(lang) or DEFAULT_LANG)
 
 
 class QuizParseError(Exception):
@@ -139,12 +138,16 @@ class QuizQuestion(_QuizModel):
             return {int(a) for a in self.answer}
         return set()
 
-    @property
-    def type_label(self) -> str:
-        return TYPE_LABELS[self.type]
+    def type_label(self, lang: str | None = None) -> str:
+        """Name of the question type ("single choice", "O/X", ...) in ``lang``."""
+        return _t(lang)(f"quiz.kind.{self.type}")
 
-    def answer_text(self) -> str:
-        """Human-readable correct answer (grading feedback, card backs, site pages)."""
+    def answer_text(self, lang: str | None = None) -> str:
+        """Human-readable correct answer (grading feedback, card backs, site pages).
+
+        Choice texts come from the question, so they are already in whatever language the
+        question is in; only the true/false wording needs ``lang``.
+        """
         if self.type == "single":
             index = next(iter(self.correct_indexes))
             return f"{index + 1}. {self.choices[index]}"
@@ -152,7 +155,21 @@ class QuizQuestion(_QuizModel):
             return ", ".join(f"{i + 1}. {self.choices[i]}" for i in sorted(self.correct_indexes))
         if self.type == "short":
             return " / ".join(self.accepted_short)
-        return "O (참)" if self.answer else "X (거짓)"
+        return _t(lang)("quiz.answer_true" if self.answer else "quiz.answer_false")
+
+    def translated(self, text: QuestionText) -> QuizQuestion:
+        """A copy of this question with its text replaced by ``text``.
+
+        ``type``, ``answer`` and ``tags`` are never taken from a translation, so grading is
+        identical in every language. ``choices`` is only replaced when the translation has
+        the same number of them (the validator reports a mismatch).
+        """
+        update: dict[str, object] = {"prompt": text.prompt, "explanation": text.explanation}
+        if text.choices is not None and len(text.choices) == len(self.choices):
+            update["choices"] = list(text.choices)
+        if text.concept is not None:
+            update["concept"] = Concept(front=text.concept.front, back=text.concept.back)
+        return self.model_copy(update=update)
 
 
 class QuizBlock(_QuizModel):
@@ -243,6 +260,30 @@ def parse_quiz(lesson: Lesson) -> LessonQuiz:
         blocks.append(block)
     if messages:
         raise QuizParseError(messages)
+    return LessonQuiz(lesson.id, blocks)
+
+
+def localized_quiz(lesson: Lesson, lang: str | None = None) -> LessonQuiz:
+    """The lesson's quiz with its text in ``lang`` (``<lesson>.<lang>.yaml``).
+
+    Questions the translation does not cover keep the text they were written in, so a
+    partly translated quiz degrades question by question instead of failing.
+    """
+    quiz = parse_quiz(lesson)
+    meta = lesson.meta_translations.get(lang or "") if lang else None
+    if meta is None or not meta.quiz:
+        return quiz
+    blocks = [
+        block.model_copy(
+            update={
+                "questions": [
+                    question.translated(text) if (text := meta.question(question.id)) else question
+                    for question in block.questions
+                ]
+            }
+        )
+        for block in quiz.blocks
+    ]
     return LessonQuiz(lesson.id, blocks)
 
 

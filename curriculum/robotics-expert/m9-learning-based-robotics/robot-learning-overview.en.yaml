@@ -1,0 +1,20 @@
+id: m9-robot-learning-overview
+lang: en
+activities:
+  m9-robot-learning-overview-reading: "Read the lesson and Hugging Face Robotics Course units 0-2"
+  m9-robot-learning-overview-quiz: "Quiz: telling the learning approaches apart"
+  m9-robot-learning-overview-exercise: >-
+    Draw up a table of the learning approach and resources that fit your own task
+resources:
+  "Hugging Face Robotics Course":
+    note: >-
+      Units 0-2 (introduction, the LeRobot ecosystem, the limits of classical robotics).
+      Free and self-paced. Units 5-7 were unpublished when this was written.
+  "Robot Learning: A Tutorial (Capuano 외, LeRobot 팀)":
+    title: "Robot Learning: A Tutorial (Capuano et al., the LeRobot team)"
+    note: >-
+      The chapters on RL, behaviour cloning and generalist policies, with LeRobot
+      examples. Interactive edition:
+      https://huggingface.co/spaces/lerobot/robot-learning-tutorial
+  "A realistic path to robotic foundation models (Interconnects)":
+    note: An essay on why robotics is moving towards being data-centred.

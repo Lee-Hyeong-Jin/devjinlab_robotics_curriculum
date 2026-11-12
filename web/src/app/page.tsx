@@ -93,7 +93,7 @@ export default async function DashboardPage() {
             {currentModule ? (
               <div className="flex flex-col gap-3">
                 <div className="flex flex-wrap items-center gap-2">
-                  {currentStage ? <Chip tone="accent">{currentStage.level}</Chip> : null}
+                  {currentStage ? <Chip tone="accent">{currentStage.levelLabel}</Chip> : null}
                   <span className="text-primary font-medium">{currentModule.title}</span>
                 </div>
                 <ProgressBar

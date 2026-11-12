@@ -1,0 +1,24 @@
+id: m10-system-architecture-requirements
+lang: en
+activities:
+  m10-system-architecture-requirements-reading: Read the lesson and the development-process lectures
+  m10-system-architecture-requirements-quiz: "Quiz: telling requirements from interfaces"
+  m10-system-architecture-requirements-exercise: >-
+    Write the requirements traceability table and the node graph of your own capstone
+resources:
+  "현직자가 알려주는 로봇 실무 개발 프로세스: 로봇 양산 사이클 (인프런, jelly)":
+    note: >-
+      17 lectures, 45 minutes (concept, design, proto, pilot, production, with a Unitree
+      Go2 example). KRW 18,700; in Korean.
+  "Robotics Learning Roadmap 2026 (Coursera)":
+    note: >-
+      The per-project time estimates in stage 2 (a line follower at 4-6 h up to a voice
+      assistant at 14-18 h). Useful for sizing your own scope.
+  "Nav2 Documentation":
+    note: >-
+      The order of the First-Time Robot Setup Guide (TF, URDF, odometry, sensors, map)
+      doubles as an interface checklist.
+  "Andino (Ekumen-OS)":
+    note: >-
+      Read how hardware, firmware, ros2_control, SLAM and Nav2 are split into packages, as
+      a real example of an architecture.

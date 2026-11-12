@@ -15,7 +15,8 @@ from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 
-from robotics_curriculum.content import Module
+from robotics_curriculum.content import Module, level_label
+from robotics_curriculum.i18n import DEFAULT_LANG, normalize_lang, translator
 from robotics_curriculum.learn.review import due_count, recent_accuracy
 from robotics_curriculum.progress import (
     LessonProgress,
@@ -27,6 +28,8 @@ from robotics_curriculum.progress import (
 
 STAGES: tuple[str, ...] = ("기초", "중급", "고급")
 NO_STAGE = "단계 미지정"
+"""Bucket for modules that declare no level. Like the level values themselves this is a
+stable id, not display text: :func:`stage_label` turns it into something to show."""
 ACCURACY_DAYS = 7
 
 
@@ -34,8 +37,13 @@ def stage_of(module: Module) -> str:
     return module.level or NO_STAGE
 
 
+def stage_label(stage: str, lang: str | None = None) -> str:
+    """Display name of a stage bucket in ``lang`` (``NO_STAGE`` included)."""
+    return level_label(None if stage == NO_STAGE else stage, lang)
+
+
 def ordered_stages(stages: Iterable[str]) -> list[str]:
-    """Known stages in teaching order (always all three), then "단계 미지정" if used."""
+    """Known stages in teaching order (always all three), then the no-level bucket if used."""
     present = set(stages)
     return [*STAGES, *([NO_STAGE] if NO_STAGE in present else [])]
 
@@ -101,17 +109,21 @@ def streak(days: set[date], today: date) -> int:
     return count
 
 
-def format_minutes(minutes: int) -> str:
+def format_minutes(minutes: int, lang: str | None = None) -> str:
+    """``135`` -> ``"2시간 15분"`` / ``"2h 15m"``."""
+    t = translator(normalize_lang(lang) or DEFAULT_LANG)
     hours, rest = divmod(minutes, 60)
     if hours and rest:
-        return f"{hours}시간 {rest}분"
-    return f"{hours}시간" if hours else f"{rest}분"
+        return t("duration.hours_minutes", hours=hours, minutes=rest)
+    return t("duration.hours", hours=hours) if hours else t("duration.minutes", minutes=rest)
 
 
-def format_seconds(seconds: int) -> str:
+def format_seconds(seconds: int, lang: str | None = None) -> str:
+    """Study time as a duration; anything under a minute is said in words."""
+    t = translator(normalize_lang(lang) or DEFAULT_LANG)
     if seconds <= 0:
-        return "0분"
-    return format_minutes(seconds // 60) if seconds >= 60 else "1분 미만"
+        return t("duration.zero")
+    return format_minutes(seconds // 60, lang) if seconds >= 60 else t("duration.under_minute")
 
 
 # -- dashboard aggregate -------------------------------------------------------
@@ -119,7 +131,7 @@ def format_seconds(seconds: int) -> str:
 
 @dataclass(frozen=True, slots=True)
 class StageProgress:
-    """One level (기초 / 중급 / 고급) with its lesson counts and modules."""
+    """One level (foundation / intermediate / advanced) with its lesson counts and modules."""
 
     stage: str
     progress: Ratio

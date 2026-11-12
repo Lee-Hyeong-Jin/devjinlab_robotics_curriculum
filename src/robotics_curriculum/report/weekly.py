@@ -12,6 +12,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta, tzinfo
 
+from robotics_curriculum.i18n import DEFAULT_LANG, Translator, normalize_lang, translator
 from robotics_curriculum.progress import LessonStatus, ProgressService
 
 STUCK_DAYS = 7
@@ -94,10 +95,16 @@ class QuizStats:
         return round(100 * self.correct / self.attempts) if self.attempts else 0
 
 
+def _t(lang: str | None) -> Translator:
+    return translator(normalize_lang(lang) or DEFAULT_LANG)
+
+
 @dataclass(slots=True)
 class WeeklyReport:
     week: IsoWeek
     as_of: date
+    lang: str = DEFAULT_LANG
+    """Language the titles and the ``detail`` strings were built in."""
     total_seconds: int = 0
     session_count: int = 0
     active_days: int = 0
@@ -120,14 +127,20 @@ def build_weekly_report(
     *,
     today: date,
     tz: tzinfo | None = None,
+    lang: str | None = None,
 ) -> WeeklyReport:
     """Collect one ISO week of progress. ``tz=None`` means the system local timezone.
 
     The stuck check is judged as of ``min(today, week's Sunday)``: a past week as of its
     Sunday, the current week as of today. "Next" lessons reflect the current state.
+
+    ``lang`` picks the language of the lesson and module titles and of the short
+    ``detail`` strings; the numbers are the same in every language.
     """
     as_of = min(today, week.sunday)
-    report = WeeklyReport(week=week, as_of=as_of)
+    chosen = normalize_lang(lang) or DEFAULT_LANG
+    t = _t(chosen)
+    report = WeeklyReport(week=week, as_of=as_of, lang=chosen)
     summaries = service.status()
     known = {s.lesson.id for s in summaries}
 
@@ -152,11 +165,13 @@ def build_weekly_report(
     per_module: dict[str, ModuleTime] = {}
     for summary in summaries:
         lesson, module, progress = summary.lesson, summary.module, summary.progress
+        lesson_title = lesson.localized(chosen).title
+        module_title = module.localized(chosen).title
         seconds = per_lesson.get(lesson.id, 0)
         if seconds:
-            prev = per_module.get(module.id, ModuleTime(module.id, module.title, 0))
-            per_module[module.id] = ModuleTime(module.id, module.title, prev.seconds + seconds)
-        line = LessonLine(lesson.id, lesson.title, seconds, progress.understanding)
+            prev = per_module.get(module.id, ModuleTime(module.id, module_title, 0))
+            per_module[module.id] = ModuleTime(module.id, module_title, prev.seconds + seconds)
+        line = LessonLine(lesson.id, lesson_title, seconds, progress.understanding)
 
         if progress.status is LessonStatus.DONE and in_week(progress.completed_at):
             report.completed.append(line)
@@ -170,13 +185,13 @@ def build_weekly_report(
         if progress.status is LessonStatus.IN_PROGRESS and progress.started_at is not None:
             days = (as_of - _local_day(progress.started_at, tz)).days
             if days > STUCK_DAYS:
-                reasons.append(f"{days}일째 진행 중")
+                reasons.append(t("report.stuck.days", days=days))
         if progress.understanding is not None and progress.understanding <= LOW_UNDERSTANDING:
-            reasons.append(f"이해도 {progress.understanding}/5")
+            reasons.append(t("report.stuck.understanding", value=progress.understanding))
         if reasons:
             report.stuck.append(
                 LessonLine(
-                    lesson.id, lesson.title, seconds, progress.understanding, ", ".join(reasons)
+                    lesson.id, lesson_title, seconds, progress.understanding, ", ".join(reasons)
                 )
             )
 
@@ -187,11 +202,17 @@ def build_weekly_report(
             card = service.store.get_card(card_id, service.user_id)
             title = card.front.splitlines()[0] if card else card_id
             lesson_id = card.lesson_id if card else "?"
-            report.stuck.append(LessonLine(lesson_id, title, detail=f"복습 카드 again {again}회"))
+            detail = t("report.stuck.again_cards", count=again)
+            report.stuck.append(LessonLine(lesson_id, title, detail=detail))
     for nxt in service.next_lessons(limit=NEXT_COUNT):
-        state = "진행 중" if nxt.status is LessonStatus.IN_PROGRESS else "시작 전"
-        detail = f"{state}, 예상 {nxt.lesson.estimated_minutes}분"
-        report.next_lessons.append(LessonLine(nxt.lesson.id, nxt.lesson.title, detail=detail))
+        state = t(
+            "report.state.in_progress"
+            if nxt.status is LessonStatus.IN_PROGRESS
+            else "report.state.not_started"
+        )
+        detail = t("report.next_detail", state=state, minutes=nxt.lesson.estimated_minutes)
+        title = nxt.lesson.localized(chosen).title
+        report.next_lessons.append(LessonLine(nxt.lesson.id, title, detail=detail))
     report.notes.sort(key=lambda n: n.day)
     return report
 
@@ -246,79 +267,120 @@ def _name(line: LessonLine) -> str:
     return f"{line.title} (`{line.lesson_id}`)"
 
 
-def render_weekly(report: WeeklyReport) -> str:
-    """Markdown for a :class:`WeeklyReport` (pure function)."""
+def render_weekly(report: WeeklyReport, lang: str | None = None) -> str:
+    """Markdown for a :class:`WeeklyReport` (pure function).
+
+    ``lang`` defaults to the language the report was built in, so the headings cannot end
+    up in a different language from the titles and details inside it.
+    """
+    t = _t(lang or report.lang)
     w = report.week
     lines = [
-        f"# 주간 리포트 {w}",
+        f"# {t('report.weekly.title', week=w)}",
         "",
-        f"기간: {w.monday:%Y-%m-%d} ~ {w.sunday:%Y-%m-%d} (기준일 {report.as_of:%Y-%m-%d})",
+        t(
+            "report.weekly.period",
+            start=f"{w.monday:%Y-%m-%d}",
+            end=f"{w.sunday:%Y-%m-%d}",
+            as_of=f"{report.as_of:%Y-%m-%d}",
+        ),
         "",
-        "## 요약",
+        f"## {t('report.weekly.summary')}",
         "",
-        f"- 학습 시간: {format_duration(report.total_seconds)}",
-        f"- 세션: {report.session_count}회 (학습한 날 {report.active_days}일)",
-        f"- 완료한 레슨: {len(report.completed)}개",
-        f"- 진행 중인 레슨: {len(report.in_progress)}개",
+        t("report.weekly.study_time", time=format_duration(report.total_seconds)),
+        t("report.weekly.sessions", count=report.session_count, days=report.active_days),
+        t("report.weekly.completed_count", count=len(report.completed)),
+        t("report.weekly.in_progress_count", count=len(report.in_progress)),
         "",
-        "## 모듈별 학습 시간",
+        f"## {t('report.weekly.module_time')}",
         "",
     ]
     if report.module_time:
         rows = [
             [f"{m.title} (`{m.module_id}`)", format_duration(m.seconds)] for m in report.module_time
         ]
-        lines += md_table(["모듈", "시간"], rows)
+        lines += md_table([t("report.weekly.col_module"), t("report.weekly.col_time")], rows)
     else:
-        lines.append("이번 주 학습 기록이 없습니다.")
+        lines.append(t("report.weekly.no_records"))
 
-    lines += ["", "## 완료한 레슨", ""]
+    lines += ["", f"## {t('report.weekly.completed')}", ""]
     if report.completed:
         rows = [
             [_name(c), format_duration(c.seconds_this_week), _score(c.understanding)]
             for c in report.completed
         ]
-        lines += md_table(["레슨", "이번 주 시간", "이해도"], rows)
+        headers = [
+            t("report.weekly.col_lesson"),
+            t("report.weekly.col_week_time"),
+            t("report.weekly.col_understanding"),
+        ]
+        lines += md_table(headers, rows)
     else:
-        lines.append("이번 주 완료한 레슨이 없습니다.")
+        lines.append(t("report.weekly.no_completed"))
 
-    lines += ["", "## 진행 중인 레슨", ""]
+    lines += ["", f"## {t('report.weekly.in_progress')}", ""]
     if report.in_progress:
         lines += [
-            f"- {_name(p)}: 이번 주 {format_duration(p.seconds_this_week)}"
+            t(
+                "report.weekly.in_progress_line",
+                lesson=_name(p),
+                time=format_duration(p.seconds_this_week),
+            )
             for p in report.in_progress
         ]
     else:
-        lines.append("없음")
+        lines.append(t("report.weekly.none"))
 
     quiz = report.quiz
     if quiz.attempts:
-        detail = f"{quiz.correct}/{quiz.attempts} 문항, {quiz.runs}회 응시"
-        quiz_line = f"- 퀴즈 정답률: {quiz.percent}% ({detail})"
+        quiz_line = t(
+            "report.weekly.quiz_rate",
+            percent=quiz.percent,
+            correct=quiz.correct,
+            attempts=quiz.attempts,
+            runs=quiz.runs,
+        )
     else:
-        quiz_line = "- 퀴즈 정답률: 기록 없음"
+        quiz_line = t("report.weekly.quiz_rate_none")
     if quiz.reviews:
         again, hard, good, easy = quiz.rating_counts
-        ratings = f"again {again} · hard {hard} · good {good} · easy {easy}"
-        review_line = f"- 복습 카드: {quiz.reviews}장 ({ratings})"
+        ratings = f"again {again} \u00b7 hard {hard} \u00b7 good {good} \u00b7 easy {easy}"
+        review_line = t("report.weekly.cards", count=quiz.reviews, ratings=ratings)
     else:
-        review_line = "- 복습 카드: 기록 없음"
-    lines += ["", "## 퀴즈·복습", "", quiz_line, review_line, "", "## 메모 요약", ""]
+        review_line = t("report.weekly.cards_none")
+    lines += [
+        "",
+        f"## {t('report.weekly.quiz_review')}",
+        "",
+        quiz_line,
+        review_line,
+        "",
+        f"## {t('report.weekly.notes')}",
+        "",
+    ]
     if report.notes:
-        lines += [f"- {n.day:%m-%d} `{n.lesson_id}`: {n.text}" for n in report.notes]
+        lines += [
+            t("report.weekly.note_line", day=f"{n.day:%m-%d}", lesson_id=n.lesson_id, text=n.text)
+            for n in report.notes
+        ]
     else:
-        lines.append("이번 주 메모가 없습니다.")
+        lines.append(t("report.weekly.no_notes"))
 
-    lines += ["", "## 막힌 지점", ""]
+    lines += ["", f"## {t('report.weekly.stuck')}", ""]
     if report.stuck:
-        lines += [f"- {_name(s)}: {s.detail}" for s in report.stuck]
+        lines += [
+            t("report.weekly.stuck_line", lesson=_name(s), detail=s.detail) for s in report.stuck
+        ]
     else:
-        lines.append("없음")
+        lines.append(t("report.weekly.none"))
 
-    lines += ["", "## 다음 주 제안", ""]
+    lines += ["", f"## {t('report.weekly.next')}", ""]
     if report.next_lessons:
-        lines += [f"{i}. {_name(n)}: {n.detail}" for i, n in enumerate(report.next_lessons, 1)]
-        lines += ["", f"시작: `rc start {report.next_lessons[0].lesson_id}`"]
+        lines += [
+            t("report.weekly.next_line", number=i, lesson=_name(n), detail=n.detail)
+            for i, n in enumerate(report.next_lessons, 1)
+        ]
+        lines += ["", t("report.weekly.start_hint", lesson_id=report.next_lessons[0].lesson_id)]
     else:
-        lines.append("모든 레슨을 완료했습니다.")
+        lines.append(t("report.weekly.all_done"))
     return "\n".join(lines) + "\n"

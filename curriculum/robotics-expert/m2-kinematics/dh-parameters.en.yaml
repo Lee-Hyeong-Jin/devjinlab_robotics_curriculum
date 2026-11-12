@@ -1,0 +1,18 @@
+id: m2-dh-parameters
+lang: en
+activities:
+  m2-dh-parameters-reading: Read the lesson
+  m2-dh-parameters-quiz: "Quiz: what the DH parameters mean"
+  m2-dh-parameters-exercise: Write the DH table of a 2-link manipulator
+resources:
+  "Robot Modeling and Control, 2nd ed. (Spong, Hutchinson, Vidyasagar)":
+    note: >-
+      Chapter 3, the standard procedure for placing DH frames. This is the convention this
+      lesson follows.
+  "Introduction to Robotics: Mechanics and Control, 4th ed. (John J. Craig)":
+    note: "Chapter 3, modified DH. Mind the difference in convention."
+  "Stanford CS223A Introduction to Robotics (Oussama Khatib)":
+    note: Frame placement for DH, inside the kinematics lectures.
+  "Modern Robotics, 부록 C Denavit-Hartenberg Parameters (Lynch & Park)":
+    title: "Modern Robotics, appendix C: Denavit-Hartenberg Parameters (Lynch & Park)"
+    note: Optional, compares DH with the product of exponentials.

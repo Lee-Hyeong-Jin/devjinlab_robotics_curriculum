@@ -1,0 +1,17 @@
+id: m6-local-planning-dwa-mppi
+lang: en
+activities:
+  m6-local-planning-dwa-mppi-reading: Read the lesson and the Nav2 controller documentation
+  m6-local-planning-dwa-mppi-quiz: "Quiz: DWA and MPPI compared"
+  m6-local-planning-dwa-mppi-exercise: Experiment with the score weights and the MPPI temperature
+resources:
+  "Nav2 Documentation":
+    note: >-
+      The controller server in Navigation Concepts, and the DWB, MPPI and Regulated Pure
+      Pursuit controller entries of the Configuration Guide.
+  "PythonRobotics (Sakai)":
+    note: The Dynamic Window Approach sample code in the Path Planning module.
+  "Modern Robotics: Mechanics, Planning, and Control (Lynch, Park)":
+    note: "A review of chapter 13, Wheeled Mobile Robots (motion models and constraints)."
+  "The Dynamic Window Approach to Collision Avoidance (Fox, Burgard, Thrun)":
+    note: "IEEE Robotics & Automation Magazine, 1997. The original DWA paper (no link)."

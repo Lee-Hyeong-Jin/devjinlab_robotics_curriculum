@@ -1,0 +1,24 @@
+id: m9-vla-foundation-models
+lang: en
+activities:
+  m9-vla-foundation-models-reading: Read the lesson, the SmolVLA blog post and the VLA survey
+  m9-vla-foundation-models-quiz: "Quiz: VLA architectures, and choosing a model"
+  m9-vla-foundation-models-exercise: Measure the quantisation error of action tokenisation
+resources:
+  "SmolVLA 블로그 (Hugging Face)":
+    title: "The SmolVLA blog post (Hugging Face)"
+    note: >-
+      450M parameters, Apache-2.0, trained on LeRobot community data. Fine-tuning needs
+      10-16 GB of VRAM.
+  "openpi (Physical Intelligence)":
+    note: >-
+      pi0, pi0-FAST and pi0.5. Inference needs over 8 GB, LoRA fine-tuning over 22.5 GB,
+      and full fine-tuning over 70 GB.
+  "A Survey on Vision-Language-Action Models for Embodied AI":
+    note: >-
+      The architecture-taxonomy section of v7 (February 2026). A suggested reading order:
+      https://relatedrepos.com/gh/MilkClouds/awesome-vla-study
+  "Isaac-GR00T (NVIDIA)":
+    note: >-
+      GR00T N1.7. Apache-2.0 code, weights under the NVIDIA Open Model License. 16 GB+
+      recommended for inference, 40 GB+ for fine-tuning.

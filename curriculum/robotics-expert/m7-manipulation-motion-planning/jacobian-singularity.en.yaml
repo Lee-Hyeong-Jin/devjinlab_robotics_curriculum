@@ -1,0 +1,20 @@
+id: m7-jacobian-singularity
+lang: en
+activities:
+  m7-jacobian-singularity-reading: "Read the lesson and the Modern Robotics ch. 5 videos"
+  m7-jacobian-singularity-quiz: "Quiz: the Jacobian, singularities and statics"
+  m7-jacobian-singularity-exercise: "Implement the Jacobian of a 2-link arm and its DLS inverse"
+resources:
+  "Modern Robotics: Mechanics, Planning, and Control (Lynch, Park)":
+    note: >-
+      Chapter 5, Velocity Kinematics and Statics (the Jacobian, singularities, the
+      manipulability ellipsoid). Free preprint PDF.
+  "Modern Robotics 강의 영상":
+    title: Modern Robotics lecture videos
+    note: "The chapter 5 playlist."
+  "Robotics Toolbox for Python (Corke)":
+    note: "Optional: check your hand calculations against `jacob0` and its manipulability measures."
+  "Robotics: Modelling, Planning and Control (Siciliano, Sciavicco, Villani, Oriolo)":
+    note: >-
+      Chapter 3, differential kinematics and statics, singularities and redundancy
+      (advanced).

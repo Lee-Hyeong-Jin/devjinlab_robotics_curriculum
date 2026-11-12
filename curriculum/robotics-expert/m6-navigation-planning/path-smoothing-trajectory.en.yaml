@@ -1,0 +1,17 @@
+id: m6-path-smoothing-trajectory
+lang: en
+activities:
+  m6-path-smoothing-trajectory-reading: "Read the lesson and Modern Robotics ch. 9"
+  m6-path-smoothing-trajectory-quiz: "Quiz: paths, trajectories and curvature"
+  m6-path-smoothing-trajectory-exercise: Experiment with smoothing weights and velocity profiles
+resources:
+  "Modern Robotics: Mechanics, Planning, and Control (Lynch, Park)":
+    note: >-
+      Chapter 9, Trajectory Generation (time scaling, trapezoidal profiles), and section
+      10.8, smoothing.
+  "Modern Robotics Videos":
+    note: "The chapter 9 videos."
+  "Planning Algorithms (LaValle)":
+    note: "Part IV, planning under differential constraints (optional, advanced)."
+  "Nav2 Documentation":
+    note: "The smoother server and Velocity Smoother entries of the Configuration Guide."

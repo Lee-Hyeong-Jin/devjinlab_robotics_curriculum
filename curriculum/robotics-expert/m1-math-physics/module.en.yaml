@@ -1,0 +1,6 @@
+id: m1-math-physics
+lang: en
+title: "M1 Maths and physics foundations"
+summary: >-
+  The mathematical tools needed to describe a robot: vectors and matrices, rotation
+  representations, and coordinate transforms.

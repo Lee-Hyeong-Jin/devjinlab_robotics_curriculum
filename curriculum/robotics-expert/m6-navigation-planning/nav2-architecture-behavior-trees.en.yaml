@@ -1,0 +1,21 @@
+id: m6-nav2-architecture-behavior-trees
+lang: en
+activities:
+  m6-nav2-architecture-behavior-trees-reading: >-
+    Read the lesson and the Nav2 Navigation Concepts and Behavior Trees pages
+  m6-nav2-architecture-behavior-trees-quiz: "Quiz: the Nav2 servers and the BT nodes"
+  m6-nav2-architecture-behavior-trees-exercise: >-
+    Implement a minimal behaviour tree and read the default BT XML
+resources:
+  "A Concise Introduction to Robot Programming with ROS 2, 2nd ed. (Martín Rico)":
+    note: The Behavior Trees and Nav2 chapters.
+  "Behavior Trees in Robotics and AI (Colledanchise, Ögren)":
+    note: >-
+      A behaviour-tree textbook published as a free arXiv PDF (no link). Chapters 1-3 cover
+      the basic nodes and the design patterns.
+  "자율주행 로봇을 위한 ROS 2 & SLAM & Nav2 한번에 끝내기 (패스트캠퍼스)":
+    note: >-
+      Part 4 on Nav2 and part 5 on advanced topics (behaviour trees, multi-robot, keepout
+      zones). Written for Humble. Paid; in Korean.
+  "Andino (Ekumen-OS)":
+    note: "Read the Nav2 parameters and launch files of the andino_navigation package (Jazzy)."

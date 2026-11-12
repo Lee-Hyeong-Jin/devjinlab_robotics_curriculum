@@ -1,0 +1,21 @@
+id: m10-testing-ci-deployment
+lang: en
+activities:
+  m10-testing-ci-deployment-reading: Read the lesson and the Docker and Foxglove documentation
+  m10-testing-ci-deployment-quiz: "Quiz: the test pyramid and the kinds of defect"
+  m10-testing-ci-deployment-exercise: >-
+    Write a log-replay regression test and a CI pipeline
+resources:
+  "Introduction to ROS 2 Development with Docker (Docker 공식 가이드)":
+    title: "Introduction to ROS 2 Development with Docker (the official Docker guide)"
+    note: >-
+      A Compose development container with a turtlesim example. Swap the ros:humble image
+      for ros:jazzy.
+  "2b-t/docker-for-robotics (best-practices guide)":
+    note: "Docker best practices for robotics (GUI, Linux and WSL2). The GitHub README."
+  "Foxglove docs: connecting to ROS 2 data":
+    note: >-
+      Live observation through Foxglove Bridge, and replaying .mcap files. MCAP has been
+      the default `ros2 bag` format since Iron.
+  "Automatic Addison ROS 2 Tutorials":
+    note: "Articles on pytest/GTest, bag recording and replay, and ros2 doctor, written for Jazzy."

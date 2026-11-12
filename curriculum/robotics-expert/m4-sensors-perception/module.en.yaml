@@ -1,0 +1,7 @@
+id: m4-sensors-perception
+lang: en
+title: "M4 Sensing and perception foundations"
+summary: >-
+  How robot sensors work and how to model their noise and observations, basic filtering,
+  camera models and image features, point-cloud processing (RANSAC and ICP), and the way
+  in to deep-learning object detection.

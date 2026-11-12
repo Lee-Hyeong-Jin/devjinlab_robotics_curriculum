@@ -6,7 +6,10 @@ const redirect = vi.fn((url: string) => {
 const cookieJar: Array<{ name: string; value: string }> = []
 const requestHeaders = new Map<string, string>()
 
+let locale = 'ko'
+
 vi.mock('next/navigation', () => ({ redirect }))
+vi.mock('next-intl/server', () => ({ getLocale: async () => locale }))
 vi.mock('next/headers', () => ({
   cookies: async () => ({
     getAll: () => cookieJar,
@@ -31,6 +34,7 @@ function jsonResponse(body: unknown, init: ResponseInit = {}): Response {
 let fetchMock: ReturnType<typeof vi.fn>
 
 beforeEach(() => {
+  locale = 'ko'
   cookieJar.length = 0
   requestHeaders.clear()
   redirect.mockClear()
@@ -48,7 +52,7 @@ describe('apiGet', () => {
   it('calls the configured base URL and returns the parsed body', async () => {
     fetchMock.mockResolvedValue(jsonResponse({ lessons: [] }))
     await expect(apiGet('/api/v1/progress/status')).resolves.toEqual({ lessons: [] })
-    expect(fetchMock.mock.calls[0]?.[0]).toBe('http://api.test/api/v1/progress/status')
+    expect(fetchMock.mock.calls[0]?.[0]).toBe('http://api.test/api/v1/progress/status?lang=ko')
   })
 
   it('forwards the request cookies so the API sees the session', async () => {
@@ -59,10 +63,24 @@ describe('apiGet', () => {
     expect((init.headers as Headers).get('Cookie')).toBe('sid=abc; csrf_token=tok')
   })
 
+  it("asks the API for the reader's language in the URL and the header (FR-9)", async () => {
+    locale = 'en'
+    fetchMock.mockResolvedValue(jsonResponse({ lessons: [] }))
+    await apiGet('/api/v1/progress/status')
+
+    // In the URL as well as the header: Next caches content responses by URL, so a
+    // header-only language would let one reader's language leak into another's cache.
+    expect(fetchMock.mock.calls[0]?.[0]).toBe('http://api.test/api/v1/progress/status?lang=en')
+    const sent = fetchMock.mock.calls[0]?.[1] as RequestInit
+    expect(new Headers(sent.headers).get('Accept-Language')).toBe('en')
+  })
+
   it('appends query parameters and drops empty ones', async () => {
     fetchMock.mockResolvedValue(jsonResponse([]))
     await apiGet('/api/v1/resources', { query: { module_id: 'm1', lesson_id: undefined } })
-    expect(fetchMock.mock.calls[0]?.[0]).toBe('http://api.test/api/v1/resources?module_id=m1')
+    expect(fetchMock.mock.calls[0]?.[0]).toBe(
+      'http://api.test/api/v1/resources?module_id=m1&lang=ko',
+    )
   })
 
   it('does not cache progress data and revalidates content', async () => {

@@ -1,0 +1,24 @@
+id: m5-graph-slam-slam-toolbox
+lang: en
+activities:
+  m5-graph-slam-slam-toolbox-reading: >-
+    Read the lesson, the SLAM lectures and the SLAM Toolbox tutorial
+  m5-graph-slam-slam-toolbox-quiz: "Quiz: pose graphs and configuring SLAM Toolbox"
+  m5-graph-slam-slam-toolbox-exercise: Optimise a pose graph and read through the configuration file
+resources:
+  "Introduction to SLAM (Stachniss)":
+    note: >-
+      Online Training - Mobile Robotics, the Robotics block. What the SLAM problem is and
+      how its variants are classified.
+  "Graph-based SLAM (Stachniss)":
+    note: >-
+      Pose-graph least squares and the information matrix. For more, the Graph SLAM with
+      Landmarks and Robust LS lectures.
+  "Nav2 tutorial: Navigating While Mapping (slam_toolbox)":
+    note: >-
+      The official slam_toolbox walkthrough. This lesson only reads its configuration and
+      topic structure.
+  "ROS2로 배우는 자율주행 로봇 센서 융합과 SLAM (최종명, 위키독스)":
+    note: "The EKF to SLAM Toolbox path. In Korean (October 2025)."
+  "Michigan ROB 530 Mobile Robotics":
+    note: "Optional, advanced: the SLAM homework and Lie-group pose representations."

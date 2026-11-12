@@ -76,7 +76,9 @@ export default async function ModulePage({ params }: Params) {
         }
         actions={
           <>
-            {mod.level ? <Chip tone="accent">{mod.level}</Chip> : null}
+            {(mod.level_label ?? mod.level) ? (
+              <Chip tone="accent">{mod.level_label ?? mod.level}</Chip>
+            ) : null}
             {mod.estimated_minutes ? (
               <Chip>
                 {t('estimated', { minutes: formatMinutes(mod.estimated_minutes, locale) })}

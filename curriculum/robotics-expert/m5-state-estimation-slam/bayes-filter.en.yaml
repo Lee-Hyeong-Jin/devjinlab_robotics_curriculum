@@ -1,0 +1,22 @@
+id: m5-bayes-filter
+lang: en
+activities:
+  m5-bayes-filter-reading: "Read the lesson and Labbe ch. 2, Discrete Bayes"
+  m5-bayes-filter-quiz: "Quiz: Bayes' rule and updating a belief"
+  m5-bayes-filter-exercise: Experiment with a histogram filter for a robot in a corridor
+resources:
+  "Kalman and Bayesian Filters in Python (Labbe)":
+    note: >-
+      Chapter 2, Discrete Bayes. It works through the same corridor-and-doors problem as
+      this lesson, in Jupyter.
+  "Bayes Filter (Stachniss)":
+    note: "Online Training - Mobile Robotics: the first lecture of the Robotics block."
+  "Stachniss Online Training – Mobile Robotics":
+    title: "Stachniss Online Training - Mobile Robotics"
+    note: >-
+      Start from the Probability Primer in the Basics block if your probability is rusty.
+      Includes the 2020 exercises.
+  "Probabilistic Robotics (Thrun, Burgard, Fox)":
+    note: >-
+      Chapter 2, Recursive State Estimation (the derivation of the Bayes filter), and
+      chapter 8, Grid Localization.

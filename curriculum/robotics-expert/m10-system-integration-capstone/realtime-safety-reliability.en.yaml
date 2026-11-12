@@ -1,0 +1,25 @@
+id: m10-realtime-safety-reliability
+lang: en
+activities:
+  m10-realtime-safety-reliability-reading: Read the lesson and the power and emergency-stop lectures
+  m10-realtime-safety-reliability-quiz: "Quiz: watchdog and fail-safe scenarios"
+  m10-realtime-safety-reliability-exercise: >-
+    Implement a watchdog state machine and write a simple FMEA table
+resources:
+  "현직자가 알려주는 로보틱스 시스템 완전 해부: 부품부터 통신까지 (인프런, jelly)":
+    note: >-
+      The sections on power and emergency stop and on splitting work between the high- and
+      low-level controllers. KRW 29,700; in Korean.
+  "ros2_control Getting Started":
+    note: >-
+      The real-time loop of the controller manager and the hardware components. The docs
+      can be read for Jazzy, Kilted or Lyrical.
+  "Getting started with micro-ROS on Raspberry Pi Pico (Canonical)":
+    note: >-
+      The starting point for putting the watchdog and the motor cut-off on a low-level
+      controller.
+  "기능 안전 표준 개요 — IEC 61508, ISO 10218, ISO 13482":
+    title: "Functional-safety standards - IEC 61508, ISO 10218, ISO 13482"
+    note: >-
+      The standards themselves are paid, and the research notes found no URL. Know their
+      names and what each one covers, no more.

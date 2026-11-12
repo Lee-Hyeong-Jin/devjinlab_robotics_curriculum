@@ -17,7 +17,7 @@ export interface ModuleCardProps {
   progress: number | null | undefined
   lessonsTotal: number
   lessonsDone: number
-  /** Stage chip, e.g. "기초". */
+  /** Stage chip, already translated (e.g. "Foundation"). */
   level?: string | null
   stateLabel: string
   lessonsLabel: string

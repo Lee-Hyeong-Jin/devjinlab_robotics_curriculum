@@ -32,9 +32,11 @@ export function moduleSummary(over: Partial<ModuleSummary> & { id: string }): Mo
     title: over.id,
     summary: '',
     level: '기초',
+    level_label: 'Foundation',
     course_id: 'robotics-expert',
     lesson_count: 0,
     estimated_minutes: 0,
+    lang: 'ko',
     ...over,
   }
 }
@@ -58,6 +60,7 @@ export function course(over: Partial<Course> = {}): Course {
     title: '로보틱스 전문가 코스',
     summary: '',
     tags: [],
+    lang: 'ko',
     module_count: 0,
     lesson_count: 0,
     stages: [],

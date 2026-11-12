@@ -27,7 +27,7 @@ export function LocaleSwitcher() {
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2" data-locale-switcher="">
       <label htmlFor={id} className="sr-only">
         {t('language')}
       </label>

@@ -1,0 +1,17 @@
+id: m1-coordinate-transforms
+lang: en
+activities:
+  m1-coordinate-transforms-reading: Read the lesson
+  m1-coordinate-transforms-quiz: "Quiz: the order of composed transforms"
+  m1-coordinate-transforms-exercise: >-
+    Script that visualises a sensor -> robot -> world transform chain
+resources:
+  "Cyrill Stachniss, Homogeneous Coordinates":
+    note: Intuition for homogeneous coordinates. Watch this first.
+  "Modern Robotics, 3.3절 동차 변환 행렬 (Lynch & Park)":
+    title: "Modern Robotics, section 3.3 (homogeneous transformation matrices, Lynch & Park)"
+    note: >-
+      The T_ab notation and the rules for composing and inverting transforms. Work through
+      some of the chapter 3 exercises.
+  "Introduction to Robotics: Mechanics and Control, 4th ed. (John J. Craig)":
+    note: "Chapter 2, Spatial Descriptions and Transformations (an alternative textbook)."

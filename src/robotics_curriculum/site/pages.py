@@ -16,7 +16,9 @@ from datetime import datetime
 from robotics_curriculum.content import (
     Course,
     Lesson,
+    LocalizedCourse,
     LocalizedLesson,
+    LocalizedModule,
     Module,
     Resource,
     ResourceKind,
@@ -25,20 +27,20 @@ from robotics_curriculum.content.quiz_block import (
     QUIZ_FENCE,
     QuizParseError,
     QuizQuestion,
-    parse_quiz,
+    localized_quiz,
 )
 from robotics_curriculum.content.sections import study_guide_headings
 from robotics_curriculum.content.validate import is_http_url
 from robotics_curriculum.i18n import DEFAULT_LANG, Translator, resolve_lang, translator
 from robotics_curriculum.progress import LessonProgress, LessonStatus, LessonSummary, Session
 from robotics_curriculum.site.stats import (
-    NO_STAGE,
     Ratio,
     activity_days,
     format_minutes,
     format_seconds,
     ordered_stages,
     ratio,
+    stage_label,
     stage_of,
     streak,
     week_stats,
@@ -47,7 +49,6 @@ from robotics_curriculum.site.stats import (
 INDEX_PAGE = "index.md"
 ROADMAP_PAGE = "roadmap.md"
 RESOURCES_PAGE = "resources.md"
-STUDY_HEADING = "이 단계 공부법"
 STUDY_ANCHOR = "study-method"
 RESOURCES_ANCHOR = "resources"
 
@@ -86,8 +87,8 @@ def activity_label(kind: str, t: Translator) -> str:
 
 
 def stage_text(stage: str, t: Translator) -> str:
-    """Stage names come from the content (기초 / 중급 / 고급); only the fallback is translated."""
-    return t("site.stage_unassigned") if stage == NO_STAGE else stage
+    """Display name of a stage. The stored value is an id; the label is translated."""
+    return stage_label(stage, t.lang)
 
 
 # -- small Markdown helpers ----------------------------------------------------
@@ -231,8 +232,15 @@ class SiteModel:
     @property
     def title(self) -> str:
         if len(self.courses) == 1:
-            return self.courses[0].title
+            return self.courses[0].localized(self.lang).title
         return self.t("site.title_fallback")
+
+    @property
+    def description(self) -> str:
+        """Site description: the single course's summary, else empty."""
+        if len(self.courses) == 1:
+            return self.courses[0].localized(self.lang).summary
+        return ""
 
     def modules(self) -> list[Module]:
         return [m for c in self.courses for m in c.modules]
@@ -254,8 +262,16 @@ class SiteModel:
         return ordered_stages(stage_of(m) for m in self.modules())
 
     def text(self, lesson: Lesson) -> LocalizedLesson:
-        """A lesson's title, summary, objectives and body in the site's language."""
+        """A lesson's title, summary, objectives, body, activities and resources."""
         return lesson.localized(self.lang)
+
+    def module_text(self, module: Module) -> LocalizedModule:
+        """A module's title and summary in the site's language."""
+        return module.localized(self.lang)
+
+    def course_text(self, course: Course) -> LocalizedCourse:
+        """A course's title and summary in the site's language."""
+        return course.localized(self.lang)
 
     def progress_rows(self) -> list[LessonProgress]:
         return [s.progress for s in self.summaries]
@@ -266,7 +282,7 @@ def lesson_link(model: SiteModel, page: str, lesson: Lesson, anchor: str = "") -
 
 
 def module_link(model: SiteModel, page: str, module: Module) -> str:
-    return link(page, model.module_page(module), module.title)
+    return link(page, model.module_page(module), model.module_text(module).title)
 
 
 def _local(dt: datetime, now: datetime) -> datetime:
@@ -318,7 +334,8 @@ def render_dashboard(model: SiteModel) -> str:
             f"{module_link(model, page, current.module)} {md_text(progress)}",
             f"- **{md_text(t('site.label.next_lesson'))}**: "
             f"{lesson_link(model, page, current.lesson)} "
-            f"{badge(state_of(current), t)} · ⏱ {format_minutes(current.lesson.estimated_minutes)}",
+            f"{badge(state_of(current), t)} · ⏱ "
+            f"{format_minutes(current.lesson.estimated_minutes, model.lang)}",
             f"- {guide} · {t('site.dashboard.start_hint', lesson_id=current.lesson.id)}",
         ]
     out += [
@@ -337,7 +354,8 @@ def render_dashboard(model: SiteModel) -> str:
             lesson = summary.lesson
             out.append(
                 f"1. {lesson_link(model, page, lesson)} {badge(state_of(summary), t)} · "
-                f"{md_text(summary.module.title)} · ⏱ {format_minutes(lesson.estimated_minutes)}"
+                f"{md_text(model.module_text(summary.module).title)} · ⏱ "
+                f"{format_minutes(lesson.estimated_minutes, model.lang)}"
             )
     else:
         out.append(md_text(t("site.dashboard.nothing_available")))
@@ -354,7 +372,7 @@ def _cards(model: SiteModel) -> str:
     cards = [
         (
             t("site.card.week_time"),
-            format_seconds(week.seconds),
+            format_seconds(week.seconds, model.lang),
             t("site.card.week_time_sub", sessions=week.sessions, start=f"{week.start:%m/%d}"),
         ),
         (
@@ -404,7 +422,8 @@ def _stage_table(model: SiteModel, page: str) -> str:
             f"{module_link(model, page, m)} {ratio(model.module_summaries(m)).percent}%"
             for m in modules
         )
-        rows.append(f"| **{md_text(stage)}** | {bar(ratio(summaries))} | {module_cells} |")
+        label = md_text(stage_text(stage, t))
+        rows.append(f"| **{label}** | {bar(ratio(summaries))} | {module_cells} |")
     return "\n".join(rows)
 
 
@@ -421,7 +440,7 @@ def _recent_activity(model: SiteModel, page: str, limit: int = 5) -> list[str]:
         length = (
             t("site.recent.session_open")
             if session.is_open
-            else format_seconds(session.elapsed_seconds(model.now))
+            else format_seconds(session.elapsed_seconds(model.now), model.lang)
         )
         events.append(
             (
@@ -481,7 +500,7 @@ def render_roadmap(model: SiteModel) -> str:
             out += [
                 f"### {module_link(model, page, module)}",
                 "",
-                f"{md_text(module.summary)}",
+                f"{md_text(model.module_text(module).summary)}",
                 "",
                 bar(module_ratio),
                 "",
@@ -498,7 +517,7 @@ def render_roadmap(model: SiteModel) -> str:
                     prereq = t("site.roadmap.prereq", names=names)
                 out.append(
                     f"- {badge(state_of(summary), t)} {lesson_link(model, page, lesson)} · "
-                    f"⏱ {format_minutes(lesson.estimated_minutes)}{prereq}"
+                    f"⏱ {format_minutes(lesson.estimated_minutes, model.lang)}{prereq}"
                 )
             out.append("")
     return "\n".join(out) + "\n"
@@ -519,7 +538,7 @@ def render_module(model: SiteModel, module: Module) -> str:
         lessons_label=md_text(t("site.label.lessons")),
         count=len(summaries),
         time_label=md_text(t("site.label.estimated_time")),
-        time=format_minutes(total_minutes),
+        time=format_minutes(total_minutes, model.lang),
         back=link(page, ROADMAP_PAGE, t("site.module.back_to_roadmap")),
     )
     headers = " | ".join(
@@ -533,12 +552,13 @@ def render_module(model: SiteModel, module: Module) -> str:
             "site.label.prerequisites",
         )
     )
+    module_text = model.module_text(module)
     out = [
-        f"# {md_text(module.title)}",
+        f"# {md_text(module_text.title)}",
         "",
         meta,
         "",
-        md_text(module.summary),
+        md_text(module_text.summary),
         "",
         bar(ratio(summaries)),
         "",
@@ -557,10 +577,11 @@ def render_module(model: SiteModel, module: Module) -> str:
         )
         out.append(
             f"| {number} | {lesson_link(model, page, lesson)} | {badge(state_of(summary), t)} | "
-            f"{format_minutes(lesson.estimated_minutes)} | {difficulty_dots(lesson.difficulty)} | "
+            f"{format_minutes(lesson.estimated_minutes, model.lang)} | "
+            f"{difficulty_dots(lesson.difficulty)} | "
             f"{prereqs or md_text(t('site.label.none'))} |"
         )
-    resources = _collect_resources(summaries)
+    resources = _collect_resources(summaries, model.lang)
     if resources:
         out += ["", f"## {md_text(t('site.heading.module_resources'))}", ""]
         out += _resource_groups(model, page, resources, show_lessons=True)
@@ -580,7 +601,8 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
         f"# {md_text(text.title)}",
         "",
         f'<p class="rc-meta">{html.escape(stage_text(stage_of(summary.module), t))} · '
-        f"{html.escape(summary.module.title)} · ⏱ {format_minutes(lesson.estimated_minutes)} · "
+        f"{html.escape(model.module_text(summary.module).title)} · "
+        f"⏱ {format_minutes(lesson.estimated_minutes, model.lang)} · "
         f"{html.escape(t('site.label.difficulty'))} {difficulty_dots(lesson.difficulty)} "
         f"({lesson.difficulty}/5) · "
         f"{badge(state_of(summary), t)}</p>",
@@ -620,11 +642,11 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
     if text.tags:
         tags = " ".join(f"`{md_text(tag)}`" for tag in text.tags)
         out += [f"**{md_text(t('site.label.tags'))}**: " + tags, ""]
-    if lesson.activities:
+    if text.activities:
         out += [f"**{md_text(t('site.label.activities'))}**", ""]
-        for activity in lesson.activities:
+        for activity in text.activities:
             minutes = (
-                f" · {format_minutes(activity.estimated_minutes)}"
+                f" · {format_minutes(activity.estimated_minutes, model.lang)}"
                 if activity.estimated_minutes
                 else ""
             )
@@ -651,8 +673,8 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
             "",
         ]
     out += [f"## {md_text(t('site.heading.resources'))} {{#{RESOURCES_ANCHOR}}}", ""]
-    if lesson.resources:
-        out += _resource_groups(model, page, [(r, [lesson]) for r in lesson.resources])
+    if text.resources:
+        out += _resource_groups(model, page, [(r, [lesson]) for r in text.resources])
     else:
         out.append(md_text(t("site.lesson.no_resources")))
     return "\n".join(out) + "\n"
@@ -667,7 +689,7 @@ def render_quiz_blocks(body: str, lesson: Lesson, t: Translator | None = None) -
     """
     t = t or translator(DEFAULT_LANG)
     try:
-        quiz = parse_quiz(lesson)
+        quiz = localized_quiz(lesson, t.lang)
     except QuizParseError:
         return _replace_fences(body, lambda _i, raw: _code_block(raw))
     blocks = quiz.blocks
@@ -701,7 +723,7 @@ def _render_question(question: QuizQuestion, number: int, t: Translator) -> str:
     if question.choices:
         lines += [f"{i + 1}. {md_text(choice)}" for i, choice in enumerate(question.choices)]
         lines.append("")
-    answer = t("site.lesson.answer_label", answer=md_text(question.answer_text()))
+    answer = t("site.lesson.answer_label", answer=md_text(question.answer_text(t.lang)))
     lines += [
         f'??? note "{md_text(t("site.heading.answer"))}"',
         "",
@@ -739,7 +761,7 @@ def _replace_fences(body: str, render: Callable[[int, str], str]) -> str:
 def _progress_line(progress: LessonProgress, now: datetime, t: Translator) -> str:
     parts = []
     if progress.total_seconds:
-        parts.append(t("site.record.total", time=format_seconds(progress.total_seconds)))
+        parts.append(t("site.record.total", time=format_seconds(progress.total_seconds, t.lang)))
     if progress.started_at:
         parts.append(t("site.record.started", date=f"{_local(progress.started_at, now):%Y-%m-%d}"))
     if progress.completed_at and progress.status is LessonStatus.DONE:
@@ -754,11 +776,13 @@ def _progress_line(progress: LessonProgress, now: datetime, t: Translator) -> st
 # -- 자료 -----------------------------------------------------------------------
 
 
-def _collect_resources(summaries: Iterable[LessonSummary]) -> list[tuple[Resource, list[Lesson]]]:
+def _collect_resources(
+    summaries: Iterable[LessonSummary], lang: str | None = None
+) -> list[tuple[Resource, list[Lesson]]]:
     """Resources in first-use order, deduplicated by (title, url), with the lessons using them."""
     found: dict[tuple[str, str | None], tuple[Resource, list[Lesson]]] = {}
     for summary in summaries:
-        for resource in summary.lesson.resources:
+        for resource in summary.lesson.localized_resources(lang):
             key = (resource.title, resource.url)
             if key not in found:
                 found[key] = (resource, [])
@@ -806,7 +830,7 @@ def _resource_groups(
 
 def render_resources(model: SiteModel) -> str:
     page = RESOURCES_PAGE
-    resources = _collect_resources(model.summaries)
+    resources = _collect_resources(model.summaries, model.lang)
     t = model.t
     out = [
         f"# {md_text(t('site.heading.resources_page'))}",

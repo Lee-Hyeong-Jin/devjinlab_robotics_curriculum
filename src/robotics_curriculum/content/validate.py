@@ -11,6 +11,8 @@ Rules:
 7. ids are unique across every course under the content root (progress needs that)
 8. quiz blocks in the lesson body parse and reference a quiz activity of the lesson
    (see :mod:`robotics_curriculum.content.quiz_block`)
+9. a ``<lesson>.<lang>.yaml`` translation only names activities, resources and quiz
+   questions that the lesson actually has, with the same number of choices
 """
 
 from __future__ import annotations
@@ -56,6 +58,7 @@ def validate_course(course: Course) -> list[ContentError]:
             errors.extend(_check_resources(lesson, lesson_path))
             errors.extend(_check_quiz(lesson, lesson_path))
             errors.extend(_check_translations(lesson))
+            errors.extend(_check_meta_translations(lesson, lesson_path))
 
     # Rule 2: dangling / self prerequisites.
     for lesson in lessons.values():
@@ -108,6 +111,46 @@ def _check_translations(lesson: Lesson) -> list[ContentError]:
             errors.append(
                 ContentError(path, f"'{lang}' translation of '{lesson.id}' has an empty body")
             )
+    return errors
+
+
+def _check_meta_translations(lesson: Lesson, lesson_path: Path) -> list[ContentError]:
+    """Rule 9: ``<lesson>.<lang>.yaml`` may only translate text that exists in the lesson.
+
+    A key that matches nothing is almost always a typo or a rename that was not followed
+    through, and it would silently leave the reader with the original language.
+    """
+    errors: list[ContentError] = []
+    activity_ids = {activity.id for activity in lesson.activities}
+    resource_titles = {resource.title for resource in lesson.resources}
+    try:
+        questions = {q.id: q for q in parse_quiz(lesson).questions}
+    except QuizParseError:
+        questions = {}  # the quiz itself is already reported by _check_quiz
+    for lang, meta in sorted(lesson.meta_translations.items()):
+        path = meta.path if meta.path is not None else lesson_path
+        where = f"'{lang}' translation of '{lesson.id}'"
+        for activity_id in sorted(set(meta.activities) - activity_ids):
+            errors.append(ContentError(path, f"{where}: no activity '{activity_id}'"))
+        for title in sorted(set(meta.resources) - resource_titles):
+            errors.append(ContentError(path, f"{where}: no resource titled '{title}'"))
+        seen: set[str] = set()
+        for question in meta.quiz:
+            if question.id in seen:
+                errors.append(ContentError(path, f"{where}: duplicate question '{question.id}'"))
+            seen.add(question.id)
+            original = questions.get(question.id)
+            if original is None:
+                errors.append(ContentError(path, f"{where}: no quiz question '{question.id}'"))
+                continue
+            if question.choices is not None and len(question.choices) != len(original.choices):
+                errors.append(
+                    ContentError(
+                        path,
+                        f"{where}: question '{question.id}' has {len(question.choices)} "
+                        f"choices but the lesson has {len(original.choices)}",
+                    )
+                )
     return errors
 
 
