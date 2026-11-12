@@ -14,7 +14,7 @@ resources:
   "Murray, Li & Sastry, A Mathematical Introduction to Robotic Manipulation":
     note: ch.2.3-2.5 (Rigid Body Velocity, Screws, Wrenches). (official URL unverified)
   "Featherstone, Rigid Body Dynamics Algorithms":
-    note: ch.2 (Spatial Vector Algebra). The same theory in the other convention (the (v, ω) ordering).
+    note: ch.2 (Spatial Vector Algebra). The same theory in a different notation; its ordering is angular-first, like this course.
   "Featherstone — A beginner's guide to 6-D vectors, part 1 (2010)":
     note: Must-read 1. Explains the motion/force duality of 6-D vectors starting from the conventions.
   "Featherstone — A beginner's guide to 6-D vectors, part 2 (2010)":

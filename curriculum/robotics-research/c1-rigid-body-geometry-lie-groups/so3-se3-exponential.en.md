@@ -75,7 +75,7 @@ back to the prerequisite lesson named in parentheses is faster.
 ## Key results
 
 The bracketed tag is the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
-see `research_notes/연구 트랙 설계/lesson-standard.md` §2).
+see the lesson standard in the research-track design notes, §2).
 
 - **R1 (Rodrigues' formula) [D3]** — for $\lVert \omega \rVert = 1$,
   $$\exp(\hat{\omega}\theta) = I + \sin\theta\,\hat{\omega} + (1 - \cos\theta)\,\hat{\omega}^2. \tag{2}$$
