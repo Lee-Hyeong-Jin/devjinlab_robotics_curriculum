@@ -11,7 +11,13 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, status
 
-from robotics_curriculum.api.deps import Index, Progress, State, get_principal
+from robotics_curriculum.api.deps import (
+    Index,
+    Progress,
+    State,
+    get_principal,
+    require_verified_email,
+)
 from robotics_curriculum.api.log import lang_var
 from robotics_curriculum.api.problems import problem_responses
 from robotics_curriculum.api.schemas import (
@@ -31,10 +37,10 @@ from robotics_curriculum.learn import dashboard_stats
 from robotics_curriculum.progress import LessonProgress
 
 router = APIRouter(
-    dependencies=[Depends(get_principal)],
+    dependencies=[Depends(get_principal), Depends(require_verified_email)],
     prefix="/api/v1/progress",
     tags=["progress"],
-    responses=problem_responses(404, 409, 422, 503),
+    responses=problem_responses(403, 404, 409, 422, 503),
 )
 
 CourseFilter = Annotated[str | None, Query(alias="course", description="Only this course id.")]

@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 
 import { apiPost, apiPostRaw } from '../api/client'
+import type { User } from '../api/types'
 import { safeNext } from '../next-path'
 import { toActionState } from './problem'
 import type { ActionState } from './result'
@@ -90,8 +91,9 @@ export async function signup(_previous: ActionState, form: FormData): Promise<Ac
   if (password !== confirm) fields.passwordConfirm = t('passwordMismatch')
   if (Object.keys(fields).length > 0) return { fields }
 
+  let created: User
   try {
-    await apiPost(
+    created = await apiPost<User>(
       '/api/v1/auth/signup',
       { email, password, display_name: displayName || null },
       { redirectOnUnauthorized: false },
@@ -99,7 +101,31 @@ export async function signup(_previous: ActionState, form: FormData): Promise<Ac
   } catch (error) {
     return toActionState(error, t('failed'))
   }
-  redirect('/login?registered=1')
+  // A server with no SMTP configuration can never deliver the link, so telling the
+  // reader to check their inbox would send them nowhere (`email_verification`).
+  const verify = created.email_verification === 'pending'
+  redirect(`/login?registered=${verify ? 'verify' : 'ready'}`)
+}
+
+/**
+ * `POST /auth/resend-verification` — mail the link again to the signed-in account.
+ *
+ * Only offered while `email_verification` is `pending`; the API answers 503 when the
+ * server cannot send mail at all.
+ */
+export async function resendVerification(
+  _previous: ActionState,
+  _form: FormData,
+): Promise<ActionState> {
+  const t = await getTranslations('verifyEmail')
+  try {
+    await apiPost('/api/v1/auth/resend-verification', undefined, {
+      redirectOnUnauthorized: false,
+    })
+  } catch (error) {
+    return toActionState(error, t('resendFailed'))
+  }
+  return { message: t('resendDone') }
 }
 
 /** `POST /auth/logout` — clears the session on the server and in the browser. */

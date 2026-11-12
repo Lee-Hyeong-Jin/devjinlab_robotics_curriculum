@@ -174,6 +174,14 @@ def create_app(
         providers = oidc_providers if oidc_providers is not None else parse_providers(os.environ)
         http = oidc_http or httpx.Client(follow_redirects=False)
         state.oidc = {pid: OidcClient(p, http, clock) for pid, p in providers.items()}
+        if state.auth.config.require_verified_email and not state.auth.mail_enabled:
+            # Nobody could ever get past the gate: every write would be 403 for every
+            # account, with no way to request the link that would lift it.
+            raise UnsafeConfiguration(
+                "RC_AUTH_REQUIRE_VERIFIED_EMAIL=1 needs SMTP configured (RC_SMTP_HOST and "
+                "friends): without mail the verification link can never be delivered, so no "
+                "account could ever save anything. Configure mail, or unset the flag."
+            )
         secret = auth_secret if auth_secret is not None else os.environ.get("RC_AUTH_SECRET", "")
         if not secret and state.oidc:
             # Without a shared key an OIDC callback that lands on another worker or replica

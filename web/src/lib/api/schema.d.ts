@@ -586,6 +586,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/resend-verification": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Resend Verification
+         * @description Send the verification link again to the signed-in account's own address.
+         *
+         *     Needs a session, so there is nothing to enumerate and no address to type. 503 when the
+         *     server has no SMTP configuration — the client reads `email_verification` first and does
+         *     not offer this at all in that case. Already-verified accounts get 202 and no mail.
+         */
+        post: operations["resend_verification_api_v1_auth_resend_verification_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/verify-email": {
         parameters: {
             query?: never;
@@ -724,6 +748,9 @@ export interface paths {
         /**
          * Get Me
          * @description The signed-in user.
+         *
+         *     Reads the state rather than depending on ``Auth``, because local mode has no auth
+         *     service and this endpoint still answers there (with the stand-in user 1).
          */
         get: operations["get_me_api_v1_me_get"];
         put?: never;
@@ -1044,6 +1071,12 @@ export interface components {
             email: string;
             /** Email Verified */
             email_verified: boolean;
+            /**
+             * Email Verification
+             * @description `verified`, `pending`, or `unavailable` when this server has no SMTP configuration and so can never deliver the link. A client shows no "check your inbox" notice and no resend button while it is `unavailable`.
+             * @enum {string}
+             */
+            email_verification: "unavailable" | "pending" | "verified";
             /** Display Name */
             display_name: string | null;
             /** Locale */
@@ -2305,6 +2338,12 @@ export interface components {
             email: string;
             /** Email Verified */
             email_verified: boolean;
+            /**
+             * Email Verification
+             * @description `verified`, `pending`, or `unavailable` when this server has no SMTP configuration and so can never deliver the link. A client shows no "check your inbox" notice and no resend button while it is `unavailable`.
+             * @enum {string}
+             */
+            email_verification: "unavailable" | "pending" | "verified";
             /** Display Name */
             display_name: string | null;
             /** Locale */
@@ -2965,6 +3004,15 @@ export interface operations {
                     "application/json": components["schemas"]["Status"];
                 };
             };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
             /** @description Not Found */
             404: {
                 headers: {
@@ -3026,6 +3074,15 @@ export interface operations {
                     "application/json": components["schemas"]["NextLesson"][];
                 };
             };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
             /** @description Not Found */
             404: {
                 headers: {
@@ -3080,6 +3137,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LessonProgress"][];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description Not Found */
@@ -3138,6 +3204,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LessonProgress"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description Not Found */
@@ -3200,6 +3275,15 @@ export interface operations {
                     "application/json": components["schemas"]["StudySession"];
                 };
             };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
             /** @description Not Found */
             404: {
                 headers: {
@@ -3258,6 +3342,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["StudySession"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description Not Found */
@@ -3320,6 +3413,15 @@ export interface operations {
                     "application/json": components["schemas"]["StudySession"];
                 };
             };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
             /** @description Not Found */
             404: {
                 headers: {
@@ -3380,6 +3482,15 @@ export interface operations {
                     "application/json": components["schemas"]["DoneResult"];
                 };
             };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
             /** @description Not Found */
             404: {
                 headers: {
@@ -3436,6 +3547,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["QuizPublic"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description Not Found */
@@ -3496,6 +3616,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["robotics_curriculum__api__schemas__QuizRun"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description Not Found */
@@ -3559,6 +3688,15 @@ export interface operations {
                     "application/json": components["schemas"]["ReviewCard"][];
                 };
             };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
             /** @description Not Found */
             404: {
                 headers: {
@@ -3619,6 +3757,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ReviewResult"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
                 };
             };
             /** @description Not Found */
@@ -3943,6 +4090,80 @@ export interface operations {
             };
             /** @description Too Many Requests */
             429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    resend_verification_api_v1_auth_resend_verification_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };

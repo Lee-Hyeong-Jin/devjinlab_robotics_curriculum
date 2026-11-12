@@ -231,6 +231,36 @@ def get_principal(
 CurrentPrincipal = Annotated[Principal, Depends(get_principal)]
 
 
+def require_verified_email(
+    request: Request, state: State, principal: CurrentPrincipal
+) -> Principal:
+    """With ``RC_AUTH_REQUIRE_VERIFIED_EMAIL=1``, an unproven address may read but not write.
+
+    Reads stay open so the reader can still find their way around (and reach the resend
+    button) while the address is unconfirmed. Off by default: a deployment without SMTP
+    could never let anyone past it, which is why starting with it on and no mail
+    configuration is refused outright (``create_app``).
+    """
+    if state.auth is None or principal is LOCAL_PRINCIPAL:
+        return principal
+    if request.method in SAFE_METHODS or not state.auth.config.require_verified_email:
+        return principal
+    if principal.user.email_verified_at is not None:
+        return principal
+    raise _deny(
+        state,
+        request,
+        403,
+        "confirm your email address before saving anything: request a new link at "
+        "POST /api/v1/auth/resend-verification",
+        "email_unverified",
+        principal.user.id,
+    )
+
+
+VerifiedPrincipal = Annotated[Principal, Depends(require_verified_email)]
+
+
 def require_session(request: Request, state: State, principal: CurrentPrincipal) -> Principal:
     """Account-management endpoints refuse personal access tokens."""
     if principal.via_token:

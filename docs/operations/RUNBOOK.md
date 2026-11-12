@@ -177,7 +177,8 @@ curl -fsS localhost:8000/version                     # 4. 확인
 | `RC_AUTH_ADMIN_EMAIL` | 비어 있음 | 이메일 인증을 마친 이 주소의 계정을 첫 관리자로 승격(관리자가 없을 때만) |
 | `RC_PUBLIC_URL` | `http://localhost:3000` | 웹 주소(재설정 링크, OIDC 복귀) |
 | `RC_AUTH_COOKIE_SECURE` | `1` | 세션 쿠키 `Secure`. `0` 은 HTTP 개발 전용 |
-| `RC_SMTP_HOST` 외 `RC_SMTP_*` | 비어 있음 | 메일. 없으면 비밀번호 재설정 503 |
+| `RC_SMTP_HOST` 외 `RC_SMTP_*` | 비어 있음 | 메일. 없으면 비밀번호 재설정·인증 메일 재전송 503, 이메일 인증 상태는 `unavailable` (§8.1) |
+| `RC_AUTH_REQUIRE_VERIFIED_EMAIL` | `0` | `1` 이면 미인증 계정은 로그인·조회는 되고 학습 데이터 쓰기·PAT 발급이 403. SMTP 없이 `1` 이면 기동을 거부 |
 | `RC_OIDC_PROVIDERS` | 비어 있음 | OIDC 제공자 JSON(ADR 0010) |
 | `RC_CURRICULUM_DIR` | 이미지의 `/app/curriculum` | 콘텐츠 경로 |
 | `RC_DATA_DIR` | `/data` | 로컬 모드 데이터 디렉터리 |
@@ -188,6 +189,49 @@ curl -fsS localhost:8000/version                     # 4. 확인
 
 비밀은 환경 변수 또는 Docker secret 으로 주입하고 저장소에 커밋하지 않는다. `.env` 는 읽지도
 커밋하지도 않는다(`.env.example` 만 둔다).
+
+## 8.1 이메일 인증 켜기
+
+SMTP 를 설정하지 않은 서버는 인증 링크를 **보낼 수 없다**. 그래서 가입 응답과 `GET /api/v1/me` 의
+`email_verification` 이 `unavailable` 이 되고, 웹은 "인증 메일을 보냈습니다" 안내·미인증 배너·재전송
+버튼을 아예 보여 주지 않는다(없는 메일을 기다리게 하지 않는다). 계정은 그대로 쓸 수 있다.
+
+메일을 켜려면:
+
+1. SMTP 변수를 넣는다. 최소 `RC_SMTP_HOST`, 보통 함께 쓰는 것:
+
+   | 변수 | 예 | 비고 |
+   |---|---|---|
+   | `RC_SMTP_HOST` | `smtp.gmail.com` | 필수. 이 값이 없으면 메일 기능 전체가 꺼진다 |
+   | `RC_SMTP_PORT` | `587` | 기본 587(STARTTLS) |
+   | `RC_SMTP_USER` | `robot@example.org` | 인증이 필요한 경우 |
+   | `RC_SMTP_PASSWORD` | 앱 비밀번호 | Docker secret 또는 환경 변수로만. 저장소에 커밋하지 않는다 |
+   | `RC_SMTP_FROM` | `no-reply@example.org` | 보내는 주소. 미설정 시 `no-reply@localhost` |
+   | `RC_SMTP_STARTTLS` | `1` | `0` 은 평문 SMTP(사내망 릴레이) |
+   | `RC_PUBLIC_URL` | `https://learnrobotics.example.com` | 메일 안의 링크가 가리킬 웹 주소. 틀리면 링크가 열리지 않는다 |
+
+   - **Gmail:** 2단계 인증을 켜고 *앱 비밀번호*를 발급해 `RC_SMTP_PASSWORD` 에 넣는다. 계정
+     비밀번호는 거부된다. `RC_SMTP_HOST=smtp.gmail.com`, `RC_SMTP_PORT=587`,
+     `RC_SMTP_USER` 는 해당 Gmail 주소, `RC_SMTP_FROM` 도 같은 주소로 둔다(다른 주소는 스팸 처리된다).
+   - **일반 SMTP / 메일 발송 서비스:** 제공자가 준 호스트·포트·사용자·비밀번호를 그대로 넣고,
+     `RC_SMTP_FROM` 은 그 제공자에서 검증한 도메인의 주소로 한다(SPF·DKIM).
+
+2. 설정을 확인한다. DB 에 아무것도 쓰지 않고 한 통만 보낸다:
+
+   ```bash
+   docker compose run --rm cli api send-test-email you@example.org
+   # 또는 로컬에서: uv run rc api send-test-email you@example.org
+   ```
+
+   실패하면 호스트·포트·자격 증명·방화벽을 그 순서로 확인한다. 성공하면 가입·비밀번호 재설정
+   메일도 나간다.
+
+3. API 를 다시 시작한다. 이제 `email_verification` 이 `pending` 으로 바뀌고 웹이 미인증 배너와
+   "인증 메일 다시 받기" 버튼을 보여 준다. 이전에 가입한 계정은 그 버튼으로 링크를 받는다.
+
+4. (선택) 인증을 **강제**하려면 `RC_AUTH_REQUIRE_VERIFIED_EMAIL=1` 을 켠다. 미인증 계정은 로그인과
+   조회는 되지만 학습 데이터 쓰기와 PAT 발급이 403(problem+json, 재전송 안내 포함)이 된다.
+   SMTP 없이 이 값을 `1` 로 두면 아무도 통과할 수 없으므로 서버가 기동을 거부한다.
 
 ## 9. 자주 겪는 문제
 

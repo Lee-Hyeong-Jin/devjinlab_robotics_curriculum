@@ -30,6 +30,7 @@ from robotics_curriculum.api.deps import (
     SessionPrincipal,
     State,
     get_principal,
+    require_verified_email,
 )
 from robotics_curriculum.api.problems import problem_responses
 from robotics_curriculum.progress import ProgressExport
@@ -43,16 +44,22 @@ router = APIRouter(
 
 
 @router.get("", response_model=User)
-def get_me(principal: CurrentPrincipal) -> User:
-    """The signed-in user."""
-    return User.of(principal.user)
+def get_me(principal: CurrentPrincipal, state: State) -> User:
+    """The signed-in user.
+
+    Reads the state rather than depending on ``Auth``, because local mode has no auth
+    service and this endpoint still answers there (with the stand-in user 1).
+    """
+    verification = state.auth.verification_state(principal.user) if state.auth else "unavailable"
+    return User.of(principal.user, verification)
 
 
 @router.patch("", response_model=User)
 def update_me(body: UserUpdate, principal: SessionPrincipal, auth: Auth, ctx: Ctx) -> User:
     """Change display name, locale or timezone."""
     fields = body.model_dump(exclude_unset=True)
-    return User.of(auth.update_profile(principal.user, ctx, **fields))
+    updated = auth.update_profile(principal.user, ctx, **fields)
+    return User.of(updated, auth.verification_state(updated))
 
 
 @router.put("/password", status_code=status.HTTP_204_NO_CONTENT)
@@ -82,7 +89,12 @@ def list_tokens(principal: SessionPrincipal, auth: Auth) -> list[ApiToken]:
     return [ApiToken.of(t) for t in auth.list_tokens(principal.user)]
 
 
-@router.post("/tokens", response_model=ApiTokenCreated, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/tokens",
+    response_model=ApiTokenCreated,
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(require_verified_email)],
+)
 def create_token(
     body: ApiTokenCreate, principal: SessionPrincipal, auth: Auth, ctx: Ctx
 ) -> ApiTokenCreated:

@@ -35,6 +35,7 @@ from robotics_curriculum.api.deps import (
     Auth,
     Ctx,
     CurrentPrincipal,
+    SessionPrincipal,
     State,
     optional_principal,
 )
@@ -91,7 +92,7 @@ def _set_session_cookies(
 def signup(body: SignupRequest, auth: Auth, ctx: Ctx) -> User:
     """Create a local account (role learner) and mail an email-verification link."""
     user = auth.signup(body.email, body.password, ctx, display_name=body.display_name)
-    return User.of(user)
+    return User.of(user, auth.verification_state(user))
 
 
 @router.post("/login", response_model=LoginResult, responses=problem_responses(401))
@@ -101,7 +102,10 @@ def login(
     """Start a browser session. Five failures in 15 minutes lock the account temporarily."""
     result = auth.login(body.email, body.password, ctx)
     _set_session_cookies(response, result, state, auth)
-    return LoginResult(user=User.of(result.user), csrf_token=result.csrf_token)
+    return LoginResult(
+        user=User.of(result.user, auth.verification_state(result.user)),
+        csrf_token=result.csrf_token,
+    )
 
 
 @router.post(
@@ -112,6 +116,23 @@ def logout(principal: CurrentPrincipal, auth: Auth, ctx: Ctx, response: Response
     auth.logout(principal, ctx)
     response.delete_cookie(SESSION_COOKIE, path="/")
     response.delete_cookie(CSRF_COOKIE, path="/")
+
+
+@router.post(
+    "/resend-verification",
+    status_code=status.HTTP_202_ACCEPTED,
+    responses=problem_responses(401, 403, 503),
+)
+def resend_verification(principal: SessionPrincipal, auth: Auth, ctx: Ctx) -> None:
+    """Send the verification link again to the signed-in account's own address.
+
+    Needs a session, so there is nothing to enumerate and no address to type. 503 when the
+    server has no SMTP configuration — the client reads `email_verification` first and does
+    not offer this at all in that case. Already-verified accounts get 202 and no mail.
+    """
+    if not auth.mail_enabled:
+        raise HTTPException(503, "mail is not configured on this server")
+    auth.resend_verification(principal.user, ctx)
 
 
 @router.post("/verify-email", status_code=status.HTTP_204_NO_CONTENT)

@@ -14,6 +14,7 @@ import { getAuthProviders } from '@/lib/api/queries'
 import { unlinkedProviders } from '@/lib/auth-providers'
 import type { ApiToken, AuthSession, Identity, Scope } from '@/lib/api/types'
 import { requireUser } from '@/lib/auth'
+import { resendVerification } from '@/lib/actions/auth'
 import {
   changePassword,
   createToken,
@@ -38,9 +39,10 @@ const SECTIONS = ['account', 'passwordSection', 'sessions', 'identities', 'token
  * `/me/identities`, `/me/tokens`, `/me/export` (frontend.md §2).
  */
 export default async function ProfilePage() {
-  const [t, tRole, locale] = await Promise.all([
+  const [t, tRole, tVerify, locale] = await Promise.all([
     getTranslations('profile'),
     getTranslations('role'),
+    getTranslations('verifyEmail'),
     getLocale(),
   ])
   const user = await requireUser('/profile')
@@ -194,9 +196,9 @@ export default async function ProfilePage() {
                 <dt className="text-muted text-xs">{t('email')}</dt>
                 <dd className="text-primary flex flex-wrap items-center gap-2 text-sm">
                   {user.email}
-                  {user.email_verified ? (
+                  {user.email_verification === 'verified' ? (
                     <Chip tone="success">{t('emailVerified')}</Chip>
-                  ) : (
+                  ) : user.email_verification === 'pending' ? (
                     <>
                       <Chip tone="warning">{t('emailUnverified')}</Chip>
                       <Link
@@ -206,7 +208,7 @@ export default async function ProfilePage() {
                         {t('verifyEmailLink')}
                       </Link>
                     </>
-                  )}
+                  ) : null}
                 </dd>
               </div>
               <div>
@@ -220,6 +222,18 @@ export default async function ProfilePage() {
                 </dd>
               </div>
             </dl>
+
+            {user.email_verification === 'pending' ? (
+              <div className="border-border-default mb-5 border-t pt-4">
+                <p className="text-muted mb-2 text-sm">{tVerify('resendHint')}</p>
+                <RowAction
+                  action={resendVerification}
+                  hidden={{}}
+                  label={tVerify('resend')}
+                  pendingLabel={tVerify('resending')}
+                />
+              </div>
+            ) : null}
 
             <ActionForm
               action={updateProfile}
