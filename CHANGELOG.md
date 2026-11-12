@@ -144,6 +144,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   nine-dimensional noise covariance derived, and the two-fold scale/gravity ambiguity of monocular
   visual-inertial fusion under constant acceleration derived in closed form and confirmed
   numerically.
+- Research track module C5: the `c5-observability-consistency` lesson in Korean and English — the
+  Hermann-Krener rank condition, the four-dimensional unobservable subspace of monocular
+  visual-inertial estimation derived from its invariance group, the mechanism by which an EKF's
+  linearization points break the null space, and FEJ shown to turn on choosing between two
+  algebraically identical Jacobian expressions. The reproduction task measures all of it by
+  numerical rank, and reports honestly that null-space preservation did not improve NEES in either
+  simulated setting.
 
 ### Fixed
 

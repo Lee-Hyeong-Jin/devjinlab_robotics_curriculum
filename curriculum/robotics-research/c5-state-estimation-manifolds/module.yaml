@@ -14,3 +14,4 @@ lessons:
   - sparsity-isam
   - manifold-estimation
   - imu-preintegration
+  - observability-consistency
