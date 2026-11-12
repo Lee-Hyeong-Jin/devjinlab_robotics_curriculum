@@ -1,0 +1,22 @@
+id: m2-inverse-kinematics
+lang: en
+activities:
+  m2-inverse-kinematics-reading: Read the lesson
+  m2-inverse-kinematics-quiz: "Quiz: how many IK solutions, and singularities"
+  m2-inverse-kinematics-exercise: >-
+    Implement analytic and numerical IK, then check both with forward kinematics
+resources:
+  "Modern Robotics, 5–6장 Velocity Kinematics / Inverse Kinematics (Lynch & Park)":
+    title: "Modern Robotics, chapters 5-6: Velocity Kinematics / Inverse Kinematics (Lynch & Park)"
+    note: "The Jacobian (section 5.1), and analytic and numerical IK (chapter 6)."
+  "Modern Robotics 강의 영상 (5–6장)":
+    title: "Modern Robotics lecture videos (chapters 5-6)"
+    note: The videos on the Jacobian and inverse kinematics.
+  "Introduction to Robotics: Mechanics and Control, 4th ed. (John J. Craig)":
+    note: "Chapter 4, Inverse Manipulator Kinematics - worked analytic IK examples."
+  "Robotics: Modelling, Planning and Control (Siciliano, Sciavicco, Villani, Oriolo)":
+    note: >-
+      Chapter 3: the Jacobian, singularities and inverse-kinematics algorithms (advanced).
+  "ModernRobotics 공식 코드 라이브러리":
+    title: The official ModernRobotics code library
+    note: Optional, compare your results against IKinSpace.

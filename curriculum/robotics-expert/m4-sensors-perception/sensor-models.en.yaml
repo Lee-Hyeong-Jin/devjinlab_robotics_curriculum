@@ -1,0 +1,24 @@
+id: m4-sensor-models
+lang: en
+activities:
+  m4-sensor-models-reading: Read the lesson
+  m4-sensor-models-quiz: "Quiz: where each sensor's error comes from"
+  m4-sensor-models-exercise: Simulate encoder, gyroscope and LiDAR noise
+resources:
+  "Cyrill Stachniss, Observation Models":
+    note: >-
+      The Robotics block: beam models and observation models from a likelihood point of
+      view. Watch this first.
+  "Cyrill Stachniss, Probability Primer":
+    note: >-
+      The Basics block. Watch it first if Gaussians and conditional probability are new.
+  "Kalman and Bayesian Filters in Python (Labbe)":
+    note: "Chapters 1-3 (the g-h filter, discrete Bayes, Gaussians). Jupyter notebooks."
+  "현직자가 알려주는 로보틱스 시스템 완전 해부 (인프런, jelly)":
+    note: >-
+      17 lectures, 58 minutes. Sensors, motor drivers, Serial/CAN/EtherCAT. In Korean;
+      paid (KRW 29,700); optional.
+  "awesome-2d-lidars":
+    note: >-
+      A list of 2D LiDARs with ROS support (LD19, RPLIDAR A1). Useful for practising
+      reading real datasheets.

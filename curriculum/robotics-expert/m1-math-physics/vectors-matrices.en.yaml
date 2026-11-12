@@ -1,0 +1,18 @@
+# English text of the structured fields of vectors-matrices.md (activity titles,
+# resource titles and notes). The prose lives in vectors-matrices.en.md.
+id: m1-vectors-matrices
+lang: en
+activities:
+  m1-vectors-matrices-reading: Read the lesson
+  m1-vectors-matrices-quiz: "Quiz: dot product, cross product, matrix multiplication"
+  m1-vectors-matrices-exercise: Plot a 2D linear transformation with NumPy
+resources:
+  "3Blue1Brown, Essence of Linear Algebra":
+    note: >-
+      The episodes on vectors, linear transformations, matrix multiplication and the cross
+      product. Build the intuition first.
+  "Modern Robotics (Lynch & Park) 위키 — Linear Algebra Review":
+    title: "Modern Robotics (Lynch & Park) wiki - Linear Algebra Review"
+    note: The free preprint and its linear-algebra refresher.
+  "MIT 18.06SC Linear Algebra (Gilbert Strang)":
+    note: Optional, for more on determinants and inverses.

@@ -1,0 +1,21 @@
+id: m4-filtering-basics
+lang: en
+activities:
+  m4-filtering-basics-reading: Read the lesson
+  m4-filtering-basics-quiz: "Quiz: filter coefficients and lag"
+  m4-filtering-basics-exercise: Compare filters for estimating IMU tilt
+resources:
+  "Kalman and Bayesian Filters in Python (Labbe)":
+    note: >-
+      Chapter 1, the g-h filter. "Blend prediction and measurement in some ratio" is the
+      intuition the complementary and the Kalman filter share.
+  "Brian Douglas / MATLAB Tech Talks: Control Systems":
+    note: Optional, for intuition about frequency response and filters.
+  "Introduction to Autonomous Robots (Correll 외)":
+    title: "Introduction to Autonomous Robots (Correll et al.)"
+    note: >-
+      The sensors chapter: IMUs, range sensors and the basics of handling noise (free).
+  "Probabilistic Robotics (Thrun, Burgard, Fox)":
+    note: >-
+      Preparation for the next step (M5): skim chapters 2-3 on the Bayes filter and the
+      Kalman filter.

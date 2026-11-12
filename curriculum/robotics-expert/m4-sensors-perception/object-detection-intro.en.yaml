@@ -1,0 +1,18 @@
+id: m4-object-detection-intro
+lang: en
+activities:
+  m4-object-detection-intro-reading: Read the lesson
+  m4-object-detection-intro-quiz: "Quiz: IoU, NMS, precision and recall"
+  m4-object-detection-intro-exercise: >-
+    Implement detection post-processing and estimate a 3D position
+resources:
+  "Robotic Manipulation (Russ Tedrake)":
+    note: >-
+      Chapter 9, Object Detection and Segmentation, and chapter 10, Deep Perception.
+      Perception from a robot's point of view. Read this first.
+  "First Principles of Computer Vision (Shree Nayar)":
+    note: Optional, for more on the pre-neural-network foundations of perception.
+  "Physical AI 입문 All-In-One (패스트캠퍼스)":
+    note: >-
+      Part 2, perception (YOLO, OpenCV). Released in stages from December 2026; paid
+      (from KRW 303,000). In Korean; optional.

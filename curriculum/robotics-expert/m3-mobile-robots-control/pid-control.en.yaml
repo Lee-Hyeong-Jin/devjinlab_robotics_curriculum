@@ -1,0 +1,20 @@
+id: m3-pid-control
+lang: en
+activities:
+  m3-pid-control-reading: Read the lesson
+  m3-pid-control-quiz: "Quiz: what the P, I and D terms do"
+  m3-pid-control-exercise: >-
+    Tune the gains and provoke windup in a heading-control simulation
+resources:
+  "Brian Douglas / MATLAB Tech Talks: Control Systems":
+    note: >-
+      Short videos that build intuition for PID and feedback control. Watch these first.
+  "Feedback Systems: An Introduction for Scientists and Engineers (Åström & Murray)":
+    note: >-
+      The PID chapter (integral windup, gain tuning). The authors publish a free edition
+      online.
+  "Modern Robotics, 11장 Robot Control (Lynch & Park)":
+    title: "Modern Robotics, chapter 11: Robot Control (Lynch & Park)"
+    note: "Sections 11.2-11.3, error dynamics and PID-shaped motion control."
+  "QUT Robot Academy (Peter Corke)":
+    note: Optional joint-control lectures in the Dynamics & Control area.

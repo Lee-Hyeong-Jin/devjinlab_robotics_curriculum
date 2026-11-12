@@ -1,0 +1,23 @@
+id: m1-rotation-representations
+lang: en
+activities:
+  m1-rotation-representations-reading: Read the lesson
+  m1-rotation-representations-quiz: "Quiz: converting between rotation representations"
+  m1-rotation-representations-exercise: >-
+    Round-trip a rotation through scipy.spatial.transform
+resources:
+  "Modern Robotics, 3.2절 회전 + 부록 B (Lynch & Park)":
+    title: "Modern Robotics, section 3.2 (rotations) and appendix B (Lynch & Park)"
+    note: Rotation matrices, exponential coordinates, Euler angles and quaternions.
+  "Modern Robotics 강의 영상 (3장)":
+    title: "Modern Robotics lecture videos (chapter 3)"
+    note: The videos on rotation matrices and angular velocity.
+  "Robotics, Vision and Control, 3rd ed. (Peter Corke)":
+    note: "Chapter 2, Representing Position and Orientation (with Python examples)."
+  "SciPy Rotation 문서":
+    title: SciPy Rotation documentation
+    note: >-
+      The axis convention of from_euler, and the component order of as_quat (x, y, z, w).
+  "QUT Robot Academy (Peter Corke) — Spatial Maths":
+    title: "QUT Robot Academy (Peter Corke) - Spatial Maths"
+    note: Optional lectures that visualise 3D rotations.

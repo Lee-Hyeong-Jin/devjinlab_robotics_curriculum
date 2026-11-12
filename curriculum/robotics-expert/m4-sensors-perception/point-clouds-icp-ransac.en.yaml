@@ -1,0 +1,19 @@
+id: m4-point-clouds-icp-ransac
+lang: en
+activities:
+  m4-point-clouds-icp-ransac-reading: Read the lesson
+  m4-point-clouds-icp-ransac-quiz: "Quiz: RANSAC iteration count and ICP convergence"
+  m4-point-clouds-icp-ransac-exercise: >-
+    Remove the ground plane and register two point clouds
+resources:
+  "Cyrill Stachniss, ICP":
+    note: "The Robotics block, through the SVD-based derivation of the alignment. Watch this first."
+  "Cyrill Stachniss, RANSAC":
+    note: "The Robotics block, including the formula for the number of iterations."
+  "Cyrill Stachniss, Least Squares – An Informal Introduction":
+    title: "Cyrill Stachniss, Least Squares - An Informal Introduction"
+    note: The Basics block. A refresher on seeing registration as a least-squares problem.
+  "Open3D Getting Started":
+    note: >-
+      v0.19. Work on real data with the Geometry (point cloud, KDTree) and Pipelines (ICP
+      registration) tutorials.
