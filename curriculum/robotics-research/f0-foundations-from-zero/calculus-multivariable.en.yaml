@@ -1,0 +1,74 @@
+id: f0-calculus-multivariable
+lang: en
+activities:
+  f0-calculus-multivariable-diagnostic: "Self-diagnosis before starting (pass and skip this lesson)"
+  f0-calculus-multivariable-lectures: Watch the MIT 18.02 lectures and read the notes
+  f0-calculus-multivariable-problems: Work the problem sets and past exams (self-marked against the solutions)
+resources:
+  "MIT 18.02 Multivariable Calculus (Fall 2007)":
+    note: The primary source. Lecture videos, lecture notes, and past exams with solutions.
+  "NumPy 수치 미분 연습":
+    title: Practice with numerical differentiation in NumPy
+    note: For checking gradients and Jacobians by finite differences; the whole research track asks for this check.
+quiz:
+  - id: q1
+    prompt: For symmetric $M$, write the gradient $\nabla f$ of $f(x) = x^\top M x$ in terms of $M$ and $x$.
+    explanation: >-
+      Expanding componentwise and differentiating gives $\nabla f = (M + M^\top)x$, which is $2Mx$
+      for symmetric $M$. This one line recurs throughout least squares, LQR and information-matrix
+      derivations.
+    answers: ["2Mx", "2 M x", "2*M*x", "2 Mx"]
+    concept:
+      front: The gradient of a quadratic form
+      back: $\nabla(x^\top Mx) = (M+M^\top)x$, which is $2Mx$ when $M$ is symmetric
+  - id: q2
+    prompt: What is the geometric meaning of the gradient $\nabla f(x_0)$?
+    choices:
+      - The tangent direction of the level set
+      - The direction of steepest increase, perpendicular to the level set
+      - The location of the function's minimum
+      - The largest eigenvector of the Hessian
+    explanation: >-
+      The directional derivative $D_u f = \nabla f^\top u$ is largest at
+      $u = \nabla f/\lVert\nabla f\rVert$ and vanishes along the level set, so the gradient is
+      perpendicular to it.
+    concept:
+      front: The geometric meaning of the gradient
+      back: The direction of steepest increase, perpendicular to the level set; its magnitude is the rate
+  - id: q3
+    prompt: "How many rows and columns does the Jacobian of $g: \\mathbb{R}^3 \\to \\mathbb{R}^2$ have? (e.g. 2x3)"
+    explanation: >-
+      Outputs × inputs, so $2\times3$: rows are outputs, columns are inputs. Getting this
+      convention wrong leads to a misplaced transpose and silently wrong estimation.
+    answers: ["2x3", "2×3", "2 x 3", "2-by-3", "2 by 3"]
+    concept:
+      front: The shape convention of a Jacobian
+      back: Outputs × inputs (rows = outputs, columns = inputs)
+  - id: q4
+    prompt: What kind of point is the origin $(0,0)$ for $f(x,y) = x^2 - y^2$?
+    choices: ["A local minimum", "A local maximum", "A saddle point", "It cannot be decided"]
+    explanation: >-
+      The Hessian is $\mathrm{diag}(2, -2)$, with eigenvalues of mixed sign, so it is a saddle
+      point. Dealing with saddle points in non-convex optimization is a recurring theme of the
+      research track.
+    concept:
+      front: Classifying critical points with the Hessian
+      back: All eigenvalues positive = local minimum, all negative = local maximum, mixed = saddle
+  - id: q5
+    prompt: >-
+      When optimizing $f(x)$ subject to $g(x)=0$, the Lagrange condition is $\nabla f = \lambda \cdot ?$
+    explanation: >-
+      $\nabla f = \lambda\nabla g$ - at the optimum the two gradients are parallel. Pontryagin's
+      maximum principle in C4 and constrained dynamics in C2 extend this condition.
+    answers: ["grad g", "nabla g", "gradient of g", "\\nabla g"]
+    concept:
+      front: The Lagrange multiplier condition
+      back: $\nabla f = \lambda\nabla g$ (at a constrained optimum the gradients are parallel)
+  - id: q6
+    prompt: A change of variables in a multiple integral requires multiplying by the absolute value of the Jacobian determinant.
+    explanation: >-
+      $\int f(x)dx = \int f(\phi(u))\lvert\det D\phi(u)\rvert du$, because the determinant is the
+      rate at which volume changes. The same factor appears when changing variables in probability.
+    concept:
+      front: Change of variables in a multiple integral
+      back: Multiply by the absolute Jacobian determinant - the determinant is the volume scaling
