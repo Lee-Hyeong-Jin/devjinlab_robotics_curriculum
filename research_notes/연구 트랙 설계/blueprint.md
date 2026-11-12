@@ -141,9 +141,9 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 | 레슨 | 유도해야 할 핵심 결과 | 필독 | 교재 | 재현 과제 |
 |---|---|---|---|---|
 | `c1-so3-se3-exponential` SO(3)·SE(3)와 지수 좌표 | Rodrigues 공식 **[D3]**; $\mathfrak{so}(3)\to SO(3)$ 전사성과 로그의 특이점 **[D3]**; 4원수 이중 피복 **[D2]** | `sola2018-micro-lie-theory`, `forster2017-preintegration` (권장 `grassia1998-exp-map`, `shoemake1985-quaternion-curves`) | MR ch.3, MLS ch.2, SER ch.7 | R1: 지수·로그 왕복 오차 < 1e-12, $\theta\to\pi$ 근방에서 수치 붕괴 지점을 실험적으로 찾음 |
-| `c1-twists-wrenches-adjoint` 트위스트·렌치와 수반 표현 | 좌표 변환 하의 트위스트 변환 $\mathrm{Ad}$ **[D2]**; 렌치의 쌍대 변환 $\mathrm{Ad}^{\!*}$ **[D2]**; 나선 운동(screw) 분해 **[D2]** | — | MR ch.3.3, MLS ch.2.5 | R1: 임의 변환에서 $\mathrm{Ad}$ 로 옮긴 트위스트가 수치 미분한 속도와 1e-10 이내 일치 |
+| `c1-twists-wrenches-adjoint` 트위스트·렌치와 수반 표현 | 좌표 변환 하의 트위스트 변환 $\mathrm{Ad}$ **[D2]**; 렌치의 쌍대 변환 $\mathrm{Ad}^{\!*}$ **[D2]**; 나선 운동(screw) 분해 **[D2]** | `featherstone2010-6d-vectors-part1`, `featherstone2010-6d-vectors-part2`, `brockett1984-poe` | MR ch.3.3, MLS ch.2.5 | R1: 임의 변환에서 $\mathrm{Ad}$ 로 옮긴 트위스트가 수치 미분한 속도와 1e-10 이내 일치 |
 | `c1-lie-group-derivatives` 리 군 위의 미분 | 좌/우 야코비안 $J_l, J_r$ 과 $\exp$ 의 미분 **[D3]**; BCH 와 선형화 오차 차수 **[D2]**; 불변 거리와 평균(Fréchet mean) **[D2]** | `forster2017-preintegration` | SER ch.7.1–7.3 | R1: $SO(3)$ 평균을 리만 경사하강으로 계산, 재시작 100회에서 동일 해 수렴 확인 |
-| `c1-poe-analytic-ik` Product of exponentials 와 해석적 IK | PoE 정기구학 **[D2]**; Paden–Kahan 부문제 1–3 **[D3]**; 6R 역기구학의 해 개수와 분기 **[D2]** | — | MLS ch.3, MR ch.4,6 | R2: 6R 팔의 해석적 IK 를 구현, 1e4 무작위 포즈에서 모든 해가 정기구학을 1e-9 이내 만족 |
+| `c1-poe-analytic-ik` Product of exponentials 와 해석적 IK | PoE 정기구학 **[D2]**; Paden–Kahan 부문제 1–3 **[D3]**; 6R 역기구학의 해 개수와 분기 **[D2]** | `brockett1984-poe`, `husty2007-6r-ik` | MLS ch.3, MR ch.4,6 | R2: 6R 팔의 해석적 IK 를 구현, 1e4 무작위 포즈에서 모든 해가 정기구학을 1e-9 이내 만족 |
 | `c1-manifold-optimization` 매니폴드 위 최적화 | 재추적 기반 Gauss–Newton 의 국소 수렴 **[D3]**; 국소 매개화(lift-solve-retract)의 1차 동등성 **[D2]**; 과매개화(4원수) 제약 처리 **[D2]** | `absil2008-manifold-opt`, `dellaert2017-factor-graphs` | SER ch.7–8 | R2: $SE(3)$ 포즈 정합을 매니폴드 GN 으로 구현, 과매개화+정규화 방식보다 반복 수가 적음을 확인 |
 
 **열린 문제**: $SE(3)$ 위 비볼록 문제의 전역 최적성 인증 범위; 회전 추정에서 특이점 없는 매개화와
@@ -154,9 +154,9 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 
 | 레슨 | 유도해야 할 핵심 결과 | 필독 | 교재 | 재현 과제 |
 |---|---|---|---|---|
-| `c2-spatial-vector-algebra` 공간 벡터 대수 | 6D 운동·힘 공간의 쌍대성 **[D2]**; 공간 관성의 변환 법칙 **[D2]**; 공간 가속도와 코리올리 항의 분리 **[D3]** | — | RBDA ch.2, MR ch.8.2 | R1: 공간 관성 변환과 동차변환 기반 계산이 1e-10 이내 일치 |
-| `c2-rnea-inverse-dynamics` 재귀 Newton–Euler | RNEA 의 $O(n)$ 복잡도와 재귀식 **[D3]**; Lagrange 유도와의 동등성 **[D2]** | — | RBDA ch.5, MR ch.8.3 | R1: RNEA 토크가 Euler–Lagrange 수식 해와 1e-9 이내 일치(7-DOF) |
-| `c2-crba-aba` 질량행렬과 순동역학 | CRBA 의 $O(n^2)$ **[D3]**; ABA 의 $O(n)$ 과 관절 공간 관성의 분기 구조 **[D3]** | — | RBDA ch.6–7 | R1: CRBA 의 $M$ 이 유한차분 역동역학과 1e-8 이내 일치; ABA 와 $M^{-1}\tau$ 해가 일치 |
+| `c2-spatial-vector-algebra` 공간 벡터 대수 | 6D 운동·힘 공간의 쌍대성 **[D2]**; 공간 관성의 변환 법칙 **[D2]**; 공간 가속도와 코리올리 항의 분리 **[D3]** | `featherstone2010-6d-vectors-part1`, `featherstone2010-6d-vectors-part2` | RBDA ch.2, MR ch.8.2 | R1: 공간 관성 변환과 동차변환 기반 계산이 1e-10 이내 일치 |
+| `c2-rnea-inverse-dynamics` 재귀 Newton–Euler | RNEA 의 $O(n)$ 복잡도와 재귀식 **[D3]**; Lagrange 유도와의 동등성 **[D2]** | `luh1980-rnea` | RBDA ch.5, MR ch.8.3 | R1: RNEA 토크가 Euler–Lagrange 수식 해와 1e-9 이내 일치(7-DOF) |
+| `c2-crba-aba` 질량행렬과 순동역학 | CRBA 의 $O(n^2)$ **[D3]**; ABA 의 $O(n)$ 과 관절 공간 관성의 분기 구조 **[D3]** | `featherstone1983-aba`, `walker1982-crba` | RBDA ch.6–7 | R1: CRBA 의 $M$ 이 유한차분 역동역학과 1e-8 이내 일치; ABA 와 $M^{-1}\tau$ 해가 일치 |
 | `c2-constrained-dynamics` 제약 동역학 | 라그랑주 승수와 KKT 형태의 동역학 **[D3]**; 널공간 투영과 조작 공간 관성 $\Lambda$ **[D3]**; Baumgarte 안정화 **[D1]** | `khatib1987-operational-space` | RBDA ch.8, MLS ch.6 | R2: 폐루프 4절 링크를 승수법과 축소좌표법으로 적분, 제약 위반 < 1e-8 유지 |
 | `c2-contact-dynamics` 접촉 동역학 | 상보성 조건(LCP/NCP)과 해 존재성 **[D3]**; 마찰 원뿔과 Painlevé 역설 **[D2]**; 시간 이산화(semi-implicit) 와 관통 **[D2]** | `stewart1996-implicit-timestepping`, `todorov2014-convex-contact` | UA ch.17, RBDA ch.11 | R2: 평면 접촉 공을 LCP 1스텝 해법으로 적분, 에너지 비증가와 비관통을 확인 |
 | `c2-dynamics-derivatives-sysid` 동역학 미분과 시스템 식별 | RNEA 의 해석적 미분 **[D2]**; 관성 매개변수의 선형성과 식별 가능성 조건 **[D3]**; 물리적 일관성 제약(SDP) **[D2]** | `carpentier2018-pinocchio` | RBDA ch.10, UA ch.18 | R2: 7-DOF 궤적에서 관성 매개변수를 선형 최소제곱으로 식별, 노이즈 대비 식별 가능한 조합만 복원됨을 조건수로 보임 |
@@ -169,7 +169,7 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 
 | 레슨 | 유도해야 할 핵심 결과 | 필독 | 교재 | 재현 과제 |
 |---|---|---|---|---|
-| `c3-lyapunov-stability` Lyapunov 안정성과 ISS | Lyapunov 정리와 역정리 **[D3]**; Barbashin–Krasovskii·LaSalle **[D3]**; ISS 와 비교 함수 **[D2]** | — | Khalil ch.4, UA ch.9 | R1: 2차 계의 Lyapunov 함수를 SOS(sum-of-squares)로 탐색, 흡인 영역 추정값이 수치 적분 결과를 포함함을 확인 |
+| `c3-lyapunov-stability` Lyapunov 안정성과 ISS | Lyapunov 정리와 역정리 **[D3]**; Barbashin–Krasovskii·LaSalle **[D3]**; ISS 와 비교 함수 **[D2]** | `sontag1989-coprime-factorization`, `papachristodoulou2002-sos` | Khalil ch.4, UA ch.9 | R1: 2차 계의 Lyapunov 함수를 SOS(sum-of-squares)로 탐색, 흡인 영역 추정값이 수치 적분 결과를 포함함을 확인 |
 | `c3-feedback-linearization` 피드백 선형화와 가제어성 | 입출력·완전 선형화 조건(involutivity, Frobenius) **[D3]**; 비홀로노믹 계의 Chow–Rashevskii **[D2]**; 영역 동역학 **[D2]** | `brockett1983-nonholonomic` | Khalil ch.13, MLS ch.7 | R2: 차동구동 로봇을 사인파 조향(steering with sinusoids)으로 주차, 종단 오차 < 1e-3 |
 | `c3-contraction-incremental` 수축 이론 | 수축 조건과 지수 수렴 **[D3]**; 미분 Lyapunov 와 리만 계량 **[D2]**; 추적 제어로의 적용 **[D2]** | `lohmiller1998-contraction`, `manchester2017-ccm` | Khalil ch.9(비교) | R1: 수축 계량이 주는 수렴률 상한이 실제 궤적 수렴률을 상회하는지 수치 검증 |
 | `c3-passivity-impedance` 수동성·에너지 성형과 임피던스 제어 | 수동성 정리와 직렬 결합 안정성 **[D3]**; 에너지 성형·댐핑 주입 **[D2]**; 임피던스/어드미턴스 제어와 접촉 안정성 **[D2]** | `hogan1985-impedance` | MR ch.11.6, MLS ch.6 | R2: 1-DOF 접촉 작업에서 임피던스 이득을 바꿔 안정 경계를 실험적으로 그림(이론 경계와 비교) |
@@ -185,8 +185,8 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 
 | 레슨 | 유도해야 할 핵심 결과 | 필독 | 교재 | 재현 과제 |
 |---|---|---|---|---|
-| `c4-pontryagin-indirect` Pontryagin 최대 원리와 간접법 | PMP 의 1차 필요조건 **[D3]**; 해밀토니안 보존·수반 방정식 **[D2]**; 슈팅의 민감도 폭발 **[D2]** | — | AA203 노트, UA ch.10 | R2: 2D 브라키스토크론/최소 시간 문제를 간접법으로 풀고, 초기 추정 민감도를 도표화 |
-| `c4-dp-lqr-lqg` 동적 계획법·LQR·LQG | Bellman 방정식 **[D3]**; LQR 의 세 가지 유도(DP·PMP·변분) **[D3]**; Riccati 수렴과 안정성 **[D3]**; LQG 분리 정리 **[D2]** | — | UA ch.7–8, AA203 W4–5 | R1: 이산 LQR 이득이 Riccati 반복·고유값 해법과 1e-10 이내 일치, 폐루프 극점이 단위원 내부 |
+| `c4-pontryagin-indirect` Pontryagin 최대 원리와 간접법 | PMP 의 1차 필요조건 **[D3]**; 해밀토니안 보존·수반 방정식 **[D2]**; 슈팅의 민감도 폭발 **[D2]** | `kalman1960-optimal-control`, `betts1998-survey` | AA203 노트, UA ch.10 | R2: 2D 브라키스토크론/최소 시간 문제를 간접법으로 풀고, 초기 추정 민감도를 도표화 |
+| `c4-dp-lqr-lqg` 동적 계획법·LQR·LQG | Bellman 방정식 **[D3]**; LQR 의 세 가지 유도(DP·PMP·변분) **[D3]**; Riccati 수렴과 안정성 **[D3]**; LQG 분리 정리 **[D2]** | `athans1971-lqg`, `kalman1960-optimal-control` | UA ch.7–8, AA203 W4–5 | R1: 이산 LQR 이득이 Riccati 반복·고유값 해법과 1e-10 이내 일치, 폐루프 극점이 단위원 내부 |
 | `c4-ilqr-ddp` iLQR/DDP 와 정규화 | DDP 의 2차 전개와 수렴 차수 **[D3]**; 정규화·merit function·선탐색의 필요성 **[D2]**; 상태 제약 처리의 한계 **[D2]** | `mayne1966-ddp`, `tassa2012-ilqr` | UA ch.10.3, 16-745 W6 | R2: 카트폴 스윙업을 iLQR 로 해결, 비용 단조 감소와 토크 한계 만족(수용 기준: 20반복 내 수렴) |
 | `c4-direct-collocation-sqp` 직접법·collocation·SQP | 직접 전사(transcription)의 희소 구조 **[D2]**; Hermite–Simpson 의 차수 **[D2]**; SQP 와 KKT 의 관계, 2차 수렴 **[D3]** | `hargraves1987-collocation`, `betts1998-survey` | NW ch.18, UA ch.10.2 | R2: 아크로봇 스윙업을 직접법으로 풀고 동역학 제약 위반 < 1e-6, iLQR 해와 비용 비교 |
 | `c4-mpc` MPC | 재귀적 실현가능성과 종단 집합 **[D3]**; Lyapunov 기반 안정성 **[D3]**; 명시적 MPC 의 구간 선형 해 **[D2]**; 실시간 반복(RTI) **[D1]** | `rawlings2017-mpc-theory`, `diehl2009-rti` | AA203 W6, 16-745 W5 | R2: 선형 MPC 를 QP 로 구현, 종단 비용·제약 유무에 따른 안정 영역 차이를 수치로 보임 |
