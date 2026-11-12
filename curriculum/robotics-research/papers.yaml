@@ -1562,6 +1562,34 @@ papers:
     note: "arXiv 2023; ICRA 2024 게재는 미확인"
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
+  - id: brohan2023-rt2
+    title: "RT-2: vision-language-action models transfer web knowledge to robotic control"
+    authors: ["A. Brohan", "N. Brown", "J. Carbajal", "et al."]
+    year: 2023
+    venue: "CoRL"
+    url: "https://arxiv.org/abs/2307.15818"
+    verified: true
+    role: seminal
+    note: "CoRL 게재는 미확인"
+  - id: kim2024-openvla
+    title: "OpenVLA: an open-source vision-language-action model"
+    authors: ["M. J. Kim", "K. Pertsch", "S. Karamcheti", "et al."]
+    year: 2024
+    venue: "CoRL"
+    url: "https://arxiv.org/abs/2406.09246"
+    verified: true
+    role: frontier
+    note: "CoRL 게재는 미확인"
+  - id: black2024-pi0
+    title: "pi0: a vision-language-action flow model for general robot control"
+    authors: ["K. Black", "N. Brown", "D. Driess", "et al."]
+    year: 2024
+    venue: "arXiv 2024 (arXiv 코멘트는 RSS 2025)"
+    url: "https://arxiv.org/abs/2410.24164"
+    verified: true
+    role: frontier
+    note: "원 제목은 그리스 문자 pi_0 를 쓴다"
+
   # ── S5 다중 로봇·필드 로보틱스 ────────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
