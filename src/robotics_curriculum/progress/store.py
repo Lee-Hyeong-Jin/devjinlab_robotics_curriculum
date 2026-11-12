@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import logging
 import sqlite3
+import time
 from collections.abc import Iterator, Sequence
 from contextlib import AbstractContextManager, contextmanager
 from datetime import UTC, date, datetime
@@ -162,6 +163,12 @@ TABLES = (
 )
 
 
+def _is_busy(exc: sqlite3.Error) -> bool:
+    """True for the transient "database is locked/busy" family of errors."""
+    text = str(exc)
+    return isinstance(exc, sqlite3.OperationalError) and ("locked" in text or "busy" in text)
+
+
 def _message(exc: sqlite3.Error) -> str:
     """A user-facing sentence for a sqlite failure (no stack, no internal paths)."""
     text = str(exc)
@@ -302,9 +309,30 @@ class SqliteProgressStore:
         self._depth = 0
         if on_disk:
             # WAL lets a reader (e.g. `rc status`) run while another process writes.
-            self._exec("PRAGMA journal_mode=WAL")
+            self._enable_wal()
             self._restrict_permissions()
         self._migrate()
+
+    def _enable_wal(self) -> None:
+        """Switch the database to WAL once, tolerating concurrent openers.
+
+        SQLite does not apply the busy timeout to a journal-mode change, so a second
+        connection opening while the first one writes fails at once with "database is
+        locked". The mode is persistent, so reading it first makes every later open a
+        no-op; the first-ever switch is retried briefly.
+        """
+        deadline = time.monotonic() + BUSY_TIMEOUT_SECONDS
+        while True:
+            try:
+                row = self._conn.execute("PRAGMA journal_mode").fetchone()
+                if row is not None and str(row[0]).lower() == "wal":
+                    return
+                self._conn.execute("PRAGMA journal_mode=WAL")
+                return
+            except sqlite3.OperationalError as exc:
+                if not _is_busy(exc) or time.monotonic() >= deadline:
+                    raise StoreError(_message(exc)) from exc
+                time.sleep(0.05)
 
     def _restrict_permissions(self) -> None:
         for target, mode in ((self.path.parent, DATA_DIR_MODE), (self.path, DB_FILE_MODE)):
