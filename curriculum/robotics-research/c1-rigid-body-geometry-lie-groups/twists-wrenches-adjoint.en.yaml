@@ -1,0 +1,74 @@
+# English text of the structured fields of twists-wrenches-adjoint.md (activity titles,
+# resource notes, quiz). The prose lives in twists-wrenches-adjoint.en.md.
+id: c1-twists-wrenches-adjoint
+lang: en
+activities:
+  c1-twists-wrenches-adjoint-reading: Read the lesson and follow the derivations
+  c1-twists-wrenches-adjoint-papers: Read the three must-read papers + a one-page note each
+  c1-twists-wrenches-adjoint-problems: "Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample)"
+  c1-twists-wrenches-adjoint-reproduction: "Reproduction task - numerical checks of Ad, Ad^T and the screw decomposition (R1)"
+  c1-twists-wrenches-adjoint-quiz: Concept check quiz
+resources:
+  "Lynch & Park, Modern Robotics":
+    note: ch.3.3 (Rigid-Body Motions and Twists) and 3.4 (Wrenches). The notation baseline for this lesson.
+  "Murray, Li & Sastry, A Mathematical Introduction to Robotic Manipulation":
+    note: ch.2.3-2.5 (Rigid Body Velocity, Screws, Wrenches). (official URL unverified)
+  "Featherstone, Rigid Body Dynamics Algorithms":
+    note: ch.2 (Spatial Vector Algebra). The same theory in the other convention (the (v, ω) ordering).
+  "Featherstone — A beginner's guide to 6-D vectors, part 1 (2010)":
+    note: Must-read 1. Explains the motion/force duality of 6-D vectors starting from the conventions.
+  "Featherstone — A beginner's guide to 6-D vectors, part 2 (2010)":
+    note: Must-read 2. Coordinate transforms and their use inside algorithms.
+  "Brockett — Robotic manipulators and the product of exponentials formula (1984)":
+    note: Must-read 3. The original source tying twists to the exponential map; the starting point of the next lesson (PoE).
+quiz:
+  - id: q1
+    prompt: >-
+      How does a wrench move between frames, given that a twist moves from $b$ to $a$ by
+      $[\mathrm{Ad}_{T_{ab}}]$?
+    choices:
+      - By the same $[\mathrm{Ad}_{T_{ab}}]$, also from $b \to a$
+      - By $[\mathrm{Ad}_{T_{ab}}]^\top$, from $a \to b$ (the opposite direction)
+      - By $[\mathrm{Ad}_{T_{ab}}]^{-1}$, from $b \to a$
+      - It does not transform (a wrench is frame-independent)
+    explanation: >-
+      Requiring the power $\mathcal{V}^\top\mathcal{F}$ to be frame-independent gives
+      $\mathcal{F}_b = [\mathrm{Ad}_{T_{ab}}]^\top\mathcal{F}_a$. Twists live in the tangent space
+      and wrenches in its dual.
+    concept:
+      front: How twists and wrenches transform differently
+      back: >-
+        Twists move by $\mathrm{Ad}$, wrenches by $\mathrm{Ad}^\top$ in the opposite direction (dual
+        space)
+  - id: q2
+    prompt: >-
+      A bug that forgets the transpose in the wrench transform can be caught by testing with
+      rotation-only ($p = 0$) transforms.
+    explanation: >-
+      With $p = 0$, $[\mathrm{Ad}]$ is block diagonal $\mathrm{diag}(R, R)$ and orthogonal, so its
+      transpose equals its inverse. The difference only shows up for transforms with translation -
+      tests must include $p \neq 0$.
+    concept:
+      front: The test condition that exposes a forgotten transpose on wrenches
+      back: >-
+        $p \neq 0$ (a transform with translation). With $p = 0$, $\mathrm{Ad}^\top = \mathrm{Ad}^{-1}$
+        and the two are indistinguishable
+  - id: q3
+    prompt: Write the screw pitch $h$ of a twist $\mathcal{V} = (\omega, v)$ in terms of $\omega$ and $v$.
+    explanation: >-
+      $\hat{s}^\top v = h$ with $\hat{s} = \omega/\lVert\omega\rVert$, hence
+      $h = \omega^\top v/\lVert\omega\rVert^2$. It is undefined for $\omega = 0$ (pure translation).
+  - id: q4
+    prompt: >-
+      What is the shortest way to show that $\mathrm{Ad}$ is a group representation
+      ($[\mathrm{Ad}_{T_1T_2}] = [\mathrm{Ad}_{T_1}][\mathrm{Ad}_{T_2}]$)?
+    choices:
+      - Expand the 6×6 block products and compare both sides
+      - Define $\mathrm{Ad}$ by conjugation and use only associativity and $(T_1T_2)^{-1} = T_2^{-1}T_1^{-1}$
+      - Expand both sides through the exponential map and compare
+      - Check it numerically for random $T_1, T_2$
+    explanation: >-
+      From the conjugation definition,
+      $(T_1T_2)[\mathcal{V}](T_1T_2)^{-1} = T_1(T_2[\mathcal{V}]T_2^{-1})T_1^{-1}$ follows
+      immediately. It is shorter than the block expansion and also shows why it holds - conjugation
+      preserves the Lie algebra.

@@ -45,6 +45,33 @@ Two identities for $\lVert \omega \rVert = 1$ are used throughout. Expand both b
 
 $$\hat{\omega}^2 = \omega\omega^\top - I, \qquad \hat{\omega}^3 = -\hat{\omega}. \tag{1}$$
 
+## Self-diagnosis before starting
+
+This is the first lesson of the module, so check your readiness first. **Prerequisite lessons are
+not locked** — if you can solve all of the following, skip the recommended prerequisites (the R0
+module and M1 of the `robotics-expert` course) and start here. **If two or more stop you**, going
+back to the prerequisite lesson named in parentheses is faster.
+
+1. What is the 2-norm condition number $\kappa_2(A)$ of $A = \mathrm{diag}(3, 1, 0.01)$?
+   (`r0-linear-algebra-decompositions`)
+   **Answer**: $\kappa_2 = \sigma_{\max}/\sigma_{\min} = 3/0.01 = 300$.
+2. If $R \in \mathbb{R}^{3\times3}$ satisfies $R^\top R = I$, which values can $\det R$ take,
+   and which of them belong to $SO(3)$? (`m1-rotation-representations`)
+   **Answer**: $\det R = \pm1$ (from $\det(R^\top R) = (\det R)^2 = 1$). $SO(3)$ takes only $+1$.
+3. Write the series definition of the matrix exponential $\exp(A)$ and state when
+   $\exp(A+B) = \exp(A)\exp(B)$ holds. (`r0-ad-and-integrators`)
+   **Answer**: $\exp(A) = \sum_{k\ge0} A^k/k!$. The identity holds only when $AB = BA$.
+4. For $f(x) = x^\top M x$ with symmetric $M$, write $\nabla f$ and the first-order Taylor
+   expansion at $x_0$. (`f0-calculus-multivariable`)
+   **Answer**: $\nabla f = 2Mx$ and $f(x_0 + \delta) \approx f(x_0) + 2(Mx_0)^\top\delta$.
+5. In at most three lines of numpy, compute the Jacobian of $g: \mathbb{R}^3 \to \mathbb{R}^3$
+   by central finite differences, and say why a step size of $10^{-5}$ is a reasonable choice.
+   (`r0-ad-and-integrators`)
+   **Answer**: column $i$ is $(g(x + he_i) - g(x - he_i))/(2h)$. Central differences have
+   truncation error $O(h^2)$ and round-off error $O(\epsilon/h)$, so in double precision
+   ($\epsilon \approx 2\times10^{-16}$) the optimum is near
+   $h \sim \epsilon^{1/3} \approx 6\times10^{-6}$.
+
 ## Key results
 
 The bracketed tag is the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
@@ -311,10 +338,9 @@ your rotation matrices to $10^{-12}$ on the same inputs (watch the component-ord
 
 ## Concept check
 
-Run `rc quiz c1-so3-se3-exponential`. The quiz is for **concept checking only**; the real work is
-the problem set and the reproduction task above (`lesson-standard.md` §4). The quiz items
-themselves live in the Korean source file, so the CLI shows their prompts in Korean until quiz
-translation lands.
+Run `rc quiz c1-so3-se3-exponential` (add `--lang en` for the English text). The quiz is for
+**concept checking only**; the real work is the problem set and the reproduction task above
+(`lesson-standard.md` §4).
 
 The four items cover: the identity $\hat{\omega}^3 = -\hat{\omega}$; why the logarithm breaks at
 $\theta \to \pi$; why no global three-parameter chart exists; and the rotation angle of a matrix

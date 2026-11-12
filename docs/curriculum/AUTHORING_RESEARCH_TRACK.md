@@ -1,5 +1,17 @@
 # 연구원 트랙 레슨 집필 지침 (Authoring the research track)
 
+> **모듈 저자가 시작할 때 읽을 것 (5줄 요약)**
+> 1. `research_notes/연구 트랙 설계/blueprint.md` 에서 **담당 모듈의 표**를 찾는다 — 그 행들이 과제 명세다.
+> 2. 기준 레슨 `curriculum/robotics-research/c1-rigid-body-geometry-lie-groups/so3-se3-exponential.md`
+>    (+ `.en.md`)를 **복사해서 시작한다**. 섹션 제목 10개는 §2 표 그대로 두고 바꾸지 않는다.
+> 2-A. **모듈의 첫 레슨**에는 `## 시작 전 자가 진단`(3–5문항, 정답 공개)을 넣는다. 선수는
+>    **잠금이 아니라 권장**이다 — "먼저 이수해야 한다" 같은 표현을 쓰지 않는다(lesson-standard §1-A).
+> 3. 레슨마다 **D2 이상 유도 1개 이상**, 문제 세트 4–8문항(유형 3종 이상), 필독 논문 2–4편(URL 확인 필수),
+>    재현 과제 1개(**코드로 판정 가능한** 수용 기준), 열린 문제 2–4개 — 하나라도 없으면 반송이다(§11).
+> 4. 한국어 원문과 영어판(`.en.md`)을 **같은 커밋에** 넣는다. 영어판은 요약본이 아니라 전문이다.
+> 5. 커밋 전에 `bash scripts/harness/check.sh` **전체**를 돌린다 — `rc validate` 만으로는 부족하다
+>    (새 코스·모듈은 테스트 픽스처를 깨뜨릴 수 있다).
+
 연구원 트랙(`curriculum/robotics-research`) 레슨 **1개를 쓰는 절차**다. 엔지니어 코스
 (`curriculum/robotics-expert`)는 이 지침의 대상이 아니다 — 그쪽은
 [LESSON_TEMPLATE.md](LESSON_TEMPLATE.md) 와 [CONTENT_MODEL.md](CONTENT_MODEL.md) 를 따른다.
@@ -64,6 +76,7 @@ objectives:                          # 관찰 가능한 동사로. 3–5개
   - DDP 의 2차 전개를 빠진 줄 없이 유도할 수 있다.
   - 정규화 없이 iLQR 이 발산하는 조건을 설명할 수 있다.
 prerequisites: [c4-dp-lqr-lqg]       # 같은 코스의 레슨 id 만. 없으면 []
+                                     # 플랫폼은 이것을 잠그지 않는다 — 권장 순서 정보다
 difficulty: 5                        # 연구 트랙은 트랙 내 상대값 3–5
 estimated_minutes: 480               # 연구 레슨은 300–900
 tags: [optimal-control, ddp, research]
@@ -88,6 +101,7 @@ resources:                           # 필독 논문도 당분간 여기에 (kin
 
 ```
 ## 전제와 기호        ## Setup and notation
+## 시작 전 자가 진단  ## Self-diagnosis before starting   (모듈의 첫 레슨만)
 ## 핵심 결과          ## Key results
 ## 유도               ## Derivation
 ## 증명 스케치        ## Proof sketch        (D3 결과가 있으면 필수)
@@ -202,8 +216,15 @@ resources:                           # 필독 논문도 당분간 여기에 (kin
   구조(prerequisites·difficulty·activities·resources)는 원문에만 둔다 — 다른 키는 에러다.
 - 섹션 제목은 §2 표의 영어 제목을 **그대로** 쓴다.
 - 수식·기호·식 번호·정리 번호·코드·논문 제목·데이터셋 이름은 번역하지 않는다.
-- ` ```quiz ` 블록은 **원문 파일에만** 둔다. 영어판에서는 그 절에서 무엇을 묻는지만 서술하고,
-  문항 번역은 별도 작업(i18n 담당)이다.
+- 번역 파일은 **두 개**다. 둘 다 같은 커밋에 넣는다.
+  - `<lesson>.en.md` — 산문(본문 전체). front matter 는 위 6개 키만.
+  - `<lesson>.en.yaml` — 구조화된 텍스트: `activities`, `resources`, `quiz`. 견본은
+    `curriculum/robotics-expert/m1-math-physics/vectors-matrices.en.yaml` 와
+    `curriculum/robotics-research/c1-rigid-body-geometry-lie-groups/so3-se3-exponential.en.yaml`.
+- 퀴즈 문항의 영어는 `<lesson>.en.yaml` 의 `quiz` 에 **문항 id 로 짝지어** 넣는다.
+  `type` 과 `answer` 는 번역하지 않는다(채점 기준은 언어와 무관해야 한다). `choices` 는 개수와
+  순서가 원문과 같아야 하고, `short` 문항은 그 언어의 허용 답을 `answers` 로 **추가**할 수 있다.
+- 모듈을 새로 만들면 `module.en.yaml`(title, summary)도 쓴다.
 
 ## 9. 검증 체크리스트
 
@@ -211,7 +232,8 @@ resources:                           # 필독 논문도 당분간 여기에 (kin
 uv run rc validate                                   # 스키마·선수지식 DAG·퀴즈 블록
 uv run rc site build --out /tmp/site                 # 렌더 확인 (레슨 페이지가 생기는지)
 uv run ruff format --check .                         # 문서의 Python 코드 블록 포함
-bash scripts/harness/check.sh --quick                # 코드를 건드렸다면
+bash scripts/harness/check.sh                        # 커밋 전 필수(전체). 새 코스·모듈은
+                                                     # 테스트 픽스처를 깨뜨릴 수 있어 --quick 으로는 부족하다
 ```
 
 섹션과 퀴즈가 실제로 추출되는지 직접 확인한다:
@@ -231,7 +253,8 @@ for h in ['전제와 기호','핵심 결과','유도','증명 스케치','문제
 
 제출 전 자체 점검(lesson-standard.md §12 와 동일):
 
-- [ ] 고정 섹션 10개가 지정된 제목·순서로 있다
+- [ ] 고정 섹션이 지정된 제목·순서로 있다(모듈 첫 레슨은 `## 시작 전 자가 진단` 포함)
+- [ ] 선수를 "권장"으로 썼다 — 잠금·필수 표현이 없다
 - [ ] `## 핵심 결과` 에 D2 이상이 1개 이상, 각 결과에 등급 표기
 - [ ] D2/D3 결과마다 가정이 깨지는 실패 모드 1개
 - [ ] 문제 세트 4–8문항, 유형 3종 이상, 난이도·해답 방침 표기
@@ -242,6 +265,24 @@ for h in ['전제와 기호','핵심 결과','유도','증명 스케치','문제
 - [ ] 영어판이 본문 전체를 담고 섹션 제목이 규정 문자열과 일치
 - [ ] `rc validate` 와 `rc site build` 통과
 - [ ] 외부 자료 본문을 복제하지 않았다
+
+## 9-1. 공유 파일의 경계 (저자 간 규칙)
+
+여러 저자가 동시에 작업하므로 **공유 파일은 자기 모듈 몫만 건드린다**(오케스트레이터 승인 2026-11-12).
+이 경계를 어기면 다른 저자의 작업이 조용히 사라진다 — 실제로 한 번 발생했다.
+
+| 파일 | 내가 고쳐도 되는 것 | 건드리지 않는 것 |
+|---|---|---|
+| `research_notes/연구 트랙 설계/papers.yaml` | 내 모듈 레슨이 쓰는 항목(추가·수정). **추가는 파일 끝이 아니라 자기 모듈 블록(`# ── C4 …` 주석 구간) 안에** | 다른 모듈 항목 — 읽기 전용. 같은 논문을 쓰면 id 를 **재사용**하고 `lessons[]` 에 내 레슨 id 만 더한다 |
+| `research_notes/연구 트랙 설계/blueprint.md` | 내 모듈 절·표의 행 | 다른 모듈 절, §1–§3(전제·구조·규약), §7–§10 |
+| `research_notes/연구 트랙 설계/lesson-standard.md` | — (표준 변경은 설계 담당에게 요청) | 전체 |
+| `docs/curriculum/*`, `CHANGELOG.md` | CHANGELOG 에 내 레슨 한 줄 | 나머지 |
+
+- 같은 파일을 건드려야 하면 **먼저 담당 세션에 알리고** 수락·일정을 받는다. 커밋 후 해시를 통보한다.
+- 다른 저자의 변경이 먼저 들어왔으면 **그 커밋을 머지한 뒤 그 위에** 자기 작업을 올린다.
+  자기 브랜치의 오래된 상태로 덮어쓰면 안 된다.
+- papers.yaml 에 항목을 추가할 때 **id 중복과 DOI 중복을 먼저 확인**한다
+  (`grep -c '^  - id:' papers.yaml` 로 총수를 보고, 같은 논문이 다른 id 로 들어가지 않게 한다).
 
 ## 10. 커밋
 

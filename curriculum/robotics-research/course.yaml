@@ -5,7 +5,7 @@ summary: >-
   대학원 과목과 국제 학회(RSS, ICRA, IROS, CoRL, IJRR, T-RO, RA-L)의 연구 수준이며, 레슨마다
   핵심 결과를 직접 유도하고 원 논문을 읽고 수치적으로 재현한다. 설계안은
   research_notes/연구 트랙 설계/blueprint.md(97레슨), 레슨 표준은 같은 폴더의 lesson-standard.md.
-  현재 작성된 모듈은 C1(기준 레슨 1개)과 C2 다물체 동역학(6레슨)이다 — 선수 과정은
+  현재는 표준 검증용 기준 레슨(reference lesson) 1개만 들어 있다 — 선수 과정은
   robotics-expert 코스다.
 tags: [robotics, research, graduate]
 modules:
