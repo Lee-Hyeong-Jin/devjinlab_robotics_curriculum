@@ -47,6 +47,12 @@ const DYNAMIC_KEYS = new Set([
   'review.hard',
   'review.good',
   'review.easy',
+  // `t(`role.${paper.role}`)` in `<PaperList>`; the value comes from the API.
+  'paper.role.seminal',
+  'paper.role.standard',
+  'paper.role.frontier',
+  'paper.role.critique',
+  'paper.role.survey',
 ])
 
 const SOURCE_ROOT = join(process.cwd(), 'src')

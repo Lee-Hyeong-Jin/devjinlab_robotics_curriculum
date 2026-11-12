@@ -146,6 +146,7 @@ site:
     answer: "Answer and explanation"
     roadmap_page: "Roadmap"
     resources_page: "Resources"
+    papers: "Papers"
   state:
     done: "done"
     in_progress: "in progress"

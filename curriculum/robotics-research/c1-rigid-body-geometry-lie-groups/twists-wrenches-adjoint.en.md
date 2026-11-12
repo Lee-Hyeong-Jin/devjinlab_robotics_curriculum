@@ -20,8 +20,7 @@ tags: [lie-groups, se3, twist, wrench, screw-theory, research]
 
 ## Setup and notation
 
-The notation of the previous lesson ([`c1-so3-se3-exponential`](so3-se3-exponential.en.md)) carries
-over. Additional symbols:
+The notation of the previous lesson `c1-so3-se3-exponential` carries over. Additional symbols:
 
 | Symbol | Meaning |
 |---|---|
@@ -32,10 +31,10 @@ over. Additional symbols:
 | $[\mathrm{ad}_{\mathcal{V}}] \in \mathbb{R}^{6\times6}$ | matrix representation of the Lie bracket |
 | $\mathcal{S} = (\hat{s}, -\hat{s}\times q + h\hat{s})$ | screw axis; $\hat{s}$ unit direction, $q$ a point on the axis, $h$ pitch |
 
-**Convention warning**: this course uses the $(\omega, v)$ ordering (Modern Robotics, MLS).
-Featherstone's spatial vectors and Pinocchio use $(v, \omega)$. When reading must-read papers 1
-and 2, **first confirm that the ordering is flipped** — this mismatch is the most common 6-D bug
-in practice (see problem P5).
+**Convention warning**: this course uses the $(\omega, v)$ ordering (angular part first — Modern
+Robotics, MLS). Featherstone's spatial vectors are also angular-first, so must-read papers 1 and 2
+agree with us, but **Pinocchio uses $(v, \omega)$ (linear first)**. Check the ordering of any
+library **before** using it — this mismatch is the most common 6-D bug in practice (see problem P5).
 
 We use $\hat{a}b = a \times b = -\hat{b}a$ and $R\hat{\omega}R^\top = \widehat{R\omega}$
 throughout. Verify the latter yourself (same trick as P1 of the previous lesson).
@@ -259,12 +258,12 @@ $(-(0,0,1)\times(-2,0,0) + (0,0,3))\cdot 2 = ((0,2,0)+(0,0,3))\cdot2 = (0,4,6)$.
 ## Paper reading
 
 **Three must-read papers.** Write a one-page note per paper against the ten fixed questions
-(`research_notes/연구 트랙 설계/lesson-standard.md` §5).
+(the lesson standard in the research-track design notes, §5).
 
 1. **Featherstone, "A beginner's guide to 6-D vectors", part 1 (2010, IEEE RAM)** —
    role: `standard`. <https://doi.org/10.1109/MRA.2010.937853>
-   Extra questions: (a) if you map the author's $(v, \omega)$ ordering into this lesson's
-   $(\omega, v)$, how are the blocks of $[\mathrm{Ad}]$ rearranged? (b) explain, in terms of R2
+   Extra questions: (a) if you switch to the linear-first $(v, \omega)$ convention, how are the
+   blocks of $[\mathrm{Ad}]$ rearranged? (b) explain, in terms of R2
    and R5, why the author insists that motion vectors and force vectors be **different types**.
 2. **Featherstone, part 2 (2010, IEEE RAM)** — role: `standard`.
    <https://doi.org/10.1109/MRA.2010.939560>
@@ -305,7 +304,7 @@ $[\mathrm{Ad}_{T_{ab}}]\mathcal{V}_b$ to within $10^{-6}$.
 |---|---|---|
 | angular velocity right, linear velocity wrong | sign of the $\hat{p}R$ block ($-\widehat{R\omega}p = \hat{p}R\omega$) | hand-check with $p = (1,0,0)$, $\omega = (0,0,1)$, $v = 0$ |
 | rotation-only tests pass, translation ones fail | the transpose was forgotten in the wrench transform | run condition 3 with $p \ne 0$ |
-| 6-D components get scrambled | mixing with a library's $(v,\omega)$ ordering | feed the unit twists $e_1 \dots e_6$ and see which block moves |
+| 6-D components get scrambled | mixing with a linear-first $(v,\omega)$ library such as Pinocchio | feed the unit twists $e_1 \dots e_6$ and see which block moves |
 | screw axis blows up as $\omega \to 0$ | the $1/\lVert\omega\rVert^2$ in (3) | sweep the branch threshold on a log scale and plot the error |
 
 ## Open problems
@@ -329,9 +328,8 @@ $[\mathrm{Ad}_{T_{ab}}]\mathcal{V}_b$ to within $10^{-6}$.
 
 ## Concept check
 
-Run `rc quiz c1-twists-wrenches-adjoint`. It is for concept checking only; the real work is the
-problem set and the reproduction task. The quiz items live in the Korean source file, so the CLI
-shows their prompts in Korean until quiz translation lands.
+Run `rc quiz c1-twists-wrenches-adjoint` (add `--lang en` for the English text). It is for concept
+checking only; the real work is the problem set and the reproduction task.
 
 The four items cover: how wrenches transform relative to twists; why a rotation-only test cannot
 catch a forgotten transpose; the screw pitch formula; and the shortest way to prove that
@@ -340,8 +338,8 @@ $\mathrm{Ad}$ is a group representation.
 ## How to study this stage
 
 1. **Nail down the ordering first (20 min)** — decide to write $(\omega, v)$, then check and note
-   the ordering of every reference you use. Featherstone's is flipped. Saving these 20 minutes
-   costs you a day later.
+   the ordering of every reference and library you use (Pinocchio is linear-first). Saving these 20
+   minutes costs you a day later.
 2. **Expand R1 blockwise yourself (60 min)** — reproduce the three-line expansion on paper. If you
    stall on $-\widehat{R\omega}p = \hat{p}R\omega$, all you need is $-a\times b = b\times a$.
 3. **For R2, remember only "power is invariant" (30 min)** — do not memorise where the transpose

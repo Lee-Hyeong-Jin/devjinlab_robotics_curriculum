@@ -111,6 +111,19 @@
     "code": "Code",
     "notes": "Notes"
   },
+  "paper": {
+    "heading": "Papers",
+    "required": "Required",
+    "optional": "Optional",
+    "unverified": "Link unchecked",
+    "role": {
+      "seminal": "Seminal",
+      "standard": "Standard",
+      "frontier": "Frontier",
+      "critique": "Critique",
+      "survey": "Survey"
+    }
+  },
   "activityKind": {
     "reading": "Reading",
     "quiz": "Quiz",

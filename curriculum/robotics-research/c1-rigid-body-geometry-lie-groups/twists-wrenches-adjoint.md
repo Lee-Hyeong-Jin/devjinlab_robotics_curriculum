@@ -21,7 +21,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 80
   - id: c1-twists-wrenches-adjoint-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 3편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 110
   - id: c1-twists-wrenches-adjoint-problems
@@ -29,7 +29,7 @@ activities:
     title: 문제 세트 (유도 2 · 증명 1 · 계산 1 · 구현 1 · 반례 1)
     estimated_minutes: 130
   - id: c1-twists-wrenches-adjoint-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — Ad·Ad^T·나선 분해 수치 검증 (R1)
     estimated_minutes: 80
   - id: c1-twists-wrenches-adjoint-quiz
@@ -47,26 +47,24 @@ resources:
   - title: "Featherstone, Rigid Body Dynamics Algorithms"
     url: https://royfeatherstone.org/
     kind: book
-    note: ch.2 (Spatial Vector Algebra). 다른 규약((v, ω) 순서)의 같은 이론.
-  - title: "Featherstone — A beginner's guide to 6-D vectors, part 1 (2010)"
-    url: https://doi.org/10.1109/MRA.2010.937853
-    kind: article
-    note: 필독 1. 6D 벡터의 운동·힘 쌍대성을 규약부터 설명한다.
-  - title: "Featherstone — A beginner's guide to 6-D vectors, part 2 (2010)"
-    url: https://doi.org/10.1109/MRA.2010.939560
-    kind: article
-    note: 필독 2. 좌표 변환과 알고리즘에서의 사용.
-  - title: "Brockett — Robotic manipulators and the product of exponentials formula (1984)"
-    url: https://doi.org/10.1007/BFb0031048
-    kind: article
-    note: 필독 3. 트위스트를 지수 사상으로 엮는 원전. 다음 레슨(PoE)의 출발점.
+    note: ch.2 (Spatial Vector Algebra). 같은 이론을 다른 표기로 전개한다(순서는 이 코스와 같은 각 성분 먼저).
+papers:
+  - id: featherstone2010-6d-vectors-part1
+    required: true
+    role: standard
+  - id: featherstone2010-6d-vectors-part2
+    required: true
+    role: standard
+  - id: brockett1984-poe
+    required: true
+    role: seminal
 ---
 
 # 트위스트·렌치와 수반 표현
 
 ## 전제와 기호
 
-앞 레슨([`c1-so3-se3-exponential`](so3-se3-exponential.md))의 표기를 그대로 쓴다. 추가 기호:
+앞 레슨 `c1-so3-se3-exponential` 의 표기를 그대로 쓴다. 추가 기호:
 
 | 기호 | 뜻 |
 |---|---|
@@ -77,9 +75,10 @@ resources:
 | $[\mathrm{ad}_{\mathcal{V}}] \in \mathbb{R}^{6\times6}$ | 리 괄호의 행렬 표현 |
 | $\mathcal{S} = (\hat{s}, -\hat{s}\times q + h\hat{s})$ | 나선 축(screw axis). $\hat{s}$ 단위 방향, $q$ 축 위의 한 점, $h$ 피치 |
 
-**규약 경고**: 이 코스는 $(\omega, v)$ 순서(Modern Robotics, MLS)를 쓴다. Featherstone 의
-공간 벡터와 Pinocchio 는 $(v, \omega)$ 순서를 쓴다. 필독 논문 1·2 를 읽을 때 **순서가 뒤집혀
-있다는 것을 먼저 확인**하라 — 이 불일치가 실무에서 가장 흔한 6D 버그다(§문제 세트 P5).
+**규약 경고**: 이 코스는 $(\omega, v)$ 순서(각 성분 먼저 — Modern Robotics, MLS)를 쓴다.
+Featherstone 의 공간 벡터도 각 성분 먼저이므로 필독 논문 1·2 와 순서가 같지만, **Pinocchio 는
+$(v, \omega)$ 순서(선형 먼저)**다. 라이브러리를 쓸 때 순서를 **먼저 확인**하라 — 이 불일치가
+실무에서 가장 흔한 6D 버그다(§문제 세트 P5).
 
 $\hat{a}b = a \times b = -\hat{b}a$ 와 $R\hat{\omega}R^\top = \widehat{R\omega}$ 를 계속 쓴다.
 후자는 직접 확인하라(앞 레슨 P1 과 같은 요령).
@@ -293,8 +292,8 @@ $(-\hat{s}\times q_\perp + h\hat{s})\dot{\theta} = (-(0,0,1)\times(-2,0,0) + (0,
 
 1. **Featherstone, "A beginner's guide to 6-D vectors", part 1 (2010, IEEE RAM)** —
    역할: `표준(standard)`. <https://doi.org/10.1109/MRA.2010.937853>
-   추가 질문: ⓐ 저자의 $(v, \omega)$ 순서를 이 레슨의 $(\omega, v)$ 로 옮기면 $[\mathrm{Ad}]$ 의
-   블록이 어떻게 재배치되는가? ⓑ 저자가 "운동 벡터"와 "힘 벡터"를 **다른 타입**으로 다루라고
+   추가 질문: ⓐ 선형 먼저 $(v, \omega)$ 규약으로 바꾸면 $[\mathrm{Ad}]$ 의 블록이 어떻게
+   재배치되는가? ⓑ 저자가 "운동 벡터"와 "힘 벡터"를 **다른 타입**으로 다루라고
    주장하는 이유를 R2·R5 와 연결해 쓰라.
 2. **Featherstone, part 2 (2010, IEEE RAM)** — 역할: `표준(standard)`.
    <https://doi.org/10.1109/MRA.2010.939560>
@@ -330,7 +329,7 @@ $(-\hat{s}\times q_\perp + h\hat{s})\dot{\theta} = (-(0,0,1)\times(-2,0,0) + (0,
 |---|---|---|
 | 각속도는 맞고 선속도만 틀리다 | $\hat{p}R$ 블록의 부호($-\widehat{R\omega}p = \hat{p}R\omega$) | $p = (1,0,0)$, $\omega = (0,0,1)$, $v = 0$ 으로 손으로 검산 |
 | 회전만 있는 테스트는 통과, 평행이동이 있으면 실패 | 렌치 변환에서 전치를 잊었다 | 조건 3 을 $p \ne 0$ 으로 돌린다 |
-| 6D 벡터 성분이 뒤섞인다 | 라이브러리의 $(v,\omega)$ 순서와 혼용 | 단위 트위스트 $e_1 \dots e_6$ 를 넣어 어느 블록이 움직이는지 본다 |
+| 6D 벡터 성분이 뒤섞인다 | 선형 먼저 $(v,\omega)$ 를 쓰는 라이브러리(Pinocchio 등)와 혼용 | 단위 트위스트 $e_1 \dots e_6$ 를 넣어 어느 블록이 움직이는지 본다 |
 | $\omega \to 0$ 에서 나선 축이 폭발한다 | (3)의 $1/\lVert\omega\rVert^2$ | 분기 임계값을 로그 스케일로 쓸며 오차를 그린다 |
 
 ## 열린 문제
@@ -392,8 +391,8 @@ questions:
 
 ## 이 단계 공부법
 
-1. **표기 순서를 먼저 못 박는다 (20분)** — $(\omega, v)$ 로 쓸 것을 정하고, 참고 자료마다 순서를
-   확인해 메모한다. Featherstone 은 뒤집혀 있다. 이 20분을 아끼면 나중에 하루를 잃는다.
+1. **표기 순서를 먼저 못 박는다 (20분)** — $(\omega, v)$ 로 쓸 것을 정하고, 참고 자료와
+   라이브러리마다 순서를 확인해 메모한다(Pinocchio 는 선형 먼저). 이 20분을 아끼면 나중에 하루를 잃는다.
 2. **R1 을 블록으로 직접 전개한다 (60분)** — 본문의 세 줄짜리 전개를 종이에서 재현한다.
    $-\widehat{R\omega}p = \hat{p}R\omega$ 한 줄에서 막히면 $-a\times b = b\times a$ 만 확인하면 된다.
 3. **R2 는 "일률 불변"만 기억한다 (30분)** — 전치가 어디서 오는지 외우지 말고, (6)에서 다시

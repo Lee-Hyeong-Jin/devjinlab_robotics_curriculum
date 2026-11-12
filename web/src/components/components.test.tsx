@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 
-import type { AuthProvider, ResourceRef } from '@/lib/api/types'
+import type { AuthProvider, Paper, ResourceRef } from '@/lib/api/types'
 import { resource } from '@/test/factories'
 import { renderWithIntl } from '@/test/render'
 
@@ -12,6 +12,7 @@ import { EmptyState } from './EmptyState'
 import { LessonRow } from './LessonRow'
 import { ModuleCard } from './ModuleCard'
 import { ProgressBar } from './ProgressBar'
+import { PaperList } from './PaperList'
 import { ProviderButtons } from './ProviderButtons'
 import { ResourceExplorer } from './ResourceExplorer'
 import { ResourceRow } from './ResourceRow'
@@ -336,5 +337,66 @@ describe('ProviderButtons', () => {
     renderWithIntl(<ProviderButtons providers={[provider('github', 'GitHub')]} variant="connect" />)
     expect(screen.getByRole('link', { name: 'GitHub 연결하기' })).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /계속하기/ })).not.toBeInTheDocument()
+  })
+})
+
+describe('PaperList', () => {
+  const paper = (over: Partial<Paper> & { id: string; title: string }): Paper => ({
+    authors: [],
+    year: null,
+    venue: null,
+    url: null,
+    verified: true,
+    role: null,
+    required: false,
+    note: null,
+    citation: '',
+    ...over,
+  })
+
+  it('renders nothing when the lesson assigns no paper', () => {
+    const { container } = renderWithIntl(<PaperList papers={[]} />)
+    expect(container).toBeEmptyDOMElement()
+  })
+
+  it('marks required reading, the role, and what to read', () => {
+    renderWithIntl(
+      <PaperList
+        papers={[
+          paper({
+            id: 'mayne-1966',
+            title: 'A second-order gradient method',
+            url: 'https://doi.org/10.1/x',
+            required: true,
+            role: 'seminal',
+            note: '§3 only',
+            citation: 'D. Q. Mayne (1966), IJC',
+          }),
+        ]}
+      />,
+    )
+    expect(screen.getByText('필독')).toBeInTheDocument()
+    expect(screen.getByText('원전')).toBeInTheDocument()
+    expect(screen.getByText('D. Q. Mayne (1966), IJC')).toBeInTheDocument()
+    expect(screen.getByText('§3 only')).toBeInTheDocument()
+    const link = screen.getByRole('link', { name: 'A second-order gradient method' })
+    expect(link).toHaveAttribute('href', 'https://doi.org/10.1/x')
+    expect(link).toHaveAttribute('rel', expect.stringContaining('noopener'))
+  })
+
+  it('says so when nobody has checked the link yet', () => {
+    renderWithIntl(
+      <PaperList
+        papers={[paper({ id: 'p', title: 'T', url: 'https://example.org', verified: false })]}
+      />,
+    )
+    expect(screen.getByText('링크 미확인')).toBeInTheDocument()
+  })
+
+  it('does not call a paper with no link unchecked', () => {
+    renderWithIntl(<PaperList papers={[paper({ id: 'p', title: 'T', verified: false })]} />)
+    expect(screen.queryByText('링크 미확인')).toBeNull()
+    expect(screen.queryByRole('link')).toBeNull()
+    expect(screen.getByText('T')).toBeInTheDocument()
   })
 })
