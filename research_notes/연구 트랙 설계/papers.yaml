@@ -18,7 +18,7 @@
 #   lessons   : 이 논문을 필독으로 지정한 blueprint.md 의 레슨 id
 #   role      : seminal | standard | frontier | critique | survey
 #
-# 확인 상태 (2026-11-12 기준): 134편 중 133편 verified: true, 1편 false.
+# 확인 상태 (2026-11-12 기준): 145편 중 144편 verified: true, 1편 false.
 #   미확인 1편 — brockett1983-nonholonomic (책 챕터, Crossref 에서 찾지 못함).
 #   끝내 확인되지 않으면 목록에서 빼고 대체 논문을 넣는다(오케스트레이터 지시 2026-11-12).
 #   확인 방법: arXiv API(id_list), Crossref API, OpenAlex, JMLR 페이지. Semantic Scholar 는
@@ -262,6 +262,114 @@ papers:
     url: "https://doi.org/10.1109/TAC.2005.851439"
     verified: true
     lessons: [c4-robust-stochastic-oc]
+    role: seminal
+
+  - id: featherstone2010-6d-vectors-part1
+    title: "A beginner's guide to 6-D vectors (part 1)"
+    authors: ["R. Featherstone"]
+    year: 2010
+    venue: "IEEE Robotics & Automation Magazine 17(3)"
+    url: "https://doi.org/10.1109/MRA.2010.937853"
+    verified: true
+    lessons: [c1-twists-wrenches-adjoint, c2-spatial-vector-algebra]
+    role: standard
+  - id: featherstone2010-6d-vectors-part2
+    title: "A beginner's guide to 6-D vectors (part 2)"
+    authors: ["R. Featherstone"]
+    year: 2010
+    venue: "IEEE Robotics & Automation Magazine 17(4)"
+    url: "https://doi.org/10.1109/MRA.2010.939560"
+    note: "Crossref 에 [Tutorial] 로 표기됨"
+    verified: true
+    lessons: [c1-twists-wrenches-adjoint, c2-spatial-vector-algebra]
+    role: standard
+  - id: brockett1984-poe
+    title: "Robotic manipulators and the product of exponentials formula"
+    authors: ["R. W. Brockett"]
+    year: 1984
+    venue: "Mathematical Theory of Networks and Systems (LNCIS)"
+    url: "https://doi.org/10.1007/BFb0031048"
+    note: "Crossref 의 date 필드가 비어 있어 연도 1984 와 MTNS venue 는 레코드로 확인되지 않았다(LNCIS 수록만 확인)"
+    verified: true
+    lessons: [c1-twists-wrenches-adjoint, c1-poe-analytic-ik]
+    role: seminal
+  - id: husty2007-6r-ik
+    title: "A new and efficient algorithm for the inverse kinematics of a general serial 6R manipulator"
+    authors: ["M. L. Husty", "M. Pfurner", "H.-P. Schröcker"]
+    year: 2007
+    venue: "Mechanism and Machine Theory"
+    url: "https://doi.org/10.1016/j.mechmachtheory.2006.02.001"
+    note: "2005 DETC 학회판(10.1115/DETC2005-84745)은 쓰지 않는다"
+    verified: true
+    lessons: [c1-poe-analytic-ik]
+    role: standard
+  - id: luh1980-rnea
+    title: "On-line computational scheme for mechanical manipulators"
+    authors: ["J. Y. S. Luh", "M. W. Walker", "R. P. C. Paul"]
+    year: 1980
+    venue: "ASME J. Dynamic Systems, Measurement, and Control"
+    url: "https://doi.org/10.1115/1.3149599"
+    note: "제1저자만 레코드로 확인. 정오표(10.1115/1.3139629)는 쓰지 않는다"
+    verified: true
+    lessons: [c2-rnea-inverse-dynamics]
+    role: seminal
+  - id: featherstone1983-aba
+    title: "The calculation of robot dynamics using articulated-body inertias"
+    authors: ["R. Featherstone"]
+    year: 1983
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/027836498300200102"
+    verified: true
+    lessons: [c2-crba-aba]
+    role: seminal
+  - id: walker1982-crba
+    title: "Efficient dynamic computer simulation of robotic mechanisms"
+    authors: ["M. W. Walker", "D. E. Orin"]
+    year: 1982
+    venue: "ASME J. Dynamic Systems, Measurement, and Control"
+    url: "https://doi.org/10.1115/1.3139699"
+    note: "제2저자 Orin 은 레코드로 확인되지 않았다"
+    verified: true
+    lessons: [c2-crba-aba]
+    role: seminal
+  - id: sontag1989-coprime-factorization
+    title: "Smooth stabilization implies coprime factorization"
+    authors: ["E. D. Sontag"]
+    year: 1989
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/9.28018"
+    note: "입력-상태 안정성(ISS) 개념이 처음 도입된 논문이다. 제목 자체는 coprime factorization 이므로 id 에 iss 를 쓰지 않는다"
+    verified: true
+    lessons: [c3-lyapunov-stability]
+    role: seminal
+  - id: papachristodoulou2002-sos
+    title: "On the construction of Lyapunov functions using the sum of squares decomposition"
+    authors: ["A. Papachristodoulou", "S. Prajna"]
+    year: 2002
+    venue: "IEEE CDC"
+    url: "https://doi.org/10.1109/CDC.2002.1184414"
+    note: "Crossref date 필드가 비어 있어 2002 는 프로시딩 제목에서 읽었다. 제2저자 Prajna 는 레코드로 확인되지 않았다"
+    verified: true
+    lessons: [c3-lyapunov-stability]
+    role: standard
+  - id: athans1971-lqg
+    title: "The role and use of the stochastic linear-quadratic-Gaussian problem in control system design"
+    authors: ["M. Athans"]
+    year: 1971
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.1971.1099818"
+    verified: true
+    lessons: [c4-dp-lqr-lqg]
+    role: seminal
+  - id: kalman1960-optimal-control
+    title: "Contributions to the theory of optimal control"
+    authors: ["R. E. Kalman"]
+    year: 1960
+    venue: "Boletín de la Sociedad Matemática Mexicana 5 (원문); 아래 URL 은 2009 IEEE Press 재수록판"
+    url: "https://doi.org/10.1109/9780470544334.ch8"
+    note: "원문(Bol. Soc. Mat. Mexicana 5, 1960, pp. 102-119)의 영구 링크는 확인하지 못했다. 확인된 것은 2009 IEEE Press 선집 Control Theory 의 재수록판 DOI 다 — 인용할 때 재수록판임을 밝힐 것"
+    verified: true
+    lessons: [c4-pontryagin-indirect, c4-dp-lqr-lqg]
     role: seminal
 
   # ── C5 상태 추정 ─────────────────────────────────────────────────────

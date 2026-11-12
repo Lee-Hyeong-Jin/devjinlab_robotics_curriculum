@@ -5,13 +5,17 @@ from typer.testing import CliRunner
 
 from robotics_curriculum.cli import app
 from robotics_curriculum.content import (
+    LEVEL_KEYS,
     ActivityKind,
     LoadError,
+    ResourceKind,
     check,
     load_course,
     load_courses,
     validate_course,
 )
+from robotics_curriculum.content.models import ModuleMeta
+from robotics_curriculum.i18n import translator
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 FIXTURE_CURRICULUM = Path(__file__).resolve().parent / "fixtures" / "curriculum"
@@ -208,3 +212,47 @@ def test_cli_validate_reports_errors_and_exits_1(tmp_path: Path) -> None:
     result = runner.invoke(app, ["validate", str(course)])
     assert result.exit_code == 1
     assert f"{course / 'mod' / 'a.md'}: prerequisite 'ghost'" in result.output
+
+
+# -- research-track vocabulary (lesson-standard.md §11-2, §11-4, §11-5) ---------------
+
+
+def test_activity_kinds_cover_the_research_track_without_losing_the_old_ones() -> None:
+    """`reading` and `paper` have to stay distinguishable: a textbook is not a primary paper."""
+    values = {k.value for k in ActivityKind}
+    assert {"reading", "quiz", "exercise"} <= values  # existing content keeps working
+    assert {"paper", "reproduction", "project"} <= values
+
+
+def test_resource_kinds_cover_datasets_and_published_code() -> None:
+    values = {k.value for k in ResourceKind}
+    assert {"book", "course", "video", "article", "other"} <= values
+    assert {"paper", "dataset", "code", "notes"} <= values
+
+
+def test_every_resource_kind_has_a_display_label_in_both_languages() -> None:
+    """A kind with no label would render as the bare enum value on the site."""
+    for lang in ("ko", "en"):
+        t = translator(lang)
+        for kind in ResourceKind:
+            key = f"resource.kind.{kind.value}"
+            assert t(key) != key, (lang, key)
+
+
+def test_every_activity_kind_has_a_display_label_in_both_languages() -> None:
+    for lang in ("ko", "en"):
+        t = translator(lang)
+        for kind in ActivityKind:
+            key = f"site.activity.{kind.value}"
+            assert t(key) != key, (lang, key)
+
+
+def test_the_research_level_is_accepted_and_labelled() -> None:
+    assert LEVEL_KEYS["연구"] == "research"
+    for lang in ("ko", "en"):
+        assert translator(lang)("level.research") != "level.research"
+
+
+def test_a_module_may_declare_the_research_level(tmp_path: Path) -> None:
+    meta = ModuleMeta(id="m-research", title="연구", summary="연구 모듈", level="연구", lessons=[])
+    assert meta.level == "연구"

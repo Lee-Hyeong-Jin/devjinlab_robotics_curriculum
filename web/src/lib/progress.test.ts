@@ -10,6 +10,7 @@ import {
   lessonLockState,
   lockStateFromStatus,
   moduleState,
+  normalizeState,
   ratio,
   type LockState,
 } from './progress'
@@ -25,13 +26,12 @@ describe('moduleState', () => {
   })
 
   it('is in_progress as soon as one lesson is started or finished', () => {
-    expect(moduleState(['in_progress', 'locked'])).toBe('in_progress')
-    expect(moduleState(['done', 'locked'])).toBe('in_progress')
+    expect(moduleState(['in_progress', 'available'])).toBe('in_progress')
+    expect(moduleState(['done', 'available'])).toBe('in_progress')
   })
 
-  it('is locked only when every lesson is locked', () => {
-    expect(moduleState(['locked', 'locked'])).toBe('locked')
-    expect(moduleState(['locked', 'available'])).toBe('available')
+  it('is available while nothing has been started', () => {
+    expect(moduleState(['available', 'available'])).toBe('available')
   })
 })
 
@@ -51,7 +51,7 @@ describe('average', () => {
 
 describe('doneCount', () => {
   it('counts only done lessons', () => {
-    const states: LockState[] = ['done', 'in_progress', 'done', 'locked']
+    const states: LockState[] = ['done', 'in_progress', 'done', 'available']
     expect(doneCount(states)).toBe(2)
   })
 })
@@ -66,16 +66,26 @@ describe('lockStateFromStatus', () => {
 })
 
 describe('lessonLockState', () => {
-  it('reports done and in_progress regardless of the lock flag', () => {
-    expect(lessonLockState({ status: 'done', locked: true })).toBe('done')
-    expect(lessonLockState({ status: 'in_progress', locked: true })).toBe('in_progress')
+  it('maps the progress status, and nothing else', () => {
+    expect(lessonLockState({ status: 'done' })).toBe('done')
+    expect(lessonLockState({ status: 'in_progress' })).toBe('in_progress')
+    expect(lessonLockState({ status: 'not_started' })).toBe('available')
+    expect(lessonLockState({})).toBe('available')
+  })
+})
+
+describe('normalizeState', () => {
+  it('passes the real states through', () => {
+    expect(normalizeState('done')).toBe('done')
+    expect(normalizeState('in_progress')).toBe('in_progress')
+    expect(normalizeState('available')).toBe('available')
   })
 
-  it('reports locked only for an unstarted lesson with a missing prerequisite', () => {
-    expect(lessonLockState({ status: 'not_started', locked: true })).toBe('locked')
-    expect(lessonLockState({ status: 'not_started', locked: false })).toBe('available')
-    expect(lessonLockState({ status: 'not_started', locked: null })).toBe('available')
-    expect(lessonLockState({})).toBe('available')
+  it("reads an old server's `locked` as available, so no screen can render a lock", () => {
+    expect(normalizeState('locked')).toBe('available')
+    expect(normalizeState(null)).toBe('available')
+    expect(normalizeState(undefined)).toBe('available')
+    expect(normalizeState('nonsense')).toBe('available')
   })
 })
 

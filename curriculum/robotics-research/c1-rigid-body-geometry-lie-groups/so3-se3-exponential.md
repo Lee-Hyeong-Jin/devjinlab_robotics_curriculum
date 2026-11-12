@@ -94,6 +94,30 @@ $\lVert \omega \rVert = 1$ 일 때 두 항등식을 계속 쓴다. 둘 다 직�
 
 $$\hat{\omega}^2 = \omega\omega^\top - I, \qquad \hat{\omega}^3 = -\hat{\omega}. \tag{1}$$
 
+## 시작 전 자가 진단
+
+이 모듈의 첫 레슨이므로 준비 상태를 먼저 점검한다. **선수 레슨은 잠겨 있지 않다** — 아래를 전부
+풀 수 있으면 권장 선수(R0 모듈, `robotics-expert` 코스의 M1)를 건너뛰고 바로 시작해도 된다.
+**두 문항 이상 막히면** 괄호 안의 선수 레슨으로 돌아가는 편이 빠르다.
+
+1. $A = \mathrm{diag}(3, 1, 0.01)$ 의 2-노름 조건수 $\kappa_2(A)$ 는?
+   (`r0-linear-algebra-decompositions`)
+   **정답**: $\kappa_2 = \sigma_{\max}/\sigma_{\min} = 3/0.01 = 300$.
+2. $R \in \mathbb{R}^{3\times3}$ 가 $R^\top R = I$ 를 만족할 때 $\det R$ 이 가질 수 있는 값은?
+   그중 $SO(3)$ 에 속하는 것은? (`m1-rotation-representations`)
+   **정답**: $\det R = \pm1$ ($\det(R^\top R) = (\det R)^2 = 1$ 에서). $SO(3)$ 는 $+1$ 만.
+3. 행렬 지수 $\exp(A)$ 의 정의를 급수로 쓰고, $\exp(A+B) = \exp(A)\exp(B)$ 가 성립하는
+   조건을 말하라. (`r0-ad-and-integrators`)
+   **정답**: $\exp(A) = \sum_{k\ge0} A^k/k!$. 등식은 $AB = BA$ (교환)일 때만 성립한다.
+4. $f(x) = x^\top M x$ ($M$ 은 대칭)의 기울기 $\nabla f$ 와, $x_0$ 에서의 1차 Taylor 전개를
+   쓰라. (`f0-calculus-multivariable`)
+   **정답**: $\nabla f = 2Mx$, $f(x_0 + \delta) \approx f(x_0) + 2(Mx_0)^\top\delta$.
+5. numpy 로 $g: \mathbb{R}^3 \to \mathbb{R}^3$ 의 야코비안을 중심 유한차분으로 계산하는 코드를
+   세 줄 이내로 쓰고, 스텝 크기를 $10^{-5}$ 로 고르는 이유를 말하라. (`r0-ad-and-integrators`)
+   **정답**: 열마다 $(g(x + he_i) - g(x - he_i))/(2h)$. 중심 차분의 절단 오차는 $O(h^2)$,
+   반올림 오차는 $O(\epsilon/h)$ 이므로 배정밀도($\epsilon \approx 2\times10^{-16}$)에서
+   $h \sim \epsilon^{1/3} \approx 6\times10^{-6}$ 근방이 최적이다.
+
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —

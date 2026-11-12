@@ -36,6 +36,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   sets, must-read papers, reproduction tasks and open problems. Lessons so far:
   `c8-mdp-pomdp-bellman`, `c8-policy-gradient`.
 
+### Changed
+
+- Nothing in a course is locked any more (ADR 0015). Prerequisites are advice about order:
+  every lesson can be opened, started and completed at any time, which the core always
+  allowed — only the display pretended otherwise. `rc next` now ranks instead of filtering,
+  the `[-]` / `▨` / 🔒 markers are gone, and the lesson screen lists unfinished prerequisites
+  as links. `LessonState.locked` stays in the API, always false and deprecated; read the new
+  `missing_prerequisites` instead.
+
 ### Fixed
 
 - The English build showed Korean in places that had no translation at all: course and
@@ -80,6 +89,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and `Strict-Transport-Security` only when the request arrived over HTTPS.
 - `docs/adr/0013-signup-policy.md` (proposed, not implemented): `RC_AUTH_SIGNUP`
   (`open` | `closed` | `invite`) and how invitations would work.
+- A course may carry a `papers.yaml` bibliography that its lessons reference by id
+  (ADR 0014): the registry says what a paper is, the lesson decides which papers it assigns,
+  whether each is required, and what to read of it. `rc papers <lesson_id>` lists them,
+  required reading first, flagging a link that has not been checked. `rc validate` gains
+  rule 11 (referential integrity, unique ids, http(s) urls, at least one required reading per
+  lesson that assigns papers). A course with no `papers.yaml` is unaffected.
+- `rc validate` can now report a **warning**: it prints them, keeps exit code 0, and the API
+  and progress service ignore them. Used for a bibliography entry no lesson references yet,
+  and for a stale reverse index — both normal while lessons are still being written.
+- Content vocabulary for the research track (`lesson-standard.md` §11-2, §11-4, §11-5), all
+  additive so the existing lessons validate unchanged: `ActivityKind` gains `paper`,
+  `reproduction` and `project`; `ResourceKind` gains `paper`, `dataset`, `code` and `notes`;
+  `Level` gains `연구` (`research`). Labels added in ko and en for the CLI, the static site
+  and the web.
+- `scripts/perf/api_load.py`: measures the read endpoints' latency percentiles with asyncio
+  and the `httpx` already in the package (no new dependency). Baseline recorded in
+  `docs/operations/perf-baseline.md`: every read endpoint's p95 is under the PRD's 300 ms
+  target in both local and server mode, with the slowest at 158 ms.
+- `docs/operations/lighthouse.md`: why Lighthouse was not run (not installed; adding it is a
+  dependency decision), plus LCP/FCP/CLS measured with the Chromium already present — the
+  slowest page's LCP is 420 ms against the PRD's 2.5 s target, CLS 0.
 - `scripts/ops/deploy_pull.sh`: pull-based continuous deployment for a single host (deploys only commits with a green CI run, backs up first, rolls back on failure).
 - Robotics researcher track: a new course under `curriculum/robotics-research/` with the first
   reference lesson (SO(3)/SE(3) and exponential coordinates) in Korean and English, plus the
