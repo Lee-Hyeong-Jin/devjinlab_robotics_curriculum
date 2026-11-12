@@ -11,12 +11,23 @@
 #   year      : 출판 연도
 #   venue     : 학회·저널 (약어)
 #   url       : 영구 링크. null 이면 아직 링크를 확정하지 않았다는 뜻이다.
-#   verified  : true 는 2026-11-12 이 조사에서 실제로 fetch 해 그 논문임을 확인했다는 뜻.
-#               false 는 미확인 — 문서에 노출할 때 "(미확인)" 으로 표기한다.
+#   verified  : true 는 2026-11-12 이 조사에서 실제로 fetch 해 제목·제1저자·연도가 일치함을
+#               확인했다는 뜻. false 는 미확인 — 문서에 노출할 때 "(미확인)" 으로 표기한다.
+#   note      : 선택. 확인 과정에서 나온 유보 사항(선공개 연도 차이, 재수록판, 통칭 제목,
+#               venue 미확인 등). 레슨 본문에 그대로 옮길 필요는 없다.
 #   lessons   : 이 논문을 필독으로 지정한 blueprint.md 의 레슨 id
 #   role      : seminal | standard | frontier | critique | survey
 #
-# 주의: 총 130편으로 브리프의 "100편 내외"를 상회한다. blueprint.md 의 97레슨이 레슨당
+# 확인 상태 (2026-11-12 기준): 131편 중 124편 verified: true, 7편 false.
+#   미확인 7편 — brockett1983-nonholonomic, rawlings2017-mpc-theory, reif1979-complexity,
+#   canny1988-complexity, likhachev2003-ara, toussaint2015-lgp, ziebart2008-maxent-irl.
+#   모두 DOI/arXiv 가 없거나(단행본·구 프로시딩) 공개 PDF 본문 확인에 실패한 경우다.
+#   확인 방법: arXiv API(id_list), Crossref API, OpenAlex, JMLR 페이지. Semantic Scholar 는
+#   요청 제한(429)으로 일부만 사용했다. DOI 로만 확인한 항목은 전체 저자 목록까지는
+#   대조하지 않았다. arXiv 로 확인한 항목의 학회·저널 게재(venue)는 journal_ref 가 없는 경우
+#   확인되지 않았으며 그런 항목은 note 에 적었다.
+#
+# 주의: 총 131편으로 브리프의 "100편 내외"를 상회한다. blueprint.md 의 97레슨이 레슨당
 #       1–3편을 지정한 결과이며, 줄이려면 specialization 트랙을 4개로 줄이는 쪽이 자연스럽다
 #       (blueprint.md §10-1).
 
@@ -27,8 +38,8 @@ papers:
     authors: ["P.-A. Absil", "R. Mahony", "R. Sepulchre"]
     year: 2008
     venue: "Princeton University Press (book)"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1515/9781400830244"
+    verified: true
     lessons: [c1-manifold-optimization]
     role: standard
   - id: dellaert2017-factor-graphs
@@ -36,8 +47,8 @@ papers:
     authors: ["F. Dellaert", "M. Kaess"]
     year: 2017
     venue: "Foundations and Trends in Robotics"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1561/2300000043"
+    verified: true
     lessons: [c1-manifold-optimization, c5-factor-graphs-map]
     role: survey
 
@@ -47,8 +58,8 @@ papers:
     authors: ["O. Khatib"]
     year: 1987
     venue: "IEEE J. Robotics and Automation"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/JRA.1987.1087068"
+    verified: true
     lessons: [c2-constrained-dynamics]
     role: seminal
   - id: stewart1996-implicit-timestepping
@@ -56,8 +67,8 @@ papers:
     authors: ["D. E. Stewart", "J. C. Trinkle"]
     year: 1996
     venue: "Int. J. Numerical Methods in Engineering"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1002/(SICI)1097-0207(19960815)39:15<2673::AID-NME972>3.0.CO;2-I"
+    verified: true
     lessons: [c2-contact-dynamics]
     role: seminal
   - id: todorov2014-convex-contact
@@ -65,8 +76,8 @@ papers:
     authors: ["E. Todorov"]
     year: 2014
     venue: "ICRA"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/ICRA.2014.6907751"
+    verified: true
     lessons: [c2-contact-dynamics]
     role: standard
   - id: carpentier2018-pinocchio
@@ -74,8 +85,8 @@ papers:
     authors: ["J. Carpentier", "N. Mansard"]
     year: 2018
     venue: "RSS"
-    url: null
-    verified: false
+    url: "https://doi.org/10.15607/RSS.2018.XIV.038"
+    verified: true
     lessons: [c2-dynamics-derivatives-sysid]
     role: standard
 
@@ -86,6 +97,7 @@ papers:
     year: 1983
     venue: "Differential Geometric Control Theory"
     url: null
+    note: "URL 미확인 (책 챕터, DOI 미확인)"
     verified: false
     lessons: [c3-feedback-linearization]
     role: seminal
@@ -94,8 +106,8 @@ papers:
     authors: ["W. Lohmiller", "J.-J. E. Slotine"]
     year: 1998
     venue: "Automatica"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1016/S0005-1098(98)00019-3"
+    verified: true
     lessons: [c3-contraction-incremental]
     role: seminal
   - id: manchester2017-ccm
@@ -104,16 +116,18 @@ papers:
     year: 2017
     venue: "IEEE T-AC"
     url: "https://arxiv.org/abs/1503.03144"
-    verified: false
+    note: "arXiv 2015 게재, T-AC 2017"
+    verified: true
     lessons: [c3-contraction-incremental]
     role: standard
   - id: hogan1985-impedance
-    title: "Impedance control: an approach to manipulation (Parts I-III)"
+    title: "Impedance control: an approach to manipulation (Part II: Implementation)"
     authors: ["N. Hogan"]
     year: 1985
     venue: "ASME J. Dynamic Systems, Measurement, and Control"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1115/1.3140713"
+    note: "Part I 은 ACC 1984 (10.23919/ACC.1984.4788393), Part III 은 10.1115/1.3140701. 확인된 것은 Part II/III 의 1985 JDSMC 판이다"
+    verified: true
     lessons: [c3-passivity-impedance]
     role: seminal
   - id: slotine1987-adaptive-manipulator
@@ -121,17 +135,18 @@ papers:
     authors: ["J.-J. E. Slotine", "W. Li"]
     year: 1987
     venue: "IJRR"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1177/027836498700600303"
+    verified: true
     lessons: [c3-adaptive-control]
     role: seminal
   - id: ames2017-cbf
     title: "Control barrier function based quadratic programs for safety critical systems"
-    authors: ["A. D. Ames", "X. Xu", "J. W. Grizzle", "et al."]
+    authors: ["A. D. Ames", "X. Xu", "J. W. Grizzle", "P. Tabuada"]
     year: 2017
     venue: "IEEE T-AC"
-    url: null
-    verified: false
+    url: "https://arxiv.org/abs/1609.06408"
+    note: "arXiv 2016 게재, T-AC 2017"
+    verified: true
     lessons: [c3-cbf-safety-filter]
     role: seminal
 
@@ -141,8 +156,8 @@ papers:
     authors: ["D. Q. Mayne"]
     year: 1966
     venue: "Int. J. Control"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1080/00207176608921369"
+    verified: true
     lessons: [c4-ilqr-ddp]
     role: seminal
   - id: tassa2012-ilqr
@@ -150,8 +165,8 @@ papers:
     authors: ["Y. Tassa", "T. Erez", "E. Todorov"]
     year: 2012
     venue: "IROS"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/IROS.2012.6386025"
+    verified: true
     lessons: [c4-ilqr-ddp]
     role: standard
   - id: hargraves1987-collocation
@@ -159,8 +174,8 @@ papers:
     authors: ["C. R. Hargraves", "S. W. Paris"]
     year: 1987
     venue: "AIAA J. Guidance, Control, and Dynamics"
-    url: null
-    verified: false
+    url: "https://doi.org/10.2514/3.20223"
+    verified: true
     lessons: [c4-direct-collocation-sqp]
     role: seminal
   - id: betts1998-survey
@@ -168,8 +183,8 @@ papers:
     authors: ["J. T. Betts"]
     year: 1998
     venue: "AIAA J. Guidance, Control, and Dynamics"
-    url: null
-    verified: false
+    url: "https://doi.org/10.2514/2.4231"
+    verified: true
     lessons: [c4-direct-collocation-sqp]
     role: survey
   - id: rawlings2017-mpc-theory
@@ -178,6 +193,7 @@ papers:
     year: 2017
     venue: "Nob Hill Publishing (book)"
     url: null
+    note: "URL 미확인 (출판사 페이지 미확인)"
     verified: false
     lessons: [c4-mpc]
     role: standard
@@ -186,8 +202,8 @@ papers:
     authors: ["M. Diehl", "H. J. Ferreau", "N. Haverbeke"]
     year: 2009
     venue: "Nonlinear Model Predictive Control (LNCIS)"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1007/978-3-642-01094-1_32"
+    verified: true
     lessons: [c4-mpc]
     role: standard
   - id: posa2014-contact-implicit
@@ -195,8 +211,9 @@ papers:
     authors: ["M. Posa", "C. Cantu", "R. Tedrake"]
     year: 2014
     venue: "IJRR"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1177/0278364913506757"
+    note: "Crossref 등록 연도 2013(온라인 선공개), 지면 2014. AFR X 학회판 10.1007/978-3-642-36279-8_32"
+    verified: true
     lessons: [c4-contact-implicit-hybrid, s2-planning-through-contact]
     role: seminal
   - id: howell2019-altro
@@ -204,8 +221,8 @@ papers:
     authors: ["T. A. Howell", "B. E. Jackson", "Z. Manchester"]
     year: 2019
     venue: "IROS"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/IROS40897.2019.8967788"
+    verified: true
     lessons: [c4-contact-implicit-hybrid]
     role: standard
   - id: mitchell2005-hji-reachability
@@ -213,8 +230,8 @@ papers:
     authors: ["I. M. Mitchell", "A. M. Bayen", "C. J. Tomlin"]
     year: 2005
     venue: "IEEE T-AC"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/TAC.2005.851439"
+    verified: true
     lessons: [c4-robust-stochastic-oc]
     role: seminal
 
@@ -224,8 +241,8 @@ papers:
     authors: ["F. Dellaert", "M. Kaess"]
     year: 2006
     venue: "IJRR"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1177/0278364906072768"
+    verified: true
     lessons: [c5-factor-graphs-map]
     role: seminal
   - id: kaess2012-isam2
@@ -233,8 +250,9 @@ papers:
     authors: ["M. Kaess", "H. Johannsson", "R. Roberts", "et al."]
     year: 2012
     venue: "IJRR"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1177/0278364911430419"
+    note: "Crossref 등록 연도 2011(온라인 선공개), 지면 2012"
+    verified: true
     lessons: [c5-sparsity-isam]
     role: seminal
   - id: barrau2017-invariant-ekf
@@ -243,16 +261,17 @@ papers:
     year: 2017
     venue: "IEEE T-AC"
     url: "https://arxiv.org/abs/1410.1465"
-    verified: false
+    note: "arXiv 2014 게재, T-AC 2017"
+    verified: true
     lessons: [c5-manifold-estimation]
     role: seminal
   - id: forster2017-preintegration
     title: "On-manifold preintegration for real-time visual-inertial odometry"
-    authors: ["C. Forster", "L. Carlone", "F. Dellaert", "et al."]
+    authors: ["C. Forster", "L. Carlone", "F. Dellaert", "D. Scaramuzza"]
     year: 2017
     venue: "IEEE T-RO"
     url: "https://arxiv.org/abs/1512.02363"
-    verified: false
+    verified: true
     lessons: [c1-lie-group-derivatives, c5-imu-preintegration]
     role: seminal
   - id: huang2010-fej
@@ -260,8 +279,9 @@ papers:
     authors: ["G. P. Huang", "A. I. Mourikis", "S. I. Roumeliotis"]
     year: 2010
     venue: "IJRR"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1177/0278364909353640"
+    note: "Crossref 등록 연도 2009(온라인 선공개), 지면 2010"
+    verified: true
     lessons: [c5-observability-consistency]
     role: seminal
   - id: li2013-vio-observability
@@ -269,17 +289,18 @@ papers:
     authors: ["M. Li", "A. I. Mourikis"]
     year: 2013
     venue: "IJRR"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1177/0278364913481251"
+    verified: true
     lessons: [c5-observability-consistency]
     role: standard
   - id: rosen2019-se-sync
     title: "SE-Sync: a certifiably correct algorithm for synchronization over the special Euclidean group"
-    authors: ["D. M. Rosen", "L. Carlone", "A. S. Bandeira", "et al."]
+    authors: ["D. M. Rosen", "L. Carlone", "A. S. Bandeira", "J. J. Leonard"]
     year: 2019
     venue: "IJRR"
     url: "https://arxiv.org/abs/1612.07386"
-    verified: false
+    note: "arXiv 2016 게재, IJRR 2019"
+    verified: true
     lessons: [c5-robust-global-estimation, s1-certifiable-slam]
     role: seminal
   - id: yang2021-teaser
@@ -288,7 +309,8 @@ papers:
     year: 2021
     venue: "IEEE T-RO"
     url: "https://arxiv.org/abs/2001.07715"
-    verified: false
+    note: "arXiv 2020 게재; arXiv journal_ref 는 T-RO 2020, 지면 2021"
+    verified: true
     lessons: [c5-robust-global-estimation]
     role: standard
   - id: sunderhauf2012-switchable
@@ -296,17 +318,17 @@ papers:
     authors: ["N. Sunderhauf", "P. Protzel"]
     year: 2012
     venue: "IROS"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/IROS.2012.6385590"
+    verified: true
     lessons: [c5-robust-global-estimation]
     role: standard
   - id: carlone2015-lagrangian-duality
     title: "Lagrangian duality in 3D SLAM: verification techniques and optimal solutions"
-    authors: ["L. Carlone", "D. M. Rosen", "G. Calafiore", "et al."]
+    authors: ["L. Carlone", "D. M. Rosen", "G. Calafiore", "J. J. Leonard", "F. Dellaert"]
     year: 2015
     venue: "IROS"
-    url: null
-    verified: false
+    url: "https://arxiv.org/abs/1506.00746"
+    verified: true
     lessons: [s1-certifiable-slam]
     role: standard
 
@@ -317,6 +339,7 @@ papers:
     year: 1979
     venue: "FOCS"
     url: null
+    note: "URL 미확인 (FOCS 1979, DOI 미확인)"
     verified: false
     lessons: [c6-cspace-complexity]
     role: seminal
@@ -326,6 +349,7 @@ papers:
     year: 1988
     venue: "MIT Press (book)"
     url: null
+    note: "URL 미확인 (MIT Press 단행본)"
     verified: false
     lessons: [c6-cspace-complexity]
     role: seminal
@@ -335,7 +359,8 @@ papers:
     year: 2023
     venue: "Science Robotics"
     url: "https://arxiv.org/abs/2205.04422"
-    verified: false
+    note: "arXiv 2022 게재, Science Robotics 2023"
+    verified: true
     lessons: [c6-combinatorial-gcs, s2-planning-through-contact]
     role: frontier
   - id: kavraki1996-prm
@@ -343,8 +368,8 @@ papers:
     authors: ["L. E. Kavraki", "P. Svestka", "J.-C. Latombe", "M. H. Overmars"]
     year: 1996
     venue: "IEEE T-RA"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/70.508439"
+    verified: true
     lessons: [c6-sampling-completeness]
     role: seminal
   - id: lavalle2001-rrt
@@ -352,8 +377,9 @@ papers:
     authors: ["S. M. LaValle", "J. J. Kuffner"]
     year: 2001
     venue: "IJRR"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1177/02783640122067453"
+    note: "1999 ICRA 선행판 10.1109/ROBOT.1999.770022"
+    verified: true
     lessons: [c6-sampling-completeness]
     role: seminal
   - id: karaman2011-rrtstar
@@ -362,7 +388,7 @@ papers:
     year: 2011
     venue: "IJRR"
     url: "https://arxiv.org/abs/1105.1186"
-    verified: false
+    verified: true
     lessons: [c6-asymptotic-optimality]
     role: seminal
   - id: gammell2015-bitstar
@@ -370,8 +396,9 @@ papers:
     authors: ["J. D. Gammell", "S. S. Srinivasa", "T. D. Barfoot"]
     year: 2015
     venue: "ICRA"
-    url: null
-    verified: false
+    url: "https://arxiv.org/abs/1405.5848"
+    note: "arXiv 2014 게재, journal_ref 는 ICRA 2015"
+    verified: true
     lessons: [c6-asymptotic-optimality]
     role: standard
   - id: likhachev2003-ara
@@ -380,6 +407,7 @@ papers:
     year: 2003
     venue: "NIPS"
     url: null
+    note: "URL 미확인 (NIPS 2003 프로시딩 페이지 미확인)"
     verified: false
     lessons: [c6-search-based-planning]
     role: seminal
@@ -388,17 +416,19 @@ papers:
     authors: ["S. Aine", "S. Swaminathan", "V. Narayanan", "et al."]
     year: 2016
     venue: "IJRR"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1177/0278364915594029"
+    note: "Crossref 등록 연도 2015(온라인 선공개), 지면 2016. RSS 2014 학회판 10.15607/RSS.2014.X.056"
+    verified: true
     lessons: [c6-search-based-planning]
     role: standard
   - id: webb2013-kinodynamic-rrtstar
-    title: "Kinodynamic RRT*: asymptotically optimal motion planning for robots with linear dynamics"
+    title: "Kinodynamic RRT*: optimal motion planning for systems with linear differential constraints"
     authors: ["D. J. Webb", "J. van den Berg"]
     year: 2013
     venue: "ICRA"
     url: "https://arxiv.org/abs/1205.5088"
-    verified: false
+    note: "arXiv 2012 게재, ICRA 2013"
+    verified: true
     lessons: [c6-kinodynamic-planning]
     role: standard
   - id: pivtoraiko2009-lattice
@@ -406,8 +436,8 @@ papers:
     authors: ["M. Pivtoraiko", "R. A. Knepper", "A. Kelly"]
     year: 2009
     venue: "J. Field Robotics"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1002/rob.20285"
+    verified: true
     lessons: [c6-kinodynamic-planning]
     role: standard
   - id: garrett2021-tamp-survey
@@ -416,7 +446,8 @@ papers:
     year: 2021
     venue: "Annual Review of Control, Robotics, and Autonomous Systems"
     url: "https://arxiv.org/abs/2010.01083"
-    verified: false
+    note: "arXiv 2020 게재, Annual Review 2021"
+    verified: true
     lessons: [c6-tamp]
     role: survey
   - id: toussaint2015-lgp
@@ -425,6 +456,7 @@ papers:
     year: 2015
     venue: "IJCAI"
     url: null
+    note: "URL 미확인 (arXiv 에 원 IJCAI 2015 논문 없음)"
     verified: false
     lessons: [c6-tamp]
     role: standard
@@ -435,8 +467,9 @@ papers:
     authors: ["H. C. Longuet-Higgins"]
     year: 1981
     venue: "Nature"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1038/293133a0"
+    note: "1987 Readings in Computer Vision 재수록판 DOI 는 쓰지 않는다"
+    verified: true
     lessons: [c7-two-view-geometry]
     role: seminal
   - id: nister2004-five-point
@@ -444,8 +477,9 @@ papers:
     authors: ["D. Nister"]
     year: 2004
     venue: "IEEE T-PAMI"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/TPAMI.2004.17"
+    note: "CVPR 2003 선행판 10.1109/CVPR.2003.1211470"
+    verified: true
     lessons: [c7-two-view-geometry]
     role: seminal
   - id: triggs2000-bundle-adjustment
@@ -453,8 +487,8 @@ papers:
     authors: ["B. Triggs", "P. F. McLauchlan", "R. I. Hartley", "A. W. Fitzgibbon"]
     year: 2000
     venue: "Vision Algorithms: Theory and Practice (LNCS)"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1007/3-540-44480-7_21"
+    verified: true
     lessons: [c7-bundle-adjustment]
     role: seminal
   - id: agarwal2010-rome
@@ -462,8 +496,8 @@ papers:
     authors: ["S. Agarwal", "N. Snavely", "S. M. Seitz", "R. Szeliski"]
     year: 2010
     venue: "ECCV"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1007/978-3-642-15552-9_3"
+    verified: true
     lessons: [c7-bundle-adjustment]
     role: standard
   - id: fischler1981-ransac
@@ -471,8 +505,9 @@ papers:
     authors: ["M. A. Fischler", "R. C. Bolles"]
     year: 1981
     venue: "Communications of the ACM"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1145/358669.358692"
+    note: "1987 재수록판 DOI(10.1016/b978-0-08-051581-6.50070-2)는 쓰지 않는다"
+    verified: true
     lessons: [c7-robust-fitting-ransac]
     role: seminal
   - id: barath2020-magsac
@@ -481,7 +516,8 @@ papers:
     year: 2020
     venue: "CVPR"
     url: "https://arxiv.org/abs/1912.05909"
-    verified: false
+    note: "arXiv v1 2019, CVPR 2020"
+    verified: true
     lessons: [c7-robust-fitting-ransac]
     role: standard
   - id: teed2021-droid-slam
@@ -490,7 +526,7 @@ papers:
     year: 2021
     venue: "NeurIPS"
     url: "https://arxiv.org/abs/2108.10869"
-    verified: false
+    verified: true
     lessons: [c7-learned-correspondence-slam]
     role: frontier
   - id: sarlin2020-superglue
@@ -499,7 +535,8 @@ papers:
     year: 2020
     venue: "CVPR"
     url: "https://arxiv.org/abs/1911.11763"
-    verified: false
+    note: "arXiv v1 2019, CVPR 2020"
+    verified: true
     lessons: [c7-learned-correspondence-slam]
     role: standard
   - id: mildenhall2020-nerf
@@ -508,7 +545,7 @@ papers:
     year: 2020
     venue: "ECCV"
     url: "https://arxiv.org/abs/2003.08934"
-    verified: false
+    verified: true
     lessons: [c7-neural-fields-3dgs]
     role: seminal
   - id: kerbl2023-3dgs
@@ -517,7 +554,8 @@ papers:
     year: 2023
     venue: "ACM TOG (SIGGRAPH)"
     url: "https://arxiv.org/abs/2308.04079"
-    verified: false
+    note: "ACM TOG 42(4), 2023-07"
+    verified: true
     lessons: [c7-neural-fields-3dgs]
     role: frontier
   - id: gallego2020-event-survey
@@ -526,7 +564,8 @@ papers:
     year: 2020
     venue: "IEEE T-PAMI"
     url: "https://arxiv.org/abs/1904.08405"
-    verified: false
+    note: "arXiv v1 2019, journal_ref 는 T-PAMI 2020"
+    verified: true
     lessons: [c7-event-tactile-sensing]
     role: survey
   - id: yuan2017-gelsight
@@ -534,8 +573,8 @@ papers:
     authors: ["W. Yuan", "S. Dong", "E. H. Adelson"]
     year: 2017
     venue: "Sensors"
-    url: null
-    verified: false
+    url: "https://doi.org/10.3390/s17122762"
+    verified: true
     lessons: [c7-event-tactile-sensing, s2-tactile-contact-estimation]
     role: seminal
 
@@ -545,8 +584,8 @@ papers:
     authors: ["L. P. Kaelbling", "M. L. Littman", "A. R. Cassandra"]
     year: 1998
     venue: "Artificial Intelligence"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1016/S0004-3702(98)00023-X"
+    verified: true
     lessons: [c8-mdp-pomdp-bellman]
     role: seminal
   - id: sutton2000-policy-gradient
@@ -554,8 +593,9 @@ papers:
     authors: ["R. S. Sutton", "D. McAllester", "S. Singh", "Y. Mansour"]
     year: 2000
     venue: "NIPS"
-    url: null
-    verified: false
+    url: "https://papers.nips.cc/paper_files/paper/1999/hash/464d828b85b0bed98e80ade0a5c43b0f-Abstract.html"
+    note: "NIPS 12 — 학회는 1999-12, 프로시딩 권 표기는 2000"
+    verified: true
     lessons: [c8-policy-gradient]
     role: seminal
   - id: schulman2015-trpo
@@ -564,7 +604,7 @@ papers:
     year: 2015
     venue: "ICML"
     url: "https://arxiv.org/abs/1502.05477"
-    verified: false
+    verified: true
     lessons: [c8-policy-gradient]
     role: seminal
   - id: schulman2017-ppo
@@ -573,7 +613,7 @@ papers:
     year: 2017
     venue: "arXiv"
     url: "https://arxiv.org/abs/1707.06347"
-    verified: false
+    verified: true
     lessons: [c8-policy-gradient]
     role: standard
   - id: mnih2015-dqn
@@ -581,8 +621,8 @@ papers:
     authors: ["V. Mnih", "K. Kavukcuoglu", "D. Silver", "et al."]
     year: 2015
     venue: "Nature"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1038/nature14236"
+    verified: true
     lessons: [c8-value-based-rl]
     role: seminal
   - id: vanhasselt2016-double-q
@@ -591,7 +631,8 @@ papers:
     year: 2016
     venue: "AAAI"
     url: "https://arxiv.org/abs/1509.06461"
-    verified: false
+    note: "arXiv v1 2015, AAAI 2016"
+    verified: true
     lessons: [c8-value-based-rl]
     role: standard
   - id: janner2019-mbpo
@@ -600,7 +641,7 @@ papers:
     year: 2019
     venue: "NeurIPS"
     url: "https://arxiv.org/abs/1906.08253"
-    verified: false
+    verified: true
     lessons: [c8-model-based-world-models]
     role: standard
   - id: hafner2023-dreamerv3
@@ -609,7 +650,8 @@ papers:
     year: 2023
     venue: "arXiv (Nature 2025)"
     url: "https://arxiv.org/abs/2301.04104"
-    verified: false
+    note: "arXiv v1 2023. Nature 2025 게재는 미확인"
+    verified: true
     lessons: [c8-model-based-world-models]
     role: frontier
   - id: ross2011-dagger
@@ -618,7 +660,8 @@ papers:
     year: 2011
     venue: "AISTATS"
     url: "https://arxiv.org/abs/1011.0686"
-    verified: false
+    note: "arXiv v1 2010, AISTATS 2011"
+    verified: true
     lessons: [c8-imitation-learning]
     role: seminal
   - id: ziebart2008-maxent-irl
@@ -626,7 +669,8 @@ papers:
     authors: ["B. D. Ziebart", "A. Maas", "J. A. Bagnell", "A. K. Dey"]
     year: 2008
     venue: "AAAI"
-    url: null
+    url: "https://cdn.aaai.org/AAAI/2008/AAAI08-227.pdf"
+    note: "URL 은 응답했으나 PDF 본문 확인 실패 — 메타데이터(제목·제1저자·연도·AAAI)는 Semantic Scholar 로만 확인. DOI/arXiv 없음"
     verified: false
     lessons: [c8-imitation-learning]
     role: seminal
@@ -636,7 +680,7 @@ papers:
     year: 2020
     venue: "arXiv"
     url: "https://arxiv.org/abs/2005.01643"
-    verified: false
+    verified: true
     lessons: [c8-offline-rl]
     role: survey
   - id: kumar2020-cql
@@ -645,7 +689,7 @@ papers:
     year: 2020
     venue: "NeurIPS"
     url: "https://arxiv.org/abs/2006.04779"
-    verified: false
+    verified: true
     lessons: [c8-offline-rl]
     role: standard
   - id: levine2018-control-as-inference
@@ -654,7 +698,7 @@ papers:
     year: 2018
     venue: "arXiv"
     url: "https://arxiv.org/abs/1805.00909"
-    verified: false
+    verified: true
     lessons: [c8-control-as-inference]
     role: survey
   - id: haarnoja2018-sac
@@ -663,7 +707,7 @@ papers:
     year: 2018
     venue: "ICML"
     url: "https://arxiv.org/abs/1801.01290"
-    verified: false
+    verified: true
     lessons: [c8-control-as-inference]
     role: standard
   - id: williams2017-mppi
@@ -671,8 +715,8 @@ papers:
     authors: ["G. Williams", "A. Aldrich", "E. A. Theodorou"]
     year: 2017
     venue: "AIAA J. Guidance, Control, and Dynamics"
-    url: null
-    verified: false
+    url: "https://doi.org/10.2514/1.G001921"
+    verified: true
     lessons: [c8-control-as-inference]
     role: standard
   - id: tobin2017-domain-randomization
@@ -681,7 +725,7 @@ papers:
     year: 2017
     venue: "IROS"
     url: "https://arxiv.org/abs/1703.06907"
-    verified: false
+    verified: true
     lessons: [c8-generalization-sim2real]
     role: seminal
   - id: chen2020-learning-by-cheating
@@ -690,7 +734,8 @@ papers:
     year: 2020
     venue: "CoRL"
     url: "https://arxiv.org/abs/1912.12294"
-    verified: false
+    note: "arXiv v1 2019, CoRL 2020"
+    verified: true
     lessons: [c8-generalization-sim2real]
     role: standard
 
@@ -700,8 +745,8 @@ papers:
     authors: ["A. I. Mourikis", "S. I. Roumeliotis"]
     year: 2007
     venue: "ICRA"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/ROBOT.2007.364024"
+    verified: true
     lessons: [s1-vio-systems]
     role: seminal
   - id: qin2018-vins-mono
@@ -710,25 +755,27 @@ papers:
     year: 2018
     venue: "IEEE T-RO"
     url: "https://arxiv.org/abs/1708.03852"
-    verified: false
+    note: "arXiv v1 2017, T-RO 2018"
+    verified: true
     lessons: [s1-vio-systems]
     role: standard
   - id: galvez-lopez2012-dbow2
     title: "Bags of binary words for fast place recognition in image sequences"
-    authors: ["D. Galvez-Lopez", "J. D. Tardos"]
+    authors: ["D. Gálvez-López", "J. D. Tardós"]
     year: 2012
     venue: "IEEE T-RO"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/TRO.2012.2197158"
+    verified: true
     lessons: [s1-loop-closure-lifelong]
     role: seminal
   - id: cadena2016-slam-survey
-    title: "Past, present, and future of simultaneous localization and mapping: toward the robust-perception age"
+    title: "Past, present, and future of simultaneous localization and mapping: towards the robust-perception age"
     authors: ["C. Cadena", "L. Carlone", "H. Carrillo", "et al."]
     year: 2016
     venue: "IEEE T-RO"
     url: "https://arxiv.org/abs/1606.05830"
-    verified: false
+    note: "journal_ref: IEEE T-RO 32(6), 1309-1332, 2016"
+    verified: true
     lessons: [s1-loop-closure-lifelong]
     role: survey
   - id: newcombe2011-kinectfusion
@@ -736,8 +783,8 @@ papers:
     authors: ["R. A. Newcombe", "S. Izadi", "O. Hilliges", "et al."]
     year: 2011
     venue: "ISMAR"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/ISMAR.2011.6092378"
+    verified: true
     lessons: [s1-dense-neural-slam]
     role: seminal
   - id: sucar2021-imap
@@ -746,7 +793,7 @@ papers:
     year: 2021
     venue: "ICCV"
     url: "https://arxiv.org/abs/2103.12352"
-    verified: false
+    verified: true
     lessons: [s1-dense-neural-slam]
     role: frontier
   - id: rosinol2021-kimera
@@ -755,7 +802,7 @@ papers:
     year: 2021
     venue: "IJRR"
     url: "https://arxiv.org/abs/2101.06894"
-    verified: false
+    verified: true
     lessons: [s1-semantic-scene-graphs]
     role: frontier
   - id: salas-moreno2013-slampp
@@ -763,8 +810,8 @@ papers:
     authors: ["R. F. Salas-Moreno", "R. A. Newcombe", "H. Strasdat", "et al."]
     year: 2013
     venue: "CVPR"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/CVPR.2013.178"
+    verified: true
     lessons: [s1-semantic-scene-graphs]
     role: seminal
   - id: sturm2012-tum-rgbd
@@ -772,8 +819,8 @@ papers:
     authors: ["J. Sturm", "N. Engelhard", "F. Endres", "et al."]
     year: 2012
     venue: "IROS"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/IROS.2012.6385773"
+    verified: true
     lessons: [s1-slam-benchmarking]
     role: standard
   - id: geiger2012-kitti
@@ -781,8 +828,8 @@ papers:
     authors: ["A. Geiger", "P. Lenz", "R. Urtasun"]
     year: 2012
     venue: "CVPR"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/CVPR.2012.6248074"
+    verified: true
     lessons: [s1-slam-benchmarking]
     role: standard
   - id: zhang2018-trajectory-eval
@@ -790,8 +837,8 @@ papers:
     authors: ["Z. Zhang", "D. Scaramuzza"]
     year: 2018
     venue: "IROS"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/IROS.2018.8593941"
+    verified: true
     lessons: [s1-slam-benchmarking]
     role: standard
 
@@ -801,8 +848,9 @@ papers:
     authors: ["C. Ferrari", "J. Canny"]
     year: 1992
     venue: "ICRA"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/ROBOT.1992.219918"
+    note: "Crossref 레코드의 issued date 가 비어 있어 연도는 프로시딩 제목에서 읽었다"
+    verified: true
     lessons: [s2-grasp-mechanics]
     role: seminal
   - id: rodriguez2012-caging
@@ -810,8 +858,8 @@ papers:
     authors: ["A. Rodriguez", "M. T. Mason", "S. Ferry"]
     year: 2012
     venue: "IJRR"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1177/0278364912442972"
+    verified: true
     lessons: [s2-grasp-mechanics]
     role: standard
   - id: lynch1996-pushing
@@ -819,8 +867,9 @@ papers:
     authors: ["K. M. Lynch", "M. T. Mason"]
     year: 1996
     venue: "IJRR"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1177/027836499601500602"
+    note: "1995 WAFR 선행판은 DOI 없음"
+    verified: true
     lessons: [s2-contact-modes-dexterity]
     role: seminal
   - id: chavan-dafle2014-extrinsic-dexterity
@@ -828,8 +877,8 @@ papers:
     authors: ["N. Chavan-Dafle", "A. Rodriguez", "R. Paolini", "et al."]
     year: 2014
     venue: "ICRA"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/ICRA.2014.6907062"
+    verified: true
     lessons: [s2-contact-modes-dexterity]
     role: seminal
   - id: koval2015-contact-manifold-pf
@@ -837,8 +886,9 @@ papers:
     authors: ["M. C. Koval", "N. S. Pollard", "S. S. Srinivasa"]
     year: 2015
     venue: "IJRR"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1177/0278364915571007"
+    note: "2013 IROS 논문은 다른 논문이다"
+    verified: true
     lessons: [s2-tactile-contact-estimation]
     role: standard
   - id: mahler2017-dexnet2
@@ -847,7 +897,7 @@ papers:
     year: 2017
     venue: "RSS"
     url: "https://arxiv.org/abs/1703.09312"
-    verified: false
+    verified: true
     lessons: [s2-learned-grasping]
     role: seminal
   - id: sundermeyer2021-contact-graspnet
@@ -856,7 +906,7 @@ papers:
     year: 2021
     venue: "ICRA"
     url: "https://arxiv.org/abs/2103.14127"
-    verified: false
+    verified: true
     lessons: [s2-learned-grasping]
     role: standard
   - id: fang2023-anygrasp
@@ -865,7 +915,8 @@ papers:
     year: 2023
     venue: "IEEE T-RO"
     url: "https://arxiv.org/abs/2212.08333"
-    verified: false
+    note: "arXiv v1 2022, T-RO 2023"
+    verified: true
     lessons: [s2-learned-grasping]
     role: frontier
   - id: chi2023-diffusion-policy
@@ -874,7 +925,7 @@ papers:
     year: 2023
     venue: "RSS"
     url: "https://arxiv.org/abs/2303.04137"
-    verified: false
+    verified: true
     lessons: [s2-generative-policies]
     role: frontier
   - id: zhao2023-act
@@ -883,25 +934,27 @@ papers:
     year: 2023
     venue: "RSS"
     url: "https://arxiv.org/abs/2304.13705"
-    verified: false
+    verified: true
     lessons: [s2-generative-policies]
     role: frontier
   - id: black2024-pi0
     title: "pi0: a vision-language-action flow model for general robot control"
     authors: ["K. Black", "N. Brown", "D. Driess", "et al."]
     year: 2024
-    venue: "arXiv"
+    venue: "arXiv 2024 (arXiv 코멘트는 RSS 2025)"
     url: "https://arxiv.org/abs/2410.24164"
-    verified: false
+    note: "원 제목은 그리스 문자 pi_0 를 쓴다"
+    verified: true
     lessons: [s2-generative-policies, s4-vla-architectures]
     role: frontier
   - id: aydinoglu2024-contact-implicit-mpc
     title: "Consensus complementarity control for multi-contact MPC"
-    authors: ["A. Aydinoglu", "A. Wei", "M. Posa", "et al."]
+    authors: ["A. Aydinoglu", "A. Wei", "W.-C. Huang", "M. Posa"]
     year: 2024
-    venue: "IEEE T-RO"
-    url: null
-    verified: false
+    venue: "arXiv 2023 (T-RO 게재 미확인)"
+    url: "https://arxiv.org/abs/2304.11259"
+    note: "arXiv v1 2023-04. T-RO 2024 게재 여부는 확인되지 않았다. 관련 선행: Aydinoglu & Posa, Real-Time Multi-Contact MPC via ADMM, arXiv 2109.07076"
+    verified: true
     lessons: [s2-planning-through-contact]
     role: frontier
 
@@ -911,8 +964,8 @@ papers:
     authors: ["J. W. Grizzle", "G. Abba", "F. Plestan"]
     year: 2001
     venue: "IEEE T-AC"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/9.898695"
+    verified: true
     lessons: [s3-hybrid-limit-cycles]
     role: seminal
   - id: westervelt2003-hzd
@@ -920,8 +973,8 @@ papers:
     authors: ["E. R. Westervelt", "J. W. Grizzle", "D. E. Koditschek"]
     year: 2003
     venue: "IEEE T-AC"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/TAC.2002.806653"
+    verified: true
     lessons: [s3-hzd-gait-generation]
     role: seminal
   - id: ames2014-hzd-experimental
@@ -929,8 +982,9 @@ papers:
     authors: ["A. D. Ames", "K. Galloway", "K. Sreenath", "J. W. Grizzle"]
     year: 2014
     venue: "IEEE T-AC"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/TAC.2014.2299335"
+    note: "id 의 -experimental 접미사는 부적절한 이름이다(제목에 없음)"
+    verified: true
     lessons: [s3-hzd-gait-generation]
     role: standard
   - id: kajita2003-zmp-preview
@@ -938,8 +992,9 @@ papers:
     authors: ["S. Kajita", "F. Kanehiro", "K. Kaneko", "et al."]
     year: 2003
     venue: "ICRA"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/ROBOT.2003.1241826"
+    note: "Crossref 레코드의 year 필드가 비어 있어 연도는 프로시딩 제목에서 읽었다"
+    verified: true
     lessons: [s3-centroidal-mpc]
     role: seminal
   - id: dicarlo2018-convex-mpc
@@ -947,8 +1002,8 @@ papers:
     authors: ["J. Di Carlo", "P. M. Wensing", "B. Katz", "et al."]
     year: 2018
     venue: "IROS"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/IROS.2018.8594448"
+    verified: true
     lessons: [s3-centroidal-mpc]
     role: standard
   - id: sentis2005-wbc
@@ -956,8 +1011,8 @@ papers:
     authors: ["L. Sentis", "O. Khatib"]
     year: 2005
     venue: "Int. J. Humanoid Robotics"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1142/S0219843605000594"
+    verified: true
     lessons: [s3-whole-body-control]
     role: seminal
   - id: herzog2016-momentum-wbc
@@ -966,7 +1021,8 @@ papers:
     year: 2016
     venue: "Autonomous Robots"
     url: "https://arxiv.org/abs/1410.7284"
-    verified: false
+    note: "arXiv v1 2014. arXiv 코멘트는 Autonomous Robots 2015 로 적고 있어 지면 연도(2015 vs 2016)는 미확정"
+    verified: true
     lessons: [s3-whole-body-control]
     role: standard
   - id: lee2020-blind-locomotion
@@ -975,7 +1031,8 @@ papers:
     year: 2020
     venue: "Science Robotics"
     url: "https://arxiv.org/abs/2010.11251"
-    verified: false
+    note: 'Science Robotics 5(47), eabc5986. "blind" 는 통칭이고 원 제목에는 없다'
+    verified: true
     lessons: [s3-locomotion-rl]
     role: seminal
   - id: kumar2021-rma
@@ -984,7 +1041,7 @@ papers:
     year: 2021
     venue: "RSS"
     url: "https://arxiv.org/abs/2107.04034"
-    verified: false
+    verified: true
     lessons: [s3-locomotion-rl]
     role: frontier
   - id: miki2022-anymal-wild
@@ -993,7 +1050,8 @@ papers:
     year: 2022
     venue: "Science Robotics"
     url: "https://arxiv.org/abs/2201.08117"
-    verified: false
+    note: "Science Robotics 7(62), 2022-01-19"
+    verified: true
     lessons: [s3-locomotion-rl]
     role: frontier
   - id: bledt2018-mit-cheetah
@@ -1001,8 +1059,8 @@ papers:
     authors: ["G. Bledt", "M. J. Powell", "B. Katz", "et al."]
     year: 2018
     venue: "IROS"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/IROS.2018.8593885"
+    verified: true
     lessons: [s3-dynamic-maneuvers]
     role: standard
   - id: grandia2023-perceptive-locomotion
@@ -1011,7 +1069,8 @@ papers:
     year: 2023
     venue: "IEEE T-RO"
     url: "https://arxiv.org/abs/2208.08373"
-    verified: false
+    note: "arXiv v1 2022, T-RO 2023(venue 미확인)"
+    verified: true
     lessons: [s3-dynamic-maneuvers]
     role: frontier
 
@@ -1022,7 +1081,8 @@ papers:
     year: 2023
     venue: "ICRA 2024"
     url: "https://arxiv.org/abs/2310.08864"
-    verified: false
+    note: "arXiv 2023; ICRA 2024 게재는 미확인"
+    verified: true
     lessons: [s4-robot-data-scaling]
     role: frontier
   - id: kaplan2020-scaling-laws
@@ -1031,7 +1091,7 @@ papers:
     year: 2020
     venue: "arXiv"
     url: "https://arxiv.org/abs/2001.08361"
-    verified: false
+    verified: true
     lessons: [s4-robot-data-scaling]
     role: standard
   - id: brohan2023-rt2
@@ -1040,7 +1100,8 @@ papers:
     year: 2023
     venue: "CoRL"
     url: "https://arxiv.org/abs/2307.15818"
-    verified: false
+    note: "CoRL 게재는 미확인"
+    verified: true
     lessons: [s4-vla-architectures]
     role: seminal
   - id: kim2024-openvla
@@ -1049,7 +1110,8 @@ papers:
     year: 2024
     venue: "CoRL"
     url: "https://arxiv.org/abs/2406.09246"
-    verified: false
+    note: "CoRL 게재는 미확인"
+    verified: true
     lessons: [s4-vla-architectures]
     role: frontier
   - id: nair2022-r3m
@@ -1058,7 +1120,8 @@ papers:
     year: 2022
     venue: "CoRL"
     url: "https://arxiv.org/abs/2203.12601"
-    verified: false
+    note: "arXiv 코멘트가 CoRL 2022 로 적고 있다"
+    verified: true
     lessons: [s4-pretrained-representations]
     role: standard
   - id: majumdar2023-vc1
@@ -1067,7 +1130,8 @@ papers:
     year: 2023
     venue: "NeurIPS"
     url: "https://arxiv.org/abs/2303.18240"
-    verified: false
+    note: "NeurIPS 게재는 미확인"
+    verified: true
     lessons: [s4-pretrained-representations]
     role: critique
   - id: ahn2022-saycan
@@ -1076,7 +1140,8 @@ papers:
     year: 2022
     venue: "CoRL"
     url: "https://arxiv.org/abs/2204.01691"
-    verified: false
+    note: "CoRL 게재는 미확인"
+    verified: true
     lessons: [s4-language-and-planning]
     role: seminal
   - id: liang2023-code-as-policies
@@ -1085,7 +1150,8 @@ papers:
     year: 2023
     venue: "ICRA"
     url: "https://arxiv.org/abs/2209.07753"
-    verified: false
+    note: "arXiv v1 2022, ICRA 2023(venue 미확인)"
+    verified: true
     lessons: [s4-language-and-planning]
     role: standard
   - id: agarwal2021-deep-rl-at-the-edge
@@ -1094,16 +1160,18 @@ papers:
     year: 2021
     venue: "NeurIPS"
     url: "https://arxiv.org/abs/2108.13264"
-    verified: false
+    note: "NeurIPS 게재는 미확인"
+    verified: true
     lessons: [s4-evaluation-science]
     role: critique
   - id: li2024-simpler
-    title: "Evaluating real-world robot manipulation policies in simulation (SIMPLER)"
+    title: "Evaluating real-world robot manipulation policies in simulation"
     authors: ["X. Li", "K. Hsu", "J. Gu", "et al."]
     year: 2024
     venue: "CoRL"
     url: "https://arxiv.org/abs/2405.05941"
-    verified: false
+    note: "SIMPLER 는 통칭이고 원 제목에 없다. 제1저자 Xuanlin Li, 2024. CoRL 게재는 미확인"
+    verified: true
     lessons: [s4-evaluation-science]
     role: critique
   - id: angelopoulos2021-conformal
@@ -1112,7 +1180,7 @@ papers:
     year: 2021
     venue: "arXiv (Foundations and Trends 2023)"
     url: "https://arxiv.org/abs/2107.07511"
-    verified: false
+    verified: true
     lessons: [s4-safety-ood]
     role: standard
   - id: sinha2022-system-level-ood
@@ -1121,7 +1189,7 @@ papers:
     year: 2022
     venue: "arXiv"
     url: "https://arxiv.org/abs/2212.14020"
-    verified: false
+    verified: true
     lessons: [s4-safety-ood]
     role: critique
 
@@ -1131,8 +1199,8 @@ papers:
     authors: ["R. Olfati-Saber", "J. A. Fax", "R. M. Murray"]
     year: 2007
     venue: "Proceedings of the IEEE"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/JPROC.2006.887293"
+    verified: true
     lessons: [s5-graph-consensus]
     role: survey
   - id: jadbabaie2003-coordination
@@ -1140,8 +1208,9 @@ papers:
     authors: ["A. Jadbabaie", "J. Lin", "A. S. Morse"]
     year: 2003
     venue: "IEEE T-AC"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/TAC.2003.812781"
+    note: "CDC 2002 학회판(10.1109/CDC.2002.1184304)은 다른 레코드이므로 쓰지 않는다"
+    verified: true
     lessons: [s5-graph-consensus]
     role: seminal
   - id: boyd2011-admm
@@ -1149,8 +1218,9 @@ papers:
     authors: ["S. Boyd", "N. Parikh", "E. Chu", "et al."]
     year: 2011
     venue: "Foundations and Trends in Machine Learning"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1561/9781601984616"
+    note: "널리 쓰이는 저널 DOI 10.1561/2200000016 은 이 조사에서 확인하지 못했다. 확인된 것은 단행본 레코드(Crossref year 2010)이고 저널 권호는 FnT ML 3(1), 2011"
+    verified: true
     lessons: [s5-distributed-optimization]
     role: standard
   - id: choudhary2017-distributed-slam
@@ -1159,7 +1229,8 @@ papers:
     year: 2017
     venue: "IJRR"
     url: "https://arxiv.org/abs/1702.03435"
-    verified: false
+    note: "IJRR 게재는 미확인"
+    verified: true
     lessons: [s5-distributed-optimization]
     role: standard
   - id: sharon2015-cbs
@@ -1167,8 +1238,8 @@ papers:
     authors: ["G. Sharon", "R. Stern", "A. Felner", "N. R. Sturtevant"]
     year: 2015
     venue: "Artificial Intelligence"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1016/j.artint.2014.11.006"
+    verified: true
     lessons: [s5-multi-agent-planning]
     role: seminal
   - id: yu2013-mapf-complexity
@@ -1176,8 +1247,8 @@ papers:
     authors: ["J. Yu", "S. M. LaValle"]
     year: 2013
     venue: "AAAI"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1609/aaai.v27i1.8541"
+    verified: true
     lessons: [s5-multi-agent-planning]
     role: seminal
   - id: krause2008-submodular
@@ -1185,8 +1256,9 @@ papers:
     authors: ["A. Krause", "A. Singh", "C. Guestrin"]
     year: 2008
     venue: "JMLR"
-    url: null
-    verified: false
+    url: "https://jmlr.org/papers/v9/krause08a.html"
+    note: "JMLR 9, 235-284. ICML 2005 축약판 DOI(10.1145/1102351.1102385)는 다른 논문이므로 쓰지 않는다"
+    verified: true
     lessons: [s5-active-information-gathering]
     role: seminal
   - id: atanasov2015-decentralized-active
@@ -1194,8 +1266,8 @@ papers:
     authors: ["N. Atanasov", "J. Le Ny", "K. Daniilidis", "G. J. Pappas"]
     year: 2015
     venue: "ICRA"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/ICRA.2015.7139863"
+    verified: true
     lessons: [s5-active-information-gathering]
     role: standard
   - id: julier1997-covariance-intersection
@@ -1203,25 +1275,27 @@ papers:
     authors: ["S. J. Julier", "J. K. Uhlmann"]
     year: 1997
     venue: "American Control Conference"
-    url: null
-    verified: false
+    url: "https://doi.org/10.1109/ACC.1997.609105"
+    verified: true
     lessons: [s5-comms-constrained-estimation]
     role: seminal
   - id: ebadi2022-darpa-subt
-    title: "Present and future of SLAM in extreme environments (the DARPA SubT challenge)"
+    title: "Present and future of SLAM in extreme underground environments"
     authors: ["K. Ebadi", "L. Bernreiter", "H. Biggie", "et al."]
     year: 2022
     venue: "IEEE T-RO"
     url: "https://arxiv.org/abs/2208.01787"
-    verified: false
+    note: "제1저자 Kamak Ebadi. T-RO 2022 게재는 미확인"
+    verified: true
     lessons: [s5-field-deployment]
     role: survey
-  - id: rouvcek2019-darpa-subt-system
+  - id: roucek2019-darpa-subt-system
     title: "DARPA Subterranean Challenge: multi-robotic exploration of underground environments"
     authors: ["T. Roucek", "M. Pecka", "P. Cizek", "et al."]
-    year: 2019
-    venue: "MESAS"
-    url: null
-    verified: false
+    year: 2020
+    venue: "MESAS 2019 (LNCS, 2020)"
+    url: "https://doi.org/10.1007/978-3-030-43890-6_22"
+    note: "제1저자 Tomas Roucek. 2022 Field Robotics 논문은 다른 논문(arXiv 2110.05911)"
+    verified: true
     lessons: [s5-field-deployment]
     role: standard

@@ -328,7 +328,7 @@ UA ch.11,20–21, S&B.
 | `s5-multi-agent-planning` 다중 로봇 계획 | MAPF 의 완전성·최적성과 NP-hardness **[D3]**; CBS 의 최적성 증명 **[D3]**; 우선순위 계획의 불완전성 **[D2]** | `sharon2015-cbs`, `yu2013-mapf-complexity` | R2: CBS 와 우선순위 계획을 비교해 최적성·성공률 차이를 격자 크기별로 보임 |
 | `s5-active-information-gathering` 능동 지각·정보 수집 | 상호정보 목적함수와 submodularity **[D3]**; 탐욕 알고리즘의 $(1-1/e)$ 보장 **[D3]** | `krause2008-submodular`, `atanasov2015-decentralized-active` | R2: 센서 배치 탐욕 해가 최적 대비 $(1-1/e)$ 이상임을 소규모 완전 탐색과 비교 |
 | `s5-comms-constrained-estimation` 통신 제약과 분산 추정 | 지연·패킷 손실 하 추정 일관성 **[D2]**; 상관 무시의 과확신 **[D3]**; 공분산 교차(CI) **[D2]** | `julier1997-covariance-intersection` | R1: 상관을 무시한 융합이 NEES 과확신을 만들고 CI 가 보수적임을 수치로 확인 |
-| `s5-field-deployment` 필드 배치와 장기 자율성 | 신뢰성 지표(MTBF)와 고장 모드 분석 **[D2]**; 실기 평가 설계 **[D2]** | `ebadi2022-darpa-subt`, `rouvcek2019-darpa-subt-system` | R2: 공개 필드 데이터/보고서에서 실패 모드를 분류하고 개선 우선순위를 근거와 함께 제시 |
+| `s5-field-deployment` 필드 배치와 장기 자율성 | 신뢰성 지표(MTBF)와 고장 모드 분석 **[D2]**; 실기 평가 설계 **[D2]** | `ebadi2022-darpa-subt`, `roucek2019-darpa-subt-system` | R2: 공개 필드 데이터/보고서에서 실패 모드를 분류하고 개선 우선순위를 근거와 함께 제시 |
 
 **열린 문제**: 통신 제약 하 분산 추정의 일관성 보장; 대규모 군집의 확장성; 장기 필드 자율성의
 신뢰성 공학; 이질적 팀의 과제 배분.
