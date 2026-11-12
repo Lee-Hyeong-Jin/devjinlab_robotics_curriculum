@@ -105,6 +105,11 @@ docker compose up -d --build --wait web      # db -> migrate -> api -> web
 - `bash scripts/smoke.sh` brings the same stack up, checks it end to end, and tears it down.
 - First admin: set `RC_AUTH_ADMIN_EMAIL` before the first start, or run
   `uv run rc api promote-admin <email>`.
+- Public curriculum (optional): `RC_PUBLIC_CONTENT=1` lets anonymous readers browse the
+  courses, modules, lessons and resources so they can be found and linked, while progress,
+  notes, quiz results and the admin API still need a session (ADR 0016). Set `RC_PUBLIC_URL`
+  to the site's public address — canonical links, `hreflang`, `sitemap.xml` and `robots.txt`
+  are built from it.
 - Email is optional. Without `RC_SMTP_HOST` the API reports `email_verification: "unavailable"`
   and the web shows no verification banner, so nobody waits for mail that cannot arrive.
   To turn it on, see [RUNBOOK §8.1](docs/operations/RUNBOOK.md) and check the settings with

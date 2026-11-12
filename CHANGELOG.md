@@ -46,7 +46,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   a reproduction task whose acceptance criteria were checked by running the code, and open
   problems.
 
+### Fixed
+
+- `docker-compose.yml` passed `RC_PUBLIC_CONTENT` to neither service and gave the web no
+  `RC_PUBLIC_URL`, so setting them in `.env` did nothing to the deployment that actually runs
+  — publishing stayed off and canonical links and the sitemap pointed at `localhost`. Both
+  values now reach both services, with a test over the compose file so it cannot silently
+  regress.
+
 ### Changed
+
+- SEO. With `RC_PUBLIC_CONTENT=1` (ADR 0016) the curriculum is readable without a session and
+  the pages that hold it become indexable: per-page title and description, canonical URL,
+  `hreflang` for ko/en plus `x-default`, OpenGraph and Twitter cards, `sitemap.xml` covering
+  every course, module and lesson in both languages, a `robots.txt` that keeps crawlers out
+  of personal and operator pages, and JSON-LD (`Course`, `LearningResource`,
+  `BreadcrumbList`). `noindex` stays the default for the whole app, so a page has to ask to
+  be indexed and only gets it where content is actually published.
+- The UI language can be pinned with `?lang=en`. The URL carries no locale segment, so the
+  English version of a page had no address of its own — which `hreflang` and a sitemap both
+  need. `?lang=` overrides the cookie for that request; the canonical URL stays the bare path.
+- Web: an anonymous reader on a published page is no longer redirected to the login screen
+  when the page asks for their progress — having none is an answer, not an error. A signed-in
+  reader whose session expired is still redirected.
 
 - `rc validate` gains rule 12: a link in a lesson body (or in a translation of it) must be an
   http(s) URL, an anchor, or a relative path to an asset — never another lesson's `.md` file,
