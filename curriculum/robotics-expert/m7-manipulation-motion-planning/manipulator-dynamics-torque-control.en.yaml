@@ -1,0 +1,26 @@
+id: m7-manipulator-dynamics-torque-control
+lang: en
+activities:
+  m7-manipulator-dynamics-torque-control-reading: "Read the lesson and the Modern Robotics ch. 8 and 11 videos"
+  m7-manipulator-dynamics-torque-control-quiz: "Quiz: the terms of the equations of motion, and the controllers compared"
+  m7-manipulator-dynamics-torque-control-exercise: >-
+    Implement a 2-link dynamics simulator and computed-torque control
+resources:
+  "Modern Robotics: Mechanics, Planning, and Control (Lynch, Park)":
+    note: >-
+      Chapter 8, Dynamics of Open Chains (8.1, the Lagrangian), and chapter 11, Robot
+      Control (11.4, computed torque).
+  "Modern Robotics Ch. 8 Dynamics 영상":
+    title: "Modern Robotics ch. 8, Dynamics (videos)"
+    note: "Chapter 8, 10 videos, 50:19."
+  "Modern Robotics Ch. 11 Robot Control 영상":
+    title: "Modern Robotics ch. 11, Robot Control (videos)"
+    note: "Chapter 11, 13 videos, 57:51."
+  "Coursera Modern Robotics Specialization":
+    note: >-
+      Course 3, Robot Dynamics (chapters 8-9). A Korean edition exists as
+      modernrobotics-course3-ko. Free to audit.
+  "Pinocchio practical exercises (ROS Jazzy package docs)":
+    note: >-
+      Exercise 4, direct and inverse dynamics. Check your hand derivation against a
+      rigid-body dynamics library (advanced, optional).

@@ -1,0 +1,19 @@
+id: m5-occupancy-grid-scan-matching
+lang: en
+activities:
+  m5-occupancy-grid-scan-matching-reading: Read the lesson and the Occupancy Grid Maps lecture
+  m5-occupancy-grid-scan-matching-quiz: "Quiz: log odds and scan matching"
+  m5-occupancy-grid-scan-matching-exercise: Map and scan-match with a simulated LiDAR
+resources:
+  "Occupancy Grid Maps (Stachniss)":
+    note: "Online Training - Mobile Robotics, the Robotics block."
+  "ICP (Stachniss)":
+    note: >-
+      The basis of scan registration. Both a refresher on the M4 ICP lesson and a step
+      beyond it.
+  "Probabilistic Robotics (Thrun, Burgard, Fox)":
+    note: >-
+      Chapter 9, Occupancy Grid Mapping, and chapter 6, the beam and likelihood-field
+      sensor models.
+  "Michigan ROB 530 Mobile Robotics":
+    note: "Optional: the mapping homework, for more practice."

@@ -1,0 +1,17 @@
+id: m5-particle-filter-mcl
+lang: en
+activities:
+  m5-particle-filter-mcl-reading: Read the lesson and Labbe's Particle Filters chapter
+  m5-particle-filter-mcl-quiz: "Quiz: resampling and the number of particles"
+  m5-particle-filter-mcl-exercise: Experiment with a landmark-based 2D particle filter
+resources:
+  "Particle Filter & MCL (Stachniss)":
+    note: "Online Training - Mobile Robotics, the Robotics block."
+  "Kalman and Bayesian Filters in Python (Labbe)":
+    note: "Chapter 11, Particle Filters (the number varies between editions of the repository)."
+  "Probabilistic Robotics (Thrun, Burgard, Fox)":
+    note: >-
+      Chapter 4, Nonparametric Filters, and chapter 8, Monte Carlo Localization (including
+      KLD sampling).
+  "Michigan ROB 530 Mobile Robotics":
+    note: "Optional: the localisation homework, for more practice."

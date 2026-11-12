@@ -1,0 +1,22 @@
+id: m8-reference-robot-code
+lang: en
+activities:
+  m8-reference-robot-code-reading: Read the lesson and the layout of the Andino repository
+  m8-reference-robot-code-quiz: "Quiz: name each package's job"
+  m8-reference-robot-code-exercise: "Trace the data flow from bringup to /cmd_vel and write it up"
+resources:
+  "Andino (Ekumen-OS)":
+    note: >-
+      The package layout: andino_base (the ros2_control hardware interface),
+      andino_control, andino_slam and andino_navigation.
+  "TurtleBot3 e-Manual (ROBOTIS)":
+    note: >-
+      ROS 2 setup, SLAM and Navigation examples (Humble and Jazzy). The Korean pages are
+      moving to docs.robotis.com/ko.
+  "TurtleBot 4 User Manual — Tutorials":
+    title: "TurtleBot 4 User Manual - Tutorials"
+    note: >-
+      The Driving, First node (Python), Generating a map and Navigation tutorials. Jazzy
+      is supported.
+  "Mastering ROS 2 for Robotics Programming, 4th ed. (Joseph & Cacace)":
+    note: "The ros2 controllers, Nav2 and MoveIt 2 chapters (Jazzy). Paid."

@@ -1,0 +1,18 @@
+id: m6-sampling-based-planning
+lang: en
+activities:
+  m6-sampling-based-planning-reading: "Read the lesson and the Modern Robotics ch. 10 videos"
+  m6-sampling-based-planning-quiz: "Quiz: PRM, RRT and RRT* compared"
+  m6-sampling-based-planning-exercise: Implement RRT and RRT* and experiment with their parameters
+resources:
+  "Planning Algorithms (LaValle)":
+    note: >-
+      Part II, chapter 5, sampling-based planning (RRT and PRM), and chapter 4,
+      configuration space.
+  "Modern Robotics Ch. 10 Motion Planning 영상":
+    title: "Modern Robotics ch. 10, Motion Planning (videos)"
+    note: "The chapter 10 playlist, 49:36."
+  "Modern Robotics: Mechanics, Planning, and Control (Lynch, Park)":
+    note: "Section 10.5, sampling-based planning. Free preprint PDF."
+  "Michigan AutoRob":
+    note: "Optional: the A*, RRT-Connect and collision-checking projects."

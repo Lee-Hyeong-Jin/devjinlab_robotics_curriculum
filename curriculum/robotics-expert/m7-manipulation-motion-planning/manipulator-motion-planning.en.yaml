@@ -1,0 +1,25 @@
+id: m7-manipulator-motion-planning
+lang: en
+activities:
+  m7-manipulator-motion-planning-reading: "Read the lesson and the Modern Robotics ch. 10 videos"
+  m7-manipulator-motion-planning-quiz: "Quiz: configuration-space obstacles and the OMPL planners"
+  m7-manipulator-motion-planning-exercise: >-
+    Compute C_obs for a 2-link arm and plan a path in joint space
+resources:
+  "Modern Robotics: Mechanics, Planning, and Control (Lynch, Park)":
+    note: >-
+      Chapter 10, Motion Planning (10.2 configuration-space obstacles, 10.5 sampling-based
+      planning).
+  "Modern Robotics Ch. 10 Motion Planning 영상":
+    title: "Modern Robotics ch. 10, Motion Planning (videos)"
+    note: "The chapter 10 playlist, 49:36."
+  "Planning Algorithms (LaValle)":
+    note: >-
+      Chapter 4, configuration space (tori and topology), and chapter 5, sampling-based
+      planning.
+  "Robotic Manipulation (Tedrake)":
+    note: >-
+      The Motion Planning chapter (collision-free IK, sampling planners, trajectory
+      optimisation).
+  "Michigan AutoRob":
+    note: "Optional: the RRT-Connect and collision-checking projects on a URDF arm."
