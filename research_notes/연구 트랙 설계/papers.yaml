@@ -180,6 +180,42 @@ papers:
     role: seminal
 
   # ── C4 최적 제어·궤적 최적화 ─────────────────────────────────────────
+  - id: sussmann1997-300-years
+    title: "300 years of optimal control: from the brachystochrone to the maximum principle"
+    authors: ["H. J. Sussmann", "J. C. Willems"]
+    year: 1997
+    venue: "IEEE Control Systems Magazine"
+    url: "https://doi.org/10.1109/37.588098"
+    verified: true
+    lessons: [c4-pontryagin-indirect]
+    role: standard
+  - id: hartl1995-pmp-state-constraints
+    title: "A survey of the maximum principles for optimal control problems with state constraints"
+    authors: ["R. F. Hartl", "S. P. Sethi", "R. G. Vickson"]
+    year: 1995
+    venue: "SIAM Review"
+    url: "https://doi.org/10.1137/1037043"
+    verified: true
+    lessons: [c4-pontryagin-indirect]
+    role: survey
+  - id: bellman1954-dp-theory
+    title: "The theory of dynamic programming"
+    authors: ["R. Bellman"]
+    year: 1954
+    venue: "Bull. Amer. Math. Soc."
+    url: "https://doi.org/10.1090/S0002-9904-1954-09848-8"
+    verified: true
+    lessons: [c4-dp-lqr-lqg]
+    role: seminal
+  - id: doyle1978-lqg-margins
+    title: "Guaranteed margins for LQG regulators"
+    authors: ["J. C. Doyle"]
+    year: 1978
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.1978.1101812"
+    verified: true
+    lessons: [c4-dp-lqr-lqg]
+    role: critique
   - id: mayne1966-ddp
     title: "A second-order gradient method for determining optimal trajectories of non-linear discrete-time systems"
     authors: ["D. Q. Mayne"]
@@ -214,7 +250,7 @@ papers:
     venue: "AIAA J. Guidance, Control, and Dynamics"
     url: "https://doi.org/10.2514/2.4231"
     verified: true
-    lessons: [c4-direct-collocation-sqp]
+    lessons: [c4-pontryagin-indirect, c4-direct-collocation-sqp]
     role: survey
   - id: rawlings2017-mpc-theory
     title: "Model Predictive Control: Theory, Computation, and Design"
@@ -263,6 +299,25 @@ papers:
     verified: true
     lessons: [c4-robust-stochastic-oc]
     role: seminal
+  - id: todorov2005-ilqg
+    title: "A generalized iterative LQG method for locally-optimal feedback control of constrained nonlinear stochastic systems"
+    authors: ["E. Todorov", "W. Li"]
+    year: 2005
+    venue: "ACC"
+    url: "https://doi.org/10.1109/ACC.2005.1469949"
+    note: "Crossref 레코드에 발행 연도 필드가 없다(proceedings-article). 연도는 프로시딩 제목(2005 ACC)으로 확인했다."
+    verified: true
+    lessons: [c4-robust-stochastic-oc]
+    role: standard
+  - id: mayne2005-tube-mpc
+    title: "Robust model predictive control of constrained linear systems with bounded disturbances"
+    authors: ["D. Q. Mayne", "M. M. Seron", "S. V. Rakovic"]
+    year: 2005
+    venue: "Automatica"
+    url: "https://doi.org/10.1016/j.automatica.2004.08.019"
+    verified: true
+    lessons: [c4-robust-stochastic-oc]
+    role: standard
 
   - id: featherstone2010-6d-vectors-part1
     title: "A beginner's guide to 6-D vectors (part 1)"
@@ -369,7 +424,7 @@ papers:
     url: "https://doi.org/10.1109/9780470544334.ch8"
     note: "원문(Bol. Soc. Mat. Mexicana 5, 1960, pp. 102-119)의 영구 링크는 확인하지 못했다. 확인된 것은 2009 IEEE Press 선집 Control Theory 의 재수록판 DOI 다 — 인용할 때 재수록판임을 밝힐 것"
     verified: true
-    lessons: [c4-pontryagin-indirect, c4-dp-lqr-lqg]
+    lessons: [c4-dp-lqr-lqg]
     role: seminal
 
   # ── C5 상태 추정 ─────────────────────────────────────────────────────

@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Research-track module C4 (optimal control and trajectory optimization) with its first
+  lesson, `c4-pontryagin-indirect`: Pontryagin's minimum principle proved from needle
+  variations and a separating hyperplane, the adjoint equation derived as the transpose of
+  the variational equation, bang-bang structure and singular arcs, the exponential
+  conditioning of single shooting, and the brachistochrone solved in closed form. Korean
+  source plus the English translation.
 - Translations for the content that had nowhere to hold them: `course.<lang>.yaml` and
   `module.<lang>.yaml` carry a course's and a module's title and summary, and
   `<lesson>.<lang>.yaml` carries activity titles, resource titles and notes, and the quiz
