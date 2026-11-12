@@ -16,3 +16,4 @@ lessons:
   - rnea-inverse-dynamics
   - crba-aba
   - constrained-dynamics
+  - contact-dynamics
