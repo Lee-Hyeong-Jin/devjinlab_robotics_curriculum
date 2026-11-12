@@ -1655,15 +1655,6 @@ papers:
     verified: true
     role: frontier
     note: "2026-11-12 Crossref 확인."
-  - id: yuan2017-gelsight
-    title: "GelSight: High-Resolution Robot Tactile Sensors for Estimating Geometry and Force"
-    authors: ["W. Yuan", "S. Dong", "E. H. Adelson"]
-    year: 2017
-    venue: "Sensors"
-    url: "https://doi.org/10.3390/s17122762"
-    verified: true
-    role: seminal
-    note: "2026-11-12 Crossref 확인."
   - id: koval2015-contact-manifold-pf
     title: "Pose estimation for planar contact manipulation with manifold particle filters"
     authors: ["M. C. Koval", "N. S. Pollard", "S. S. Srinivasa"]
@@ -1754,15 +1745,6 @@ papers:
     verified: true
     role: standard
     note: "arXiv 2018. journal_ref 없음 — 게재 venue(CoRL 2018)는 arXiv 로 확인되지 않았다."
-  - id: tobin2017-domain-randomization
-    title: "Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World"
-    authors: ["J. Tobin", "R. Fong", "A. Ray", "et al."]
-    year: 2017
-    venue: "IROS"
-    url: "https://arxiv.org/abs/1703.06907"
-    verified: true
-    role: standard
-    note: "arXiv 2017. journal_ref 없음 — 게재 venue(IROS 2017)는 arXiv 로 확인되지 않았다."
   - id: fang2020-graspnet-1billion
     title: "GraspNet-1Billion: A Large-Scale Benchmark for General Object Grasping"
     authors: ["H.-S. Fang", "C. Wang", "M. Gou", "C. Lu"]
