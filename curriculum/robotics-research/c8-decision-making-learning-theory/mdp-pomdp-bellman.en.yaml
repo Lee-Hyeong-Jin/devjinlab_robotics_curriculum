@@ -11,12 +11,6 @@ resources:
     note: ch.3 (finite MDPs), ch.4 (dynamic programming). The primary textbook for this lesson. (official URL unverified)
   "LaValle, Planning Algorithms":
     note: ch.10 (sequential decision making under uncertainty), ch.11 (sensors and information spaces), ch.12. Full text free.
-  "Blackwell — Discounted dynamic programming (1965)":
-    note: Must-read 1. The origin of the contraction argument for discounted DP and of the existence of an optimal policy.
-  "Smallwood & Sondik — The optimal control of partially observable Markov processes over a finite horizon (1973)":
-    note: Must-read 2. The origin of the PWLC value function and of alpha vectors.
-  "Kaelbling, Littman & Cassandra — Planning and acting in partially observable stochastic domains (1998)":
-    note: Must-read 3. The standard reference for the belief-MDP conversion and POMDP planning.
   "Papadimitriou & Tsitsiklis — The complexity of Markov decision processes (1987)":
     note: Recommended. The complexity classification of MDPs and POMDPs (finite-horizon POMDPs are PSPACE-complete).
   "Madani, Hanks & Condon — On the undecidability of probabilistic planning (2003)":

@@ -7,9 +7,7 @@ summary: >-
   정리를 직접 유도하고 원 논문을 읽고 수치로 재현한다. 근거가 되는 대학원 과목은
   Berkeley CS285 전체, Stanford AA274B/CS237B, AA203 W7-10, CMU 16-831, UPenn ESE 650 M3 이고
   교재는 Sutton-Barto 와 Tedrake Underactuated Robotics ch.11, 20-21 이다.
-# 설계상의 수준은 "연구"(research)다. Level 리터럴에 "연구"가 추가되기 전까지 "고급"으로 둔다
-# (research_notes/연구 트랙 설계/lesson-standard.md §11-4).
-level: 고급
+level: 연구
 lessons:
   - mdp-pomdp-bellman
   - policy-gradient

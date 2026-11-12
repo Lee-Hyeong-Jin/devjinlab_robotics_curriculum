@@ -23,7 +23,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 90
   - id: c8-model-based-world-models-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 3편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 150
   - id: c8-model-based-world-models-problems
@@ -31,36 +31,37 @@ activities:
     title: 문제 세트 (유도 2 · 증명 1 · 계산 1 · 구현 1 · 반례 1 · 논문 1)
     estimated_minutes: 165
   - id: c8-model-based-world-models-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — 롤아웃 길이의 성능-편향 곡선과 목표 불일치 (R2)
     estimated_minutes: 120
   - id: c8-model-based-world-models-quiz
     kind: quiz
     title: 개념 점검 퀴즈
     estimated_minutes: 15
+papers:
+  - id: kearns2002-near-optimal
+    required: true
+    role: seminal
+    note: "§3"
+  - id: janner2019-mbpo
+    required: true
+    role: standard
+    note: "§4-5"
+  - id: hafner2023-dreamerv3
+    required: true
+    role: frontier
+    note: "§2-3"
 resources:
   - title: "Sutton & Barto, Reinforcement Learning: An Introduction (2nd ed.)"
     kind: book
     note: ch.8 (계획과 학습의 통합, Dyna). 1순위 교재. (공식 URL 미확인)
-  - title: "Kearns & Singh — Near-optimal reinforcement learning in polynomial time (2002)"
-    url: https://doi.org/10.1023/A:1017984413808
-    kind: article
-    note: 필독 1. 시뮬레이션 보조정리의 원전(§3 의 보조정리).
-  - title: "Janner, Fu, Zhang & Levine — When to trust your model: model-based policy optimization (2019)"
-    url: https://arxiv.org/abs/1906.08253
-    kind: article
-    note: 필독 2. 분기 롤아웃의 성능 한계와 $k$ 선택(§4-5).
-  - title: "Hafner, Pasukonis, Ba & Lillicrap — Mastering diverse domains through world models (2023)"
-    url: https://arxiv.org/abs/2301.04104
-    kind: article
-    note: 필독 3. 잠재 세계 모델의 학습 목표와 규모 확장(§2-3).
   - title: "Hafner et al. — Learning latent dynamics for planning from pixels (2018)"
     url: https://arxiv.org/abs/1811.04551
-    kind: article
+    kind: paper
     note: 권장. PlaNet — RSSM 과 잠재 공간 계획의 ELBO 유도가 가장 명시적이다.
   - title: "Chua, Calandra, McAllister & Levine — Deep RL in a handful of trials using probabilistic dynamics models (2018)"
     url: https://arxiv.org/abs/1805.12114
-    kind: article
+    kind: paper
     note: 권장. PETS — 앙상블로 불확실성을 다루고 롤아웃 길이를 제한한다.
 ---
 

@@ -9,12 +9,6 @@ activities:
 resources:
   "Sutton & Barto, Reinforcement Learning: An Introduction (2nd ed.)":
     note: ch.13 (policy gradient methods). The primary textbook for this lesson. (official URL unverified)
-  "Sutton, McAllester, Singh & Mansour — Policy gradient methods for RL with function approximation (2000)":
-    note: Must-read 1. The origin of the policy gradient theorem.
-  "Schulman, Levine, Abbeel, Jordan & Moritz — Trust region policy optimization (2015)":
-    note: Must-read 2. Sections 2-3 and appendix A (the monotone improvement bound).
-  "Schulman, Wolski, Dhariwal, Radford & Klimov — Proximal policy optimization algorithms (2017)":
-    note: Must-read 3. The clipped objective of section 3.
   "Williams — Simple statistical gradient-following algorithms for connectionist RL (1992)":
     note: Recommended. The origin of REINFORCE.
   "Baxter & Bartlett — Infinite-horizon policy-gradient estimation (2001)":

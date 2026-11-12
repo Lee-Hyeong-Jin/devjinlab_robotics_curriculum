@@ -23,7 +23,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 90
   - id: c8-value-based-rl-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 4편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 180
   - id: c8-value-based-rl-problems
@@ -31,40 +31,41 @@ activities:
     title: 문제 세트 (유도 2 · 증명 1 · 계산 1 · 구현 1 · 반례 1 · 논문 1)
     estimated_minutes: 165
   - id: c8-value-based-rl-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — Baird 반례의 발산과 잔차 경사법의 수렴 (R1)
     estimated_minutes: 90
   - id: c8-value-based-rl-quiz
     kind: quiz
     title: 개념 점검 퀴즈
     estimated_minutes: 15
+papers:
+  - id: baird1995-residual
+    required: true
+    role: seminal
+    note: "§2-3"
+  - id: tsitsiklis1997-td-function-approx
+    required: true
+    role: seminal
+    note: "§3-5"
+  - id: mnih2015-dqn
+    required: true
+    role: standard
+    note: "Methods"
+  - id: vanhasselt2016-double-q
+    required: true
+    role: standard
+    note: "§3-4"
 resources:
   - title: "Sutton & Barto, Reinforcement Learning: An Introduction (2nd ed.)"
     kind: book
     note: ch.9 (on-policy 근사), ch.10 (off-policy 근사), ch.11 (off-policy 방법의 불안정성). 1순위 교재. (공식 URL 미확인)
-  - title: "Baird — Residual algorithms: reinforcement learning with function approximation (1995)"
-    url: https://doi.org/10.1016/B978-1-55860-377-6.50013-X
-    kind: article
-    note: 필독 1. 반례와 잔차 경사법의 원전.
-  - title: "Tsitsiklis & Van Roy — An analysis of temporal-difference learning with function approximation (1997)"
-    url: https://doi.org/10.1109/9.580874
-    kind: article
-    note: 필독 2. on-policy 선형 TD 의 수렴과 투영 Bellman 오차 한계(§3-5).
-  - title: "Mnih et al. — Human-level control through deep reinforcement learning (2015)"
-    url: https://doi.org/10.1038/nature14236
-    kind: article
-    note: 필독 3. 경험 재생과 목표망이 삼요소의 어느 다리를 약화하는가(Methods 절).
-  - title: "van Hasselt, Guez & Silver — Deep reinforcement learning with double Q-learning (2016)"
-    url: https://arxiv.org/abs/1509.06461
-    kind: article
-    note: 필독 4. 과대추정의 측정과 이중 추정기(§3-4).
   - title: "van Hasselt et al. — Deep reinforcement learning and the deadly triad (2018)"
     url: https://arxiv.org/abs/1812.02648
-    kind: article
+    kind: paper
     note: 권장. 삼요소의 각 다리를 실험으로 분리한다.
   - title: "Fujimoto, van Hoof & Meger — Addressing function approximation error in actor-critic methods (2018)"
     url: https://arxiv.org/abs/1802.09477
-    kind: article
+    kind: paper
     note: 권장. 연속 행동에서의 과대추정과 쌍둥이 비평자(TD3).
 ---
 

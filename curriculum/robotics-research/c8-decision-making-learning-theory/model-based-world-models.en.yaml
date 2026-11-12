@@ -9,12 +9,6 @@ activities:
 resources:
   "Sutton & Barto, Reinforcement Learning: An Introduction (2nd ed.)":
     note: ch.8 (integrating planning and learning, Dyna). The primary textbook. (official URL unverified)
-  "Kearns & Singh — Near-optimal reinforcement learning in polynomial time (2002)":
-    note: Must-read 1. The origin of the simulation lemma (the lemma in section 3).
-  "Janner, Fu, Zhang & Levine — When to trust your model: model-based policy optimization (2019)":
-    note: Must-read 2. The performance bound of branched rollouts and the choice of $k$ (sections 4-5).
-  "Hafner, Pasukonis, Ba & Lillicrap — Mastering diverse domains through world models (2023)":
-    note: Must-read 3. The training objective of a latent world model and scaling it up (sections 2-3).
   "Hafner et al. — Learning latent dynamics for planning from pixels (2018)":
     note: Recommended. PlaNet - the RSSM and the most explicit ELBO derivation for latent-space planning.
   "Chua, Calandra, McAllister & Levine — Deep RL in a handful of trials using probabilistic dynamics models (2018)":

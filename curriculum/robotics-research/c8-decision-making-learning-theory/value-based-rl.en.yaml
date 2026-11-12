@@ -9,14 +9,6 @@ activities:
 resources:
   "Sutton & Barto, Reinforcement Learning: An Introduction (2nd ed.)":
     note: ch.9 (on-policy approximation), ch.10 (off-policy approximation), ch.11 (instability of off-policy methods). The primary textbook. (official URL unverified)
-  "Baird — Residual algorithms: reinforcement learning with function approximation (1995)":
-    note: Must-read 1. The origin of the counterexample and of the residual gradient.
-  "Tsitsiklis & Van Roy — An analysis of temporal-difference learning with function approximation (1997)":
-    note: Must-read 2. Convergence of on-policy linear TD and the projected Bellman error bound (sections 3-5).
-  "Mnih et al. — Human-level control through deep reinforcement learning (2015)":
-    note: Must-read 3. Which leg of the triad replay and the target network weaken (the Methods section).
-  "van Hasselt, Guez & Silver — Deep reinforcement learning with double Q-learning (2016)":
-    note: Must-read 4. Measuring overestimation and the double estimator (sections 3-4).
   "van Hasselt et al. — Deep reinforcement learning and the deadly triad (2018)":
     note: Recommended. Separates each leg of the triad experimentally.
   "Fujimoto, van Hoof & Meger — Addressing function approximation error in actor-critic methods (2018)":

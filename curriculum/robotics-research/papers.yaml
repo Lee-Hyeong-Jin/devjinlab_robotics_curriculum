@@ -1012,6 +1012,119 @@ papers:
     role: standard
     note: "arXiv v1 2019"
 
+  - id: blackwell1965-discounted-dp
+    title: "Discounted dynamic programming"
+    authors: ["D. Blackwell"]
+    year: 1965
+    venue: "The Annals of Mathematical Statistics"
+    url: "https://doi.org/10.1214/aoms/1177700285"
+    verified: true
+    role: seminal
+    note: "Crossref 로 제목·제1저자·연도·저널 확인. 할인 DP 의 수축 사상 논증과 최적 정책 존재의 원전"
+  - id: smallwood1973-pomdp-pwlc
+    title: "The optimal control of partially observable Markov processes over a finite horizon"
+    authors: ["R. D. Smallwood", "E. J. Sondik"]
+    year: 1973
+    venue: "Operations Research"
+    url: "https://doi.org/10.1287/opre.21.5.1071"
+    verified: true
+    role: seminal
+    note: "Crossref 로 제목·저자·연도·저널 확인. 유한 지평 POMDP 가치함수의 PWLC 성질과 알파 벡터의 원전"
+  - id: kaelbling1998-pomdp
+    title: "Planning and acting in partially observable stochastic domains"
+    authors: ["L. P. Kaelbling", "M. L. Littman", "A. R. Cassandra"]
+    year: 1998
+    venue: "Artificial Intelligence"
+    url: "https://doi.org/10.1016/S0004-3702(98)00023-X"
+    verified: true
+    role: seminal
+  - id: sutton2000-policy-gradient
+    title: "Policy gradient methods for reinforcement learning with function approximation"
+    authors: ["R. S. Sutton", "D. McAllester", "S. Singh", "Y. Mansour"]
+    year: 2000
+    venue: "NIPS"
+    url: "https://papers.nips.cc/paper_files/paper/1999/hash/464d828b85b0bed98e80ade0a5c43b0f-Abstract.html"
+    verified: true
+    role: seminal
+    note: "NIPS 12 — 학회는 1999-12, 프로시딩 권 표기는 2000"
+  - id: schulman2015-trpo
+    title: "Trust region policy optimization"
+    authors: ["J. Schulman", "S. Levine", "P. Abbeel", "et al."]
+    year: 2015
+    venue: "ICML"
+    url: "https://arxiv.org/abs/1502.05477"
+    verified: true
+    role: seminal
+  - id: schulman2017-ppo
+    title: "Proximal policy optimization algorithms"
+    authors: ["J. Schulman", "F. Wolski", "P. Dhariwal", "et al."]
+    year: 2017
+    venue: "arXiv"
+    url: "https://arxiv.org/abs/1707.06347"
+    verified: true
+    role: standard
+  - id: baird1995-residual
+    title: "Residual algorithms: reinforcement learning with function approximation"
+    authors: ["L. C. Baird"]
+    year: 1995
+    venue: "ICML"
+    url: "https://doi.org/10.1016/B978-1-55860-377-6.50013-X"
+    verified: true
+    role: seminal
+    note: "Crossref 로 제목·제1저자·연도·프로시딩 확인. Baird 반례와 잔차 경사법의 원전"
+  - id: tsitsiklis1997-td-function-approx
+    title: "An analysis of temporal-difference learning with function approximation"
+    authors: ["J. N. Tsitsiklis", "B. Van Roy"]
+    year: 1997
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/9.580874"
+    verified: true
+    role: seminal
+    note: "Crossref 로 확인. on-policy 선형 TD 의 수렴과 투영 Bellman 오차 한계의 원전"
+  - id: mnih2015-dqn
+    title: "Human-level control through deep reinforcement learning"
+    authors: ["V. Mnih", "K. Kavukcuoglu", "D. Silver", "et al."]
+    year: 2015
+    venue: "Nature"
+    url: "https://doi.org/10.1038/nature14236"
+    verified: true
+    role: seminal
+  - id: vanhasselt2016-double-q
+    title: "Deep reinforcement learning with double Q-learning"
+    authors: ["H. van Hasselt", "A. Guez", "D. Silver"]
+    year: 2016
+    venue: "AAAI"
+    url: "https://arxiv.org/abs/1509.06461"
+    verified: true
+    role: standard
+    note: "arXiv v1 2015, AAAI 2016"
+  - id: kearns2002-near-optimal
+    title: "Near-optimal reinforcement learning in polynomial time"
+    authors: ["M. Kearns", "S. Singh"]
+    year: 2002
+    venue: "Machine Learning"
+    url: "https://doi.org/10.1023/A:1017984413808"
+    verified: true
+    role: seminal
+    note: "Crossref 로 확인. 시뮬레이션 보조정리(모델 오차의 가치 오차 전파)의 원전"
+  - id: janner2019-mbpo
+    title: "When to trust your model: model-based policy optimization"
+    authors: ["M. Janner", "J. Fu", "M. Zhang", "S. Levine"]
+    year: 2019
+    venue: "NeurIPS"
+    url: "https://arxiv.org/abs/1906.08253"
+    verified: true
+    role: standard
+  - id: hafner2023-dreamerv3
+    title: "Mastering diverse domains through world models"
+    authors: ["D. Hafner", "J. Pasukonis", "J. Ba", "T. Lillicrap"]
+    year: 2023
+    venue: "arXiv (Nature 2025)"
+    url: "https://arxiv.org/abs/2301.04104"
+    verified: true
+    role: frontier
+    note: "arXiv v1 2023. Nature 2025 게재는 미확인"
+
   # ── S1 SLAM·공간 지능 ───────────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 

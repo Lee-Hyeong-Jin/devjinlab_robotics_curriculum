@@ -23,7 +23,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 90
   - id: c8-policy-gradient-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 3편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 150
   - id: c8-policy-gradient-problems
@@ -31,60 +31,60 @@ activities:
     title: 문제 세트 (유도 2 · 증명 1 · 계산 1 · 구현 1 · 반례 1 · 논문 1)
     estimated_minutes: 180
   - id: c8-policy-gradient-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — 추정기 분산과 표본 효율 비교 (R2)
     estimated_minutes: 105
   - id: c8-policy-gradient-quiz
     kind: quiz
     title: 개념 점검 퀴즈
     estimated_minutes: 15
+papers:
+  - id: sutton2000-policy-gradient
+    required: true
+    role: seminal
+  - id: schulman2015-trpo
+    required: true
+    role: seminal
+    note: "§2-3, App. A"
+  - id: schulman2017-ppo
+    required: true
+    role: standard
+    note: "§3"
 resources:
   - title: "Sutton & Barto, Reinforcement Learning: An Introduction (2nd ed.)"
     kind: book
     note: ch.13 (정책 경사 방법). 이 레슨의 1순위 교재. (공식 URL 미확인)
-  - title: "Sutton, McAllester, Singh & Mansour — Policy gradient methods for RL with function approximation (2000)"
-    url: https://papers.nips.cc/paper_files/paper/1999/hash/464d828b85b0bed98e80ade0a5c43b0f-Abstract.html
-    kind: article
-    note: 필독 1. 정책 경사 정리의 원전.
-  - title: "Schulman, Levine, Abbeel, Jordan & Moritz — Trust region policy optimization (2015)"
-    url: https://arxiv.org/abs/1502.05477
-    kind: article
-    note: 필독 2. §2-3 과 부록 A (단조 개선 한계).
-  - title: "Schulman, Wolski, Dhariwal, Radford & Klimov — Proximal policy optimization algorithms (2017)"
-    url: https://arxiv.org/abs/1707.06347
-    kind: article
-    note: 필독 3. §3 의 클리핑 목적함수.
   - title: "Williams — Simple statistical gradient-following algorithms for connectionist RL (1992)"
     url: https://doi.org/10.1007/BF00992696
-    kind: article
+    kind: paper
     note: 권장. REINFORCE 의 원전.
   - title: "Baxter & Bartlett — Infinite-horizon policy-gradient estimation (2001)"
     url: https://doi.org/10.1613/jair.806
-    kind: article
+    kind: paper
     note: 권장. GPOMDP 와 할인이 추정 편향을 만드는 지점.
   - title: "Amari — Natural gradient works efficiently in learning (1998)"
     url: https://doi.org/10.1162/089976698300017746
-    kind: article
+    kind: paper
     note: 권장. 자연 경사와 Fisher 계량의 원전.
   - title: "Kakade — A natural policy gradient (2001)"
     url: https://papers.nips.cc/paper_files/paper/2001/hash/4b86abe48d358ecf194c56c69108433e-Abstract.html
-    kind: article
+    kind: paper
     note: 권장. 자연 경사를 정책 경사에 접목한 글.
   - title: "Schulman, Moritz, Levine, Jordan & Abbeel — Generalized advantage estimation (2015)"
     url: https://arxiv.org/abs/1506.02438
-    kind: article
+    kind: paper
     note: 권장. $\lambda$ 로 편향-분산을 조절하는 이점 추정.
   - title: "Engstrom et al. — Implementation matters in deep policy gradients (2020)"
     url: https://arxiv.org/abs/2005.12729
-    kind: article
+    kind: paper
     note: 권장(반론). PPO 의 성능이 알고리즘이 아니라 구현 세부에서 온다는 절제 실험.
   - title: "Henderson et al. — Deep reinforcement learning that matters (2017)"
     url: https://arxiv.org/abs/1709.06560
-    kind: article
+    kind: paper
     note: 권장(반론). 시드·분산 보고 없이 비교하면 결론이 뒤집힌다.
   - title: "Agarwal, Kakade, Lee & Mahajan — On the theory of policy gradient methods (2019)"
     url: https://arxiv.org/abs/1908.00261
-    kind: article
+    kind: paper
     note: 권장. 정책 경사의 전역 수렴과 분포 이동 항.
 ---
 

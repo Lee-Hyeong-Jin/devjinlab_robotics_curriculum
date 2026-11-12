@@ -23,7 +23,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 90
   - id: c8-mdp-pomdp-bellman-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 3편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 150
   - id: c8-mdp-pomdp-bellman-problems
@@ -31,13 +31,25 @@ activities:
     title: 문제 세트 (유도 1 · 증명 1 · 계산 2 · 구현 1 · 반례 1 · 논문 1)
     estimated_minutes: 150
   - id: c8-mdp-pomdp-bellman-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — 가치 반복의 $\gamma^k$ 오차 감소 검증 (R1)
     estimated_minutes: 75
   - id: c8-mdp-pomdp-bellman-quiz
     kind: quiz
     title: 개념 점검 퀴즈
     estimated_minutes: 15
+papers:
+  - id: blackwell1965-discounted-dp
+    required: true
+    role: seminal
+    note: "§2-3"
+  - id: smallwood1973-pomdp-pwlc
+    required: true
+    role: seminal
+  - id: kaelbling1998-pomdp
+    required: true
+    role: standard
+    note: "§3-4"
 resources:
   - title: "Sutton & Barto, Reinforcement Learning: An Introduction (2nd ed.)"
     kind: book
@@ -46,29 +58,17 @@ resources:
     url: https://lavalle.pl/planning/
     kind: book
     note: ch.10 (불확실성 하 순차 의사결정), ch.11 (센서와 정보 공간), ch.12. 전문 무료.
-  - title: "Blackwell — Discounted dynamic programming (1965)"
-    url: https://doi.org/10.1214/aoms/1177700285
-    kind: article
-    note: 필독 1. 할인 DP 의 수축 논증과 최적 정책 존재의 원전.
-  - title: "Smallwood & Sondik — The optimal control of partially observable Markov processes over a finite horizon (1973)"
-    url: https://doi.org/10.1287/opre.21.5.1071
-    kind: article
-    note: 필독 2. PWLC 가치함수와 알파 벡터의 원전.
-  - title: "Kaelbling, Littman & Cassandra — Planning and acting in partially observable stochastic domains (1998)"
-    url: https://doi.org/10.1016/S0004-3702(98)00023-X
-    kind: article
-    note: 필독 3. 신념 MDP 변환과 POMDP 계획의 표준 참조.
   - title: "Papadimitriou & Tsitsiklis — The complexity of Markov decision processes (1987)"
     url: https://doi.org/10.1287/moor.12.3.441
-    kind: article
+    kind: paper
     note: 권장. MDP·POMDP 의 복잡도 분류(유한 지평 POMDP 는 PSPACE-완전).
   - title: "Madani, Hanks & Condon — On the undecidability of probabilistic planning (2003)"
     url: https://doi.org/10.1016/S0004-3702(02)00378-8
-    kind: article
+    kind: paper
     note: 권장. 무한 지평 POMDP 의 결정 불가능성.
   - title: "Sunberg & Kochenderfer — Online algorithms for POMDPs with continuous spaces (2017)"
     url: https://arxiv.org/abs/1709.06196
-    kind: article
+    kind: paper
     note: 권장. 연속 상태·관측 POMDP 의 온라인 계획(POMCPOW)과 입자 붕괴 문제.
 ---
 
