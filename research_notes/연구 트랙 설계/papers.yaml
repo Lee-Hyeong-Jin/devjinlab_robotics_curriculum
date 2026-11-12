@@ -18,16 +18,18 @@
 #   lessons   : 이 논문을 필독으로 지정한 blueprint.md 의 레슨 id
 #   role      : seminal | standard | frontier | critique | survey
 #
-# 확인 상태 (2026-11-12 기준): 155편 중 154편 verified: true, 1편 false.
-#   (C2 모듈 필독·권장 10편은 C2 저자 세션이 2026-11-12 Crossref API 로 확인해 추가했다.)
-#   미확인 1편 — brockett1983-nonholonomic (책 챕터, Crossref 에서 찾지 못함).
-#   끝내 확인되지 않으면 목록에서 빼고 대체 논문을 넣는다(오케스트레이터 지시 2026-11-12).
-#   확인 방법: arXiv API(id_list), Crossref API, OpenAlex, JMLR 페이지. Semantic Scholar 는
-#   요청 제한(429)으로 일부만 사용했다. DOI 로만 확인한 항목은 전체 저자 목록까지는
-#   대조하지 않았다. arXiv 로 확인한 항목의 학회·저널 게재(venue)는 journal_ref 가 없는 경우
-#   확인되지 않았으며 그런 항목은 note 에 적었다.
+# 확인 상태: **편수를 여기에 적지 않는다** — 저자 8명이 동시에 항목을 추가하므로 하드코딩한
+#   집계는 즉시 어긋나고, 헤더가 공유 구역이어서 충돌원이 된다. 필요할 때 계산한다:
+#     grep -c '^  - id:' papers.yaml                    # 총 편수
+#     grep -c 'verified: false' papers.yaml             # 미확인 편수
+#     grep -B8 'verified: false' papers.yaml | grep 'id:'  # 미확인 항목
+#   확인 방법: arXiv API(id_list), Crossref API, OpenAlex, 학회 프로시딩 페이지(papers.nips.cc,
+#   ijcai.org, cdn.aaai.org), 저자·연구실 페이지. DOI 로만 확인한 항목은 제목·제1저자·연도까지
+#   대조했고 전체 저자 목록은 대조하지 않았다. arXiv 로 확인한 항목의 학회·저널 게재(venue)는
+#   journal_ref 가 없으면 확인되지 않았으며 그런 항목은 note 에 적었다.
+#   끝내 확인되지 않는 항목은 목록에서 빼고 대체 논문을 넣는다(오케스트레이터 지시 2026-11-12).
 #
-# 주의: 총 155편으로 브리프의 "100편 내외"를 상회한다. blueprint.md 의 97레슨이 레슨당
+# 주의: 편수가 브리프의 "100편 내외"를 상회한다. blueprint.md 의 레슨들이 레슨당
 #       1–3편을 지정한 결과이며, 줄이려면 specialization 트랙을 4개로 줄이는 쪽이 자연스럽다
 #       (blueprint.md §10-1).
 

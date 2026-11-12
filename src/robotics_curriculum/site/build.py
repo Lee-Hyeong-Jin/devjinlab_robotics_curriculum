@@ -310,14 +310,26 @@ def generate_project(
     return config_path
 
 
-def run_mkdocs_build(config_path: Path, out_dir: Path) -> None:
-    """``mkdocs build`` via its Python API (no subprocess, no network)."""
+def run_mkdocs_build(config_path: Path, out_dir: Path, *, strict: bool = False) -> None:
+    """``mkdocs build`` via its Python API (no subprocess, no network).
+
+    ``strict`` turns mkdocs' warnings — a link to a page that does not exist, a nav entry
+    with no file — into a failure. Without it a broken lesson link only logged a warning and
+    the build still exited 0, so CI stayed green on content that was already wrong.
+    """
     from mkdocs.commands.build import build
     from mkdocs.config import load_config
+    from mkdocs.exceptions import Abort
 
-    config = load_config(str(config_path), site_dir=str(out_dir.resolve()))
+    config = load_config(str(config_path), site_dir=str(out_dir.resolve()), strict=strict)
     try:
         build(config)
+    except Abort as exc:
+        raise SiteError(
+            f"mkdocs refused the build in strict mode: {exc}. "
+            f"Fix the warnings above (a broken link is usually a lesson id written as a "
+            f"relative path; write it in backticks instead)."
+        ) from None
     finally:
         config.plugins.on_shutdown()
 
@@ -330,21 +342,23 @@ def build_site(
     now: datetime | None = None,
     force: bool = False,
     lang: str = DEFAULT_LANG,
+    strict: bool = False,
 ) -> Path:
     """Generate the MkDocs project (in ``project_dir`` or a temp dir) and build into ``out_dir``.
 
     ``out_dir`` is replaced by mkdocs, so it and ``project_dir`` must pass
-    :func:`ensure_writable` first; ``force`` allows a non-empty directory.
+    :func:`ensure_writable` first; ``force`` allows a non-empty directory. ``strict`` makes a
+    mkdocs warning fail the build (see :func:`run_mkdocs_build`).
     """
     ensure_writable(out_dir, kind="site output directory", force=force)
     _mark(out_dir)
     if project_dir is not None:
         config = generate_project(service, project_dir, now=now, force=force, lang=lang)
-        run_mkdocs_build(config, out_dir)
+        run_mkdocs_build(config, out_dir, strict=strict)
         return out_dir
     with tempfile.TemporaryDirectory(prefix="rc-site-") as tmp:
         config = generate_project(service, Path(tmp), now=now, force=force, lang=lang)
-        run_mkdocs_build(config, out_dir)
+        run_mkdocs_build(config, out_dir, strict=strict)
     return out_dir
 
 
