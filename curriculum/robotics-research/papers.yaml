@@ -1544,15 +1544,6 @@ papers:
     verified: true
     role: seminal
     note: "the binary bag-of-words place recogniser and its verification stages"
-  - id: sunderhauf2012-switchable
-    title: "Switchable constraints for robust pose graph SLAM"
-    authors: ["N. Sunderhauf", "P. Protzel"]
-    year: 2012
-    venue: "IROS"
-    url: "https://doi.org/10.1109/IROS.2012.6385590"
-    verified: true
-    role: standard
-    note: "switch variables that let the back end reject a loop closure"
   - id: yang2020-gnc
     title: "Graduated non-convexity for robust spatial perception: from non-minimal solvers to global outlier rejection"
     authors: ["H. Yang", "P. Antonante", "V. Tzoumas", "L. Carlone"]
@@ -1562,35 +1553,6 @@ papers:
     verified: true
     role: standard
     note: "arXiv v1 2019-09-18, journal_ref RA-L 2020"
-  - id: mourikis2007-msckf
-    title: "A multi-state constraint Kalman filter for vision-aided inertial navigation"
-    authors: ["A. I. Mourikis", "S. I. Roumeliotis"]
-    year: 2007
-    venue: "ICRA"
-    url: "https://doi.org/10.1109/ROBOT.2007.364024"
-    verified: true
-    role: seminal
-    note: "the null-space projection and the sliding-window filter"
-  - id: qin2018-vins-mono
-    title: "VINS-Mono: a robust and versatile monocular visual-inertial state estimator"
-    authors: ["T. Qin", "P. Li", "S. Shen"]
-    year: 2018
-    venue: "IEEE T-RO"
-    url: "https://arxiv.org/abs/1708.03852"
-    verified: true
-    role: standard
-    note: "arXiv v1 2017, T-RO 2018; the optimisation-based counterpart"
-  - id: cadena2016-slam-survey
-    title: "Past, present, and future of simultaneous localization and mapping: towards the robust-perception age"
-    authors: ["C. Cadena", "L. Carlone", "H. Carrillo", "et al."]
-    year: 2016
-    venue: "IEEE T-RO"
-    url: "https://arxiv.org/abs/1606.05830"
-    verified: true
-    role: survey
-    note: "journal_ref IEEE T-RO 32(6) 1309-1332, 2016"
-  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
-
   # ── S2 조작·접촉 ────────────────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
