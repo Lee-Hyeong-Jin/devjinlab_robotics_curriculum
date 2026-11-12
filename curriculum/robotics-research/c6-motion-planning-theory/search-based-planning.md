@@ -48,38 +48,26 @@ resources:
     url: http://lavalle.pl/planning/
     kind: book
     note: ch.2 (이산 계획) — 2.2 의 전방·후방 탐색 통일 틀과 2.3 의 최적 계획.
-  - title: "Likhachev, Gordon & Thrun — ARA*: anytime A* with provable bounds on sub-optimality (2003)"
-    url: https://papers.nips.cc/paper_files/paper/2003/hash/ee8fe9093fbbb687bef15a38facc44d2-Abstract.html
-    kind: paper
-    note: 필독 1. 가중치를 낮추며 g 를 재사용하는 anytime 구조와 INCONS 목록.
-  - title: "Aine, Swaminathan, Narayanan, Hwang & Likhachev — Multi-Heuristic A* (2016)"
-    url: https://doi.org/10.1177/0278364915594029
-    kind: paper
-    note: 필독 2. 허용되지 않는 휴리스틱 여러 개를 쓰면서 앵커 탐색으로 한계를 유지한다.
-  - title: "Hart, Nilsson & Raphael — A formal basis for the heuristic determination of minimum cost paths (1968)"
-    url: https://doi.org/10.1109/TSSC.1968.300136
-    kind: paper
-    note: 필독 3. A* 의 원전. 허용성(admissibility)과 최적성의 최초 증명.
-  - title: "Pohl — Heuristic search viewed as path finding in a graph (1970)"
-    url: https://doi.org/10.1016/0004-3702(70)90007-X
-    kind: paper
-    note: 권장. weighted A* 의 원전($\epsilon$-허용 탐색). R2 의 한계가 여기서 처음 나온다.
-  - title: "Dechter & Pearl — Generalized best-first search strategies and the optimality of A* (1985)"
-    url: https://doi.org/10.1145/3828.3830
-    kind: paper
-    note: 권장. A* 가 "확장 노드 수에서 최적으로 효율적"이라는 주장의 정확한 조건.
-  - title: "Likhachev, Ferguson, Gordon, Stentz & Thrun — Anytime search in dynamic graphs (2008)"
-    url: https://doi.org/10.1016/j.artint.2007.11.009
-    kind: paper
-    note: 권장. ARA* 와 D* Lite 를 합친 Anytime D*. R3 의 완성형.
-  - title: "Koenig & Likhachev — Fast replanning for navigation in unknown terrain (2005)"
-    url: https://doi.org/10.1109/tro.2004.838026
-    kind: paper
-    note: 권장. D* Lite. 후방 탐색 + 국소 일관성 복구로 변화한 간선만 다시 계산한다.
-  - title: "Stentz — Optimal and efficient path planning for partially known environments (1997)"
-    url: https://doi.org/10.1007/978-1-4615-6325-9_11
-    kind: paper
-    note: 권장. D* 의 원전. 야외 주행 로봇에서 실제로 쓰인 최초의 증분 재계획.
+papers:
+  - id: likhachev2003-ara
+    required: true
+    role: seminal
+  - id: aine2016-mha
+    required: true
+    role: standard
+  - id: hart1968-astar
+    required: true
+    role: seminal
+  - id: pohl1970-weighted-astar
+    role: seminal
+  - id: dechter1985-astar-optimality
+    role: standard
+  - id: likhachev2008-anytime-dynamic-astar
+    role: standard
+  - id: koenig2005-dstar-lite
+    role: standard
+  - id: stentz1997-dstar
+    role: seminal
 ---
 
 # 탐색 기반 계획

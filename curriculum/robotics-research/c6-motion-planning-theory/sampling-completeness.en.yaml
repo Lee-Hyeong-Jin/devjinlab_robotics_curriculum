@@ -14,28 +14,6 @@ resources:
     note: >-
       ch.5 (sampling-based motion planning) - 5.2 sampling theory and dispersion, 5.4 PRM, 5.5 RRT.
       Free in full.
-  "Kavraki, Svestka, Latombe & Overmars — Probabilistic roadmaps for path planning in high-dimensional configuration spaces (1996)":
-    note: Must-read 1. The primary source for PRM - roadmap construction and the first completeness argument.
-  "LaValle & Kuffner — Randomized kinodynamic planning (2001)":
-    note: >-
-      Must-read 2. The primary source for RRT (the IJRR version). The Voronoi bias and the extension
-      to differential constraints.
-  "Hsu, Latombe & Motwani — Path planning in expansive configuration spaces (1999)":
-    note: >-
-      Must-read 3. $\epsilon$-goodness and $(\epsilon,\alpha,\beta)$-expansiveness - the only
-      framework that quantifies a narrow passage.
-  "Kleinbort, Solovey, Littlefield, Bekris & Halperin — Probabilistic completeness of RRT for geometric and kinodynamic planning (2019)":
-    note: >-
-      Optional. Closes a gap in the RRT completeness proof and improves the bound. R1 of this lesson
-      follows this paper's construction.
-  "Hsu, Jiang, Reif & Sun — The bridge test for sampling narrow passages with probabilistic roadmaps (2003)":
-    note: >-
-      Optional. A sampler that targets narrow passages - the practical way around the $\delta^d$
-      barrier of uniform sampling.
-  "Ladd & Kavraki — Measure theoretic analysis of probabilistic path planning (2004)":
-    note: Optional. Rebuilds the completeness argument measure-theoretically and separates the assumptions.
-  "Kuffner & LaValle — RRT-Connect (2000)":
-    note: Optional. Bidirectional RRT - the textbook case of same completeness, different constants.
 quiz:
   - id: q1
     prompt: >-

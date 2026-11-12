@@ -17,18 +17,6 @@ resources:
   "CMU 16-782 Planning and Decision-making in Robotics":
     note: >-
       The reference course for this whole module; slides and assignments are public.
-  "Reif — Complexity of the mover's problem and generalizations (1979)":
-    note: Must-read 1. The primary source for PSPACE-hardness of generalized motion planning.
-  "Canny — The Complexity of Robot Motion Planning (1988)":
-    note: Must-read 2. The roadmap algorithm and the singly exponential upper bound. An MIT Press book.
-  "Schwartz & Sharir — On the piano movers' problem II (1983)":
-    note: >-
-      Optional. The first complete algorithm, by cylindrical algebraic decomposition, and its
-      doubly exponential bound.
-  "Hopcroft, Schwartz & Sharir — PSPACE-hardness of the warehouseman's problem (1984)":
-    note: >-
-      Optional. PSPACE-hardness already holds for translating rectangles - evidence that linkages
-      are not what makes the problem hard.
 quiz:
   - id: q1
     prompt: >-

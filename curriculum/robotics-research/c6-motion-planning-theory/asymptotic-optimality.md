@@ -44,34 +44,25 @@ resources:
     url: http://lavalle.pl/planning/
     kind: book
     note: ch.5 — 5.2 의 분산(dispersion)과 5.6 의 로드맵 품질 논의. 점근 최적성 자체는 이 책 이후의 결과다.
-  - title: "Karaman & Frazzoli — Sampling-based algorithms for optimal motion planning (2011)"
-    url: https://arxiv.org/abs/1105.1186
-    kind: paper
-    note: 필독 1. RRT*·PRM* 의 원전. 정리 33(RRT 의 비최적성)과 정리 34·38(RRT* 의 점근 최적성).
-  - title: "Gammell, Srinivasa & Barfoot — Batch Informed Trees (BIT*) (2015)"
-    url: https://arxiv.org/abs/1405.5848
-    kind: paper
-    note: 필독 2. 휴리스틱 탐색과 샘플링의 결합. 배치 단위로 암묵적 랜덤 기하 그래프를 탐색한다.
-  - title: "Gammell, Srinivasa & Barfoot — Informed RRT* (2014)"
-    url: https://arxiv.org/abs/1404.2334
-    kind: paper
-    note: 필독 3. informed 집합(prolate hyperspheroid)과 직접 샘플링. R2 의 부피 공식이 여기서 나온다.
-  - title: "Solovey, Janson, Schmerling, Frazzoli & Pavone — Revisiting the asymptotic optimality of RRT* (2020)"
-    url: https://arxiv.org/abs/1909.09688
-    kind: paper
-    note: 권장. 원 증명의 빈틈을 지적하고 $\gamma$ 조건을 다시 세운다. P8 의 대상.
-  - title: "Janson, Schmerling, Clark & Pavone — Fast Marching Tree (FMT*) (2015)"
-    url: https://arxiv.org/abs/1306.3532
-    kind: paper
-    note: 권장. 동적 계획법 꼴의 점근 최적 플래너. 같은 반경 규칙을 다른 탐색 순서로 쓴다.
-  - title: "Janson, Ichter & Pavone — Deterministic sampling-based motion planning (2018)"
-    url: https://arxiv.org/abs/1505.00023
-    kind: paper
-    note: 권장. 분산 기반 결정론적 수열로 같은 보장을 얻는다. 무작위성이 본질이 아님을 보이는 대조군.
-  - title: "Strub & Gammell — Advanced BIT* (ABIT*) (2020)"
-    url: https://arxiv.org/abs/2002.06589
-    kind: paper
-    note: 권장. BIT* 에 inflation·truncation 을 넣어 초기 해를 빠르게 얻는다.
+papers:
+  - id: karaman2011-rrtstar
+    required: true
+    role: seminal
+    note: "§4, §6 (Thm 33, 34, 38)"
+  - id: gammell2015-bitstar
+    required: true
+    role: standard
+  - id: gammell2014-informed-rrtstar
+    required: true
+    role: standard
+  - id: solovey2020-revisiting-ao
+    role: critique
+  - id: janson2015-fmt
+    role: standard
+  - id: janson2018-deterministic-sampling
+    role: critique
+  - id: strub2020-abit
+    role: standard
 ---
 
 # 점근 최적성

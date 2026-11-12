@@ -46,22 +46,19 @@ resources:
     url: https://www.cs.cmu.edu/~maxim/classes/robotplanning_grad/
     kind: course
     note: 이 모듈 전체의 기준 과목. 강의 슬라이드와 과제가 공개되어 있다.
-  - title: "Reif — Complexity of the mover's problem and generalizations (1979)"
-    url: https://doi.org/10.1109/SFCS.1979.10
-    kind: paper
-    note: 필독 1. 일반 운동 계획의 PSPACE-hardness 원전.
-  - title: "Canny — The Complexity of Robot Motion Planning (1988)"
-    url: https://openlibrary.org/works/OL4626080W
-    kind: book
-    note: 필독 2. 로드맵 알고리즘과 단일 지수 상한. MIT Press 단행본.
-  - title: "Schwartz & Sharir — On the piano movers' problem II (1983)"
-    url: https://doi.org/10.1016/0196-8858(83)90014-3
-    kind: paper
-    note: 권장. 원통형 대수 분해(CAD)로 얻은 최초의 완전 알고리즘과 이중 지수 상한.
-  - title: "Hopcroft, Schwartz & Sharir — PSPACE-hardness of the warehouseman's problem (1984)"
-    url: https://doi.org/10.1177/027836498400300405
-    kind: paper
-    note: 권장. 직사각형 평행이동만으로도 PSPACE-hard 임을 보인다 — 관절 사슬이 본질이 아니라는 증거.
+papers:
+  - id: reif1979-complexity
+    required: true
+    role: seminal
+    note: "§2-4"
+  - id: canny1988-complexity
+    required: true
+    role: seminal
+    note: "ch.1, ch.3"
+  - id: schwartz1983-piano-movers
+    role: seminal
+  - id: hopcroft1984-warehouseman
+    role: standard
 ---
 
 # 구성공간과 복잡도

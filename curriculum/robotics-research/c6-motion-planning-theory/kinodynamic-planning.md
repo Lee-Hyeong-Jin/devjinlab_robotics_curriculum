@@ -44,34 +44,24 @@ resources:
     url: http://lavalle.pl/planning/
     kind: book
     note: ch.13 (미분 모델), ch.14 (미분 제약 하 샘플링 기반 계획) — 14.2 의 도달가능 그래프와 14.4 의 격자.
-  - title: "Webb & van den Berg — Kinodynamic RRT*: optimal motion planning for systems with linear differential constraints (2013)"
-    url: https://arxiv.org/abs/1205.5088
-    kind: paper
-    note: 필독 1. R1 의 그라미안 조종과 $\tau^\ast$ 의 정상 조건이 여기서 나온다.
-  - title: "Pivtoraiko, Knepper & Kelly — Differentially constrained mobile robot motion planning in state lattices (2009)"
-    url: https://doi.org/10.1002/rob.20285
-    kind: paper
-    note: 필독 2. 상태 격자와 운동 원시, 경로 집합(path set)의 중복 제거.
-  - title: "Karaman & Frazzoli — Optimal kinodynamic motion planning using incremental sampling-based methods (2010)"
-    url: https://doi.org/10.1109/CDC.2010.5717430
-    kind: paper
-    note: 필독 3. RRT* 를 미분 제약으로 확장할 때 필요한 가정(약 국소 가제어성)과 반경 규칙의 변형.
-  - title: "Li, Littlefield & Bekris — Asymptotically optimal sampling-based kinodynamic planning (2016)"
-    url: https://arxiv.org/abs/1407.2896
-    kind: paper
-    note: 권장. SST — 조종 없이 전방 전파 + 가지치기로 (준)최적성을 얻는다. R4 의 출처.
-  - title: "Hauser & Zhou — Asymptotically optimal planning by feasible kinodynamic planning in a state-cost space (2016)"
-    url: https://doi.org/10.1109/tro.2016.2602363
-    kind: paper
-    note: 권장. 비용을 상태에 넣어 최적 계획을 가능성 계획으로 환원한다.
-  - title: "Dubins — On curves of minimal length with a constraint on average curvature (1957)"
-    url: https://doi.org/10.2307/2372560
-    kind: paper
-    note: 권장. 곡률 제약 하 최단 경로가 호-직선-호의 유한 집합으로 분류된다는 원전.
-  - title: "Reeds & Shepp — Optimal paths for a car that goes both forwards and backwards (1990)"
-    url: https://doi.org/10.2140/pjm.1990.145.367
-    kind: paper
-    note: 권장. 후진을 허용한 Dubins 의 확장. 48개 단어 분류.
+papers:
+  - id: webb2013-kinodynamic-rrtstar
+    required: true
+    role: standard
+  - id: pivtoraiko2009-lattice
+    required: true
+    role: standard
+  - id: karaman2010-kinodynamic
+    required: true
+    role: seminal
+  - id: li2016-sst
+    role: standard
+  - id: hauser2016-state-cost-space
+    role: standard
+  - id: dubins1957-minimal-curves
+    role: seminal
+  - id: reedsshepp1990-optimal-paths
+    role: seminal
 ---
 
 # 미분 제약·격자 계획

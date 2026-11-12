@@ -14,30 +14,6 @@ resources:
     note: >-
       ch.5 - dispersion in 5.2 and the roadmap-quality discussion in 5.6. Asymptotic optimality
       itself postdates this book.
-  "Karaman & Frazzoli — Sampling-based algorithms for optimal motion planning (2011)":
-    note: >-
-      Must-read 1. The primary source for RRT* and PRM*. Theorem 33 (non-optimality of RRT) and
-      Theorems 34 and 38 (asymptotic optimality of RRT*).
-  "Gammell, Srinivasa & Barfoot — Batch Informed Trees (BIT*) (2015)":
-    note: >-
-      Must-read 2. Heuristic search combined with sampling - it searches an implicit random
-      geometric graph in batches.
-  "Gammell, Srinivasa & Barfoot — Informed RRT* (2014)":
-    note: >-
-      Must-read 3. The informed set (a prolate hyperspheroid) and direct sampling of it. The volume
-      formula of R2 comes from here.
-  "Solovey, Janson, Schmerling, Frazzoli & Pavone — Revisiting the asymptotic optimality of RRT* (2020)":
-    note: Optional. Points out a gap in the original proof and restates the condition on $\gamma$. The target of P8.
-  "Janson, Schmerling, Clark & Pavone — Fast Marching Tree (FMT*) (2015)":
-    note: >-
-      Optional. An asymptotically optimal planner in dynamic-programming form - the same radius rule
-      with a different search order.
-  "Janson, Ichter & Pavone — Deterministic sampling-based motion planning (2018)":
-    note: >-
-      Optional. The same guarantees from deterministic low-dispersion sequences - the control group
-      showing randomness is not essential.
-  "Strub & Gammell — Advanced BIT* (ABIT*) (2020)":
-    note: Optional. Adds inflation and truncation to BIT* to reach a first solution faster.
 quiz:
   - id: q1
     prompt: What is the one **essential** change that turns RRT into RRT*?

@@ -12,7 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `c6-combinatorial-gcs`(조합적 계획과 볼록 분해), `c6-sampling-completeness`(샘플링 기반과
   확률적 완전성), `c6-asymptotic-optimality`(점근 최적성),
   `c6-search-based-planning`(탐색 기반 계획),
-  `c6-kinodynamic-planning`(미분 제약·격자 계획). 각 레슨은 한국어·영어.
+  `c6-kinodynamic-planning`(미분 제약·격자 계획),
+  `c6-tamp`(TAMP). 7레슨 전부 한국어·영어.
 - Translations for the content that had nowhere to hold them: `course.<lang>.yaml` and
   `module.<lang>.yaml` carry a course's and a module's title and summary, and
   `<lesson>.<lang>.yaml` carries activity titles, resource titles and notes, and the quiz

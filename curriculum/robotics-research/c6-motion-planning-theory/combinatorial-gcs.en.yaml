@@ -14,24 +14,6 @@ resources:
     note: >-
       ch.6 (combinatorial planning) - 6.2 polygonal environments, 6.3 cell decompositions, 6.2.4
       shortest-path roadmaps. Free in full.
-  "Lozano-Pérez & Wesley — An algorithm for planning collision-free paths among polyhedral obstacles (1979)":
-    note: >-
-      Must-read 1. The primary source for the visibility graph; C-space inflation and VGRAPH are in
-      the same paper.
-  "Marcucci, Petersen, von Wrangel & Tedrake — Motion planning around obstacles with convex optimization (2023)":
-    note: Must-read 2. GCS applied to motion planning. Science Robotics 2023.
-  "Marcucci, Umenberger, Parrilo & Tedrake — Shortest Paths in Graphs of Convex Sets (2024)":
-    note: >-
-      Must-read 3. The theory side of GCS shortest paths - the perspective reformulation and the
-      tightness of the relaxation. SIAM J. Optim. 34(1).
-  "Deits & Tedrake — Computing large convex regions of obstacle-free space through semidefinite programming (2015)":
-    note: >-
-      Optional. IRIS - how to find convex regions of free space, i.e. where the sets $X_v$ of a GCS
-      come from.
-  "Canny & Reif — New lower bound techniques for robot motion planning problems (1987)":
-    note: >-
-      Optional. Shows that the shortest path among polyhedra in three dimensions is NP-hard - the
-      source for R4.
 quiz:
   - id: q1
     prompt: >-

@@ -14,24 +14,6 @@ resources:
     note: >-
       ch.13 (differential models) and ch.14 (sampling-based planning under differential constraints)
       - the reachability graph of 14.2 and the lattices of 14.4.
-  "Webb & van den Berg — Kinodynamic RRT*: optimal motion planning for systems with linear differential constraints (2013)":
-    note: Must-read 1. The Gramian steering of R1 and the stationarity condition for $\tau^\ast$ come from here.
-  "Pivtoraiko, Knepper & Kelly — Differentially constrained mobile robot motion planning in state lattices (2009)":
-    note: Must-read 2. State lattices and motion primitives, and removing redundancy from the path set.
-  "Karaman & Frazzoli — Optimal kinodynamic motion planning using incremental sampling-based methods (2010)":
-    note: >-
-      Must-read 3. The assumptions needed to extend RRT* to differential constraints (weak local
-      controllability) and the modified radius rule.
-  "Li, Littlefield & Bekris — Asymptotically optimal sampling-based kinodynamic planning (2016)":
-    note: Optional. SST - (near-)optimality from forward propagation plus pruning, with no steering. The source of R4.
-  "Hauser & Zhou — Asymptotically optimal planning by feasible kinodynamic planning in a state-cost space (2016)":
-    note: Optional. Folding the cost into the state reduces optimal planning to feasibility planning.
-  "Dubins — On curves of minimal length with a constraint on average curvature (1957)":
-    note: >-
-      Optional. The primary source for the classification of curvature-constrained shortest paths into
-      a finite set of arc-line-arc words.
-  "Reeds & Shepp — Optimal paths for a car that goes both forwards and backwards (1990)":
-    note: Optional. The extension of Dubins allowing reverse - the classification into 48 words.
 quiz:
   - id: q1
     prompt: Why does the fixed-time optimal steering problem for a linear system solve without calculus of variations?
