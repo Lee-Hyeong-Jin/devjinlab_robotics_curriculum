@@ -159,29 +159,37 @@ def audit_cli(data_dir: Path) -> list[Gap]:
 # -- content and catalogues ------------------------------------------------------------
 
 
-def audit_content() -> list[Gap]:
-    """Content fields that have no place to hold a translation at all."""
-    from robotics_curriculum.content import load_courses
+def audit_content(lang: str = "en") -> list[Gap]:
+    """Content fields that still read in the authoring language in the ``lang`` build."""
+    from robotics_curriculum.content import load_courses, localized_quiz
+    from robotics_curriculum.content.quiz_block import QuizParseError
 
     gaps: list[Gap] = []
     for course in load_courses(CURRICULUM):
-        if find_hangul(course.title) or find_hangul(course.summary):
+        if not course.localized(lang).translated:
             gaps.append(Gap("content", f"course.yaml ({course.id})", "title / summary"))
         for module in course.modules:
-            if find_hangul(module.title) or find_hangul(module.summary):
+            if not module.localized(lang).translated:
                 gaps.append(Gap("content", f"{module.id}/module.yaml", "title / summary"))
-            if module.level and find_hangul(module.level):
-                gaps.append(Gap("content", f"{module.id}/module.yaml", f"level: {module.level}"))
             for lesson in module.lessons:
                 where = f"{module.id}/{lesson.id}"
-                if "en" not in lesson.translations:
-                    gaps.append(Gap("content", where, "no .en.md translation"))
-                for activity in lesson.activities:
+                text = lesson.localized(lang)
+                if not text.translated:
+                    gaps.append(Gap("content", where, f"no .{lang}.md translation"))
+                for activity in text.activities:
                     if find_hangul(activity.title):
                         gaps.append(Gap("content", where, f"activity {activity.id}: title"))
-                for index, resource in enumerate(lesson.resources):
+                for index, resource in enumerate(text.resources):
                     if find_hangul(resource.title) or find_hangul(resource.note or ""):
                         gaps.append(Gap("content", where, f"resource {index}: title / note"))
+                try:
+                    questions = localized_quiz(lesson, lang).questions
+                except QuizParseError:
+                    continue
+                for question in questions:
+                    texts = [question.prompt, question.explanation, *question.choices]
+                    if any(find_hangul(value) for value in texts):
+                        gaps.append(Gap("content", where, f"quiz {question.id}"))
     return gaps
 
 

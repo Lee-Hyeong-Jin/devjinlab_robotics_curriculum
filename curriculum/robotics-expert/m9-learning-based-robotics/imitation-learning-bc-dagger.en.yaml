@@ -1,0 +1,18 @@
+id: m9-imitation-learning-bc-dagger
+lang: en
+activities:
+  m9-imitation-learning-bc-dagger-reading: "Read the lesson and Underactuated ch. 21, Imitation Learning"
+  m9-imitation-learning-bc-dagger-quiz: "Quiz: distribution shift and DAgger"
+  m9-imitation-learning-bc-dagger-exercise: Lane-keeping with behaviour cloning and with DAgger
+resources:
+  "LeRobot":
+    note: >-
+      v0.7.0 when this was written. The ACT, Diffusion and VQ-BeT policy implementations,
+      the LIBERO and MetaWorld benchmarks, and LeRobotDataset.
+  "How I trained ACT on SO-101 (Hugging Face 블로그 미러)":
+    title: "How I trained ACT on SO-101 (Hugging Face blog mirror)"
+    note: >-
+      Sherry Chen's record of the trial and error of a first ACT training run. Read it for
+      the data-collection advice.
+  "Berkeley CS 285 Deep Reinforcement Learning":
+    note: "The Imitation Learning lecture and HW1 (BC and DAgger)."

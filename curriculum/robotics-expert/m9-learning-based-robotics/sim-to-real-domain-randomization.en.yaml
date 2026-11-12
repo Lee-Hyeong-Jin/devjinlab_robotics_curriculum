@@ -1,0 +1,30 @@
+id: m9-sim-to-real-domain-randomization
+lang: en
+activities:
+  m9-sim-to-real-domain-randomization-reading: >-
+    Read the lesson and the Isaac Lab and MuJoCo Playground documentation
+  m9-sim-to-real-domain-randomization-quiz: "Quiz: what causes the reality gap, and what to do about it"
+  m9-sim-to-real-domain-randomization-exercise: Experiment with randomisation ranges and robustness
+resources:
+  "Robot Learning Fundamentals (NVIDIA Physical AI Learning)":
+    note: >-
+      Free registration; read rather than run. Of its nine lessons on RL, PPO, reward
+      design and sim-to-real, lesson 08, Simulation to Reality, is closest to this one.
+      Isaac Lab 3.0 runs on the Newton backend without Isaac Sim, but still needs an
+      NVIDIA GPU (Turing or newer).
+  "Visual Domain Randomization (Isaac Lab, NVIDIA Physical AI Learning)":
+    note: >-
+      A hands-on unit showing how lighting, material and camera randomisation are declared
+      in a configuration file.
+  "MuJoCo Playground":
+    note: >-
+      v1.0. CartpoleBalance takes about a minute on CPU; also G1 motion tracking and an
+      SO-101 sim-to-real example.
+  "unitree_rl_mjlab":
+    note: >-
+      Read the real workflow: flat-ground velocity tracking for Go2 and G1, then
+      policy.onnx, then sim2sim in unitree_mujoco.
+  "Sim-to-Real with SO-101 (NVIDIA Physical AI Learning)":
+    note: >-
+      Domain randomisation for teleoperation, co-training with real data, and the
+      actuation-gap module.

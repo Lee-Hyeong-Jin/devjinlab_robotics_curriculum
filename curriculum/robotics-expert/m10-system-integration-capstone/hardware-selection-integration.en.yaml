@@ -1,0 +1,28 @@
+id: m10-hardware-selection-integration
+lang: en
+activities:
+  m10-hardware-selection-integration-reading: Read the lesson and the system-teardown lectures
+  m10-hardware-selection-integration-quiz: "Quiz: communication buses and power design"
+  m10-hardware-selection-integration-exercise: >-
+    Write the bill of materials and the power budget of your own capstone
+resources:
+  "현직자가 알려주는 로보틱스 시스템 완전 해부: 부품부터 통신까지 (인프런, jelly)":
+    note: >-
+      17 lectures, 58 minutes (high- and low-level controllers, motor drivers, sensors,
+      power and emergency stop; Serial, CAN, Ethernet, EtherCAT, SPI/I2C and packet
+      design). KRW 29,700; in Korean.
+  "SO-ARM100 (TheRobotStudio)":
+    note: >-
+      The SO-101 bill of materials (USD 121.94 for the follower, 229.88 for leader plus
+      follower), 3D printing, and where to buy (including RoboSEasy in Korea).
+  "TurtleBot3 Burger (Generation Robots)":
+    note: "EUR 894.92 (November 2026, RPi4 4 GB, LDS-02). Korean pricing not checked."
+  "Raspberry Pi 5 가격 인상 (OMG! Ubuntu)":
+    title: "Raspberry Pi 5 price rise (OMG! Ubuntu)"
+    note: >-
+      The 2026 DRAM shortage put the 16 GB Pi 5 at USD 385 - the reason to budget
+      generously for compute.
+  "micro_ros_setup (micro-ROS)":
+    note: >-
+      The low-level-controller route: attaching an MCU (ESP32, Pico, STM32) directly to
+      the ROS 2 graph.

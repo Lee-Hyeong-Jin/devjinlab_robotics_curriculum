@@ -1,0 +1,32 @@
+id: m10-career-community-portfolio
+lang: en
+activities:
+  m10-career-community-portfolio-reading: Read the lesson and look around the community and competition pages
+  m10-career-community-portfolio-quiz: "Quiz: what a portfolio is made of"
+  m10-career-community-portfolio-exercise: >-
+    Turn your capstone repository into a portfolio piece and plan the next six months
+resources:
+  "ROS Discourse — Korea Users Group":
+    title: "ROS Discourse - Korea Users Group"
+    note: >-
+      Almost no activity since April 2025. Worth browsing for the past seminar material
+      (Yoonseok Pyo), but ask questions in the forum's English categories instead.
+  "ROSCon Korea 2026 (Korea Times 보도)":
+    title: "ROSCon Korea 2026 (as reported by the Korea Times)"
+    note: >-
+      21-22 January 2026 in Pangyo, hosted by Kwangwoon University with PinkLAB and XYZ.
+      The first ROSCon held in Korea.
+  "RoboCup South Korea Open 2026":
+    note: >-
+      6-8 February 2026 in Pyeongchang. RoboCup 2026 in Incheon (30 June - 6 July) is at
+      https://robocup.org/events/80
+  "2026 로보틱스 작품공모전 (과기정통부)":
+    title: "2026 robotics project competition (Korean Ministry of Science and ICT)"
+    note: >-
+      Submissions 8 October to 2 November 2026; you submit a project, so a capstone can be
+      entered as it stands.
+  "F1TENTH 공개 강의 저장소 (mlab-upenn)":
+    title: "The F1TENTH open courseware repository (mlab-upenn)"
+    note: >-
+      Labs and slides for autonomous racing (a car costs roughly USD 2,100-3,000). A good
+      next step if you can work with a university lab.

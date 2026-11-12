@@ -1,0 +1,22 @@
+id: m9-mdp-decision-making
+lang: en
+activities:
+  m9-mdp-decision-making-reading: Read the lesson and the Stachniss MDP lecture
+  m9-mdp-decision-making-quiz: "Quiz: the Bellman equation and the iterative solutions"
+  m9-mdp-decision-making-exercise: >-
+    Run value and policy iteration on a slippery grid world
+resources:
+  "MDPs (Stachniss)":
+    note: >-
+      Online Training - Mobile Robotics, the Robotics block. Explains value iteration in
+      the context of robot navigation.
+  "Planning Algorithms (LaValle)":
+    note: >-
+      Part III, Decision-Theoretic Planning (MDPs, value and policy iteration, POMDPs).
+      Free HTML and PDF.
+  "Probabilistic Robotics (Thrun, Burgard, Fox)":
+    note: >-
+      The Markov Decision Processes chapter (value iteration and robot control). The same
+      textbook as M5.
+  "MIT OCW 16.410 Principles of Autonomy and Decision Making":
+    note: "The lectures on search, planning and decision making (2010). Optional, for more theory."
