@@ -812,6 +812,16 @@ papers:
     verified: true
     lessons: [c8-value-based-rl]
     role: standard
+  - id: kearns2002-near-optimal
+    title: "Near-optimal reinforcement learning in polynomial time"
+    authors: ["M. Kearns", "S. Singh"]
+    year: 2002
+    venue: "Machine Learning"
+    url: "https://doi.org/10.1023/A:1017984413808"
+    note: "c8 저자 세션이 추가(2026-11-12). Crossref 로 확인. 시뮬레이션 보조정리(모델 오차의 가치 오차 전파)의 원전"
+    verified: true
+    lessons: [c8-model-based-world-models]
+    role: seminal
   - id: janner2019-mbpo
     title: "When to trust your model: model-based policy optimization"
     authors: ["M. Janner", "J. Fu", "M. Zhang", "S. Levine"]

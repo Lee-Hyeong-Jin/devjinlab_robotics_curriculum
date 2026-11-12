@@ -1,0 +1,63 @@
+id: c8-model-based-world-models
+lang: en
+activities:
+  c8-model-based-world-models-reading: Read the text and follow the derivations
+  c8-model-based-world-models-papers: Read the three must-read papers + a one-page note each
+  c8-model-based-world-models-problems: Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample, 1 paper)
+  c8-model-based-world-models-reproduction: Reproduction task - the performance-bias curve in rollout length and objective mismatch (R2)
+  c8-model-based-world-models-quiz: Concept-check quiz
+resources:
+  "Sutton & Barto, Reinforcement Learning: An Introduction (2nd ed.)":
+    note: ch.8 (integrating planning and learning, Dyna). The primary textbook. (official URL unverified)
+  "Kearns & Singh — Near-optimal reinforcement learning in polynomial time (2002)":
+    note: Must-read 1. The origin of the simulation lemma (the lemma in section 3).
+  "Janner, Fu, Zhang & Levine — When to trust your model: model-based policy optimization (2019)":
+    note: Must-read 2. The performance bound of branched rollouts and the choice of $k$ (sections 4-5).
+  "Hafner, Pasukonis, Ba & Lillicrap — Mastering diverse domains through world models (2023)":
+    note: Must-read 3. The training objective of a latent world model and scaling it up (sections 2-3).
+  "Hafner et al. — Learning latent dynamics for planning from pixels (2018)":
+    note: Recommended. PlaNet - the RSSM and the most explicit ELBO derivation for latent-space planning.
+  "Chua, Calandra, McAllister & Levine — Deep RL in a handful of trials using probabilistic dynamics models (2018)":
+    note: Recommended. PETS - handling uncertainty with an ensemble and limiting the rollout length.
+quiz:
+  - id: q1
+    prompt: "Where does the $(1-\\gamma)^{-2}$ of the simulation lemma (2) come from?"
+    choices:
+      - "Because the sum of discounted rewards is nested twice"
+      - "Because the $1/(1-\\gamma)$ of $(I-\\gamma\\hat{P}^\\pi)^{-1}$ multiplies the $1/(1-\\gamma)$ of $\\lVert V^\\pi\\rVert_\\infty$"
+      - "Because the transition error is measured in $\\ell_1$"
+      - "Because of the 1-Lipschitz property of the $\\max$ operator"
+    explanation: "In the identity (1) the inverse has norm $1/(1-\\gamma)$, and bounding the bracket's $(\\hat{P}-P)V^\\pi$ with Hölder brings in $\\lVert V^\\pi\\rVert_\\infty \\le R_{\\max}/(1-\\gamma)$ a second time. The product of those two factors is $(1-\\gamma)^{-2}$."
+    concept:
+      front: "The $(1-\\gamma)^{-2}$ of the simulation lemma"
+      back: "The $1/(1-\\gamma)$ of the inverse times the $1/(1-\\gamma)$ of the value magnitude - switching to the span tightens the latter"
+  - id: q2
+    prompt: "Dyna's bias disappears if enough real data is collected."
+    explanation: "In the limit of updating only from model samples, Dyna's fixed point is the **model's** optimal value $\\hat{V}^\\*$, whose error depends only on model error as in (6). Real data reduces the bias only insofar as it fixes the model; mixing real data at a ratio $\\beta$ reduces the bias proportionally to $\\beta$ but reduces the sample-efficiency gain by the same amount."
+    concept:
+      front: "Dyna's fixed point"
+      back: "The model's optimal value $\\hat{V}^\\*$ - the bias depends only on model error and does not vanish with data volume"
+  - id: q3
+    prompt: "What happens to the optimal branched rollout length $k$ as the critic noise $\\sigma_V$ grows?"
+    choices:
+      - "It decreases (because the model should be trusted less)"
+      - "It increases (because the critic should be trusted less)"
+      - "It does not change"
+      - "It depends only on $\\gamma$, so it is unrelated"
+    explanation: "In (4) the critic error is damped by $\\gamma^k$ while model error accumulates with $k$. A larger $\\sigma_V$ means more to damp, so $k^\\star$ grows - the logarithmic dependence of (7), confirmed in the reproduction task as a monotone increase at all five model qualities."
+    concept:
+      front: "What $k^\\star$ depends on"
+      back: "Grows logarithmically in $\\sigma_V$, shrinks logarithmically in $\\epsilon_P$ - roll the model only as far as you trust it"
+  - id: q4
+    prompt: "A model with higher held-out log-likelihood also has smaller value error."
+    explanation: "Model error reaches the value through the **inner product** $(\\hat{P}-P)V^\\pi$ in (1), so only the component along $V^\\pi$ matters. Likelihood does not distinguish directions, so one can construct a model whose likelihood rose more but whose value error is more than twice as large (reproduction criterion 4)."
+    concept:
+      front: "Objective mismatch"
+      back: "Likelihood weighs every direction equally, the value only the $V^\\pi$ direction - the two orderings disagree"
+  - id: q5
+    prompt: "In the ELBO (5) of a sequential latent variable model, what does the KL term pull the inference distribution toward? (one word)"
+    answers: ["prior", "the prior", "transition prior", "p(z_t|z_{t-1},a_{t-1})"]
+    explanation: "The KL term pulls $q(z_t\\mid o_{\\le t},a_{<t})$ toward the transition prior $p(z_t\\mid z_{t-1},a_{t-1})$. That is a demand that the latent state be **predictable**, while the first term (reconstruction) demands that information be preserved. The balance of the two demands determines the latent representation."
+    concept:
+      front: "The two terms of the ELBO"
+      back: "Reconstruction = preserve information, KL = predictability (stay close to the transition prior)"

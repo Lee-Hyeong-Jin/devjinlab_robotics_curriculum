@@ -14,3 +14,4 @@ lessons:
   - mdp-pomdp-bellman
   - policy-gradient
   - value-based-rl
+  - model-based-world-models
