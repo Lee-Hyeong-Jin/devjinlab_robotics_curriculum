@@ -14,3 +14,4 @@ modules:
   - c2-multibody-dynamics
   - c3-nonlinear-robust-control
   - c6-motion-planning-theory
+  - s2-manipulation-contact

@@ -912,7 +912,60 @@ papers:
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
   # ── S2 조작·접촉 ────────────────────────────────────────────────
-  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+  - id: ferrari1992-grasp-quality
+    title: "Planning optimal grasps"
+    authors: ["C. Ferrari", "J. Canny"]
+    year: 1992
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ROBOT.1992.219918"
+    verified: true
+    role: seminal
+    note: "2026-11-12 Crossref 확인. 레코드의 issued date 가 비어 있어 연도는 프로시딩 제목에서 읽었다."
+  - id: rodriguez2012-caging
+    title: "From caging to grasping"
+    authors: ["A. Rodriguez", "M. T. Mason", "S. Ferry"]
+    year: 2012
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364912442972"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인."
+  - id: nguyen1988-force-closure
+    title: "Constructing Force-Closure Grasps"
+    authors: ["V.-D. Nguyen"]
+    year: 1988
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/027836498800700301"
+    verified: true
+    role: seminal
+    note: "2026-11-12 Crossref 확인. 평면 force closure 의 구성적 판정."
+  - id: mishra1987-positive-grips
+    title: "On the existence and synthesis of multifinger positive grips"
+    authors: ["B. Mishra", "J. T. Schwartz", "M. Sharir"]
+    year: 1987
+    venue: "Algorithmica"
+    url: "https://doi.org/10.1007/bf01840373"
+    verified: true
+    role: seminal
+    note: "2026-11-12 Crossref 확인. 무마찰 하한(평면 4점·공간 7점)."
+  - id: rimon1998-mobility
+    title: "Mobility of bodies in contact. I. A 2nd-order mobility index for multiple-finger grasps"
+    authors: ["E. Rimon", "J. W. Burdick"]
+    year: 1998
+    venue: "IEEE T-RA"
+    url: "https://doi.org/10.1109/70.720346"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인. 접촉 섭동에 대한 2차 이동도."
+  - id: bicchi2000-grasping-review
+    title: "Robotic grasping and contact: a review"
+    authors: ["A. Bicchi", "V. Kumar"]
+    year: 2000
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ROBOT.2000.844081"
+    verified: true
+    role: survey
+    note: "2026-11-12 Crossref 확인(등록 연도 누락, 프로시딩은 ICRA 2000)."
 
   # ── S3 보행·언더액추에이티드 ──────────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)

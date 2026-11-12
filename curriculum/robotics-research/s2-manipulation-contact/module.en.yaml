@@ -1,0 +1,12 @@
+id: s2-manipulation-contact
+lang: en
+title: S2 Manipulation and contact
+summary: >-
+  Moving objects through contact, treated at four layers: mechanics, estimation, learning and
+  planning. It starts with deciding force closure in the friction cone and the wrench space, goes
+  through contact modes and the limit surface of non-prehensile manipulation (pushing), the
+  solvability of inverting contact state from tactile images, the label noise and sim-to-real gap of
+  learned grasping, the score-based objective of generative policies, and ends at planning and
+  control with contact made explicit (contact-implicit MPC, GCS). The recommended prerequisites are
+  C1-C4 and C6; in particular the contact dynamics (complementarity) of C2 and the TAMP (contact-mode
+  enumeration) of C6 are the two pillars of this module.
