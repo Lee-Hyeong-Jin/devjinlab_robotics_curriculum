@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Research-track lesson `c4-mpc`: recursive feasibility from control invariance of the
+  terminal set and Lyapunov stability from a terminal cost that is a control Lyapunov
+  function, both proved by the shift-and-append construction; a grid study counting the 178
+  states that are feasible now and infeasible later without a terminal condition; explicit
+  MPC as a piecewise affine map; and real-time iteration. Korean source plus the English
+  translation.
 - Research-track lesson `c4-direct-collocation-sqp`: the exact nonzero count of the
   transcribed constraint Jacobian and its identity with the Riccati recursion, Hermite-Simpson
   derived from cubic Hermite interpolation with midpoint collocation (global order four), SQP

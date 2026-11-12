@@ -445,13 +445,22 @@ papers:
     verified: true
     lessons: [c4-direct-collocation-sqp]
     role: standard
+  - id: mayne2000-constrained-mpc
+    title: "Constrained model predictive control: stability and optimality"
+    authors: ["D. Q. Mayne", "J. B. Rawlings", "C. V. Rao", "P. O. M. Scokaert"]
+    year: 2000
+    venue: "Automatica"
+    url: "https://doi.org/10.1016/S0005-1098(99)00214-9"
+    verified: true
+    lessons: [c4-mpc]
+    role: seminal
   - id: rawlings2017-mpc-theory
     title: "Model Predictive Control: Theory, Computation, and Design"
     authors: ["J. B. Rawlings", "D. Q. Mayne", "M. M. Diehl"]
     year: 2017
     venue: "Nob Hill Publishing (book)"
     url: "https://sites.engineering.ucsb.edu/~jbraw/mpc/"
-    note: "URL 미확인 (출판사 페이지 미확인)"
+    note: "2026-11-12 재확인: 페이지 제목이 서지와 일치(저자 페이지)."
     verified: true
     lessons: [c4-mpc]
     role: standard

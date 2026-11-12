@@ -486,6 +486,27 @@ papers:
     venue: "AIAA J. Guidance, Control, and Dynamics"
     url: "https://doi.org/10.2514/2.4231"
     verified: true
+  - id: mayne2000-constrained-mpc
+    title: "Constrained model predictive control: stability and optimality"
+    authors: ["D. Q. Mayne", "J. B. Rawlings", "C. V. Rao", "P. O. M. Scokaert"]
+    year: 2000
+    venue: "Automatica"
+    url: "https://doi.org/10.1016/S0005-1098(99)00214-9"
+    verified: true
+  - id: rawlings2017-mpc-theory
+    title: "Model Predictive Control: Theory, Computation, and Design"
+    authors: ["J. B. Rawlings", "D. Q. Mayne", "M. M. Diehl"]
+    year: 2017
+    venue: "Nob Hill Publishing (book)"
+    url: "https://sites.engineering.ucsb.edu/~jbraw/mpc/"
+    verified: true
+  - id: diehl2009-rti
+    title: "Efficient numerical methods for nonlinear MPC and moving horizon estimation"
+    authors: ["M. Diehl", "H. J. Ferreau", "N. Haverbeke"]
+    year: 2009
+    venue: "Nonlinear Model Predictive Control (LNCIS)"
+    url: "https://doi.org/10.1007/978-3-642-01094-1_32"
+    verified: true
   - id: kelly2017-trajopt-tutorial
     title: "An introduction to trajectory optimization: how to do your own direct collocation"
     authors: ["M. Kelly"]
