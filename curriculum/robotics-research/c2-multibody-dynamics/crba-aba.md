@@ -57,11 +57,10 @@ papers:
   - id: walker1982-crba
     role: seminal
     required: true
-    note: 논문의 Method 3 이 CRBA 다. Method 1·2(순동역학의 소박한 경로)와 비용을 비교하는 절을 함께 읽는다.
+    note: "Methods 1-4"
   - id: featherstone1983-aba
     role: seminal
     required: true
-    note: 관절 공간 관성의 정의와 재귀를 세우는 절. R3 의 유도와 1:1 대조하며 읽는다.
 ---
 
 # 질량행렬(CRBA)과 순동역학(ABA)
@@ -149,7 +148,7 @@ $M(q) \succ 0$ 은 이 전제에서 따라온다(문제 P1 ⓐ).
   $I^A_i \succ 0$ 이고 $I^a_i \succeq 0$ 이며, 따라서 $d_i > 0$ 이므로 (4)의 나눗셈은 **항상
   안전하다**(피벗팅이 필요 없다). 비용은 바디당 상수이므로 $\Theta(n)$. CRBA + 조밀 Cholesky
   경로($\Theta(n^2) + \Theta(n^3)$)와의 교차점은 작은 $n$ 에서 CRBA 쪽이고, 그 위치는 구현과
-  하드웨어가 결정한다 — 비용 표는 RBDA §6.4·§7.4. **[D1]**
+  하드웨어가 결정한다 — 비용 표는 RBDA ch.6·ch.7 의 비교 절에 있다. **[D1]**
 
 ## 유도
 

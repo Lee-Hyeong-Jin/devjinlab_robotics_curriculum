@@ -54,14 +54,11 @@ papers:
   - id: featherstone2010-6d-vectors-part1
     role: standard
     required: true
-    note: 운동 공간과 힘 공간을 두 개의 다른 벡터공간으로 세우는 절, Plücker 좌표를 도입하는 절.
   - id: featherstone2010-6d-vectors-part2
     role: standard
     required: true
-    note: 공간 관성·외적·미분 규칙을 세우는 절과 동역학 알고리즘으로 잇는 마지막 절. R2·R3·R4 와 1:1 대응.
   - id: featherstone2006-plucker-basis
     role: standard
-    note: 권장. 쌍대 기저를 명시적으로 써서 좌표 변환 규칙이 왜 두 종류인지 보인다.
 ---
 
 # 공간 벡터 대수
@@ -379,7 +376,7 @@ C2: $f = I a + (v\times^{*})Iv$ 이고 둘째 항은 $v$ 에 직교한다.
    (마지막 등호는 (6)의 $v\times^{*} = -(v\times)^\top$). 둘째 항은 $-\,{}^AI\,(v\times)$.
    더하면 C1 이다.
 4. **Newton-Euler.** 공간 운동량은 $h = Iv$ 이고, 관성 좌표계에서 공간 힘은 운동량의 시간
-   미분이다($F^6$ 에서의 Newton 제2법칙 — Featherstone 2010 Part 2 §II):
+   미분이다($F^6$ 에서의 Newton 제2법칙 — Featherstone 2010 Part 2 의 운동량 절):
    $$
    f = \dot{h} = \dot{I}v + I\dot{v} = (v\times^{*})Iv - I\underbrace{(v\times)v}_{=\,0} + Ia = Ia + (v\times^{*})Iv.
    $$
@@ -395,8 +392,8 @@ C2: $f = I a + (v\times^{*})Iv$ 이고 둘째 항은 $v$ 에 직교한다.
 남고, 그 항이 변형체·가변 질량 동역학의 추가 항이다.
 
 생략한 기술적 단계: $F^6$ 에서 운동량의 미분이 공간 힘이라는 것 자체는 Newton 제2법칙을
-6D 로 올린 공리에 해당한다. 유도를 보려면 Featherstone 2010 Part 2 §II–III, 또는
-RBDA ch.2.9 의 운동량 논의를 본다.
+6D 로 올린 공리에 해당한다. 유도를 보려면 Featherstone 2010 Part 2 의 운동량을 다루는 절, 또는
+RBDA ch.2 의 운동량 논의를 본다.
 
 ## 문제 세트
 

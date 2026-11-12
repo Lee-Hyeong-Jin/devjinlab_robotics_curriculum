@@ -372,7 +372,7 @@ but the differentiation rule (5). No differential geometry is needed — everyth
    (v\times^{*})\,{}^AI$ (the last equality being $v\times^{*} = -(v\times)^\top$ from (6)). The
    second is $-\,{}^AI\,(v\times)$. Adding them gives C1.
 4. **Newton-Euler.** The spatial momentum is $h = Iv$, and in an inertial frame the spatial force
-   is the time derivative of momentum (Newton's second law in $F^6$ — Featherstone 2010 Part 2 §II):
+   is the time derivative of momentum (Newton's second law in $F^6$ — Featherstone 2010 Part 2 의 운동량 절):
    $$
    f = \dot{h} = \dot{I}v + I\dot{v} = (v\times^{*})Iv - I\underbrace{(v\times)v}_{=\,0} + Ia = Ia + (v\times^{*})Iv.
    $$
@@ -390,8 +390,8 @@ and a $\dot{}^BI$ term survives from step 1 onward; that term is the extra contr
 deformable-body and variable-mass dynamics.
 
 Technical step omitted: that the derivative of momentum in $F^6$ is the spatial force is itself
-Newton's second law lifted to 6-D. For a derivation see Featherstone 2010 Part 2 §II–III, or the
-momentum discussion in RBDA ch.2.9.
+Newton's second law lifted to 6-D. For a derivation see the momentum section of Featherstone 2010 Part 2, or the
+momentum discussion in RBDA ch.2.
 
 ## Problem set
 

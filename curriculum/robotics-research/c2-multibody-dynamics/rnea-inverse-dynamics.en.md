@@ -320,7 +320,7 @@ it is all linear algebra.
    definition of the generalised force in d'Alembert's principle. For a holonomic system
    d'Alembert ⟺ Euler-Lagrange, so the right-hand side of (7) equals
    $\frac{d}{dt}\partial T/\partial\dot q_i - \partial T/\partial q_i + \partial V/\partial q_i$.
-   (Omitted: the standard proof that d'Alembert implies Lagrange. MLS ch.4.2, or any analytical
+   (Omitted: the standard proof that d'Alembert implies Lagrange. MLS ch.4, or any analytical
    mechanics text. This bridge is **[D1]**, and conditions 2 and 3 of the reproduction task are
    what check it numerically.)
 5. **Specialise.** With $\dot q = 0$ and $a_g = 0$ every $v_j = 0$, so the bias terms vanish and
@@ -354,8 +354,7 @@ depends on every input) for the lower bound.
    product; (e) $I_ia_i$ and $(v_i\times^{*})(I_iv_i)$ — one symmetric product plus two general
    ones. The backward pass does (f) the inner product $S_i^\top f_i$ and (g) one $X^\top f_i$
    product plus an addition. All are of **fixed size $6\times6$**, so the cost per body is a
-   constant $c$ independent of $n$ (the exact flop tables per joint type are in RBDA §5.3 and
-   Table 5.1).
+   constant $c$ independent of $n$ (the exact flop tables per joint type are in the cost section of RBDA ch.5).
 2. **Each body is visited exactly twice.** Because the numbering is topologically sorted with
    $\lambda(i) < i$, the forward pass is the **plain loop** $i = 1 \dots n$ and the backward pass
    $i = n \dots 1$, with no recursion stack. The number of visits is exactly $2n$. What is stored

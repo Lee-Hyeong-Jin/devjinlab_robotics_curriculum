@@ -109,7 +109,7 @@ D3 proof — see `lesson-standard.md` §2 in the track design notes).
   **always safe** (no pivoting needed). The cost is constant per body, so $\Theta(n)$. The
   crossover with the CRBA-plus-dense-Cholesky route ($\Theta(n^2) + \Theta(n^3)$) favours CRBA at
   small $n$, and where it sits is decided by the implementation and the hardware — the cost
-  tables are RBDA §6.4 and §7.4. **[D1]**
+  tables are in the comparison sections of RBDA ch.6 and ch.7. **[D1]**
 
 ## Derivation
 

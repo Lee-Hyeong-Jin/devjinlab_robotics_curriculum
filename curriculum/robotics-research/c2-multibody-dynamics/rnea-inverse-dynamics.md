@@ -40,7 +40,7 @@ resources:
   - title: "Featherstone, Rigid Body Dynamics Algorithms (2008)"
     url: https://doi.org/10.1007/978-0-387-74315-8
     kind: book
-    note: ch.5 (Inverse Dynamics). 재귀식의 표기와 비용 표(§5.3)가 이 레슨의 기준이다.
+    note: ch.5 (Inverse Dynamics). 재귀식의 표기와 비용 표가 이 레슨의 기준이다.
   - title: "Lynch & Park, Modern Robotics"
     url: http://hades.mech.northwestern.edu/index.php/Modern_Robotics
     kind: book
@@ -53,11 +53,9 @@ papers:
   - id: luh1980-rnea
     role: seminal
     required: true
-    note: 전진 운동학 재귀와 후진 힘 재귀를 세우는 절, 그리고 비용을 논하는 절. (1)(3)(5)와 1:1 대응.
   - id: featherstone2000-dynamics-equations-algorithms
     role: survey
     required: true
-    note: 역·순동역학·질량행렬 알고리즘을 한 틀에서 비교하는 절. R5 와 다음 레슨의 복잡도 지형.
 ---
 
 # 재귀 Newton–Euler (RNEA)
@@ -336,7 +334,7 @@ H2: $S_i$ 는 바디 $i$ 좌표에서 상수다. H3: 각 바디의 질량 분포
    가상 속도장에 사영해 더한 것"이고, 이것이 d'Alembert 원리의 일반화 힘 정의다. 홀로노믹
    계에서 d'Alembert ⟺ Euler–Lagrange 이므로 (7)의 우변은
    $\frac{d}{dt}\partial T/\partial\dot q_i - \partial T/\partial q_i + \partial V/\partial q_i$ 와 같다.
-   (생략: d'Alembert ⟹ Lagrange 의 표준 증명. MLS ch.4.2 또는 임의의 해석역학 교재.
+   (생략: d'Alembert ⟹ Lagrange 의 표준 증명. MLS ch.4 또는 임의의 해석역학 교재.
    이 가교는 **[D1]** 이고, 수치적 확인은 재현 과제 조건 2·3 이 담당한다.)
 5. **특수화.** $\dot q = 0$, $a_g = 0$ 이면 모든 $v_j = 0$ 이므로 편향 항이 사라지고
    $a_j = J_j\ddot q$ 다. (7)에 넣으면 $\tau = \big(\sum_j J_j^\top I_jJ_j\big)\ddot q$ 이고,
@@ -366,7 +364,7 @@ RNEA 는 차수 최적이다.
    ⓓ $v_i \times v_{J_i}$ — $6\times6$ 곱 1회 ⓔ $I_ia_i$ 와 $(v_i\times^{*})(I_iv_i)$ — 대칭
    곱 1회 + 일반 곱 2회. 후진 패스는 ⓕ $S_i^\top f_i$ 내적 1회 ⓖ $X^\top f_i$ 곱 1회와 덧셈.
    모두 **$6\times6$ 고정 크기**이므로 바디당 비용은 $n$ 과 무관한 상수 $c$ 다
-   (관절 유형별 정확한 flop 표는 RBDA §5.3·Table 5.1).
+   (관절 유형별 정확한 flop 표는 RBDA ch.5 의 비용 절에 있다).
 2. **각 바디를 정확히 두 번 방문한다.** 바디 번호가 $\lambda(i) < i$ 로 위상 정렬되어 있으므로
    전진은 $i = 1 \dots n$, 후진은 $i = n \dots 1$ 의 **단순 루프**이고 재귀 스택도 필요 없다.
    방문 횟수는 정확히 $2n$. 저장하는 것은 $v_i, a_i, f_i, X_i$ 로 바디당 상수 — 공간도 $\Theta(n)$.
