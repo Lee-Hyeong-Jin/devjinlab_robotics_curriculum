@@ -773,6 +773,26 @@ papers:
     verified: true
     lessons: [c8-policy-gradient]
     role: standard
+  - id: baird1995-residual
+    title: "Residual algorithms: reinforcement learning with function approximation"
+    authors: ["L. C. Baird"]
+    year: 1995
+    venue: "ICML"
+    url: "https://doi.org/10.1016/B978-1-55860-377-6.50013-X"
+    note: "c8 저자 세션이 추가(2026-11-12). Crossref 로 제목·제1저자·연도·프로시딩 확인. Baird 반례와 잔차 경사법의 원전"
+    verified: true
+    lessons: [c8-value-based-rl]
+    role: seminal
+  - id: tsitsiklis1997-td-function-approx
+    title: "An analysis of temporal-difference learning with function approximation"
+    authors: ["J. N. Tsitsiklis", "B. Van Roy"]
+    year: 1997
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/9.580874"
+    note: "c8 저자 세션이 추가(2026-11-12). Crossref 로 확인. on-policy 선형 TD 의 수렴과 투영 Bellman 오차 한계의 원전"
+    verified: true
+    lessons: [c8-value-based-rl]
+    role: seminal
   - id: mnih2015-dqn
     title: "Human-level control through deep reinforcement learning"
     authors: ["V. Mnih", "K. Kavukcuoglu", "D. Silver", "et al."]

@@ -1,0 +1,65 @@
+id: c8-value-based-rl
+lang: en
+activities:
+  c8-value-based-rl-reading: Read the text and follow the derivations
+  c8-value-based-rl-papers: Read the four must-read papers + a one-page note each
+  c8-value-based-rl-problems: Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample, 1 paper)
+  c8-value-based-rl-reproduction: Reproduction task - divergence in Baird's counterexample and convergence of the residual gradient (R1)
+  c8-value-based-rl-quiz: Concept-check quiz
+resources:
+  "Sutton & Barto, Reinforcement Learning: An Introduction (2nd ed.)":
+    note: ch.9 (on-policy approximation), ch.10 (off-policy approximation), ch.11 (instability of off-policy methods). The primary textbook. (official URL unverified)
+  "Baird — Residual algorithms: reinforcement learning with function approximation (1995)":
+    note: Must-read 1. The origin of the counterexample and of the residual gradient.
+  "Tsitsiklis & Van Roy — An analysis of temporal-difference learning with function approximation (1997)":
+    note: Must-read 2. Convergence of on-policy linear TD and the projected Bellman error bound (sections 3-5).
+  "Mnih et al. — Human-level control through deep reinforcement learning (2015)":
+    note: Must-read 3. Which leg of the triad replay and the target network weaken (the Methods section).
+  "van Hasselt, Guez & Silver — Deep reinforcement learning with double Q-learning (2016)":
+    note: Must-read 4. Measuring overestimation and the double estimator (sections 3-4).
+  "van Hasselt et al. — Deep reinforcement learning and the deadly triad (2018)":
+    note: Recommended. Separates each leg of the triad experimentally.
+  "Fujimoto, van Hoof & Meger — Addressing function approximation error in actor-critic methods (2018)":
+    note: Recommended. Overestimation with continuous actions and twin critics (TD3).
+quiz:
+  - id: q1
+    prompt: "Where is the on-policy assumption used in the proof of $\\lVert P^\\pi v\\rVert_D \\le \\lVert v\\rVert_D$?"
+    choices:
+      - "In the step that applies convexity of squaring (Jensen)"
+      - "In the stationarity equality $\\sum_s d(s) P^\\pi_{ss'} = d(s')$"
+      - "In the step that extracts the contraction factor from $\\gamma < 1$"
+      - "In the step where the orthogonal projection $\\Pi$ is non-expansive"
+    explanation: "Jensen holds regardless of $d$, and non-expansiveness of $\\Pi$ has nothing to do with $P^\\pi$. The only thing that can fail is the equality saying $d$ is stationary for $P^\\pi$, and Baird's counterexample violates exactly that (uniform weighting, a target policy that sends all mass to one state)."
+    concept:
+      front: "Where the on-policy assumption enters"
+      back: "The single line $d^\\top P^\\pi = d^\\top$ (stationarity) - break it and the whole contraction argument collapses"
+  - id: q2
+    prompt: "Linear TD diverges in Baird's counterexample because the true value function cannot be represented by the features."
+    explanation: "The true value is $V^\\pi \\equiv 0$ and is represented **exactly** by $\\theta = 0$. The cause of divergence is not limited expressiveness but eigenvalues of the expected update matrix $A$ with negative real part, which in turn come from the combination of a shared feature, bootstrapping and a mismatched distribution."
+    concept:
+      front: "The cause of divergence in Baird"
+      back: "Not limited expressiveness - the negative-real-part eigenvalues of $A$ (the triad in combination)"
+  - id: q3
+    prompt: "Write the expectation of the maximum of $m$ independent $\\mathrm{Unif}(-\\epsilon,\\epsilon)$ noises in terms of $\\epsilon$ and $m$ (as a fraction)."
+    answers: ["eps(m-1)/(m+1)", "epsilon(m-1)/(m+1)", "\\epsilon(m-1)/(m+1)", "(m-1)/(m+1)"]
+    explanation: "The maximum of $m$ draws from $\\mathrm{Unif}(0,1)$ has mean $m/(m+1)$, so $-\\epsilon + 2\\epsilon m/(m+1) = \\epsilon(m-1)/(m+1)$. It tends to $\\epsilon$ as $m$ grows, and this bias accumulates at every bootstrap."
+    concept:
+      front: "Overestimation bias of the maximum (uniform noise)"
+      back: "$\\epsilon(m-1)/(m+1)$ - tends to $\\epsilon$ as the number of actions grows"
+  - id: q4
+    prompt: "What is the structural reason the residual gradient converges?"
+    choices:
+      - "Because the target no longer depends on $\\theta$"
+      - "Because the update matrix $B$ is a non-negatively weighted sum of outer products and hence symmetric positive semidefinite"
+      - "Because the importance ratio becomes 1"
+      - "Because the step size is taken small enough"
+    explanation: "$B = \\sum_s w(s)\\phi_\\Delta(s)\\phi_\\Delta(s)^\\top$ is symmetric with all eigenvalues $\\ge 0$, so the MSBE is monotonically non-increasing for $\\alpha < 2/\\lambda_{\\max}$. The target still depends on $\\theta$ (bootstrapping remains), and a small step size alone cannot stop TD from diverging."
+    concept:
+      front: "Why the residual gradient converges"
+      back: "$B$ is symmetric PSD - the price is a different fixed point and the double-sampling requirement"
+  - id: q5
+    prompt: "The double estimator is an unbiased estimate of $\\max_a \\mathbb{E}[\\hat{Q}(a)]$."
+    explanation: "Separating selection from evaluation makes the bias zero when all true values are equal, but when they differ $\\mathbb{E}[\\hat{Q}_B(a^\\star)] = \\sum_a \\Pr(a^\\star=a) q_a \\le \\max_a q_a$, a downward bias. Double Q does not remove the bias; it **flips its sign**."
+    concept:
+      front: "What the double estimator does"
+      back: "Turns a positive bias into a negative one - it is not an unbiased estimator"

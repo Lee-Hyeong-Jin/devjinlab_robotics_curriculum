@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Research-track module `c8-decision-making-learning-theory` (C8, decision making and
   learning theory), research-grade lessons in Korean and English with derivations, problem
   sets, must-read papers, reproduction tasks and open problems. Lessons so far:
-  `c8-mdp-pomdp-bellman`, `c8-policy-gradient`.
+  `c8-mdp-pomdp-bellman`, `c8-policy-gradient`, `c8-value-based-rl`.
 
 ### Changed
 
