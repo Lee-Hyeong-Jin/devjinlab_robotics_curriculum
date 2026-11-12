@@ -1,0 +1,12 @@
+id: robotics-research
+title: 로보틱스 연구원 트랙
+summary: >-
+  로보틱스 연구원(researcher)을 목표로 하는 specialization 급 전문 과정. 기준은 세계 최상위
+  대학원 과목과 국제 학회(RSS, ICRA, IROS, CoRL, IJRR, T-RO, RA-L)의 연구 수준이며, 레슨마다
+  핵심 결과를 직접 유도하고 원 논문을 읽고 수치적으로 재현한다. 설계안은
+  research_notes/연구 트랙 설계/blueprint.md(97레슨), 레슨 표준은 같은 폴더의 lesson-standard.md.
+  현재는 표준 검증용 기준 레슨(reference lesson) 1개만 들어 있다 — 선수 과정은
+  robotics-expert 코스다.
+tags: [robotics, research, graduate]
+modules:
+  - c1-rigid-body-geometry-lie-groups
