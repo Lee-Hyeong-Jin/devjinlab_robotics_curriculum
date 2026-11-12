@@ -252,6 +252,10 @@ papers:
     note: "§3 의 2차 전개"
 ```
 
+표시: `rc papers <lesson_id>`, 정적 사이트 레슨 하단의 "필독 논문" 절, `GET /lessons/{id}` 의
+`papers[]`(필독 먼저 정렬, 한 줄 서지 `citation` 포함), web 레슨 화면의 사이드바.
+`verified: false` 인 논문은 어디서나 "미확인"으로 표시한다.
+
 **원본은 레슨이다.** 어떤 논문을 필독으로 지정하는가는 교육적 결정이므로 레슨에 있고, 레지스트리는
 그 논문이 무엇인지만 말한다. 같은 논문이 레슨에 따라 `seminal` 이기도 `critique` 이기도 하므로
 레슨의 `role` 이 레지스트리 값을 덮어쓴다. 출력은 `rc papers <lesson_id>`.

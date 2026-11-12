@@ -294,3 +294,87 @@ def test_rc_validate_reports_a_warning_without_failing(tmp_path: Path) -> None:
     assert result.exit_code == 0, result.output
     assert "warning:" in result.output
     assert "1 warning(s)" in result.output
+
+
+# -- API and static site show them ---
+
+
+def write_in(root: Path) -> Path:
+    """A one-lesson course with both papers assigned, inside ``root``."""
+    return write_course(root, lesson_front=ASSIGNS_BOTH)
+
+
+def test_the_api_lesson_response_lists_papers_required_first(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    from robotics_curriculum.api.app import create_app
+    from robotics_curriculum.api.settings import Settings
+
+    course = write_in(tmp_path / "content")
+    app = create_app(Settings(curriculum_dir=course.parent, data_dir=tmp_path / "data"))
+    body = TestClient(app).get("/api/v1/lessons/l1").json()
+    assert [p["id"] for p in body["papers"]] == ["mayne-1966", "todorov-2005"]
+    first = body["papers"][0]
+    assert first["required"] is True and first["role"] == "seminal"
+    assert first["citation"] == "D. Q. Mayne (1966), International Journal of Control"
+    assert first["note"] == "§3 only"
+    assert body["papers"][1]["verified"] is False
+
+
+def test_a_lesson_without_papers_reports_an_empty_list(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    from robotics_curriculum.api.app import create_app
+    from robotics_curriculum.api.settings import Settings
+
+    course = write_course(tmp_path / "content", registry=None)
+    app = create_app(Settings(curriculum_dir=course.parent, data_dir=tmp_path / "data"))
+    assert TestClient(app).get("/api/v1/lessons/l1").json()["papers"] == []
+
+
+def test_the_site_lesson_page_has_a_papers_section(tmp_path: Path) -> None:
+    course = write_in(tmp_path / "content")
+    out = tmp_path / "site"
+    result = runner.invoke(
+        app,
+        [
+            "--data-dir",
+            str(tmp_path / "data"),
+            "--curriculum",
+            str(course.parent),
+            "site",
+            "build",
+            "--strict",
+            "--out",
+            str(out),
+        ],
+    )
+    assert result.exit_code == 0, result.output
+    page = (out / "modules" / "mod" / "l1.html").read_text("utf-8")
+    assert "필독 논문" in page
+    assert "A second-order gradient method" in page
+    assert "D. Q. Mayne (1966), International Journal of Control" in page
+    assert "§3 only" in page
+    # The unchecked link is flagged so a reader knows not to trust it.
+    assert "미확인" in page
+
+
+def test_the_site_omits_the_section_for_a_course_without_papers(tmp_path: Path) -> None:
+    course = write_course(tmp_path / "content", registry=None)
+    out = tmp_path / "site"
+    result = runner.invoke(
+        app,
+        [
+            "--data-dir",
+            str(tmp_path / "data"),
+            "--curriculum",
+            str(course.parent),
+            "site",
+            "build",
+            "--out",
+            str(out),
+        ],
+    )
+    assert result.exit_code == 0, result.output
+    page = (out / "modules" / "mod" / "l1.html").read_text("utf-8")
+    assert "필독 논문" not in page

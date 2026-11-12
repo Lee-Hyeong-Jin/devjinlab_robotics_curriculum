@@ -111,6 +111,19 @@
     "code": "구현",
     "notes": "노트"
   },
+  "paper": {
+    "heading": "필독 논문",
+    "required": "필독",
+    "optional": "선택",
+    "unverified": "링크 미확인",
+    "role": {
+      "seminal": "원전",
+      "standard": "표준",
+      "frontier": "최신",
+      "critique": "비판",
+      "survey": "서베이"
+    }
+  },
   "activityKind": {
     "reading": "읽기",
     "quiz": "퀴즈",

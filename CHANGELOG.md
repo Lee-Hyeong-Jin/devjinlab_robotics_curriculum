@@ -93,6 +93,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and `Strict-Transport-Security` only when the request arrived over HTTPS.
 - `docs/adr/0013-signup-policy.md` (proposed, not implemented): `RC_AUTH_SIGNUP`
   (`open` | `closed` | `invite`) and how invitations would work.
+- Assigned papers are shown: `GET /lessons/{id}` carries `papers[]` (required reading first,
+  with a one-line citation), the static site gets a "필독 논문" section, and the web lesson
+  screen lists them in the sidebar. A paper whose link nobody has checked says so.
 - A course may carry a `papers.yaml` bibliography that its lessons reference by id
   (ADR 0014): the registry says what a paper is, the lesson decides which papers it assigns,
   whether each is required, and what to read of it. `rc papers <lesson_id>` lists them,
