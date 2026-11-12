@@ -122,6 +122,100 @@ papers:
     lessons: [c2-dynamics-derivatives-sysid]
     role: standard
 
+  - id: featherstone2006-plucker-basis
+    title: "Plücker basis vectors"
+    authors: ["R. Featherstone"]
+    year: 2006
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ROBOT.2006.1641982"
+    note: "Crossref 에 게재 연도가 비어 있다(ICRA 2006 프로시딩). 권장 자료."
+    verified: true
+    lessons: [c2-spatial-vector-algebra]
+    role: standard
+  - id: featherstone2000-dynamics-equations-algorithms
+    title: "Robot dynamics: equations and algorithms"
+    authors: ["R. Featherstone", "D. Orin"]
+    year: 2000
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ROBOT.2000.844153"
+    note: "Crossref 에 게재 연도가 비어 있다(ICRA 2000 프로시딩, San Francisco)."
+    verified: true
+    lessons: [c2-rnea-inverse-dynamics]
+    role: survey
+  - id: udwadia1992-constrained-motion
+    title: "A new perspective on constrained motion"
+    authors: ["F. E. Udwadia", "R. E. Kalaba"]
+    year: 1992
+    venue: "Proc. Royal Society A"
+    url: "https://doi.org/10.1098/rspa.1992.0158"
+    verified: true
+    lessons: [c2-constrained-dynamics]
+    role: standard
+  - id: baumgarte1972-constraint-stabilization
+    title: "Stabilization of constraints and integrals of motion in dynamical systems"
+    authors: ["J. Baumgarte"]
+    year: 1972
+    venue: "Computer Methods in Applied Mechanics and Engineering"
+    url: "https://doi.org/10.1016/0045-7825(72)90018-7"
+    verified: true
+    lessons: [c2-constrained-dynamics]
+    role: seminal
+  - id: anitescu1997-lcp-contact
+    title: "Formulating dynamic multi-rigid-body contact problems with friction as solvable linear complementarity problems"
+    authors: ["M. Anitescu", "F. A. Potra"]
+    year: 1997
+    venue: "Nonlinear Dynamics"
+    url: "https://doi.org/10.1023/A:1008292328909"
+    verified: true
+    lessons: [c2-contact-dynamics]
+    role: standard
+  - id: stewart2000-rigid-body-friction-impact
+    title: "Rigid-body dynamics with friction and impact"
+    authors: ["D. E. Stewart"]
+    year: 2000
+    venue: "SIAM Review"
+    url: "https://doi.org/10.1137/S0036144599360110"
+    verified: true
+    lessons: [c2-contact-dynamics]
+    role: survey
+  - id: genot1999-painleve
+    title: "New results on Painlevé paradoxes"
+    authors: ["F. Génot", "B. Brogliato"]
+    year: 1999
+    venue: "European Journal of Mechanics A/Solids"
+    url: "https://doi.org/10.1016/S0997-7538(99)00144-8"
+    verified: true
+    lessons: [c2-contact-dynamics]
+    role: standard
+  - id: atkeson1986-inertial-parameters
+    title: "Estimation of inertial parameters of manipulator loads and links"
+    authors: ["C. G. Atkeson", "C. H. An", "J. M. Hollerbach"]
+    year: 1986
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/027836498600500306"
+    verified: true
+    lessons: [c2-dynamics-derivatives-sysid]
+    role: seminal
+  - id: gautier1990-minimal-inertial-parameters
+    title: "Direct calculation of minimum set of inertial parameters of serial robots"
+    authors: ["M. Gautier", "W. Khalil"]
+    year: 1990
+    venue: "IEEE Trans. Robotics and Automation"
+    url: "https://doi.org/10.1109/70.56655"
+    verified: true
+    lessons: [c2-dynamics-derivatives-sysid]
+    role: standard
+  - id: wensing2018-lmi-inertial
+    title: "Linear matrix inequalities for physically consistent inertial parameter identification: a statistical perspective on the mass distribution"
+    authors: ["P. M. Wensing", "S. Kim", "J.-J. E. Slotine"]
+    year: 2018
+    venue: "IEEE RA-L 3(1)"
+    url: "https://doi.org/10.1109/LRA.2017.2729659"
+    note: "Crossref 의 게재 연도는 2018(RA-L 3권 1호), 온라인 선공개는 2017."
+    verified: true
+    lessons: [c2-dynamics-derivatives-sysid]
+    role: standard
+
   # ── C3 비선형·강건 제어 ──────────────────────────────────────────────
   - id: murray1993-steering-sinusoids
     title: "Nonholonomic motion planning: steering using sinusoids"

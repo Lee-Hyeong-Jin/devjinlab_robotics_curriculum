@@ -185,6 +185,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   references them from front-matter `papers[]` with `required`/`role` and a language-neutral
   locator, the activity kinds `paper` and `reproduction` replace the interim `reading`/`exercise`,
   tool resources use `kind: code`, and the module level is `연구`.
+- Research track module C2 (multibody dynamics) under
+  `curriculum/robotics-research/c2-multibody-dynamics/`: six research-grade lessons in Korean and
+  English on spatial vector algebra, RNEA, CRBA/ABA, constrained dynamics, contact dynamics and
+  the derivatives of dynamics with inertial parameter identification. Each lesson derives its key
+  results at depth D2-D3, sets 4-8 problems, assigns 2-4 verified must-read papers and a
+  reproduction task with machine-checkable acceptance criteria.
 
 ### Fixed
 
