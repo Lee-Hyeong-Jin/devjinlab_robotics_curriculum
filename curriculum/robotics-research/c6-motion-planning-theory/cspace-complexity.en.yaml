@@ -1,0 +1,115 @@
+id: c6-cspace-complexity
+lang: en
+activities:
+  c6-cspace-complexity-reading: Read the lesson and follow the derivations
+  c6-cspace-complexity-papers: >-
+    Read the two must-read papers and write a one-page note on each
+  c6-cspace-complexity-problems: >-
+    Problem set (1 derivation, 2 proofs, 1 numerical, 1 implementation, 1 counterexample, 1 paper)
+  c6-cspace-complexity-reproduction: >-
+    Reproduction task - area and topology of the C-space of a 2-link arm (R1)
+  c6-cspace-complexity-quiz: Concept-check quiz
+resources:
+  "LaValle, Planning Algorithms":
+    note: >-
+      ch.3 (geometric representations and transformations), ch.4 (configuration space), ch.6
+      (combinatorial planning and complexity). Free in full.
+  "CMU 16-782 Planning and Decision-making in Robotics":
+    note: >-
+      The reference course for this whole module; slides and assignments are public.
+  "Reif — Complexity of the mover's problem and generalizations (1979)":
+    note: Must-read 1. The primary source for PSPACE-hardness of generalized motion planning.
+  "Canny — The Complexity of Robot Motion Planning (1988)":
+    note: Must-read 2. The roadmap algorithm and the singly exponential upper bound. An MIT Press book.
+  "Schwartz & Sharir — On the piano movers' problem II (1983)":
+    note: >-
+      Optional. The first complete algorithm, by cylindrical algebraic decomposition, and its
+      doubly exponential bound.
+  "Hopcroft, Schwartz & Sharir — PSPACE-hardness of the warehouseman's problem (1984)":
+    note: >-
+      Optional. PSPACE-hardness already holds for translating rectangles - evidence that linkages
+      are not what makes the problem hard.
+quiz:
+  - id: q1
+    prompt: >-
+      Why does it matter that $\mathcal{C}_{free}$ is open when $O$ is closed and $A(q)$ is
+      continuous in $q$?
+    choices:
+      - Because paths can then be chosen differentiable
+      - >-
+        Because every free configuration then has a ball of positive clearance around it, which is
+        what makes finite-precision sampling meaningful
+      - Because $\mathcal{C}_{obs}$ becomes convex
+      - Because configuration space becomes diffeomorphic to $\mathbb{R}^n$
+    explanation: >-
+      Being open, $\mathcal{C}_{free}$ contains a ball with $\delta(q) > 0$ around each of its
+      points. Every probabilistic-completeness proof is carried out on those balls. Modelling $O$
+      as an open set destroys this property and with it every clearance-based guarantee.
+    concept:
+      front: What the openness of $\mathcal{C}_{free}$ buys you
+      back: >-
+        A ball of positive clearance at every free configuration - the reason finite sampling or a
+        grid can be complete at all
+  - id: q2
+    prompt: >-
+      For a planar 2R arm, if an obstacle can be touched by the first link then
+      $\mathcal{C}_{obs}$ necessarily contains a component wrapping the torus in the $\theta_2$
+      direction.
+    explanation: >-
+      The pose of link 1 depends on $\theta_1$ alone, so its collision set is a cylinder (a band) of
+      the form $S_1 \times S^1$ (equation (2) of R1(c)). Each component of the band contains
+      $\{\ast\} \times S^1$, which maps to the generator $(0,1)$ of $\pi_1(T^2) = \mathbb{Z}^2$ and
+      is therefore non-contractible.
+    concept:
+      front: The cylinder structure of a serial chain's C-obstacle
+      back: >-
+        Link $i$'s collision set is a function of the first $i$ coordinates only, so it is a band
+        wrapping the remaining directions
+  - id: q3
+    prompt: >-
+      A free space inside the torus $T^2$ is computed to have $b_0 = 1$ and $\chi = -2$. What is the
+      number of holes $b_1$?
+    choices: ["1", "2", "3", "4"]
+    explanation: >-
+      A compact subsurface with boundary has $b_2 = 0$, so $\chi = b_0 - b_1$ and
+      $b_1 = b_0 - \chi = 1 - (-2) = 3$. This is the case of a torus with two contractible blobs
+      removed (instance C of the reproduction task).
+    concept:
+      front: Counting holes on a surface
+      back: $b_2 = 0$, so $b_1 = b_0 - \chi$, and $\chi$ is $V - E + F$ on the grid
+  - id: q4
+    prompt: Select everything that is true of the PSPACE-completeness of generalized motion planning.
+    choices:
+      - >-
+        The lower bound holds only when the degrees of freedom (or the number of moving bodies) are
+        part of the input
+      - >-
+        With the degrees of freedom fixed to a constant there is an algorithm polynomial in the
+        number and degree of the constraint polynomials
+      - >-
+        Because the problem is PSPACE-complete, even a particular instance with large clearance
+        requires exponential time
+      - The upper bound follows from $\mathcal{C}_{free}$ being a semialgebraic set
+    explanation: >-
+      The lower-bound reduction uses $n$ (or the body count) as input. For fixed $n$, Canny's
+      roadmap costs $m^n d^{O(n^4)}$, a polynomial in $m$ and $d$. The upper bound comes from
+      semialgebraicity plus the roadmap. The third statement is the classic misreading - a
+      complexity class is a property of a problem family, and on a family whose clearance is bounded
+      below a grid of resolution $O(\delta)$ suffices.
+    concept:
+      front: What PSPACE-completeness does not say
+      back: >-
+        Anything about one instance. The lower bound uses the degrees of freedom as input, and for
+        fixed degrees of freedom the problem is polynomial time
+  - id: q5
+    prompt: >-
+      Write $\mathcal{C}_{obs}$ as a Minkowski sum for a body $A(0)$ that only translates among
+      obstacles $O$.
+    answers: ["O ⊕ (-A(0))", "O + (-A(0))", "O \\oplus (-A(0))", "O ⊕ -A", "O + (-A)"]
+    explanation: >-
+      $q \in \mathcal{C}_{obs} \iff \exists a \in A(0): a + q \in O \iff q \in O \oplus (-A(0))$.
+      Once rotation is allowed, each $\theta$ gives a different sum and this identity survives only
+      as a formula for one slice.
+    concept:
+      front: $\mathcal{C}_{obs}$ for a translating robot
+      back: $O \oplus (-A(0))$ - shrink the robot to a point and inflate the obstacles

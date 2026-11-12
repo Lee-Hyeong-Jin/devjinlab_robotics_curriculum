@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-
+- 연구원 트랙에 C6 동작 계획 이론 모듈을 추가했다 — 첫 레슨 `c6-cspace-complexity`(구성공간과 복잡도, 한국어·영어).
 - Translations for the content that had nowhere to hold them: `course.<lang>.yaml` and
   `module.<lang>.yaml` carry a course's and a module's title and summary, and
   `<lesson>.<lang>.yaml` carries activity titles, resource titles and notes, and the quiz
