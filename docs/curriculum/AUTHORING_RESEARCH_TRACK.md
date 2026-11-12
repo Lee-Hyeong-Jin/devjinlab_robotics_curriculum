@@ -1,5 +1,15 @@
 # 연구원 트랙 레슨 집필 지침 (Authoring the research track)
 
+> **모듈 저자가 시작할 때 읽을 것 (5줄 요약)**
+> 1. `research_notes/연구 트랙 설계/blueprint.md` 에서 **담당 모듈의 표**를 찾는다 — 그 행들이 과제 명세다.
+> 2. 기준 레슨 `curriculum/robotics-research/c1-rigid-body-geometry-lie-groups/so3-se3-exponential.md`
+>    (+ `.en.md`)를 **복사해서 시작한다**. 섹션 제목 10개는 §2 표 그대로 두고 바꾸지 않는다.
+> 3. 레슨마다 **D2 이상 유도 1개 이상**, 문제 세트 4–8문항(유형 3종 이상), 필독 논문 2–4편(URL 확인 필수),
+>    재현 과제 1개(**코드로 판정 가능한** 수용 기준), 열린 문제 2–4개 — 하나라도 없으면 반송이다(§11).
+> 4. 한국어 원문과 영어판(`.en.md`)을 **같은 커밋에** 넣는다. 영어판은 요약본이 아니라 전문이다.
+> 5. 커밋 전에 `bash scripts/harness/check.sh` **전체**를 돌린다 — `rc validate` 만으로는 부족하다
+>    (새 코스·모듈은 테스트 픽스처를 깨뜨릴 수 있다).
+
 연구원 트랙(`curriculum/robotics-research`) 레슨 **1개를 쓰는 절차**다. 엔지니어 코스
 (`curriculum/robotics-expert`)는 이 지침의 대상이 아니다 — 그쪽은
 [LESSON_TEMPLATE.md](LESSON_TEMPLATE.md) 와 [CONTENT_MODEL.md](CONTENT_MODEL.md) 를 따른다.
@@ -211,7 +221,8 @@ resources:                           # 필독 논문도 당분간 여기에 (kin
 uv run rc validate                                   # 스키마·선수지식 DAG·퀴즈 블록
 uv run rc site build --out /tmp/site                 # 렌더 확인 (레슨 페이지가 생기는지)
 uv run ruff format --check .                         # 문서의 Python 코드 블록 포함
-bash scripts/harness/check.sh --quick                # 코드를 건드렸다면
+bash scripts/harness/check.sh                        # 커밋 전 필수(전체). 새 코스·모듈은
+                                                     # 테스트 픽스처를 깨뜨릴 수 있어 --quick 으로는 부족하다
 ```
 
 섹션과 퀴즈가 실제로 추출되는지 직접 확인한다:

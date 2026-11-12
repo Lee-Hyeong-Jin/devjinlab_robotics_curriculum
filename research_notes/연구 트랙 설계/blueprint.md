@@ -121,13 +121,13 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 
 | 레슨 | 유도해야 할 핵심 결과 | 필독 | 교재 | 재현 과제 |
 |---|---|---|---|---|
-| `r0-linear-algebra-decompositions` 분해와 조건수 | 최소제곱의 정규방정식 조건수 = $\kappa(A)^2$ **[D2]**; QR·SVD 해법의 안정성; 유사역행렬과 영공간 **[D2]** | — | CO App. A, NW ch.2 | R1: 악조건 최소제곱을 정규방정식·QR·SVD 로 풀어 오차를 $\kappa$ 에 대해 도표화, QR 이 더 정확함을 수치로 보임 |
-| `r0-sparse-linear-algebra` 희소 선형대수 | 희소 Cholesky 의 fill-in 과 소거 순서 의존성 **[D2]**; 정규방정식의 희소 구조와 Schur 보완 **[D2]**; CG 수렴 한계 $\sqrt{\kappa}$ **[D1]** | — | SER ch.3, NW ch.5 | R1: 포즈 그래프 모양의 희소 행렬에 COLAMD 유무로 Cholesky 비영원소 수를 비교(10배 이상 차이 확인) |
-| `r0-convex-optimization` 볼록성·쌍대성·KKT | 라그랑주 쌍대와 약·강 쌍대성 **[D3]**; KKT 필요·충분 조건 **[D3]**; SOCP/SDP 로의 환원 **[D1]** | — | CO ch.2–5 | R1: QP 를 직접 쌍대로 풀고 cvxpy 해와 쌍대 간극 < 1e-8 일치 |
-| `r0-numerical-optimization` 수치 최적화 | Newton 의 2차 수렴 **[D3]**; BFGS 업데이트와 secant 조건 **[D2]**; 신뢰영역·선탐색의 전역 수렴 **[D1]**; SQP 와 내부점의 구조 **[D1]** | — | NW ch.3,6,18,19 | R2: Rosenbrock 에 대해 경사하강·Newton·BFGS 구현, 반복 수와 수렴 차수를 로그 도표로 확인 |
-| `r0-estimation-theory` 확률과 추정 이론 | 선형 가우시안 MAP = 가중 최소제곱 **[D2]**; Cramér–Rao 하한 **[D3]**; 일관성·효율성·Fisher 정보 **[D2]** | — | SER ch.2–3, PR ch.2 | R1: 1D 추정기 3종의 분산을 몬테카를로로 추정해 CRLB 와 비교(상대오차 < 5%) |
-| `r0-manifolds-lie-groups` 다양체와 행렬 리 군 | 접공간·재추적(retraction) **[D2]**; $\exp/\log$ 사상과 그 미분(좌/우 야코비안) **[D3]**; BCH 1·2차 항 **[D2]** | — | SER ch.7–8, MLS ch.2 | R1: $SO(3)$ 에서 $\exp$ 의 해석적 야코비안을 유한차분과 1e-7 이내 일치시킴 |
-| `r0-ad-and-integrators` 자동 미분과 적분기 | forward/reverse mode 의 비용 비교 **[D2]**; 명시·암시·symplectic 적분기의 에너지 거동 **[D2]**; 강성 조건 **[D1]** | — | NW ch.8, UA App. | R1: 진자에 Euler·RK4·symplectic 을 적용해 1e4 스텝 에너지 드리프트를 비교(symplectic 이 유계임을 확인) |
+| `r0-linear-algebra-decompositions` 분해와 조건수 | 최소제곱의 정규방정식 조건수 = $\kappa(A)^2$ **[D2]**; QR·SVD 해법의 안정성; 유사역행렬과 영공간 **[D2]** | 교재(예외 §5) | CO App. A, NW ch.2 | R1: 악조건 최소제곱을 정규방정식·QR·SVD 로 풀어 오차를 $\kappa$ 에 대해 도표화, QR 이 더 정확함을 수치로 보임 |
+| `r0-sparse-linear-algebra` 희소 선형대수 | 희소 Cholesky 의 fill-in 과 소거 순서 의존성 **[D2]**; 정규방정식의 희소 구조와 Schur 보완 **[D2]**; CG 수렴 한계 $\sqrt{\kappa}$ **[D1]** | 교재(예외 §5) | SER ch.3, NW ch.5 | R1: 포즈 그래프 모양의 희소 행렬에 COLAMD 유무로 Cholesky 비영원소 수를 비교(10배 이상 차이 확인) |
+| `r0-convex-optimization` 볼록성·쌍대성·KKT | 라그랑주 쌍대와 약·강 쌍대성 **[D3]**; KKT 필요·충분 조건 **[D3]**; SOCP/SDP 로의 환원 **[D1]** | 교재(예외 §5) | CO ch.2–5 | R1: QP 를 직접 쌍대로 풀고 cvxpy 해와 쌍대 간극 < 1e-8 일치 |
+| `r0-numerical-optimization` 수치 최적화 | Newton 의 2차 수렴 **[D3]**; BFGS 업데이트와 secant 조건 **[D2]**; 신뢰영역·선탐색의 전역 수렴 **[D1]**; SQP 와 내부점의 구조 **[D1]** | 교재(예외 §5) | NW ch.3,6,18,19 | R2: Rosenbrock 에 대해 경사하강·Newton·BFGS 구현, 반복 수와 수렴 차수를 로그 도표로 확인 |
+| `r0-estimation-theory` 확률과 추정 이론 | 선형 가우시안 MAP = 가중 최소제곱 **[D2]**; Cramér–Rao 하한 **[D3]**; 일관성·효율성·Fisher 정보 **[D2]** | 교재(예외 §5) | SER ch.2–3, PR ch.2 | R1: 1D 추정기 3종의 분산을 몬테카를로로 추정해 CRLB 와 비교(상대오차 < 5%) |
+| `r0-manifolds-lie-groups` 다양체와 행렬 리 군 | 접공간·재추적(retraction) **[D2]**; $\exp/\log$ 사상과 그 미분(좌/우 야코비안) **[D3]**; BCH 1·2차 항 **[D2]** | 교재(예외 §5) | SER ch.7–8, MLS ch.2 | R1: $SO(3)$ 에서 $\exp$ 의 해석적 야코비안을 유한차분과 1e-7 이내 일치시킴 |
+| `r0-ad-and-integrators` 자동 미분과 적분기 | forward/reverse mode 의 비용 비교 **[D2]**; 명시·암시·symplectic 적분기의 에너지 거동 **[D2]**; 강성 조건 **[D1]** | 교재(예외 §5) | NW ch.8, UA App. | R1: 진자에 Euler·RK4·symplectic 을 적용해 1e4 스텝 에너지 드리프트를 비교(symplectic 이 유계임을 확인) |
 
 **열린 문제(모듈 수준)**: 비볼록 문제의 전역성 인증(certification) 가능 범위; 대규모 희소 2차
 문제에서 1차 방법의 조건수 의존성 제거; 자동 미분이 비매끄러운(접촉) 동역학에서 주는 기울기의 타당성.
