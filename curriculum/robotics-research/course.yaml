@@ -9,5 +9,9 @@ summary: >-
   robotics-expert 코스다.
 tags: [robotics, research, graduate]
 modules:
+  - f0-foundations-from-zero
   - c1-rigid-body-geometry-lie-groups
+  - c2-multibody-dynamics
+  - c3-nonlinear-robust-control
+  - c6-motion-planning-theory
   - c8-decision-making-learning-theory

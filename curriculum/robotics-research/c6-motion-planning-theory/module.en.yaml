@@ -1,0 +1,12 @@
+id: c6-motion-planning-theory
+lang: en
+title: C6 Motion planning theory
+summary: >-
+  Motion planning treated as theory. It starts from the topology of configuration space and the
+  PSPACE-completeness of generalized motion planning, goes through complete combinatorial planning
+  and convex decomposition, the probabilistic-completeness and asymptotic-optimality proofs of
+  sampling-based planning, the sub-optimality bounds of admissible heuristic search, planning under
+  differential constraints, and ends at TAMP, where symbolic and continuous search are combined.
+  The graduate courses behind it are all of CMU 16-782 and MIT 16.410; the textbooks are LaValle's
+  "Planning Algorithms" (PA) and Tedrake's "Underactuated Robotics" ch.12. Results from this module
+  are reused in S2 (manipulation and contact), S5 (multi-robot) and C8 (learning-based control).

@@ -1,0 +1,76 @@
+# English text of the structured fields of poe-analytic-ik.md (activity titles,
+# resource notes, quiz). The prose lives in poe-analytic-ik.en.md.
+id: c1-poe-analytic-ik
+lang: en
+activities:
+  c1-poe-analytic-ik-reading: Read the lesson and follow the derivations
+  c1-poe-analytic-ik-papers: Read the two must-read papers + a one-page note each
+  c1-poe-analytic-ik-problems: "Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample)"
+  c1-poe-analytic-ik-reproduction: "Reproduction task - analytic 6R IK and the forward-kinematics round trip (R2)"
+  c1-poe-analytic-ik-quiz: Concept check quiz
+resources:
+  "Murray, Li & Sastry, A Mathematical Introduction to Robotic Manipulation":
+    note: ch.3 (Manipulator Kinematics). The standard treatment of PoE and the Paden-Kahan subproblems. (official URL unverified)
+  "Lynch & Park, Modern Robotics":
+    note: ch.4 (Forward Kinematics) and ch.6 (Inverse Kinematics), for the space/body forms and numerical IK.
+  "Modern Robotics 코드 라이브러리":
+    title: Modern Robotics code library
+    note: Reference implementation of PoE forward kinematics and numerical IK (Python); used as the baseline in the reproduction task.
+quiz:
+  - id: q1
+    prompt: In which configuration are the screw axes $\mathcal{S}_i$ of the PoE space form (1) measured?
+    choices:
+      - At the current joint angles $\theta$ (recomputed every time)
+      - In the zero configuration, as fixed values
+      - In the end-effector frame
+      - After the preceding joints have moved
+    explanation: >-
+      $\mathcal{S}_i$ is a fixed value taken in the zero configuration. Moving $\theta_1$ does move
+      the actual location of axis 2, but the left-hand exponential factors in (1) absorb that
+      change, so the axes are never recomputed - which is why a list of axes can replace a DH table.
+    concept:
+      front: In which configuration are PoE screw axes measured
+      back: >-
+        In the zero configuration, as fixed values; the motion of the preceding joints is absorbed
+        by the left-hand exponential factors
+  - id: q2
+    prompt: "Select every condition required for subproblem 1 to have a solution ($u = p-q$, $v = r-q$)."
+    choices:
+      - $\omega^\top u = \omega^\top v$ (equal components along the axis)
+      - $\lVert u'\rVert = \lVert v'\rVert$ (equal lengths of the perpendicular components)
+      - $u$ and $v$ are parallel
+      - $p$ lies on the axis
+    explanation: >-
+      A rotation preserves the axial component and the length of the perpendicular component, so
+      those two conserved quantities must match for a solution to exist. If $p$ lies on the axis
+      ($u'=0$) the problem degenerates instead and $\theta$ becomes arbitrary.
+    concept:
+      front: Solvability conditions of Paden-Kahan subproblem 1
+      back: >-
+        Equal axial components and equal perpendicular lengths - the two quantities a rotation
+        preserves
+  - id: q3
+    prompt: >-
+      What is the main reason for using atan2 rather than
+      $\arccos(u'^\top v'/\lVert u'\rVert^2)$ for the angle in subproblem 1?
+    choices:
+      - atan2 is faster
+      - $\arccos$ loses the sign (it only returns $[0,\pi]$) and its derivative blows up where $u' \parallel v'$
+      - The domain of $\arccos$ is too narrow to use
+      - The two are entirely equivalent
+    explanation: >-
+      The direction of rotation (the sign) is decided by $\omega^\top(u'\times v')$. Using only
+      $\arccos$ discards that information, and it is also numerically poor when the vectors are
+      nearly parallel. atan2, using both the sine and cosine components, covers the whole range and
+      is better conditioned.
+  - id: q4
+    prompt: At most how many inverse-kinematics solutions does a general 6R manipulator have?
+    choices: ["2", "8", "16", "Infinitely many"]
+    explanation: >-
+      A general 6R has at most 16, reducible to a degree-16 polynomial (Husty et al. 2007). Special
+      structures such as a spherical wrist drop to 8 and admit a Paden-Kahan closed form.
+    concept:
+      front: Upper bound on the number of 6R IK solutions
+      back: >-
+        16 (a degree-16 polynomial). Special structures such as a spherical wrist have 8 and a
+        closed form

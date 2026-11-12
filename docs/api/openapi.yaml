@@ -3357,6 +3357,13 @@ components:
           title: Papers
           description: Assigned papers, required reading first; empty unless the course has a papers.yaml
             registry (ADR 0014).
+        problems:
+          items:
+            $ref: '#/components/schemas/LessonProblem'
+          type: array
+          title: Problems
+          description: The lesson's problem set, parsed out of the body's ```problemset blocks. Not graded
+            and not scheduled for review, unlike the quiz.
         content_format:
           type: string
           const: markdown
@@ -3405,6 +3412,82 @@ components:
       - prev_lesson_id
       - next_lesson_id
       title: Lesson
+    LessonProblem:
+      properties:
+        id:
+          type: string
+          title: Id
+        type:
+          type: string
+          enum:
+          - derivation
+          - proof
+          - numerical
+          - implementation
+          - counterexample
+          - paper
+          title: Type
+        stars:
+          type: integer
+          maximum: 3.0
+          minimum: 1.0
+          title: Stars
+          description: 1 routine, 2 substantial, 3 research-level.
+        prompt:
+          type: string
+          title: Prompt
+          description: Markdown.
+        refers_to:
+          items:
+            type: string
+          type: array
+          title: Refers To
+          description: '"핵심 결과" numbers the problem builds on.'
+        solution_policy:
+          type: string
+          enum:
+          - sketch
+          - full
+          - rubric
+          - answer
+          title: Solution Policy
+          description: 'How much of the solution is published: sketch | full | rubric | answer.'
+        solution:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Solution
+          description: Markdown; null when none is published.
+        tolerance:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Tolerance
+          description: '`numerical` only: how close counts as right.'
+        activity_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Activity Id
+          description: 'The `kind: exercise` activity it belongs to.'
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - type
+      - stars
+      - prompt
+      - refers_to
+      - solution_policy
+      - solution
+      - tolerance
+      - activity_id
+      title: LessonProblem
+      description: |-
+        One problem of a lesson's problem set (ADR 0014's sibling, lesson-standard.md §11-3).
+
+        Never graded and never turned into a flashcard, unlike a quiz question: a derivation or a
+        proof cannot be marked automatically. `solution` is whatever `solution_policy` promises.
     LessonProgress:
       properties:
         user_id:
