@@ -278,9 +278,14 @@ papers:
 | 9 | 레슨 번역 파일(`<lesson>.<lang>.md`)이 텍스트를 담고 있고 id·언어가 일치 (위 "레슨 번역" 절) | loader/validate |
 | 10 | 본문 ` ```quiz ` 블록이 파싱됨: YAML 오류, 모르는 `type`, `answer` 형태·범위, `explanation` 누락, 문항 `id` 중복, `activity` 참조 오류(없는 활동, quiz 활동이 둘 이상인데 생략)를 `lesson '<id>': quiz block N: question M: ...` 형식으로 보고 | validate |
 | 11 | 레슨이 참조한 논문 id 가 `papers.yaml` 에 있고, 레지스트리 id 가 유일하고, 레지스트리 `url` 이 http(s) 이고, 한 레슨이 같은 논문을 두 번 나열하지 않고, 논문을 지정한 레슨은 `required: true` 를 1개 이상 가짐 (ADR 0014) | validate |
+| 12 | 레슨 본문(과 그 번역)의 링크가 http(s) URL, 앵커(`#...`), 또는 자료 파일 상대 경로다. **다른 레슨의 `.md` 파일을 가리키는 링크는 금지** — 사이트는 레슨을 다른 구조로 생성하므로 그 경로가 깨진 링크가 된다. 레슨을 가리킬 때는 레슨 id 를 백틱으로 쓴다(`` `m1-vectors-matrices` ``) | validate |
 | 11w | **경고**: 아무 레슨도 참조하지 않는 레지스트리 논문 / 레지스트리 `lessons[]` 가 실제 참조와 다름 | validate |
 
 성공 시 `OK: N lessons in M modules`(경고가 있으면 `(N warning(s))` 가 붙는다).
+
+`rc validate` 와 별개로 **`rc site build --strict`** 가 mkdocs 경고(없는 페이지로의 링크, 파일이
+없는 nav 항목)를 실패로 만든다. `--strict` 없이는 경고만 찍고 종료 코드 0 이라 깨진 링크가 CI 를
+통과했다. 검증 게이트(`scripts/harness/check.sh`)와 CI 는 `--strict` 를 쓴다.
 
 ## 레슨 ID와 진도 데이터
 

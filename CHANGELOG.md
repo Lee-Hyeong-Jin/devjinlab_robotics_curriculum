@@ -34,6 +34,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- `rc validate` gains rule 12: a link in a lesson body (or in a translation of it) must be an
+  http(s) URL, an anchor, or a relative path to an asset — never another lesson's `.md` file,
+  which the generated site lays out elsewhere and so turns into a dead link. Write the lesson
+  id in backticks instead.
+- `rc site build --strict` fails on any mkdocs warning, and the verification gate and CI now
+  use it. Without it a link to a page that does not exist only warned and the build still
+  exited 0, so broken lesson links reached a green CI run. `scripts/harness/check.sh` also
+  runs `rc validate` and the strict build now, which it never did.
 - Nothing in a course is locked any more (ADR 0015). Prerequisites are advice about order:
   every lesson can be opened, started and completed at any time, which the core always
   allowed — only the display pretended otherwise. `rc next` now ranks instead of filtering,
