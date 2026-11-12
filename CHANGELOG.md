@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Research-track lesson `c4-ilqr-ddp`: the second-order DDP backward pass derived in full,
+  why DDP is Newton on the control sequence (quadratic) and iLQR Gauss-Newton (linear), the
+  two regularizations and the merit-ratio line search, exact handling of control box
+  constraints against the impossibility for state constraints, and the locality of the
+  method. Korean source plus the English translation.
 - Research-track lesson `c4-dp-lqr-lqg`: the Bellman equation and the HJB, the verification
   theorem as the sufficient condition the PMP lacks, the costate as the gradient of the value
   function, LQR derived three ways (DP, PMP, completion of squares), monotone convergence of

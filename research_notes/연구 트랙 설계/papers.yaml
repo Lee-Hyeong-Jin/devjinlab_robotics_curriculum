@@ -234,6 +234,24 @@ papers:
     verified: true
     lessons: [c4-ilqr-ddp]
     role: standard
+  - id: liao1991-ddp-convergence
+    title: "Convergence in unconstrained discrete-time differential dynamic programming"
+    authors: ["L.-Z. Liao", "C. A. Shoemaker"]
+    year: 1991
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/9.86943"
+    verified: true
+    lessons: [c4-ilqr-ddp]
+    role: standard
+  - id: tassa2014-control-limited-ddp
+    title: "Control-limited differential dynamic programming"
+    authors: ["Y. Tassa", "N. Mansard", "E. Todorov"]
+    year: 2014
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ICRA.2014.6907001"
+    verified: true
+    lessons: [c4-ilqr-ddp]
+    role: standard
   - id: hargraves1987-collocation
     title: "Direct trajectory optimization using nonlinear programming and collocation"
     authors: ["C. R. Hargraves", "S. W. Paris"]

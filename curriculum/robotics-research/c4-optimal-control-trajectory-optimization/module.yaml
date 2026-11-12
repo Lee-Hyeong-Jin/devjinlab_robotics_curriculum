@@ -13,3 +13,4 @@ level: 고급
 lessons:
   - pontryagin-indirect
   - dp-lqr-lqg
+  - ilqr-ddp
