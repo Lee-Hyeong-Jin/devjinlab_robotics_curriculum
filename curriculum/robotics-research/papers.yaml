@@ -221,6 +221,40 @@ papers:
     verified: true
     role: standard
 
+  - id: atkeson1986-inertial-parameters
+    title: "Estimation of inertial parameters of manipulator loads and links"
+    authors: ["C. G. Atkeson", "C. H. An", "J. M. Hollerbach"]
+    year: 1986
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/027836498600500306"
+    verified: true
+    role: seminal
+  - id: gautier1990-minimal-inertial-parameters
+    title: "Direct calculation of minimum set of inertial parameters of serial robots"
+    authors: ["M. Gautier", "W. Khalil"]
+    year: 1990
+    venue: "IEEE Trans. Robotics and Automation"
+    url: "https://doi.org/10.1109/70.56655"
+    verified: true
+    role: standard
+  - id: wensing2018-lmi-inertial
+    title: "Linear matrix inequalities for physically consistent inertial parameter identification: a statistical perspective on the mass distribution"
+    authors: ["P. M. Wensing", "S. Kim", "J.-J. E. Slotine"]
+    year: 2018
+    venue: "IEEE RA-L 3(1)"
+    url: "https://doi.org/10.1109/LRA.2017.2729659"
+    note: "Crossref 의 게재 연도는 2018(RA-L 3권 1호), 온라인 선공개는 2017"
+    verified: true
+    role: standard
+  - id: carpentier2018-pinocchio
+    title: "Analytical derivatives of rigid body dynamics algorithms"
+    authors: ["J. Carpentier", "N. Mansard"]
+    year: 2018
+    venue: "RSS"
+    url: "https://doi.org/10.15607/RSS.2018.XIV.038"
+    verified: true
+    role: standard
+
   # ── C3 비선형·강건 제어 ────────────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 

@@ -9,4 +9,5 @@ summary: >-
   assume the notation and the algorithms of this module. The graduate courses behind it are
   CMU 16-711 Ch3-4 and ETH Robot Dynamics; the textbooks are Featherstone's RBDA, Modern
   Robotics ch.8 and Underactuated ch.17-18. C1 is the recommended prerequisite module, and the
-  first lesson (c2-spatial-vector-algebra) opens with a self-diagnostic.
+  first lesson (c2-spatial-vector-algebra) opens with a self-diagnostic. All six lessons of the
+  design are written.
