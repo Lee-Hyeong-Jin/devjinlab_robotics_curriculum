@@ -18,7 +18,8 @@
 #   lessons   : 이 논문을 필독으로 지정한 blueprint.md 의 레슨 id
 #   role      : seminal | standard | frontier | critique | survey
 #
-# 확인 상태 (2026-11-12 기준): 134편 중 133편 verified: true, 1편 false.
+# 확인 상태 (2026-11-12 기준): 149편 중 148편 verified: true, 1편 false.
+#   (C2 모듈 필독 15편은 2026-11-12 Crossref API 로 확인해 저자 세션이 추가했다.)
 #   미확인 1편 — brockett1983-nonholonomic (책 챕터, Crossref 에서 찾지 못함).
 #   끝내 확인되지 않으면 목록에서 빼고 대체 논문을 넣는다(오케스트레이터 지시 2026-11-12).
 #   확인 방법: arXiv API(id_list), Crossref API, OpenAlex, JMLR 페이지. Semantic Scholar 는
@@ -26,7 +27,7 @@
 #   대조하지 않았다. arXiv 로 확인한 항목의 학회·저널 게재(venue)는 journal_ref 가 없는 경우
 #   확인되지 않았으며 그런 항목은 note 에 적었다.
 #
-# 주의: 총 131편으로 브리프의 "100편 내외"를 상회한다. blueprint.md 의 97레슨이 레슨당
+# 주의: 총 149편으로 브리프의 "100편 내외"를 상회한다. blueprint.md 의 97레슨이 레슨당
 #       1–3편을 지정한 결과이며, 줄이려면 specialization 트랙을 4개로 줄이는 쪽이 자연스럽다
 #       (blueprint.md §10-1).
 
@@ -82,12 +83,97 @@ papers:
     role: seminal
 
   # ── C2 다물체 동역학 ─────────────────────────────────────────────────
+  - id: featherstone2010-6d-vectors-1
+    title: "A Beginner's Guide to 6-D Vectors (Part 1)"
+    authors: ["R. Featherstone"]
+    year: 2010
+    venue: "IEEE Robotics & Automation Magazine"
+    url: "https://doi.org/10.1109/MRA.2010.937853"
+    verified: true
+    lessons: [c2-spatial-vector-algebra]
+    role: standard
+  - id: featherstone2010-6d-vectors-2
+    title: "A Beginner's Guide to 6-D Vectors (Part 2) [Tutorial]"
+    authors: ["R. Featherstone"]
+    year: 2010
+    venue: "IEEE Robotics & Automation Magazine"
+    url: "https://doi.org/10.1109/MRA.2010.939560"
+    verified: true
+    lessons: [c2-spatial-vector-algebra]
+    role: standard
+  - id: featherstone2006-plucker-basis
+    title: "Plücker basis vectors"
+    authors: ["R. Featherstone"]
+    year: 2006
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ROBOT.2006.1641982"
+    note: "Crossref 에 게재 연도가 비어 있다(ICRA 2006 프로시딩). 권장 자료."
+    verified: true
+    lessons: [c2-spatial-vector-algebra]
+    role: standard
+  - id: luh1980-online-computational-scheme
+    title: "On-Line Computational Scheme for Mechanical Manipulators"
+    authors: ["J. Y. S. Luh", "M. W. Walker", "R. P. C. Paul"]
+    year: 1980
+    venue: "ASME J. Dynamic Systems, Measurement, and Control"
+    url: "https://doi.org/10.1115/1.3149599"
+    note: "재귀 Newton-Euler(RNEA)의 원전. 같은 권에 정오표가 있다(10.1115/1.3139629)."
+    verified: true
+    lessons: [c2-rnea-inverse-dynamics]
+    role: seminal
+  - id: featherstone2000-dynamics-equations-algorithms
+    title: "Robot dynamics: equations and algorithms"
+    authors: ["R. Featherstone", "D. Orin"]
+    year: 2000
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ROBOT.2000.844153"
+    note: "Crossref 에 게재 연도가 비어 있다(ICRA 2000 프로시딩, San Francisco)."
+    verified: true
+    lessons: [c2-rnea-inverse-dynamics]
+    role: survey
+  - id: walker1982-crba
+    title: "Efficient Dynamic Computer Simulation of Robotic Mechanisms"
+    authors: ["M. W. Walker", "D. E. Orin"]
+    year: 1982
+    venue: "ASME J. Dynamic Systems, Measurement, and Control"
+    url: "https://doi.org/10.1115/1.3139699"
+    note: "composite-rigid-body 질량행렬 알고리즘(CRBA)의 원전. 논문에서는 Method 3."
+    verified: true
+    lessons: [c2-crba-aba]
+    role: seminal
+  - id: featherstone1983-aba
+    title: "The Calculation of Robot Dynamics Using Articulated-Body Inertias"
+    authors: ["R. Featherstone"]
+    year: 1983
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/027836498300200102"
+    verified: true
+    lessons: [c2-crba-aba]
+    role: seminal
   - id: khatib1987-operational-space
     title: "A unified approach for motion and force control of robot manipulators: the operational space formulation"
     authors: ["O. Khatib"]
     year: 1987
     venue: "IEEE J. Robotics and Automation"
     url: "https://doi.org/10.1109/JRA.1987.1087068"
+    verified: true
+    lessons: [c2-constrained-dynamics]
+    role: seminal
+  - id: udwadia1992-constrained-motion
+    title: "A new perspective on constrained motion"
+    authors: ["F. E. Udwadia", "R. E. Kalaba"]
+    year: 1992
+    venue: "Proc. Royal Society A"
+    url: "https://doi.org/10.1098/rspa.1992.0158"
+    verified: true
+    lessons: [c2-constrained-dynamics]
+    role: standard
+  - id: baumgarte1972-constraint-stabilization
+    title: "Stabilization of constraints and integrals of motion in dynamical systems"
+    authors: ["J. Baumgarte"]
+    year: 1972
+    venue: "Computer Methods in Applied Mechanics and Engineering"
+    url: "https://doi.org/10.1016/0045-7825(72)90018-7"
     verified: true
     lessons: [c2-constrained-dynamics]
     role: seminal
@@ -109,12 +195,67 @@ papers:
     verified: true
     lessons: [c2-contact-dynamics]
     role: standard
+  - id: anitescu1997-lcp-contact
+    title: "Formulating Dynamic Multi-Rigid-Body Contact Problems with Friction as Solvable Linear Complementarity Problems"
+    authors: ["M. Anitescu", "F. A. Potra"]
+    year: 1997
+    venue: "Nonlinear Dynamics"
+    url: "https://doi.org/10.1023/A:1008292328909"
+    verified: true
+    lessons: [c2-contact-dynamics]
+    role: standard
+  - id: stewart2000-rigid-body-friction-impact
+    title: "Rigid-Body Dynamics with Friction and Impact"
+    authors: ["D. E. Stewart"]
+    year: 2000
+    venue: "SIAM Review"
+    url: "https://doi.org/10.1137/S0036144599360110"
+    verified: true
+    lessons: [c2-contact-dynamics]
+    role: survey
+  - id: genot1999-painleve
+    title: "New results on Painlevé paradoxes"
+    authors: ["F. Génot", "B. Brogliato"]
+    year: 1999
+    venue: "European Journal of Mechanics A/Solids"
+    url: "https://doi.org/10.1016/S0997-7538(99)00144-8"
+    verified: true
+    lessons: [c2-contact-dynamics]
+    role: standard
   - id: carpentier2018-pinocchio
     title: "Analytical derivatives of rigid body dynamics algorithms"
     authors: ["J. Carpentier", "N. Mansard"]
     year: 2018
     venue: "RSS"
     url: "https://doi.org/10.15607/RSS.2018.XIV.038"
+    verified: true
+    lessons: [c2-dynamics-derivatives-sysid]
+    role: standard
+  - id: atkeson1986-inertial-parameters
+    title: "Estimation of Inertial Parameters of Manipulator Loads and Links"
+    authors: ["C. G. Atkeson", "C. H. An", "J. M. Hollerbach"]
+    year: 1986
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/027836498600500306"
+    verified: true
+    lessons: [c2-dynamics-derivatives-sysid]
+    role: seminal
+  - id: gautier1990-minimal-inertial-parameters
+    title: "Direct calculation of minimum set of inertial parameters of serial robots"
+    authors: ["M. Gautier", "W. Khalil"]
+    year: 1990
+    venue: "IEEE Trans. Robotics and Automation"
+    url: "https://doi.org/10.1109/70.56655"
+    verified: true
+    lessons: [c2-dynamics-derivatives-sysid]
+    role: standard
+  - id: wensing2018-lmi-inertial
+    title: "Linear Matrix Inequalities for Physically Consistent Inertial Parameter Identification: A Statistical Perspective on the Mass Distribution"
+    authors: ["P. M. Wensing", "S. Kim", "J.-J. E. Slotine"]
+    year: 2018
+    venue: "IEEE RA-L"
+    url: "https://doi.org/10.1109/LRA.2017.2729659"
+    note: "Crossref 의 게재 연도는 2018(RA-L 3권 1호), 온라인 선공개는 2017."
     verified: true
     lessons: [c2-dynamics-derivatives-sysid]
     role: standard
