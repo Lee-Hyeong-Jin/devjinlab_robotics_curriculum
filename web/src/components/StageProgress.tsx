@@ -30,14 +30,14 @@ export function StageProgress({
         {stages.map((stage) => (
           <li key={stage.level}>
             <div className="mb-2 flex flex-wrap items-center justify-between gap-3">
-              <h3 className="text-primary text-sm font-semibold">{stage.level}</h3>
+              <h3 className="text-primary text-sm font-semibold">{stage.levelLabel}</h3>
               <span className="text-muted text-xs">
                 {lessonsLabel(stage.lessonsDone, stage.lessonsTotal)}
               </span>
             </div>
             <ProgressBar
               value={stage.progress}
-              label={`${stage.level} ${progressLabel}`}
+              label={`${stage.levelLabel} ${progressLabel}`}
               showValue
             />
             <ul className="mt-3 flex flex-col gap-2">

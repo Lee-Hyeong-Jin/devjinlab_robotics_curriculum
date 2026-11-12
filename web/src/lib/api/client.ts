@@ -11,6 +11,10 @@ import 'server-only'
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
+import { getLocale } from 'next-intl/server'
+
+import { DEFAULT_LOCALE } from '@/i18n/locales'
+
 import { apiBaseUrl, apiTimeoutMs } from './config'
 import { ApiError, ApiUnreachableError } from './errors'
 import type { GetPath, GetResponse, Problem } from './types'
@@ -44,16 +48,28 @@ export interface RequestOptions {
 /** Seconds between content revalidations. */
 const CONTENT_REVALIDATE_SECONDS = 300
 
-function buildUrl(path: string, query: RequestOptions['query']): string {
+function buildUrl(path: string, query: RequestOptions['query'], locale: string): string {
   const url = new URL(`${apiBaseUrl()}${path}`)
   for (const [key, value] of Object.entries(query ?? {})) {
     if (value !== undefined && value !== null) url.searchParams.set(key, String(value))
   }
+  // The language belongs in the URL, not only in a header: content responses are cached
+  // by URL, so two readers in two languages would otherwise share one cached body (FR-9).
+  url.searchParams.set('lang', locale)
   return url.toString()
 }
 
-async function forwardedHeaders(method: string): Promise<Headers> {
-  const out = new Headers({ Accept: 'application/json' })
+/** The reader's UI locale, or the API's own default when there is no request context. */
+async function currentLocale(): Promise<string> {
+  try {
+    return await getLocale()
+  } catch {
+    return DEFAULT_LOCALE
+  }
+}
+
+async function forwardedHeaders(method: string, locale: string): Promise<Headers> {
+  const out = new Headers({ Accept: 'application/json', 'Accept-Language': locale })
   const jar = await cookies()
   const all = jar.getAll()
   if (all.length > 0) {
@@ -109,10 +125,11 @@ async function send<T>({
   redirectOnUnauthorized = true,
   tags,
 }: RawRequest): Promise<SendResult<T>> {
-  const url = buildUrl(path, query)
+  const locale = await currentLocale()
+  const url = buildUrl(path, query, locale)
   const init: RequestInit & { next?: { revalidate?: number; tags?: string[] } } = {
     method,
-    headers: await forwardedHeaders(method),
+    headers: await forwardedHeaders(method, locale),
     signal: AbortSignal.timeout(apiTimeoutMs()),
   }
   if (body !== undefined) init.body = JSON.stringify(body)

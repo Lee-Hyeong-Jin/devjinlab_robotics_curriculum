@@ -1,0 +1,11 @@
+id: m10-system-integration-capstone
+lang: en
+title: "M10 System integration and capstone project"
+summary: >-
+  System design from requirements down to components and interfaces, hardware integration
+  (choosing sensors, actuators, compute, power and communication), an overview of
+  watchdogs, fail-safes and functional safety, and unit, integration and HIL testing with
+  CI and deployment built around containers and logging; then designing and assessing a
+  capstone project carried out on low-cost real hardware or on datasets rather than in a
+  simulator, and connecting it to a portfolio, communities, competitions and hiring.
+  This is the last module, where the parts learned in M1-M8 become one working system.

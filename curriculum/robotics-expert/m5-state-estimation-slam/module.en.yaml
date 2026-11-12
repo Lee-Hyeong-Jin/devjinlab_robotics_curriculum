@@ -1,0 +1,9 @@
+id: m5-state-estimation-slam
+lang: en
+title: "M5 State estimation and SLAM"
+summary: >-
+  Starting from the Bayes filter, which expresses a robot's pose as a probability, this
+  module covers the Kalman filter and the EKF, particle filters and Monte Carlo
+  localisation, sensor fusion of wheel odometry with an IMU, occupancy-grid maps and scan
+  matching, and graph SLAM up to reading SLAM Toolbox -- mostly through numpy examples.
+  The mapping and localisation in M6 (navigation) build on this module.

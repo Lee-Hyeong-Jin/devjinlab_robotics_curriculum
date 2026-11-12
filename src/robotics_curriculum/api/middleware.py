@@ -6,6 +6,7 @@ import logging
 import re
 import time
 import uuid
+from urllib.parse import parse_qsl
 
 from starlette.datastructures import Headers, MutableHeaders
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
@@ -28,6 +29,20 @@ def _request_id(scope: Scope) -> str:
     return uuid.uuid4().hex
 
 
+def _lang_query(scope: Scope) -> str | None:
+    """``?lang=en`` on the request, which wins over ``Accept-Language``.
+
+    A caching client (the web front-end) needs the language in the URL: its data cache is
+    keyed by URL, so two readers in two languages would otherwise share one cached body.
+    """
+    raw = scope.get("query_string") or b""
+    query = raw.decode("latin-1") if isinstance(raw, bytes) else str(raw)
+    for key, value in parse_qsl(query, keep_blank_values=False):
+        if key == "lang":
+            return str(value)
+    return None
+
+
 class RequestContextMiddleware:
     """Sets :data:`request_id_var`, echoes ``X-Request-ID``, logs one line per request.
 
@@ -45,7 +60,7 @@ class RequestContextMiddleware:
         request_id = _request_id(scope)
         token = request_id_var.set(request_id)
         accept_language = Headers(scope=scope).get("accept-language")
-        lang_token = lang_var.set(resolve_lang(accept_language=accept_language))
+        lang_token = lang_var.set(resolve_lang(_lang_query(scope), accept_language=accept_language))
         status = 500
         started = False
         begin = time.perf_counter()

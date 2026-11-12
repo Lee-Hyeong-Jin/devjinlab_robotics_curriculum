@@ -97,7 +97,7 @@ export interface paths {
         };
         /**
          * List Courses
-         * @description Every course in the curriculum.
+         * @description Every course in the curriculum, with its text in the requested language.
          */
         get: operations["list_courses_api_v1_courses_get"];
         put?: never;
@@ -1313,6 +1313,12 @@ export interface components {
             /** Lesson Count */
             lesson_count: number;
             /**
+             * Lang
+             * @description Language of `title` and `summary`.
+             * @default ko
+             */
+            lang: string;
+            /**
              * Stages
              * @description Modules grouped by level, in course order.
              */
@@ -1332,6 +1338,12 @@ export interface components {
             module_count: number;
             /** Lesson Count */
             lesson_count: number;
+            /**
+             * Lang
+             * @description Language of `title` and `summary`.
+             * @default ko
+             */
+            lang: string;
         };
         /** DeleteAccount */
         DeleteAccount: {
@@ -1444,7 +1456,7 @@ export interface components {
             body: string;
             /**
              * Study Method
-             * @description Markdown of the "## 이 단계 공부법" section, if the lesson has one.
+             * @description Markdown of the study-guide section, if the lesson has one.
              */
             study_method: string | null;
             /**
@@ -1594,8 +1606,16 @@ export interface components {
             title: string;
             /** Summary */
             summary: string;
-            /** Level */
+            /**
+             * Level
+             * @description Stable level id, the same in every language (null when unset).
+             */
             level: ("기초" | "중급" | "고급") | null;
+            /**
+             * Level Label
+             * @description `level` as it should be shown, in the requested language.
+             */
+            level_label?: string | null;
             /** Course Id */
             course_id: string;
             /** Lesson Count */
@@ -1605,6 +1625,12 @@ export interface components {
              * @description Sum over the module's lessons.
              */
             estimated_minutes: number;
+            /**
+             * Lang
+             * @description Language of `title` and `summary`.
+             * @default ko
+             */
+            lang: string;
             /** Lessons */
             lessons: components["schemas"]["LessonSummary"][];
         };
@@ -1633,8 +1659,16 @@ export interface components {
             title: string;
             /** Summary */
             summary: string;
-            /** Level */
+            /**
+             * Level
+             * @description Stable level id, the same in every language (null when unset).
+             */
             level: ("기초" | "중급" | "고급") | null;
+            /**
+             * Level Label
+             * @description `level` as it should be shown, in the requested language.
+             */
+            level_label?: string | null;
             /** Course Id */
             course_id: string;
             /** Lesson Count */
@@ -1644,6 +1678,12 @@ export interface components {
              * @description Sum over the module's lessons.
              */
             estimated_minutes: number;
+            /**
+             * Lang
+             * @description Language of `title` and `summary`.
+             * @default ko
+             */
+            lang: string;
         };
         /** NextLesson */
         NextLesson: {
@@ -2045,8 +2085,16 @@ export interface components {
         RoadmapStage: {
             /** Course Id */
             course_id: string;
-            /** Level */
+            /**
+             * Level
+             * @description Stable level id, the same in every language (null when unset).
+             */
             level: ("기초" | "중급" | "고급") | null;
+            /**
+             * Level Label
+             * @description `level` as it should be shown, in the requested language.
+             */
+            level_label?: string | null;
             /**
              * Progress
              * @description Mean of the module progress values.
@@ -2137,16 +2185,30 @@ export interface components {
              * @description null for modules without a level.
              */
             level: ("기초" | "중급" | "고급") | null;
+            /**
+             * Level Label
+             * @description `level` as it should be shown, in the requested language.
+             */
+            level_label?: string | null;
             /** Modules */
             modules: components["schemas"]["ModuleSummary"][];
         };
         /**
          * StageStat
-         * @description One level (기초 / 중급 / 고급) with its lesson counts.
+         * @description One level (foundation / intermediate / advanced) with its lesson counts.
          */
         StageStat: {
-            /** Level */
+            /**
+             * Level
+             * @description Stable level id, the same in every language.
+             */
             level: string;
+            /**
+             * Label
+             * @description `level` as it should be shown.
+             * @default
+             */
+            label: string;
             /**
              * Progress
              * @description Percent of the level's lessons done.

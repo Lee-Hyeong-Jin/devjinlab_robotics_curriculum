@@ -1,0 +1,11 @@
+id: m6-navigation-planning
+lang: en
+title: "M6 Navigation and path planning"
+summary: >-
+  Starting from configuration space and grid graph search (Dijkstra, A*), this module
+  implements sampling-based planning (PRM, RRT, RRT*), costmaps and global planning, local
+  planning and obstacle avoidance (DWA, MPPI), and path smoothing and trajectory generation
+  as numpy examples, and finally reads how those parts fit together in Nav2's servers,
+  plugins and behaviour trees.
+  It builds on the mapping and localisation of M5 and on tf2 from M8, and the motion
+  planning of M7 picks up its sampling-based planning.

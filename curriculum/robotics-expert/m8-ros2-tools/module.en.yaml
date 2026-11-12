@@ -1,0 +1,10 @@
+id: m8-ros2-tools
+lang: en
+title: "M8 ROS 2 and tooling overview"
+summary: >-
+  A reading-centred tour of ROS 2 Jazzy (Ubuntu 24.04): the computation-graph concepts and
+  how to pick a distribution, programming nodes, topics, services, actions, parameters and
+  launch files, the core tools (tf2, URDF, RViz, rosbag2/MCAP, Foxglove), the higher-level
+  stacks and development environment (ros2_control, Nav2, MoveIt 2, micro-ROS), and reading
+  the code of a reference robot.
+  The ROS 2 lessons of M5, M6 and M7 take this module as a prerequisite.

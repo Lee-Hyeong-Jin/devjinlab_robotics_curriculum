@@ -422,7 +422,8 @@ def _stage_table(model: SiteModel, page: str) -> str:
             f"{module_link(model, page, m)} {ratio(model.module_summaries(m)).percent}%"
             for m in modules
         )
-        rows.append(f"| **{md_text(stage)}** | {bar(ratio(summaries))} | {module_cells} |")
+        label = md_text(stage_text(stage, t))
+        rows.append(f"| **{label}** | {bar(ratio(summaries))} | {module_cells} |")
     return "\n".join(rows)
 
 
