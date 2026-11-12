@@ -1,0 +1,86 @@
+# English text of the structured fields of feedback-linearization.md (activity titles,
+# resource notes, quiz). The prose lives in feedback-linearization.en.md.
+id: c3-feedback-linearization
+lang: en
+activities:
+  c3-feedback-linearization-reading: Read the lesson and follow the derivations
+  c3-feedback-linearization-papers: Read the three must-read papers + a one-page note each
+  c3-feedback-linearization-problems: "Problem set (2 derivations, 1 proof, 2 numerical, 1 implementation, 1 counterexample)"
+  c3-feedback-linearization-reproduction: "Reproduction task - park with steering by sinusoids (R2)"
+  c3-feedback-linearization-quiz: Concept check quiz
+resources:
+  "Khalil, Nonlinear Systems (3rd ed., 2002)":
+    note: >-
+      ch.13 (feedback linearisation) - 13.1 normal forms, 13.2 input-output linearisation,
+      13.4 the conditions for full linearisation. (official URL unverified)
+  "Murray, Li & Sastry, A Mathematical Introduction to Robotic Manipulation":
+    note: >-
+      ch.7 (nonholonomic motion planning) - the standard robotics treatment of the chained form,
+      steering with sinusoids and Chow's theorem. (official URL unverified)
+  "Tedrake, Underactuated Robotics":
+    note: Recommended. Partial feedback linearisation (collocated and non-collocated) and its limits on underactuated systems.
+quiz:
+  - id: q1
+    prompt: >-
+      For the differential-drive robot (1), what does it mean simultaneously that $[g_1, g_2]$
+      leaves $\mathrm{span}\{g_1,g_2\}$?
+    choices:
+      - It is neither controllable nor linearisable
+      - It can move in a new direction (controllable) and at the same time no output linearises the full state
+      - It is not controllable but is linearisable
+      - Neither property has anything to do with the bracket
+    explanation: >-
+      A bracket that leaves the distribution means motion is not trapped on an integral surface,
+      which gives controllability through LARC. For the same reason $\Delta$ is not involutive, so
+      the Frobenius theorem does not provide a linearising output. One fact produces both
+      conclusions.
+    concept:
+      front: The two faces of a non-involutive distribution
+      back: >-
+        The bracket leaving the span means controllable (Chow) and not fully linearisable
+        (Frobenius)
+  - id: q2
+    prompt: >-
+      In the chained form, after one period of $v_1 = a\sin\omega t$ and $v_2 = b\cos\omega t$,
+      what is the displacement of $z_3$ in terms of $a$, $b$ and $\omega$?
+    answers: ["pi*a*b/omega^2", "pi a b / omega^2", "pi ab/omega^2", "\\pi a b/\\omega^2"]
+    explanation: >-
+      In $\Delta z_3 = \int_0^T z_2v_1\,dt$ the $z_2(0)$ term vanishes because $\int\sin = 0$, and
+      what remains is $\frac{ab}{\omega}\int_0^T\sin^2\omega t\,dt = \frac{ab}{\omega}\cdot
+      \frac{T}{2} = \frac{\pi ab}{\omega^2}$. That it is independent of the starting position is
+      the heart of the algorithm.
+    concept:
+      front: Displacement over one period of sinusoidal steering
+      back: "$\\Delta z_3 = \\pi ab/\\omega^2$ - while $z_1$ and $z_2$ return to where they started"
+  - id: q3
+    prompt: >-
+      Since a forward distance $d$ close to zero tracks the wheel axle more accurately, smaller $d$
+      is always better.
+    explanation: >-
+      $\det J_d = d$, so the norm of $J_d^{-1}$ grows like $1/d$. A small $d$ makes the angular-rate
+      command blow up like $1/d$, and the design fails first at the input limits and through noise
+      amplification. $d$ trades the location of the tracked point against conditioning.
+    concept:
+      front: The trade in the forward distance $d$
+      back: >-
+        $\det J_d = d$ - a small $d$ means angular rates of order $1/d$, a large $d$ means a
+        tracked point far from the robot
+  - id: q4
+    prompt: >-
+      Applying Brockett's necessary condition to (1), where does the conclusion come from that the
+      lateral direction $(0,\epsilon,0)$ is not in the image?
+    choices:
+      - "From $u_2 = 0$ and $\\cos\\theta \\ne 0$ forcing $u_1 = 0$, which makes the second component zero as well"
+      - Because $\theta$ is bounded
+      - Because $g_1$ and $g_2$ are linearly independent
+      - Because the Lie brackets span three dimensions
+    explanation: >-
+      In a small neighbourhood $\lvert\theta\rvert<\delta<\pi/2$, so $\cos\theta\ne0$. The first
+      component $\cos\theta\,u_1 = 0$ forces $u_1=0$, and then the second component
+      $\sin\theta\,u_1$ is zero too. Brackets do let you move sideways by concatenating manoeuvres,
+      but the set of velocities available at one instant has no such direction.
+    concept:
+      front: Where Brockett's condition fails for (1)
+      back: >-
+        The set of velocities available at one instant contains no lateral direction - so no smooth
+        time-invariant feedback

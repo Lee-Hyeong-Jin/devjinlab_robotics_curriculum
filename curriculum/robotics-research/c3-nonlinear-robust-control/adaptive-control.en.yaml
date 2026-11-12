@@ -1,0 +1,80 @@
+# English text of the structured fields of adaptive-control.md (activity titles,
+# resource notes, quiz). The prose lives in adaptive-control.en.md.
+id: c3-adaptive-control
+lang: en
+activities:
+  c3-adaptive-control-reading: Read the lesson and follow the derivations
+  c3-adaptive-control-papers: Read the three must-read papers + a one-page note each
+  c3-adaptive-control-problems: "Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  c3-adaptive-control-reproduction: "Reproduction task - parameters converge only on a persistently exciting trajectory (R2)"
+  c3-adaptive-control-quiz: Concept check quiz
+resources:
+  "Khalil, Nonlinear Systems (3rd ed., 2002)":
+    note: >-
+      ch.9 (perturbation and averaging) and ch.4.8 (comparison functions for non-autonomous
+      systems). The tools of the PE argument are here. (official URL unverified)
+  "Lynch & Park, Modern Robotics":
+    note: ch.11.4 (adaptive control) and ch.8.4 (the linear-in-parameter structure). Free in full.
+quiz:
+  - id: q1
+    prompt: >-
+      In $\dot V = -s^\top K_D s$ for the Slotine-Li adaptive controller, **no parameter-error term
+      appears**. What does that mean?
+    choices:
+      - The parameters always converge to their true values
+      - The Lyapunov argument alone cannot conclude parameter convergence — only tracking convergence
+      - The controller is unstable
+      - A larger $K_D$ makes the parameters converge too
+    explanation: >-
+      $\dot V$ is only semi-definite (zero) in $\tilde a$, so $\tilde a$ is merely bounded and
+      convergence follows only under a separate condition (persistent excitation). Indeed, at a
+      set-point the tracking error reaches $10^{-14}$ while the parameter error stays at 34%.
+    concept:
+      front: The scope of the adaptive guarantee
+      back: >-
+        $\dot V = -s^\top K_Ds$ gives tracking convergence only; parameter convergence needs the PE
+        condition
+  - id: q2
+    prompt: >-
+      Write the condition that the regressor $W(t)$ is persistently exciting, as an integral
+      inequality (one line).
+    answers: ["int_t^{t+T} W^T W >= alpha I", "integral W'W >= alpha I", "int W^T W >= alpha I", "∫ W^T W dt >= alpha I"]
+    explanation: >-
+      There exist $\alpha, T_0 > 0$ such that for every $t$,
+      $\int_t^{t+T_0} W(\sigma)^\top W(\sigma)d\sigma \succeq \alpha I$. It says information keeps
+      arriving in every direction; where it fails, the parameter error in that direction remains
+      forever.
+    concept:
+      front: The persistent-excitation (PE) condition
+      back: "$\\int_t^{t+T_0} W^\\top W\\,d\\sigma \\succeq \\alpha I$ - it must hold for every $t$"
+  - id: q3
+    prompt: >-
+      If the tracking error has converged to zero, the estimated parameters may be reused in another
+      controller or planner.
+    explanation: >-
+      The set-point experiment on the two-link arm is the counterexample: with a tracking error of
+      $5\cdot10^{-14}$ the inertial parameters are wrong even in sign ($\hat a_1 = -2.09$ against
+      $a_1 = 1.33$) and only the gravity ones are right. The information about the unexcited columns
+      was never in the data.
+    concept:
+      front: Tracking performance versus identification quality
+      back: >-
+        They are separate - without PE the estimate can stop at wrong values while tracking is
+        perfect
+  - id: q4
+    prompt: >-
+      Why does the rank of the Gram matrix of the two-link arm fall from 5 to 2 at a set-point?
+    choices:
+      - Because gravity becomes zero
+      - "Because $\\dot q_d = \\ddot q_d = 0$ makes the inertial and Coriolis columns of the regressor vanish after the transient, leaving only the gravity columns"
+      - Because the adaptation gain is too small
+      - Because the mass matrix becomes singular
+    explanation: >-
+      Columns 1, 2 and 3 of (6) are built only from $\ddot q_r$ and $\dot q\dot q_r$. At a set-point
+      those terms disappear once the transient ends, leaving columns 4 and 5 (gravity) and a rank of
+      2. Parameters in the null-space directions leave no trace in the data.
+    concept:
+      front: Where excitation dies at a set-point
+      back: >-
+        The inertial and Coriolis columns scale with $\ddot q_r$ and $\dot q$ - at rest only the
+        gravity columns remain, so the rank is 2

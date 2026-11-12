@@ -1,0 +1,74 @@
+# English text of the structured fields of passivity-impedance.md (activity titles,
+# resource notes, quiz). The prose lives in passivity-impedance.en.md.
+id: c3-passivity-impedance
+lang: en
+activities:
+  c3-passivity-impedance-reading: Read the lesson and follow the derivations
+  c3-passivity-impedance-papers: Read the three must-read papers + a one-page note each
+  c3-passivity-impedance-problems: "Problem set (2 derivations, 1 proof, 2 numerical, 1 implementation, 1 counterexample)"
+  c3-passivity-impedance-reproduction: "Reproduction task - stability and passivity boundaries of a virtual wall (R2)"
+  c3-passivity-impedance-quiz: Concept check quiz
+resources:
+  "Lynch & Park, Modern Robotics":
+    note: ch.11.6 (impedance control) and ch.8.1 (the passivity structure of Lagrangian dynamics). Free in full.
+quiz:
+  - id: q1
+    prompt: >-
+      Which structure is decisive in showing that a manipulator is passive at the $(\tau, \dot q)$
+      port?
+    choices:
+      - "The fact that $M(q) \\succ 0$"
+      - "The fact that $\\tfrac12\\dot M - C$ is skew-symmetric for the Christoffel choice of $C$"
+      - The fact that the gravity term is bounded
+      - The fact that joint friction dissipates energy
+    explanation: >-
+      Expanding $\dot V$ leaves the term $\dot q^\top(\tfrac12\dot M - C)\dot q$, which is
+      **exactly zero** for the Christoffel choice. $M \succ 0$ makes $V$ positive definite but
+      provides no cancellation, and another $C$ breaks it.
+    concept:
+      front: The core of manipulator passivity
+      back: >-
+        Skew symmetry of $\tfrac12\dot M - C$, so $\dot q^\top(\tfrac12\dot M-C)\dot q = 0$. It
+        depends on the choice of $C$.
+  - id: q2
+    prompt: >-
+      How large is the equivalent negative damping that a ZOH-implemented virtual spring $K$
+      creates at low frequency? (in terms of $K$ and $T$)
+    answers: ["KT/2", "K*T/2", "KT / 2", "-KT/2", "K T / 2"]
+    explanation: >-
+      In the $\theta \to 0$ limit of (3) the equivalent damping of the port is $b - KT/2 + B$, so
+      the sampled spring looks like a damping of $-KT/2$: the held force acts half a period late
+      and injects energy every cycle.
+    concept:
+      front: Negative damping of a sampled virtual spring
+      back: "$-KT/2$ - hence passivity needs physical damping $b \\ge KT/2$ when $B=0$"
+  - id: q3
+    prompt: >-
+      A digital impedance controller that is stable against one environment is also stable against
+      every passive environment.
+    explanation: >-
+      The stability boundary is $b > KT/2 - B$ while the passivity boundary is higher (at most
+      $KT/2 + |B|$). Gains between the two are stable **against that environment** but can be
+      handed energy when coupled to another passive one (or to a human pushing differently).
+      Passivity is a guarantee over the whole class, and its price is a stiffness cap.
+    concept:
+      front: Stability boundary versus passivity boundary
+      back: >-
+        $KT/2-B \le$ passivity threshold $\le KT/2+|B|$ - passivity covers every passive
+        environment and so is more conservative
+  - id: q4
+    prompt: >-
+      On a fully actuated manipulator with $\tau = g(q) - K_p(q-q_d) - K_d\dot q$, what is
+      $\dot V_d$?
+    choices:
+      - "$-\\dot q^\\top K_p \\dot q$"
+      - "$-\\dot q^\\top K_d \\dot q$"
+      - "$-(q-q_d)^\\top K_p (q-q_d)$"
+      - "$0$"
+    explanation: >-
+      Differentiating $V_d = \tfrac12\dot q^\top M\dot q + \tfrac12(q-q_d)^\top K_p(q-q_d)$ cancels
+      the gravity and $C$ terms and also the shaping term, leaving only the injected damping.
+      $\dot V_d \le 0$ with equality only at $\dot q = 0$, so LaSalle gives $q \to q_d$.
+    concept:
+      front: Energy derivative under shaping plus damping injection
+      back: "$\\dot V_d = -\\dot q^\\top K_d\\dot q$ - all dissipation comes from the damping you injected"

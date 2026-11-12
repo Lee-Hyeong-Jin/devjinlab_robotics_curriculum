@@ -1,0 +1,98 @@
+# English text of the structured fields of spatial-vector-algebra.md (activity titles,
+# resource notes, quiz). The prose lives in spatial-vector-algebra.en.md.
+id: c2-spatial-vector-algebra
+lang: en
+activities:
+  c2-spatial-vector-algebra-reading: Read the lesson and follow the derivations
+  c2-spatial-vector-algebra-papers: Read the two must-read papers + a one-page note each
+  c2-spatial-vector-algebra-problems: "Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample)"
+  c2-spatial-vector-algebra-reproduction: "Reproduction task - spatial inertia transform and bias force (R1)"
+  c2-spatial-vector-algebra-quiz: Concept check quiz
+resources:
+  "Featherstone, Rigid Body Dynamics Algorithms (2008)":
+    note: ch.2 (Spatial Vector Algebra). The primary textbook for this lesson; the notation of the module follows it.
+  "Lynch & Park, Modern Robotics":
+    note: ch.8.1-8.2 (Lagrangian and Newton-Euler dynamics). The same results in twist and wrench notation. The full PDF is free.
+  "Featherstone — Spatial vector and rigid-body dynamics software":
+    note: Recommended. The author's published spatial vector implementation (Matlab/Octave), useful for cross-checking the reproduction task.
+quiz:
+  - id: q1
+    prompt: If the motion transform is $^{B}X_{A}$, what is the force transform $^{B}X^{*}_{A}$?
+    choices:
+      - $({}^{B}X_{A})^{\top}$
+      - $({}^{B}X_{A})^{-\top}$
+      - $({}^{B}X_{A})^{-1}$
+      - The same as $^{B}X_{A}$
+    explanation: >-
+      Power $f^{\top}v$ must be frame-independent, so $f_B^{\top}({}^{B}X_{A}v_A) = f_A^{\top}v_A$
+      has to hold for every $v_A$. Hence $({}^{B}X_{A})^{\top}f_B = f_A$, that is
+      $^{B}X^{*}_{A} = ({}^{B}X_{A})^{-\top} = ({}^{A}X_{B})^{\top}$. Using the transpose alone
+      flips the sign of the moment-transfer term as soon as a translation is involved.
+    concept:
+      front: The coordinate transform of a force vector
+      back: >-
+        $^{B}X^{*}_{A} = ({}^{B}X_{A})^{-\top} = ({}^{A}X_{B})^{\top}$ - invariance of power is the
+        only justification needed
+  - id: q2
+    prompt: Which is the correct expression for moving a spatial inertia from frame $A$ to frame $B$?
+    choices:
+      - $({}^{B}X_{A})^{-1}\,{}^{A}I\,{}^{B}X_{A}$ (a similarity transform)
+      - $({}^{A}X_{B})^{\top}\,{}^{A}I\,{}^{A}X_{B}$ (a congruence)
+      - $({}^{B}X_{A})^{\top}\,{}^{A}I\,{}^{B}X_{A}$
+      - $^{B}X_{A}\,{}^{A}I\,({}^{B}X_{A})^{\top}$
+    explanation: >-
+      $I$ maps $M^6 \to F^6$, so $^{A}X_{B}$ attaches to its input and
+      $^{B}X^{*}_{A} = ({}^{A}X_{B})^{\top}$ to its output, which makes the whole thing a
+      congruence - and that is why symmetry and positive definiteness survive. A similarity
+      transform happens to be right for a pure rotation and makes $I$ non-symmetric the moment a
+      translation enters.
+    concept:
+      front: The transformation of spatial inertia
+      back: >-
+        $^{B}I = ({}^{A}X_{B})^{\top}\,{}^{A}I\,{}^{A}X_{B}$ - a congruence, not a similarity
+        transform
+  - id: q3
+    prompt: >-
+      The lower three components of spatial acceleration equal the (classical) acceleration of the
+      body-fixed point coinciding with the coordinate origin.
+    explanation: >-
+      The two differ by $\omega \times v_O$: $a_{\text{classical}} = \dot{v}_O + \omega \times v_O$
+      whereas the lower half of spatial acceleration is $\dot{v}_O$. The reason is that the
+      body-fixed point coinciding with the origin is a different point at each instant. If the
+      origin is at the centre of mass, or $v_O = 0$, the difference vanishes and the bug stays
+      hidden.
+    concept:
+      front: Spatial acceleration vs the acceleration of a point
+      back: >-
+        $a_{\text{classical}} = \dot{v}_O + \omega \times v_O$; spatial acceleration is $\dot{v}_O$.
+        The difference is $\omega \times v_O$
+  - id: q4
+    prompt: What is the power delivered by the bias force $(v\times^{*})Iv$ of (8)?
+    answers: ["0", "zero", "none", "it does no work"]
+    explanation: >-
+      $v^{\top}(v\times^{*})Iv = (-(v\times)v)^{\top}Iv$ and $(v\times)v = 0$, so it is exactly
+      zero. This is the precise content of the statement that the Coriolis and centrifugal terms do
+      not contribute to the kinetic-energy budget, and it is used directly as a numerical check
+      (the work balance) on integrators and controllers.
+    concept:
+      front: The power of the Coriolis/centrifugal (bias) term
+      back: exactly zero - it follows from $(v\times)v = 0$
+  - id: q5
+    prompt: >-
+      Select every hypothesis that the derivation of
+      $\dot{I} = (v\times^{*})I - I(v\times)$ **actually uses**.
+    choices:
+      - The spatial inertia seen in a body-fixed frame is constant (rigidity)
+      - The reference frame is an inertial (fixed) frame
+      - The inertia matrix is diagonal
+      - The centre of mass is at the coordinate origin
+    explanation: >-
+      Rigidity makes $^{B}I$ constant, which is what step 1 needs, and the inertial-frame
+      assumption is needed right after, when $f = \dot{h}$ is used. Neither diagonality of the
+      inertia nor the position of the centre of mass enters the derivation at all - though putting
+      the origin at the centre of mass does hide the error of R5 and so defeats the test.
+    concept:
+      front: The hypotheses (7) uses
+      back: >-
+        Rigidity ($^{B}I$ constant) plus an inertial frame. Diagonal inertia and a centre-of-mass
+        origin are not needed

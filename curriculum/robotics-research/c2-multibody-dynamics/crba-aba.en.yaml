@@ -1,0 +1,99 @@
+# English text of the structured fields of crba-aba.md (activity titles, resource notes,
+# quiz). The prose lives in crba-aba.en.md.
+id: c2-crba-aba
+lang: en
+activities:
+  c2-crba-aba-reading: Read the lesson and follow the derivations
+  c2-crba-aba-papers: Read the two must-read papers + a one-page note each
+  c2-crba-aba-problems: "Problem set (2 derivations, 2 proofs, 1 numerical, 1 implementation, 1 paper)"
+  c2-crba-aba-reproduction: "Reproduction task - CRBA and ABA against each other, plus structure checks (R1)"
+  c2-crba-aba-quiz: Concept check quiz
+resources:
+  "Featherstone, Rigid Body Dynamics Algorithms (2008)":
+    note: ch.6 (Forward Dynamics - the CRB and the articulated-body method) and ch.7 (Sparse Factorization). The primary textbook for this lesson.
+  "Lynch & Park, Modern Robotics":
+    note: ch.8.2-8.6 (the mass matrix and forward dynamics). The same results in twist notation. The full PDF is free.
+  "Nocedal & Wright, Numerical Optimization":
+    note: Recommended. ch.3 (Cholesky) and ch.16 (Schur complements of KKT systems). Background for reading ABA as a sparse elimination. (official URL unverified)
+  "Featherstone — Spatial vector and rigid-body dynamics software":
+    note: Recommended. The author's `HandC`, `FDab` and `FDcrb`, for the optional cross-check of the reproduction task (Octave).
+quiz:
+  - id: q1
+    prompt: When is $M_{ij} = 0$ guaranteed **structurally**?
+    choices:
+      - When $|i - j| > 1$
+      - When bodies $i$ and $j$ are on different branches (neither is an ancestor of the other)
+      - Always, whenever $i \ne j$
+      - When the joint axes $S_i$ and $S_j$ are orthogonal
+    explanation: >-
+      The sum $M_{ij} = \sum_k J_{k,i}^{\top}I_kJ_{k,j}$ survives only for
+      $k \in \nu(i)\cap\nu(j)$, and in a tree the intersection of two subtrees either has one
+      containing the other or is empty. On different branches it is empty, so the entry is exactly
+      zero. Orthogonal axes give an accidental zero for a particular geometry, not a structural
+      guarantee.
+    concept:
+      front: The structural zero pattern of $M$
+      back: >-
+        Decided by the ancestor relation - $M_{ij}$ across branches is exactly zero. Upper-triangular
+        non-zeros $= \sum_i(1+\mathrm{depth}(i))$
+  - id: q2
+    prompt: What is the cost order of CRBA for a serial chain with $n$ degrees of freedom?
+    choices: ["$\\Theta(n)$", "$\\Theta(n\\log n)$", "$\\Theta(n^2)$", "$\\Theta(n^3)$"]
+    explanation: >-
+      The cost is $\Theta(\sum_i(1+\mathrm{depth}(i)))$, and a serial chain has
+      $\mathrm{depth}(i) = i-1$, giving $n(n+1)/2 = \Theta(n^2)$. That equals the number of
+      upper-triangular non-zeros of $M$, so CRBA is output-optimal — $M$ cannot be built more
+      cheaply. On a star tree it drops to $\Theta(n)$.
+    concept:
+      front: The cost of CRBA
+      back: >-
+        $\Theta(\mathrm{nnz}_{\triangle}(M)) = \Theta(\sum_i(1+\mathrm{depth}(i)))$ - serial $n^2$,
+        balanced tree $n\log n$, star $n$
+  - id: q3
+    prompt: What do you get by multiplying $I^a_j = I^A_j - U_jU_j^{\top}/d_j$ by the joint axis $S_j$? (One value.)
+    answers: ["0", "zero", "the zero vector", "zero vector"]
+    explanation: >-
+      $I^a_jS_j = I^A_jS_j - U_j(U_j^{\top}S_j)/d_j = U_j - U_jd_j/d_j = 0$. Meaning: after
+      $\ddot{q}_j$ has been eliminated, the inertia the parent sees is exactly singular along the
+      joint axis - a free joint transmits no force in that direction. So $I^a_j$ is positive
+      semidefinite but not positive definite, and verifying it with Cholesky fails.
+    concept:
+      front: The value of $I^a_jS_j$
+      back: >-
+        Exactly zero - no force is transmitted along a free joint's direction.
+        $I^a_j \succeq 0$ (not positive definite)
+  - id: q4
+    prompt: ABA's $d_i = S_i^{\top}I^A_iS_i$ equals what, in terms of $M$?
+    choices:
+      - $M_{ii}$
+      - The Schur complement obtained by eliminating the proper-descendant block $\mathcal{D}(i)$
+      - $(M^{-1})_{ii}$
+      - The $i$-th eigenvalue of $M$
+    explanation: >-
+      $d_i = M_{ii} - M_{i\mathcal{D}}M_{\mathcal{D}\mathcal{D}}^{-1}M_{\mathcal{D}i}$ - the inertia
+      felt at joint $i$ with the descendant joints free and the ancestor joints locked. From
+      $M \succ 0$ we get $0 < d_i \le M_{ii}$, with equality only at a leaf. That is why ABA is the
+      same thing as a fill-in-free sparse elimination of $M$ in tree order.
+    concept:
+      front: What $d_i$ really is
+      back: >-
+        A Schur complement of $M$ (descendant block eliminated). $0 < d_i \le M_{ii}$, equality at a
+        leaf. ABA = zero-fill-in sparse elimination
+  - id: q5
+    prompt: Select every fact that the guarantee "ABA never divides by zero" ($d_i > 0$) **actually uses**.
+    choices:
+      - Every body's $I_i$ is positive definite (mass > 0)
+      - A congruence $X^{\top}I^aX$ preserves positive semidefiniteness
+      - The Schur complement of a positive-definite matrix is positive semidefinite
+      - $M$ is formed explicitly and factored by Cholesky
+    explanation: >-
+      The induction starts at the leaves with $I^A_i = I_i \succ 0$; at each step the Schur
+      complement lemma gives $I^a_i \succeq 0$, a congruence preserves that semidefiniteness in the
+      parent's coordinates, and positive definite plus positive semidefinite carries the induction
+      upward. ABA never forms $M$ - that is why it is $\Theta(n)$. A zero-mass link makes
+      $d_i = 0$ at a leaf and breaks the guarantee.
+    concept:
+      front: Why $d_i > 0$
+      back: >-
+        $I_i \succ 0$ + the Schur complement lemma + congruence preserving definiteness, by
+        leaf-to-root induction. Breaks on a zero-mass link

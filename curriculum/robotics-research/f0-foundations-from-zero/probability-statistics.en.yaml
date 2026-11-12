@@ -1,0 +1,88 @@
+id: f0-probability-statistics
+lang: en
+activities:
+  f0-probability-statistics-diagnostic: "Self-diagnosis before starting (pass and skip this lesson)"
+  f0-probability-statistics-lectures: Read the MIT 18.05 notes (use 6.041 if you want videos)
+  f0-probability-statistics-problems: Work the problem sets and past exams (self-marked against the solutions)
+resources:
+  "MIT 18.05 Introduction to Probability and Statistics (Spring 2022)":
+    note: The primary source. Lecture notes, readings, problem sets and exams with solutions (no lecture videos).
+  "MIT 6.041 Probabilistic Systems Analysis (Fall 2010)":
+    note: Use this if you want videos. Lecture videos, problem sets and exams with solutions; engineering-oriented, so closer to robotics.
+  "NumPy random 문서":
+    title: NumPy random documentation
+    note: For confirming distributions and limit theorems yourself by Monte Carlo.
+quiz:
+  - id: q1
+    prompt: >-
+      With a disease prevalence of 1%, a test sensitivity of 99% and a specificity of 99%, what is
+      roughly the probability of actually having the disease given a positive result? (integer, in %)
+    explanation: >-
+      Bayes' theorem gives $P = \frac{0.99\times0.01}{0.99\times0.01 + 0.01\times0.99} = 0.5$. When
+      the prior is low, even an accurate test cannot raise the posterior far - an intuition used
+      directly in sensor fusion.
+    answers: ["50", "50%", "50 percent"]
+    concept:
+      front: Bayes' theorem with a low prior
+      back: >-
+        $P(H|E) = P(E|H)P(H)/P(E)$; with a low prior, even an accurate observation raises the
+        posterior only so far
+  - id: q2
+    prompt: If $x \sim \mathcal{N}(\mu, \Sigma)$ and $y = Ax + b$, what is the covariance of $y$?
+    explanation: >-
+      $\mathrm{Cov}(y) = A\Sigma A^\top$ (the mean is $A\mu+b$). Gaussians are closed under linear
+      transformation, and this one line is the prediction step of the Kalman filter.
+    answers: ["A Sigma A^T", "A\\Sigma A^\\top", "ASigmaA^T", "A Σ A^T"]
+    concept:
+      front: Linear transformation of a Gaussian
+      back: $y=Ax+b$ gives $y \sim \mathcal{N}(A\mu+b,\ A\Sigma A^\top)$ - the family is closed
+  - id: q3
+    prompt: What is the difference between the law of large numbers and the central limit theorem?
+    choices:
+      - They are two names for the same theorem
+      - The law of large numbers says the sample mean converges to the true value; the central limit theorem says the **distribution of that error** becomes Gaussian
+      - The law of large numbers concerns variance and the central limit theorem concerns the mean
+      - The central limit theorem holds only when the samples are Gaussian
+    explanation: >-
+      The law of large numbers is about convergence (where it goes); the central limit theorem is
+      about the rate and the error distribution (how spread out it is). The confidence intervals of
+      R1 depend on the latter.
+    concept:
+      front: Law of large numbers versus central limit theorem
+      back: >-
+        The former is convergence of the sample mean; the latter says its error is distributed as
+        $\mathcal{N}(0,\sigma^2/n)$
+  - id: q4
+    prompt: What happens when some variables are marginalised out of a joint Gaussian?
+    choices:
+      - It stops being Gaussian
+      - You simply take the corresponding blocks of the mean and covariance of the remaining variables
+      - You simply take the corresponding block of the inverse covariance (the information matrix)
+      - The variance always increases
+    explanation: >-
+      In **covariance** form taking the block is enough, but in **information** form a Schur
+      complement is needed - which is why marginalisation densifies a graph. iSAM2 in C5 is about
+      exactly this difference.
+    concept:
+      front: Marginalising a Gaussian
+      back: Block extraction in covariance form, a Schur complement in information form - the latter breaks sparsity
+  - id: q5
+    prompt: >-
+      With 100 samples of mean 10 and standard deviation 2, roughly what is the half-width of the
+      95% confidence interval for the mean? (two decimal places)
+    explanation: >-
+      $1.96 \times \sigma/\sqrt{n} = 1.96 \times 2/10 = 0.392$. The "how many trials do I need"
+      question of R1 (power analysis) is this formula inverted.
+    answers: ["0.39", "0.392", "0.4"]
+    concept:
+      front: Confidence interval for a mean
+      back: $\bar{x} \pm z\,\sigma/\sqrt{n}$ - the width shrinks like $1/\sqrt{n}$
+  - id: q6
+    prompt: If two random variables have zero correlation they are independent.
+    explanation: >-
+      Independence implies zero correlation but not conversely (e.g. $x \sim U(-1,1)$ and $y=x^2$
+      are uncorrelated yet dependent). For a **joint Gaussian**, however, uncorrelated does mean
+      independent - that exception is why covariance alone suffices for the Kalman filter.
+    concept:
+      front: Uncorrelated versus independent
+      back: Independence implies uncorrelated; the converse fails in general but holds for joint Gaussians

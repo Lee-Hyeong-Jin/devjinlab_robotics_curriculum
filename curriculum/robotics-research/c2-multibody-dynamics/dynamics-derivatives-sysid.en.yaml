@@ -1,0 +1,104 @@
+# English text of the structured fields of dynamics-derivatives-sysid.md (activity titles,
+# resource notes, quiz). The prose lives in dynamics-derivatives-sysid.en.md.
+id: c2-dynamics-derivatives-sysid
+lang: en
+activities:
+  c2-dynamics-derivatives-sysid-reading: Read the lesson and follow the derivations
+  c2-dynamics-derivatives-sysid-papers: Read the three must-read papers + a one-page note each
+  c2-dynamics-derivatives-sysid-problems: "Problem set (2 derivations, 2 proofs, 1 numerical, 1 implementation, 1 paper)"
+  c2-dynamics-derivatives-sysid-reproduction: "Reproduction task - identify the inertial parameters of a 7-DOF arm and decompose identifiability (R2)"
+  c2-dynamics-derivatives-sysid-quiz: Concept check quiz
+resources:
+  "Featherstone, Rigid Body Dynamics Algorithms (2008)":
+    note: ch.10 (Accuracy and Efficiency). Inertial parameters and numerical accuracy - the chapter that closes this module.
+  "Tedrake, Underactuated Robotics":
+    note: ch.18 (System Identification). A modern treatment of linear-regression identification and physical consistency. Free in full.
+  "Boyd & Vandenberghe, Convex Optimization":
+    note: Recommended. ch.4.6 (SDP) and App. A.5.5. Background for LMI constraints and semidefinite programs. The full PDF is free.
+  "Nocedal & Wright, Numerical Optimization":
+    note: Recommended. ch.10 (least squares) and ch.3. Conditioning, and normal equations versus QR and SVD. (official URL unverified)
+quiz:
+  - id: q1
+    prompt: Which parameters make the spatial inertia linear in $\pi$?
+    choices:
+      - $(m,\; c,\; \bar{I}_C)$ - mass, centre of mass, and inertia about the centre of mass
+      - $(m,\; h = mc,\; I_O)$ - mass, first moment, and inertia about the origin
+      - $(m,\; c,\; I_O)$
+      - It is linear under any of these choices
+    explanation: >-
+      With $(m, c, \bar{I}_C)$ the parallel-axis term $m\hat{c}\hat{c}^{\top}$ in the upper-left
+      block is quadratic in $c$, so it is nonlinear. Reparameterising by $h = mc$ and
+      $I_O = \bar{I}_C + m\hat{c}\hat{c}^{\top}$ makes every entry of first degree. That single
+      reparameterisation turns identification into linear least squares and makes the physical
+      consistency constraint convex (an LMI) as well - it pays off twice.
+    concept:
+      front: The linear parameterisation of inertia
+      back: >-
+        $(m,\; h = mc,\; I_O)$, ten of them. $(m, c, \bar{I}_C)$ is nonlinear because of the
+        parallel-axis term
+  - id: q2
+    prompt: Select every **true** statement about the structurally unidentifiable subspace $\mathcal{N}$.
+    choices:
+      - It does not depend on the state $(q, \dot{q}, \ddot{q})$
+      - It can be reduced by designing a good excitation trajectory
+      - It can be reduced by adding measurements (a base force sensor, say)
+      - Torque prediction is complete even without recovering the $\mathcal{N}$ directions
+    explanation: >-
+      $\mathcal{N}$ is an intersection of kernels over all states, so it is state-independent and a
+      trajectory cannot change it - what a trajectory changes is the condition number $\kappa$.
+      Changing the measurement set does reduce it (identifiability is a property of the mechanism
+      plus the measurements). And since $\tau$ sees only $Y\pi$, prediction is complete with the
+      base parameters alone - in the measurement, at $\sigma = 10^{-3}$ the prediction error at
+      fresh states is around $2\times10^{-3}$.
+    concept:
+      front: Properties of $\mathcal{N}$
+      back: >-
+        State-independent, not changeable by a trajectory, changeable by measurements, harmless to
+        torque prediction. What a trajectory changes is $\kappa$
+  - id: q3
+    prompt: What condition is equivalent to the inertial parameters being realisable by a positive mass density? (Name the matrix.)
+    answers: ["pseudo-inertia", "the pseudo-inertia is positive definite", "pseudo inertia", "P >= 0", "positive definiteness of the pseudo-inertia matrix"]
+    explanation: >-
+      $P(\pi_i) = \int\rho\,\tilde{r}\tilde{r}^{\top}dV \succeq 0$ with $\tilde{r} = (r; 1)$, and
+      the converse is constructed with four point masses. Since $P$ is linear in $\pi_i$ this is an
+      LMI and identification becomes an SDP. $I_O \succ 0$ and the triangle inequalities are only
+      the condition on the upper-left block of $P$, so they are **strictly weaker**.
+    concept:
+      front: The condition equivalent to physical consistency
+      back: >-
+        The pseudo-inertia $P(\pi_i) \succeq 0$. Linear in $\pi_i$, so an LMI → identification is an
+        SDP. Stronger than the triangle inequalities
+  - id: q4
+    prompt: $\partial\tau/\partial\ddot{q}$ is exactly equal to the mass matrix $M(q)$.
+    explanation: >-
+      $\tau = M(q)\ddot{q} + b(q,\dot{q})$ with $b$ independent of $\ddot{q}$, so the Jacobian is
+      exactly $M(q)$ - not an approximation. That is why, with gravity off and $\dot{q} = 0$, a
+      finite difference reaches machine precision with no truncation error ($4.4\times10^{-16}$, at
+      every $h$), while with gravity on cancellation dominates and the error grows like $1/h$.
+    concept:
+      front: $\partial\tau/\partial\ddot{q}$
+      back: >-
+        Exactly $M(q)$ - CRBA is this Jacobian. With gravity off the finite difference has zero
+        truncation error
+  - id: q5
+    prompt: >-
+      The minimum-norm identification solution can be physically inconsistent even with no noise at
+      all ($\sigma = 0$). Why?
+    choices:
+      - Because least squares does not converge
+      - Because physical consistency lives in the unidentifiable directions, which the minimum-norm solution sets to zero
+      - Because the regressor is badly conditioned
+      - Because the pseudo-inertia is nonlinear in $\pi$
+    explanation: >-
+      Measured: at $\sigma = 0$ the solution on the identifiable subspace has
+      $\min\lambda_{\min}(P) = -1.1274$, inconsistent; restoring the $\mathcal{N}$ component to its
+      true value makes it consistent at $+9.3\times10^{-4}$ and **the torque prediction does not
+      change at all** ($1.2\times10^{-12}$). So consistency lies entirely in the unidentifiable
+      directions - and that is the direction the SDP of (5) chooses. As $\sigma$ grows, the
+      identifiable component too is pushed outside the consistent set and the constraint changes the
+      estimate.
+    concept:
+      front: Why it is inconsistent even at $\sigma = 0$
+      back: >-
+        Consistency lies along $\mathcal{N}$ and the minimum-norm solution sets that to zero. The SDP
+        chooses that direction

@@ -1,0 +1,11 @@
+id: f0-foundations-from-zero
+lang: en
+title: "F0 Foundations from zero"
+summary: >-
+  The stage that takes someone from nothing to first- and second-year undergraduate mathematics,
+  physics and programming. It is a **guide** module that writes no new content: it points at
+  verified public courses and textbooks and uses diagnostic problems to decide whether a lesson can
+  be skipped. Eight lessons: calculus I and II, linear algebra, differential equations, probability
+  and statistics, Python with numerical computing and Git, classical mechanics, and reading and
+  writing proofs. After this module comes the robotics-expert course and then the R0 mathematics
+  bridge. Prerequisites are advisory, never locked - any lesson can be opened directly.

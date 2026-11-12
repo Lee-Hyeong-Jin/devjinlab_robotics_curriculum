@@ -1,0 +1,116 @@
+id: c6-asymptotic-optimality
+lang: en
+activities:
+  c6-asymptotic-optimality-reading: Read the lesson and follow the derivations
+  c6-asymptotic-optimality-papers: >-
+    Read the three must-read papers and write a one-page note on each
+  c6-asymptotic-optimality-problems: >-
+    Problem set (2 derivations, 2 proofs, 2 numerical, 1 implementation, 1 counterexample)
+  c6-asymptotic-optimality-reproduction: >-
+    Reproduction task - cost convergence curves of RRT and RRT* averaged over 200 runs (R2)
+  c6-asymptotic-optimality-quiz: Concept-check quiz
+resources:
+  "LaValle, Planning Algorithms":
+    note: >-
+      ch.5 - dispersion in 5.2 and the roadmap-quality discussion in 5.6. Asymptotic optimality
+      itself postdates this book.
+quiz:
+  - id: q1
+    prompt: What is the one **essential** change that turns RRT into RRT*?
+    choices:
+      - Restricting the sample distribution to the informed set
+      - Allowing a node's parent to be changed later (rewiring)
+      - Removing the goal bias
+      - Using $k$-nearest neighbours instead of the single nearest
+    explanation: >-
+      The proof of R2 rests entirely on hypothesis H2 (a parent is chosen once and never changed).
+      Adding rewiring makes "a node's cost is fixed at creation" false, destroying step 3, and
+      asymptotic optimality then holds. The radius rule is the device that makes rewiring
+      **efficient**, and informed sampling is an acceleration on top of that.
+    concept:
+      front: The one line separating RRT from RRT*
+      back: >-
+        Rewiring - a node's cost can decrease later. The radius rule is what caps the cost of that at
+        $O(\log n)$
+  - id: q2
+    prompt: Why does the radius rule $r_n \propto (\log n / n)^{1/d}$ need the $\log n$?
+    choices:
+      - To keep the neighbour count constant
+      - >-
+        So that the probability $e^{-np_n}$ of a covering ball being empty falls as a power of $n$ and
+        becomes summable
+      - To reduce numerical error in the distance computation
+      - To make the volume of the ellipsoid small
+    explanation: >-
+      With $np_n \propto \log n$ we get $e^{-np_n} = n^{-\beta}$, which together with the union
+      bound's leading factor $O(n^{1/d})$ makes $\sum_n$ converge when $\beta > 1 + 1/d$.
+      Borel–Cantelli then gives "it fails only finitely often", hence almost sure convergence. With
+      $r_n \propto n^{-1/d}$ alone, $np_n$ is constant and summability is lost.
+    concept:
+      front: What the $\log n$ is for
+      back: It makes $e^{-np_n}$ a power of $n$, so Borel–Cantelli can be applied
+  - id: q3
+    prompt: >-
+      What must be known to compute $\gamma^\ast$, and what happens if that quantity is
+      **overestimated**?
+    choices:
+      - $\mu(\mathcal{X}_{free})$, and overestimating it loses the guarantee
+      - >-
+        $\mu(\mathcal{X}_{free})$, and overestimating it keeps the guarantee while only raising the
+        neighbour count
+      - The optimal cost $c^\ast$
+      - The clearance $\delta$ of the solution path
+    explanation: >-
+      $\gamma^\ast \propto (\mu(\mathcal{X}_{free})/\zeta_d)^{1/d}$. Overestimating $\mu$ (using the
+      box volume and ignoring obstacles, say) makes $\gamma$ larger than needed, raising the radius,
+      the neighbour count and the per-iteration cost, but the condition $\gamma > \gamma^\ast$ still
+      holds - the safe direction. Underestimating is the dangerous one.
+    concept:
+      front: The input to $\gamma^\ast$ and the safe direction of error
+      back: >-
+        $\mu(\mathcal{X}_{free})$ is needed. Overestimating is safe (only costlier); underestimating
+        loses the guarantee
+  - id: q4
+    prompt: >-
+      In a two-dimensional environment, informed sampling already shrinks the search region
+      substantially once the current solution is at 1.1 times the optimum.
+    explanation: >-
+      In the reproduction environment the ellipsoid at $c_{best} = 1.1L^\ast$ has volume 92.95, which
+      is **larger** than the free-space volume 80 - the ellipsoid covers the whole free space, so
+      informed sampling equals uniform sampling. It starts to differ only within 1.05 times the
+      optimum, and even at the optimum it cuts only 35%. As $(1-\kappa^{-2})^{(d-1)/2}$ in (3) says,
+      the benefit appears as the dimension grows.
+    concept:
+      front: The dimensional dependence of informed sampling
+      back: $(1-\kappa^{-2})^{(d-1)/2}$ - nearly useless in low dimension, sharply effective in high
+  - id: q5
+    prompt: Select everything that is true of asymptotic optimality.
+    choices:
+      - It guarantees nothing about solution quality at finite $n$
+      - The per-iteration cost of RRT* is $O(\log n)$
+      - There is a general theory of the convergence rate
+      - If the cost is not Euclidean length, the informed set is not an ellipsoid
+    explanation: >-
+      Asymptotic optimality claims only the limit (in the reproduction task RRT* at $n=2000$ is at
+      1.0081 times the optimum). The per-iteration neighbour count is $\zeta_d\gamma^d\log n/\mu$ by
+      (6), proportional to $\log n$. A general theory of the rate does **not** exist (an open
+      problem). The informed set is an ellipsoid by the triangle inequality, so it is specific to a
+      length cost.
+    concept:
+      front: The scope of asymptotic optimality
+      back: >-
+        Only the limit. $O(\log n)$ per iteration, no rate theory, and the informed set is specific to
+        a length cost
+  - id: q6
+    prompt: >-
+      With the radius $r_n = \gamma(\log n/n)^{1/d}$, what is the expected neighbour count as a
+      function of $n$?
+    answers: ["O(log n)", "proportional to log n", "zeta_d gamma^d log n / mu", "$O(\\log n)$", "O(logn)", "logarithmic in n"]
+    explanation: >-
+      $\mathbb{E}[|N(x)|] = n\zeta_d r_n^d/\mu = \zeta_d\gamma^d\log n/\mu$, proportional to
+      $\log n$. A constant radius would give $\Theta(n)$ and a total cost of $\Theta(n^2)$. The
+      radius rule is the smallest radius that still gives optimality, and its price is $O(\log n)$ per
+      iteration.
+    concept:
+      front: The computational price of the radius rule
+      back: Expected neighbours $= \zeta_d\gamma^d\log n/\mu = O(\log n)$, total $O(n\log n)$

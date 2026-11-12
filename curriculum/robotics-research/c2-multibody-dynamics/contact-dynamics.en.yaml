@@ -1,0 +1,104 @@
+# English text of the structured fields of contact-dynamics.md (activity titles, resource
+# notes, quiz). The prose lives in contact-dynamics.en.md.
+id: c2-contact-dynamics
+lang: en
+activities:
+  c2-contact-dynamics-reading: Read the lesson and follow the derivations
+  c2-contact-dynamics-papers: Read the three must-read papers + a one-page note each
+  c2-contact-dynamics-problems: "Problem set (2 derivations, 2 proofs, 1 numerical, 1 implementation, 1 counterexample)"
+  c2-contact-dynamics-reproduction: "Reproduction task - integrate a planar contact with a one-step LCP and reproduce the Painlevé threshold (R2)"
+  c2-contact-dynamics-quiz: Concept check quiz
+resources:
+  "Tedrake, Underactuated Robotics":
+    note: ch.17 (dynamics with contact). A modern treatment of complementarity, time stepping and convex relaxation. Free in full.
+  "Featherstone, Rigid Body Dynamics Algorithms (2008)":
+    note: ch.11 (Contact and Impact). Impact and friction models for rigid contact, with the algorithms.
+  "Cottle, Pang & Stone, The Linear Complementarity Problem":
+    note: Recommended. The existence and uniqueness theory of LCPs (positive semidefinite matrices, P-matrices, Lemke's algorithm). Background for R2.
+  "Boyd & Vandenberghe, Convex Optimization":
+    note: Recommended. ch.4-5. Background for reading the convex relaxation (R5) and the maximum-dissipation principle as a QP. The full PDF is free.
+quiz:
+  - id: q1
+    prompt: >-
+      Select every physical condition bundled into the normal complementarity
+      $0 \le g \perp \lambda_n \ge 0$.
+    choices:
+      - "Non-penetration: the body does not sink into the floor"
+      - "No tension: the floor can only push, never pull"
+      - If separated, the normal force is zero
+      - Friction acts opposite to the slip
+    explanation: >-
+      The three conditions are $g \ge 0$, $\lambda_n \ge 0$ and $g\lambda_n = 0$ respectively.
+      Without the third, a solution in which the floor pushes up a body floating in the air would
+      be admissible. The direction of friction is a separate condition (the maximum-dissipation
+      principle) and has nothing to do with normal complementarity.
+    concept:
+      front: The three conditions normal complementarity bundles
+      back: >-
+        Non-penetration $g \ge 0$, no tension $\lambda_n \ge 0$, complementarity
+        $g\lambda_n = 0$
+  - id: q2
+    prompt: On what grounds does frictionless velocity-level time stepping **always** have a solution?
+    choices:
+      - Because the LCP matrix $J_nM^{-1}J_n^{\top}$ is positive definite
+      - Because the matrix is positive semidefinite and, with no initial penetration, the equivalent convex QP is bounded below
+      - Because there is only one contact
+      - Because the Coulomb cone was linearised into a polyhedron
+    explanation: >-
+      $A_n = J_nM^{-1}J_n^{\top}$ is a congruence of $M^{-1} \succ 0$ and so is positive
+      semidefinite (not positive definite if $J_n$ is rank-deficient), and a positive-semidefinite
+      LCP has the same solutions as the KKT points of
+      $\min_{p\ge0}\frac12 p^{\top}A_np + c^{\top}p$. Since $A_nd = 0 \Rightarrow J_n^{\top}d = 0$
+      and then $c^{\top}d = d^{\top}g/h \ge 0$ (because $g \ge 0$), it is bounded below. With
+      initial penetration the argument breaks.
+    concept:
+      front: Solvability of the frictionless contact LCP
+      back: >-
+        $A_n \succeq 0$ plus $g \ge 0$ → the equivalent convex QP is bounded below → a solution
+        exists. $p_n$ may not be unique
+  - id: q3
+    prompt: What is the critical friction coefficient $\mu_{\mathrm{crit}}$ of the Painlevé paradox for a uniform rod slipping on its lower end? (As a fraction.)
+    answers: ["4/3", "4 / 3", "1.3333", "1.333333", "1.33333333", "four thirds"]
+    explanation: >-
+      With $a = \frac{1}{m}[(1+3\cos^2\theta) - 3\mu|\sin\theta|\cos\theta]$, the condition
+      $a \le 0$ is $\mu \ge (1+3c^2)/(3|s|c)$. Substituting $t = \tan|\theta|$ turns the right-hand
+      side into $(t^2+4)/(3t)$, whose minimum at $t = 2$ is $4/3$. So at
+      $\theta = -\arctan 2 \approx -63.43^{\circ}$ there is no acceleration-level solution once
+      $\mu > 4/3$.
+    concept:
+      front: The Painlevé critical $\mu$ of a uniform rod
+      back: >-
+        $4/3$, attained at $\theta = -\arctan 2 \approx -63.43^{\circ}$. The minimum of
+        $(t^2+4)/(3t)$ at $t = \tan|\theta| = 2$
+  - id: q4
+    prompt: The Painlevé paradox means that the physics of rigid contact is contradictory.
+    explanation: >-
+      What is contradictory is not the physics but the **model**. Holding rigidity, Coulomb
+      friction and the acceleration level together can leave the solution set empty. Releasing any
+      one resolves it: compliant contact, a velocity-level (impulse) formulation, or regularised
+      friction. Practice almost always takes the velocity level, and the Painlevé situation is then
+      resolved as an impulsive stick — in the measurement, the rod at $\mu = 2$ receives a stick
+      solution with $p_n = 0.3083$.
+    concept:
+      front: What the Painlevé paradox really is
+      back: >-
+        A contradiction of the model (rigidity + Coulomb + acceleration level). Going down to the
+        velocity level resolves it as an impulsive stick
+  - id: q5
+    prompt: What changes if the $g/h$ term is dropped from the velocity-level discretisation?
+    choices:
+      - The energy can increase
+      - Non-penetration breaks at first order and penetration accumulates as $O(h)$
+      - The friction cone breaks
+      - Nothing changes - $g/h$ is a convenience term
+    explanation: >-
+      The $g/h$ term makes the complementarity read $v_n^+ \ge -g/h$, which guarantees
+      $g^{k+1} \approx g + hv_n^+ \ge 0$ to first order. Dropping it leaves only $v_n^+ \ge 0$, so
+      any penetration already present is never recovered and accumulates. It plays the same role as
+      the position term of Baumgarte in the previous lesson and has the same first-order limitation
+      — an $O(h^2)$ penetration remains whenever $J_n$ depends on the configuration.
+    concept:
+      front: The role of the $g/h$ term
+      back: >-
+        Guarantees non-penetration to first order (the same role as Baumgarte's position term). The
+        residual penetration is $O(h^2)$, exactly zero when $J_n$ is constant

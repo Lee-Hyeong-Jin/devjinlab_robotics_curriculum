@@ -1,0 +1,13 @@
+id: c2-multibody-dynamics
+lang: en
+title: "C2 Multibody dynamics"
+summary: >-
+  Write the dynamics of a rigid-body chain in 6-D spatial vector algebra and derive inverse
+  dynamics (RNEA), the mass matrix (CRBA), forward dynamics (ABA), constrained dynamics and the
+  operational-space inertia, the complementarity formulation of contact, and the analytical
+  derivatives of dynamics together with inertial parameter identification. C3, C4, S2 and S3
+  assume the notation and the algorithms of this module. The graduate courses behind it are
+  CMU 16-711 Ch3-4 and ETH Robot Dynamics; the textbooks are Featherstone's RBDA, Modern
+  Robotics ch.8 and Underactuated ch.17-18. C1 is the recommended prerequisite module, and the
+  first lesson (c2-spatial-vector-algebra) opens with a self-diagnostic. All six lessons of the
+  design are written.

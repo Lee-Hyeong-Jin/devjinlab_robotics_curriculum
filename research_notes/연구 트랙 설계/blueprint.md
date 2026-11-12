@@ -149,8 +149,10 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 **형식이 다르다**: F0 레슨은 내용을 새로 쓰지 않는다. **가이드형(guide) 레슨**이다 — 검증된 공개
 강의·교재를 어떤 순서로, 어디까지, 무엇으로 확인하며 볼지 안내하고, **진단 문제**로 통과 여부를
 스스로 판정하게 한다. 진단을 통과하면 그 레슨을 건너뛴다. 따라서 연구 트랙 레슨 표준
-([lesson-standard.md](lesson-standard.md) §1)의 고정 섹션 9–10개를 적용하지 않고, 아래 4개 절만 쓴다:
-`## 도달 목표` · `## 학습 경로` · `## 시작 전 자가 진단` · `## 이 단계 공부법`.
+([lesson-standard.md](lesson-standard.md) §1)의 고정 섹션을 적용하지 않고, 아래 4개 절만 **이 순서로** 쓴다:
+`## 도달 목표` · `## 시작 전 자가 진단` · `## 학습 경로` · `## 이 단계 공부법`.
+진단을 학습 경로보다 앞에 두는 것은 F0 에서 진단이 "이 레슨을 건너뛸지"를 먼저 정하는 관문이기
+때문이다(집필하면서 정한 순서다). 진단은 ` ```quiz ` 블록으로 써서 `rc quiz` 로 채점되게 한다.
 
 아래 URL 은 모두 2026-11-12 에 fetch 해 확인했다. 제공 내용(영상·문제집·해답·시험)도 그때 확인한 것이다.
 
@@ -223,12 +225,12 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 
 | 레슨 | 유도해야 할 핵심 결과 | 필독 | 교재 | 재현 과제 |
 |---|---|---|---|---|
-| `c2-spatial-vector-algebra` 공간 벡터 대수 | 6D 운동·힘 공간의 쌍대성 **[D2]**; 공간 관성의 변환 법칙 **[D2]**; 공간 가속도와 코리올리 항의 분리 **[D3]** | `featherstone2010-6d-vectors-part1`, `featherstone2010-6d-vectors-part2` | RBDA ch.2, MR ch.8.2 | R1: 공간 관성 변환과 동차변환 기반 계산이 1e-10 이내 일치 |
-| `c2-rnea-inverse-dynamics` 재귀 Newton–Euler | RNEA 의 $O(n)$ 복잡도와 재귀식 **[D3]**; Lagrange 유도와의 동등성 **[D2]** | `luh1980-rnea` | RBDA ch.5, MR ch.8.3 | R1: RNEA 토크가 Euler–Lagrange 수식 해와 1e-9 이내 일치(7-DOF) |
-| `c2-crba-aba` 질량행렬과 순동역학 | CRBA 의 $O(n^2)$ **[D3]**; ABA 의 $O(n)$ 과 관절 공간 관성의 분기 구조 **[D3]** | `featherstone1983-aba`, `walker1982-crba` | RBDA ch.6–7 | R1: CRBA 의 $M$ 이 유한차분 역동역학과 1e-8 이내 일치; ABA 와 $M^{-1}\tau$ 해가 일치 |
-| `c2-constrained-dynamics` 제약 동역학 | 라그랑주 승수와 KKT 형태의 동역학 **[D3]**; 널공간 투영과 조작 공간 관성 $\Lambda$ **[D3]**; Baumgarte 안정화 **[D1]** | `khatib1987-operational-space` | RBDA ch.8, MLS ch.6 | R2: 폐루프 4절 링크를 승수법과 축소좌표법으로 적분, 제약 위반 < 1e-8 유지 |
-| `c2-contact-dynamics` 접촉 동역학 | 상보성 조건(LCP/NCP)과 해 존재성 **[D3]**; 마찰 원뿔과 Painlevé 역설 **[D2]**; 시간 이산화(semi-implicit) 와 관통 **[D2]** | `stewart1996-implicit-timestepping`, `todorov2014-convex-contact` | UA ch.17, RBDA ch.11 | R2: 평면 접촉 공을 LCP 1스텝 해법으로 적분, 에너지 비증가와 비관통을 확인 |
-| `c2-dynamics-derivatives-sysid` 동역학 미분과 시스템 식별 | RNEA 의 해석적 미분 **[D2]**; 관성 매개변수의 선형성과 식별 가능성 조건 **[D3]**; 물리적 일관성 제약(SDP) **[D2]** | `carpentier2018-pinocchio` | RBDA ch.10, UA ch.18 | R2: 7-DOF 궤적에서 관성 매개변수를 선형 최소제곱으로 식별, 노이즈 대비 식별 가능한 조합만 복원됨을 조건수로 보임 |
+| `c2-spatial-vector-algebra` 공간 벡터 대수 | 6D 운동·힘 공간의 쌍대성 **[D2]**; 공간 관성의 변환 법칙 **[D2]**; 공간 가속도와 코리올리 항의 분리 **[D3]** | `featherstone2010-6d-vectors-part1`, `featherstone2010-6d-vectors-part2` (권장 `featherstone2006-plucker-basis`) | RBDA ch.2, MR ch.8.2 | R1: 공간 관성 변환과 동차변환 기반 계산이 1e-10 이내 일치 |
+| `c2-rnea-inverse-dynamics` 재귀 Newton–Euler | RNEA 의 $O(n)$ 복잡도와 재귀식 **[D3]**; Lagrange 유도와의 동등성 **[D2]** | `luh1980-rnea`, `featherstone2000-dynamics-equations-algorithms` | RBDA ch.5, MR ch.8.3 | R1: RNEA 토크가 Euler–Lagrange 해와 일치 — ① 기호·자동미분으로 미분한 정확한 해 대비 상대오차 < 1e-9(7-DOF) ② 유한차분 해 대비 < 1e-7 + h 스윕 V 곡선 (유한차분으로는 1e-9 가 불안정함을 실측: h=1e-4 에서 5.8e-8, 1e-5 에서 6.8e-10, 1e-6 에서 3.1e-9, 1e-7 에서 7.2e-8 — 저자 세션 측정 2026-11-12, 설계 담당 승인) |
+| `c2-crba-aba` 질량행렬과 순동역학 | CRBA 의 $O(n^2)$ **[D3]**; ABA 의 $O(n)$ 과 관절 공간 관성의 분기 구조 **[D3]** | `featherstone1983-aba`, `walker1982-crba` | RBDA ch.6–7 | R1: CRBA 의 $M$ 이 유한차분 역동역학과 일치 — 중력 0·$\dot q = 0$ 에서 $\tau$ 가 $\ddot q$ 에 정확히 선형이므로 기계 정밀도(1e-12, 실측 4.4e-16, 모든 $h$ 에서 동일)로 요구한다. 중력을 켜면 상쇄가 지배해 1e-9 수준에 머문다(저자 세션 측정 2026-11-12); ABA 와 $M^{-1}\tau$ 해가 일치 |
+| `c2-constrained-dynamics` 제약 동역학 | 라그랑주 승수와 KKT 형태의 동역학 **[D3]**; 널공간 투영과 조작 공간 관성 $\Lambda$ **[D3]**; Baumgarte 안정화 **[D1]** | `khatib1987-operational-space`, `udwadia1992-constrained-motion`, `baumgarte1972-constraint-stabilization` | RBDA ch.8, MLS ch.6 | R2: 폐루프 4절 링크를 승수법과 축소좌표법으로 적분, 제약 위반 < 1e-8 유지 |
+| `c2-contact-dynamics` 접촉 동역학 | 상보성 조건(LCP/NCP)과 해 존재성 **[D3]**; 마찰 원뿔과 Painlevé 역설 **[D2]**; 시간 이산화(semi-implicit) 와 관통 **[D2]** | `stewart1996-implicit-timestepping`, `todorov2014-convex-contact`, `anitescu1997-lcp-contact` (권장 `stewart2000-rigid-body-friction-impact`, `genot1999-painleve`) | UA ch.17, RBDA ch.11 | R2: 평면 접촉 공을 LCP 1스텝 해법(모드 열거)으로 적분, 에너지 비증가와 비관통을 확인 — 실측: 분리·고착·미끄럼 3모드 도달, 충격량 스텝 25031/50000 에서 최대 dE = -3.0e-6(전부 음수), 원판은 관통 정확히 0, 봉은 O(h^2)(비 3.92/3.96/3.98/3.99). Painlevé 임계는 닫힌 형태 mu_crit = 4/3 at theta = -arctan 2 이고 가속도 수준이 비가해인 상태에서도 속도 수준은 풀린다 (저자 세션 측정 2026-11-12) |
+| `c2-dynamics-derivatives-sysid` 동역학 미분과 시스템 식별 | RNEA 의 해석적 미분 **[D2]**; 관성 매개변수의 선형성과 식별 가능성 조건 **[D3]**; 물리적 일관성 제약(SDP) **[D2]** | `carpentier2018-pinocchio`, `atkeson1986-inertial-parameters`, `wensing2018-lmi-inertial` (권장 `gautier1990-minimal-inertial-parameters`) | RBDA ch.10, UA ch.18 | R2: 7-DOF 상태 표본에서 관성 매개변수를 선형 최소제곱으로 식별, 식별 가능한 조합만 복원됨을 조건수로 보임 — 실측(기준 팔): n_b = 43/70, dim N = 27, 특이값 간극 5.22 -> 1.9e-14, kappa = 25.39, 식별 가능 성분 오차는 sigma 에 선형(9.9e-4 per 1e-3)이고 N 성분 오차는 sigma 와 무관하게 4.7586 고정. 중력을 끄면 n_b = 39. 유사 관성 LMI 는 sigma = 0 에서도 최소노름 해를 비일관으로 만든다(저자 세션 측정 2026-11-12) |
 
 **열린 문제**: 접촉이 있는 계의 미분가능성과 학습에 쓰는 기울기의 정당성; 실제 마찰·변형의 모델
 오차 한계; 대규모 다물체계에서 실시간 미분 동역학의 비용.
@@ -238,12 +240,12 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 
 | 레슨 | 유도해야 할 핵심 결과 | 필독 | 교재 | 재현 과제 |
 |---|---|---|---|---|
-| `c3-lyapunov-stability` Lyapunov 안정성과 ISS | Lyapunov 정리와 역정리 **[D3]**; Barbashin–Krasovskii·LaSalle **[D3]**; ISS 와 비교 함수 **[D2]** | `sontag1989-coprime-factorization`, `papachristodoulou2002-sos` | Khalil ch.4, UA ch.9 | R1: 2차 계의 Lyapunov 함수를 SOS(sum-of-squares)로 탐색, 흡인 영역 추정값이 수치 적분 결과를 포함함을 확인 |
-| `c3-feedback-linearization` 피드백 선형화와 가제어성 | 입출력·완전 선형화 조건(involutivity, Frobenius) **[D3]**; 비홀로노믹 계의 Chow–Rashevskii **[D2]**; 영역 동역학 **[D2]** | `brockett1983-nonholonomic` | Khalil ch.13, MLS ch.7 | R2: 차동구동 로봇을 사인파 조향(steering with sinusoids)으로 주차, 종단 오차 < 1e-3 |
-| `c3-contraction-incremental` 수축 이론 | 수축 조건과 지수 수렴 **[D3]**; 미분 Lyapunov 와 리만 계량 **[D2]**; 추적 제어로의 적용 **[D2]** | `lohmiller1998-contraction`, `manchester2017-ccm` | Khalil ch.9(비교) | R1: 수축 계량이 주는 수렴률 상한이 실제 궤적 수렴률을 상회하는지 수치 검증 |
-| `c3-passivity-impedance` 수동성·에너지 성형과 임피던스 제어 | 수동성 정리와 직렬 결합 안정성 **[D3]**; 에너지 성형·댐핑 주입 **[D2]**; 임피던스/어드미턴스 제어와 접촉 안정성 **[D2]** | `hogan1985-impedance` | MR ch.11.6, MLS ch.6 | R2: 1-DOF 접촉 작업에서 임피던스 이득을 바꿔 안정 경계를 실험적으로 그림(이론 경계와 비교) |
-| `c3-adaptive-control` 적응 제어 | 매개변수 수렴과 지속 여진(persistent excitation) **[D3]**; 확실성 등가의 함정 **[D2]**; $L_1$·강건 적응 **[D1]** | `slotine1987-adaptive-manipulator` | Khalil ch.9 | R2: 매니퓰레이터 적응 제어를 구현, PE 를 만족하는 궤적에서만 매개변수가 수렴함을 보임 |
-| `c3-cbf-safety-filter` CBF/CLF 안전 필터 | CBF 의 전진 불변성 **[D3]**; QP 기반 최소 개입 필터와 실현가능성 **[D2]**; 입력 제약·고차 CBF **[D2]** | `ames2017-cbf` | — | R2: 이중 적분기 안전 필터를 QP 로 구현, 제약 위반 0 과 비활성 구간에서 명목 제어와 일치 확인 |
+| `c3-lyapunov-stability` Lyapunov 안정성과 ISS | Lyapunov 정리와 역정리 **[D3]**; Barbashin–Krasovskii·LaSalle **[D3]**; ISS 와 비교 함수 **[D2]** | `sontag1989-coprime-factorization`, `papachristodoulou2002-sos`, `topcu2008-local-stability-sos` | Khalil ch.4, UA ch.9 | R1: 2차 계의 Lyapunov 함수를 SOS(sum-of-squares)로 탐색, 흡인 영역 추정값이 수치 적분 결과를 포함함을 확인 |
+| `c3-feedback-linearization` 피드백 선형화와 가제어성 | 입출력·완전 선형화 조건(involutivity, Frobenius) **[D3]**; 비홀로노믹 계의 Chow–Rashevskii **[D2]**; 영역 동역학 **[D2]** | `murray1993-steering-sinusoids`, `hauser1992-nonminimum-phase`, `devasia1996-inversion` | Khalil ch.13, MLS ch.7 | R2: 차동구동 로봇을 사인파 조향(steering with sinusoids)으로 주차, 종단 오차 < 1e-3 |
+| `c3-contraction-incremental` 수축 이론 | 수축 조건과 지수 수렴 **[D3]**; 미분 Lyapunov 와 리만 계량 **[D2]**; 추적 제어로의 적용 **[D2]** | `lohmiller1998-contraction`, `manchester2017-ccm`, `tsukamoto2021-contraction-tutorial` | Khalil ch.9(비교) | R1: 수축 계량이 주는 수렴률 상한이 실제 궤적 수렴률을 상회하는지 수치 검증 |
+| `c3-passivity-impedance` 수동성·에너지 성형과 임피던스 제어 | 수동성 정리와 직렬 결합 안정성 **[D3]**; 에너지 성형·댐핑 주입 **[D2]**; 임피던스/어드미턴스 제어와 접촉 안정성 **[D2]** | `hogan1985-impedance`, `colgate1988-coupled-stability`, `colgate1997-sampled-passivity` | MR ch.11.6, MLS ch.6 | R2: 1-DOF 접촉 작업에서 임피던스 이득을 바꿔 안정 경계를 실험적으로 그림(이론 경계와 비교) |
+| `c3-adaptive-control` 적응 제어 | 매개변수 수렴과 지속 여진(persistent excitation) **[D3]**; 확실성 등가의 함정 **[D2]**; $L_1$·강건 적응 **[D1]** | `slotine1987-adaptive-manipulator`, `boyd1986-pe`, `rohrs1985-unmodeled-dynamics` | Khalil ch.9 | R2: 매니퓰레이터 적응 제어를 구현, PE 를 만족하는 궤적에서만 매개변수가 수렴함을 보임 |
+| `c3-cbf-safety-filter` CBF/CLF 안전 필터 | CBF 의 전진 불변성 **[D3]**; QP 기반 최소 개입 필터와 실현가능성 **[D2]**; 입력 제약·고차 CBF **[D2]** | `ames2017-cbf`, `ames2019-cbf-survey`, `nguyen2016-ecbf` | — | R2: 이중 적분기 안전 필터를 QP 로 구현, 제약 위반 0 과 비활성 구간에서 명목 제어와 일치 확인 |
 
 **열린 문제**: 학습된 동역학 위에서의 안정성 보장; CBF 의 실현가능성과 보수성의 교환;
 접촉·충격이 있는 계의 강건 안정성 이론.
@@ -287,7 +289,7 @@ Barfoot SER 전권, UPenn ESE 650 M1.
 | 레슨 | 유도해야 할 핵심 결과 | 필독 | 교재 | 재현 과제 |
 |---|---|---|---|---|
 | `c6-cspace-complexity` 구성공간과 복잡도 | C-space 위상과 장애물 사상 **[D2]**; 일반 운동 계획의 PSPACE-hardness **[D2]**; 피아노 운반 문제의 대수적 해법 **[D1]** | `reif1979-complexity`, `canny1988-complexity` | PA ch.3–4,6 | R1: 2-링크 팔의 C-space 장애물을 격자로 계산하고 위상(구멍 수)을 확인 |
-| `c6-combinatorial-gcs` 조합적 계획과 볼록 분해 | 셀 분해의 완전성 **[D3]**; 가시성 그래프 최적성 **[D2]**; 측지 볼록 집합 그래프(GCS)의 혼합정수 완화 **[D2]** | `marcucci2023-gcs` | PA ch.6 | R2: 다각형 환경에서 가시성 그래프 최단경로를 구현, 샘플링 해보다 짧음을 확인 |
+| `c6-combinatorial-gcs` 조합적 계획과 볼록 분해 | 셀 분해의 완전성 **[D3]**; 가시성 그래프 최적성 **[D2]**; 측지 볼록 집합 그래프(GCS)의 혼합정수 완화 **[D2]** | `lozanoperez1979-visibility`, `marcucci2023-gcs`, `marcucci2024-spp-gcs` | PA ch.6 | R2: 다각형 환경에서 가시성 그래프 최단경로를 구현, 샘플링 해보다 짧음을 확인 |
 | `c6-sampling-completeness` 샘플링 기반과 확률적 완전성 | PRM/RRT 의 확률적 완전성 증명 **[D3]**; 확장 실패 확률의 지수 감소 **[D3]**; 좁은 통로와 $\epsilon$-good 가정 **[D2]** | `kavraki1996-prm`, `lavalle2001-rrt` | PA ch.5 | R2: RRT 를 구현해 좁은 통로 폭 대비 성공률 곡선을 그림(이론 경향과 일치) |
 | `c6-asymptotic-optimality` 점근 최적성 | RRT* 의 점근 최적성과 연결 반경 $r_n \propto (\log n/n)^{1/d}$ **[D3]**; informed/BIT* 의 수렴 가속 **[D2]**; 차원의 저주 **[D2]** | `karaman2011-rrtstar`, `gammell2015-bitstar` | PA ch.5(비교) | R2: RRT 와 RRT* 의 비용 수렴 곡선을 500회 반복 평균으로 비교, RRT* 가 최적 비용에 수렴 |
 | `c6-search-based-planning` 탐색 기반 계획 | A* 의 최적성·허용성 **[D3]**; weighted A* 의 $w$-준최적 한계 **[D3]**; ARA*/D* 의 일관성 복구 **[D2]**; Multi-Heuristic A* **[D2]** | `likhachev2003-ara`, `aine2016-mha` | 16-782 노트, PA ch.2 | R2: 격자 그래프에서 A*/weighted A*/ARA* 의 비용-시간 교환을 재현, 비용 ≤ $w\cdot C^*$ 확인 |

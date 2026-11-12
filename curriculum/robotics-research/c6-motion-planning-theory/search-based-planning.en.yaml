@@ -1,0 +1,106 @@
+id: c6-search-based-planning
+lang: en
+activities:
+  c6-search-based-planning-reading: Read the lesson and follow the derivations
+  c6-search-based-planning-papers: >-
+    Read the three must-read papers and write a one-page note on each
+  c6-search-based-planning-problems: >-
+    Problem set (1 derivation, 3 proofs, 1 numerical, 1 implementation, 1 counterexample)
+  c6-search-based-planning-reproduction: >-
+    Reproduction task - the cost-time trade-off of A*, weighted A* and ARA* (R2)
+  c6-search-based-planning-quiz: Concept-check quiz
+resources:
+  "CMU 16-782 Planning and Decision-making in Robotics":
+    note: >-
+      The primary lecture notes for this lesson; A*, weighted A*, ARA*, D* Lite and MHA* make up the
+      first half of the course.
+  "LaValle, Planning Algorithms":
+    note: ch.2 (discrete planning) - the unified forward/backward search framework of 2.2 and optimal planning in 2.3.
+quiz:
+  - id: q1
+    prompt: In how many places is admissibility $h \le h^\ast$ used in the optimality proof of A*?
+    choices:
+      - One - when the lemma's OPEN node has $h(s_i)$ replaced by $h^\ast(s_i)$
+      - Two - once in the lemma and once in the monotonicity argument
+      - At every node expansion
+      - Nowhere - only consistency is used
+    explanation: >-
+      The proof of the lemma ("there is an OPEN node on an optimal path with $g = g^\ast$") never
+      mentions $h$ - it uses only relaxation and the OPEN/CLOSED structure. Admissibility appears in
+      the single line that bounds that node's $f$ by $C^\ast$. That is why changing the key to
+      $g + wh$ leaves the lemma intact and the weighted A* bound takes two lines.
+    concept:
+      front: Where admissibility enters the optimality of A*
+      back: One line, bounding the lemma's OPEN node by $h \le h^\ast$; the lemma itself never uses $h$
+  - id: q2
+    prompt: Why is the weighted A* bound $g(s_{goal}) \le w C^\ast$ much looser than reality?
+    choices:
+      - Because the heuristic is not consistent
+      - >-
+        Because $g^\ast(s_i) \le w\,g^\ast(s_i)$ inflates **the cost already paid** by $w$ as well
+      - Because of tie-breaking in the priority queue
+      - Because the number of expansions falls
+    explanation: >-
+      Inequality (b) of the derivation passes from $g^\ast(s_i) + w h^\ast(s_i)$ to
+      $w(g^\ast(s_i) + h^\ast(s_i))$, inflating the already-settled cost $g^\ast(s_i)$ by $w$ too.
+      There is no need for that, so the sub-optimality comes out far below $w$ - the measured ratio
+      at $w=5$ is 1.13. The a posteriori bound (3) recovers the loss.
+    concept:
+      front: Why the $wC^\ast$ bound is loose
+      back: It inflates the already-paid $g^\ast$ by $w$; the a posteriori $\varepsilon$ recovers it
+  - id: q3
+    prompt: What breaks in ARA* if the INCONS list is not returned to OPEN at the next iteration?
+    choices:
+      - Expansions increase but the guarantee survives
+      - >-
+        A node on the optimal path may be in neither list, so the key lemma fails and the
+        sub-optimality bound disappears
+      - The heuristic loses admissibility
+      - Only memory usage grows
+    explanation: >-
+      The invariant ARA* maintains is "$\mathrm{OPEN} \cup \mathrm{INCONS}$ contains every
+      inconsistent node", and that invariant is what lets the lemma of R1 be reapplied at each
+      iteration. Discarding INCONS loses the inconsistent nodes, the lemma's OPEN node may not exist,
+      and the basis for the $w_t C^\ast$ bound is gone - the most common correctness bug in ARA*
+      implementations.
+    concept:
+      front: ARA*'s invariant
+      back: OPEN ∪ INCONS contains every inconsistent node - that is what revives the lemma each iteration
+  - id: q4
+    prompt: An admissible heuristic is always consistent.
+    explanation: >-
+      Consistency is **stronger** than admissibility. Summing $h(s) \le c(s,s') + h(s')$ along an
+      optimal path with $h(s_{goal})=0$ yields admissibility, but the converse is false - a
+      three-node graph with the middle node's $h$ dropped to zero is a counterexample. With an
+      admissible but inconsistent $h$, optimality survives but re-expansions appear and in the worst
+      case their number is exponential.
+    concept:
+      front: Admissibility versus consistency
+      back: Consistent ⇒ admissible (not conversely). Admissible gives optimality, consistent gives no re-expansion
+  - id: q5
+    prompt: Select everything that is true of Multi-Heuristic A*.
+    choices:
+      - It can use inadmissible heuristics
+      - All queues must share the same $g$ values
+      - The bound on the solution is a factor $w_1 + w_2$
+      - The anchor queue's heuristic must be admissible
+    explanation: >-
+      The structure of MHA* is "the inadmissible heuristics expand only under the anchor's
+      supervision". The anchor's $h_0$ must be admissible (it is the only link to $C^\ast$), and the
+      queues must share $g$ so an improvement in one reaches the others. The bound is the **product**
+      $w_1 w_2 C^\ast$, because the two inflations act in sequence.
+    concept:
+      front: The three elements of MHA*
+      back: >-
+        An admissible anchor + shared $g$ + the key condition $\mathrm{key}_i \le w_2\mathrm{key}_0$
+        ⇒ $w_1w_2C^\ast$
+  - id: q6
+    prompt: What property must a heuristic have for A* never to expand a node twice?
+    answers: ["consistency", "consistent", "monotone", "monotonicity", "a consistent heuristic"]
+    explanation: >-
+      With consistency $h(s) \le c(s,s') + h(s')$, $f$ is non-decreasing along any path, so the $f$
+      values A* pops are non-decreasing and a node's $g$ is already optimal when it is expanded.
+      Admissibility alone permits re-expansions, exponentially many in the worst case.
+    concept:
+      front: The property that removes re-expansions
+      back: Consistency (monotonicity) - $f$ non-decreasing along a path, so $g$ is optimal at expansion

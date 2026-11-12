@@ -1,0 +1,94 @@
+id: f0-linear-algebra
+lang: en
+activities:
+  f0-linear-algebra-diagnostic: "Self-diagnosis before starting (pass and skip this lesson)"
+  f0-linear-algebra-lectures: Watch the MIT 18.06 lectures
+  f0-linear-algebra-problems: Work the problem sets and past exams (self-marked against the solutions)
+resources:
+  "MIT 18.06 Linear Algebra (Spring 2010, Gilbert Strang)":
+    note: The primary source. Lecture videos, problem sets with solutions, and past exams with solutions are all public.
+  "Gilbert Strang 의 교재 페이지":
+    title: Gilbert Strang's book page
+    note: Introduction to Linear Algebra and others. Not free, so working from 18.06 alone is fine.
+  "NumPy linalg 문서":
+    title: NumPy linalg documentation
+    note: For checking hand computation in code; learn svd, eig, solve, matrix_rank and cond.
+quiz:
+  - id: q1
+    prompt: What is the 2-norm condition number $\kappa_2(A)$ of $A = \mathrm{diag}(3, 1, 0.01)$?
+    explanation: >-
+      $\kappa_2 = \sigma_{\max}/\sigma_{\min} = 3/0.01 = 300$; for a diagonal matrix the singular
+      values are the absolute diagonal entries. A large condition number makes numerical solutions
+      sensitive - the first lesson of R0 is about exactly this.
+    answers: ["300", "3/0.01", "300.0"]
+    concept:
+      front: The 2-norm condition number
+      back: $\kappa_2(A) = \sigma_{\max}/\sigma_{\min}$ (the ratio of largest to smallest singular value)
+  - id: q2
+    prompt: For an $m \times n$ matrix $A$ of rank $r$, what is the dimension of its null space?
+    choices: ["$m - r$", "$n - r$", "$r$", "$n$"]
+    explanation: >-
+      The rank-nullity theorem gives $\dim\mathcal{N}(A) = n - r$; the left null space has
+      dimension $m-r$. This distinction is what makes the gauge freedom of a pose graph (a
+      six-dimensional null space) comprehensible.
+    concept:
+      front: The rank-nullity theorem
+      back: >-
+        For an $m\times n$ matrix, $\dim\mathcal{N}(A) = n - \mathrm{rank}$ and
+        $\dim\mathcal{N}(A^\top) = m - \mathrm{rank}$
+  - id: q3
+    prompt: >-
+      Write the normal equations of the least-squares problem $\min_x \lVert Ax - b\rVert^2$ as
+      $A^\top A x = ?$ (the right-hand side)
+    explanation: >-
+      $\nabla_x \lVert Ax-b\rVert^2 = 2A^\top(Ax-b) = 0$ gives $A^\top Ax = A^\top b$. Every
+      estimation problem in the research track reduces to this form.
+    answers: ["A^T b", "A^Tb", "A'b", "A transpose b", "A^\\top b"]
+    concept:
+      front: The normal equations of least squares
+      back: $A^\top A x = A^\top b$ - the result of projecting the residual orthogonally onto the column space
+  - id: q4
+    prompt: Select everything that is **always** true of a real symmetric matrix $S$.
+    choices:
+      - All its eigenvalues are real
+      - It can be diagonalised by an orthogonal matrix
+      - All its eigenvalues are positive
+      - It is invertible
+    explanation: >-
+      A real symmetric matrix has real eigenvalues and is orthogonally diagonalisable
+      ($S = Q\Lambda Q^\top$). Positive eigenvalues hold only when it is **positive definite**, and
+      a zero eigenvalue also makes it singular.
+    concept:
+      front: Properties of a real symmetric matrix
+      back: >-
+        Real eigenvalues and orthogonal diagonalisation ($S=Q\Lambda Q^\top$); definiteness is a
+        separate condition
+  - id: q5
+    prompt: If the SVD of $A$ is $A = U\Sigma V^\top$, what is an orthonormal basis of the column space of $A$?
+    choices:
+      - The first $r$ columns of $V$
+      - The first $r$ columns of $U$
+      - The diagonal entries of $\Sigma$
+      - The last $m-r$ columns of $U$
+    explanation: >-
+      The first $r$ columns of $U$ span the column space and the last $m-r$ the left null space;
+      the first $r$ columns of $V$ span the row space and the last $n-r$ the null space. The SVD
+      gives all four subspaces at once.
+    concept:
+      front: The SVD and the four subspaces
+      back: >-
+        First $r$ of $U$ = column space, rest of $U$ = left null space, first $r$ of $V$ = row
+        space, rest of $V$ = null space
+  - id: q6
+    prompt: >-
+      Solving the normal equations $A^\top Ax = A^\top b$ directly is numerically equivalent to
+      solving via a QR factorisation.
+    explanation: >-
+      $\kappa(A^\top A) = \kappa(A)^2$, so forming the normal equations **squares** the condition
+      number. For ill-conditioned problems QR or the SVD is far more accurate; the first lesson of
+      R0 confirms this numerically.
+    concept:
+      front: The numerical weakness of the normal equations
+      back: >-
+        The condition number is squared ($\kappa(A^\top A)=\kappa(A)^2$) - use QR or the SVD when
+        ill-conditioned
