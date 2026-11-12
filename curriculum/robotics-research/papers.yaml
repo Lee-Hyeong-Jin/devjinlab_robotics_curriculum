@@ -1590,6 +1590,25 @@ papers:
     role: frontier
     note: "원 제목은 그리스 문자 pi_0 를 쓴다"
 
+  - id: nair2022-r3m
+    title: "R3M: a universal visual representation for robot manipulation"
+    authors: ["S. Nair", "A. Rajeswaran", "V. Kumar", "et al."]
+    year: 2022
+    venue: "CoRL"
+    url: "https://arxiv.org/abs/2203.12601"
+    verified: true
+    role: standard
+    note: "arXiv 코멘트가 CoRL 2022 로 적고 있다"
+  - id: majumdar2023-vc1
+    title: "Where are we in the search for an artificial visual cortex for embodied intelligence? (VC-1)"
+    authors: ["A. Majumdar", "K. Yadav", "S. Arnaud", "et al."]
+    year: 2023
+    venue: "NeurIPS"
+    url: "https://arxiv.org/abs/2303.18240"
+    verified: true
+    role: critique
+    note: "NeurIPS 게재는 미확인"
+
   # ── S5 다중 로봇·필드 로보틱스 ────────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 

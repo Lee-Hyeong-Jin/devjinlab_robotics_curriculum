@@ -39,7 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Research-track specialization module `s4-robot-learning-foundation-models` (S4, robot
   learning and foundation models) at `level: 연구`. Every reproduction task is judged on a CPU
   without a GPU; large-scale fine-tuning is an optional extension. Lessons so far:
-  `s4-robot-data-scaling`, `s4-vla-architectures`.
+  `s4-robot-data-scaling`, `s4-vla-architectures`,
+  `s4-pretrained-representations`.
 - Research-track module `c8-decision-making-learning-theory` (C8, decision making and
   learning theory) at `level: 연구`, complete with all eight lessons in Korean and English:
   `c8-mdp-pomdp-bellman`, `c8-policy-gradient`, `c8-value-based-rl`,
