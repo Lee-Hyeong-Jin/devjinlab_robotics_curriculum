@@ -36,6 +36,11 @@ export function isNotFound(error: unknown): boolean {
   return error instanceof ApiError && error.status === 404
 }
 
+/** True when the API refused for lack of a session or a valid token. */
+export function isUnauthorized(error: unknown): boolean {
+  return error instanceof ApiError && error.status === 401
+}
+
 /** True when the endpoint is not implemented yet (404/405/501 on a contract path). */
 export function isUnimplemented(error: unknown): boolean {
   return error instanceof ApiError && [404, 405, 501].includes(error.status)

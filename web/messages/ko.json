@@ -4,7 +4,8 @@
     "shortTitle": "로보틱스 코스",
     "skipToContent": "본문으로 건너뛰기",
     "mainNavigation": "주요 메뉴",
-    "loading": "불러오는 중"
+    "loading": "불러오는 중",
+    "description": "로보틱스 전문가가 되기 위한 단계별 커리큘럼 — 수학·기구학·제어·인식·SLAM·ROS 2 를 레슨, 공부법, 퀴즈로."
   },
   "nav": {
     "dashboard": "대시보드",
@@ -59,7 +60,8 @@
     "colState": "상태",
     "colProgress": "진행률",
     "empty": "로드맵을 불러올 수 없습니다.",
-    "stageLessons": "레슨 {done}/{total}"
+    "stageLessons": "레슨 {done}/{total}",
+    "courseTitle": "{course} 로드맵"
   },
   "module": {
     "lessons": "레슨",

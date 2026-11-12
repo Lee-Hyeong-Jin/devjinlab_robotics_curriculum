@@ -243,8 +243,22 @@ describe('StageProgress', () => {
             lessonsDone: 1,
             lessonsTotal: 2,
             modules: [
-              { id: 'm1', title: '모듈 1', progress: 1, state: 'done', lessons: [] },
-              { id: 'm2', title: '모듈 2', progress: 0, state: 'available', lessons: [] },
+              {
+                id: 'm1',
+                title: '모듈 1',
+                progress: 1,
+                state: 'done',
+                lessons: [],
+                lessonsTotal: 1,
+              },
+              {
+                id: 'm2',
+                title: '모듈 2',
+                progress: 0,
+                state: 'available',
+                lessons: [],
+                lessonsTotal: 1,
+              },
             ],
           },
         ]}
