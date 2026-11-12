@@ -36,10 +36,13 @@ and statistics, programming, algorithms, mechanics, dynamics)과 MIT EECS TQE Gr
 ## 2. 트랙 구조 (track structure)
 
 ```
-Stage 0  R0 수학·수치 기초 (bridge)                     7 레슨   ─ 선택(진단 후)
+Stage -1 F0 시작 전 기초 (foundations from zero)        8 레슨   ─ 진단 통과 시 건너뛰기
+         └ 미적분·선형대수·미분방정식·확률·고전역학·증명·파이썬 (가이드형)
+
+Stage 0  R0 수학·수치 기초 (bridge)                     7 레슨   ─ 진단 통과 시 건너뛰기
          └ 기존 robotics-expert 50레슨 = 로보틱스 선수
 
-Stage 1  공통 코어 (common core)                        51 레슨  ─ 전원 필수
+Stage 1  공통 코어 (common core)                        51 레슨  ─ 권장 전원 이수
          C1 강체 기하와 리 군                   5
          C2 다물체 동역학                       6
          C3 비선형·강건 제어                    6
@@ -53,12 +56,18 @@ Stage 2  Specialization (택 1, 권장 2)                  6 레슨/트랙
          S1 SLAM·공간 지능 | S2 조작·접촉 | S3 보행·언더액추에이티드
          S4 로봇 학습·파운데이션 모델 | S5 다중 로봇·필드 로보틱스
 
-Stage 3  연구 실행 (research practice)                   9 레슨  ─ 전원 필수
+Stage 3  연구 실행 (research practice)                   9 레슨  ─ 권장 전원 이수
          R1 연구 방법론  6     R2 캡스톤  3
 ```
 
-총 97레슨(= 7 + 51 + 30 + 9). 한 학습자의 이수 경로는 **Stage 0(선택) + 코어 51 + specialization
-6~12 + Stage 3 의 9** ≈ 66–72레슨.
+총 105레슨(= 8 + 7 + 51 + 30 + 9). 한 학습자의 이수 경로는 **Stage -1·0(진단으로 건너뛸 수 있음)
++ 코어 51 + specialization 6~12 + Stage 3 의 9** ≈ 66–87레슨.
+
+> **선수는 "권장"이다 (사용자 결정 2026-11-12).** 플랫폼은 선수 레슨을 **잠그지 않는다** — 선수
+> 관계는 권장 순서를 보여 주는 정보일 뿐이고, 학습자는 어느 레슨이든 바로 열 수 있다. 대신 각
+> 모듈의 **첫 레슨에 "시작 전 자가 진단"** 문항을 두어 학습자가 스스로 준비 상태를 판단한다
+> ([lesson-standard.md](lesson-standard.md) §1). 아래 DAG 는 **권장 선수(recommended
+> prerequisites)** 를 뜻한다.
 
 **공통 코어 8모듈의 근거**: CMU RI Core Course Qualifier 의 4영역(Perception / Cognition /
 Action / Math Foundations)과 MIT EECS TQE Group 3·4 의 교집합이다([benchmark.md](benchmark.md) §9-1).
@@ -67,9 +76,10 @@ Action → C1·C2·C3·C4, Perception → C5·C7, Cognition → C8, Math Foundat
 ### 모듈 선수 관계 (prerequisite DAG)
 
 ```
-R0 ──> C1 ──> C2 ──> C3 ──> C4
+F0 ──> (robotics-expert 50레슨) ──> R0 ──> C1 ──> C2 ──> C3 ──> C4
        │       │             ↑
        │       └─────────────┘
+       │ (R0 에서)
        ├────> C5 <─── C7
        ├────> C6 <─── C4 (미분 제약·커널 계획)
        └────> C8 <─── C4 (DP·LQR), C6 (MDP·탐색)
@@ -88,6 +98,8 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 
 | 구간 | 내용 | 레슨 | 기간 |
 |---|---|---|---|
+| -1 | F0 진단 → 부족한 것만 (완전 초보는 전부) | 0–8 | 0–10개월 |
+| -0.5 | `robotics-expert` 코스(기존 50레슨) — 로보틱스 선수 | 0–50 | 0–4개월 |
 | 0 | R0 진단 → 부족한 것만 | 0–7 | 0–2개월 |
 | 1 | C1 → C2 → C3 (기하·동역학·제어) | 17 | 4개월 |
 | 2 | C4 → C5 (최적 제어·추정) — 두 모듈이 이 트랙의 중심 | 13 | 3.5개월 |
@@ -95,9 +107,24 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 | 4 | Specialization 1개 | 6 | 2개월 |
 | 5 | R1 연구 방법론 (specialization 과 병행 가능) | 6 | 1.5개월 |
 | 6 | R2 캡스톤 (서베이 → 재현 → 기여 + 워크숍 논문 초안) | 3 | 4개월 |
-| | **합계** | **66** | **약 20개월** |
+| | **합계(연구 트랙만)** | **66** | **약 20개월** |
 
 주 20시간이면 약 12개월. 두 번째 specialization 을 더하면 +2개월.
+
+**0에서 박사급까지의 전체 경로**(완전 초보가 아무것도 건너뛰지 않는 경우, 주 12시간 기준):
+
+| 단계 | 도달 수준 | 누적 학습 시간 | 누적 기간 |
+|---|---|---|---|
+| Stage -1 (F0) | 학부 1–2학년 수학·물리·프로그래밍 | 약 500시간 | 약 10개월 |
+| robotics-expert 50레슨 | 로보틱스 엔지니어 입문~중급 | 약 600시간 | 약 12개월 |
+| Stage 0 (R0) | 대학원 입학 수준의 수학·수치 도구 | 약 660시간 | 약 13개월 |
+| Stage 1 (코어 51) | 박사과정 자격시험 과목 수준 | 약 1,070시간 | 약 21개월 |
+| Stage 2 (specialization) | 특정 분야의 최신 논문을 읽고 재현 | 약 1,120시간 | 약 22개월 |
+| Stage 3 (R1·R2) | 서베이·재현·작은 기여 + 워크숍 논문 초안 | 약 1,200시간 | 약 24개월 |
+
+즉 **완전한 0에서 시작하면 주 12시간으로 약 2년, 주 20시간으로 약 15개월**이다. 진단으로
+건너뛰는 단계가 많을수록 짧아진다. 이 숫자는 레슨의 `estimated_minutes` 합계에서 계산한
+추정이며 실측값이 아니다.
 
 ## 3. 표기 규약
 
@@ -114,6 +141,48 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
   **S&B** Sutton–Barto(동일) · **NW** Nocedal–Wright(동일) · **Khalil**(동일).
 - **재현 과제**: 티어 R1–R4([lesson-standard.md](lesson-standard.md) §6)와 수용 기준 요약.
 
+## 3-1. Stage -1 — F0 시작 전 기초 (foundations from zero)
+
+**왜 있는가**: 이 커리큘럼은 "0부터 박사급까지"를 목표로 한다(사용자 결정 2026-11-12). 기존
+50레슨은 고교 수학과 기본 파이썬을 전제하고, R0 는 학부 수학을 전제한다. 그 아래를 메우는 단계다.
+
+**형식이 다르다**: F0 레슨은 내용을 새로 쓰지 않는다. **가이드형(guide) 레슨**이다 — 검증된 공개
+강의·교재를 어떤 순서로, 어디까지, 무엇으로 확인하며 볼지 안내하고, **진단 문제**로 통과 여부를
+스스로 판정하게 한다. 진단을 통과하면 그 레슨을 건너뛴다. 따라서 연구 트랙 레슨 표준
+([lesson-standard.md](lesson-standard.md) §1)의 고정 섹션 9–10개를 적용하지 않고, 아래 4개 절만 쓴다:
+`## 도달 목표` · `## 학습 경로` · `## 시작 전 자가 진단` · `## 이 단계 공부법`.
+
+아래 URL 은 모두 2026-11-12 에 fetch 해 확인했다. 제공 내용(영상·문제집·해답·시험)도 그때 확인한 것이다.
+
+| 레슨 | 도달 목표(통과 기준) | 안내 자료 (확인됨) | 예상 시간 |
+|---|---|---|---|
+| `f0-calculus-single-variable` 미적분 I | 극한·도함수·적분·Taylor 급수를 계산하고, 최적화 문제를 미분으로 풀 수 있다 | [MIT 18.01 Single Variable Calculus (Fall 2006)](https://ocw.mit.edu/courses/18-01-single-variable-calculus-fall-2006/) — 강의 영상, 강의 노트, 시험+해답 | 70시간 |
+| `f0-calculus-multivariable` 미적분 II | 편미분·기울기·연쇄법칙·다중적분·발산/회전을 계산하고 기울기의 기하적 의미를 설명할 수 있다 | [MIT 18.02 Multivariable Calculus (Fall 2007)](https://ocw.mit.edu/courses/18-02-multivariable-calculus-fall-2007/) — 강의 영상, 노트, 시험+해답 | 70시간 |
+| `f0-linear-algebra` 선형대수 | 소거법·부분공간·4개 기본 부분공간·고윳값·SVD 를 손으로 계산하고 의미를 말할 수 있다 | [MIT 18.06 Linear Algebra (Spring 2010, Strang)](https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/) — 강의 영상, 문제집+해답, 시험+해답 | 80시간 |
+| `f0-differential-equations` 미분방정식 | 1·2계 ODE 를 풀고, 선형 계의 해를 고윳값으로 해석하고, 수치 적분기의 필요성을 설명할 수 있다 | [MIT 18.03 Differential Equations (Spring 2010)](https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/) — 강의 영상, 노트, 문제집+해답 | 60시간 |
+| `f0-probability-statistics` 확률·통계 | 조건부확률·베이즈 정리·기댓값·분산·대수의 법칙·중심극한정리를 쓰고, 추정과 신뢰구간을 계산할 수 있다 | [MIT 18.05 Introduction to Probability and Statistics (Spring 2022)](https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/) — 노트, 문제집+해답, 시험+해답(영상 없음) · 영상이 필요하면 [MIT 6.041 (Fall 2010)](https://ocw.mit.edu/courses/6-041-probabilistic-systems-analysis-and-applied-probability-fall-2010/) — 강의 영상, 문제집+해답 | 70시간 |
+| `f0-classical-mechanics` 고전 역학 | Newton 법칙으로 운동을 세우고, 에너지·운동량 보존과 회전 운동(관성 모멘트, 토크)을 다룰 수 있다 | [MIT 8.01SC Classical Mechanics (Fall 2016)](https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/) — 강의 영상, 문제집 1–12, 온라인 교재 | 70시간 |
+| `f0-proofs-math-maturity` 증명 읽기·쓰기 | 정의-정리-증명 구조를 읽고, 귀납법·대우·모순법으로 간단한 명제를 **직접 증명**할 수 있다 | [Hammack, *Book of Proof* (3판, 무료 전문)](https://richardhammack.github.io/BookOfProof/) — Part I–IV 14장 + 선별 해답 · [MIT 6.042J Mathematics for Computer Science (Fall 2010)](https://ocw.mit.edu/courses/6-042j-mathematics-for-computer-science-fall-2010/) — 강의 영상, 시험+해답 | 50시간 |
+| `f0-python-numerics-git` 파이썬·수치계산·Git | numpy 로 배열 연산·브로드캐스팅을 쓰고, 부동소수점 오차와 조건수를 인식하고, Git 으로 작업을 관리할 수 있다 | [NumPy user guide](https://numpy.org/doc/stable/user/) · [Scientific Python Lectures](https://lectures.scientific-python.org/) · [Pro Git (무료 전문, CC BY-NC-SA)](https://git-scm.com/book/en/v2) | 40시간 |
+
+합계 약 510시간. 주 12시간이면 약 10개월이지만, **대부분의 학습자는 전부 듣지 않는다** — 진단으로
+통과한 레슨은 건너뛴다.
+
+**권장 순서**: `f0-calculus-single-variable` → `f0-linear-algebra` → `f0-calculus-multivariable`
+→ `f0-differential-equations` → `f0-probability-statistics` → `f0-python-numerics-git`
+→ `f0-classical-mechanics` → `f0-proofs-math-maturity`.
+선형대수를 일찍 넣는 이유는 로보틱스에서 가장 먼저, 가장 많이 쓰이기 때문이다. 증명 레슨을 마지막에
+두는 이유는 앞의 과목들에서 증명을 읽어 본 뒤가 효율적이기 때문이다 — 다만 R0 의 D3 결과를 만나기
+**전에는 반드시** 마쳐야 한다.
+
+**진단 문제 작성 규칙**: 레슨당 5–8문항, 전부 **채점 가능한 계산·단답**으로, 정답과 허용오차를
+공개한다. 통과선은 80%다. 진단은 "그 과목을 들었는가"가 아니라 "그 과목의 결과를 쓸 수 있는가"를
+묻는다(예: "3×3 행렬의 SVD 를 구하고 특이값으로 조건수를 계산하라").
+
+**확인하지 못한 자료**: 3Blue1Brown 의 "Essence of Linear Algebra" 시리즈는 fetch 한 페이지에서
+시리즈 제목·목록을 확인하지 못했다 **(미확인)** — 안내 자료로 넣지 않았다. Strang 의 교재는
+무료 공개가 아니므로 18.06 OCW 를 1순위로 둔다.
+
 ## 4. Stage 0 — R0 수학·수치 기초 (bridge)
 
 `level: 연구`, 진단 퀴즈로 건너뛸 수 있는 모듈. 근거: CMU 16-811 이 Math Foundations 영역의
@@ -121,13 +190,13 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 
 | 레슨 | 유도해야 할 핵심 결과 | 필독 | 교재 | 재현 과제 |
 |---|---|---|---|---|
-| `r0-linear-algebra-decompositions` 분해와 조건수 | 최소제곱의 정규방정식 조건수 = $\kappa(A)^2$ **[D2]**; QR·SVD 해법의 안정성; 유사역행렬과 영공간 **[D2]** | — | CO App. A, NW ch.2 | R1: 악조건 최소제곱을 정규방정식·QR·SVD 로 풀어 오차를 $\kappa$ 에 대해 도표화, QR 이 더 정확함을 수치로 보임 |
-| `r0-sparse-linear-algebra` 희소 선형대수 | 희소 Cholesky 의 fill-in 과 소거 순서 의존성 **[D2]**; 정규방정식의 희소 구조와 Schur 보완 **[D2]**; CG 수렴 한계 $\sqrt{\kappa}$ **[D1]** | — | SER ch.3, NW ch.5 | R1: 포즈 그래프 모양의 희소 행렬에 COLAMD 유무로 Cholesky 비영원소 수를 비교(10배 이상 차이 확인) |
-| `r0-convex-optimization` 볼록성·쌍대성·KKT | 라그랑주 쌍대와 약·강 쌍대성 **[D3]**; KKT 필요·충분 조건 **[D3]**; SOCP/SDP 로의 환원 **[D1]** | — | CO ch.2–5 | R1: QP 를 직접 쌍대로 풀고 cvxpy 해와 쌍대 간극 < 1e-8 일치 |
-| `r0-numerical-optimization` 수치 최적화 | Newton 의 2차 수렴 **[D3]**; BFGS 업데이트와 secant 조건 **[D2]**; 신뢰영역·선탐색의 전역 수렴 **[D1]**; SQP 와 내부점의 구조 **[D1]** | — | NW ch.3,6,18,19 | R2: Rosenbrock 에 대해 경사하강·Newton·BFGS 구현, 반복 수와 수렴 차수를 로그 도표로 확인 |
-| `r0-estimation-theory` 확률과 추정 이론 | 선형 가우시안 MAP = 가중 최소제곱 **[D2]**; Cramér–Rao 하한 **[D3]**; 일관성·효율성·Fisher 정보 **[D2]** | — | SER ch.2–3, PR ch.2 | R1: 1D 추정기 3종의 분산을 몬테카를로로 추정해 CRLB 와 비교(상대오차 < 5%) |
-| `r0-manifolds-lie-groups` 다양체와 행렬 리 군 | 접공간·재추적(retraction) **[D2]**; $\exp/\log$ 사상과 그 미분(좌/우 야코비안) **[D3]**; BCH 1·2차 항 **[D2]** | — | SER ch.7–8, MLS ch.2 | R1: $SO(3)$ 에서 $\exp$ 의 해석적 야코비안을 유한차분과 1e-7 이내 일치시킴 |
-| `r0-ad-and-integrators` 자동 미분과 적분기 | forward/reverse mode 의 비용 비교 **[D2]**; 명시·암시·symplectic 적분기의 에너지 거동 **[D2]**; 강성 조건 **[D1]** | — | NW ch.8, UA App. | R1: 진자에 Euler·RK4·symplectic 을 적용해 1e4 스텝 에너지 드리프트를 비교(symplectic 이 유계임을 확인) |
+| `r0-linear-algebra-decompositions` 분해와 조건수 | 최소제곱의 정규방정식 조건수 = $\kappa(A)^2$ **[D2]**; QR·SVD 해법의 안정성; 유사역행렬과 영공간 **[D2]** | 교재(예외 §5) | CO App. A, NW ch.2 | R1: 악조건 최소제곱을 정규방정식·QR·SVD 로 풀어 오차를 $\kappa$ 에 대해 도표화, QR 이 더 정확함을 수치로 보임 |
+| `r0-sparse-linear-algebra` 희소 선형대수 | 희소 Cholesky 의 fill-in 과 소거 순서 의존성 **[D2]**; 정규방정식의 희소 구조와 Schur 보완 **[D2]**; CG 수렴 한계 $\sqrt{\kappa}$ **[D1]** | 교재(예외 §5) | SER ch.3, NW ch.5 | R1: 포즈 그래프 모양의 희소 행렬에 COLAMD 유무로 Cholesky 비영원소 수를 비교(10배 이상 차이 확인) |
+| `r0-convex-optimization` 볼록성·쌍대성·KKT | 라그랑주 쌍대와 약·강 쌍대성 **[D3]**; KKT 필요·충분 조건 **[D3]**; SOCP/SDP 로의 환원 **[D1]** | 교재(예외 §5) | CO ch.2–5 | R1: QP 를 직접 쌍대로 풀고 cvxpy 해와 쌍대 간극 < 1e-8 일치 |
+| `r0-numerical-optimization` 수치 최적화 | Newton 의 2차 수렴 **[D3]**; BFGS 업데이트와 secant 조건 **[D2]**; 신뢰영역·선탐색의 전역 수렴 **[D1]**; SQP 와 내부점의 구조 **[D1]** | 교재(예외 §5) | NW ch.3,6,18,19 | R2: Rosenbrock 에 대해 경사하강·Newton·BFGS 구현, 반복 수와 수렴 차수를 로그 도표로 확인 |
+| `r0-estimation-theory` 확률과 추정 이론 | 선형 가우시안 MAP = 가중 최소제곱 **[D2]**; Cramér–Rao 하한 **[D3]**; 일관성·효율성·Fisher 정보 **[D2]** | 교재(예외 §5) | SER ch.2–3, PR ch.2 | R1: 1D 추정기 3종의 분산을 몬테카를로로 추정해 CRLB 와 비교(상대오차 < 5%) |
+| `r0-manifolds-lie-groups` 다양체와 행렬 리 군 | 접공간·재추적(retraction) **[D2]**; $\exp/\log$ 사상과 그 미분(좌/우 야코비안) **[D3]**; BCH 1·2차 항 **[D2]** | 교재(예외 §5) | SER ch.7–8, MLS ch.2 | R1: $SO(3)$ 에서 $\exp$ 의 해석적 야코비안을 유한차분과 1e-7 이내 일치시킴 |
+| `r0-ad-and-integrators` 자동 미분과 적분기 | forward/reverse mode 의 비용 비교 **[D2]**; 명시·암시·symplectic 적분기의 에너지 거동 **[D2]**; 강성 조건 **[D1]** | 교재(예외 §5) | NW ch.8, UA App. | R1: 진자에 Euler·RK4·symplectic 을 적용해 1e4 스텝 에너지 드리프트를 비교(symplectic 이 유계임을 확인) |
 
 **열린 문제(모듈 수준)**: 비볼록 문제의 전역성 인증(certification) 가능 범위; 대규모 희소 2차
 문제에서 1차 방법의 조건수 의존성 제거; 자동 미분이 비매끄러운(접촉) 동역학에서 주는 기울기의 타당성.
@@ -140,10 +209,10 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 
 | 레슨 | 유도해야 할 핵심 결과 | 필독 | 교재 | 재현 과제 |
 |---|---|---|---|---|
-| `c1-so3-se3-exponential` SO(3)·SE(3)와 지수 좌표 | Rodrigues 공식 **[D3]**; $\mathfrak{so}(3)\to SO(3)$ 전사성과 로그의 특이점 **[D3]**; 4원수 이중 피복 **[D2]** | — | MR ch.3, MLS ch.2, SER ch.7 | R1: 지수·로그 왕복 오차 < 1e-12, $\theta\to\pi$ 근방에서 수치 붕괴 지점을 실험적으로 찾음 |
-| `c1-twists-wrenches-adjoint` 트위스트·렌치와 수반 표현 | 좌표 변환 하의 트위스트 변환 $\mathrm{Ad}$ **[D2]**; 렌치의 쌍대 변환 $\mathrm{Ad}^{\!*}$ **[D2]**; 나선 운동(screw) 분해 **[D2]** | — | MR ch.3.3, MLS ch.2.5 | R1: 임의 변환에서 $\mathrm{Ad}$ 로 옮긴 트위스트가 수치 미분한 속도와 1e-10 이내 일치 |
+| `c1-so3-se3-exponential` SO(3)·SE(3)와 지수 좌표 | Rodrigues 공식 **[D3]**; $\mathfrak{so}(3)\to SO(3)$ 전사성과 로그의 특이점 **[D3]**; 4원수 이중 피복 **[D2]** | `sola2018-micro-lie-theory`, `forster2017-preintegration` (권장 `grassia1998-exp-map`, `shoemake1985-quaternion-curves`) | MR ch.3, MLS ch.2, SER ch.7 | R1: 지수·로그 왕복 오차 < 1e-12, $\theta\to\pi$ 근방에서 수치 붕괴 지점을 실험적으로 찾음 |
+| `c1-twists-wrenches-adjoint` 트위스트·렌치와 수반 표현 | 좌표 변환 하의 트위스트 변환 $\mathrm{Ad}$ **[D2]**; 렌치의 쌍대 변환 $\mathrm{Ad}^{\!*}$ **[D2]**; 나선 운동(screw) 분해 **[D2]** | `featherstone2010-6d-vectors-part1`, `featherstone2010-6d-vectors-part2`, `brockett1984-poe` | MR ch.3.3, MLS ch.2.5 | R1: 임의 변환에서 $\mathrm{Ad}$ 로 옮긴 트위스트가 수치 미분한 속도와 1e-10 이내 일치 |
 | `c1-lie-group-derivatives` 리 군 위의 미분 | 좌/우 야코비안 $J_l, J_r$ 과 $\exp$ 의 미분 **[D3]**; BCH 와 선형화 오차 차수 **[D2]**; 불변 거리와 평균(Fréchet mean) **[D2]** | `forster2017-preintegration` | SER ch.7.1–7.3 | R1: $SO(3)$ 평균을 리만 경사하강으로 계산, 재시작 100회에서 동일 해 수렴 확인 |
-| `c1-poe-analytic-ik` Product of exponentials 와 해석적 IK | PoE 정기구학 **[D2]**; Paden–Kahan 부문제 1–3 **[D3]**; 6R 역기구학의 해 개수와 분기 **[D2]** | — | MLS ch.3, MR ch.4,6 | R2: 6R 팔의 해석적 IK 를 구현, 1e4 무작위 포즈에서 모든 해가 정기구학을 1e-9 이내 만족 |
+| `c1-poe-analytic-ik` Product of exponentials 와 해석적 IK | PoE 정기구학 **[D2]**; Paden–Kahan 부문제 1–3 **[D3]**; 6R 역기구학의 해 개수와 분기 **[D2]** | `brockett1984-poe`, `husty2007-6r-ik` | MLS ch.3, MR ch.4,6 | R2: 6R 팔의 해석적 IK 를 구현, 1e4 무작위 포즈에서 모든 해가 정기구학을 1e-9 이내 만족 |
 | `c1-manifold-optimization` 매니폴드 위 최적화 | 재추적 기반 Gauss–Newton 의 국소 수렴 **[D3]**; 국소 매개화(lift-solve-retract)의 1차 동등성 **[D2]**; 과매개화(4원수) 제약 처리 **[D2]** | `absil2008-manifold-opt`, `dellaert2017-factor-graphs` | SER ch.7–8 | R2: $SE(3)$ 포즈 정합을 매니폴드 GN 으로 구현, 과매개화+정규화 방식보다 반복 수가 적음을 확인 |
 
 **열린 문제**: $SE(3)$ 위 비볼록 문제의 전역 최적성 인증 범위; 회전 추정에서 특이점 없는 매개화와
@@ -154,9 +223,9 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 
 | 레슨 | 유도해야 할 핵심 결과 | 필독 | 교재 | 재현 과제 |
 |---|---|---|---|---|
-| `c2-spatial-vector-algebra` 공간 벡터 대수 | 6D 운동·힘 공간의 쌍대성 **[D2]**; 공간 관성의 변환 법칙 **[D2]**; 공간 가속도와 코리올리 항의 분리 **[D3]** | — | RBDA ch.2, MR ch.8.2 | R1: 공간 관성 변환과 동차변환 기반 계산이 1e-10 이내 일치 |
-| `c2-rnea-inverse-dynamics` 재귀 Newton–Euler | RNEA 의 $O(n)$ 복잡도와 재귀식 **[D3]**; Lagrange 유도와의 동등성 **[D2]** | — | RBDA ch.5, MR ch.8.3 | R1: RNEA 토크가 Euler–Lagrange 수식 해와 1e-9 이내 일치(7-DOF) |
-| `c2-crba-aba` 질량행렬과 순동역학 | CRBA 의 $O(n^2)$ **[D3]**; ABA 의 $O(n)$ 과 관절 공간 관성의 분기 구조 **[D3]** | — | RBDA ch.6–7 | R1: CRBA 의 $M$ 이 유한차분 역동역학과 1e-8 이내 일치; ABA 와 $M^{-1}\tau$ 해가 일치 |
+| `c2-spatial-vector-algebra` 공간 벡터 대수 | 6D 운동·힘 공간의 쌍대성 **[D2]**; 공간 관성의 변환 법칙 **[D2]**; 공간 가속도와 코리올리 항의 분리 **[D3]** | `featherstone2010-6d-vectors-part1`, `featherstone2010-6d-vectors-part2` | RBDA ch.2, MR ch.8.2 | R1: 공간 관성 변환과 동차변환 기반 계산이 1e-10 이내 일치 |
+| `c2-rnea-inverse-dynamics` 재귀 Newton–Euler | RNEA 의 $O(n)$ 복잡도와 재귀식 **[D3]**; Lagrange 유도와의 동등성 **[D2]** | `luh1980-rnea` | RBDA ch.5, MR ch.8.3 | R1: RNEA 토크가 Euler–Lagrange 수식 해와 1e-9 이내 일치(7-DOF) |
+| `c2-crba-aba` 질량행렬과 순동역학 | CRBA 의 $O(n^2)$ **[D3]**; ABA 의 $O(n)$ 과 관절 공간 관성의 분기 구조 **[D3]** | `featherstone1983-aba`, `walker1982-crba` | RBDA ch.6–7 | R1: CRBA 의 $M$ 이 유한차분 역동역학과 1e-8 이내 일치; ABA 와 $M^{-1}\tau$ 해가 일치 |
 | `c2-constrained-dynamics` 제약 동역학 | 라그랑주 승수와 KKT 형태의 동역학 **[D3]**; 널공간 투영과 조작 공간 관성 $\Lambda$ **[D3]**; Baumgarte 안정화 **[D1]** | `khatib1987-operational-space` | RBDA ch.8, MLS ch.6 | R2: 폐루프 4절 링크를 승수법과 축소좌표법으로 적분, 제약 위반 < 1e-8 유지 |
 | `c2-contact-dynamics` 접촉 동역학 | 상보성 조건(LCP/NCP)과 해 존재성 **[D3]**; 마찰 원뿔과 Painlevé 역설 **[D2]**; 시간 이산화(semi-implicit) 와 관통 **[D2]** | `stewart1996-implicit-timestepping`, `todorov2014-convex-contact` | UA ch.17, RBDA ch.11 | R2: 평면 접촉 공을 LCP 1스텝 해법으로 적분, 에너지 비증가와 비관통을 확인 |
 | `c2-dynamics-derivatives-sysid` 동역학 미분과 시스템 식별 | RNEA 의 해석적 미분 **[D2]**; 관성 매개변수의 선형성과 식별 가능성 조건 **[D3]**; 물리적 일관성 제약(SDP) **[D2]** | `carpentier2018-pinocchio` | RBDA ch.10, UA ch.18 | R2: 7-DOF 궤적에서 관성 매개변수를 선형 최소제곱으로 식별, 노이즈 대비 식별 가능한 조합만 복원됨을 조건수로 보임 |
@@ -169,7 +238,7 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 
 | 레슨 | 유도해야 할 핵심 결과 | 필독 | 교재 | 재현 과제 |
 |---|---|---|---|---|
-| `c3-lyapunov-stability` Lyapunov 안정성과 ISS | Lyapunov 정리와 역정리 **[D3]**; Barbashin–Krasovskii·LaSalle **[D3]**; ISS 와 비교 함수 **[D2]** | — | Khalil ch.4, UA ch.9 | R1: 2차 계의 Lyapunov 함수를 SOS(sum-of-squares)로 탐색, 흡인 영역 추정값이 수치 적분 결과를 포함함을 확인 |
+| `c3-lyapunov-stability` Lyapunov 안정성과 ISS | Lyapunov 정리와 역정리 **[D3]**; Barbashin–Krasovskii·LaSalle **[D3]**; ISS 와 비교 함수 **[D2]** | `sontag1989-coprime-factorization`, `papachristodoulou2002-sos` | Khalil ch.4, UA ch.9 | R1: 2차 계의 Lyapunov 함수를 SOS(sum-of-squares)로 탐색, 흡인 영역 추정값이 수치 적분 결과를 포함함을 확인 |
 | `c3-feedback-linearization` 피드백 선형화와 가제어성 | 입출력·완전 선형화 조건(involutivity, Frobenius) **[D3]**; 비홀로노믹 계의 Chow–Rashevskii **[D2]**; 영역 동역학 **[D2]** | `brockett1983-nonholonomic` | Khalil ch.13, MLS ch.7 | R2: 차동구동 로봇을 사인파 조향(steering with sinusoids)으로 주차, 종단 오차 < 1e-3 |
 | `c3-contraction-incremental` 수축 이론 | 수축 조건과 지수 수렴 **[D3]**; 미분 Lyapunov 와 리만 계량 **[D2]**; 추적 제어로의 적용 **[D2]** | `lohmiller1998-contraction`, `manchester2017-ccm` | Khalil ch.9(비교) | R1: 수축 계량이 주는 수렴률 상한이 실제 궤적 수렴률을 상회하는지 수치 검증 |
 | `c3-passivity-impedance` 수동성·에너지 성형과 임피던스 제어 | 수동성 정리와 직렬 결합 안정성 **[D3]**; 에너지 성형·댐핑 주입 **[D2]**; 임피던스/어드미턴스 제어와 접촉 안정성 **[D2]** | `hogan1985-impedance` | MR ch.11.6, MLS ch.6 | R2: 1-DOF 접촉 작업에서 임피던스 이득을 바꿔 안정 경계를 실험적으로 그림(이론 경계와 비교) |
@@ -185,8 +254,8 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 
 | 레슨 | 유도해야 할 핵심 결과 | 필독 | 교재 | 재현 과제 |
 |---|---|---|---|---|
-| `c4-pontryagin-indirect` Pontryagin 최대 원리와 간접법 | PMP 의 1차 필요조건 **[D3]**; 해밀토니안 보존·수반 방정식 **[D2]**; 슈팅의 민감도 폭발 **[D2]** | — | AA203 노트, UA ch.10 | R2: 2D 브라키스토크론/최소 시간 문제를 간접법으로 풀고, 초기 추정 민감도를 도표화 |
-| `c4-dp-lqr-lqg` 동적 계획법·LQR·LQG | Bellman 방정식 **[D3]**; LQR 의 세 가지 유도(DP·PMP·변분) **[D3]**; Riccati 수렴과 안정성 **[D3]**; LQG 분리 정리 **[D2]** | — | UA ch.7–8, AA203 W4–5 | R1: 이산 LQR 이득이 Riccati 반복·고유값 해법과 1e-10 이내 일치, 폐루프 극점이 단위원 내부 |
+| `c4-pontryagin-indirect` Pontryagin 최대 원리와 간접법 | PMP 의 1차 필요조건 **[D3]**; 해밀토니안 보존·수반 방정식 **[D2]**; 슈팅의 민감도 폭발 **[D2]** | `kalman1960-optimal-control`, `betts1998-survey` | AA203 노트, UA ch.10 | R2: 2D 브라키스토크론/최소 시간 문제를 간접법으로 풀고, 초기 추정 민감도를 도표화 |
+| `c4-dp-lqr-lqg` 동적 계획법·LQR·LQG | Bellman 방정식 **[D3]**; LQR 의 세 가지 유도(DP·PMP·변분) **[D3]**; Riccati 수렴과 안정성 **[D3]**; LQG 분리 정리 **[D2]** | `athans1971-lqg`, `kalman1960-optimal-control` | UA ch.7–8, AA203 W4–5 | R1: 이산 LQR 이득이 Riccati 반복·고유값 해법과 1e-10 이내 일치, 폐루프 극점이 단위원 내부 |
 | `c4-ilqr-ddp` iLQR/DDP 와 정규화 | DDP 의 2차 전개와 수렴 차수 **[D3]**; 정규화·merit function·선탐색의 필요성 **[D2]**; 상태 제약 처리의 한계 **[D2]** | `mayne1966-ddp`, `tassa2012-ilqr` | UA ch.10.3, 16-745 W6 | R2: 카트폴 스윙업을 iLQR 로 해결, 비용 단조 감소와 토크 한계 만족(수용 기준: 20반복 내 수렴) |
 | `c4-direct-collocation-sqp` 직접법·collocation·SQP | 직접 전사(transcription)의 희소 구조 **[D2]**; Hermite–Simpson 의 차수 **[D2]**; SQP 와 KKT 의 관계, 2차 수렴 **[D3]** | `hargraves1987-collocation`, `betts1998-survey` | NW ch.18, UA ch.10.2 | R2: 아크로봇 스윙업을 직접법으로 풀고 동역학 제약 위반 < 1e-6, iLQR 해와 비용 비교 |
 | `c4-mpc` MPC | 재귀적 실현가능성과 종단 집합 **[D3]**; Lyapunov 기반 안정성 **[D3]**; 명시적 MPC 의 구간 선형 해 **[D2]**; 실시간 반복(RTI) **[D1]** | `rawlings2017-mpc-theory`, `diehl2009-rti` | AA203 W6, 16-745 W5 | R2: 선형 MPC 를 QP 로 구현, 종단 비용·제약 유무에 따른 안정 영역 차이를 수치로 보임 |

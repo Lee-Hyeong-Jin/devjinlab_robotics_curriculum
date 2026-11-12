@@ -1,0 +1,9 @@
+id: robotics-research
+lang: en
+title: Robotics researcher track
+summary: >-
+  A specialization-grade course for people aiming to become robotics researchers. The bar is set
+  by graduate courses at the world's leading departments and by the research level of the
+  international venues (RSS, ICRA, IROS, CoRL, IJRR, T-RO, RA-L): every lesson derives its key
+  results, reads the primary papers and reproduces them numerically. The design and the lesson standard live in the
+  research-track design notes in this repository. Prerequisites are advisory, never locked.

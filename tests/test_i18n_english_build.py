@@ -96,14 +96,23 @@ def describe(findings: list[Finding]) -> str:
 
 
 @pytest.fixture(scope="module")
-def course() -> Course:
-    (loaded,) = load_courses(CURRICULUM)
-    return loaded
+def courses() -> list[Course]:
+    return load_courses(CURRICULUM)
 
 
 @pytest.fixture(scope="module")
-def allowed(course: Course) -> set[str]:
-    return untranslatable(course)
+def course(courses: list[Course]) -> Course:
+    """The course the screens are walked on: the fully translated engineer track."""
+    return next(c for c in courses if c.id == "robotics-expert")
+
+
+@pytest.fixture(scope="module")
+def allowed(courses: list[Course]) -> set[str]:
+    """Korean that is expected in English mode: untranslated content of every course."""
+    found: set[str] = set()
+    for loaded in courses:
+        found |= untranslatable(loaded)
+    return found
 
 
 # -- API -----------------------------------------------------------------------
