@@ -29,6 +29,10 @@ KIND_KEYS: dict[ResourceKind, str] = {
     ResourceKind.COURSE: "course",
     ResourceKind.VIDEO: "video",
     ResourceKind.ARTICLE: "article",
+    ResourceKind.PAPER: "paper",
+    ResourceKind.DATASET: "dataset",
+    ResourceKind.CODE: "code",
+    ResourceKind.NOTES: "notes",
     ResourceKind.OTHER: "other",
 }
 

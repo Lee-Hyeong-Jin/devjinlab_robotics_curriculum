@@ -17,9 +17,14 @@ from robotics_curriculum.i18n import DEFAULT_LANG, normalize_lang, translator
 
 ID_PATTERN = r"^[a-z0-9][a-z0-9-]*$"
 Id = Annotated[str, Field(pattern=ID_PATTERN, description="lowercase slug, e.g. m1-vectors")]
-Level = Literal["기초", "중급", "고급"]
+Level = Literal["기초", "중급", "고급", "연구"]
 
-LEVEL_KEYS: dict[str, str] = {"기초": "foundation", "중급": "intermediate", "고급": "advanced"}
+LEVEL_KEYS: dict[str, str] = {
+    "기초": "foundation",
+    "중급": "intermediate",
+    "고급": "advanced",
+    "연구": "research",
+}
 """Level value (the authoring language) -> message key suffix. The value is the stable id
 that content, progress and the CLI ``--level`` filter use; only the display label is
 translated (``level.foundation`` and friends in ``i18n/locales/``)."""
@@ -47,9 +52,20 @@ class ContentModel(BaseModel):
 
 
 class ActivityKind(StrEnum):
+    """What kind of work an activity is.
+
+    ``reading`` is a textbook or notes; ``paper`` is a primary paper read with notes of one's
+    own, which the research track has to tell apart from it. ``exercise`` is a problem set,
+    ``reproduction`` is reproducing a published result, and ``project`` is a capstone.
+    See ``research_notes/연구 트랙 설계/lesson-standard.md`` §11-2.
+    """
+
     READING = "reading"
+    PAPER = "paper"
     QUIZ = "quiz"
     EXERCISE = "exercise"
+    REPRODUCTION = "reproduction"
+    PROJECT = "project"
 
 
 class Activity(ContentModel):
@@ -62,10 +78,18 @@ class Activity(ContentModel):
 
 
 class ResourceKind(StrEnum):
+    """A paper normally belongs in the course's ``papers.yaml`` registry; ``paper`` here is
+    for a one-off. ``dataset`` (KITTI, TUM RGB-D), ``code`` (Drake, GTSAM) and ``notes``
+    (lecture notes) are the research track's own categories (lesson-standard.md §11-5)."""
+
     BOOK = "book"
     COURSE = "course"
     VIDEO = "video"
     ARTICLE = "article"
+    PAPER = "paper"
+    DATASET = "dataset"
+    CODE = "code"
+    NOTES = "notes"
     OTHER = "other"
 
 

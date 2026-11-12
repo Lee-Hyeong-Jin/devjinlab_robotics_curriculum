@@ -2618,9 +2618,19 @@ components:
       type: string
       enum:
       - reading
+      - paper
       - quiz
       - exercise
+      - reproduction
+      - project
       title: ActivityKind
+      description: |-
+        What kind of work an activity is.
+
+        ``reading`` is a textbook or notes; ``paper`` is a primary paper read with notes of one's
+        own, which the research track has to tell apart from it. ``exercise`` is a problem set,
+        ``reproduction`` is reproducing a published result, and ``project`` is a capstone.
+        See ``research_notes/연구 트랙 설계/lesson-standard.md`` §11-2.
     ActivityProgress:
       properties:
         user_id:
@@ -3622,6 +3632,7 @@ components:
             - 기초
             - 중급
             - 고급
+            - 연구
           - type: 'null'
           title: Level
           description: Stable level id, the same in every language (null when unset).
@@ -3717,6 +3728,7 @@ components:
             - 기초
             - 중급
             - 고급
+            - 연구
           - type: 'null'
           title: Level
           description: Stable level id, the same in every language (null when unset).
@@ -4179,8 +4191,16 @@ components:
       - course
       - video
       - article
+      - paper
+      - dataset
+      - code
+      - notes
       - other
       title: ResourceKind
+      description: |-
+        A paper normally belongs in the course's ``papers.yaml`` registry; ``paper`` here is
+        for a one-off. ``dataset`` (KITTI, TUM RGB-D), ``code`` (Drake, GTSAM) and ``notes``
+        (lecture notes) are the research track's own categories (lesson-standard.md §11-5).
     ResourceRef:
       properties:
         title:
@@ -4421,6 +4441,7 @@ components:
             - 기초
             - 중급
             - 고급
+            - 연구
           - type: 'null'
           title: Level
           description: Stable level id, the same in every language (null when unset).
@@ -4574,6 +4595,7 @@ components:
             - 기초
             - 중급
             - 고급
+            - 연구
           - type: 'null'
           title: Level
           description: null for modules without a level.

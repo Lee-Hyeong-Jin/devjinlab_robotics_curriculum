@@ -103,12 +103,19 @@
     "course": "강의",
     "video": "영상",
     "article": "문서",
-    "other": "기타"
+    "other": "기타",
+    "paper": "논문",
+    "dataset": "데이터셋",
+    "code": "구현",
+    "notes": "노트"
   },
   "activityKind": {
     "reading": "읽기",
     "quiz": "퀴즈",
-    "exercise": "실습"
+    "exercise": "실습",
+    "paper": "논문 읽기",
+    "reproduction": "재현",
+    "project": "프로젝트"
   },
   "state": {
     "done": "완료",

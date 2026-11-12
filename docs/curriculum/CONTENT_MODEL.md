@@ -39,7 +39,7 @@ curriculum/
 | `id` | slug | O | 모듈 ID (`m1-math-physics`) |
 | `title` | str | O | 표시 이름 |
 | `summary` | str | O | 요약 |
-| `level` | `기초` \| `중급` \| `고급` | - | 모듈 수준. 기본 없음 |
+| `level` | `기초` \| `중급` \| `고급` \| `연구` | - | 모듈 수준. 기본 없음 |
 | `lessons` | list[str] | - | 레슨 파일 이름(확장자 제외), 순서대로 |
 
 ## 레슨 front matter (`<lesson>.md`)
@@ -64,12 +64,15 @@ front matter에 정의되지 않은 키가 있으면 에러다(오타 방지). `
 | 필드 | 타입 | 필수 | 설명 |
 |---|---|---|---|
 | `id` | slug | O | 코스 전체에서 유일. 관례: `<lesson-id>-<kind>` |
-| `kind` | `reading` \| `quiz` \| `exercise` | O | 활동 종류 |
+| `kind` | `reading` \| `paper` \| `quiz` \| `exercise` \| `reproduction` \| `project` | O | 활동 종류 |
 | `title` | str | O | 표시 이름 |
 | `estimated_minutes` | int ≥ 1 | - | 활동 단위 예상 시간 |
 
-> 시뮬레이터 실습(`lab`)은 지원하지 않는다. PRD FR-1.3의 `project`, `external`은 아직 미지원.
-> 필요해지면 `ActivityKind`에 추가한다.
+> `reading`은 교재·노트, `paper`는 원 논문 읽기(노트 작성 포함)다 — 연구 트랙이 둘을 구별해야 해서
+> 나눴다. `exercise`는 문제 세트, `reproduction`은 공개된 결과의 재현, `project`는 캡스톤이다
+> (`research_notes/연구 트랙 설계/lesson-standard.md` §11-2).
+> 시뮬레이터 실습(`lab`)과 PRD FR-1.3의 `external`은 아직 미지원이다. 외부 자료는 `resources[]`
+> 또는 코스의 `papers.yaml` 레지스트리로 건다.
 > `kind: quiz` 활동의 문항은 본문의 ` ```quiz ` 블록에 쓴다(아래 "본문 안의 퀴즈 블록").
 
 ### Resource
@@ -78,7 +81,7 @@ front matter에 정의되지 않은 키가 있으면 에러다(오타 방지). `
 |---|---|---|---|
 | `title` | str | O | 자료 이름 |
 | `url` | str | - | 링크 |
-| `kind` | `book` \| `course` \| `video` \| `article` \| `other` | - | 자료 종류 |
+| `kind` | `book` \| `course` \| `video` \| `article` \| `paper` \| `dataset` \| `code` \| `notes` \| `other` | - | 자료 종류 |
 | `note` | str | - | 범위·메모 (예: `Ch. 3`) |
 
 그 단계의 공부 방법은 front matter가 아니라 본문의 `## 이 단계 공부법` 절에 쓴다

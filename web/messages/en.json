@@ -103,12 +103,19 @@
     "course": "Course",
     "video": "Video",
     "article": "Article",
-    "other": "Other"
+    "other": "Other",
+    "paper": "Papers",
+    "dataset": "Datasets",
+    "code": "Code",
+    "notes": "Notes"
   },
   "activityKind": {
     "reading": "Reading",
     "quiz": "Quiz",
-    "exercise": "Exercise"
+    "exercise": "Exercise",
+    "paper": "Paper",
+    "reproduction": "Reproduction",
+    "project": "Project"
   },
   "state": {
     "done": "Done",

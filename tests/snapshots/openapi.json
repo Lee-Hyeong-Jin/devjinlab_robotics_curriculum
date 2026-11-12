@@ -4021,10 +4021,14 @@
         "type": "string",
         "enum": [
           "reading",
+          "paper",
           "quiz",
-          "exercise"
+          "exercise",
+          "reproduction",
+          "project"
         ],
-        "title": "ActivityKind"
+        "title": "ActivityKind",
+        "description": "What kind of work an activity is.\n\n``reading`` is a textbook or notes; ``paper`` is a primary paper read with notes of one's\nown, which the research track has to tell apart from it. ``exercise`` is a problem set,\n``reproduction`` is reproducing a published result, and ``project`` is a capstone.\nSee ``research_notes/연구 트랙 설계/lesson-standard.md`` §11-2."
       },
       "ActivityProgress": {
         "properties": {
@@ -5458,7 +5462,8 @@
                 "enum": [
                   "기초",
                   "중급",
-                  "고급"
+                  "고급",
+                  "연구"
                 ]
               },
               {
@@ -5589,7 +5594,8 @@
                 "enum": [
                   "기초",
                   "중급",
-                  "고급"
+                  "고급",
+                  "연구"
                 ]
               },
               {
@@ -6224,9 +6230,14 @@
           "course",
           "video",
           "article",
+          "paper",
+          "dataset",
+          "code",
+          "notes",
           "other"
         ],
-        "title": "ResourceKind"
+        "title": "ResourceKind",
+        "description": "A paper normally belongs in the course's ``papers.yaml`` registry; ``paper`` here is\nfor a one-off. ``dataset`` (KITTI, TUM RGB-D), ``code`` (Drake, GTSAM) and ``notes``\n(lecture notes) are the research track's own categories (lesson-standard.md §11-5)."
       },
       "ResourceRef": {
         "properties": {
@@ -6553,7 +6564,8 @@
                 "enum": [
                   "기초",
                   "중급",
-                  "고급"
+                  "고급",
+                  "연구"
                 ]
               },
               {
@@ -6775,7 +6787,8 @@
                 "enum": [
                   "기초",
                   "중급",
-                  "고급"
+                  "고급",
+                  "연구"
                 ]
               },
               {

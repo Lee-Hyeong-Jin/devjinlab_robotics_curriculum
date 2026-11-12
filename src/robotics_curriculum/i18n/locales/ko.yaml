@@ -95,6 +95,10 @@ resource:
     course: "강의"
     video: "영상"
     article: "글"
+    paper: "논문"
+    dataset: "데이터셋"
+    code: "구현"
+    notes: "노트"
     other: "기타"
   none: "  (등록된 자료 없음)"
   library_title: "{course} 자료 라이브러리 ({count}개)"
@@ -171,6 +175,9 @@ site:
     reading: "읽기"
     quiz: "퀴즈"
     exercise: "실습"
+    paper: "논문 읽기"
+    reproduction: "재현"
+    project: "프로젝트"
   dashboard:
     module_progress: "({done}/{total} 레슨 완료)"
     study_guide_link: "공부법 보기"
@@ -235,6 +242,7 @@ level:
   foundation: "기초"
   intermediate: "중급"
   advanced: "고급"
+  research: "연구"
   none: "단계 미지정"
 
 duration:

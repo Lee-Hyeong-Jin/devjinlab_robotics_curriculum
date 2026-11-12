@@ -94,6 +94,10 @@ resource:
     course: "Courses"
     video: "Videos"
     article: "Articles"
+    paper: "Papers"
+    dataset: "Datasets"
+    code: "Code"
+    notes: "Notes"
     other: "Other"
   none: "  (no resources listed)"
   library_title: "{course} resource library ({count})"
@@ -170,6 +174,9 @@ site:
     reading: "Reading"
     quiz: "Quiz"
     exercise: "Exercise"
+    paper: "Paper"
+    reproduction: "Reproduction"
+    project: "Project"
   dashboard:
     module_progress: "({done}/{total} lessons done)"
     study_guide_link: "How to study it"
@@ -234,6 +241,7 @@ level:
   foundation: "Foundation"
   intermediate: "Intermediate"
   advanced: "Advanced"
+  research: "Research"
   none: "No stage"
 
 duration:

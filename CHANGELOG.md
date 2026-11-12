@@ -76,6 +76,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and `Strict-Transport-Security` only when the request arrived over HTTPS.
 - `docs/adr/0013-signup-policy.md` (proposed, not implemented): `RC_AUTH_SIGNUP`
   (`open` | `closed` | `invite`) and how invitations would work.
+- Content vocabulary for the research track (`lesson-standard.md` §11-2, §11-4, §11-5), all
+  additive so the existing lessons validate unchanged: `ActivityKind` gains `paper`,
+  `reproduction` and `project`; `ResourceKind` gains `paper`, `dataset`, `code` and `notes`;
+  `Level` gains `연구` (`research`). Labels added in ko and en for the CLI, the static site
+  and the web.
 - `scripts/perf/api_load.py`: measures the read endpoints' latency percentiles with asyncio
   and the `httpx` already in the package (no new dependency). Baseline recorded in
   `docs/operations/perf-baseline.md`: every read endpoint's p95 is under the PRD's 300 ms

@@ -1038,9 +1038,15 @@ export interface components {
         };
         /**
          * ActivityKind
+         * @description What kind of work an activity is.
+         *
+         *     ``reading`` is a textbook or notes; ``paper`` is a primary paper read with notes of one's
+         *     own, which the research track has to tell apart from it. ``exercise`` is a problem set,
+         *     ``reproduction`` is reproducing a published result, and ``project`` is a capstone.
+         *     See ``research_notes/연구 트랙 설계/lesson-standard.md`` §11-2.
          * @enum {string}
          */
-        ActivityKind: "reading" | "quiz" | "exercise";
+        ActivityKind: "reading" | "paper" | "quiz" | "exercise" | "reproduction" | "project";
         /**
          * ActivityProgress
          * @description Per-activity state (platform-design §4.1); Phase 1 only records quiz activities.
@@ -1643,7 +1649,7 @@ export interface components {
              * Level
              * @description Stable level id, the same in every language (null when unset).
              */
-            level: ("기초" | "중급" | "고급") | null;
+            level: ("기초" | "중급" | "고급" | "연구") | null;
             /**
              * Level Label
              * @description `level` as it should be shown, in the requested language.
@@ -1696,7 +1702,7 @@ export interface components {
              * Level
              * @description Stable level id, the same in every language (null when unset).
              */
-            level: ("기초" | "중급" | "고급") | null;
+            level: ("기초" | "중급" | "고급" | "연구") | null;
             /**
              * Level Label
              * @description `level` as it should be shown, in the requested language.
@@ -1983,9 +1989,12 @@ export interface components {
         };
         /**
          * ResourceKind
+         * @description A paper normally belongs in the course's ``papers.yaml`` registry; ``paper`` here is
+         *     for a one-off. ``dataset`` (KITTI, TUM RGB-D), ``code`` (Drake, GTSAM) and ``notes``
+         *     (lecture notes) are the research track's own categories (lesson-standard.md §11-5).
          * @enum {string}
          */
-        ResourceKind: "book" | "course" | "video" | "article" | "other";
+        ResourceKind: "book" | "course" | "video" | "article" | "paper" | "dataset" | "code" | "notes" | "other";
         /** ResourceRef */
         ResourceRef: {
             /** Title */
@@ -2131,7 +2140,7 @@ export interface components {
              * Level
              * @description Stable level id, the same in every language (null when unset).
              */
-            level: ("기초" | "중급" | "고급") | null;
+            level: ("기초" | "중급" | "고급" | "연구") | null;
             /**
              * Level Label
              * @description `level` as it should be shown, in the requested language.
@@ -2226,7 +2235,7 @@ export interface components {
              * Level
              * @description null for modules without a level.
              */
-            level: ("기초" | "중급" | "고급") | null;
+            level: ("기초" | "중급" | "고급" | "연구") | null;
             /**
              * Level Label
              * @description `level` as it should be shown, in the requested language.

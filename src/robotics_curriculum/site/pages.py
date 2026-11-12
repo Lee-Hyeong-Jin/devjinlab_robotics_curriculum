@@ -66,6 +66,10 @@ KIND_KEYS: tuple[tuple[ResourceKind | None, str], ...] = (
     (ResourceKind.COURSE, "course"),
     (ResourceKind.VIDEO, "video"),
     (ResourceKind.ARTICLE, "article"),
+    (ResourceKind.PAPER, "paper"),
+    (ResourceKind.DATASET, "dataset"),
+    (ResourceKind.CODE, "code"),
+    (ResourceKind.NOTES, "notes"),
     (ResourceKind.OTHER, "other"),
     (None, "other"),
 )
