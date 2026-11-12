@@ -18,3 +18,4 @@ lessons:
   - imitation-learning
   - offline-rl
   - control-as-inference
+  - generalization-sim2real

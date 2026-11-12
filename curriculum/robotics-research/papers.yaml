@@ -207,6 +207,33 @@ papers:
     verified: true
     role: standard
 
+  - id: tobin2017-domain-randomization
+    title: "Domain randomization for transferring deep neural networks from simulation to the real world"
+    authors: ["J. Tobin", "R. Fong", "A. Ray", "et al."]
+    year: 2017
+    venue: "IROS"
+    url: "https://arxiv.org/abs/1703.06907"
+    verified: true
+    role: seminal
+  - id: rajeswaran2017-epopt
+    title: "EPOpt: learning robust neural network policies using model ensembles"
+    authors: ["A. Rajeswaran", "S. Ghotra", "B. Ravindran", "S. Levine"]
+    year: 2017
+    venue: "ICLR"
+    url: "https://arxiv.org/abs/1610.01283"
+    verified: true
+    role: standard
+    note: "arXiv v1 2016"
+  - id: chen2020-learning-by-cheating
+    title: "Learning by cheating"
+    authors: ["D. Chen", "B. Zhou", "V. Koltun", "P. Krahenbuhl"]
+    year: 2020
+    venue: "CoRL"
+    url: "https://arxiv.org/abs/1912.12294"
+    verified: true
+    role: standard
+    note: "arXiv v1 2019"
+
   # ── S1 SLAM·공간 지능 ───────────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 

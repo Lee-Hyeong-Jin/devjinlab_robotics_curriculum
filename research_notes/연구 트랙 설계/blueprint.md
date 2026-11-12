@@ -326,7 +326,7 @@ UA ch.11,20–21, S&B.
 | `c8-imitation-learning` 모방학습과 공변량 이동 | BC 의 복합 오차 $O(\epsilon T^2)$ **[D3]**; DAgger 의 후회 한계 $O(\epsilon T)$ **[D3]**; IRL 의 모호성과 최대 엔트로피 해 **[D2]** | `ross2010-efficient-reductions`, `ross2011-dagger`, `ziebart2008-maxent-irl` | CS285 W1–2 | R2: BC 와 DAgger 를 같은 전문가로 학습해 지평선에 따른 오차 증가 차수를 실험으로 분리 |
 | `c8-offline-rl` 오프라인 RL 과 분포 이동 | 외삽 오차와 보수성(pessimism)의 하한 보장 **[D3]**; 행동 정규화 vs 가치 보수성 **[D2]**; 오프라인 평가(OPE)의 분산 **[D2]** | `jin2021-pessimism`, `levine2020-offline-rl`, `kumar2020-cql` | CS285 W9 | R2: D4RL 류 소형 데이터셋에서 BC·CQL 을 비교해 데이터 품질에 따른 역전 현상을 재현 |
 | `c8-control-as-inference` 제어로서의 추론 | 최대 엔트로피 RL 과 soft Bellman **[D3]**; 변분 추론과의 동등성 **[D3]**; MPPI·경로 적분 제어의 유도 **[D2]** | `levine2018-control-as-inference`, `haarnoja2018-sac`, `williams2017-mppi` | CS285 W6–7, UA ch.11 | R2: MPPI 와 iLQR 로 같은 과제를 풀어 비용·샘플 수 교환을 도표화 |
-| `c8-generalization-sim2real` 일반화와 sim-to-real 이론 | 도메인 랜덤화의 암묵적 목적함수 **[D2]**; 분포 이동 하 일반화 한계 **[D2]**; 특권 학습·교사-학생의 정보 격차 **[D2]** | `tobin2017-domain-randomization`, `chen2020-learning-by-cheating` | CS285 W13 | R2: 랜덤화 폭을 바꿔 보이지 않는 매개변수에서의 성능 곡선을 그림(과도 랜덤화의 손해 확인) |
+| `c8-generalization-sim2real` 일반화와 sim-to-real 이론 | 도메인 랜덤화의 암묵적 목적함수 **[D2]**; 분포 이동 하 일반화 한계 **[D2]**; 특권 학습·교사-학생의 정보 격차 **[D2]** | `tobin2017-domain-randomization`, `rajeswaran2017-epopt`, `chen2020-learning-by-cheating` | CS285 W13 | R2: 랜덤화 폭을 바꿔 보이지 않는 매개변수에서의 성능 곡선을 그림(과도 랜덤화의 손해 확인) |
 
 **열린 문제**: 로봇 규모 데이터에서의 표본 복잡도 이론; 오프라인 RL 의 실기 보장; 평가의 재현성
 (CS285 W13 이 "Challenges and Open Problems" 로 한 주를 쓰는 이유); 접촉·비매끄러운 동역학에서

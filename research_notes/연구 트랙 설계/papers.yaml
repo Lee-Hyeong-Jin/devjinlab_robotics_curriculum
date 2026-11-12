@@ -929,6 +929,16 @@ papers:
     verified: true
     lessons: [c8-control-as-inference]
     role: standard
+  - id: rajeswaran2017-epopt
+    title: "EPOpt: learning robust neural network policies using model ensembles"
+    authors: ["A. Rajeswaran", "S. Ghotra", "B. Ravindran", "S. Levine"]
+    year: 2017
+    venue: "ICLR"
+    url: "https://arxiv.org/abs/1610.01283"
+    note: "c8 저자 세션이 추가(2026-11-12). arXiv API 로 제목·제1저자 확인(v1 2016). 평균 대신 CVaR 꼬리를 최적화하는 강건 목적함수의 대표"
+    verified: true
+    lessons: [c8-generalization-sim2real]
+    role: standard
   - id: tobin2017-domain-randomization
     title: "Domain randomization for transferring deep neural networks from simulation to the real world"
     authors: ["J. Tobin", "R. Fong", "A. Ray", "et al."]
