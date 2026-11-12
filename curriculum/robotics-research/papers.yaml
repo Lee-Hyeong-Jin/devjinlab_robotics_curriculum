@@ -128,7 +128,33 @@ papers:
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
   # ── C8 의사결정·학습 이론 ───────────────────────────────────────────
-  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+  - id: ross2010-efficient-reductions
+    title: "Efficient reductions for imitation learning"
+    authors: ["S. Ross", "J. A. Bagnell"]
+    year: 2010
+    venue: "AISTATS"
+    url: "https://proceedings.mlr.press/v9/ross10a.html"
+    verified: true
+    role: seminal
+    note: "DOI 없음 — PMLR v9 페이지에서 제목 확인"
+  - id: ross2011-dagger
+    title: "A reduction of imitation learning and structured prediction to no-regret online learning"
+    authors: ["S. Ross", "G. J. Gordon", "J. A. Bagnell"]
+    year: 2011
+    venue: "AISTATS"
+    url: "https://arxiv.org/abs/1011.0686"
+    verified: true
+    role: seminal
+    note: "arXiv v1 2010, AISTATS 2011"
+  - id: ziebart2008-maxent-irl
+    title: "Maximum entropy inverse reinforcement learning"
+    authors: ["B. D. Ziebart", "A. Maas", "J. A. Bagnell", "A. K. Dey"]
+    year: 2008
+    venue: "AAAI"
+    url: "https://cdn.aaai.org/AAAI/2008/AAAI08-227.pdf"
+    verified: true
+    role: seminal
+    note: "DOI·arXiv 없음 — 메타데이터는 Semantic Scholar 로 확인"
 
   # ── S1 SLAM·공간 지능 ───────────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)

@@ -35,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   learning theory), research-grade lessons in Korean and English with derivations, problem
   sets, must-read papers, reproduction tasks and open problems. Lessons so far:
   `c8-mdp-pomdp-bellman`, `c8-policy-gradient`, `c8-value-based-rl`,
-  `c8-model-based-world-models`.
+  `c8-model-based-world-models`, `c8-imitation-learning`.
 
 ### Changed
 
