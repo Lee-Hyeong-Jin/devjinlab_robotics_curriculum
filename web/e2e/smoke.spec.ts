@@ -43,6 +43,39 @@ for (const screen of SCREENS) {
   })
 }
 
+test('every page response carries the security headers, and the CSP breaks nothing', async ({
+  page,
+}) => {
+  const problems: string[] = []
+  page.on('console', (message) => {
+    if (message.type() === 'error') problems.push(message.text())
+  })
+  page.on('pageerror', (error) => problems.push(String(error)))
+
+  const response = await page.goto('/')
+  const headers = response?.headers() ?? {}
+  expect(headers['x-content-type-options']).toBe('nosniff')
+  expect(headers['x-frame-options']).toBe('DENY')
+  expect(headers['referrer-policy']).toBe('strict-origin-when-cross-origin')
+  expect(headers['permissions-policy']).toContain('camera=()')
+  expect(headers['cross-origin-opener-policy']).toBe('same-origin')
+
+  const csp = headers['content-security-policy'] ?? ''
+  expect(csp).toContain("frame-ancestors 'none'")
+  expect(csp).toContain("object-src 'none'")
+  expect(csp).toContain("base-uri 'self'")
+  expect(csp).toMatch(/script-src [^;]*'nonce-[^']+'/)
+  expect(csp).not.toContain("'unsafe-eval'")
+  // HSTS is for HTTPS only, and the suite runs over plain HTTP.
+  expect(headers['strict-transport-security']).toBeUndefined()
+
+  // The nonce-based policy must not block Next's own bundles: hydration is what makes the
+  // theme toggle work, and the pre-paint inline script is what sets `data-theme`.
+  await page.getByRole('button', { name: /^다크$|^Dark$/ }).click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+  expect(problems, 'console errors (a blocked script shows up here)').toEqual([])
+})
+
 test('the skip link is the first thing a keyboard reaches', async ({ page }) => {
   await page.goto('/')
   await page.keyboard.press('Tab')

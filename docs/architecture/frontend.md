@@ -158,6 +158,28 @@ API는 **Markdown 원문**을 준다(`GET /api/v1/lessons/{id}` → `body`, `stu
 - `study_method`는 같은 파이프라인으로 렌더해 레슨 상단 강조 카드에 넣는다(Figma `11-307`의 "이 단계 공부법").
 - 변환 결과는 레슨 ID + 콘텐츠 SHA로 캐시한다(콘텐츠는 재배포 때만 바뀐다).
 
+## 5.1 보안 헤더
+
+API 가 자기 응답에 붙이는 헤더(`api/middleware.py`)는 브라우저가 받는 페이지에는 닿지 않는다
+(nginx 가 `web` 을 직접 서빙한다). 그래서 web 이 자기 몫을 붙인다 — `lib/security-headers.ts` 에
+정의, `middleware.ts` 가 응답에 설정.
+
+- **CSP 는 nonce 기반**이다. `middleware.ts` 가 요청마다 nonce 를 만들어 정책에 넣고 요청 헤더
+  `x-nonce` 로 넘기면, Next 가 자기 스크립트에 붙이고 루트 레이아웃이 직접 쓰는 인라인 스크립트
+  (첫 페인트 전 테마 적용)에 붙인다. `'strict-dynamic'` 이 그 스크립트들이 불러오는 청크를 덮으므로
+  해시 목록을 관리하지 않는다. `'unsafe-eval'` 은 개발 모드에만 들어간다.
+- `style-src` 는 `'unsafe-inline'` 을 유지한다. 진행바 너비가 인라인 `style` 속성이고 Next 가 자기
+  style 태그를 주입한다. 스타일 주입은 코드를 실행하지 못하므로, Next 업그레이드마다 깨지는 해시
+  목록보다 이쪽이 낫다.
+- `img-src` 는 `https:` 를 허용한다. 레슨이 다른 호스트의 그림을 링크할 수 있고, `src` 프로토콜은
+  sanitize 스키마가 이미 http(s) 로 제한한다.
+- **HSTS 는 HTTPS 요청에만** 보낸다(`x-forwarded-proto`). 평문 HTTP 에서는 브라우저가 무시하고,
+  로컬 실행과 E2E 는 일부러 HTTP 다.
+- 상수 헤더(`X-Content-Type-Options` 등)는 `next.config.ts` 의 `headers()` 에도 두어
+  미들웨어 matcher 가 건너뛰는 `_next/static` 까지 덮는다.
+- 회귀 방지: `lib/security-headers.test.ts`(정책 조립)와 smoke e2e(실제 응답 헤더 + nonce CSP 아래
+  하이드레이션이 동작하고 콘솔 에러 0).
+
 ## 6. i18n과 접근성
 
 - `next-intl`. 메시지 `messages/ko.json`, `messages/en.json`. 기본 `ko`.
@@ -185,7 +207,7 @@ API는 **Markdown 원문**을 준다(`GET /api/v1/lessons/{id}` → `body`, `stu
 6. 관리자: ~~사용자·감사~~ 완료 / 콘텐츠·시스템 미구현
 7. 다크 모드·i18n ~~기본~~ 완료 / Lighthouse·부하 테스트 미실행
 
-남은 것: `/admin/content`·`/admin/system`, 보안 헤더(CSP·HSTS 등), Lighthouse·부하 테스트.
+남은 것: `/admin/content`·`/admin/system`, Lighthouse·부하 테스트.
 
 완료된 것 중 설계가 바뀐 것: OIDC 로그인 버튼은 `GET /api/v1/auth/providers`(설정된 제공자
 목록)를 계약에 넣어 해결했고, 퀴즈 해설 Markdown 은 Server Action 이 렌더한 React 트리를

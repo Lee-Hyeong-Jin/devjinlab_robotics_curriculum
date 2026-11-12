@@ -1,10 +1,12 @@
 import type { Metadata, Viewport } from 'next'
+import { headers } from 'next/headers'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages, getTranslations } from 'next-intl/server'
 
 import { SkipLink } from '@/components/SkipLink'
 import { TopNav } from '@/components/TopNav'
 import { THEME_INIT_SCRIPT } from '@/lib/theme'
+import { NONCE_HEADER } from '@/middleware'
 
 import './globals.css'
 
@@ -23,17 +25,21 @@ export const viewport: Viewport = {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [locale, messages, t] = await Promise.all([
+  const [locale, messages, t, requestHeaders] = await Promise.all([
     getLocale(),
     getMessages(),
     getTranslations('app'),
+    headers(),
   ])
+  // Minted per request by `middleware.ts` and named in the CSP; without it this script is
+  // blocked and dark readers get a flash of light.
+  const nonce = requestHeaders.get(NONCE_HEADER) ?? undefined
 
   return (
     <html lang={locale} suppressHydrationWarning>
       <head>
         {/* Apply the stored theme before first paint so dark readers see no flash. */}
-        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        <script nonce={nonce} dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body className="min-h-dvh">
         <NextIntlClientProvider locale={locale} messages={messages}>

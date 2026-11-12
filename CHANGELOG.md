@@ -32,6 +32,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Setting it without SMTP configured refuses to start, since nobody could get past it.
 - `rc api send-test-email <address>`: send one message through the configured SMTP server to
   check the settings. Writes nothing to the database.
+- Web: security headers on every page response — a nonce-based `Content-Security-Policy`
+  (`strict-dynamic`, `frame-ancestors 'none'`, no `unsafe-eval`), `X-Content-Type-Options`,
+  `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy`,
+  and `Strict-Transport-Security` only when the request arrived over HTTPS.
+- `docs/adr/0013-signup-policy.md` (proposed, not implemented): `RC_AUTH_SIGNUP`
+  (`open` | `closed` | `invite`) and how invitations would work.
 - `scripts/ops/deploy_pull.sh`: pull-based continuous deployment for a single host (deploys only commits with a green CI run, backs up first, rolls back on failure).
 
 ### Fixed
