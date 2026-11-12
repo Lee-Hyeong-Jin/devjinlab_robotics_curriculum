@@ -22,7 +22,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 90
   - id: c3-adaptive-control-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 3편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 150
   - id: c3-adaptive-control-problems
@@ -30,7 +30,7 @@ activities:
     title: 문제 세트 (유도 2 · 증명 1 · 계산 1 · 구현 1 · 반례 1 · 논문 1)
     estimated_minutes: 180
   - id: c3-adaptive-control-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — PE 궤적에서만 매개변수가 수렴함을 보임 (R2)
     estimated_minutes: 105
   - id: c3-adaptive-control-quiz
@@ -38,29 +38,27 @@ activities:
     title: 개념 점검 퀴즈
     estimated_minutes: 15
 resources:
-  - title: "Slotine & Li — On the adaptive control of robot manipulators (1987)"
-    url: https://doi.org/10.1177/027836498700600303
-    kind: article
-    note: 필독 1. 이 레슨의 제어기와 Lyapunov 논증의 원전. §2·§3.
-  - title: "Boyd & Sastry — Necessary and sufficient conditions for parameter convergence in adaptive control (1986)"
-    url: https://doi.org/10.1016/0005-1098(86)90002-6
-    kind: article
-    note: 필독 2. 지속 여진이 **필요충분**이라는 결과. Automatica 22(6).
-  - title: "Rohrs, Valavani, Athans & Stein — Robustness of continuous-time adaptive control algorithms in the presence of unmodeled dynamics (1985)"
-    url: https://doi.org/10.1109/TAC.1985.1104070
-    kind: article
-    note: 필독 3. 적응 제어가 불안정해지는 고전 반례. 1985 IEEE T-AC 에 Åström 의 논평이 함께 실렸다.
   - title: "Khalil, Nonlinear Systems (3rd ed., 2002)"
     kind: book
     note: ch.9 (섭동과 평균화), ch.4.8 (비자율계의 비교 함수). PE 논증의 도구가 여기 있다. (공식 URL 미확인)
-  - title: "Cao & Hovakimyan — Design and analysis of a novel L1 adaptive controller, Part II (2006)"
-    url: https://doi.org/10.1109/ACC.2006.1657244
-    kind: article
-    note: 권장. 적응 속도와 강건성을 저역 통과 필터로 분리하는 $L_1$ 적응 제어.
   - title: "Lynch & Park, Modern Robotics"
     url: http://hades.mech.northwestern.edu/index.php/Modern_Robotics
     kind: book
     note: ch.11.4 (적응 제어)와 ch.8.4 (선형 매개변수 구조). 전문 PDF 무료.
+papers:
+  - id: slotine1987-adaptive-manipulator
+    required: true
+    role: seminal
+    note: "§2, §3"
+  - id: boyd1986-pe
+    required: true
+    role: standard
+    note: "§3, §4"
+  - id: rohrs1985-unmodeled-dynamics
+    required: true
+    role: critique
+  - id: cao2006-l1-adaptive
+    role: standard
 ---
 
 # 적응 제어와 지속 여진

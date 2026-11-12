@@ -9,12 +9,6 @@ activities:
   c3-cbf-safety-filter-reproduction: "Reproduction task - a double-integrator safety filter and its feasibility boundary (R2)"
   c3-cbf-safety-filter-quiz: Concept check quiz
 resources:
-  "Ames, Xu, Grizzle & Tabuada — Control barrier function based quadratic programs for safety critical systems (2017)":
-    note: Must-read 1. The original source for the CBF-QP formulation; §II and §III (definitions, forward invariance, the QP).
-  "Ames, Coogan, Egerstedt, Notomista, Sreenath & Tabuada — Control barrier functions: theory and applications (2019)":
-    note: Must-read 2. The map of the field up to 2019 - extended class-K, robust CBFs, applications.
-  "Nguyen & Sreenath — Exponential control barrier functions for enforcing high relative-degree safety-critical constraints (2016)":
-    note: Must-read 3. Handling constraints of relative degree two or more; the source of R3 in this lesson.
   "Khalil, Nonlinear Systems (3rd ed., 2002)":
     note: ch.3.4 (the comparison lemma) - the tool of the R1 proof. (official URL unverified)
   "Boyd & Vandenberghe, Convex Optimization":

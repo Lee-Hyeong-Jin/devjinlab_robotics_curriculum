@@ -9,16 +9,6 @@ activities:
   c3-passivity-impedance-reproduction: "Reproduction task - stability and passivity boundaries of a virtual wall (R2)"
   c3-passivity-impedance-quiz: Concept check quiz
 resources:
-  "Hogan — Impedance control: an approach to manipulation (1985)":
-    note: Must-read 1. The original source for impedance control (Part II); why one controls the *relation* rather than position or force.
-  "Colgate & Hogan — Robust control of dynamically interacting systems (1988)":
-    note: Must-read 2. Coupled stability and port passivity. Int. J. Control 48(1), 1988.
-  "Colgate & Schenkel — Passivity of a class of sampled-data systems: application to haptic interfaces (1997)":
-    note: Must-read 3. The original of the reproduction task - the physical damping a sampled virtual wall needs to stay passive.
-  "Ortega, Spong, Gómez-Estern & Blankenstein — Stabilization of a class of underactuated mechanical systems via interconnection and damping assignment (2002)":
-    note: Recommended. Energy shaping on underactuated systems (IDA-PBC) and the matching equations.
-  "Colgate & Brown — Factors affecting the Z-Width of a haptic display (1994)":
-    note: Recommended. What decides the range of implementable impedances (Z-width) - sampling, quantisation, friction.
   "Lynch & Park, Modern Robotics":
     note: ch.11.6 (impedance control) and ch.8.1 (the passivity structure of Lagrangian dynamics). Free in full.
 quiz:

@@ -23,7 +23,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 90
   - id: c3-contraction-incremental-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 3편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 150
   - id: c3-contraction-incremental-problems
@@ -31,7 +31,7 @@ activities:
     title: 문제 세트 (유도 2 · 계산 1 · 구현 1 · 반례 1 · 논문 1)
     estimated_minutes: 180
   - id: c3-contraction-incremental-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — 수축 계량과 실측 수렴률 비교 (R1)
     estimated_minutes: 105
   - id: c3-contraction-incremental-quiz
@@ -39,25 +39,26 @@ activities:
     title: 개념 점검 퀴즈
     estimated_minutes: 15
 resources:
-  - title: "Lohmiller & Slotine — On contraction analysis for non-linear systems (1998)"
-    url: https://doi.org/10.1016/S0005-1098(98)00019-3
-    kind: article
-    note: 필독 1. 수축 해석의 원전. §2(기본 결과)와 §3(일반화 계량)이 이 레슨의 R1·R2 다.
-  - title: "Manchester & Slotine — Control contraction metrics (2017)"
-    url: https://arxiv.org/abs/1503.03144
-    kind: article
-    note: 필독 2. 제어기 설계를 볼록 문제로 바꾸는 조건. §III·§IV 를 읽는다.
-  - title: "Tsukamoto, Chung & Slotine — Contraction theory for nonlinear stability analysis and learning-based control: a tutorial overview (2021)"
-    url: https://arxiv.org/abs/2110.00675
-    kind: article
-    note: 필독 3. 2021년까지의 지도. 학습 기반 제어와의 접점(§5–6)을 본다. Annual Reviews in Control 52:135-169.
   - title: "Khalil, Nonlinear Systems (3rd ed., 2002)"
     kind: book
     note: ch.9 (비교·섭동 해석)와 ch.3.4 (비교 보조정리). 수축 이론은 다루지 않지만 R2 의 도구가 여기 있다. (공식 URL 미확인)
   - title: "CVXPY"
     url: https://www.cvxpy.org/
-    kind: other
+    kind: code
     note: 재현 과제의 LMI 를 푸는 도구. SCS·Clarabel 중 아무 솔버나 쓴다.
+papers:
+  - id: lohmiller1998-contraction
+    required: true
+    role: seminal
+    note: "§2, §3"
+  - id: manchester2017-ccm
+    required: true
+    role: standard
+    note: "§III, §IV"
+  - id: tsukamoto2021-contraction-tutorial
+    required: true
+    role: survey
+    note: "§2.4, §5-6"
 ---
 
 # 수축 이론과 증분 안정성

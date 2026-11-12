@@ -155,6 +155,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the minimum-intervention QP from the KKT conditions, the exponential CBF chain for a
   relative-degree-two constraint, and a reproduction task that measures how input limits break the
   guarantee (95 of 189 runs saturate at $u_{\max}=2$, worst $h = -0.138$).
+- Module C3 moved onto the schema the paper registry added (AUTHORING §8-1): its 22 papers are
+  registered in `curriculum/robotics-research/papers.yaml` (all with verified URLs), each lesson
+  references them from front-matter `papers[]` with `required`/`role` and a language-neutral
+  locator, the activity kinds `paper` and `reproduction` replace the interim `reading`/`exercise`,
+  tool resources use `kind: code`, and the module level is `연구`.
 
 ### Fixed
 

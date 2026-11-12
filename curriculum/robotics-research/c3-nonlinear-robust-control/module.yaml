@@ -7,9 +7,7 @@ summary: >-
   매개변수를, CBF 안전 필터로 제약을 처리한다. 근거가 되는 대학원 과목은 CMU 16-711 Ch5-6,
   Berkeley C106B W1-4, Stanford CS223A(operational space)이고 교재는 Khalil, Modern Robotics
   ch.11, Murray-Li-Sastry ch.6-7, Tedrake Underactuated Robotics ch.9 다. 설계상 레슨은 6개다.
-# 설계상의 수준은 "연구"(research)다. Level 리터럴에 "연구"가 추가되기 전까지 "고급"으로 둔다
-# (research_notes/연구 트랙 설계/lesson-standard.md §11-4).
-level: 고급
+level: 연구
 lessons:
   - lyapunov-stability
   - feedback-linearization

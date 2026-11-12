@@ -9,18 +9,10 @@ activities:
   c3-adaptive-control-reproduction: "Reproduction task - parameters converge only on a persistently exciting trajectory (R2)"
   c3-adaptive-control-quiz: Concept check quiz
 resources:
-  "Slotine & Li — On the adaptive control of robot manipulators (1987)":
-    note: Must-read 1. The original source for the controller and the Lyapunov argument of this lesson. §2-§3.
-  "Boyd & Sastry — Necessary and sufficient conditions for parameter convergence in adaptive control (1986)":
-    note: Must-read 2. The result that persistent excitation is **necessary and sufficient**. Automatica 22(6).
-  "Rohrs, Valavani, Athans & Stein — Robustness of continuous-time adaptive control algorithms in the presence of unmodeled dynamics (1985)":
-    note: Must-read 3. The classical counterexample where adaptive control goes unstable; Åström's commentary appeared alongside it in the same 1985 issue.
   "Khalil, Nonlinear Systems (3rd ed., 2002)":
     note: >-
       ch.9 (perturbation and averaging) and ch.4.8 (comparison functions for non-autonomous
       systems). The tools of the PE argument are here. (official URL unverified)
-  "Cao & Hovakimyan — Design and analysis of a novel L1 adaptive controller, Part II (2006)":
-    note: Recommended. $L_1$ adaptive control, which separates adaptation speed from robustness with a low-pass filter.
   "Lynch & Park, Modern Robotics":
     note: ch.11.4 (adaptive control) and ch.8.4 (the linear-in-parameter structure). Free in full.
 quiz:

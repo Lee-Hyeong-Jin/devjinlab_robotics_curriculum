@@ -22,7 +22,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 90
   - id: c3-cbf-safety-filter-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 3편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 135
   - id: c3-cbf-safety-filter-problems
@@ -30,7 +30,7 @@ activities:
     title: 문제 세트 (유도 2 · 증명 1 · 계산 1 · 구현 1 · 반례 1)
     estimated_minutes: 150
   - id: c3-cbf-safety-filter-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — 이중 적분기 안전 필터와 실현가능성 경계 (R2)
     estimated_minutes: 90
   - id: c3-cbf-safety-filter-quiz
@@ -38,18 +38,6 @@ activities:
     title: 개념 점검 퀴즈
     estimated_minutes: 15
 resources:
-  - title: "Ames, Xu, Grizzle & Tabuada — Control barrier function based quadratic programs for safety critical systems (2017)"
-    url: https://arxiv.org/abs/1609.06408
-    kind: article
-    note: 필독 1. CBF-QP 정식화의 원전. §II·§III (정의·전진 불변성·QP).
-  - title: "Ames, Coogan, Egerstedt, Notomista, Sreenath & Tabuada — Control barrier functions: theory and applications (2019)"
-    url: https://arxiv.org/abs/1903.11199
-    kind: article
-    note: 필독 2. 2019년까지의 지도. 확장 class-K, 강건 CBF, 응용의 정리.
-  - title: "Nguyen & Sreenath — Exponential control barrier functions for enforcing high relative-degree safety-critical constraints (2016)"
-    url: https://doi.org/10.1109/ACC.2016.7524935
-    kind: article
-    note: 필독 3. 상대 차수가 2 이상인 제약의 처리. 이 레슨 R3 의 원전.
   - title: "Khalil, Nonlinear Systems (3rd ed., 2002)"
     kind: book
     note: ch.3.4 (비교 보조정리) — R1 증명의 도구. (공식 URL 미확인)
@@ -59,8 +47,19 @@ resources:
     note: ch.5 (쌍대성과 KKT) — R2 의 닫힌 해를 유도하는 데 쓴다. 전문 PDF 무료.
   - title: "CVXPY"
     url: https://www.cvxpy.org/
-    kind: other
+    kind: code
     note: 재현 과제에서 닫힌 해를 대조할 QP 솔버. 아무 솔버나 쓴다.
+papers:
+  - id: ames2017-cbf
+    required: true
+    role: seminal
+    note: "§II, §III"
+  - id: ames2019-cbf-survey
+    required: true
+    role: survey
+  - id: nguyen2016-ecbf
+    required: true
+    role: standard
 ---
 
 # CBF·CLF 안전 필터

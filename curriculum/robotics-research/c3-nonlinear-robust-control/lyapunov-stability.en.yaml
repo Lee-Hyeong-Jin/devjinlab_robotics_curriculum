@@ -17,14 +17,6 @@ resources:
     note: >-
       ch.9 (Lyapunov analysis) - the robotics-side entry point to searching for Lyapunov
       functions with SOS. Free in full.
-  "Sontag — Smooth stabilization implies coprime factorization (1989)":
-    note: Must-read 1. The paper where ISS was first defined; read only §I and §III, the definition and the main theorem.
-  "Papachristodoulou & Prajna — On the construction of Lyapunov functions using the sum of squares decomposition (2002)":
-    note: Must-read 2. The standard formulation of searching for a Lyapunov function with SOS.
-  "Topcu, Packard & Seiler — Local stability analysis using simulations and sum-of-squares programming (2008)":
-    note: Must-read 3. The reproduction task is a scaled-down version of this paper's procedure (simulation for the outer bound, SOS for the inner one).
-  "Sontag & Wang — On characterizations of the input-to-state stability property (1995)":
-    note: Recommended. Gives the converse direction, the equivalence of ISS and ISS-Lyapunov functions.
   "CVXPY":
     note: The tool that solves the SDP of the reproduction task. Any solver will do - SCS or Clarabel.
 quiz:

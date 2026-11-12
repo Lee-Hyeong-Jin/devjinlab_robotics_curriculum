@@ -23,7 +23,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 90
   - id: c3-feedback-linearization-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 3편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 150
   - id: c3-feedback-linearization-problems
@@ -31,7 +31,7 @@ activities:
     title: 문제 세트 (유도 2 · 증명 1 · 계산 2 · 구현 1 · 반례 1)
     estimated_minutes: 180
   - id: c3-feedback-linearization-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — 사인파 조향으로 주차 (R2)
     estimated_minutes: 105
   - id: c3-feedback-linearization-quiz
@@ -45,22 +45,21 @@ resources:
   - title: "Murray, Li & Sastry, A Mathematical Introduction to Robotic Manipulation"
     kind: book
     note: ch.7 (비홀로노믹 운동 계획) — 연쇄형·사인파 조향·Chow 정리의 로보틱스 쪽 표준 서술. (공식 URL 미확인)
-  - title: "Murray & Sastry — Nonholonomic motion planning: steering using sinusoids (1993)"
-    url: https://doi.org/10.1109/9.277235
-    kind: article
-    note: 필독 1. 연쇄형과 사인파 조향의 원전. §II·§III 가 재현 과제의 알고리즘이다.
-  - title: "Hauser, Sastry & Meyer — Nonlinear control design for slightly non-minimum phase systems (1992)"
-    url: https://doi.org/10.1016/0005-1098(92)90029-F
-    kind: article
-    note: 필독 2. 영역 동역학이 불안정할 때 정확 선형화를 포기하고 무엇을 하는지.
-  - title: "Devasia, Chen & Paden — Nonlinear inversion-based output tracking (1996)"
-    url: https://doi.org/10.1109/9.508898
-    kind: article
-    note: 필독 3. 비최소위상 계에서 안정 역변환(stable inversion)으로 정확 추적을 복구하는 방법.
   - title: "Tedrake, Underactuated Robotics"
     url: https://underactuated.csail.mit.edu/
     kind: book
     note: 권장. 부분 피드백 선형화(collocated/non-collocated)와 언더액추에이티드 계에서의 한계.
+papers:
+  - id: murray1993-steering-sinusoids
+    required: true
+    role: seminal
+    note: "§II, §III"
+  - id: hauser1992-nonminimum-phase
+    required: true
+    role: standard
+  - id: devasia1996-inversion
+    required: true
+    role: standard
 ---
 
 # 피드백 선형화와 가제어성

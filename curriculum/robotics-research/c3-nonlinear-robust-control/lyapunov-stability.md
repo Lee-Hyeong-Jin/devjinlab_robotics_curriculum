@@ -22,7 +22,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 90
   - id: c3-lyapunov-stability-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 3편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 150
   - id: c3-lyapunov-stability-problems
@@ -30,7 +30,7 @@ activities:
     title: 문제 세트 (유도 2 · 증명 1 · 계산 1 · 구현 1 · 반례 1 · 논문 1)
     estimated_minutes: 180
   - id: c3-lyapunov-stability-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — SOS 로 흡인 영역 인증 (R1)
     estimated_minutes: 105
   - id: c3-lyapunov-stability-quiz
@@ -45,26 +45,23 @@ resources:
     url: https://underactuated.csail.mit.edu/
     kind: book
     note: ch.9 (Lyapunov analysis) — SOS 로 Lyapunov 함수를 찾는 절차의 로보틱스 쪽 입구. 전문 무료.
-  - title: "Sontag — Smooth stabilization implies coprime factorization (1989)"
-    url: https://doi.org/10.1109/9.28018
-    kind: article
-    note: 필독 1. ISS 가 처음 정의된 논문. §I·§III 의 정의와 주 정리만 본다.
-  - title: "Papachristodoulou & Prajna — On the construction of Lyapunov functions using the sum of squares decomposition (2002)"
-    url: https://doi.org/10.1109/CDC.2002.1184414
-    kind: article
-    note: 필독 2. SOS 로 Lyapunov 함수를 탐색하는 표준 정식화.
-  - title: "Topcu, Packard & Seiler — Local stability analysis using simulations and sum-of-squares programming (2008)"
-    url: https://doi.org/10.1016/j.automatica.2008.03.010
-    kind: article
-    note: 필독 3. 재현 과제가 이 논문의 절차(시뮬레이션으로 상한, SOS 로 하한)를 축소한 것이다.
-  - title: "Sontag & Wang — On characterizations of the input-to-state stability property (1995)"
-    url: https://doi.org/10.1016/0167-6911(94)00050-6
-    kind: article
-    note: 권장. ISS 와 ISS-Lyapunov 함수의 동등성(역방향)을 준다.
   - title: "CVXPY"
     url: https://www.cvxpy.org/
-    kind: other
+    kind: code
     note: 재현 과제의 SDP 를 푸는 도구. SCS·Clarabel 중 아무 솔버나 쓴다.
+papers:
+  - id: sontag1989-coprime-factorization
+    required: true
+    role: seminal
+    note: "§I, §III"
+  - id: papachristodoulou2002-sos
+    required: true
+    role: standard
+  - id: topcu2008-local-stability-sos
+    required: true
+    role: standard
+  - id: sontag1995-iss-characterizations
+    role: standard
 ---
 
 # Lyapunov 안정성과 ISS

@@ -17,12 +17,6 @@ resources:
     note: >-
       ch.7 (nonholonomic motion planning) - the standard robotics treatment of the chained form,
       steering with sinusoids and Chow's theorem. (official URL unverified)
-  "Murray & Sastry — Nonholonomic motion planning: steering using sinusoids (1993)":
-    note: Must-read 1. The original source for the chained form and sinusoidal steering; §II and §III are the algorithm of the reproduction task.
-  "Hauser, Sastry & Meyer — Nonlinear control design for slightly non-minimum phase systems (1992)":
-    note: Must-read 2. What to do instead of exact linearisation when the zero dynamics are unstable.
-  "Devasia, Chen & Paden — Nonlinear inversion-based output tracking (1996)":
-    note: Must-read 3. Recovering exact tracking on non-minimum-phase systems with stable inversion.
   "Tedrake, Underactuated Robotics":
     note: Recommended. Partial feedback linearisation (collocated and non-collocated) and its limits on underactuated systems.
 quiz:

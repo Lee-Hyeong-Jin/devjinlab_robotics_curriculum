@@ -22,7 +22,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 90
   - id: c3-passivity-impedance-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 3편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 150
   - id: c3-passivity-impedance-problems
@@ -30,7 +30,7 @@ activities:
     title: 문제 세트 (유도 2 · 증명 1 · 계산 2 · 구현 1 · 반례 1)
     estimated_minutes: 180
   - id: c3-passivity-impedance-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — 가상 벽의 안정 경계와 수동성 경계 (R2)
     estimated_minutes: 105
   - id: c3-passivity-impedance-quiz
@@ -38,30 +38,25 @@ activities:
     title: 개념 점검 퀴즈
     estimated_minutes: 15
 resources:
-  - title: "Hogan — Impedance control: an approach to manipulation (1985)"
-    url: https://doi.org/10.1115/1.3140713
-    kind: article
-    note: 필독 1. 임피던스 제어의 원전(Part II). 왜 위치도 힘도 아니라 **관계**를 제어하는가.
-  - title: "Colgate & Hogan — Robust control of dynamically interacting systems (1988)"
-    url: https://doi.org/10.1080/00207178808906161
-    kind: article
-    note: 필독 2. 결합 안정성(coupled stability)과 포트 수동성. Int. J. Control 48(1), 1988.
-  - title: "Colgate & Schenkel — Passivity of a class of sampled-data systems: application to haptic interfaces (1997)"
-    url: https://doi.org/10.1002/(SICI)1097-4563(199701)14:1<37::AID-ROB4>3.0.CO;2-V
-    kind: article
-    note: 필독 3. 재현 과제의 원형. 샘플링된 가상 벽이 수동이기 위한 물리 감쇠 조건.
-  - title: "Ortega, Spong, Gómez-Estern & Blankenstein — Stabilization of a class of underactuated mechanical systems via interconnection and damping assignment (2002)"
-    url: https://doi.org/10.1109/TAC.2002.800770
-    kind: article
-    note: 권장. 언더액추에이티드 계의 에너지 성형(IDA-PBC)과 정합 방정식(matching equations).
-  - title: "Colgate & Brown — Factors affecting the Z-Width of a haptic display (1994)"
-    url: https://doi.org/10.1109/ROBOT.1994.351077
-    kind: article
-    note: 권장. 구현 가능한 임피던스 범위(Z-width)를 결정하는 요소 — 샘플링·양자화·마찰.
   - title: "Lynch & Park, Modern Robotics"
     url: http://hades.mech.northwestern.edu/index.php/Modern_Robotics
     kind: book
     note: ch.11.6 (임피던스 제어)와 ch.8.1 (라그랑주 동역학의 수동성 구조). 전문 PDF 무료.
+papers:
+  - id: hogan1985-impedance
+    required: true
+    role: seminal
+  - id: colgate1988-coupled-stability
+    required: true
+    role: seminal
+    note: "§3"
+  - id: colgate1997-sampled-passivity
+    required: true
+    role: standard
+  - id: ortega2002-ida-pbc
+    role: standard
+  - id: colgate1994-zwidth
+    role: standard
 ---
 
 # 수동성·에너지 성형과 임피던스 제어
