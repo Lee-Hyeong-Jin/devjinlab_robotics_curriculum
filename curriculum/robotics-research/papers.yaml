@@ -109,6 +109,15 @@ papers:
     verified: true
     role: standard
 
+  - id: husty2007-6r-ik
+    title: "A new and efficient algorithm for the inverse kinematics of a general serial 6R manipulator"
+    authors: ["M. L. Husty", "M. Pfurner", "H.-P. Schröcker"]
+    year: 2007
+    venue: "Mechanism and Machine Theory"
+    url: "https://doi.org/10.1016/j.mechmachtheory.2006.02.001"
+    note: "2005 DETC 학회판(10.1115/DETC2005-84745)은 쓰지 않는다"
+    verified: true
+    role: standard
   # ── C2 다물체 동역학 ──────────────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
