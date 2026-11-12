@@ -13,3 +13,4 @@ summary: >-
 level: 고급
 lessons:
   - spatial-vector-algebra
+  - rnea-inverse-dynamics

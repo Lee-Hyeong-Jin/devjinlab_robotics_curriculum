@@ -1,0 +1,95 @@
+# English text of the structured fields of rnea-inverse-dynamics.md (activity titles,
+# resource notes, quiz). The prose lives in rnea-inverse-dynamics.en.md.
+id: c2-rnea-inverse-dynamics
+lang: en
+activities:
+  c2-rnea-inverse-dynamics-reading: Read the lesson and follow the derivations
+  c2-rnea-inverse-dynamics-papers: Read the two must-read papers + a one-page note each
+  c2-rnea-inverse-dynamics-problems: "Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 paper)"
+  c2-rnea-inverse-dynamics-reproduction: "Reproduction task - RNEA against the Euler-Lagrange equations (R1)"
+  c2-rnea-inverse-dynamics-quiz: Concept check quiz
+resources:
+  "Featherstone, Rigid Body Dynamics Algorithms (2008)":
+    note: ch.5 (Inverse Dynamics). The notation of the recursions and the cost tables (§5.3) are the reference for this lesson.
+  "Lynch & Park, Modern Robotics":
+    note: ch.8.3 (Newton-Euler Inverse Dynamics). The same algorithm in $(\omega, v)$ twist notation. The full PDF is free.
+  "Luh, Walker & Paul — On-Line Computational Scheme for Mechanical Manipulators (1980)":
+    note: Must-read 1. The original source for RNEA. Read the "on-line computation" motivation and the $O(n)$ claim in the hardware context of the time.
+  "Featherstone & Orin — Robot dynamics: equations and algorithms (2000, ICRA)":
+    note: Must-read 2. A map of the inverse- and forward-dynamics algorithms with their costs. Places RNEA in the same frame as CRBA and ABA.
+  "Featherstone — Spatial vector and rigid-body dynamics software":
+    note: Recommended. The author's `ID` (RNEA) implementation, for the optional cross-check of the reproduction task (Octave).
+quiz:
+  - id: q1
+    prompt: Where does the last term $v_i \times v_{J_i}$ of the acceleration recursion (3) come from?
+    choices:
+      - It models joint friction
+      - Because the parent-to-child transform $^{i}X_{\lambda(i)}$ varies in time
+      - Because gravity is handled as $a_0 = -a_g$
+      - Because spatial inertia is not symmetric
+    explanation: >-
+      Substituting $\frac{d}{dt}{}^{i}X_{\lambda(i)} = -(v_{J_i}\times)\,{}^{i}X_{\lambda(i)}$ into
+      (1) leaves $-(v_{J_i}\times)(v_i - v_{J_i}) = v_i \times v_{J_i}$. The term is independent of
+      $\ddot{q}$ and quadratic in $\dot{q}$, and it is the whole of the Coriolis and centrifugal
+      torque. Omit it and only tests with $\dot{q} = 0$ pass.
+    concept:
+      front: Where the bias term $v_i \times v_{J_i}$ of (3) comes from
+      back: >-
+        The time derivative of the transform $^{i}X_{\lambda(i)}$. Independent of $\ddot{q}$,
+        quadratic in $\dot{q}$ - the whole of the Coriolis terms
+  - id: q2
+    prompt: Which operator lifts a child's force $f_j$ into its parent's coordinates in the backward recursion?
+    choices:
+      - $^{\lambda(j)}X_j$ (the motion transform)
+      - $({}^{j}X_{\lambda(j)})^{\top}$ (= the force transform $^{\lambda(j)}X^{*}_j$)
+      - $({}^{\lambda(j)}X_j)^{-1}$
+      - $^{j}X_{\lambda(j)}$
+    explanation: >-
+      $f_j$ is an element of force space $F^6$, so it needs the force transform
+      $^{\lambda(j)}X^{*}_j$, which by (2) of the previous lesson equals
+      $({}^{j}X_{\lambda(j)})^{\top}$. That is the `Xup[j].T @ f[j]` of the code - no inverse is
+      computed. Using the motion transform goes wrong the moment translation is involved.
+    concept:
+      front: The transform in the backward force recursion
+      back: $^{\lambda(j)}X^{*}_j = ({}^{j}X_{\lambda(j)})^{\top}$ - one transpose, no inverse
+  - id: q3
+    prompt: What do you get by calling RNEA with $\dot{q} = 0$, gravity off and $\ddot{q} = e_k$? (One word or symbol.)
+    answers: ["the k-th column of M", "column k of M", "M e_k", "Me_k", "mass matrix column", "a column of the mass matrix"]
+    explanation: >-
+      With $\dot{q} = 0$ every $v_j = 0$, so the bias terms vanish and $a_j = J_j\ddot{q}$.
+      Substituting into (7) gives $\tau = (\sum_j J_j^{\top}I_jJ_j)e_k = M(q)e_k$. So $n$ calls to
+      RNEA give the whole of $M$ in $\Theta(n^2)$ - and CRBA achieves the same order with a smaller
+      constant.
+    concept:
+      front: Extracting the mass matrix with RNEA
+      back: $\dot{q}=0$, no gravity, $\ddot{q}=e_k$ → $M(q)e_k$. $n$ calls = $\Theta(n^2)$
+  - id: q4
+    prompt: The spatial Jacobian satisfies $\partial_{q_l} J_{\cdot k} = \partial_{q_k} J_{\cdot l}$ (that is, it is integrable).
+    explanation: >-
+      (4) says that symmetry is broken by exactly the Lie bracket:
+      $\partial_{q_l}J_{i,k} - \partial_{q_k}J_{i,l} = (J_{i,k}\times)J_{i,l}$. Had it been
+      symmetric, the Coriolis terms could have been removed by a change of coordinates alone.
+      Checking (4) by finite differences at a random 7-DOF configuration confirms it at the
+      $10^{-10}$ level.
+    concept:
+      front: Non-integrability of the spatial Jacobian
+      back: >-
+        $\partial_{q_l}J_{\cdot k} - \partial_{q_k}J_{\cdot l} = [J_{\cdot k}, J_{\cdot l}] \ne 0$ -
+        the origin of the Coriolis terms
+  - id: q5
+    prompt: Select every fact that the conclusion "RNEA is $\Theta(n)$" **actually uses**.
+    choices:
+      - The per-body operations are of fixed size $6\times6$, independent of $n$
+      - Numbering with $\lambda(i) < i$ makes the forward and backward passes plain loops
+      - The mass matrix $M$ is never formed explicitly
+      - All joints are revolute
+    explanation: >-
+      Constant cost per body plus two visits per body gives the upper bound $O(n)$. Not forming $M$
+      or $C$ is the crux: forming either costs $\Theta(n^2)$ or more on its own. The joint type
+      affects only the constant, not the order - multi-DOF joints keep the order at
+      $\Theta(\sum_i n_i)$.
+    concept:
+      front: What makes RNEA $\Theta(n)$
+      back: >-
+        Constant cost per body, two visits, and never forming $M$ or $C$. Joint type changes only
+        the constant
