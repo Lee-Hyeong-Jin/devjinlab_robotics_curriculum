@@ -17,6 +17,7 @@ from robotics_curriculum.api.schemas import (
     LessonSummary,
     Module,
     ModuleSummary,
+    Paper,
     Resource,
     ResourceRef,
     Roadmap,
@@ -25,6 +26,7 @@ from robotics_curriculum.api.schemas import (
 )
 from robotics_curriculum.content import Course as CourseModel
 from robotics_curriculum.content import ResourceKind, level_label
+from robotics_curriculum.content.papers import paper_index, resolve_lesson_papers
 from robotics_curriculum.content.search import search
 from robotics_curriculum.content.sections import extract_study_guide
 
@@ -89,6 +91,7 @@ def get_lesson(lesson_id: str, index: Index) -> Lesson:
         objectives=text.objectives,
         activities=text.activities,
         resources=[Resource.model_validate(r.model_dump()) for r in text.resources],
+        papers=[Paper.of(row) for row in resolve_lesson_papers(lesson, paper_index(entry.course))],
         body=text.body,
         study_method=extract_study_guide(text.body, text.lang),
         prev_lesson_id=order[pos - 1] if pos > 0 else None,

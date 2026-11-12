@@ -11,14 +11,8 @@ activities:
 resources:
   "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
     note: ch.7.1-7.3. Closed forms of the left and right Jacobians and their inverses, and the left/right representations of uncertainty.
-  "Solà, Deray & Atchuthan — A micro Lie theory for state estimation in robotics (2018)":
-    note: Must-read 1, sections 2-4. The standard reference for this lesson's notation and Jacobian conventions.
-  "Forster, Carlone, Dellaert & Scaramuzza — On-manifold preintegration (2017)":
-    note: Must-read 2, sections II-III and the appendix. Where the right Jacobian is actually used, in bias re-linearisation and uncertainty propagation.
   "Lynch & Park, Modern Robotics":
     note: ch.3.3 and appendix B. The $G(\theta)$ of the SE(3) exponential comes from the same integral as the left Jacobian.
-  "Absil, Mahony & Sepulchre, Optimization Algorithms on Matrix Manifolds (2008)":
-    note: Recommended. Chapter 4 on Riemannian gradient descent and its convergence; the textbook for the next lesson.
 quiz:
   - id: q1
     prompt: >-

@@ -9,6 +9,7 @@ import { Chip } from '@/components/Chip'
 import { LessonRow } from '@/components/LessonRow'
 import { MarkdownBody } from '@/components/MarkdownBody'
 import { PageHeader } from '@/components/PageHeader'
+import { PaperList } from '@/components/PaperList'
 import { ResourceRow } from '@/components/ResourceRow'
 import { StudyPanel } from '@/components/StudyPanel'
 import { isNotFound } from '@/lib/api/errors'
@@ -52,12 +53,13 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
  */
 export default async function LessonPage({ params }: Params) {
   const { moduleId, lessonId } = await params
-  const [t, tState, tKind, tActivity, tQuiz, locale] = await Promise.all([
+  const [t, tState, tKind, tActivity, tQuiz, tPaper, locale] = await Promise.all([
     getTranslations('lesson'),
     getTranslations('state'),
     getTranslations('kind'),
     getTranslations('activityKind'),
     getTranslations('quiz'),
+    getTranslations('paper'),
     getLocale(),
   ])
   const [lesson, progress, mod, status] = await Promise.all([
@@ -270,6 +272,15 @@ export default async function LessonPage({ params }: Params) {
                   </li>
                 ))}
               </ul>
+            </Card>
+          ) : null}
+
+          {lesson.papers && lesson.papers.length > 0 ? (
+            <Card as="section" aria-labelledby="lesson-papers-heading">
+              <h2 id="lesson-papers-heading" className="text-primary mb-2 text-sm font-semibold">
+                {tPaper('heading')}
+              </h2>
+              <PaperList papers={lesson.papers} />
             </Card>
           ) : null}
 

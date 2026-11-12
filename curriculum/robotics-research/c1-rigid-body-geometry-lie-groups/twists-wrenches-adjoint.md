@@ -21,7 +21,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 80
   - id: c1-twists-wrenches-adjoint-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 3편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 110
   - id: c1-twists-wrenches-adjoint-problems
@@ -29,7 +29,7 @@ activities:
     title: 문제 세트 (유도 2 · 증명 1 · 계산 1 · 구현 1 · 반례 1)
     estimated_minutes: 130
   - id: c1-twists-wrenches-adjoint-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — Ad·Ad^T·나선 분해 수치 검증 (R1)
     estimated_minutes: 80
   - id: c1-twists-wrenches-adjoint-quiz
@@ -48,18 +48,16 @@ resources:
     url: https://royfeatherstone.org/
     kind: book
     note: ch.2 (Spatial Vector Algebra). 같은 이론을 다른 표기로 전개한다(순서는 이 코스와 같은 각 성분 먼저).
-  - title: "Featherstone — A beginner's guide to 6-D vectors, part 1 (2010)"
-    url: https://doi.org/10.1109/MRA.2010.937853
-    kind: article
-    note: 필독 1. 6D 벡터의 운동·힘 쌍대성을 규약부터 설명한다.
-  - title: "Featherstone — A beginner's guide to 6-D vectors, part 2 (2010)"
-    url: https://doi.org/10.1109/MRA.2010.939560
-    kind: article
-    note: 필독 2. 좌표 변환과 알고리즘에서의 사용.
-  - title: "Brockett — Robotic manipulators and the product of exponentials formula (1984)"
-    url: https://doi.org/10.1007/BFb0031048
-    kind: article
-    note: 필독 3. 트위스트를 지수 사상으로 엮는 원전. 다음 레슨(PoE)의 출발점.
+papers:
+  - id: featherstone2010-6d-vectors-part1
+    required: true
+    role: standard
+  - id: featherstone2010-6d-vectors-part2
+    required: true
+    role: standard
+  - id: brockett1984-poe
+    required: true
+    role: seminal
 ---
 
 # 트위스트·렌치와 수반 표현
