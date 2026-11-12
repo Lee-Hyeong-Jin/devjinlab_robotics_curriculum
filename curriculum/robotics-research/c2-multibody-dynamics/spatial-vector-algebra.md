@@ -22,7 +22,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 90
   - id: c2-spatial-vector-algebra-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 2편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 120
   - id: c2-spatial-vector-algebra-problems
@@ -30,7 +30,7 @@ activities:
     title: 문제 세트 (유도 2 · 증명 1 · 계산 1 · 구현 1 · 반례 1)
     estimated_minutes: 120
   - id: c2-spatial-vector-algebra-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — 공간 관성 변환과 편향 항 검증 (R1)
     estimated_minutes: 75
   - id: c2-spatial-vector-algebra-quiz
@@ -46,22 +46,22 @@ resources:
     url: http://hades.mech.northwestern.edu/index.php/Modern_Robotics
     kind: book
     note: ch.8.1-8.2 (Lagrangian/Newton-Euler 동역학). 같은 결과를 트위스트·렌치 표기로 본다. 전문 PDF 무료.
-  - title: "Featherstone — A Beginner's Guide to 6-D Vectors (Part 1) (2010)"
-    url: https://doi.org/10.1109/MRA.2010.937853
-    kind: article
-    note: 필독 1. 6D 벡터가 왜 두 개의 다른 공간인지, 좌표계 없이 쓰는 법.
-  - title: "Featherstone — A Beginner's Guide to 6-D Vectors (Part 2) (2010)"
-    url: https://doi.org/10.1109/MRA.2010.939560
-    kind: article
-    note: 필독 2. 공간 관성·외적·미분 규칙과 알고리즘으로의 연결.
-  - title: "Featherstone — Plücker basis vectors (2006, ICRA)"
-    url: https://doi.org/10.1109/ROBOT.2006.1641982
-    kind: article
-    note: 권장. 쌍대 기저를 명시적으로 쓰는 방식 — 좌표 변환 규칙이 왜 두 종류인지가 또렷해진다.
   - title: "Featherstone — Spatial vector and rigid-body dynamics software"
     url: https://royfeatherstone.org/spatial/
-    kind: other
-    note: 권장. 저자가 공개한 공간 벡터 구현(Matlab/Octave). 재현 과제의 교차 검증용.
+    kind: code
+    note: 권장. 저자가 공개한 공간 벡터 구현(Matlab/Octave). 재현 과제의 선택 교차 검증용.
+papers:
+  - id: featherstone2010-6d-vectors-part1
+    role: standard
+    required: true
+    note: 운동 공간과 힘 공간을 두 개의 다른 벡터공간으로 세우는 절, Plücker 좌표를 도입하는 절.
+  - id: featherstone2010-6d-vectors-part2
+    role: standard
+    required: true
+    note: 공간 관성·외적·미분 규칙을 세우는 절과 동역학 알고리즘으로 잇는 마지막 절. R2·R3·R4 와 1:1 대응.
+  - id: featherstone2006-plucker-basis
+    role: standard
+    note: 권장. 쌍대 기저를 명시적으로 써서 좌표 변환 규칙이 왜 두 종류인지 보인다.
 ---
 
 # 공간 벡터 대수

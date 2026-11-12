@@ -13,10 +13,6 @@ resources:
     note: ch.5 (Inverse Dynamics). The notation of the recursions and the cost tables (§5.3) are the reference for this lesson.
   "Lynch & Park, Modern Robotics":
     note: ch.8.3 (Newton-Euler Inverse Dynamics). The same algorithm in $(\omega, v)$ twist notation. The full PDF is free.
-  "Luh, Walker & Paul — On-Line Computational Scheme for Mechanical Manipulators (1980)":
-    note: Must-read 1. The original source for RNEA. Read the "on-line computation" motivation and the $O(n)$ claim in the hardware context of the time.
-  "Featherstone & Orin — Robot dynamics: equations and algorithms (2000, ICRA)":
-    note: Must-read 2. A map of the inverse- and forward-dynamics algorithms with their costs. Places RNEA in the same frame as CRBA and ABA.
   "Featherstone — Spatial vector and rigid-body dynamics software":
     note: Recommended. The author's `ID` (RNEA) implementation, for the optional cross-check of the reproduction task (Octave).
 quiz:

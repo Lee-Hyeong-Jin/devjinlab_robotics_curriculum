@@ -21,7 +21,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 90
   - id: c2-rnea-inverse-dynamics-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 2편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 120
   - id: c2-rnea-inverse-dynamics-problems
@@ -29,7 +29,7 @@ activities:
     title: 문제 세트 (유도 2 · 증명 1 · 계산 1 · 구현 1 · 논문 1)
     estimated_minutes: 150
   - id: c2-rnea-inverse-dynamics-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — RNEA 와 Euler–Lagrange 의 일치 (R1)
     estimated_minutes: 105
   - id: c2-rnea-inverse-dynamics-quiz
@@ -45,18 +45,19 @@ resources:
     url: http://hades.mech.northwestern.edu/index.php/Modern_Robotics
     kind: book
     note: ch.8.3 (Newton–Euler Inverse Dynamics). 같은 알고리즘을 $(\omega, v)$ 트위스트 표기로 본다. 전문 PDF 무료.
-  - title: "Luh, Walker & Paul — On-Line Computational Scheme for Mechanical Manipulators (1980)"
-    url: https://doi.org/10.1115/1.3149599
-    kind: article
-    note: 필독 1. RNEA 의 원전. "온라인 계산"이라는 동기와 $O(n)$ 주장을 당시 하드웨어 맥락에서 읽는다.
-  - title: "Featherstone & Orin — Robot dynamics: equations and algorithms (2000, ICRA)"
-    url: https://doi.org/10.1109/ROBOT.2000.844153
-    kind: article
-    note: 필독 2. 역·순동역학 알고리즘의 지형도와 비용 비교. RNEA 를 CRBA·ABA 와 같은 틀에서 본다.
   - title: "Featherstone — Spatial vector and rigid-body dynamics software"
     url: https://royfeatherstone.org/spatial/
-    kind: other
+    kind: code
     note: 권장. 저자의 `ID`(RNEA) 구현. 재현 과제의 선택 교차 검증용(Octave).
+papers:
+  - id: luh1980-rnea
+    role: seminal
+    required: true
+    note: 전진 운동학 재귀와 후진 힘 재귀를 세우는 절, 그리고 비용을 논하는 절. (1)(3)(5)와 1:1 대응.
+  - id: featherstone2000-dynamics-equations-algorithms
+    role: survey
+    required: true
+    note: 역·순동역학·질량행렬 알고리즘을 한 틀에서 비교하는 절. R5 와 다음 레슨의 복잡도 지형.
 ---
 
 # 재귀 Newton–Euler (RNEA)

@@ -13,12 +13,6 @@ resources:
     note: ch.2 (Spatial Vector Algebra). The primary textbook for this lesson; the notation of the module follows it.
   "Lynch & Park, Modern Robotics":
     note: ch.8.1-8.2 (Lagrangian and Newton-Euler dynamics). The same results in twist and wrench notation. The full PDF is free.
-  "Featherstone — A Beginner's Guide to 6-D Vectors (Part 1) (2010)":
-    note: Must-read 1. Why a 6-D vector belongs to one of two different spaces, and how to write it without coordinates.
-  "Featherstone — A Beginner's Guide to 6-D Vectors (Part 2) (2010)":
-    note: Must-read 2. Spatial inertia, the cross products and the differentiation rules, and how they connect to the algorithms.
-  "Featherstone — Plücker basis vectors (2006, ICRA)":
-    note: Recommended. Writing the dual basis out explicitly makes it obvious why there are two kinds of coordinate transform.
   "Featherstone — Spatial vector and rigid-body dynamics software":
     note: Recommended. The author's published spatial vector implementation (Matlab/Octave), useful for cross-checking the reproduction task.
 quiz:

@@ -1,0 +1,60 @@
+# 연구원 트랙 논문 레지스트리 (ADR 0014).
+#
+# 이 파일은 **서지**다 — 누가 무엇을 어디에 썼고 링크를 확인했는지. 어떤 레슨이 어떤 논문을
+# 어떻게 읽히는지는 레슨 front matter 의 `papers[]` 가 원본이다.
+#
+# 규칙
+#   - 모듈 저자는 **자기 모듈 블록 안에만** 추가한다(`# ── C2 …` 주석 구간).
+#   - 같은 논문을 다른 모듈이 이미 올렸으면 **id 를 재사용**하고 새 항목을 만들지 않는다.
+#   - 추가 전에 id 중복과 DOI 중복을 확인한다: `grep -c '^  - id:' papers.yaml`.
+#   - `verified: true` 는 URL 을 실제로 열거나 Crossref·arXiv API 로 제목·제1저자·연도를
+#     대조했다는 뜻이다. 확인하지 못했으면 false 로 두고 본문에 "(미확인)"을 적는다.
+#   - 설계 단계의 전체 서지(모든 모듈, 155편)는 `research_notes/연구 트랙 설계/papers.yaml` 에 있다.
+#     여기에는 **실제로 레슨이 참조하는 것만** 옮긴다.
+
+papers:
+  # ── C2 다물체 동역학 ─────────────────────────────────────────────────
+  - id: featherstone2010-6d-vectors-part1
+    title: "A beginner's guide to 6-D vectors (part 1)"
+    authors: ["R. Featherstone"]
+    year: 2010
+    venue: "IEEE Robotics & Automation Magazine 17(3)"
+    url: "https://doi.org/10.1109/MRA.2010.937853"
+    verified: true
+    role: standard
+  - id: featherstone2010-6d-vectors-part2
+    title: "A beginner's guide to 6-D vectors (part 2)"
+    authors: ["R. Featherstone"]
+    year: 2010
+    venue: "IEEE Robotics & Automation Magazine 17(4)"
+    url: "https://doi.org/10.1109/MRA.2010.939560"
+    note: "Crossref 에 [Tutorial] 로 표기됨"
+    verified: true
+    role: standard
+  - id: featherstone2006-plucker-basis
+    title: "Plücker basis vectors"
+    authors: ["R. Featherstone"]
+    year: 2006
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ROBOT.2006.1641982"
+    note: "Crossref 에 게재 연도가 비어 있다(ICRA 2006 프로시딩)"
+    verified: true
+    role: standard
+  - id: luh1980-rnea
+    title: "On-line computational scheme for mechanical manipulators"
+    authors: ["J. Y. S. Luh", "M. W. Walker", "R. P. C. Paul"]
+    year: 1980
+    venue: "ASME J. Dynamic Systems, Measurement, and Control"
+    url: "https://doi.org/10.1115/1.3149599"
+    note: "제1저자만 레코드로 확인. 정오표(10.1115/1.3139629)는 쓰지 않는다"
+    verified: true
+    role: seminal
+  - id: featherstone2000-dynamics-equations-algorithms
+    title: "Robot dynamics: equations and algorithms"
+    authors: ["R. Featherstone", "D. Orin"]
+    year: 2000
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ROBOT.2000.844153"
+    note: "Crossref 에 게재 연도가 비어 있다(ICRA 2000 프로시딩, San Francisco)"
+    verified: true
+    role: survey
