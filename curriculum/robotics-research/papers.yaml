@@ -188,6 +188,33 @@ papers:
     verified: true
     role: critique
     note: "how little optimal triangulation actually buys"
+  - id: sarlin2020-superglue
+    title: "SuperGlue: learning feature matching with graph neural networks"
+    authors: ["P.-E. Sarlin", "D. DeTone", "T. Malisiewicz", "A. Rabinovich"]
+    year: 2020
+    venue: "CVPR"
+    url: "https://arxiv.org/abs/1911.11763"
+    verified: true
+    role: standard
+    note: "arXiv v1 2019-11-26, CVPR 2020; the matching layer is an entropic optimal transport solver"
+  - id: teed2021-droid-slam
+    title: "DROID-SLAM: deep visual SLAM for monocular, stereo, and RGB-D cameras"
+    authors: ["Z. Teed", "J. Deng"]
+    year: 2021
+    venue: "NeurIPS"
+    url: "https://arxiv.org/abs/2108.10869"
+    verified: true
+    role: frontier
+    note: "the dense bundle adjustment layer with learned weights"
+  - id: wang2024-dust3r
+    title: "DUSt3R: geometric 3D vision made easy"
+    authors: ["S. Wang", "V. Leroy", "Y. Cabon", "B. Chidlovskii", "J. Revaud"]
+    year: 2024
+    venue: "arXiv"
+    url: "https://arxiv.org/abs/2312.14132"
+    verified: true
+    role: frontier
+    note: "arXiv v1 2023-12-21; the arXiv record carries no journal_ref, so the venue is unverified"
   - id: fischler1981-ransac
     title: "Random sample consensus: a paradigm for model fitting with applications to image analysis and automated cartography"
     authors: ["M. A. Fischler", "R. C. Bolles"]

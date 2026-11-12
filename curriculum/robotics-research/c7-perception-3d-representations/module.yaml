@@ -12,3 +12,4 @@ lessons:
   - two-view-geometry
   - bundle-adjustment
   - robust-fitting-ransac
+  - learned-correspondence-slam

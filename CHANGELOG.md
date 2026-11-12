@@ -138,6 +138,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   distribution (and why the $w^m$ form is optimistic), the gap between what that formula
   guarantees and what RANSAC delivers, the inlier threshold as a $\chi^2$ quantile, and branch
   and bound for globally optimal maximum consensus checked against exhaustive enumeration.
+- `c7-learned-correspondence-slam`: the gradient of a differentiable bundle adjustment layer by
+  implicit differentiation (and the measured bias of the Gauss-Newton Hessian shortcut), the
+  SuperGlue matching layer derived as entropic optimal transport, the scale ambiguity of joint
+  depth-and-pose learning as a one-dimensional null space, and an experiment separating noise from
+  structural ambiguity as the cause of correspondence failure.
 - `curriculum/robotics-research/papers.yaml`: the course paper registry (ADR 0014) with the
   eleven papers the C7 lessons assign; both C7 lessons reference them through front-matter
   `papers:` and `rc papers <lesson_id>` lists them.

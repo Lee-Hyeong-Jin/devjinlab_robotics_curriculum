@@ -1,0 +1,101 @@
+# English text of the structured fields of learned-correspondence-slam.md (activity titles,
+# resource notes, quiz items). The prose lives in learned-correspondence-slam.en.md.
+id: c7-learned-correspondence-slam
+lang: en
+activities:
+  c7-learned-correspondence-slam-reading: Read the lesson and follow the derivations
+  c7-learned-correspondence-slam-papers: Read the two must-read papers and write a one-page note on each
+  c7-learned-correspondence-slam-problems: "Problem set (2 derivations, 1 proof, 2 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  c7-learned-correspondence-slam-reproduction: "Reproduction task: the differentiable BA gradient, Sinkhorn, and the scale null space (R2, with an optional R4 extension)"
+  c7-learned-correspondence-slam-quiz: Concept-check quiz
+resources:
+  "Szeliski, Computer Vision: Algorithms and Applications (2nd ed., 2022)":
+    note: ch.11 (structure from motion and SLAM). Read it only as a contrast with the geometric pipeline.
+  "TUM RGB-D SLAM dataset and benchmark":
+    note: >-
+      The input for the optional extension (R4). The ATE/RPE evaluation scripts and the ground truth
+      are published with it.
+  "DROID-SLAM (reference implementation)":
+    note: >-
+      Used in the optional extension (R4). It needs a CUDA GPU, which is why it is not among this
+      task's mandatory conditions.
+  "SuperGluePretrainedNetwork":
+    note: "Recommended. Compare the Sinkhorn implementation of the matching layer (iteration count, $\\epsilon$) against your own."
+  "DUSt3R (reference implementation)":
+    note: Recommended. Look at it to compare against a design that drops almost all the geometric constraints (open problem 2).
+quiz:
+  - id: q1
+    prompt: >-
+      What happens if the gradient with respect to the learned weights of a differentiable BA layer
+      is backpropagated through the Gauss-Newton Hessian $J^\top WJ$?
+    choices:
+      - "It is exact - implicit differentiation calls for $J^\\top WJ$"
+      - "It is biased whenever the residual is non-zero, and the bias does not shrink with more iterations"
+      - "It is biased but the bias vanishes as the iterations increase"
+      - "It is biased only for a linear model"
+    explanation: >-
+      Implicit differentiation calls for the full Hessian
+      $J^\\top WJ + \\sum_i w_i r_i \\nabla^2 r_i$. Measured: the full Hessian matches central
+      differences at the $10^{-10}$ level while the GN shortcut was 4-8% off, the same order as the
+      dropped term's relative size of 0.086. Even at 60 iterations it flattens at 3.87%. For a
+      linear model $\\nabla^2 r_i = 0$ and the two Hessians coincide.
+    concept:
+      front: The GN shortcut in a DBA layer's gradient
+      back: >-
+        A bias from dropping the second-order term of the full Hessian. Sound only when the residual
+        is small, and iterations do not remove it
+  - id: q2
+    prompt: The row-wise argmax of a soft assignment obtained from Sinkhorn is always a valid permutation.
+    explanation: >-
+      At large $\\epsilon$ two rows pick the same column. Measured on a hard instance: 3 duplicate
+      columns at $\\epsilon=2$, one from $1$ down to $0.05$, and none at $\\epsilon=0.01$, where it
+      first agreed with Hungarian. Even with $\\max P \\approx 1$ (at $\\epsilon=0.05$) the
+      duplicate survives - "almost binary" and "a permutation" are different statements.
+    concept:
+      front: Sinkhorn argmax decoding
+      back: A permutation only as $\epsilon\to0$. "Almost binary" does not imply a permutation
+  - id: q3
+    prompt: >-
+      In monocular joint depth-and-pose learning with the bearings fixed in the reference frame,
+      what is the rank deficiency of the Jacobian? (number only)
+    answers: ["1", "one"]
+    explanation: >-
+      The loss is invariant under $(D,t) \\mapsto (sD, st)$, so only the scale direction remains.
+      Measured: the singular values break at
+      $\\sigma_{n-1}/\\sigma_n = 9.89\\times10^7$ and the scale generator satisfies
+      $\\lVert Jg\\rVert/(\\lVert J\\rVert_F\\lVert g\\rVert) = 2.7\\times10^{-12}$. It is one
+      rather than the seven of bundle adjustment because fixing the bearings removes the rotation
+      and translation invariances.
+    concept:
+      front: The gauge of monocular depth plus pose
+      back: "Scale only (with the bearings fixed). The generator is $\\delta D = D$, $\\delta t = t$, $\\delta R = 0$"
+  - id: q4
+    prompt: In the synthetic descriptor experiment, what actually broke mutual nearest neighbour plus ratio-test matching?
+    choices:
+      - "The magnitude of the isotropic perturbation (tripling $\\tau$)"
+      - "The fraction of repeated structure (duplicated descriptors)"
+      - "The descriptor dimension"
+      - "The ratio-test threshold"
+    explanation: >-
+      Measured: tripling $\\tau$ from 0.30 to 0.90 left precision and recall at 1.000. Adding 20%
+      duplicated structure dropped the recall to 0.643 and 40% to 0.363. The ratio test is a device
+      that demands "the second nearest neighbour is far", so it is powerless in principle when the
+      ambiguity is structural.
+    concept:
+      front: The cause of correspondence failure
+      back: Structural ambiguity (repeated patterns), not noise magnitude. The ratio test cannot fix it in principle
+  - id: q5
+    prompt: Why is per-frame median scale alignment a problem in monocular depth evaluation?
+    choices:
+      - "Because the median is more biased than the mean"
+      - "Because it spends the scale freedom of (3) separately in each frame and so erases scale drift from the metric"
+      - "Because it needs ground-truth depth"
+      - "It is not a problem - scale is unrecoverable, so alignment is the only option"
+    explanation: >-
+      The loss is invariant under $(D,t)\\mapsto(sD,st)$, so scale is never recovered. But aligning
+      $s$ separately in each frame keeps the trajectory's scale drift out of the metric. The numbers
+      then differ systematically from an evaluation that allows a single global $s$, which is why
+      the first question to ask of a depth table is how many times the scale was aligned.
+    concept:
+      front: The trap of per-frame scale alignment
+      back: Spends the scale freedom per frame, so drift disappears from the metric. The numbers differ from a single global alignment
