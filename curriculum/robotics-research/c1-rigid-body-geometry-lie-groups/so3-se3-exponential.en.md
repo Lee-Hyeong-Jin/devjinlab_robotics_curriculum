@@ -338,10 +338,9 @@ your rotation matrices to $10^{-12}$ on the same inputs (watch the component-ord
 
 ## Concept check
 
-Run `rc quiz c1-so3-se3-exponential`. The quiz is for **concept checking only**; the real work is
-the problem set and the reproduction task above (`lesson-standard.md` §4). The quiz items
-themselves live in the Korean source file, so the CLI shows their prompts in Korean until quiz
-translation lands.
+Run `rc quiz c1-so3-se3-exponential` (add `--lang en` for the English text). The quiz is for
+**concept checking only**; the real work is the problem set and the reproduction task above
+(`lesson-standard.md` §4).
 
 The four items cover: the identity $\hat{\omega}^3 = -\hat{\omega}$; why the logarithm breaks at
 $\theta \to \pi$; why no global three-parameter chart exists; and the rotation angle of a matrix

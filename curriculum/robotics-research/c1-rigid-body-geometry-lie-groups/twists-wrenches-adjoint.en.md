@@ -329,9 +329,8 @@ $[\mathrm{Ad}_{T_{ab}}]\mathcal{V}_b$ to within $10^{-6}$.
 
 ## Concept check
 
-Run `rc quiz c1-twists-wrenches-adjoint`. It is for concept checking only; the real work is the
-problem set and the reproduction task. The quiz items live in the Korean source file, so the CLI
-shows their prompts in Korean until quiz translation lands.
+Run `rc quiz c1-twists-wrenches-adjoint` (add `--lang en` for the English text). It is for concept
+checking only; the real work is the problem set and the reproduction task.
 
 The four items cover: how wrenches transform relative to twists; why a rotation-only test cannot
 catch a forgotten transpose; the screw pitch formula; and the shortest way to prove that
