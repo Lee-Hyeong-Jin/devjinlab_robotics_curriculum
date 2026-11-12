@@ -1,0 +1,87 @@
+id: f0-proofs-math-maturity
+lang: en
+activities:
+  f0-proofs-math-maturity-diagnostic: "Self-diagnosis before starting (pass and skip this lesson)"
+  f0-proofs-math-maturity-reading: Read Book of Proof (Parts I-IV) and watch the 6.042J lectures
+  f0-proofs-math-maturity-problems: Proof exercises (self-marked against the selected solutions) plus 6.042J past papers
+resources:
+  "Hammack, Book of Proof (3rd edition, 무료 전문)":
+    title: "Hammack, Book of Proof (3rd edition, full text free)"
+    note: The primary source. The 14 chapters of Parts I-IV with selected solutions; free under CC BY-NC-ND (v3.4, Feb 2025).
+  "MIT 6.042J Mathematics for Computer Science (Fall 2010)":
+    note: Lecture videos, readings and past exams with solutions. Particularly good for training in writing proofs.
+quiz:
+  - id: q1
+    prompt: What is the negation of "for every $x$, if $P(x)$ then $Q(x)$"?
+    choices:
+      - For every $x$, $P(x)$ and $\lnot Q(x)$
+      - There exists an $x$ with $P(x)$ and $\lnot Q(x)$
+      - For every $x$, if $\lnot P(x)$ then $\lnot Q(x)$
+      - There exists an $x$ with $\lnot P(x)$ and $Q(x)$
+    explanation: >-
+      $\lnot\forall x(P\to Q) \equiv \exists x(P \land \lnot Q)$ - meaning that finding a
+      counterexample is how a universal statement is refuted. The counterexample problems of a
+      problem set use this structure.
+    concept:
+      front: Negating a universal implication
+      back: $\lnot\forall x(P\to Q) \equiv \exists x(P\land\lnot Q)$ - a single counterexample refutes it
+  - id: q2
+    prompt: What is the most natural way to prove "if $n^2$ is even then $n$ is even"?
+    choices:
+      - A direct proof (assume $n^2$ even and derive that $n$ is even)
+      - Contraposition (assume $n$ odd and show $n^2$ is odd)
+      - Mathematical induction
+      - Giving a counterexample
+    explanation: >-
+      The contrapositive ($\lnot Q \to \lnot P$) is far easier: if $n=2k+1$ then
+      $n^2 = 2(2k^2+2k)+1$ is odd. Choosing the proof strategy is half of the proof.
+    concept:
+      front: Proof by contraposition
+      back: Prove $\lnot Q\to\lnot P$ instead of $P\to Q$ - better when structure is easier to extract from the hypothesis
+  - id: q3
+    prompt: How does strong induction differ from ordinary induction?
+    choices:
+      - It needs no base case
+      - It assumes **all** cases below $n$, not just $n-1$
+      - It applies only to infinite sets
+      - Its conclusion is weaker
+    explanation: >-
+      Strong induction assumes all of $P(1),\dots,P(n-1)$ to show $P(n)$. It is needed for
+      recursive splitting (for example justifying a divide-and-conquer algorithm). A base case is
+      still required.
+    concept:
+      front: Strong induction
+      back: Assumes every case below $n$; a base case is still needed and the conclusion is the same
+  - id: q4
+    prompt: If no counterexample to a statement can be found, the statement is true.
+    explanation: >-
+      Failing to find a counterexample is not a proof - it may simply not have been found yet.
+      This is why the reproduction tasks of the research track do not accept "it held in a
+      numerical experiment" as a proof.
+    concept:
+      front: Absence of a counterexample is not a proof
+      back: Showing truth requires a proof; numerical experiments are only a refutation tool
+  - id: q5
+    prompt: What is the role of a lemma in a proof?
+    choices:
+      - A result more important than the theorem
+      - An intermediate result proved separately to serve the main theorem
+      - A result that follows immediately from the theorem
+      - An unproved assumption
+    explanation: >-
+      A lemma is an intermediate result that shortens the main proof, while a corollary is what
+      follows immediately from the theorem. This is why the lesson standard asks a proof sketch to
+      state which lemma was omitted.
+    concept:
+      front: Lemma versus corollary
+      back: A lemma is an intermediate result serving the main proof; a corollary follows immediately from the theorem
+  - id: q6
+    prompt: What is the name of the proof technique used to show that $\sqrt{2}$ is irrational?
+    explanation: >-
+      Proof by contradiction: assume it is rational and derive a contradiction with coprimality.
+      The argument in C1 that "no global three-parameter chart exists" has the same structure (a
+      contradiction via compactness).
+    answers: ["contradiction", "proof by contradiction", "reductio ad absurdum"]
+    concept:
+      front: Proof by contradiction
+      back: Assume the negation of the conclusion and derive a contradiction; especially useful for non-existence

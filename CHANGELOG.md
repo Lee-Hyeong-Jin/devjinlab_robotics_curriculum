@@ -8,7 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-
+- 연구원 트랙에 C6 동작 계획 이론 모듈을 추가했다 — `c6-cspace-complexity`(구성공간과 복잡도),
+  `c6-combinatorial-gcs`(조합적 계획과 볼록 분해), `c6-sampling-completeness`(샘플링 기반과
+  확률적 완전성), `c6-asymptotic-optimality`(점근 최적성),
+  `c6-search-based-planning`(탐색 기반 계획),
+  `c6-kinodynamic-planning`(미분 제약·격자 계획),
+  `c6-tamp`(TAMP). 7레슨 전부 한국어·영어.
 - Translations for the content that had nowhere to hold them: `course.<lang>.yaml` and
   `module.<lang>.yaml` carry a course's and a module's title and summary, and
   `<lesson>.<lang>.yaml` carries activity titles, resource titles and notes, and the quiz
@@ -93,6 +98,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and `Strict-Transport-Security` only when the request arrived over HTTPS.
 - `docs/adr/0013-signup-policy.md` (proposed, not implemented): `RC_AUTH_SIGNUP`
   (`open` | `closed` | `invite`) and how invitations would work.
+- `scripts/perf/api_load.py` reports the machine's CPU count and load average, and warns when
+  the control endpoint (`healthz`, which does no work) is itself slow — that is the signal
+  that a run measured a busy machine rather than the API, which is otherwise easy to read as
+  a performance regression. `docs/operations/perf-baseline.md` and `lighthouse.md` gain a
+  second dated measurement, taken with two courses and 53 lessons.
+- Web: a course switcher. With more than one course the roadmap shows a tab per course and
+  the dashboard a progress row per course, each linking to that course's roadmap. The
+  selection travels in `?course=`, so it works without JavaScript and can be bookmarked.
+  Until now `RC_DEFAULT_COURSE_ID` was the only way to pick a course, which left a second
+  one (the research track) with no way in at all. A single-course deployment is unchanged.
+- ` ```problemset ` blocks: a lesson can carry derivations, proofs, numerical and
+  implementation problems that are **not** graded and never become flashcards, unlike quiz
+  questions (lesson-standard.md §11-3). `rc validate` gains rule 13 for their structure —
+  including that a `numerical` problem must publish both its expected value and a tolerance —
+  and warns when a set is outside 4-8 problems or uses fewer than three types. The static
+  site and the web lesson screen show the problems with each solution behind a disclosure
+  that says whether it is a sketch, a full solution or a rubric; `GET /lessons/{id}` carries
+  them as `problems[]`.
+- `<lesson>.<lang>.yaml` can translate a paper reference's `note` (`papers: {<id>: "..."}`).
+  Only the note: a paper's title, authors and venue are its published bibliography.
 - Assigned papers are shown: `GET /lessons/{id}` carries `papers[]` (required reading first,
   with a one-line citation), the static site gets a "필독 논문" section, and the web lesson
   screen lists them in the sidebar. A paper whose link nobody has checked says so.
@@ -156,6 +181,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   separate bounded from redescending kernels, and a four-line proof of the global optimality
   certificate for SO(2) rotation synchronization (SE-Sync in miniature) together with the measured
   fact that its tightness survives noise but not outliers.
+- Research-track module C3 (nonlinear and robust control) under
+  `curriculum/robotics-research/c3-nonlinear-robust-control/`: lesson 1, Lyapunov stability and
+  ISS, in Korean and English — the Lyapunov theorem, its converse for exponential stability and
+  LaSalle's invariance principle as proof sketches, the ISS estimate derived from an
+  ISS-Lyapunov function, and a sum-of-squares certificate for a region of attraction with a
+  numerically checkable reproduction task.
+- Research-track lesson 2 of module C3, feedback linearisation and controllability, in Korean and
+  English: the full feedback-linearisation condition reduced to the Frobenius theorem, zero
+  dynamics and the forward-point output of a differential-drive robot, the second-order Lie
+  bracket motion derived from a composition of flows, the chained form with steering by sinusoids
+  ($\Delta z_3 = \pi ab/\omega^2$), and Brockett's obstruction shown concretely.
+- Research-track lesson 3 of module C3, contraction theory and incremental stability, in Korean
+  and English: the contraction condition derived from virtual displacements up to finite
+  Riemannian distance, constant metrics found by LMI where the Euclidean metric certifies nothing,
+  the disturbance tube $\sup\lVert\Theta d\rVert/\lambda$, why a control contraction metric is
+  convex in the dual metric, and a reproduction task that measures how conservative the
+  certificate is (certified 0.49 against a measured rate of 1.00).
+- Research-track lesson 4 of module C3, passivity, energy shaping and impedance control, in
+  Korean and English: manipulator passivity from the skew symmetry of $\tfrac12\dot M - C$,
+  the passivity theorem for feedback interconnections, energy shaping with damping injection, and
+  a closed-form per-cycle energy of a sampled virtual wall that reproduces the Colgate-Schenkel
+  passivity condition in the limit and quantifies where it is conservative.
+- Research-track lesson 5 of module C3, adaptive control and persistent excitation, in Korean and
+  English: the regressor of a two-link arm built column by column, the Slotine-Li Lyapunov
+  derivation of $\dot V = -s^\top K_D s$, persistent excitation as the necessary and sufficient
+  boundary of parameter convergence, and a reproduction task where tracking reaches $5\cdot10^{-14}$
+  at a set-point while the inertial parameters stay 34% wrong.
+- Research-track lesson 6 of module C3, CBF and CLF safety filters, in Korean and English,
+  completing the module: forward invariance proved with the comparison lemma, the closed form of
+  the minimum-intervention QP from the KKT conditions, the exponential CBF chain for a
+  relative-degree-two constraint, and a reproduction task that measures how input limits break the
+  guarantee (95 of 189 runs saturate at $u_{\max}=2$, worst $h = -0.138$).
+- Module C3 moved onto the schema the paper registry added (AUTHORING §8-1): its 22 papers are
+  registered in `curriculum/robotics-research/papers.yaml` (all with verified URLs), each lesson
+  references them from front-matter `papers[]` with `required`/`role` and a language-neutral
+  locator, the activity kinds `paper` and `reproduction` replace the interim `reading`/`exercise`,
+  tool resources use `kind: code`, and the module level is `연구`.
+- Research track module C2 (multibody dynamics) under
+  `curriculum/robotics-research/c2-multibody-dynamics/`: six research-grade lessons in Korean and
+  English on spatial vector algebra, RNEA, CRBA/ABA, constrained dynamics, contact dynamics and
+  the derivatives of dynamics with inertial parameter identification. Each lesson derives its key
+  results at depth D2-D3, sets 4-8 problems, assigns 2-4 verified must-read papers and a
+  reproduction task with machine-checkable acceptance criteria.
 
 ### Fixed
 

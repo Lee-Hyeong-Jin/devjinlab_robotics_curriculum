@@ -1,0 +1,103 @@
+id: c6-tamp
+lang: en
+activities:
+  c6-tamp-reading: Read the lesson and follow the derivations
+  c6-tamp-papers: Read the three must-read papers and write a one-page note on each
+  c6-tamp-problems: >-
+    Problem set (1 derivation, 3 proofs, 1 numerical, 1 implementation, 1 counterexample, 1 paper)
+  c6-tamp-reproduction: >-
+    Reproduction task - the growth rate of search nodes in a block-stacking TAMP (R3)
+  c6-tamp-quiz: Concept-check quiz
+resources:
+  "CMU 16-782 Planning and Decision-making in Robotics":
+    note: The symbolic-planning and TAMP lectures of the second half; the lecture-note reference for this lesson.
+  "LaValle, Planning Algorithms":
+    note: ch.2.4 (logic-based planning representations) and ch.7.7 (manipulation planning). Read as the prehistory of TAMP.
+quiz:
+  - id: q1
+    prompt: Why is feasibility of a TAMP decidable once the plan skeleton $\pi$ is fixed?
+    choices:
+      - Because the parameter space becomes finite
+      - >-
+        Because the constraints define a semialgebraic set and quantifier elimination applies by
+        Tarski–Seidenberg
+      - Because symbolic planning is PSPACE-complete
+      - Because the streams emit only finitely many candidates
+    explanation: >-
+      Fixing the skeleton leaves the parameters **continuous** but finite-dimensional, and the
+      geometric and motion constraints are polynomial inequalities and first-order formulas, so
+      $\mathcal{F}(\pi)$ is semialgebraic. Emptiness is decidable by quantifier elimination at a cost
+      doubly exponential in the number of variables - the same framework as the upper bound of
+      `c6-cspace-complexity` R3.
+    concept:
+      front: Decidability of TAMP with a fixed skeleton
+      back: $\mathcal{F}(\pi)$ semialgebraic → Tarski–Seidenberg; cost doubly exponential in the variables
+  - id: q2
+    prompt: What can an algorithm **not** do for TAMP with no bound on the plan length?
+    choices:
+      - Find a solution in finite time when one exists
+      - Output "infeasible" in finite time when none exists
+      - Enumerate skeletons in order of length
+      - Decide the feasibility of a fixed skeleton
+    explanation: >-
+      Enumerating skeletons by length and deciding each halts on YES instances but increases $K$
+      forever on NO instances - semi-decidability. So a TAMP planner's stop means "not found", not
+      "none exists", and a higher level cannot derive a goal's impossibility from the planner's
+      failure.
+    concept:
+      front: The consequence of TAMP being semi-decidable
+      back: Infeasibility cannot be decided - a stop means "not found", not "none exists"
+  - id: q3
+    prompt: Select every condition needed for probabilistic completeness of a sampling-based TAMP.
+    choices:
+      - Each stream samples densely on its own constraint manifold
+      - The symbolic planner is complete for the given set of objects
+      - Every (skeleton, sample-count) pair is tried in finite time
+      - The motion planner is asymptotically optimal
+    explanation: >-
+      The three conditions cover, respectively, "find the continuous parameters" (a), "find the
+      skeleton that uses them" (b), and "alternate between the two fairly" (c). Asymptotic optimality
+      is **irrelevant to completeness** - cost optimization is a separate problem. Dropping any one of
+      the three admits an instance with a solution on which the algorithm fails forever.
+    concept:
+      front: The three conditions for completeness of sampling-based TAMP
+      back: Dense streams + a complete symbolic search + fair interleaving (iterative deepening)
+  - id: q4
+    prompt: With $n_c$ contact points, how many contact modes are there?
+    choices: ["$2^{n_c}$", "$3^{n_c}$", "$n_c!$", "$3 n_c$"]
+    explanation: >-
+      Each contact point is in one of {separated, sticking, sliding}, giving $3^{n_c}$. Discretizing
+      the sliding direction into $k$ directions in three dimensions raises it to $(2+k)^{n_c}$, and a
+      mode sequence of length $K$ is that to the $K$-th power. Note that $n_c$ is a **modelling
+      choice**, so this number is not a property of the physics.
+    concept:
+      front: The number of contact modes
+      back: $3^{n_c}$ (separated, sticking, sliding); sequences $3^{n_c K}$ - and $n_c$ is a model choice
+  - id: q5
+    prompt: >-
+      In a block-stacking TAMP, both the plan length and the number of search nodes grow
+      exponentially in the number of blocks.
+    explanation: >-
+      The plan length is **linear** - one `pick`+`place` per block, so exactly $2n$, and the
+      measurements are $4,6,8,10,12,14$. Only the search-node count is exponential (measured slope
+      2.5289, about 12.5 times per block). That is why the lever in TAMP is shrinking the skeleton
+      space rather than accelerating motion planning.
+    concept:
+      front: Where the difficulty of TAMP sits
+      back: >-
+        Solution length linear ($2n$), search exponential ($\approx 12.5^n$) - the branching factor of
+        the skeleton space is the problem
+  - id: q6
+    prompt: >-
+      What is a sequence of actions with undetermined parameters, such as a mode sequence or an action
+      sequence, called in TAMP?
+    answers: ["plan skeleton", "skeleton", "a plan skeleton"]
+    explanation: >-
+      A plan skeleton. Fixing the skeleton leaves a continuous constraint-satisfaction problem, which
+      is decidable (R1(a)), and the difficulty of TAMP lies in the outer layer that searches the
+      skeleton space. In contact planning the mode sequence plays the same role.
+    concept:
+      front: Plan skeleton
+      back: >-
+        An action sequence with parameters undetermined; fixing it gives a decidable continuous
+        problem, while the search blows up in skeleton space

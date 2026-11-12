@@ -24,6 +24,12 @@ from robotics_curriculum.content import (
     ResourceKind,
 )
 from robotics_curriculum.content.papers import citation, paper_index, resolve_lesson_papers
+from robotics_curriculum.content.problem_set import (
+    PROBLEMSET_FENCE,
+    Problem,
+    ProblemSetParseError,
+    parse_problem_sets,
+)
 from robotics_curriculum.content.quiz_block import (
     QUIZ_FENCE,
     QuizParseError,
@@ -676,7 +682,10 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
         out += [f"**{md_text(t('site.label.my_record'))}**: {md_text(record)}", ""]
     out += ["---", ""]
 
-    body, study = split_study_section(render_quiz_blocks(strip_leading_h1(text.body), lesson, t))
+    rendered = render_problem_set_blocks(
+        render_quiz_blocks(strip_leading_h1(text.body), lesson, t), lesson, t
+    )
+    body, study = split_study_section(rendered)
     out += [body.strip("\n"), ""]
 
     out += [f"## {md_text(t('site.heading.study_guide'))} {{#{STUDY_ANCHOR}}}", ""]
@@ -704,7 +713,7 @@ def _papers_section(model: SiteModel, lesson: Lesson, t: Translator) -> list[str
     Nothing is emitted when the course has no registry, so the courses that predate the
     research track look exactly as they did.
     """
-    rows = resolve_lesson_papers(lesson, paper_index(model.course_of(lesson)))
+    rows = resolve_lesson_papers(lesson, paper_index(model.course_of(lesson)), model.lang)
     if not rows:
         return []
     out = [f"## {md_text(t('site.heading.papers'))} {{#{PAPERS_ANCHOR}}}", ""]
@@ -777,7 +786,14 @@ def _render_question(question: QuizQuestion, number: int, t: Translator) -> str:
     return "\n".join(lines)
 
 
-def _replace_fences(body: str, render: Callable[[int, str], str]) -> str:
+def _replace_fences(
+    body: str,
+    render: Callable[[int, str], str],
+    *,
+    fence: re.Pattern[str] = QUIZ_FENCE,
+    name: str = "quiz",
+) -> str:
+    """Replace each ``fence``d block's contents with ``render(index, raw)``."""
     out: list[str] = []
     current: list[str] | None = None
     closing: str | None = None
@@ -791,13 +807,61 @@ def _replace_fences(body: str, render: Callable[[int, str], str]) -> str:
             else:
                 current.append(line)
             continue
-        match = QUIZ_FENCE.match(line.strip())
+        match = fence.match(line.strip())
         if match:
             current, closing = [], match["fence"]
         else:
             out.append(line)
     if current is not None:  # unterminated fence: keep it verbatim
-        out += [f"{closing}quiz", *current]
+        out += [f"{closing}{name}", *current]
+    return "\n".join(out)
+
+
+def render_problem_set_blocks(body: str, lesson: Lesson, t: Translator | None = None) -> str:
+    """Replace each ```` ```problemset ```` fence with the problems; solutions fold away.
+
+    Prompts stay visible; the solution goes into a collapsible ``???`` admonition labelled by
+    its policy, so a reader can work before looking. Nothing here is graded (§11-3), so there
+    is no answer field and no flashcard — only what the lesson chose to publish.
+    """
+    t = t or translator(DEFAULT_LANG)
+    try:
+        sets = parse_problem_sets(lesson)
+    except ProblemSetParseError:
+        return _replace_fences(
+            body, lambda _i, raw: _code_block(raw), fence=PROBLEMSET_FENCE, name="problemset"
+        )
+    blocks = sets.blocks
+    number = 0
+
+    def render(index: int, raw: str) -> str:
+        nonlocal number
+        if index >= len(blocks):
+            return _code_block(raw)
+        problems = blocks[index].problems
+        heading = md_text(t("site.heading.problem_set", count=len(problems)))
+        out = [f'!!! example "{heading}"', ""]
+        for problem in problems:
+            number += 1
+            out += indent(_render_problem(problem, number, t)).splitlines() + [""]
+        return "\n".join(out)
+
+    return _replace_fences(body, render, fence=PROBLEMSET_FENCE, name="problemset")
+
+
+def _render_problem(problem: Problem, number: int, t: Translator) -> str:
+    """One problem: stars and type, the prompt, then the solution behind a disclosure."""
+    kind = md_text(t(f"problem.type.{problem.type}"))
+    stars = "★" * problem.stars + "☆" * (3 - problem.stars)
+    out = [f"**{number}.** ({stars} · {kind}) {md_text(problem.prompt)}", ""]
+    if problem.refers_to:
+        refers = " · ".join(f"`{md_text(ref)}`" for ref in problem.refers_to)
+        out += [f"{md_text(t('problem.refers_to'))}: {refers}", ""]
+    if problem.solution:
+        label = md_text(t(f"problem.policy.{problem.solution_policy}"))
+        out += [f'??? success "{label}"', "", indent(md_text(problem.solution)), ""]
+        if problem.tolerance is not None:
+            out += [indent(f"{md_text(t('problem.tolerance'))}: `{problem.tolerance}`"), ""]
     return "\n".join(out)
 
 

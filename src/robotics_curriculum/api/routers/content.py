@@ -14,6 +14,7 @@ from robotics_curriculum.api.schemas import (
     Course,
     CourseSummary,
     Lesson,
+    LessonProblem,
     LessonSummary,
     Module,
     ModuleSummary,
@@ -25,8 +26,11 @@ from robotics_curriculum.api.schemas import (
     Stage,
 )
 from robotics_curriculum.content import Course as CourseModel
+from robotics_curriculum.content import Lesson as LessonModel
 from robotics_curriculum.content import ResourceKind, level_label
 from robotics_curriculum.content.papers import paper_index, resolve_lesson_papers
+from robotics_curriculum.content.problem_set import ProblemSetParseError, parse_problem_sets
+from robotics_curriculum.content.problem_set import resolve_activity as resolve_problem_activity
 from robotics_curriculum.content.search import search
 from robotics_curriculum.content.sections import extract_study_guide
 
@@ -91,12 +95,33 @@ def get_lesson(lesson_id: str, index: Index) -> Lesson:
         objectives=text.objectives,
         activities=text.activities,
         resources=[Resource.model_validate(r.model_dump()) for r in text.resources],
-        papers=[Paper.of(row) for row in resolve_lesson_papers(lesson, paper_index(entry.course))],
+        papers=[
+            Paper.of(row)
+            for row in resolve_lesson_papers(lesson, paper_index(entry.course), lang_var.get())
+        ],
+        problems=_problems(lesson),
         body=text.body,
         study_method=extract_study_guide(text.body, text.lang),
         prev_lesson_id=order[pos - 1] if pos > 0 else None,
         next_lesson_id=order[pos + 1] if pos + 1 < len(order) else None,
     )
+
+
+def _problems(lesson: LessonModel) -> list[LessonProblem]:
+    """The lesson's problem set, or ``[]`` when a block does not parse.
+
+    A broken block is a validation error (``rc validate`` rule 13); the API must still answer,
+    and the body it returns still holds the block verbatim.
+    """
+    try:
+        sets = parse_problem_sets(lesson)
+    except ProblemSetParseError:
+        return []
+    return [
+        LessonProblem(**problem.model_dump(), activity_id=resolve_problem_activity(block, lesson))
+        for block in sets.blocks
+        for problem in block.problems
+    ]
 
 
 @router.get("/resources", response_model=list[ResourceRef], responses=problem_responses(404))
