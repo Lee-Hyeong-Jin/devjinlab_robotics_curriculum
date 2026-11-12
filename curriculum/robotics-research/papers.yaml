@@ -1266,15 +1266,6 @@ papers:
     verified: true
     role: frontier
     note: "arXiv v1 2023-12-21; the arXiv record carries no journal_ref, so the venue is unverified"
-  - id: fischler1981-ransac
-    title: "Random sample consensus: a paradigm for model fitting with applications to image analysis and automated cartography"
-    authors: ["M. A. Fischler", "R. C. Bolles"]
-    year: 1981
-    venue: "Communications of the ACM"
-    url: "https://doi.org/10.1145/358669.358692"
-    verified: true
-    role: seminal
-    note: "do not use the 1987 reprint DOI (10.1016/b978-0-08-051581-6.50070-2)"
   - id: barath2020-magsac
     title: "MAGSAC++, a fast, reliable and accurate robust estimator"
     authors: ["D. Barath", "J. Noskova", "M. Ivashechkin", "J. Matas"]
@@ -1320,24 +1311,6 @@ papers:
     verified: true
     role: standard
     note: "explicit vs implicit Schur and visibility-based preconditioners; source of the BAL datasets"
-  - id: rosen2019-se-sync
-    title: "SE-Sync: a certifiably correct algorithm for synchronization over the special Euclidean group"
-    authors: ["D. M. Rosen", "L. Carlone", "A. S. Bandeira", "J. J. Leonard"]
-    year: 2019
-    venue: "IJRR"
-    url: "https://arxiv.org/abs/1612.07386"
-    verified: true
-    role: seminal
-    note: "arXiv 2016, IJRR 2019; a global-optimality certificate for pose graphs without points"
-  - id: kaess2012-isam2
-    title: "iSAM2: incremental smoothing and mapping using the Bayes tree"
-    authors: ["M. Kaess", "H. Johannsson", "R. Roberts", "et al."]
-    year: 2012
-    venue: "IJRR"
-    url: "https://doi.org/10.1177/0278364911430419"
-    verified: true
-    role: seminal
-    note: "Crossref year 2011 (online first), in print 2012; incremental elimination and marginalisation"
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
   # ── C8 의사결정·학습 이론 ───────────────────────────────────────────
