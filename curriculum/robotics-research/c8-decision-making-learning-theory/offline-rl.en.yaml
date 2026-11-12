@@ -1,0 +1,63 @@
+id: c8-offline-rl
+lang: en
+activities:
+  c8-offline-rl-reading: Read the text and follow the derivations
+  c8-offline-rl-papers: Read the three must-read papers + a one-page note each
+  c8-offline-rl-problems: Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample, 1 paper)
+  c8-offline-rl-reproduction: Reproduction task - verifying the pessimism bounds and the reversal with data quality (R2)
+  c8-offline-rl-quiz: Concept-check quiz
+resources:
+  "Sutton & Barto, Reinforcement Learning: An Introduction (2nd ed.)":
+    note: ch.5.5-5.9 (off-policy Monte Carlo and importance weighting). Secondary textbook. (official URL unverified)
+  "Fu et al. — D4RL: datasets for deep data-driven reinforcement learning (2020)":
+    note: Recommended. The rationale behind the standard random/medium/expert quality split.
+  "Fujimoto, Meger & Precup — Off-policy deep RL without exploration (2018)":
+    note: Recommended. The paper that first isolated extrapolation error (BCQ).
+  "Kostrikov, Nair & Levine — Offline RL with implicit Q-learning (2021)":
+    note: Recommended. Avoiding out-of-distribution queries via expectile regression.
+  "Buckman, Gelada & Bellemare — The importance of pessimism in fixed-dataset policy optimization (2020)":
+    note: Recommended. An analysis of why pessimism is not optional but necessary.
+  "Thomas & Brunskill — Data-efficient off-policy policy evaluation (2016)":
+    note: Recommended. The doubly robust estimator and variance reduction.
+quiz:
+  - id: q1
+    prompt: "Why is the fixed point of the pessimistic operator $\\tilde{T}Q = \\hat{T}Q - \\Gamma$ a lower bound on $Q^\\*$?"
+    choices:
+      - "Because $\\Gamma$ is always smaller than $V_{\\max}$"
+      - "Because $\\tilde{T}Q \\le TQ$ (operator domination) and monotonicity give $\\tilde{T}^k Q^\\* \\le Q^\\*$"
+      - "Because $\\hat{T}$ is an unbiased estimate of $T$"
+      - "Because $\\Gamma \\to 0$ as the data grows"
+    explanation: "From (4), $\\hat{T}Q \\le TQ + \\Gamma$, so $\\tilde{T}Q \\le TQ$. Iterating $\\tilde{T}$ from $Q^\\*$ gives $\\tilde{T}^kQ^\\* \\le Q^\\*$ by monotonicity, and the limit is $\\tilde{Q}$, so $\\tilde{Q}\\le Q^\\*$. Neither unbiasedness nor $\\Gamma\\to0$ is used."
+    concept:
+      front: "The argument that pessimism gives a lower bound"
+      back: "Operator domination $\\tilde{T}Q\\le TQ$ plus a monotone ladder - unbiasedness is not needed"
+  - id: q2
+    prompt: "In the suboptimality bound (2), under which distribution is the uncertainty $\\Gamma$ averaged?"
+    choices:
+      - "The behaviour policy's distribution $d^{\\pi_b}$"
+      - "The optimal policy's distribution $d^{\\pi^\\*}$"
+      - "The learned policy's distribution $d^{\\tilde\\pi}$"
+      - "The worst-case distribution over all policies"
+    explanation: "Only $(P^{\\pi^\\*})^t$ appears in step 4 of the derivation; the distribution of $\\tilde\\pi$ is nowhere in the bound. So the data need only cover **where the optimal policy goes** (single-policy concentrability), and the far stronger all-policy concentrability is unnecessary."
+    concept:
+      front: "Single-policy concentrability"
+      back: "(2) measures $\\Gamma$ only under $d^{\\pi^\\*}$, so coverage of the whole space is unnecessary"
+  - id: q3
+    prompt: "Conservative offline RL cannot be worse than the behaviour policy."
+    explanation: "(1) is a **lower bound on the value** and (2) is a suboptimality bound that is useful when $\\Gamma$ is small. Neither says $J(\\tilde\\pi) \\ge J(\\pi_b)$. If the penalty overwhelms the reward scale, $\\tilde{Q}$ becomes nearly flat, the greedy choice becomes arbitrary, and the result can indeed be worse than the behaviour policy (problem P5)."
+    concept:
+      front: "A lower bound is not a guarantee of improvement"
+      back: "(1) prevents overestimation and (2) is useful only when $\\Gamma$ is small - neither guarantees $J(\\pi_b)$"
+  - id: q4
+    prompt: "Behaviour regularization (a support constraint) and value conservatism admit the same set of policies."
+    explanation: "A support constraint **structurally** excludes actions $\\pi_b$ never took, so an optimal action outside the support can never be chosen (and with a deterministic $\\pi_b$ it reduces to behavior cloning). Value conservatism only applies a penalty, so such an action stays a candidate as soon as there is any data on it."
+    concept:
+      front: "Behaviour regularization versus value conservatism"
+      back: "The former structurally excludes out-of-support actions (capped at $\\Pi_b$); the latter only penalizes"
+  - id: q5
+    prompt: "When evaluating a deterministic policy with a behaviour policy uniform over $m$ actions, what is the second moment of the trajectory importance ratio? (in terms of $m$ and the horizon $T$)"
+    answers: ["m^T", "m**T", "m^{T}", "m to the T"]
+    explanation: "The per-step second moment is $\\sum_a \\pi(a)^2/\\pi_b(a) = 1/(1/m) = m$, and the steps are independent, so the product is $m^T$. The effective sample size is $N/m^T$: at $m=4$ and $T=8$, two million trajectories are worth only 31 effective samples."
+    concept:
+      front: "The curse of horizon"
+      back: "$\\mathbb{E}[\\varrho^2] = m^T$ and $\\mathrm{ESS} = N/m^T$ - per-decision IS and doubly robust only shrink constants"

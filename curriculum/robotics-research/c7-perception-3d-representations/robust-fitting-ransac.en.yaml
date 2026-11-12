@@ -1,0 +1,91 @@
+# English text of the structured fields of robust-fitting-ransac.md (activity titles, resource
+# notes, quiz items). The prose lives in robust-fitting-ransac.en.md.
+id: c7-robust-fitting-ransac
+lang: en
+activities:
+  c7-robust-fitting-ransac-reading: Read the lesson and follow the derivations
+  c7-robust-fitting-ransac-papers: Read the two must-read papers and write a one-page note on each
+  c7-robust-fitting-ransac-problems: "Problem set (1 derivation, 1 proof, 3 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  c7-robust-fitting-ransac-reproduction: "Reproduction task: iteration count against contamination, and global maximum consensus (R1)"
+  c7-robust-fitting-ransac-quiz: Concept-check quiz
+resources:
+  "Hartley & Zisserman, Multiple View Geometry in Computer Vision (2nd ed.)":
+    note: "ch.4.7 (robust estimation: RANSAC, threshold selection, adaptive termination). The primary textbook for this lesson."
+  "Szeliski, Computer Vision: Algorithms and Applications (2nd ed., 2022)":
+    note: "ch.8 (motion estimation) and the noise models of ch.2.1. A practical comparison of the RANSAC variants."
+  "scikit-image: RANSAC (ransac)":
+    note: >-
+      Recommended baseline. Compare the adaptive-termination implementation of
+      `skimage.measure.ransac` against your own.
+  "OpenCV USAC (findHomography/findEssentialMat 의 USAC_* 플래그)":
+    title: "OpenCV USAC (the USAC_* flags of findHomography/findEssentialMat)"
+    note: >-
+      Recommended. MAGSAC++ is available as `USAC_MAGSAC`. Compare iteration counts and accuracy on
+      the same input.
+quiz:
+  - id: q1
+    prompt: What does the RANSAC iteration-count formula $N = \log\eta/\log(1-w^m)$ actually guarantee?
+    choices:
+      - "That an accurate model is returned with probability $1-\\eta$"
+      - "That an all-inlier sample is drawn at least once with probability $1-\\eta$"
+      - "That the inlier set is recovered exactly with probability $1-\\eta$"
+      - "That the global maximum consensus is reached with probability $1-\\eta$"
+    explanation: >-
+      The formula is a statement about sampling only. The measurements agree with the theoretical
+      0.99 for the all-inlier-sample probability (0.993 at $w=0.8$), yet the p90 slope error of the
+      minimal model was nine times the value after refit. Accuracy comes from refitting on the
+      consensus set.
+    concept:
+      front: What the iteration-count formula guarantees
+      back: Only the probability of drawing one all-inlier sample. The accuracy of the model comes from the refit
+  - id: q2
+    prompt: For small $n$, the approximation $p = w^m$ overestimates the number of iterations required.
+    explanation: >-
+      The opposite. The exact probability is the hypergeometric
+      $\\prod_{k<m}(I-k)/(n-k) \\le w^m$, so $w^m$ **over**estimates the success probability and
+      therefore **under**estimates the iteration count. Measured: at $(n,I,m)=(100,50,7)$ the
+      requirement is 736 rather than 588 (+25%), and at $(20,10,5)$ it is 282 rather than 146
+      (+93%).
+    concept:
+      front: Which way the $w^m$ approximation errs
+      back: It is optimistic - it assumes sampling with replacement, and underestimates the iteration count at small $n$
+  - id: q3
+    prompt: For isotropic Gaussian noise $\sigma$, what is the $\alpha=0.05$ inlier threshold for a 2D reprojection error?
+    choices: ["$1.960\\sigma$", "$2.4477\\sigma$", "$3.0802\\sigma$", "$\\sigma$"]
+    explanation: >-
+      A reprojection error has two independent components, so
+      $\\lVert r\\rVert^2/\\sigma^2 \\sim \\chi^2_2$ and
+      $\\epsilon = \\sigma\\sqrt{\\chi^2_{2,0.95}} = \\sigma\\sqrt{5.9915} = 2.4477\\sigma$.
+      $1.960\\sigma$ is one degree of freedom (point-line or epipolar distance) and $3.0802\\sigma$
+      is four (symmetric transfer error).
+    concept:
+      front: Where the inlier threshold comes from
+      back: "$\\epsilon = \\sigma\\sqrt{\\chi^2_{d,1-\\alpha}}$ - 1.960 at $d$=1, 2.4477 at 2, 3.0802 at 4"
+  - id: q4
+    prompt: >-
+      At a fixed inlier ratio $w$, by roughly what factor does the required iteration count grow
+      when the minimal sample size $m$ increases by one? (a formula or a value)
+    answers: ["1/w", "w^-1", "a factor of 1/w", "about 1/w"]
+    explanation: >-
+      Since $N \\approx \\ln(1/\\eta)w^{-m}$, going from $m$ to $m+1$ multiplies it by $1/w$: twice
+      at $w=0.5$ and 3.3 times at $w=0.3$. That is why, at $w=0.5$, the five-point solver needs 146
+      iterations, the seven-point 588 and the eight-point 1177.
+    concept:
+      front: How the minimal sample size enters the cost
+      back: "$N \\approx \\ln(1/\\eta)w^{-m}$ - one more element costs a factor $1/w$. The reason minimal solvers are researched"
+  - id: q5
+    prompt: >-
+      Why is branch and bound for maximum consensus used for rotation search (3 DOF) but not for a
+      homography (8 DOF)?
+    choices:
+      - "Because no Lipschitz bound can be built for a homography"
+      - "Because the complexity is exponential in the parameter dimension $d$, not in the number of points $n$"
+      - "Because rotations have no outliers"
+      - "Because the consensus set of a homography is not convex"
+    explanation: >-
+      Measured on $d=2$ line fitting, the node count grew only 1.8x for an 8x increase in $n$ and
+      1.7x for a $10^5$-fold tightening of the box resolution. The difficulty is in $d$, not $n$
+      (Chin et al. 2018), which is why it is practical only for $d \\le 3$.
+    concept:
+      front: The range where branch and bound is usable
+      back: "Complexity is exponential in the parameter dimension $d$ - practical at $d\\le3$ (rotation search), not at 8 DOF"

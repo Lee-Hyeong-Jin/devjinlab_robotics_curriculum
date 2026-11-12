@@ -1,0 +1,96 @@
+# English text of the structured fields of neural-fields-3dgs.md (activity titles, resource
+# notes, quiz items). The prose lives in neural-fields-3dgs.en.md.
+id: c7-neural-fields-3dgs
+lang: en
+activities:
+  c7-neural-fields-3dgs-reading: Read the lesson and follow the derivations
+  c7-neural-fields-3dgs-papers: Read the two must-read papers and write a one-page note on each
+  c7-neural-fields-3dgs-problems: "Problem set (2 derivations, 1 proof, 2 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  c7-neural-fields-3dgs-reproduction: "Reproduction task: volume-rendering discretisation, spectral bias and the affine projection (R2, with an optional R4 extension)"
+  c7-neural-fields-3dgs-quiz: Concept-check quiz
+resources:
+  "NeRF (reference implementation)":
+    note: Recommended. Locate the discretisation and the hierarchical sampling of sec. 4 in the code.
+  "3D Gaussian Splatting (reference implementation)":
+    note: >-
+      Used in the optional extension (R4). It needs the CUDA rasteriser, which is why it is not
+      among the mandatory conditions.
+  "NeRF synthetic (Blender) 데이터셋과 LLFF 장면":
+    title: "The NeRF synthetic (Blender) dataset and the LLFF scenes"
+    note: The input for the optional extension (R4). Use the download links in the repository README.
+  "Mip-NeRF 360 project page":
+    note: Recommended. Anti-aliasing and the parameterisation of unbounded scenes - the current approach for open problems 1 and 2.
+quiz:
+  - id: q1
+    prompt: What is NeRF's alpha-compositing formula $C = \sum_i T_i\alpha_i c_i$ with respect to the volume rendering integral?
+    choices:
+      - "A Riemann sum - a numerical approximation that becomes exact as samples increase"
+      - "An **exact** evaluation of the integral under the assumption that density and colour are constant per interval"
+      - "A Monte Carlo estimator, hence unbiased but with variance"
+      - "A first-order Taylor approximation"
+    explanation: >-
+      Inside an interval $T(t) = T_ie^{-\\sigma_i(t-t_i)}$, so
+      $\\int T\\sigma c\\,dt = T_ic_i(1-e^{-\\sigma_i\\delta_i})$ comes out exactly. Measured: on a
+      piecewise-constant case the difference from the analytic value was exactly zero in double
+      precision. What more samples reduce is only the gap between "piecewise constant" and the real
+      scene, which is why concentrating samples near a surface (hierarchical sampling) beats adding
+      more of them.
+    concept:
+      front: The nature of the alpha-compositing discretisation
+      back: An **exact** integral under the piecewise-constant assumption. The approximation is in that assumption, not in the sample count
+  - id: q2
+    prompt: Changing the compositing order of the intervals along a ray changes both the final colour and the accumulated alpha.
+    explanation: >-
+      The accumulated alpha is $1 - \\prod_i(1-\\alpha_i) = 1 - \\exp(-\\sum\\sigma_i\\delta_i)$ and
+      is therefore **order-invariant**; the colour is not. Measured (6 primitives): 0.481154 front
+      to back, 0.564796 unsorted and 0.591136 back to front, with the accumulated alpha 0.943034 in
+      all three. That is why 3DGS must depth-sort, and why an approximate sort is itself a rendering
+      error.
+    concept:
+      front: Order dependence of compositing
+      back: The colour depends on the order, the accumulated alpha does not. 3DGS pays for sorting because of this
+  - id: q3
+    prompt: What is the effect of a positional encoding that gives **the same amplitude** to every frequency, as NeRF does?
+    choices:
+      - "It strengthens the spectral bias that makes low frequencies learn first"
+      - "Inside the encoded band every frequency learns at the same rate, and the bias appears outside the band as 'not representable'"
+      - "High frequencies are learned before low ones"
+      - "It has nothing to do with learning speed and only adds capacity"
+    explanation: >-
+      Gradient descent converges along the Gram eigendirection $\\lambda_k$ with
+      $t_{1/2} = \\ln2/(\\eta\\lambda_k)$, and for equal-amplitude Fourier features all
+      $\\lambda_k = a_k^2/2$ are the same. Measured: at $a_k = k^0$ every frequency halved in
+      exactly 2 iterations, with a measured/predicted ratio of 1.000. Switching to $a_k = k^{-1}$
+      makes $t_{1/2}$ grow as $k^2$.
+    concept:
+      front: The two effects of an equal-amplitude encoding
+      back: Band extension (setting the ceiling) plus flattening inside the band (removing the bias). Outside the band it is not slow but impossible
+  - id: q4
+    prompt: >-
+      When the affine projected covariance of a 3D Gaussian is written
+      $\Sigma' = J W \Sigma W^\top J^\top$, which dimensionless ratio governs where the
+      approximation starts to fail? (symbol or name)
+    answers: ["s/Z", "s/z", "extent/depth", "size/depth", "the ratio of Gaussian extent to depth"]
+    explanation: >-
+      Measured: the relative error is $10^{-4}$ to $10^{-3}$ for $s/Z \\le 0.01$,
+      $1.4$ to $2.9\\times10^{-2}$ at $s/Z = 0.05$, and $0.94$ to $0.99$ (invalid) at $s/Z = 0.2$.
+      At the same $s/Z$ the error grows with the off-axis distance. That is why implementations cap
+      the on-screen size and clip near the camera.
+    concept:
+      front: The valid regime of the EWA affine approximation
+      back: "$s/Z$ (Gaussian extent over depth): accurate below 0.01, a few percent at 0.05, invalid at 0.2, and worse off axis"
+  - id: q5
+    prompt: What is the main reason 3DGS parameterises the covariance as $\Sigma = RSS^\top R^\top$?
+    choices:
+      - "Because it is faster to compute"
+      - "Because positive semi-definiteness is then guaranteed **by construction** during optimisation"
+      - "Because rotation and scale are physically interpretable"
+      - "Because it raises the covariance's degrees of freedom from 6 to 7"
+    explanation: >-
+      $\\Sigma = (RS)(RS)^\\top$, so $\\Sigma \\succeq 0$ whatever $R$ and $S$ are. Measured: over
+      20,000 random (scale, rotation) pairs there were no negative eigenvalues. Optimising the six
+      entries freely would lose positive definiteness along the way and leave the rendering
+      undefined.
+    concept:
+      front: Why $\Sigma = RSS^\top R^\top$
+      back: Positive semi-definiteness by construction. Optimising the entries directly breaks it

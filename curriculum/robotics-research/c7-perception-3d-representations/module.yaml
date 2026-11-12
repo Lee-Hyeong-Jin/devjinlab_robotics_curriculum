@@ -1,0 +1,17 @@
+id: c7-perception-3d-representations
+title: C7 지각과 3D 표현
+summary: >-
+  두 시점 기하에서 시작해 번들 조정, 강건 적합, 학습 기반 대응, 뉴럴 필드와 3D Gaussian
+  splatting, 이벤트·촉각 센싱까지 — 로봇이 세계를 어떤 수학적 표현으로 복원하고 그 표현이
+  언제 깨지는지를 다룬다. 근거가 되는 대학원 과목은 CMU 16-822, UZH/ETH 151-0632 Vision
+  Algorithms, MIT 16.485 L11-15, Stanford CS231A, TUM IN2228 이고 교재는 Hartley-Zisserman
+  Multiple View Geometry 와 Szeliski Computer Vision 2e 다.
+  설계상 레슨은 6개다(research_notes/연구 트랙 설계/blueprint.md 의 C7 절).
+level: 연구
+lessons:
+  - two-view-geometry
+  - bundle-adjustment
+  - robust-fitting-ransac
+  - learned-correspondence-slam
+  - neural-fields-3dgs
+  - event-tactile-sensing

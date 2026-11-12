@@ -1,0 +1,67 @@
+id: r0-linear-algebra-decompositions
+lang: en
+activities:
+  r0-linear-algebra-decompositions-reading: Read the lesson and follow the derivations
+  r0-linear-algebra-decompositions-textbook: "Textbook reading (Trefethen-Bau, Boyd appendices, Nocedal-Wright) + a one-page note"
+  r0-linear-algebra-decompositions-problems: "Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample)"
+  r0-linear-algebra-decompositions-reproduction: "Reproduction task - plot the error of the three solvers against the condition number (R1)"
+  r0-linear-algebra-decompositions-quiz: Concept check quiz
+resources:
+  "Trefethen & Bau, Numerical Linear Algebra":
+    note: Lectures 11-20 (QR, least squares, conditioning, stability). The primary textbook for this lesson. (official URL unverified)
+  "Boyd & Vandenberghe, Convex Optimization":
+    note: Appendices A (linear algebra background) and C. Free PDF.
+  "Nocedal & Wright, Numerical Optimization (2nd ed.)":
+    note: ch.10 (least-squares problems); the comparison of normal equations, QR and SVD is there. (official URL unverified)
+  "NumPy linalg 문서":
+    title: NumPy linalg documentation
+    note: lstsq, qr, svd, cond, matrix_rank - the tools for the reproduction task.
+quiz:
+  - id: q1
+    prompt: If $\kappa_2(A) = 10^6$, what is $\kappa_2(A^\top A)$?
+    explanation: >-
+      The singular values of $A^\top A$ are the squares of those of $A$, so the condition number is
+      squared. In double precision $\kappa=10^{12}$ leaves only about four significant digits.
+    answers: ["10^12", "1e12", "10**12", "1000000000000", "10^{12}"]
+    concept:
+      front: The condition number of the normal equations
+      back: $\kappa_2(A^\top A) = \kappa_2(A)^2$ - half of the significant digits are lost
+  - id: q2
+    prompt: What is the key reason QR least squares is numerically better than the normal equations?
+    choices:
+      - It needs fewer operations
+      - It never forms $A^\top A$, so the condition number is not squared
+      - It always gives the exact solution
+      - It gives a unique solution even under rank deficiency
+    explanation: >-
+      Orthogonal transformations preserve singular values, so $\kappa_2(R)=\kappa_2(A)$. QR in fact
+      needs more arithmetic, and it is the SVD (the pseudo-inverse) that gives a unique solution
+      under rank deficiency.
+    concept:
+      front: The advantage of QR least squares
+      back: It never forms $A^\top A$, so the condition number is not squared (orthogonal transforms preserve singular values)
+  - id: q3
+    prompt: A rank-deficient matrix has no least-squares solution.
+    explanation: >-
+      It has **infinitely many** (the affine subspace $x_0+\mathcal{N}(A)$). Among them a unique
+      minimum-norm solution exists, given by $A^+b$. The correct statement is not "there is no
+      solution" but "a rule is needed to pick one".
+    concept:
+      front: Least-squares solutions under rank deficiency
+      back: Infinitely many; the minimum-norm one is unique and equals $A^+b$ - a rule is needed to choose
+  - id: q4
+    prompt: >-
+      For the claim "the numerical rank of this matrix is 2" to be reproducible, what must be
+      reported with it?
+    choices:
+      - The size of the matrix
+      - The singular-value threshold
+      - The library version used
+      - The condition number
+    explanation: >-
+      Numerical rank is the number of singular values above $\tau$ and changes with $\tau$. A rank
+      claim without a threshold is not reproducible - the null-space diagnoses of C1 and C5 both
+      use this value.
+    concept:
+      front: What a numerical-rank claim needs
+      back: The threshold $\tau$; the default is $\sigma_1\max(m,n)\epsilon$ but it must be stated

@@ -1,0 +1,94 @@
+# English text of the structured fields of event-tactile-sensing.md (activity titles, resource
+# notes, quiz items). The prose lives in event-tactile-sensing.en.md.
+id: c7-event-tactile-sensing
+lang: en
+activities:
+  c7-event-tactile-sensing-reading: Read the lesson and follow the derivations
+  c7-event-tactile-sensing-papers: Read the two must-read papers and write a one-page note on each
+  c7-event-tactile-sensing-problems: "Problem set (2 derivations, 1 proof, 3 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  c7-event-tactile-sensing-reproduction: "Reproduction task: angular velocity from public event data, and photometric stereo (R2)"
+  c7-event-tactile-sensing-quiz: Concept-check quiz
+resources:
+  "Event Camera Dataset and Simulator (ECD, DAVIS 240C)":
+    note: >-
+      The input for the reproduction task. The text version of `shapes_rotation` contains
+      events.txt (t x y p), imu.txt (angular velocity ground truth) and calib.txt (intrinsics and
+      distortion). 157 MB compressed.
+  "GelSight 프로젝트 페이지 (MIT)":
+    title: "GelSight project page"
+    note: Recommended. Check the sensor construction (three coloured lights, an elastic gel, a camera) in the figures. It is a commercial product page.
+  "Szeliski, Computer Vision: Algorithms and Applications (2nd ed., 2022)":
+    note: ch.13.1 (shape from shading / photometric stereo). The mathematical background for the tactile section.
+quiz:
+  - id: q1
+    prompt: Why does an event camera compare changes of the log intensity $L = \log I$ against the threshold?
+    choices:
+      - "Because logarithms are faster to compute"
+      - "Because it makes the sensor respond to relative contrast $\\Delta I/I$, treating dark and bright regions on the same footing"
+      - "Because the noise becomes Gaussian in the log domain"
+      - "Because it is needed to define the sign of the polarity"
+    explanation: >-
+      Since $\\Delta L = \\Delta I/I$, the threshold $C$ becomes a threshold on relative contrast.
+      That lets one sensor work in very dark and very bright regions at once, which is the basis of
+      its high dynamic range. The rate is $|\\nabla L\\cdot v|/C$, proportional to **the gradient
+      along the motion**.
+    concept:
+      front: Why log intensity
+      back: "$\\Delta L = \\Delta I/I$ - the threshold becomes one on relative contrast, giving the wide dynamic range"
+  - id: q2
+    prompt: The rate model $N = |\nabla L\cdot v|\Delta t / C$ is more accurate the shorter the integration window.
+    explanation: >-
+      The opposite. The threshold model is a quantiser, so over a short window most pixels have
+      $|\\Delta L| < C$ and fire nothing, and the actual count is
+      $\\lfloor |\\Delta L|/C \\rfloor$. Measured: the measured/predicted ratio is 0.000 at 1 ms,
+      0.058 at 2 ms, 0.405 at 5 ms and 0.813 at 20 ms, climbing towards one. The spatial
+      correlation, though, matches much sooner (0.957 at 5 ms).
+    concept:
+      front: The valid regime of the rate model
+      back: When the per-pixel count is well above one. For short windows quantisation makes it overpredict
+  - id: q3
+    prompt: What exactly does maximising the **variance** of the image of warped events measure in contrast maximisation?
+    choices:
+      - "The accuracy of the motion compensation"
+      - "How much the events are clustered (spatially concentrated)"
+      - "The likelihood of the event generation model"
+      - "The smoothness of the optical flow"
+    explanation: >-
+      The variance measures how few pixels the events pile into, and it is used through the
+      **indirect** argument that correct motion makes events from one edge overlap. That is why a
+      wide enough warp family admits a degenerate solution piling everything onto a point (event
+      collapse). That it is not derived from the generation model is an open problem.
+    concept:
+      front: What contrast maximisation measures
+      back: Clustering, not motion compensation - hence the degenerate solutions of wide warp families
+  - id: q4
+    prompt: >-
+      The angular velocity estimated by contrast maximisation on public event data comes out with
+      the opposite sign from the one the IMU reports. What should you check? (one word or short)
+    answers: ["frame convention", "sign convention", "convention", "coordinate convention", "the warp sign convention"]
+    explanation: >-
+      If the dataset's IMU frame and the sign convention of the warp $\\exp(-\\hat\\omega t)$
+      differ, the whole vector flips. Measured (ECD shapes_rotation, three 30 ms windows): the
+      magnitude errors were 1.18%/3.20%/2.98% and the axis angles 2.18°/2.70°/3.20° - a good match -
+      while the vectors had opposite signs. That is why the magnitude and the axis direction must be
+      reported separately.
+    concept:
+      front: The first thing to check when comparing angular velocities
+      back: The IMU frame and the warp's sign convention. Report the magnitude and the axis angle separately
+  - id: q5
+    prompt: >-
+      When estimating normal force from the indentation volume $V = \int z$ on a GelSight-style
+      sensor, which condition breaks first?
+    choices:
+      - "The assumption that the gel's albedo is uniform"
+      - "Light contact - noise outside the contact integrates and swamps the small true volume"
+      - "The invertibility of the illumination matrix $A$"
+      - "The constant ambiguity of the Poisson integration"
+    explanation: >-
+      Measured: at 1% channel noise the mean normal error is a modest $1.09^\\circ$, and yet at an
+      indentation of 1.0 the recovered volume was **8.82 times** the truth (1.38 times at an
+      indentation of 6.0). The noise outside the contact integrates into a spurious volume. A
+      contact mask must be established first and the integration confined to it.
+    concept:
+      front: The first failure condition of volume-based force estimation
+      back: Light contact. At 1% noise and indentation 1.0 the volume is 8.8x off - a contact mask is mandatory

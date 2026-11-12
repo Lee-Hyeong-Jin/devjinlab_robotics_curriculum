@@ -1,0 +1,65 @@
+id: c8-generalization-sim2real
+lang: en
+activities:
+  c8-generalization-sim2real-reading: Read the text and follow the derivations
+  c8-generalization-sim2real-papers: Read the three must-read papers + a one-page note each
+  c8-generalization-sim2real-problems: Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample, 1 paper)
+  c8-generalization-sim2real-reproduction: Reproduction task - the randomization-width performance curve and the information gap (R1)
+  c8-generalization-sim2real-quiz: Concept-check quiz
+resources:
+  "Peng et al. — Sim-to-real transfer of robotic control with dynamics randomization (2017)":
+    note: Recommended. Dynamics randomization with a recurrent policy for implicit dynamics estimation.
+  "Mehta et al. — Active domain randomization (2019)":
+    note: Recommended. Learning the randomization distribution instead of fixing it.
+  "Kumar et al. — RMA: rapid motor adaptation for legged robots (2021)":
+    note: Recommended. Compressing privileged information into a latent variable the student estimates online.
+  "Lee et al. — Learning quadrupedal locomotion over challenging terrain (2020)":
+    note: Recommended. A landmark case of the teacher-student structure working on hardware.
+  "Miki et al. — Learning robust perceptive locomotion for quadrupedal robots in the wild (2022)":
+    note: Recommended. Teacher-student with perception, and its hardware failure modes.
+  "Sinha et al. — System-level safety monitor for out-of-distribution inputs (2022)":
+    note: Recommended. A system-level approach to detecting out-of-distribution inputs at runtime.
+  "Li et al. — Evaluating real-world robot manipulation policies in simulation (2024)":
+    note: Recommended. Measuring the correlation between simulated evaluation and hardware performance (SIMPLER).
+quiz:
+  - id: q1
+    prompt: "When $\\xi\\sim p$ is drawn each episode and the policy cannot see $\\xi$, which objective does learning optimize?"
+    choices:
+      - "$\\min_{\\xi\\in\\mathrm{supp}(p)} J_\\xi(\\pi)$ (the worst case)"
+      - "$\\mathbb{E}_{\\xi\\sim p}[J_\\xi(\\pi)]$ (the average over the randomization distribution)"
+      - "$J_{\\mathbb{E}[\\xi]}(\\pi)$ (the MDP of the average parameter)"
+      - "$\\max_{\\xi} J_\\xi(\\pi)$ (the best case)"
+    explanation: "The expectation of the policy-gradient estimator is $\\nabla\\mathbb{E}_p[J_\\xi]$, so the limit point is a stationary point of the average objective. It also differs from the MDP of the average **parameter** - if $J_\\xi$ is nonlinear in $\\xi$ then $\\mathbb{E}_p[J_\\xi] \\ne J_{\\mathbb{E}[\\xi]}$. Wanting the worst case requires a different, CVaR-style objective."
+    concept:
+      front: "The implicit objective of domain randomization"
+      back: "$\\mathbb{E}_{\\xi\\sim p}[J_\\xi(\\pi)]$ - a risk-neutral average; neither the worst case nor the average-parameter MDP"
+  - id: q2
+    prompt: "Widening the randomization range monotonically improves performance at the unseen parameter."
+    explanation: "Widening increases coverage, but a single policy that cannot see $\\xi$ cannot fit all $\\xi$ at once. In the reproduction task the physical clipping at zero raises the mean slip, and once the width exceeds $w^\\star = 0.492$ the average-optimal policy switches to the safe route, so performance at $\\xi_{\\mathrm{real}}=0.05$ falls **like a step** from $7.6950$ to $5.9049$ (a 23.3% drop)."
+    concept:
+      front: "Excessive randomization"
+      back: "At the point where the mean shifts and the policy switches, performance falls like a step - width is not free"
+  - id: q3
+    prompt: "When the hardware is a single point outside the randomization support, what does the performance bound (2) become?"
+    choices:
+      - "$0$, so transfer is guaranteed"
+      - "$2V_{\\max}$, so it carries no information"
+      - "$V_{\\max}/(1-\\gamma)$"
+      - "It shrinks in proportion to the randomization width"
+    explanation: "$D_{\\mathrm{TV}}(p, \\delta_{\\xi_{\\mathrm{real}}}) = 1$, so the bound is $2V_{\\max}$ - a value that holds trivially for every policy. The theoretical role of randomization is therefore a **coverage assumption**, not a guarantee, and getting a useful bound requires additionally assuming Lipschitzness of $J_\\xi$ as in (4)."
+    concept:
+      front: "The limit of the distribution-shift bound"
+      back: "Outside the support $D_{\\mathrm{TV}}=1$ makes the bound vacuous - coverage is an assumption, not a guarantee"
+  - id: q4
+    prompt: "With good enough distillation, a student using only observations can catch up with a teacher using privileged information."
+    explanation: "The gap in (3) is the Jensen gap from swapping $\\max$ and $\\mathbb{E}$, and the student's best is the observation-conditional average $\\mathbb{E}[\\pi_{\\text{teacher}}\\mid o]$. A policy mixing two routes half and half may travel neither properly. What the student lacks is **information**, not imitation ability, so the only way to shrink the gap is to estimate $\\xi$ from history."
+    concept:
+      front: "The teacher-student gap"
+      back: "A Jensen gap - distillation quality does not shrink it; only recovering information from history does"
+  - id: q5
+    prompt: "In the reproduction task, write the slip probability $\\xi^\\star$ at which the fast and safe routes have equal value, in terms of $\\gamma$."
+    answers: ["1 - gamma^3", "1-gamma^3", "1-\\gamma^3", "1 - gamma**3"]
+    explanation: "From $\\frac{\\gamma^2}{1-\\gamma}(1-\\xi) = \\frac{\\gamma^5}{1-\\gamma}$ we get $1-\\xi = \\gamma^3$, i.e. $\\xi^\\star = 1-\\gamma^3$. At $\\gamma=0.9$ this is $0.271$, and as $\\gamma$ grows (the future matters more) $\\xi^\\star$ shrinks so the safe route wins sooner."
+    concept:
+      front: "The crossover of the two routes"
+      back: "$\\xi^\\star = 1-\\gamma^3$ - the slow route's three extra steps of delay, converted by discounting"
