@@ -83,7 +83,7 @@ D3 proof — see `lesson-standard.md` §2 in the track design notes).
   $$
   Because the right-hand side of (4) is not zero, $\dot{J}_i e_k \ne \partial J_i\dot{q}/\partial q_k$,
   and **every Coriolis term comes from there**. Checking (4) by central finite differences at a
-  random 7-DOF configuration gives an error of about $1.5\times10^{-10}$ (condition 4 of the
+  random 7-DOF configuration gives an error of about $1.1\times10^{-10}$ (condition 4 of the
   reproduction task).
 - **R3 (backward force recursion and the joint torque) [D2]** — the resultant force on body $i$
   must satisfy its equation of motion, so
@@ -519,8 +519,9 @@ The `rnea` of P5 must satisfy **all four** of the following. Fix every random se
    its minimum near $10^{-5}$.
    > Note: this condition is looser than condition 2 because of the **limits of finite
    > differencing**, not of the algorithm. The 7-DOF absolute errors measured in the author's
-   > environment were $8.9\times10^{-10}$ at $h = 10^{-5}$, $7.9\times10^{-9}$ at $h = 10^{-6}$
-   > and $1.4\times10^{-7}$ at $h = 10^{-7}$. The blueprint's "within 1e-9" applies to condition 2
+   > environment were $5.8\times10^{-8}$ at $h = 10^{-4}$, $6.8\times10^{-10}$ at $h = 10^{-5}$,
+   > $3.1\times10^{-9}$ at $h = 10^{-6}$ and $7.2\times10^{-8}$ at $h = 10^{-7}$ — a V with its
+   > minimum near $10^{-5}$. The blueprint's "within 1e-9" applies to condition 2
    > (exact differentiation) only.
 4. **Confirm the non-integrability (4) numerically** — on the same 7-DOF model, at random $q$ and
    over all triples $(i, k, l)$,
@@ -535,10 +536,18 @@ The `rnea` of P5 must satisfy **all four** of the following. Fix every random se
    $\lVert\tau^{\text{bug}} - \tau\rVert_\infty > 10^{-2}$ while at $\dot q = 0$ the difference
    vanishes below $10^{-14}$.
 
-**Input data**: no external data needed. The link offsets, masses and inertias of the 7-DOF model
-are generated with a fixed seed (`np.random.default_rng(7)`), with the inertia matrices built in
-the form $0.02\,AA^\top + 0.05\,\mathbb{1}$ so that they are positive definite and satisfy the
-triangle inequalities.
+**Input data**: no external data needed. The link offsets of the 7-DOF model are fixed, and the
+mass properties are **generated from point masses so as to be physically realisable** — for each
+body, with a fixed seed (`np.random.default_rng(7)`), draw eight points with masses
+$m_j \sim U(0.05, 0.5)$ and positions $r_j \sim U(-0.12, 0.12)^3$, collect
+$$
+m = \sum_j m_j, \quad h = \sum_j m_jr_j, \quad
+I_O = \sum_j m_j\big(\lVert r_j\rVert^2\mathbb{1} - r_jr_j^\top\big)
+$$
+and set $c = h/m$, $\bar I_C = I_O - m\hat c\hat c^\top$. Built this way the pseudo-inertia is a
+sum of rank-one positive semidefinite terms, so it is **guaranteed positive definite** (once the
+points affinely span), and the triangle inequalities follow — this is the physical consistency
+condition of `c2-dynamics-derivatives-sysid`.
 
 **Baselines** (at least one):
 - First choice: the Jacobian-based Euler-Lagrange path of condition 2 — a completely independent

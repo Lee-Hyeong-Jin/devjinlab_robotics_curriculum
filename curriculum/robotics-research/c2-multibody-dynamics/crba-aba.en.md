@@ -319,7 +319,7 @@ a leaf, $\mathcal{D} = \varnothing$ and $d_i = M_{ii}$ **exactly**.
 
 > **(7) numerically**: at a random configuration of the 7-DOF serial arm, computing ABA's $d$ and
 > the Schur complement of $M$ separately and comparing gives a maximum error of
-> $4.4\times10^{-16}$. For the two-link arm it can even be checked by hand:
+> $2.2\times10^{-16}$. For the two-link arm it can even be checked by hand:
 > $d_1 = M_{11} - M_{12}^2/M_{22} = 0.689405914278$ and $d_2 = M_{22} = 0.16$.
 
 **What this identity means.** ABA **eliminates the tree-structured $M$ in leaf-to-root order**,
@@ -410,7 +410,7 @@ defined.
 > **Caution — numerical versus exact positive definiteness.** Step 3 gives
 > $I^a_i \succeq 0$, but in floating point the smallest eigenvalue can come out negative at the
 > $-10^{-16}$ level (measured in the author's environment:
-> $\lambda_{\min}(I^a) = -7.2\times10^{-16}$). That is the round-off of an eigenvalue which (6)
+> $\lambda_{\min}(I^a) = -3.1\times10^{-15}$). That is the round-off of an eigenvalue which (6)
 > says must be **exactly** zero. Trying to confirm positive definiteness by running Cholesky on
 > $I^a_i$ will fail, so the check must be "$\lambda_{\min} \ge -\epsilon$ and
 > $I^a_iS_i \approx 0$".
@@ -547,11 +547,16 @@ The `crba` and `aba` of P6 must satisfy **all four** of the following. Fix the r
    $M^{\text{fd}}_{\cdot k} = \dfrac{\mathrm{rnea}(q, 0, h e_k) - \mathrm{rnea}(q, 0, -h e_k)}{2h}$
    with $h = 10^{-6}$ and gravity off,
    $$
-   \max\big\lVert M^{\text{CRBA}} - M^{\text{fd}} \big\rVert_\infty < 10^{-8}.
+   \max\big\lVert M^{\text{CRBA}} - M^{\text{fd}} \big\rVert_\infty < 10^{-12}.
    $$
-   > Measured in the author's environment: $3.2\times10^{-9}$. This condition is dominated by the
-   > **limits of finite differencing**, so sweep $h$ over $10^{-4} \dots 10^{-8}$ and confirm the
-   > V curve.
+   > Measured in the author's environment: $4.4\times10^{-16}$, and the same level across the whole
+   > range $h \in [10^{-8}, 10^{-4}]$ — **no V curve is the correct outcome** here. The reason: with
+   > gravity off and $\dot q = 0$, $\tau = M\ddot q$ is **exactly linear** in $\ddot q$, so the
+   > central difference has zero truncation error, and $\tau$ is small enough that there is no
+   > cancellation either. Turn gravity **on** and cancellation dominates, the error growing like
+   > $1/h$ (measured: $7.1\times10^{-11}$ at $h = 10^{-4}$, $8.7\times10^{-9}$ at $10^{-6}$ and
+   > $9.2\times10^{-7}$ at $10^{-8}$). That is why this condition **specifies gravity off** —
+   > contrast it with the V curve of condition 3 in the previous lesson.
 3. **ABA versus the $M^{-1}$ route, and the RNEA round trip** — over $10^3$ random
    $(q, \dot q, \tau)$,
    $$
@@ -560,18 +565,18 @@ The `crba` and `aba` of P6 must satisfy **all four** of the following. Fix the r
    $$
    \max\big\lVert \mathrm{rnea}\big(q, \dot q, \mathrm{aba}(q,\dot q,\tau)\big) - \tau \big\rVert_\infty < 10^{-12}.
    $$
-   > Measured: $8.1\times10^{-15}$ and $1.4\times10^{-14}$.
+   > Measured: $1.8\times10^{-14}$ and $2.4\times10^{-15}$.
    > Test with $\dot q \ne 0$ without fail — at $\dot q = 0$ the bug of P2 (a) stays hidden.
 4. **Structure checks (this lesson's own condition)** — confirm all four.
    (a) **$d_i$ is a Schur complement of $M$**, (7): for a serial chain
    $\mathcal{D}(i) = \{i+1,\dots,n\}$, so
    $\max_i|d_i - (M_{ii} - M_{i\mathcal{D}}M_{\mathcal{D}\mathcal{D}}^{-1}M_{\mathcal{D}i})| < 10^{-12}$
-   (measured $4.4\times10^{-16}$), together with $0 < d_i \le M_{ii}$ and $d_n = M_{nn}$
+   (measured $2.2\times10^{-16}$), together with $0 < d_i \le M_{ii}$ and $d_n = M_{nn}$
    **exactly**.
    (b) **$I^a_iS_i = 0$**, (6): $\max_i\lVert I^a_iS_i\rVert_\infty < 10^{-14}$ (it should be
    exactly zero).
    (c) **$I^A_i \succ 0$, $I^a_i \succeq 0$**: $\lambda_{\min}(I^A_i) > 0$ and
-   $\lambda_{\min}(I^a_i) > -10^{-14}$ (measured $-7.2\times10^{-16}$ — **a negative value is
+   $\lambda_{\min}(I^a_i) > -10^{-13}$ (measured $-3.1\times10^{-15}$ — **a negative value is
    normal**, and you should confirm together with $I^a_iS_i$ that it is the round-off of the
    exactly-zero eigenvalue of (6)).
    (d) **Branch sparsity**, R1: on a four-body branching tree (parents $[-1, 0, 0, 2]$, axes
