@@ -36,10 +36,13 @@ and statistics, programming, algorithms, mechanics, dynamics)과 MIT EECS TQE Gr
 ## 2. 트랙 구조 (track structure)
 
 ```
-Stage 0  R0 수학·수치 기초 (bridge)                     7 레슨   ─ 선택(진단 후)
+Stage -1 F0 시작 전 기초 (foundations from zero)        8 레슨   ─ 진단 통과 시 건너뛰기
+         └ 미적분·선형대수·미분방정식·확률·고전역학·증명·파이썬 (가이드형)
+
+Stage 0  R0 수학·수치 기초 (bridge)                     7 레슨   ─ 진단 통과 시 건너뛰기
          └ 기존 robotics-expert 50레슨 = 로보틱스 선수
 
-Stage 1  공통 코어 (common core)                        51 레슨  ─ 전원 필수
+Stage 1  공통 코어 (common core)                        51 레슨  ─ 권장 전원 이수
          C1 강체 기하와 리 군                   5
          C2 다물체 동역학                       6
          C3 비선형·강건 제어                    6
@@ -53,12 +56,18 @@ Stage 2  Specialization (택 1, 권장 2)                  6 레슨/트랙
          S1 SLAM·공간 지능 | S2 조작·접촉 | S3 보행·언더액추에이티드
          S4 로봇 학습·파운데이션 모델 | S5 다중 로봇·필드 로보틱스
 
-Stage 3  연구 실행 (research practice)                   9 레슨  ─ 전원 필수
+Stage 3  연구 실행 (research practice)                   9 레슨  ─ 권장 전원 이수
          R1 연구 방법론  6     R2 캡스톤  3
 ```
 
-총 97레슨(= 7 + 51 + 30 + 9). 한 학습자의 이수 경로는 **Stage 0(선택) + 코어 51 + specialization
-6~12 + Stage 3 의 9** ≈ 66–72레슨.
+총 105레슨(= 8 + 7 + 51 + 30 + 9). 한 학습자의 이수 경로는 **Stage -1·0(진단으로 건너뛸 수 있음)
++ 코어 51 + specialization 6~12 + Stage 3 의 9** ≈ 66–87레슨.
+
+> **선수는 "권장"이다 (사용자 결정 2026-11-12).** 플랫폼은 선수 레슨을 **잠그지 않는다** — 선수
+> 관계는 권장 순서를 보여 주는 정보일 뿐이고, 학습자는 어느 레슨이든 바로 열 수 있다. 대신 각
+> 모듈의 **첫 레슨에 "시작 전 자가 진단"** 문항을 두어 학습자가 스스로 준비 상태를 판단한다
+> ([lesson-standard.md](lesson-standard.md) §1). 아래 DAG 는 **권장 선수(recommended
+> prerequisites)** 를 뜻한다.
 
 **공통 코어 8모듈의 근거**: CMU RI Core Course Qualifier 의 4영역(Perception / Cognition /
 Action / Math Foundations)과 MIT EECS TQE Group 3·4 의 교집합이다([benchmark.md](benchmark.md) §9-1).
@@ -67,9 +76,10 @@ Action → C1·C2·C3·C4, Perception → C5·C7, Cognition → C8, Math Foundat
 ### 모듈 선수 관계 (prerequisite DAG)
 
 ```
-R0 ──> C1 ──> C2 ──> C3 ──> C4
+F0 ──> (robotics-expert 50레슨) ──> R0 ──> C1 ──> C2 ──> C3 ──> C4
        │       │             ↑
        │       └─────────────┘
+       │ (R0 에서)
        ├────> C5 <─── C7
        ├────> C6 <─── C4 (미분 제약·커널 계획)
        └────> C8 <─── C4 (DP·LQR), C6 (MDP·탐색)
@@ -88,6 +98,8 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 
 | 구간 | 내용 | 레슨 | 기간 |
 |---|---|---|---|
+| -1 | F0 진단 → 부족한 것만 (완전 초보는 전부) | 0–8 | 0–10개월 |
+| -0.5 | `robotics-expert` 코스(기존 50레슨) — 로보틱스 선수 | 0–50 | 0–4개월 |
 | 0 | R0 진단 → 부족한 것만 | 0–7 | 0–2개월 |
 | 1 | C1 → C2 → C3 (기하·동역학·제어) | 17 | 4개월 |
 | 2 | C4 → C5 (최적 제어·추정) — 두 모듈이 이 트랙의 중심 | 13 | 3.5개월 |
@@ -95,9 +107,24 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 | 4 | Specialization 1개 | 6 | 2개월 |
 | 5 | R1 연구 방법론 (specialization 과 병행 가능) | 6 | 1.5개월 |
 | 6 | R2 캡스톤 (서베이 → 재현 → 기여 + 워크숍 논문 초안) | 3 | 4개월 |
-| | **합계** | **66** | **약 20개월** |
+| | **합계(연구 트랙만)** | **66** | **약 20개월** |
 
 주 20시간이면 약 12개월. 두 번째 specialization 을 더하면 +2개월.
+
+**0에서 박사급까지의 전체 경로**(완전 초보가 아무것도 건너뛰지 않는 경우, 주 12시간 기준):
+
+| 단계 | 도달 수준 | 누적 학습 시간 | 누적 기간 |
+|---|---|---|---|
+| Stage -1 (F0) | 학부 1–2학년 수학·물리·프로그래밍 | 약 500시간 | 약 10개월 |
+| robotics-expert 50레슨 | 로보틱스 엔지니어 입문~중급 | 약 600시간 | 약 12개월 |
+| Stage 0 (R0) | 대학원 입학 수준의 수학·수치 도구 | 약 660시간 | 약 13개월 |
+| Stage 1 (코어 51) | 박사과정 자격시험 과목 수준 | 약 1,070시간 | 약 21개월 |
+| Stage 2 (specialization) | 특정 분야의 최신 논문을 읽고 재현 | 약 1,120시간 | 약 22개월 |
+| Stage 3 (R1·R2) | 서베이·재현·작은 기여 + 워크숍 논문 초안 | 약 1,200시간 | 약 24개월 |
+
+즉 **완전한 0에서 시작하면 주 12시간으로 약 2년, 주 20시간으로 약 15개월**이다. 진단으로
+건너뛰는 단계가 많을수록 짧아진다. 이 숫자는 레슨의 `estimated_minutes` 합계에서 계산한
+추정이며 실측값이 아니다.
 
 ## 3. 표기 규약
 
@@ -113,6 +140,48 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
   **MLS** Murray–Li–Sastry(교재 지정은 확인, 공식 URL 미확인) · **PR** Thrun–Burgard–Fox(동일) ·
   **S&B** Sutton–Barto(동일) · **NW** Nocedal–Wright(동일) · **Khalil**(동일).
 - **재현 과제**: 티어 R1–R4([lesson-standard.md](lesson-standard.md) §6)와 수용 기준 요약.
+
+## 3-1. Stage -1 — F0 시작 전 기초 (foundations from zero)
+
+**왜 있는가**: 이 커리큘럼은 "0부터 박사급까지"를 목표로 한다(사용자 결정 2026-11-12). 기존
+50레슨은 고교 수학과 기본 파이썬을 전제하고, R0 는 학부 수학을 전제한다. 그 아래를 메우는 단계다.
+
+**형식이 다르다**: F0 레슨은 내용을 새로 쓰지 않는다. **가이드형(guide) 레슨**이다 — 검증된 공개
+강의·교재를 어떤 순서로, 어디까지, 무엇으로 확인하며 볼지 안내하고, **진단 문제**로 통과 여부를
+스스로 판정하게 한다. 진단을 통과하면 그 레슨을 건너뛴다. 따라서 연구 트랙 레슨 표준
+([lesson-standard.md](lesson-standard.md) §1)의 고정 섹션 9–10개를 적용하지 않고, 아래 4개 절만 쓴다:
+`## 도달 목표` · `## 학습 경로` · `## 시작 전 자가 진단` · `## 이 단계 공부법`.
+
+아래 URL 은 모두 2026-11-12 에 fetch 해 확인했다. 제공 내용(영상·문제집·해답·시험)도 그때 확인한 것이다.
+
+| 레슨 | 도달 목표(통과 기준) | 안내 자료 (확인됨) | 예상 시간 |
+|---|---|---|---|
+| `f0-calculus-single-variable` 미적분 I | 극한·도함수·적분·Taylor 급수를 계산하고, 최적화 문제를 미분으로 풀 수 있다 | [MIT 18.01 Single Variable Calculus (Fall 2006)](https://ocw.mit.edu/courses/18-01-single-variable-calculus-fall-2006/) — 강의 영상, 강의 노트, 시험+해답 | 70시간 |
+| `f0-calculus-multivariable` 미적분 II | 편미분·기울기·연쇄법칙·다중적분·발산/회전을 계산하고 기울기의 기하적 의미를 설명할 수 있다 | [MIT 18.02 Multivariable Calculus (Fall 2007)](https://ocw.mit.edu/courses/18-02-multivariable-calculus-fall-2007/) — 강의 영상, 노트, 시험+해답 | 70시간 |
+| `f0-linear-algebra` 선형대수 | 소거법·부분공간·4개 기본 부분공간·고윳값·SVD 를 손으로 계산하고 의미를 말할 수 있다 | [MIT 18.06 Linear Algebra (Spring 2010, Strang)](https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/) — 강의 영상, 문제집+해답, 시험+해답 | 80시간 |
+| `f0-differential-equations` 미분방정식 | 1·2계 ODE 를 풀고, 선형 계의 해를 고윳값으로 해석하고, 수치 적분기의 필요성을 설명할 수 있다 | [MIT 18.03 Differential Equations (Spring 2010)](https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/) — 강의 영상, 노트, 문제집+해답 | 60시간 |
+| `f0-probability-statistics` 확률·통계 | 조건부확률·베이즈 정리·기댓값·분산·대수의 법칙·중심극한정리를 쓰고, 추정과 신뢰구간을 계산할 수 있다 | [MIT 18.05 Introduction to Probability and Statistics (Spring 2022)](https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/) — 노트, 문제집+해답, 시험+해답(영상 없음) · 영상이 필요하면 [MIT 6.041 (Fall 2010)](https://ocw.mit.edu/courses/6-041-probabilistic-systems-analysis-and-applied-probability-fall-2010/) — 강의 영상, 문제집+해답 | 70시간 |
+| `f0-classical-mechanics` 고전 역학 | Newton 법칙으로 운동을 세우고, 에너지·운동량 보존과 회전 운동(관성 모멘트, 토크)을 다룰 수 있다 | [MIT 8.01SC Classical Mechanics (Fall 2016)](https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/) — 강의 영상, 문제집 1–12, 온라인 교재 | 70시간 |
+| `f0-proofs-math-maturity` 증명 읽기·쓰기 | 정의-정리-증명 구조를 읽고, 귀납법·대우·모순법으로 간단한 명제를 **직접 증명**할 수 있다 | [Hammack, *Book of Proof* (3판, 무료 전문)](https://richardhammack.github.io/BookOfProof/) — Part I–IV 14장 + 선별 해답 · [MIT 6.042J Mathematics for Computer Science (Fall 2010)](https://ocw.mit.edu/courses/6-042j-mathematics-for-computer-science-fall-2010/) — 강의 영상, 시험+해답 | 50시간 |
+| `f0-python-numerics-git` 파이썬·수치계산·Git | numpy 로 배열 연산·브로드캐스팅을 쓰고, 부동소수점 오차와 조건수를 인식하고, Git 으로 작업을 관리할 수 있다 | [NumPy user guide](https://numpy.org/doc/stable/user/) · [Scientific Python Lectures](https://lectures.scientific-python.org/) · [Pro Git (무료 전문, CC BY-NC-SA)](https://git-scm.com/book/en/v2) | 40시간 |
+
+합계 약 510시간. 주 12시간이면 약 10개월이지만, **대부분의 학습자는 전부 듣지 않는다** — 진단으로
+통과한 레슨은 건너뛴다.
+
+**권장 순서**: `f0-calculus-single-variable` → `f0-linear-algebra` → `f0-calculus-multivariable`
+→ `f0-differential-equations` → `f0-probability-statistics` → `f0-python-numerics-git`
+→ `f0-classical-mechanics` → `f0-proofs-math-maturity`.
+선형대수를 일찍 넣는 이유는 로보틱스에서 가장 먼저, 가장 많이 쓰이기 때문이다. 증명 레슨을 마지막에
+두는 이유는 앞의 과목들에서 증명을 읽어 본 뒤가 효율적이기 때문이다 — 다만 R0 의 D3 결과를 만나기
+**전에는 반드시** 마쳐야 한다.
+
+**진단 문제 작성 규칙**: 레슨당 5–8문항, 전부 **채점 가능한 계산·단답**으로, 정답과 허용오차를
+공개한다. 통과선은 80%다. 진단은 "그 과목을 들었는가"가 아니라 "그 과목의 결과를 쓸 수 있는가"를
+묻는다(예: "3×3 행렬의 SVD 를 구하고 특이값으로 조건수를 계산하라").
+
+**확인하지 못한 자료**: 3Blue1Brown 의 "Essence of Linear Algebra" 시리즈는 fetch 한 페이지에서
+시리즈 제목·목록을 확인하지 못했다 **(미확인)** — 안내 자료로 넣지 않았다. Strang 의 교재는
+무료 공개가 아니므로 18.06 OCW 를 1순위로 둔다.
 
 ## 4. Stage 0 — R0 수학·수치 기초 (bridge)
 
