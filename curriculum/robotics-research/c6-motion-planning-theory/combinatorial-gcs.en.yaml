@@ -1,0 +1,119 @@
+id: c6-combinatorial-gcs
+lang: en
+activities:
+  c6-combinatorial-gcs-reading: Read the lesson and follow the derivations
+  c6-combinatorial-gcs-papers: >-
+    Read the three must-read papers and write a one-page note on each
+  c6-combinatorial-gcs-problems: >-
+    Problem set (2 derivations, 2 proofs, 1 numerical, 1 implementation, 1 counterexample, 1 paper)
+  c6-combinatorial-gcs-reproduction: >-
+    Reproduction task - visibility-graph shortest path versus 500 sampled solutions (R2)
+  c6-combinatorial-gcs-quiz: Concept-check quiz
+resources:
+  "LaValle, Planning Algorithms":
+    note: >-
+      ch.6 (combinatorial planning) - 6.2 polygonal environments, 6.3 cell decompositions, 6.2.4
+      shortest-path roadmaps. Free in full.
+  "Lozano-Pérez & Wesley — An algorithm for planning collision-free paths among polyhedral obstacles (1979)":
+    note: >-
+      Must-read 1. The primary source for the visibility graph; C-space inflation and VGRAPH are in
+      the same paper.
+  "Marcucci, Petersen, von Wrangel & Tedrake — Motion planning around obstacles with convex optimization (2023)":
+    note: Must-read 2. GCS applied to motion planning. Science Robotics 2023.
+  "Marcucci, Umenberger, Parrilo & Tedrake — Shortest Paths in Graphs of Convex Sets (2024)":
+    note: >-
+      Must-read 3. The theory side of GCS shortest paths - the perspective reformulation and the
+      tightness of the relaxation. SIAM J. Optim. 34(1).
+  "Deits & Tedrake — Computing large convex regions of obstacle-free space through semidefinite programming (2015)":
+    note: >-
+      Optional. IRIS - how to find convex regions of free space, i.e. where the sets $X_v$ of a GCS
+      come from.
+  "Canny & Reif — New lower bound techniques for robot motion planning problems (1987)":
+    note: >-
+      Optional. Shows that the shortest path among polyhedra in three dimensions is NP-hard - the
+      source for R4.
+quiz:
+  - id: q1
+    prompt: >-
+      Why can a shortest path in a polygonal free space not turn in the **relative interior** of an
+      obstacle edge?
+    choices:
+      - Because the path is not differentiable there
+      - >-
+        Because the turning angle seen from the free side is below $\pi$, so the turn is cut short by
+        a segment lying in the free space
+      - Because the interior of an edge does not belong to the free space
+      - Because that point is not a vertex of the visibility graph
+    explanation: >-
+      Near an edge the obstacle is a half-plane and the path arrives through the free half-plane and
+      leaves into it. If the turning angle is below $\pi$, the segment joining a point before and a
+      point after the turn lies on the free side and is shorter by the triangle inequality. At a
+      reflex vertex that segment would enter the obstacle, so the argument fails there - which is why
+      turns happen only at convex vertices.
+    concept:
+      front: Where a shortest path may turn
+      back: >-
+        Only at convex obstacle vertices; in the interior of an edge a segment shortcut gives a
+        contradiction
+  - id: q2
+    prompt: >-
+      Why is the big-M formulation $c_{uv} \ge \lVert x_u - x_v \rVert - M(1-y_{uv})$ looser than the
+      perspective formulation?
+    choices:
+      - Because $M$ is non-linear
+      - >-
+        Because when $y_{uv} = 0$ it does not constrain $x_u, x_v$ at all, so the relaxed solution can
+        absorb the cost into $M$
+      - Because big-M is non-convex
+      - Because the perspective adds extra integrality constraints
+    explanation: >-
+      The perspective is the **convex hull** of
+      $\{(x,0,0)\} \cup \{(x,1,s): s \ge f(x)\}$, hence a relaxation that cannot be tightened. big-M
+      leaves the variables of a switched-off edge unconstrained instead of folding them to zero, so a
+      relaxed solution can turn many edges on a little and dodge the cost.
+    concept:
+      front: Why the perspective relaxation beats big-M
+      back: It folds a switched-off edge's variables to zero - the convex hull, which cannot be tightened
+  - id: q3
+    prompt: >-
+      The optimum of the perspective relaxation of the GCS shortest-path problem always equals the
+      true optimum.
+    explanation: >-
+      The relaxed value is a **lower bound** on the true optimum (substituting $z = yx$ into an
+      integer feasible point gives a relaxed feasible point with the same objective), and there is no
+      guarantee that the gap is zero; SPP-GCS is NP-hard in general. The small gaps on practical
+      instances are a numerical observation; the real use is that the relaxed value plus a rounded
+      solution give an interval certifying sub-optimality.
+    concept:
+      front: What the GCS relaxation guarantees
+      back: >-
+        A lower bound plus a rounded upper bound - a sub-optimality certificate. A zero gap is not
+        guaranteed (NP-hard)
+  - id: q4
+    prompt: >-
+      Select every condition needed for cell decomposition plus adjacency-graph search to be complete.
+    choices:
+      - Each cell is connected (convex suffices)
+      - The adjacency test requires a $(d-1)$-dimensional shared boundary
+      - The number of cells is finite
+      - All cells have the same volume
+    explanation: >-
+      Cells must be connected so that two points of a cell can be joined inside it (preventing false
+      positives), and adjacency must be $(d-1)$-dimensional so that a crossable boundary is
+      guaranteed - allowing diagonal adjacency through a single shared vertex produces paths through
+      points that cannot be crossed (the same issue as 4- versus 8-neighbour on a grid). Finiteness
+      gives termination. Volume is irrelevant.
+    concept:
+      front: The three conditions for completeness of a cell decomposition
+      back: Connected cells + $(d-1)$-dimensional adjacency + finiteness
+  - id: q5
+    prompt: >-
+      Simplify the perspective $\tilde f(x,y) = y f(x/y)$ of a 1-homogeneous function $f$.
+    answers: ["f(x)", "$f(x)$", "f (x)", "just f(x)", "f(x), unchanged"]
+    explanation: >-
+      By 1-homogeneity, $y f(x/y) = f(y \cdot x/y) = f(x)$. Because a norm is 1-homogeneous, the
+      substitution $z = yx$ turns the objective into $\lVert z_{uv} - z_{vu}\rVert$, a plain norm, and
+      the binary-times-convex product disappears - this is (4).
+    concept:
+      front: The perspective of a 1-homogeneous function
+      back: $\tilde f(x,y) = f(x)$ - which is why the GCS formulation with norm costs is so simple

@@ -12,3 +12,4 @@ summary: >-
 level: 고급
 lessons:
   - cspace-complexity
+  - combinatorial-gcs
