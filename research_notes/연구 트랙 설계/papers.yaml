@@ -513,6 +513,15 @@ papers:
     verified: true
     lessons: [c5-sparsity-isam]
     role: standard
+  - id: hartley2020-contact-inekf
+    title: "Contact-aided invariant extended Kalman filtering for robot state estimation"
+    authors: ["R. Hartley", "M. Ghaffari", "R. M. Eustice", "J. W. Grizzle"]
+    year: 2020
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364919894385"
+    verified: true
+    lessons: [c5-manifold-estimation]
+    role: standard
 
   # ── C6 동작 계획 이론 ────────────────────────────────────────────────
   - id: reif1979-complexity

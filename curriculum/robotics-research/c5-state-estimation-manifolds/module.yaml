@@ -12,3 +12,4 @@ level: 고급
 lessons:
   - factor-graphs-map
   - sparsity-isam
+  - manifold-estimation

@@ -92,6 +92,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   from the Bayes tree's conditional factorization, incremental QR by Givens rotations with its
   cost shown to be distance in the variable order, and KL-optimal sparsification derived as
   moment matching. Adds five verified papers to the C5 block of the reading-list registry.
+- Research track module C5: the `c5-manifold-estimation` lesson in Korean and English — the
+  retraction invariance of on-manifold Gauss-Newton proved, the Ad transformation between left and
+  right uncertainty derived, the group-affine cancellation that makes the invariant error dynamics
+  autonomous derived line by line, and a 3000-run Monte Carlo NEES comparison of a standard EKF
+  against an invariant EKF on SE(3).
 
 ### Fixed
 
