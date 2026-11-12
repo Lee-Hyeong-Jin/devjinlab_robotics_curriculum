@@ -34,12 +34,13 @@ def test_roadmap_states_and_progress(client: TestClient) -> None:
     stages = _roadmap(client)["stages"]
     assert [(s["course_id"], s["level"]) for s in stages] == [(COURSE, "기초"), (COURSE, None)]
     m1, m2 = stages[0]["modules"][0], stages[1]["modules"][0]
+    # Nothing is locked any more (ADR 0015): an untouched lesson is simply available.
     assert [(les["id"], les["state"]) for les in m1["lessons"]] == [
         (VECTORS, "available"),
-        (ROTATION, "locked"),
+        (ROTATION, "available"),
     ]
     assert (m1["state"], m1["progress"]) == ("available", 0)
-    assert (m2["state"], m2["lessons"][0]["state"]) == ("locked", "locked")
+    assert (m2["state"], m2["lessons"][0]["state"]) == ("available", "available")
 
     client.post("/api/v1/progress/log", json={"lesson_id": VECTORS, "minutes": 10})
     m1 = _roadmap(client)["stages"][0]["modules"][0]

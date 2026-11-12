@@ -38,11 +38,19 @@ def build_cmd(
         str | None,
         typer.Option("--lang", help="Site language: ko or en [default: the global --lang]."),
     ] = None,
+    strict: Annotated[
+        bool,
+        typer.Option("--strict", help="Fail on any mkdocs warning (broken link, missing page)."),
+    ] = False,
 ) -> None:
     """Generate the site from curriculum/ and your progress, then run mkdocs.
 
     ``--out`` and ``--src`` are emptied by mkdocs, so a directory that this command did
     not write is refused unless ``--force`` is given.
+
+    ``--strict`` turns a mkdocs warning into a failure. Without it a link to a page that does
+    not exist only prints a warning and the build still succeeds, which let broken lesson
+    links through CI; the verification gate uses ``--strict``.
     """
     from robotics_curriculum.site.build import SiteError, build_site, serve_site
 
@@ -57,7 +65,7 @@ def build_cmd(
     try:
         if serve:
             raise typer.Exit(code=serve_site(service, project_dir=src, force=force, lang=chosen))
-        build_site(service, out, project_dir=src, force=force, lang=chosen)
+        build_site(service, out, project_dir=src, force=force, lang=chosen, strict=strict)
     except (SiteError, ProgressError, StoreError) as exc:
         typer.echo(f"error: {exc}", err=True)
         raise typer.Exit(code=1) from None

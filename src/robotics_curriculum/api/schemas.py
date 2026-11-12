@@ -93,10 +93,40 @@ class Resource(content.Resource):
     """A study resource as written in lesson front matter."""
 
 
+class Paper(Schema):
+    """A paper this lesson assigns: the course registry's bibliography merged with the
+    lesson's own role, required flag and note (ADR 0014)."""
+
+    id: str
+    title: str
+    authors: list[str]
+    year: int | None
+    venue: str | None
+    url: str | None
+    verified: bool = Field(
+        description="False when nobody has opened the url yet; clients mark it as unchecked."
+    )
+    role: content.models.PaperRole | None = Field(
+        description="seminal | standard | frontier | critique | survey, in this lesson."
+    )
+    required: bool = Field(description="Required reading for this lesson.")
+    note: str | None = Field(description='What to read, e.g. "§3 only".')
+    citation: str = Field(description="One-line form: `Mayne et al. (1966), IJC`.")
+
+    @classmethod
+    def of(cls, row: content.LessonPaper) -> Paper:
+        return cls(**row.model_dump(), citation=content.citation(row))
+
+
 class Lesson(LessonSummary):
     objectives: list[str]
     activities: list[Activity]
     resources: list[Resource]
+    papers: list[Paper] = Field(
+        default_factory=list,
+        description="Assigned papers, required reading first; empty unless the course has a "
+        "papers.yaml registry (ADR 0014).",
+    )
     content_format: Literal["markdown"] = Field(
         default="markdown", description="Format of `body` and `study_method`."
     )
@@ -222,7 +252,21 @@ class LessonState(Schema):
 
     lesson: LessonSummary
     status: LessonStatus
-    locked: bool = Field(description="Some prerequisite is not done yet.")
+    locked: bool = Field(
+        default=False,
+        deprecated=True,
+        description=(
+            "Always false. Lessons are never locked (ADR 0015); kept so existing clients "
+            "keep parsing. Read `missing_prerequisites` instead."
+        ),
+    )
+    missing_prerequisites: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Prerequisite lesson ids that are not done yet. Advice about order, not a gate: "
+            "the lesson can be started, logged and completed regardless."
+        ),
+    )
     total_seconds: int
     started_at: datetime | None
     completed_at: datetime | None
@@ -235,7 +279,7 @@ class LessonState(Schema):
         return cls(
             lesson=LessonSummary.of(s.course, s.module, s.lesson, lang),
             status=p.status,
-            locked=s.locked,
+            missing_prerequisites=list(s.missing_prerequisites),
             total_seconds=p.total_seconds,
             started_at=p.started_at,
             completed_at=p.completed_at,
@@ -326,7 +370,12 @@ class DoneRequest(Schema):
 
 class DoneResult(Schema):
     progress: LessonProgress
-    unlocked_lesson_ids: list[str] = Field(description="Lessons this completion unlocked.")
+    unlocked_lesson_ids: list[str] = Field(
+        description=(
+            "Lessons whose last unfinished prerequisite was this one, so they are now next in "
+            "the recommended order. They were never blocked (ADR 0015)."
+        )
+    )
 
 
 # -- reports ---------------------------------------------------------------------------
@@ -603,15 +652,17 @@ class ReviewResult(Schema):
 # -- roadmap -----------------------------------------------------------------------------
 
 LockState = Literal["done", "in_progress", "available", "locked"]
+"""Roadmap state. ``locked`` is never produced any more (ADR 0015) but stays in the union so
+an existing client's exhaustive match keeps compiling."""
 
 
 def lock_state(s: Summary) -> LockState:
-    """done / in_progress, else locked (a prerequisite is not done) or available."""
+    """done / in_progress / available. Never ``locked`` — nothing is locked (ADR 0015)."""
     if s.status is LessonStatus.DONE:
         return "done"
     if s.status is LessonStatus.IN_PROGRESS:
         return "in_progress"
-    return "locked" if s.locked else "available"
+    return "available"
 
 
 class RoadmapLesson(Schema):
@@ -636,8 +687,6 @@ class RoadmapModule(Schema):
             state: LockState = "done"
         elif any(st in ("done", "in_progress") for st in states):
             state = "in_progress"
-        elif states and all(st == "locked" for st in states):
-            state = "locked"
         else:
             state = "available"
         done = sum(1 for st in states if st == "done")

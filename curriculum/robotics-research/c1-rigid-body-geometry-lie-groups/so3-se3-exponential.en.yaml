@@ -15,14 +15,6 @@ resources:
     note: ch.3 (Rigid-Body Motions) - 3.2 rotations, 3.3 rigid-body motion and screw axes. The full PDF is free.
   "Murray, Li & Sastry, A Mathematical Introduction to Robotic Manipulation":
     note: ch.2 (Rigid Body Motion). The set text of CMU 16-711 and Berkeley C106B. (official URL unverified)
-  "Solà, Deray & Atchuthan — A micro Lie theory for state estimation in robotics (2018)":
-    note: Must-read 1. The de facto standard reference for notation and Jacobian conventions.
-  "Forster, Carlone, Dellaert & Scaramuzza — On-manifold preintegration (2017)":
-    note: Must-read 2. Sections II-III, for the manifold notation and why the right Jacobian is needed.
-  "Grassia — Practical parameterization of rotations using the exponential map (1998)":
-    note: Recommended. How to use exponential coordinates numerically, including small-angle handling.
-  "Shoemake — Animating rotation with quaternion curves (1985)":
-    note: Recommended. The original source for quaternion interpolation (slerp).
 quiz:
   - id: q1
     prompt: For a unit vector $\omega$, express $\hat{\omega}^3$ in terms of $\hat{\omega}$.

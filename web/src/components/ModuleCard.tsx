@@ -36,12 +36,11 @@ export function ModuleCard({
   lessonsLabel,
   progressLabel,
 }: ModuleCardProps) {
-  const locked = state === 'locked'
   const body = (
     <>
       <div className="flex items-start justify-between gap-3">
         <h3 className="text-primary font-semibold">{title}</h3>
-        {level ? <Chip tone={locked ? 'locked' : 'neutral'}>{level}</Chip> : null}
+        {level ? <Chip tone="neutral">{level}</Chip> : null}
       </div>
       <p className="text-muted font-mono text-xs">{id}</p>
       <div className="mt-3 flex items-center justify-between gap-3">
@@ -58,11 +57,7 @@ export function ModuleCard({
     </>
   )
 
-  if (locked) {
-    // No opacity dimming: it would take the text under the 4.5:1 contrast floor.
-    // The 🔒 label and the subtle surface carry the state instead.
-    return <Card className="bg-subtle border-state-locked">{body}</Card>
-  }
+  // Always a link: no module is gated on finishing another (ADR 0015).
   return (
     <Card className="hover:border-border-accent focus-within:border-border-accent transition-colors">
       <Link href={`/modules/${id}`} className="block">

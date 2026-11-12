@@ -157,6 +157,7 @@ def test_done_closes_open_session_and_records_understanding(
     assert progress.total_seconds == 20 * 60
     assert (progress.understanding, progress.note) == (4, "ok")
     assert service.current_session() is None
+    # Those two were always startable; finishing VECTORS puts them next in the order.
     assert {lesson.id for lesson in unlocked} == {ROTATION, DH}
 
 
@@ -165,13 +166,17 @@ def test_status_lists_all_lessons_in_teaching_order(service: ProgressService) ->
     summaries = service.status()
     assert [s.lesson.id for s in summaries] == [VECTORS, ROTATION, DH]
     assert [s.status.value for s in summaries] == ["in_progress", "not_started", "not_started"]
-    assert [s.locked for s in summaries] == [False, True, True]
+    # Nothing is locked (ADR 0015); the unfinished prerequisites are reported as advice.
+    assert [s.missing_prerequisites for s in summaries] == [(), (VECTORS,), (VECTORS,)]
+    assert [s.recommended for s in summaries] == [True, False, False]
     with pytest.raises(ProgressError, match="unknown course"):
         service.status("nope")
 
 
-def test_next_respects_prerequisites(service: ProgressService) -> None:
-    assert [s.lesson.id for s in service.next_lessons()] == [VECTORS]
+def test_next_recommends_rather_than_filters(service: ProgressService) -> None:
+    """Nothing is hidden (ADR 0015): a lesson with unfinished prerequisites ranks lower."""
+    # VECTORS first because its prerequisites are done; the other two still appear.
+    assert [s.lesson.id for s in service.next_lessons()] == [VECTORS, ROTATION, DH]
     service.done(VECTORS)
     assert [s.lesson.id for s in service.next_lessons()] == [ROTATION, DH]
     service.log(DH, 5)  # in-progress lessons are recommended first
@@ -225,7 +230,9 @@ def rc(data_dir: Path, *args: str) -> Result:
 def test_cli_smoke(tmp_path: Path) -> None:
     result = rc(tmp_path, "next")
     assert result.exit_code == 0, result.output
-    assert VECTORS in result.output and DH not in result.output
+    # `next` recommends rather than filters (ADR 0015): everything is listed, VECTORS first
+    # because its prerequisites are done.
+    assert result.output.index(VECTORS) < result.output.index(DH)
 
     assert rc(tmp_path, "start", VECTORS).exit_code == 0
     result = rc(tmp_path, "start", DH)

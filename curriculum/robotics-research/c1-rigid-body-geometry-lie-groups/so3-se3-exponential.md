@@ -21,7 +21,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 90
   - id: c1-so3-se3-exponential-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 2편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 120
   - id: c1-so3-se3-exponential-problems
@@ -29,7 +29,7 @@ activities:
     title: 문제 세트 (유도 2 · 증명 1 · 계산 1 · 구현 1 · 반례 1 · 논문 1)
     estimated_minutes: 150
   - id: c1-so3-se3-exponential-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — exp/log 왕복과 미분 검증 (R1)
     estimated_minutes: 90
   - id: c1-so3-se3-exponential-quiz
@@ -48,22 +48,19 @@ resources:
   - title: "Murray, Li & Sastry, A Mathematical Introduction to Robotic Manipulation"
     kind: book
     note: ch.2 (Rigid Body Motion). CMU 16-711·Berkeley C106B 의 지정 교재. (공식 URL 미확인)
-  - title: "Solà, Deray & Atchuthan — A micro Lie theory for state estimation in robotics (2018)"
-    url: https://arxiv.org/abs/1812.01537
-    kind: article
-    note: 필독 1. 표기와 야코비안 규약의 사실상 표준 참고서.
-  - title: "Forster, Carlone, Dellaert & Scaramuzza — On-manifold preintegration (2017)"
-    url: https://arxiv.org/abs/1512.02363
-    kind: article
-    note: 필독 2. II·III절의 매니폴드 표기와 우 야코비안이 왜 필요한지.
-  - title: "Grassia — Practical parameterization of rotations using the exponential map (1998)"
-    url: https://doi.org/10.1080/10867651.1998.10487493
-    kind: article
-    note: 권장. 지수 좌표를 수치적으로 쓰는 방법과 작은 각 처리.
-  - title: "Shoemake — Animating rotation with quaternion curves (1985)"
-    url: https://doi.org/10.1145/325334.325242
-    kind: article
-    note: 권장. 사원수 보간(slerp)의 원전.
+papers:
+  - id: sola2018-micro-lie-theory
+    required: true
+    role: standard
+    note: "§2-4"
+  - id: forster2017-preintegration
+    required: true
+    role: seminal
+    note: "§II-III"
+  - id: grassia1998-exp-map
+    role: standard
+  - id: shoemake1985-quaternion-curves
+    role: seminal
 ---
 
 # SO(3)·SE(3)와 지수 좌표

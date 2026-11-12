@@ -1,15 +1,8 @@
 import type { Maybe, ResourceKind } from '@/lib/api/types'
 import { hostnameOf } from '@/lib/format'
+import { RESOURCE_KIND_TONE } from '@/lib/resource-kind'
 
-import { Chip, type ChipTone } from './Chip'
-
-const KIND_TONE: Record<ResourceKind, ChipTone> = {
-  book: 'accent',
-  course: 'accent',
-  video: 'warning',
-  article: 'neutral',
-  other: 'neutral',
-}
+import { Chip } from './Chip'
 
 /** Figma `10-70`. A resource in the lesson sidebar or the resources table. */
 export interface ResourceRowProps {
@@ -34,7 +27,7 @@ export function ResourceRow({
   return (
     <li className="border-border-default flex flex-col gap-1 border-b py-3 last:border-b-0">
       <div className="flex flex-wrap items-center gap-2">
-        {kind && kindLabel ? <Chip tone={KIND_TONE[kind]}>{kindLabel}</Chip> : null}
+        {kind && kindLabel ? <Chip tone={RESOURCE_KIND_TONE[kind]}>{kindLabel}</Chip> : null}
         {url ? (
           <a
             href={url}

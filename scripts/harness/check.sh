@@ -3,7 +3,8 @@
 # Usage: scripts/harness/check.sh [--quick]
 #   --quick : lint + type-check only, Python only (used by the Stop hook)
 #   (none)  : lint + type-check + tests for every detected stack (with the coverage gate when
-#             pytest-cov is present), installing web/node_modules first if it is missing
+#             pytest-cov is present), installing web/node_modules first if it is missing,
+#             then `rc validate` and a strict static-site build when curriculum/ exists
 # Exit 0 = all green, or no stack configured. Non-zero = something failed.
 set -u
 root="$(git rev-parse --show-toplevel 2>/dev/null || echo "${CLAUDE_PROJECT_DIR:-$PWD}")"
@@ -82,6 +83,21 @@ for s in $stacks; do
       ;;
   esac
 done
+
+# -- content gate -------------------------------------------------------------------------
+# Not a "stack": the curriculum and the static site it has to build into. `rc site build`
+# only *warned* about a broken lesson link and still exited 0, so bad content reached a green
+# CI run; --strict makes a mkdocs warning a failure.
+if [ "$quick" = 0 ] && [ -d "$root/curriculum" ]; then
+  PY=""; have uv && PY="uv run --quiet"
+  # `rc version` is a subcommand, not a flag; this is the cheapest "is rc installed" probe.
+  if $PY rc version >/dev/null 2>&1; then
+    run "rc validate" $PY rc validate
+    site_out="$(mktemp -d -t rc-site-check-XXXXXX)"
+    run "rc site build --strict" $PY rc site build --strict --out "$site_out"
+    rm -rf "$site_out"
+  fi
+fi
 
 if [ "$status" = 0 ]; then echo "ALL CHECKS PASSED"; else echo "CHECKS FAILED"; fi
 exit $status

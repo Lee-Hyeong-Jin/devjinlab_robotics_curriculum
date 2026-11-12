@@ -1,12 +1,11 @@
 import type { LockState } from '@/lib/progress'
 import { cx } from '@/lib/cx'
 
-/** Figma `10-2`/`10-3`/`10-4`/`10-5`. */
+/** Figma `10-2`/`10-3`/`10-4`. There is no locked state (ADR 0015). */
 const DOT_CLASS: Record<LockState, string> = {
   done: 'bg-state-done',
   in_progress: 'bg-state-in-progress',
   available: 'bg-state-available',
-  locked: 'bg-state-locked',
 }
 
 export interface StatusDotProps {
@@ -26,9 +25,7 @@ export function StatusDot({ state, label, labelHidden = false, className }: Stat
         data-state={state}
         className={cx('inline-block size-2.5 shrink-0 rounded-full', DOT_CLASS[state])}
       />
-      <span className={cx('text-sm', labelHidden && 'sr-only')}>
-        {state === 'locked' && !labelHidden ? `🔒 ${label}` : label}
-      </span>
+      <span className={cx('text-sm', labelHidden && 'sr-only')}>{label}</span>
     </span>
   )
 }

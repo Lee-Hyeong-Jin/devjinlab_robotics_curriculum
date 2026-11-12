@@ -381,9 +381,10 @@ paths:
       description: |-
         Level -> module -> lesson tree with the caller's states (``rc roadmap``).
 
-        Lesson state: done, in_progress, locked (a prerequisite is not done) or available. Module
-        state: done if every lesson is done, in_progress if any is started or done, locked if every
-        lesson is locked, else available. Progress values are fractions (0-1).
+        Lesson state: done, in_progress or available. Module state: done if every lesson is done,
+        in_progress if any is started or done, else available. Progress values are fractions (0-1).
+        Nothing is ever `locked` — lessons are not gated on finishing other lessons (ADR 0015);
+        the value stays in the enum so an existing client keeps parsing.
       operationId: get_roadmap_api_v1_roadmap_get
       parameters:
       - name: course
@@ -805,7 +806,11 @@ paths:
       tags:
       - progress
       summary: Done
-      description: Mark a lesson done (stops its running timer); lists the lessons it unlocked.
+      description: |-
+        Mark a lesson done (stops its running timer).
+
+        ``unlocked_lesson_ids`` names the lessons whose last unfinished prerequisite was this one,
+        so they are now next in the recommended order. They were never blocked (ADR 0015).
       operationId: done_api_v1_progress_done_post
       requestBody:
         content:
@@ -2618,9 +2623,19 @@ components:
       type: string
       enum:
       - reading
+      - paper
       - quiz
       - exercise
+      - reproduction
+      - project
       title: ActivityKind
+      description: |-
+        What kind of work an activity is.
+
+        ``reading`` is a textbook or notes; ``paper`` is a primary paper read with notes of one's
+        own, which the research track has to tell apart from it. ``exercise`` is a problem set,
+        ``reproduction`` is reproducing a published result, and ``project`` is a capstone.
+        See ``research_notes/연구 트랙 설계/lesson-standard.md`` §11-2.
     ActivityProgress:
       properties:
         user_id:
@@ -3218,7 +3233,8 @@ components:
             type: string
           type: array
           title: Unlocked Lesson Ids
-          description: Lessons this completion unlocked.
+          description: Lessons whose last unfinished prerequisite was this one, so they are now next in
+            the recommended order. They were never blocked (ADR 0015).
       additionalProperties: false
       type: object
       required:
@@ -3334,6 +3350,13 @@ components:
             $ref: '#/components/schemas/Resource'
           type: array
           title: Resources
+        papers:
+          items:
+            $ref: '#/components/schemas/Paper'
+          type: array
+          title: Papers
+          description: Assigned papers, required reading first; empty unless the course has a papers.yaml
+            registry (ADR 0014).
         content_format:
           type: string
           const: markdown
@@ -3441,7 +3464,17 @@ components:
         locked:
           type: boolean
           title: Locked
-          description: Some prerequisite is not done yet.
+          description: Always false. Lessons are never locked (ADR 0015); kept so existing clients keep
+            parsing. Read `missing_prerequisites` instead.
+          default: false
+          deprecated: true
+        missing_prerequisites:
+          items:
+            type: string
+          type: array
+          title: Missing Prerequisites
+          description: 'Prerequisite lesson ids that are not done yet. Advice about order, not a gate:
+            the lesson can be started, logged and completed regardless.'
         total_seconds:
           type: integer
           title: Total Seconds
@@ -3472,7 +3505,6 @@ components:
       required:
       - lesson
       - status
-      - locked
       - total_seconds
       - started_at
       - completed_at
@@ -3622,6 +3654,7 @@ components:
             - 기초
             - 중급
             - 고급
+            - 연구
           - type: 'null'
           title: Level
           description: Stable level id, the same in every language (null when unset).
@@ -3717,6 +3750,7 @@ components:
             - 기초
             - 중급
             - 고급
+            - 연구
           - type: 'null'
           title: Level
           description: Stable level id, the same in every language (null when unset).
@@ -3769,6 +3803,82 @@ components:
       - status
       - reason
       title: NextLesson
+    Paper:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        authors:
+          items:
+            type: string
+          type: array
+          title: Authors
+        year:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Year
+        venue:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Venue
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+        verified:
+          type: boolean
+          title: Verified
+          description: False when nobody has opened the url yet; clients mark it as unchecked.
+        role:
+          anyOf:
+          - type: string
+            enum:
+            - seminal
+            - standard
+            - frontier
+            - critique
+            - survey
+          - type: 'null'
+          title: Role
+          description: seminal | standard | frontier | critique | survey, in this lesson.
+        required:
+          type: boolean
+          title: Required
+          description: Required reading for this lesson.
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+          description: What to read, e.g. "§3 only".
+        citation:
+          type: string
+          title: Citation
+          description: 'One-line form: `Mayne et al. (1966), IJC`.'
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - title
+      - authors
+      - year
+      - venue
+      - url
+      - verified
+      - role
+      - required
+      - note
+      - citation
+      title: Paper
+      description: |-
+        A paper this lesson assigns: the course registry's bibliography merged with the
+        lesson's own role, required flag and note (ADR 0014).
     PasswordChange:
       properties:
         current_password:
@@ -4179,8 +4289,16 @@ components:
       - course
       - video
       - article
+      - paper
+      - dataset
+      - code
+      - notes
       - other
       title: ResourceKind
+      description: |-
+        A paper normally belongs in the course's ``papers.yaml`` registry; ``paper`` here is
+        for a one-off. ``dataset`` (KITTI, TUM RGB-D), ``code`` (Drake, GTSAM) and ``notes``
+        (lecture notes) are the research track's own categories (lesson-standard.md §11-5).
     ResourceRef:
       properties:
         title:
@@ -4421,6 +4539,7 @@ components:
             - 기초
             - 중급
             - 고급
+            - 연구
           - type: 'null'
           title: Level
           description: Stable level id, the same in every language (null when unset).
@@ -4574,6 +4693,7 @@ components:
             - 기초
             - 중급
             - 고급
+            - 연구
           - type: 'null'
           title: Level
           description: null for modules without a level.

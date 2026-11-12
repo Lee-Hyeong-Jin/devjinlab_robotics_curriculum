@@ -147,6 +147,33 @@ test('every "핵심 수식" lesson renders its formulas, with no TeX left on the
   }
 })
 
+test('no lesson or module is locked: every card links through (ADR 0015)', async ({ page }) => {
+  await page.goto('/roadmap')
+  // Every module card is a link, including ones nothing has been started in.
+  const moduleHrefs = await page.evaluate(() =>
+    [...document.querySelectorAll('a[href]')]
+      .map((a) => new URL((a as HTMLAnchorElement).href).pathname)
+      .filter((path) => /^\/modules\/[^/]+$/.test(path)),
+  )
+  expect(moduleHrefs.length, 'linked module cards').toBeGreaterThan(1)
+  expect(await page.locator('text=🔒').count(), 'lock glyphs').toBe(0)
+  expect(await page.locator('[data-locked]').count(), 'locked rows').toBe(0)
+  expect(await page.locator('[data-state="locked"]').count(), 'locked status dots').toBe(0)
+  await expect(page.getByText(/잠김|Locked/)).toHaveCount(0)
+
+  // The last module on the roadmap has no finished prerequisites, and still opens — and so
+  // does every lesson in it.
+  const last = moduleHrefs[moduleHrefs.length - 1] as string
+  await page.goto(last)
+  const moduleId = last.split('/')[2]
+  const lessons = page.locator(`a[href^="/modules/${moduleId}/"]`)
+  expect(await lessons.count(), 'linked lessons in the last module').toBeGreaterThan(0)
+  await lessons.first().click()
+  await page.waitForURL(/\/modules\/[^/]+\/[^/]+$/)
+  await expect(page.locator('h1')).toHaveCount(1)
+  await expect(page.getByText(/잠김|Locked/)).toHaveCount(0)
+})
+
 test('the lesson screen passes axe in dark mode too', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'dark' })
   await page.goto('/roadmap')

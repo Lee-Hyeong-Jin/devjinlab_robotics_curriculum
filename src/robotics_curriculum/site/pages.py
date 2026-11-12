@@ -23,6 +23,7 @@ from robotics_curriculum.content import (
     Resource,
     ResourceKind,
 )
+from robotics_curriculum.content.papers import citation, paper_index, resolve_lesson_papers
 from robotics_curriculum.content.quiz_block import (
     QUIZ_FENCE,
     QuizParseError,
@@ -51,13 +52,13 @@ ROADMAP_PAGE = "roadmap.md"
 RESOURCES_PAGE = "resources.md"
 STUDY_ANCHOR = "study-method"
 RESOURCES_ANCHOR = "resources"
+PAPERS_ANCHOR = "papers"
 
 # state key -> symbol; the words come from the message catalogue
 STATE_SYMBOLS: dict[str, str] = {
     "done": "■",
     "in_progress": "▣",
     "not_started": "□",
-    "locked": "▨",
 }
 
 # resource kinds in display order; ``None`` shares the "other" label
@@ -66,6 +67,10 @@ KIND_KEYS: tuple[tuple[ResourceKind | None, str], ...] = (
     (ResourceKind.COURSE, "course"),
     (ResourceKind.VIDEO, "video"),
     (ResourceKind.ARTICLE, "article"),
+    (ResourceKind.PAPER, "paper"),
+    (ResourceKind.DATASET, "dataset"),
+    (ResourceKind.CODE, "code"),
+    (ResourceKind.NOTES, "notes"),
     (ResourceKind.OTHER, "other"),
     (None, "other"),
 )
@@ -120,7 +125,7 @@ def state_of(summary: LessonSummary) -> str:
         return "done"
     if summary.status is LessonStatus.IN_PROGRESS:
         return "in_progress"
-    return "locked" if summary.locked else "not_started"
+    return "not_started"
 
 
 def badge(state: str, t: Translator) -> str:
@@ -215,10 +220,15 @@ class SiteModel:
     t: Translator = field(init=False)
     by_lesson: dict[str, LessonSummary] = field(init=False)
     module_keys: dict[int, str] = field(init=False)
+    #: Lesson id -> its course, so a page can reach that course's paper registry.
+    course_by_lesson: dict[str, Course] = field(init=False)
 
     def __post_init__(self) -> None:
         self.t = translator(resolve_lang(self.lang))
         self.by_lesson = {s.lesson.id: s for s in self.summaries}
+        self.course_by_lesson = {
+            lesson.id: course for course in self.courses for lesson in course.iter_lessons()
+        }
         counts: dict[str, int] = {}
         for course in self.courses:
             for module in course.modules:
@@ -241,6 +251,11 @@ class SiteModel:
         if len(self.courses) == 1:
             return self.courses[0].localized(self.lang).summary
         return ""
+
+    def course_of(self, lesson: Lesson) -> Course:
+        """The course a lesson belongs to; the first course as a fallback (single-course site)."""
+        found = self.course_by_lesson.get(lesson.id)
+        return found if found is not None else self.courses[0]
 
     def modules(self) -> list[Module]:
         return [m for c in self.courses for m in c.modules]
@@ -632,11 +647,13 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
         out.append(f"**{prereq_label}**: " + " · ".join(items))
     else:
         out.append(f"**{md_text(t('site.label.prerequisites'))}**: {md_text(t('site.label.none'))}")
-    if summary.locked and summary.status is not LessonStatus.DONE:
+    if summary.missing_prerequisites and summary.status is not LessonStatus.DONE:
+        # Informational: nothing stops a reader starting here (ADR 0015).
+        ids = " · ".join(f"`{md_text(i)}`" for i in summary.missing_prerequisites)
         out += [
             "",
-            f'!!! warning "{md_text(t("site.lesson.locked_title"))}"',
-            f"    {md_text(t('site.lesson.locked_body'))}",
+            f'!!! note "{md_text(t("site.lesson.prereq_pending_title"))}"',
+            f"    {md_text(t('site.lesson.prereq_pending_body'))} {ids}",
         ]
     out.append("")
     if text.tags:
@@ -672,12 +689,38 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
             f"    {md_text(t('site.lesson.study_missing_body'))}",
             "",
         ]
+    out += _papers_section(model, lesson, t)
     out += [f"## {md_text(t('site.heading.resources'))} {{#{RESOURCES_ANCHOR}}}", ""]
     if text.resources:
         out += _resource_groups(model, page, [(r, [lesson]) for r in text.resources])
     else:
         out.append(md_text(t("site.lesson.no_resources")))
     return "\n".join(out) + "\n"
+
+
+def _papers_section(model: SiteModel, lesson: Lesson, t: Translator) -> list[str]:
+    """ "필독 논문": the papers this lesson assigns, required reading first (ADR 0014).
+
+    Nothing is emitted when the course has no registry, so the courses that predate the
+    research track look exactly as they did.
+    """
+    rows = resolve_lesson_papers(lesson, paper_index(model.course_of(lesson)))
+    if not rows:
+        return []
+    out = [f"## {md_text(t('site.heading.papers'))} {{#{PAPERS_ANCHOR}}}", ""]
+    for row in rows:
+        marks = [t("paper.required") if row.required else t("paper.optional")]
+        if row.role:
+            marks.append(t(f"paper.role.{row.role}"))
+        title = f"[{md_text(row.title)}]({row.url})" if row.url else f"**{md_text(row.title)}**"
+        out.append(f"- ({md_text(' · '.join(marks))}) {title}")
+        detail = [part for part in (citation(row), row.note) if part]
+        if not row.verified and row.url:
+            detail.append(t("paper.unverified"))
+        if detail:
+            out.append(f"  {md_text(' — '.join(detail))}")
+    out.append("")
+    return out
 
 
 def render_quiz_blocks(body: str, lesson: Lesson, t: Translator | None = None) -> str:

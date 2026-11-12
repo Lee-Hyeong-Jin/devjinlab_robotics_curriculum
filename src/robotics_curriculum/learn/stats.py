@@ -26,7 +26,7 @@ from robotics_curriculum.progress import (
     Session,
 )
 
-STAGES: tuple[str, ...] = ("기초", "중급", "고급")
+STAGES: tuple[str, ...] = ("기초", "중급", "고급", "연구")
 NO_STAGE = "단계 미지정"
 """Bucket for modules that declare no level. Like the level values themselves this is a
 stable id, not display text: :func:`stage_label` turns it into something to show."""

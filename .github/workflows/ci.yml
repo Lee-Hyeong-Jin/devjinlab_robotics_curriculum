@@ -68,8 +68,10 @@ jobs:
 
       # Into the runner's own temp dir: `rc site build` refuses a non-empty directory that no
       # previous build marked with .rc-site, and /tmp is shared with whatever else runs here.
+      # --strict: without it a link to a page that does not exist is only a warning and the
+      # build still succeeds, which let broken lesson links through this job.
       - name: Build static site
-        run: uv run rc site build --out "$RUNNER_TEMP/site"
+        run: uv run rc site build --strict --out "$RUNNER_TEMP/site"
 
       - name: Upload coverage report
         if: always()

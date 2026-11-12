@@ -224,9 +224,10 @@ export interface paths {
          * Get Roadmap
          * @description Level -> module -> lesson tree with the caller's states (``rc roadmap``).
          *
-         *     Lesson state: done, in_progress, locked (a prerequisite is not done) or available. Module
-         *     state: done if every lesson is done, in_progress if any is started or done, locked if every
-         *     lesson is locked, else available. Progress values are fractions (0-1).
+         *     Lesson state: done, in_progress or available. Module state: done if every lesson is done,
+         *     in_progress if any is started or done, else available. Progress values are fractions (0-1).
+         *     Nothing is ever `locked` — lessons are not gated on finishing other lessons (ADR 0015);
+         *     the value stays in the enum so an existing client keeps parsing.
          */
         get: operations["get_roadmap_api_v1_roadmap_get"];
         put?: never;
@@ -392,7 +393,10 @@ export interface paths {
         put?: never;
         /**
          * Done
-         * @description Mark a lesson done (stops its running timer); lists the lessons it unlocked.
+         * @description Mark a lesson done (stops its running timer).
+         *
+         *     ``unlocked_lesson_ids`` names the lessons whose last unfinished prerequisite was this one,
+         *     so they are now next in the recommended order. They were never blocked (ADR 0015).
          */
         post: operations["done_api_v1_progress_done_post"];
         delete?: never;
@@ -1038,9 +1042,15 @@ export interface components {
         };
         /**
          * ActivityKind
+         * @description What kind of work an activity is.
+         *
+         *     ``reading`` is a textbook or notes; ``paper`` is a primary paper read with notes of one's
+         *     own, which the research track has to tell apart from it. ``exercise`` is a problem set,
+         *     ``reproduction`` is reproducing a published result, and ``project`` is a capstone.
+         *     See ``research_notes/연구 트랙 설계/lesson-standard.md`` §11-2.
          * @enum {string}
          */
-        ActivityKind: "reading" | "quiz" | "exercise";
+        ActivityKind: "reading" | "paper" | "quiz" | "exercise" | "reproduction" | "project";
         /**
          * ActivityProgress
          * @description Per-activity state (platform-design §4.1); Phase 1 only records quiz activities.
@@ -1400,7 +1410,7 @@ export interface components {
             progress: components["schemas"]["LessonProgress"];
             /**
              * Unlocked Lesson Ids
-             * @description Lessons this completion unlocked.
+             * @description Lessons whose last unfinished prerequisite was this one, so they are now next in the recommended order. They were never blocked (ADR 0015).
              */
             unlocked_lesson_ids: string[];
         };
@@ -1476,6 +1486,11 @@ export interface components {
             /** Resources */
             resources: components["schemas"]["Resource"][];
             /**
+             * Papers
+             * @description Assigned papers, required reading first; empty unless the course has a papers.yaml registry (ADR 0014).
+             */
+            papers?: components["schemas"]["Paper"][];
+            /**
              * Content Format
              * @description Format of `body` and `study_method`.
              * @default markdown
@@ -1543,9 +1558,16 @@ export interface components {
             status: components["schemas"]["LessonStatus"];
             /**
              * Locked
-             * @description Some prerequisite is not done yet.
+             * @deprecated
+             * @description Always false. Lessons are never locked (ADR 0015); kept so existing clients keep parsing. Read `missing_prerequisites` instead.
+             * @default false
              */
             locked: boolean;
+            /**
+             * Missing Prerequisites
+             * @description Prerequisite lesson ids that are not done yet. Advice about order, not a gate: the lesson can be started, logged and completed regardless.
+             */
+            missing_prerequisites?: string[];
             /** Total Seconds */
             total_seconds: number;
             /** Started At */
@@ -1643,7 +1665,7 @@ export interface components {
              * Level
              * @description Stable level id, the same in every language (null when unset).
              */
-            level: ("기초" | "중급" | "고급") | null;
+            level: ("기초" | "중급" | "고급" | "연구") | null;
             /**
              * Level Label
              * @description `level` as it should be shown, in the requested language.
@@ -1696,7 +1718,7 @@ export interface components {
              * Level
              * @description Stable level id, the same in every language (null when unset).
              */
-            level: ("기초" | "중급" | "고급") | null;
+            level: ("기초" | "중급" | "고급" | "연구") | null;
             /**
              * Level Label
              * @description `level` as it should be shown, in the requested language.
@@ -1727,6 +1749,50 @@ export interface components {
              * @description Why it is recommended.
              */
             reason: string;
+        };
+        /**
+         * Paper
+         * @description A paper this lesson assigns: the course registry's bibliography merged with the
+         *     lesson's own role, required flag and note (ADR 0014).
+         */
+        Paper: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Authors */
+            authors: string[];
+            /** Year */
+            year: number | null;
+            /** Venue */
+            venue: string | null;
+            /** Url */
+            url: string | null;
+            /**
+             * Verified
+             * @description False when nobody has opened the url yet; clients mark it as unchecked.
+             */
+            verified: boolean;
+            /**
+             * Role
+             * @description seminal | standard | frontier | critique | survey, in this lesson.
+             */
+            role: ("seminal" | "standard" | "frontier" | "critique" | "survey") | null;
+            /**
+             * Required
+             * @description Required reading for this lesson.
+             */
+            required: boolean;
+            /**
+             * Note
+             * @description What to read, e.g. "§3 only".
+             */
+            note: string | null;
+            /**
+             * Citation
+             * @description One-line form: `Mayne et al. (1966), IJC`.
+             */
+            citation: string;
         };
         /** PasswordChange */
         PasswordChange: {
@@ -1983,9 +2049,12 @@ export interface components {
         };
         /**
          * ResourceKind
+         * @description A paper normally belongs in the course's ``papers.yaml`` registry; ``paper`` here is
+         *     for a one-off. ``dataset`` (KITTI, TUM RGB-D), ``code`` (Drake, GTSAM) and ``notes``
+         *     (lecture notes) are the research track's own categories (lesson-standard.md §11-5).
          * @enum {string}
          */
-        ResourceKind: "book" | "course" | "video" | "article" | "other";
+        ResourceKind: "book" | "course" | "video" | "article" | "paper" | "dataset" | "code" | "notes" | "other";
         /** ResourceRef */
         ResourceRef: {
             /** Title */
@@ -2131,7 +2200,7 @@ export interface components {
              * Level
              * @description Stable level id, the same in every language (null when unset).
              */
-            level: ("기초" | "중급" | "고급") | null;
+            level: ("기초" | "중급" | "고급" | "연구") | null;
             /**
              * Level Label
              * @description `level` as it should be shown, in the requested language.
@@ -2226,7 +2295,7 @@ export interface components {
              * Level
              * @description null for modules without a level.
              */
-            level: ("기초" | "중급" | "고급") | null;
+            level: ("기초" | "중급" | "고급" | "연구") | null;
             /**
              * Level Label
              * @description `level` as it should be shown, in the requested language.

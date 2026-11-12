@@ -44,6 +44,8 @@ export function moduleSummary(over: Partial<ModuleSummary> & { id: string }): Mo
 export function lessonState(over: Partial<LessonState> & { lesson: LessonSummary }): LessonState {
   return {
     status: 'not_started',
+    // The API still sends this, always false (ADR 0015). Screens read
+    // `missing_prerequisites` instead.
     locked: false,
     total_seconds: 0,
     started_at: null,

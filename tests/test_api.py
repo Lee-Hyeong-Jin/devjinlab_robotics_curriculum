@@ -224,7 +224,7 @@ def test_stop_discard(client: TestClient, clock: Clock) -> None:
     assert client.get(f"/api/v1/progress/lessons/{VECTORS}").json()["total_seconds"] == 0
 
 
-def test_log_done_unlocks_and_next(client: TestClient) -> None:
+def test_log_done_and_next(client: TestClient) -> None:
     logged = client.post(
         "/api/v1/progress/log", json={"lesson_id": VECTORS, "minutes": 45, "note": "read"}
     )
@@ -234,7 +234,8 @@ def test_log_done_unlocks_and_next(client: TestClient) -> None:
 
     nxt = client.get("/api/v1/progress/next").json()
     # `reason` follows Accept-Language; the default is the authoring language.
-    assert [n["lesson"]["id"] for n in nxt] == [VECTORS]
+    # `next` ranks rather than filters (ADR 0015): VECTORS leads because it is in progress.
+    assert [n["lesson"]["id"] for n in nxt] == [VECTORS, ROTATION, DH]
     assert nxt[0]["reason"] == translator("ko")("api.next_reason.in_progress")
     english = client.get("/api/v1/progress/next", headers={"Accept-Language": "en"}).json()
     assert english[0]["reason"] == "in progress"
@@ -253,11 +254,13 @@ def test_log_done_unlocks_and_next(client: TestClient) -> None:
 
     status = client.get("/api/v1/progress/status", params={"course": COURSE}).json()
     assert status["open_session"] is None
+    # `locked` is deprecated and always false; unfinished prerequisites are advice.
     assert [(s["lesson"]["id"], s["status"], s["locked"]) for s in status["lessons"]] == [
         (VECTORS, "done", False),
         (ROTATION, "not_started", False),
         (DH, "not_started", False),
     ]
+    assert [s["missing_prerequisites"] for s in status["lessons"]] == [[], [], []]
     rows = client.get("/api/v1/progress/lessons").json()
     assert [r["lesson_id"] for r in rows] == [VECTORS, ROTATION, DH]
 

@@ -36,7 +36,7 @@ def marker(summary: LessonSummary) -> str:
         return "[x]"
     if summary.status is LessonStatus.IN_PROGRESS:
         return "[>]"
-    return "[-]" if summary.locked else "[ ]"
+    return "[ ]"
 
 
 def _fmt_minutes(minutes: int) -> str:
@@ -98,7 +98,7 @@ def roadmap(
         typer.Option("--level", help="Only modules of this level (the value in module.yaml)."),
     ] = None,
 ) -> None:
-    """Show the course roadmap by level and module with done/in-progress/locked markers."""
+    """Show the course roadmap by level and module with done / in-progress markers."""
     if level is not None and level not in LEVELS:
         raise _fail(f"unknown level '{level}' (choose one of {'|'.join(LEVELS)})")
     root = getattr(ctx.obj, "curriculum", None) or default_curriculum_dir()

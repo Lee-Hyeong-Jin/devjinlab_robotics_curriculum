@@ -10,7 +10,7 @@
  * reader is shown `levelLabel`, which the API translates (FR-9).
  */
 import type { Roadmap } from './api/types'
-import { doneCount, type LockState } from './progress'
+import { doneCount, normalizeState, type LockState } from './progress'
 
 export interface RoadmapLessonView {
   id: string
@@ -47,11 +47,11 @@ export function toStageViews(roadmap: Roadmap | null): RoadmapStageView[] {
       id: module.id,
       title: module.title,
       progress: module.progress,
-      state: module.state,
+      state: normalizeState(module.state),
       lessons: module.lessons.map((lesson) => ({
         id: lesson.id,
         title: lesson.title,
-        state: lesson.state,
+        state: normalizeState(lesson.state),
       })),
     }))
     const lessons = modules.flatMap((module) => module.lessons)

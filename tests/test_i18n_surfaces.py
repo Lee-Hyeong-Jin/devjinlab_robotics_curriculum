@@ -78,9 +78,9 @@ def test_errors_and_warnings_follow_the_language(tmp_path: Path) -> None:
     assert missing.exit_code == 1
     assert "error: unknown lesson 'nope'" in missing.output
 
-    warned = rc(tmp_path, "--lang", "en", "start", "m2-dh-parameters")
-    assert warned.exit_code == 0, warned.output
-    assert EN("cli.warn_prereq", ids=VECTORS) in warned.output
+    noted = rc(tmp_path, "--lang", "en", "start", "m2-dh-parameters")
+    assert noted.exit_code == 0, noted.output
+    assert EN("cli.note_prereq", ids=VECTORS) in noted.output
 
 
 def test_done_and_next_are_translated(tmp_path: Path) -> None:
@@ -89,7 +89,7 @@ def test_done_and_next_are_translated(tmp_path: Path) -> None:
     assert done.exit_code == 0, done.output
     assert done.output.startswith("done ")
     assert ", understanding 4" in done.output
-    assert "unlocked: " in done.output
+    assert "now next in the recommended order: " in done.output
 
     nxt = rc(tmp_path, "--lang", "en", "next")
     assert "difficulty" in nxt.output and "start: rc start" in nxt.output

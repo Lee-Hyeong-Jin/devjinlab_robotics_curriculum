@@ -29,11 +29,17 @@ activities:
     kind: exercise
     title: 손으로 / 코드로 풀어 보기
     estimated_minutes: 20
+  # kind: reading | paper | quiz | exercise | reproduction | project
 resources:                      # 선택. 단계별 학습 자료 (title만 필수)
   - title: Modern Robotics
     url: https://example.org/modern-robotics
-    kind: book                  # book | course | video | article | other
+    kind: book                  # book | course | video | article | paper | dataset | code | notes | other
     note: Ch. 3
+papers: []                      # 선택. 코스 papers.yaml 의 논문 id 참조 (ADR 0014)
+  #  - id: mayne-1966
+  #    required: true           # 논문을 지정하면 최소 1개는 required: true
+  #    role: seminal            # seminal | standard | frontier | critique | survey
+  #    note: "§3 의 2차 전개"
 ---
 
 # 레슨 제목
