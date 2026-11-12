@@ -841,6 +841,16 @@ papers:
     verified: true
     lessons: [c8-model-based-world-models]
     role: frontier
+  - id: ross2010-efficient-reductions
+    title: "Efficient reductions for imitation learning"
+    authors: ["S. Ross", "J. A. Bagnell"]
+    year: 2010
+    venue: "AISTATS"
+    url: "https://proceedings.mlr.press/v9/ross10a.html"
+    note: "c8 저자 세션이 추가(2026-11-12). PMLR 페이지에서 제목 확인(DOI 없음). BC 복합 오차 O(eps T^2) 한계와 하한 구성의 원전"
+    verified: true
+    lessons: [c8-imitation-learning]
+    role: seminal
   - id: ross2011-dagger
     title: "A reduction of imitation learning and structured prediction to no-regret online learning"
     authors: ["S. Ross", "G. J. Gordon", "J. A. Bagnell"]
