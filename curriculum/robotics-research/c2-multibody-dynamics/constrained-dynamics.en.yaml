@@ -1,0 +1,103 @@
+# English text of the structured fields of constrained-dynamics.md (activity titles,
+# resource notes, quiz). The prose lives in constrained-dynamics.en.md.
+id: c2-constrained-dynamics
+lang: en
+activities:
+  c2-constrained-dynamics-reading: Read the lesson and follow the derivations
+  c2-constrained-dynamics-papers: Read the three must-read papers + a one-page note each
+  c2-constrained-dynamics-problems: "Problem set (2 derivations, 2 proofs, 1 numerical, 1 implementation, 1 paper)"
+  c2-constrained-dynamics-reproduction: "Reproduction task - integrate a closed-loop four-bar with multipliers and with reduced coordinates (R2)"
+  c2-constrained-dynamics-quiz: Concept check quiz
+resources:
+  "Featherstone, Rigid Body Dynamics Algorithms (2008)":
+    note: ch.8 (Closed Loop Systems). The standard treatment of loop-closure constraints, multipliers and reduced coordinates.
+  "Murray, Li & Sastry, A Mathematical Introduction to Robotic Manipulation":
+    note: ch.6 (Multifingered Hand Kinematics) and ch.5. Constraints and the grasp matrix. (official URL unverified)
+  "Boyd & Vandenberghe, Convex Optimization":
+    note: Recommended. ch.5 (duality and KKT) and App. A.5.5 (Schur complements). Background for reading multipliers as KKT conditions. The full PDF is free.
+  "Featherstone — Spatial vector and rigid-body dynamics software":
+    note: Recommended. The closed-loop examples, for the optional cross-check of the reproduction task (Octave).
+quiz:
+  - id: q1
+    prompt: >-
+      Select every assumption that the conclusion "the KKT matrix
+      $K = \begin{bmatrix} M & -J^{\top} \\ J & 0\end{bmatrix}$ is non-singular" **actually uses**.
+    choices:
+      - $M \succ 0$ (positive semidefiniteness would not suffice)
+      - $J$ has full row rank
+      - $m \le n$
+      - The constraints are holonomic
+    explanation: >-
+      The null-space argument gets $x = 0$ from $x^{\top}Mx = (Jx)^{\top}y = 0$ together with
+      $M \succ 0$ (the only place that hypothesis is used), and then $y = 0$ from $J^{\top}y = 0$
+      and full row rank. $m \le n$ is a consequence of full row rank, and holonomy was used in the
+      **process** of differentiating $\phi$ twice to obtain $J$, not in the non-singularity proof.
+    concept:
+      front: When the KKT matrix is non-singular
+      back: >-
+        $M \succ 0$ plus full row rank of $J$. If $J$ is rank-deficient, $\ddot{q}$ is still unique
+        but $\lambda$ is not
+  - id: q2
+    prompt: According to Gauss's principle of least constraint, what does the constrained acceleration $\ddot{q}$ minimise?
+    choices:
+      - $\lVert\ddot{q}\rVert_2$
+      - $\lVert\ddot{q} - a_u\rVert_M$ - the $M$-weighted distance from the unconstrained acceleration
+      - The kinetic energy $\frac{1}{2}\dot{q}^{\top}M\dot{q}$
+      - The magnitude of the constraint force $\lVert\lambda\rVert$
+    explanation: >-
+      $\ddot{q} = \arg\min \frac{1}{2}(x-a_u)^{\top}M(x-a_u)$ subject to $Jx = k$, and the KKT
+      conditions of that problem are exactly (2). So the constrained acceleration is the
+      $M$-weighted projection of the unconstrained one. In the four-bar measurement, the KKT
+      solution's $M$-norm of 5.523095 is strictly smaller than that of every feasible point
+      displaced along $\mathrm{null}(J)$.
+    concept:
+      front: Gauss's principle of least constraint
+      back: >-
+        $\ddot{q}$ minimises $\lVert x - a_u\rVert_M$ subject to $Jx = k$ - whose KKT conditions
+        are (2)
+  - id: q3
+    prompt: Why use the dynamically consistent pseudo-inverse $\bar{J} = M^{-1}J^{\top}\Lambda$?
+    choices:
+      - Because it minimises $\lVert\dot{q}\rVert_2$
+      - Because null-space torques $N^{\top}\tau_0$ produce no task acceleration
+      - Because it is cheaper to compute than $J^{+}$
+      - Because it is stable when $J$ is near a singularity
+    explanation: >-
+      $JM^{-1}N^{\top} = 0$ holds, and by the uniqueness proof of R3 the only right inverse with
+      that property is $\bar{J}$. The geometric $J^{+}$ minimises $\lVert\dot{q}\rVert_2$ but its
+      null-space torques disturb the task. It is more expensive to compute (it needs $\Lambda$),
+      and at a singularity $\bar{J}$ blows up too.
+    concept:
+      front: What "dynamically consistent" means for $\bar{J}$
+      back: >-
+        $JM^{-1}N^{\top} = 0$ - null-space torques give zero task acceleration, and the right
+        inverse with that property is unique
+  - id: q4
+    prompt: Turning on Baumgarte stabilisation lets you keep the constraint violation arbitrarily small during numerical integration.
+    explanation: >-
+      All (9) guarantees is the exponential decay of an **injected** error. The steady-state error
+      against the truncation error created afresh at every step is set by the order of the
+      integrator. Integrating the four-bar for 2 s with the same $\alpha=\beta=20$ gives
+      $2.2\times10^{-3}$ with semi-implicit Euler ($\Delta t = 10^{-3}$) and $1.9\times10^{-9}$
+      with RK4. When the constraint has to be tight, use coordinate projection
+      ($\approx 10^{-14}$).
+    concept:
+      front: What Baumgarte does and does not guarantee
+      back: >-
+        Exponential decay of an injected error (yes). The size of the steady-state error during
+        integration (no) - that is set by the integrator's order
+  - id: q5
+    prompt: >-
+      In one expression, why does the Lagrange multiplier disappear in the reduced-coordinate form
+      (7)?
+    answers: ["G^T J^T = 0", "G^TJ^T=0", "G^T J^T", "J G = 0", "JG=0", "JG = 0", "G is a basis of null(J)"]
+    explanation: >-
+      Since $JG = 0$ we have $G^{\top}J^{\top} = 0$, so multiplying the first equation of (1) on the
+      left by $G^{\top}$ cancels the $\lambda$ term exactly. Physically it is the algebraic form of
+      the principle of virtual work: the constraint force is normal to the tangent space of the
+      constraint manifold and does no work on tangential virtual displacements.
+    concept:
+      front: Why $\lambda$ cancels in the reduced-coordinate form
+      back: >-
+        $JG = 0 \Rightarrow G^{\top}J^{\top} = 0$ - the constraint force is normal to the tangent
+        space (the principle of virtual work)

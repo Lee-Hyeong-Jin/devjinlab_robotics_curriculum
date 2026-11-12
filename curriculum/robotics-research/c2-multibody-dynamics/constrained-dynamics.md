@@ -495,6 +495,84 @@ $\dot J\dot q$ 도 해석식을 쓴다 — 유한차분을 쓰면 재현 과제 
 P5 의 4절 링크를 **승수법과 축소좌표법 두 가지로** 구현해 아래 **네 조건을 모두** 만족해야
 통과다. 시뮬레이터는 쓰지 않는다.
 
+**모델과 제약 — 이 레슨이 제공하는 핵심 코드.** 아래는 본문의 수치가 나온 코드의 핵심부다.
+$M$, $b$ 는 앞 레슨의 `crba`·`rnea` 를 쓰고, $J$ 와 $\dot J\dot q$ 는 **해석적으로** 쓴다
+(유한차분을 쓰면 조건 1 의 $10^{-12}$ 벽을 넘지 못한다).
+
+```python
+L = np.array([0.5, 0.4, 0.3])  # link lengths
+MASS = np.array([1.2, 0.9, 0.6])
+
+
+def tip(q):
+    s = np.cumsum(q)
+    return np.array([np.sum(L * np.cos(s)), np.sum(L * np.sin(s))])
+
+
+def tip_jac(q):
+    """dp/dq, shape (2, 3). Joint i moves every link k >= i."""
+    s = np.cumsum(q)
+    J = np.zeros((2, 3))
+    for k in range(3):
+        for i in range(k + 1):
+            J[0, i] += -L[k] * np.sin(s[k])
+            J[1, i] += L[k] * np.cos(s[k])
+    return J
+
+
+def tip_jdot_qd(q, qd):
+    """Jdot qd: the part of d2p/dt2 that is quadratic in qd."""
+    s, sd = np.cumsum(q), np.cumsum(qd)
+    return np.array([np.sum(-L * sd**2 * np.cos(s)), np.sum(-L * sd**2 * np.sin(s))])
+
+
+def constrained_accel(q, qd, tau, alpha=0.0, beta=0.0):
+    """Solve (2). Sign convention: M qdd + b = tau + J^T lambda, J qdd = k."""
+    M = crba(CHAIN, q)
+    b = rnea(CHAIN, q, qd, np.zeros(3), A_GRAV)  # Coriolis + gravity
+    J = tip_jac(q)
+    k = -tip_jdot_qd(q, qd) - 2 * alpha * (J @ qd) - beta**2 * (tip(q) - P0)
+    K = np.block([[M, -J.T], [J, np.zeros((2, 2))]])
+    sol = np.linalg.solve(K, np.concatenate([tau - b, k]))
+    return sol[:3], sol[3:], M, J, k  # qdd, lambda, M, J, k
+
+
+def reduced_accel(q, qd, tau):
+    """Solve (7): G^T M G udd = G^T (tau - b - M w), then qdd = G udd + w."""
+    M = crba(CHAIN, q)
+    b = rnea(CHAIN, q, qd, np.zeros(3), A_GRAV)
+    J = tip_jac(q)
+    G = np.linalg.svd(J)[2][2:].T  # a basis of null(J), shape (3, 1)
+    w = np.linalg.pinv(J) @ (-tip_jdot_qd(q, qd))  # any particular solution of J w = k
+    udd = np.linalg.solve(G.T @ M @ G, G.T @ (tau - b - M @ w))
+    return G @ udd + w
+
+
+def project(q, qd, tol=1e-14):
+    """Coordinate projection: Newton onto phi = 0, then qd onto null(J)."""
+    for _ in range(20):
+        r = tip(q) - P0
+        if np.abs(r).max() < tol:
+            break
+        q = q - np.linalg.pinv(tip_jac(q)) @ r
+    G = np.linalg.svd(tip_jac(q))[2][2:].T
+    return q, G @ (G.T @ qd)
+
+
+def operational_space(q):
+    """Lambda, the dynamically consistent inverse, and the null-space projector."""
+    M, J = crba(CHAIN, q), tip_jac(q)
+    Minv = np.linalg.inv(M)
+    Lam = np.linalg.inv(J @ Minv @ J.T)
+    Jbar = Minv @ J.T @ Lam
+    return Lam, Jbar, np.eye(3) - J.T @ Jbar.T
+```
+
+`CHAIN` 은 앞 레슨의 모델 객체(부모 $[-1,0,1]$, 축 모두 $z$, 트리 변환
+$X_{T,k} = \mathrm{Xtrans}(l_{k-1}e_x)$, 질량 속성은 P5)이고 `A_GRAV` $= (0,0,0,\,0,-9.81,0)$,
+`P0` $= \mathrm{tip}(0.6,-0.9,0.5)$ 다. `reduced_accel` 이 `udd` 를 **적분하지 않는다**는 점에
+주의하라 — $G$ 의 게이지가 불연속이므로 비교는 $\ddot q$ 수준에서만 한다(R4 의 표).
+
 1. **한 점에서 두 방법의 일치와 제약 만족** — $q_0, \dot q_0, \tau$ (P5 의 값)에서
    $$
    \lVert \ddot q^{\text{KKT}} - \ddot q^{\text{reduced}} \rVert_\infty < 10^{-12},
