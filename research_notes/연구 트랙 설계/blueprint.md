@@ -190,7 +190,7 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 | `c4-ilqr-ddp` iLQR/DDP 와 정규화 | DDP 의 2차 전개와 수렴 차수 **[D3]**; 정규화·merit function·선탐색의 필요성 **[D2]**; 상태 제약 처리의 한계 **[D2]** | `mayne1966-ddp`, `tassa2012-ilqr` | UA ch.10.3, 16-745 W6 | R2: 카트폴 스윙업을 iLQR 로 해결, 비용 단조 감소와 토크 한계 만족(수용 기준: 20반복 내 수렴) |
 | `c4-direct-collocation-sqp` 직접법·collocation·SQP | 직접 전사(transcription)의 희소 구조 **[D2]**; Hermite–Simpson 의 차수 **[D2]**; SQP 와 KKT 의 관계, 2차 수렴 **[D3]** | `hargraves1987-collocation`, `betts1998-survey` | NW ch.18, UA ch.10.2 | R2: 아크로봇 스윙업을 직접법으로 풀고 동역학 제약 위반 < 1e-6, iLQR 해와 비용 비교 |
 | `c4-mpc` MPC | 재귀적 실현가능성과 종단 집합 **[D3]**; Lyapunov 기반 안정성 **[D3]**; 명시적 MPC 의 구간 선형 해 **[D2]**; 실시간 반복(RTI) **[D1]** | `rawlings2017-mpc-theory`, `diehl2009-rti` | AA203 W6, 16-745 W5 | R2: 선형 MPC 를 QP 로 구현, 종단 비용·제약 유무에 따른 안정 영역 차이를 수치로 보임 |
-| `c4-contact-implicit-hybrid` 접촉·하이브리드 궤적 최적화 | 상보성 제약의 비볼록성과 LICQ 실패 **[D3]**; through-contact 전사 **[D2]**; 모드 스케줄과 살토(saltation) 행렬 **[D2]** | `posa2014-contact-implicit`, `howell2022-altro` | UA ch.17, 16-745 W10 | R3: Posa 2014 의 접촉 궤적(공 던지기/보행 1보)을 축소 규모로 재현, 상보성 잔차 < 1e-5 |
+| `c4-contact-implicit-hybrid` 접촉·하이브리드 궤적 최적화 | 상보성 제약의 비볼록성과 LICQ 실패 **[D3]**; through-contact 전사 **[D2]**; 모드 스케줄과 살토(saltation) 행렬 **[D2]** | `posa2014-contact-implicit`, `howell2019-altro` | UA ch.17, 16-745 W10 | R3: Posa 2014 의 접촉 궤적(공 던지기/보행 1보)을 축소 규모로 재현, 상보성 잔차 < 1e-5 |
 | `c4-robust-stochastic-oc` 강건·확률 최적 제어 | HJB/HJI 와 도달가능성(reachability) **[D3]**; minimax DDP **[D2]**; iLQG·불확실성 전파 **[D2]**; 튜브 MPC **[D1]** | `mitchell2005-hji-reachability` | AA203 W5, 16-745 W11–12 | R2: 2D 계의 도달가능 집합을 레벨셋으로 계산, 몬테카를로 궤적이 집합 안에 있음을 확인 |
 
 **열린 문제**: 접촉이 있는 계의 전역 최적성(복잡도와 인증); 실시간성과 강건성의 동시 보장;
@@ -275,7 +275,7 @@ UA ch.11,20–21, S&B.
 | `s1-vio-systems` VIO 시스템 해부 | 필터형(MSCKF)과 최적화형의 계산·정확도 교환 **[D2]**; 널공간 투영 기법 **[D3]** | `mourikis2007-msckf`, `qin2018-vins-mono` | R3: EuRoC 1개 시퀀스에서 공개 VIO 를 돌려 보고된 ATE 와 30% 이내 일치, 설정 변경의 영향 측정 |
 | `s1-loop-closure-lifelong` 루프 폐쇄와 장기 운용 | 장소 인식의 정밀도-재현율 교환 **[D2]**; 거짓 루프의 파괴적 영향과 강건 백엔드 **[D2]**; 지도 희소화(sparsification) **[D2]** | `galvez-lopez2012-dbow2`, `cadena2016-slam-survey` | R3: 거짓 루프 비율을 주입해 ATE 붕괴 지점을 찾고 강건 커널로 완화됨을 보임 |
 | `s1-dense-neural-slam` 밀집·뉴럴 SLAM | TSDF 융합의 가중 평균 유도 **[D2]**; 뉴럴 암시 표현의 증분 학습과 망각 **[D2]** | `newcombe2011-kinectfusion`, `sucar2021-imap` | R3: 소형 RGB-D 시퀀스에서 TSDF 재구성과 뉴럴 SLAM 의 메모리-정확도를 비교 |
-| `s1-semantic-scene-graphs` 의미·객체 수준 SLAM | 객체 수준 인자와 데이터 연관의 모호성 **[D2]**; 3D 장면 그래프의 계층 추론 **[D2]** | `rosinol2021-kimera`, `salas-moreno2013-slam++` | R3: 객체 수준 SLAM 의 데이터 연관 오류율을 측정하고 기하 전용 대비 이득 확인 |
+| `s1-semantic-scene-graphs` 의미·객체 수준 SLAM | 객체 수준 인자와 데이터 연관의 모호성 **[D2]**; 3D 장면 그래프의 계층 추론 **[D2]** | `rosinol2021-kimera`, `salas-moreno2013-slampp` | R3: 객체 수준 SLAM 의 데이터 연관 오류율을 측정하고 기하 전용 대비 이득 확인 |
 | `s1-certifiable-slam` 인증 가능 SLAM | SE-Sync 의 쌍대 완화와 타이트성 조건 **[D3]**; 최적성 인증서(certificate) 검사 **[D3]** | `rosen2019-se-sync`, `carlone2015-lagrangian-duality` | R3: 공개 포즈 그래프에서 완화 해의 인증서를 계산해 전역 최적임을 확인 |
 | `s1-slam-benchmarking` 평가의 과학 | ATE/RPE 정의와 정렬(Umeyama) **[D3]**; 시퀀스 간 분산과 통계적 유의성 **[D2]** | `sturm2012-tum-rgbd`, `geiger2012-kitti`, `zhang2018-trajectory-eval` | R2: 평가 도구를 직접 구현해 공개 도구 결과와 1e-6 이내 일치, 시드·시퀀스 분산을 신뢰구간으로 보고 |
 
@@ -315,7 +315,7 @@ UA ch.11,20–21, S&B.
 | `s4-vla-architectures` VLA 아키텍처와 행동 표현 | 행동 토큰화의 양자화 오차 **[D2]**; 사전학습 전이의 조건 **[D2]**; 흐름/확산 헤드의 선택 근거 **[D2]** | `brohan2023-rt2`, `kim2024-openvla`, `black2024-pi0` | R3: OpenVLA 류를 소형 과제에 미세조정해 보고된 상대 경향 재현 |
 | `s4-pretrained-representations` 사전학습 표현과 전이 | 표현 평가의 선형 프로빙 한계 **[D2]**; 시간 대조 목적함수 **[D2]** | `nair2022-r3m`, `majumdar2023-vc1` | R2: 동결 표현 3종 위에 동일 정책 헤드를 학습해 표현별 성능 차이를 5시드로 비교 |
 | `s4-language-and-planning` 언어·계획 결합 | 계층 정책의 추상화 경계 **[D2]**; LLM 계획의 실현가능성 보장 부재 **[D2]** | `ahn2022-saycan`, `liang2023-code-as-policies` | R2: 기호 계획 + 저수준 정책의 실패 사례를 분류해 실패 원인 분포를 보고 |
-| `s4-evaluation-science` 평가의 과학 | 실기 평가의 표본 수와 신뢰구간 **[D3]**; A/B 비교의 검정력 **[D2]**; 벤치마크 과적합 **[D2]** | `kress-gazit2024-eval`, `agarwal2021-deep-rl-at-the-edge` | R2: 성공률 차이를 검출하려면 몇 회 시행이 필요한지 검정력 분석으로 계산하고 공개 결과에 적용 |
+| `s4-evaluation-science` 평가의 과학 | 실기 평가의 표본 수와 신뢰구간 **[D3]**; A/B 비교의 검정력 **[D2]**; 벤치마크 과적합 **[D2]** | `li2024-simpler`, `agarwal2021-deep-rl-at-the-edge` | R2: 성공률 차이를 검출하려면 몇 회 시행이 필요한지 검정력 분석으로 계산하고 공개 결과에 적용 |
 | `s4-safety-ood` 안전·OOD·실패 모드 | 불확실성 정량화(앙상블·공형 예측)의 보장 **[D3]**; 중단(abstention) 정책의 비용 **[D2]** | `angelopoulos2021-conformal`, `sinha2022-system-level-ood` | R2: 공형 예측으로 행동 불확실성 구간을 만들고 목표 커버리지(90%)를 실측 확인 |
 
 **열린 문제**: 로봇 데이터의 스케일링 한계; 평가 재현성; 일반화의 측정; 안전 보장과 대형 정책의 결합.
