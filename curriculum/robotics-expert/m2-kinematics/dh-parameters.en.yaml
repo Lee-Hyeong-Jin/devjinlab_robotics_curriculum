@@ -16,3 +16,48 @@ resources:
   "Modern Robotics, 부록 C Denavit-Hartenberg Parameters (Lynch & Park)":
     title: "Modern Robotics, appendix C: Denavit-Hartenberg Parameters (Lynch & Park)"
     note: Optional, compares DH with the product of exponentials.
+quiz:
+  - id: q1
+    prompt: 'In standard DH, which parameter is the variable of a **revolute joint**?'
+    choices:
+      - '$\theta_i$ (the joint angle)'
+      - '$d_i$ (the link offset)'
+      - '$a_i$ (the link length)'
+      - '$\alpha_i$ (the link twist)'
+    explanation: >-
+      A revolute joint turns about the $z_{i-1}$ axis, so $\theta_i$ is the variable and
+      the other three are constants fixed by the structure of the link. For a prismatic
+      joint $d_i$ is the variable instead.
+    concept:
+      front: Which DH parameter is the joint variable
+      back: >-
+        $\theta_i$ for a revolute joint, $d_i$ for a prismatic one - the other three are
+        structural constants
+  - id: q2
+    prompt: >-
+      When the two joint axes $z_{i-1}$ and $z_i$ are parallel, what is the link twist
+      $\alpha_i$?
+    choices:
+      - '$0$ (or $180^\circ$)'
+      - 'Always $90^\circ$'
+      - The same as the joint angle
+      - It cannot be defined
+    explanation: >-
+      $\alpha_i$ is the angle from $z_{i-1}$ to $z_i$ measured about the common normal.
+      Parallel axes have no twist, so it is $0$ (same direction) or $180^\circ$ (opposite
+      direction). Axes that intersect at a right angle give $a_i = 0$ and
+      $\alpha_i = \pm 90^\circ$.
+  - id: q3
+    prompt: >-
+      A DH table from Craig's textbook can be substituted straight into the standard DH
+      formula and give the same result.
+    explanation: >-
+      Craig uses the modified DH convention, which attaches the frame to the axis of joint
+      $i$. The parameter subscripts ($a_{i-1}$, $\alpha_{i-1}$) and the order the
+      transforms are multiplied in both differ, so mixing the two conventions produces the
+      wrong transform. Check which convention a datasheet or a piece of code uses first.
+    concept:
+      front: Standard DH vs modified (Craig) DH
+      back: >-
+        Different frame placement, different parameter subscripts, different
+        multiplication order - mixing them is wrong

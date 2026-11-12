@@ -15,3 +15,41 @@ resources:
       some of the chapter 3 exercises.
   "Introduction to Robotics: Mechanics and Control, 4th ed. (John J. Craig)":
     note: "Chapter 2, Spatial Descriptions and Transformations (an alternative textbook)."
+quiz:
+  - id: q1
+    prompt: 'What is $T_{ab}\,T_{bc}$?'
+    choices:
+      - "$T_{ac}$"
+      - "$T_{ca}$"
+      - "$T_{ba}$"
+      - It is undefined
+    explanation: >-
+      Multiply so that the subscripts cancel: $T_{ab}T_{bc} = T_{ac}$. Keep to that rule
+      and you will rarely get the order of a composition wrong.
+    concept:
+      front: The rule for composing transforms
+      back: "$T_{ab}T_{bc} = T_{ac}$ - the inner subscripts cancel"
+  - id: q2
+    prompt: >-
+      When you write a **direction vector**, such as a velocity or an axis, in homogeneous
+      coordinates, what is its last component?
+    choices:
+      - 1 - the same as for a point
+      - 0 - it must not be affected by translation
+      - The magnitude of the vector
+      - The number of the frame
+    explanation: >-
+      With a last component of 0, multiplying by $T$ does not add the position part
+      $\mathbf{p}$ and only the rotation is applied. A direction must not change when the
+      origin of the frame moves, so it gets 0.
+    concept:
+      front: The last component in homogeneous coordinates
+      back: 1 for a point, 0 for a direction vector (which translation must not affect)
+  - id: q3
+    prompt: >-
+      The position part of the inverse transform $T_{ba}$ of $T_{ab}$ is
+      $-\mathbf{p}_{ab}$.
+    explanation: >-
+      The position part of $T_{ba}$ is $-R_{ab}^T\mathbf{p}_{ab}$. The frame rotates along
+      with the change, so the translation vector has to pass through the transpose of the
+      rotation as well.

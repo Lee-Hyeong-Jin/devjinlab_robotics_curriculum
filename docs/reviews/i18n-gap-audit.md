@@ -1,7 +1,7 @@
 # i18n gap audit - Korean left in the English build
 
 - generated: 2026-11-12 by `uv run python scripts/i18n/audit.py --write`
-- Korean runs found: **5093**
+- Korean runs found: **4147**
 - detector: `robotics_curriculum.i18n.scan` (Hangul syllables, Jamo, compatibility Jamo)
 - rows are grouped by field: list indexes and content ids collapse to `*` / `{id}`.
 
@@ -20,8 +20,8 @@ The web front-end is not listed separately: `web/messages/en.json` is at full ke
 
 | surface | Korean runs | distinct fields |
 | --- | ---: | ---: |
-| API | 4760 | 12 |
-| content | 161 | 10 |
+| API | 3856 | 12 |
+| content | 119 | 7 |
 | source | 19 | 19 |
 | static site | 153 | 13 |
 
@@ -29,8 +29,8 @@ The web front-end is not listed separately: `web/messages/en.json` is at full ke
 
 | where | runs | sample |
 | --- | ---: | --- |
-| `GET /api/v1/lessons/{id}/quiz /questions/*/choices/*` | 2970 | $\theta = 0^\circ$ 이다 |
-| `GET /api/v1/lessons/{id}/quiz /questions/*/prompt` | 1580 | 두 벡터의 내적이 음수라면 두 벡터 사이 각도 $\theta$ 에 대해 무엇을 알 수 있는가? |
+| `GET /api/v1/lessons/{id}/quiz /questions/*/choices/*` | 2504 | 토픽 — 명령을 계속 흘려보낸다 |
+| `GET /api/v1/lessons/{id}/quiz /questions/*/prompt` | 1142 | 로봇 팔에 "물체를 집어라"를 지시하는 인터페이스로 가장 알맞은 것은? |
 | `GET /api/v1/lessons/{id} /resources/*/title` | 67 | 현직자가 알려주는 로보틱스 시스템 완전 해부 (인프런, jelly) |
 | `GET /api/v1/lessons/{id} /body` | 58 | /rlabbe/Kalman-and-Bayesian-Filters-in-Python> - Inflearn, "현직자가 알려주는 로보틱스 시스템 완전 해부" (in  |
 | `GET /api/v1/resources /*/title` | 50 | 현직자가 알려주는 로보틱스 시스템 완전 해부 (인프런, jelly) |
@@ -51,11 +51,8 @@ The web front-end is not listed separately: `web/messages/en.json` is at full ke
 | `m5-state-estimation-slam/{id}` | 20 | quiz q1 |
 | `m6-navigation-planning/{id}` | 19 | quiz q1 |
 | `m7-manipulation-motion-planning/{id}` | 19 | quiz q1 |
-| `m4-sensors-perception/{id}` | 17 | resource 3: title / note |
 | `m8-ros2-tools/{id}` | 17 | resource 2: title / note |
-| `m1-math-physics/{id}` | 9 | quiz q1 |
-| `m2-kinematics/{id}` | 9 | quiz q1 |
-| `m3-mobile-robots-control/{id}` | 9 | quiz q1 |
+| `m4-sensors-perception/{id}` | 2 | resource 3: title / note |
 
 ## source
 
