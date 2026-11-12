@@ -188,6 +188,51 @@ papers:
     verified: true
     role: critique
     note: "how little optimal triangulation actually buys"
+  - id: mildenhall2020-nerf
+    title: "NeRF: representing scenes as neural radiance fields for view synthesis"
+    authors: ["B. Mildenhall", "P. P. Srinivasan", "M. Tancik", "J. T. Barron", "R. Ramamoorthi", "R. Ng"]
+    year: 2020
+    venue: "ECCV"
+    url: "https://arxiv.org/abs/2003.08934"
+    verified: true
+    role: seminal
+    note: "arXiv v1 2020-03-19; sec. 4 has the discrete volume rendering and the positional encoding"
+  - id: kerbl2023-3dgs
+    title: "3D Gaussian splatting for real-time radiance field rendering"
+    authors: ["B. Kerbl", "G. Kopanas", "T. Leimkuhler", "G. Drettakis"]
+    year: 2023
+    venue: "ACM TOG (SIGGRAPH)"
+    url: "https://arxiv.org/abs/2308.04079"
+    verified: true
+    role: frontier
+    note: "ACM TOG 42(4), 2023-07; sec. 4-6 cover the splatting and the tile rasteriser"
+  - id: max1995-optical-models
+    title: "Optical models for direct volume rendering"
+    authors: ["N. Max"]
+    year: 1995
+    venue: "IEEE TVCG"
+    url: "https://doi.org/10.1109/2945.468400"
+    verified: true
+    role: seminal
+    note: "the absorption-emission model behind the volume rendering integral"
+  - id: zwicker2002-ewa-splatting
+    title: "EWA splatting"
+    authors: ["M. Zwicker", "H. Pfister", "J. van Baar", "M. Gross"]
+    year: 2002
+    venue: "IEEE TVCG"
+    url: "https://doi.org/10.1109/TVCG.2002.1021576"
+    verified: true
+    role: seminal
+    note: "the affine approximation of the projective map that 3DGS reuses"
+  - id: tancik2020-fourier-features
+    title: "Fourier features let networks learn high frequency functions in low dimensional domains"
+    authors: ["M. Tancik", "P. P. Srinivasan", "B. Mildenhall", "S. Fridovich-Keil", "et al."]
+    year: 2020
+    venue: "NeurIPS"
+    url: "https://arxiv.org/abs/2006.10739"
+    verified: true
+    role: standard
+    note: "arXiv v1 2020-06-18; the kernel view of the spectral bias of positional encoding"
   - id: sarlin2020-superglue
     title: "SuperGlue: learning feature matching with graph neural networks"
     authors: ["P.-E. Sarlin", "D. DeTone", "T. Malisiewicz", "A. Rabinovich"]

@@ -143,6 +143,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   SuperGlue matching layer derived as entropic optimal transport, the scale ambiguity of joint
   depth-and-pose learning as a one-dimensional null space, and an experiment separating noise from
   structural ambiguity as the cause of correspondence failure.
+- `c7-neural-fields-3dgs`: the volume rendering integral from the absorption-emission model, a
+  proof that NeRF's alpha-compositing discretisation is exact for piecewise-constant density (with
+  the measured second-order error for smooth density), the spectral bias of positional encoding
+  quantified through Gram eigenvalues, and the measured valid regime of the affine (EWA) projection
+  used by 3D Gaussian splatting.
 - `curriculum/robotics-research/papers.yaml`: the course paper registry (ADR 0014) with the
   eleven papers the C7 lessons assign; both C7 lessons reference them through front-matter
   `papers:` and `rc papers <lesson_id>` lists them.
