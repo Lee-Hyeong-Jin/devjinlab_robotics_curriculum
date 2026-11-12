@@ -1,0 +1,75 @@
+id: f0-classical-mechanics
+lang: en
+activities:
+  f0-classical-mechanics-diagnostic: "Self-diagnosis before starting (pass and skip this lesson)"
+  f0-classical-mechanics-lectures: Watch the MIT 8.01SC lectures and read the online textbook
+  f0-classical-mechanics-problems: Work problem sets 1-12
+resources:
+  "MIT 8.01SC Classical Mechanics (Fall 2016)":
+    note: The primary source. Lecture videos, problem sets 1-12, an online textbook and readings.
+  "Lynch & Park, Modern Robotics":
+    note: Skimming the opening of ch.8 (Dynamics of Open Chains) in advance makes the purpose of this lesson visible.
+quiz:
+  - id: q1
+    prompt: >-
+      The moment of inertia of a uniform rod of length $L$ and mass $m$ rotating about one end is
+      $mL^2/k$. What is $k$?
+    explanation: >-
+      $I = \int_0^L (m/L)x^2 dx = mL^2/3$. About its centre it is $mL^2/12$, and the two are
+      related by the parallel-axis theorem. The inertia matrix of C2 is the three-dimensional
+      version of this computation.
+    answers: ["3", "three"]
+    concept:
+      front: Moment of inertia of a uniform rod
+      back: $mL^2/3$ about an end, $mL^2/12$ about the centre, linked by the parallel-axis theorem
+  - id: q2
+    prompt: What is the parallel-axis theorem?
+    choices:
+      - $I = I_{cm} + mL^2/12$
+      - $I = I_{cm} + md^2$ (with $d$ the distance from the centre of mass to the axis)
+      - $I = I_{cm} - md^2$
+      - $I = mI_{cm}d^2$
+    explanation: >-
+      $I = I_{cm} + md^2$. The transformation used in C2 to move spatial inertia to another frame
+      is the six-dimensional version of this theorem.
+    concept:
+      front: The parallel-axis theorem
+      back: $I = I_{cm} + md^2$ - moving the axis a distance $d$ from the centre of mass adds $md^2$
+  - id: q3
+    prompt: What is the acceleration of an object sliding down a frictionless incline of angle $\theta$?
+    choices: ["$g$", "$g\\sin\\theta$", "$g\\cos\\theta$", "$g\\tan\\theta$"]
+    explanation: >-
+      The component along the incline is $mg\sin\theta$, so $a = g\sin\theta$. The trick is to draw
+      the free-body diagram and take the axis along the incline.
+    concept:
+      front: Acceleration on an incline
+      back: $a = g\sin\theta$ (frictionless); take the axis along the incline
+  - id: q4
+    prompt: What is conserved in a system with zero external torque?
+    choices: ["Kinetic energy", "Linear momentum only", "Angular momentum", "Moment of inertia"]
+    explanation: >-
+      With $\tau_{ext}=0$ the angular momentum $L = I\omega$ is conserved; if the moment of inertia
+      changes then $\omega$ changes (the figure skater). Kinetic energy need not be conserved.
+    concept:
+      front: Conservation of angular momentum
+      back: Zero external torque conserves $L=I\omega$; reducing $I$ increases $\omega$
+  - id: q5
+    prompt: In a perfectly inelastic collision both momentum and kinetic energy are conserved.
+    explanation: >-
+      Momentum is conserved but kinetic energy is not (it is lost to heat and deformation). This
+      distinction matters in the impact models of S3 (legged locomotion), where contact impacts
+      lose energy.
+    concept:
+      front: Inelastic collisions
+      back: Momentum conserved, kinetic energy not; an elastic collision conserves both
+  - id: q6
+    prompt: >-
+      The small-oscillation period of a simple pendulum of mass $m$ and length $l$ is
+      $T = 2\pi\sqrt{l/k}$. What is $k$?
+    explanation: >-
+      Linearising $\ddot\theta + (g/l)\sin\theta = 0$ gives angular frequency $\sqrt{g/l}$, so
+      $T=2\pi\sqrt{l/g}$, independent of mass. This pendulum appears in every example of C1 and C4.
+    answers: ["g", "9.8", "9.81", "gravitational acceleration"]
+    concept:
+      front: Small-amplitude period of a simple pendulum
+      back: $T = 2\pi\sqrt{l/g}$ - independent of mass, and a linearised result

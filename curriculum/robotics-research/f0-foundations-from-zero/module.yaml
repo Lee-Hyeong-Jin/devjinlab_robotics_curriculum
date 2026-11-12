@@ -1,0 +1,18 @@
+id: f0-foundations-from-zero
+title: F0 시작 전 기초
+summary: >-
+  완전한 0 에서 학부 1-2학년 수준의 수학·물리·프로그래밍까지 올리는 단계. 내용을 새로 쓰지 않는
+  **가이드형(guide)** 모듈이다 — 검증된 공개 강의·교재로 안내하고 진단 문제로 통과를 판정하며,
+  통과하면 그 레슨을 건너뛴다. 미적분 I·II, 선형대수, 미분방정식, 확률·통계, 파이썬·수치계산·Git,
+  고전 역학, 증명 읽기·쓰기 8레슨. 이 모듈을 마치면 robotics-expert 코스와 R0 수학 브리지로 간다.
+  선수는 잠금이 아니라 권장이며 어느 레슨이든 바로 열 수 있다.
+level: 연구
+lessons:
+  - calculus-single-variable
+  - linear-algebra
+  - calculus-multivariable
+  - differential-equations
+  - probability-statistics
+  - python-numerics-git
+  - classical-mechanics
+  - proofs-math-maturity

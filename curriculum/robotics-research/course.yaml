@@ -9,4 +9,5 @@ summary: >-
   robotics-expert 코스다.
 tags: [robotics, research, graduate]
 modules:
+  - f0-foundations-from-zero
   - c1-rigid-body-geometry-lie-groups
