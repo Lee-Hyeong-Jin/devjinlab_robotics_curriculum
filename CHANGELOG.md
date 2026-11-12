@@ -138,6 +138,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   authoring guide `docs/curriculum/AUTHORING_RESEARCH_TRACK.md`. The track design (benchmark of
   graduate courses, 97-lesson blueprint, lesson standard, 134-paper reading list) is under
   `research_notes/연구 트랙 설계/`.
+- Research-track module C3 (nonlinear and robust control) under
+  `curriculum/robotics-research/c3-nonlinear-robust-control/`: lesson 1, Lyapunov stability and
+  ISS, in Korean and English — the Lyapunov theorem, its converse for exponential stability and
+  LaSalle's invariance principle as proof sketches, the ISS estimate derived from an
+  ISS-Lyapunov function, and a sum-of-squares certificate for a region of attraction with a
+  numerically checkable reproduction task.
+- Research-track lesson 2 of module C3, feedback linearisation and controllability, in Korean and
+  English: the full feedback-linearisation condition reduced to the Frobenius theorem, zero
+  dynamics and the forward-point output of a differential-drive robot, the second-order Lie
+  bracket motion derived from a composition of flows, the chained form with steering by sinusoids
+  ($\Delta z_3 = \pi ab/\omega^2$), and Brockett's obstruction shown concretely.
+- Research-track lesson 3 of module C3, contraction theory and incremental stability, in Korean
+  and English: the contraction condition derived from virtual displacements up to finite
+  Riemannian distance, constant metrics found by LMI where the Euclidean metric certifies nothing,
+  the disturbance tube $\sup\lVert\Theta d\rVert/\lambda$, why a control contraction metric is
+  convex in the dual metric, and a reproduction task that measures how conservative the
+  certificate is (certified 0.49 against a measured rate of 1.00).
+- Research-track lesson 4 of module C3, passivity, energy shaping and impedance control, in
+  Korean and English: manipulator passivity from the skew symmetry of $\tfrac12\dot M - C$,
+  the passivity theorem for feedback interconnections, energy shaping with damping injection, and
+  a closed-form per-cycle energy of a sampled virtual wall that reproduces the Colgate-Schenkel
+  passivity condition in the limit and quantifies where it is conservative.
+- Research-track lesson 5 of module C3, adaptive control and persistent excitation, in Korean and
+  English: the regressor of a two-link arm built column by column, the Slotine-Li Lyapunov
+  derivation of $\dot V = -s^\top K_D s$, persistent excitation as the necessary and sufficient
+  boundary of parameter convergence, and a reproduction task where tracking reaches $5\cdot10^{-14}$
+  at a set-point while the inertial parameters stay 34% wrong.
+- Research-track lesson 6 of module C3, CBF and CLF safety filters, in Korean and English,
+  completing the module: forward invariance proved with the comparison lemma, the closed form of
+  the minimum-intervention QP from the KKT conditions, the exponential CBF chain for a
+  relative-degree-two constraint, and a reproduction task that measures how input limits break the
+  guarantee (95 of 189 runs saturate at $u_{\max}=2$, worst $h = -0.138$).
+- Module C3 moved onto the schema the paper registry added (AUTHORING §8-1): its 22 papers are
+  registered in `curriculum/robotics-research/papers.yaml` (all with verified URLs), each lesson
+  references them from front-matter `papers[]` with `required`/`role` and a language-neutral
+  locator, the activity kinds `paper` and `reproduction` replace the interim `reading`/`exercise`,
+  tool resources use `kind: code`, and the module level is `연구`.
 
 ### Fixed
 

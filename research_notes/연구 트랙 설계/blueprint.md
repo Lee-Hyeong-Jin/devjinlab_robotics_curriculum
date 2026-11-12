@@ -238,12 +238,12 @@ C5,C6,C8           ──> S5 다중 로봇·필드 로보틱스
 
 | 레슨 | 유도해야 할 핵심 결과 | 필독 | 교재 | 재현 과제 |
 |---|---|---|---|---|
-| `c3-lyapunov-stability` Lyapunov 안정성과 ISS | Lyapunov 정리와 역정리 **[D3]**; Barbashin–Krasovskii·LaSalle **[D3]**; ISS 와 비교 함수 **[D2]** | `sontag1989-coprime-factorization`, `papachristodoulou2002-sos` | Khalil ch.4, UA ch.9 | R1: 2차 계의 Lyapunov 함수를 SOS(sum-of-squares)로 탐색, 흡인 영역 추정값이 수치 적분 결과를 포함함을 확인 |
-| `c3-feedback-linearization` 피드백 선형화와 가제어성 | 입출력·완전 선형화 조건(involutivity, Frobenius) **[D3]**; 비홀로노믹 계의 Chow–Rashevskii **[D2]**; 영역 동역학 **[D2]** | `brockett1983-nonholonomic` | Khalil ch.13, MLS ch.7 | R2: 차동구동 로봇을 사인파 조향(steering with sinusoids)으로 주차, 종단 오차 < 1e-3 |
-| `c3-contraction-incremental` 수축 이론 | 수축 조건과 지수 수렴 **[D3]**; 미분 Lyapunov 와 리만 계량 **[D2]**; 추적 제어로의 적용 **[D2]** | `lohmiller1998-contraction`, `manchester2017-ccm` | Khalil ch.9(비교) | R1: 수축 계량이 주는 수렴률 상한이 실제 궤적 수렴률을 상회하는지 수치 검증 |
-| `c3-passivity-impedance` 수동성·에너지 성형과 임피던스 제어 | 수동성 정리와 직렬 결합 안정성 **[D3]**; 에너지 성형·댐핑 주입 **[D2]**; 임피던스/어드미턴스 제어와 접촉 안정성 **[D2]** | `hogan1985-impedance` | MR ch.11.6, MLS ch.6 | R2: 1-DOF 접촉 작업에서 임피던스 이득을 바꿔 안정 경계를 실험적으로 그림(이론 경계와 비교) |
-| `c3-adaptive-control` 적응 제어 | 매개변수 수렴과 지속 여진(persistent excitation) **[D3]**; 확실성 등가의 함정 **[D2]**; $L_1$·강건 적응 **[D1]** | `slotine1987-adaptive-manipulator` | Khalil ch.9 | R2: 매니퓰레이터 적응 제어를 구현, PE 를 만족하는 궤적에서만 매개변수가 수렴함을 보임 |
-| `c3-cbf-safety-filter` CBF/CLF 안전 필터 | CBF 의 전진 불변성 **[D3]**; QP 기반 최소 개입 필터와 실현가능성 **[D2]**; 입력 제약·고차 CBF **[D2]** | `ames2017-cbf` | — | R2: 이중 적분기 안전 필터를 QP 로 구현, 제약 위반 0 과 비활성 구간에서 명목 제어와 일치 확인 |
+| `c3-lyapunov-stability` Lyapunov 안정성과 ISS | Lyapunov 정리와 역정리 **[D3]**; Barbashin–Krasovskii·LaSalle **[D3]**; ISS 와 비교 함수 **[D2]** | `sontag1989-coprime-factorization`, `papachristodoulou2002-sos`, `topcu2008-local-stability-sos` | Khalil ch.4, UA ch.9 | R1: 2차 계의 Lyapunov 함수를 SOS(sum-of-squares)로 탐색, 흡인 영역 추정값이 수치 적분 결과를 포함함을 확인 |
+| `c3-feedback-linearization` 피드백 선형화와 가제어성 | 입출력·완전 선형화 조건(involutivity, Frobenius) **[D3]**; 비홀로노믹 계의 Chow–Rashevskii **[D2]**; 영역 동역학 **[D2]** | `murray1993-steering-sinusoids`, `hauser1992-nonminimum-phase`, `devasia1996-inversion` | Khalil ch.13, MLS ch.7 | R2: 차동구동 로봇을 사인파 조향(steering with sinusoids)으로 주차, 종단 오차 < 1e-3 |
+| `c3-contraction-incremental` 수축 이론 | 수축 조건과 지수 수렴 **[D3]**; 미분 Lyapunov 와 리만 계량 **[D2]**; 추적 제어로의 적용 **[D2]** | `lohmiller1998-contraction`, `manchester2017-ccm`, `tsukamoto2021-contraction-tutorial` | Khalil ch.9(비교) | R1: 수축 계량이 주는 수렴률 상한이 실제 궤적 수렴률을 상회하는지 수치 검증 |
+| `c3-passivity-impedance` 수동성·에너지 성형과 임피던스 제어 | 수동성 정리와 직렬 결합 안정성 **[D3]**; 에너지 성형·댐핑 주입 **[D2]**; 임피던스/어드미턴스 제어와 접촉 안정성 **[D2]** | `hogan1985-impedance`, `colgate1988-coupled-stability`, `colgate1997-sampled-passivity` | MR ch.11.6, MLS ch.6 | R2: 1-DOF 접촉 작업에서 임피던스 이득을 바꿔 안정 경계를 실험적으로 그림(이론 경계와 비교) |
+| `c3-adaptive-control` 적응 제어 | 매개변수 수렴과 지속 여진(persistent excitation) **[D3]**; 확실성 등가의 함정 **[D2]**; $L_1$·강건 적응 **[D1]** | `slotine1987-adaptive-manipulator`, `boyd1986-pe`, `rohrs1985-unmodeled-dynamics` | Khalil ch.9 | R2: 매니퓰레이터 적응 제어를 구현, PE 를 만족하는 궤적에서만 매개변수가 수렴함을 보임 |
+| `c3-cbf-safety-filter` CBF/CLF 안전 필터 | CBF 의 전진 불변성 **[D3]**; QP 기반 최소 개입 필터와 실현가능성 **[D2]**; 입력 제약·고차 CBF **[D2]** | `ames2017-cbf`, `ames2019-cbf-survey`, `nguyen2016-ecbf` | — | R2: 이중 적분기 안전 필터를 QP 로 구현, 제약 위반 0 과 비활성 구간에서 명목 제어와 일치 확인 |
 
 **열린 문제**: 학습된 동역학 위에서의 안정성 보장; CBF 의 실현가능성과 보수성의 교환;
 접촉·충격이 있는 계의 강건 안정성 이론.

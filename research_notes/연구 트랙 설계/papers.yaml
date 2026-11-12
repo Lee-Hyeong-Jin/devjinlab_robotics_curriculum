@@ -123,16 +123,56 @@ papers:
     role: standard
 
   # ── C3 비선형·강건 제어 ──────────────────────────────────────────────
-  - id: brockett1983-nonholonomic
-    title: "Asymptotic stability and feedback stabilization"
-    authors: ["R. W. Brockett"]
-    year: 1983
-    venue: "Differential Geometric Control Theory"
-    url: null
-    note: "URL 미확인 (책 챕터, DOI 미확인)"
-    verified: false
+  - id: murray1993-steering-sinusoids
+    title: "Nonholonomic motion planning: steering using sinusoids"
+    authors: ["R. M. Murray", "S. S. Sastry"]
+    year: 1993
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/9.277235"
+    note: "Crossref 로 확인(1993-05). brockett1983-nonholonomic 을 대체한다 — 그쪽은 1983 책 챕터로 DOI·영구 URL 이 없고(Crossref·OpenAlex 모두 doi=null), 이 논문이 c3-feedback-linearization 의 재현 과제(사인파 조향 주차)의 원전이다"
+    verified: true
     lessons: [c3-feedback-linearization]
     role: seminal
+  - id: hauser1992-nonminimum-phase
+    title: "Nonlinear control design for slightly non-minimum phase systems: application to V/STOL aircraft"
+    authors: ["J. Hauser", "S. Sastry", "G. Meyer"]
+    year: 1992
+    venue: "Automatica"
+    url: "https://doi.org/10.1016/0005-1098(92)90029-F"
+    note: "Crossref 로 확인(1992-07). 영역 동역학이 불안정할 때의 근사 선형화"
+    verified: true
+    lessons: [c3-feedback-linearization]
+    role: standard
+  - id: devasia1996-inversion
+    title: "Nonlinear inversion-based output tracking"
+    authors: ["S. Devasia", "D. Chen", "B. Paden"]
+    year: 1996
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/9.508898"
+    note: "Crossref 로 확인(1996-07). 비최소위상 계의 안정 역변환(비인과적 입력)"
+    verified: true
+    lessons: [c3-feedback-linearization]
+    role: standard
+  - id: topcu2008-local-stability-sos
+    title: "Local stability analysis using simulations and sum-of-squares programming"
+    authors: ["U. Topcu", "A. Packard", "P. Seiler"]
+    year: 2008
+    venue: "Automatica"
+    url: "https://doi.org/10.1016/j.automatica.2008.03.010"
+    note: "Crossref 로 확인(2008-10). c3-lyapunov-stability 의 재현 과제가 이 절차(시뮬레이션 상한 + SOS 하한)의 축소판이다"
+    verified: true
+    lessons: [c3-lyapunov-stability]
+    role: standard
+  - id: sontag1995-iss-characterizations
+    title: "On characterizations of the input-to-state stability property"
+    authors: ["E. D. Sontag", "Y. Wang"]
+    year: 1995
+    venue: "Systems & Control Letters"
+    url: "https://doi.org/10.1016/0167-6911(94)00050-6"
+    note: "Crossref 로 확인(1995-04). ISS 와 ISS-Lyapunov 함수의 동등성(역방향)을 준다"
+    verified: true
+    lessons: [c3-lyapunov-stability]
+    role: standard
   - id: lohmiller1998-contraction
     title: "On contraction analysis for non-linear systems"
     authors: ["W. Lohmiller", "J.-J. E. Slotine"]
@@ -142,6 +182,16 @@ papers:
     verified: true
     lessons: [c3-contraction-incremental]
     role: seminal
+  - id: tsukamoto2021-contraction-tutorial
+    title: "Contraction theory for nonlinear stability analysis and learning-based control: a tutorial overview"
+    authors: ["H. Tsukamoto", "S.-J. Chung", "J.-J. E. Slotine"]
+    year: 2021
+    venue: "Annual Reviews in Control"
+    url: "https://arxiv.org/abs/2110.00675"
+    note: "arXiv API 로 확인(2021-10). journal_ref: Annual Reviews in Control 52:135-169 (2021)"
+    verified: true
+    lessons: [c3-contraction-incremental]
+    role: survey
   - id: manchester2017-ccm
     title: "Control contraction metrics: convex and intrinsic criteria for nonlinear feedback design"
     authors: ["I. R. Manchester", "J.-J. E. Slotine"]

@@ -1,0 +1,11 @@
+id: c3-nonlinear-robust-control
+lang: en
+title: "C3 Nonlinear and robust control"
+summary: >-
+  Stability and robustness of nonlinear systems at the level of proof. Lyapunov, LaSalle and ISS
+  build the decision tools; feedback linearisation and controllability (involutivity,
+  Chow-Rashevskii) change coordinates; contraction theory compares neighbouring trajectories;
+  passivity and energy shaping handle contact; adaptive control handles unknown parameters; and
+  CBF safety filters handle constraints. The graduate courses behind it are CMU 16-711 Ch5-6,
+  Berkeley C106B W1-4 and Stanford CS223A (operational space); the textbooks are Khalil, Modern
+  Robotics ch.11, Murray-Li-Sastry ch.6-7 and Tedrake's Underactuated Robotics ch.9.

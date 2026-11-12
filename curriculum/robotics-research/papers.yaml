@@ -131,7 +131,202 @@ papers:
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
   # ── C3 비선형·강건 제어 ────────────────────────────────────────────
-  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+  - id: sontag1989-coprime-factorization
+    title: "Smooth stabilization implies coprime factorization"
+    authors: ["E. D. Sontag"]
+    year: 1989
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/9.28018"
+    note: "Crossref 확인(1989-04). 입력-상태 안정성(ISS)이 처음 정의된 논문 — 제목은 coprime factorization 이므로 id 에 iss 를 쓰지 않았다"
+    verified: true
+    role: seminal
+  - id: sontag1995-iss-characterizations
+    title: "On characterizations of the input-to-state stability property"
+    authors: ["E. D. Sontag", "Y. Wang"]
+    year: 1995
+    venue: "Systems & Control Letters"
+    url: "https://doi.org/10.1016/0167-6911(94)00050-6"
+    note: "Crossref 확인(1995-04). ISS 와 ISS-Lyapunov 함수의 동등성(역방향)"
+    verified: true
+    role: standard
+  - id: papachristodoulou2002-sos
+    title: "On the construction of Lyapunov functions using the sum of squares decomposition"
+    authors: ["A. Papachristodoulou", "S. Prajna"]
+    year: 2002
+    venue: "IEEE CDC"
+    url: "https://doi.org/10.1109/CDC.2002.1184414"
+    note: "Crossref 확인. date 필드가 비어 있어 연도는 프로시딩 제목에서 읽었고 제2저자는 레코드로 확인되지 않았다"
+    verified: true
+    role: standard
+  - id: topcu2008-local-stability-sos
+    title: "Local stability analysis using simulations and sum-of-squares programming"
+    authors: ["U. Topcu", "A. Packard", "P. Seiler"]
+    year: 2008
+    venue: "Automatica"
+    url: "https://doi.org/10.1016/j.automatica.2008.03.010"
+    note: "Crossref 확인(2008-10)"
+    verified: true
+    role: standard
+  - id: murray1993-steering-sinusoids
+    title: "Nonholonomic motion planning: steering using sinusoids"
+    authors: ["R. M. Murray", "S. S. Sastry"]
+    year: 1993
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/9.277235"
+    note: "Crossref 확인(1993-05). Brockett 1983(책 챕터)은 DOI·영구 URL 이 없어 레지스트리에 넣지 않았고 이 논문으로 대체했다"
+    verified: true
+    role: seminal
+  - id: hauser1992-nonminimum-phase
+    title: "Nonlinear control design for slightly non-minimum phase systems: application to V/STOL aircraft"
+    authors: ["J. Hauser", "S. Sastry", "G. Meyer"]
+    year: 1992
+    venue: "Automatica"
+    url: "https://doi.org/10.1016/0005-1098(92)90029-F"
+    note: "Crossref 확인(1992-07)"
+    verified: true
+    role: standard
+  - id: devasia1996-inversion
+    title: "Nonlinear inversion-based output tracking"
+    authors: ["S. Devasia", "D. Chen", "B. Paden"]
+    year: 1996
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/9.508898"
+    note: "Crossref 확인(1996-07)"
+    verified: true
+    role: standard
+  - id: lohmiller1998-contraction
+    title: "On contraction analysis for non-linear systems"
+    authors: ["W. Lohmiller", "J.-J. E. Slotine"]
+    year: 1998
+    venue: "Automatica"
+    url: "https://doi.org/10.1016/S0005-1098(98)00019-3"
+    verified: true
+    role: seminal
+  - id: manchester2017-ccm
+    title: "Control contraction metrics: convex and intrinsic criteria for nonlinear feedback design"
+    authors: ["I. R. Manchester", "J.-J. E. Slotine"]
+    year: 2017
+    venue: "IEEE T-AC"
+    url: "https://arxiv.org/abs/1503.03144"
+    note: "arXiv 2015 게재, T-AC 2017"
+    verified: true
+    role: standard
+  - id: tsukamoto2021-contraction-tutorial
+    title: "Contraction theory for nonlinear stability analysis and learning-based control: a tutorial overview"
+    authors: ["H. Tsukamoto", "S.-J. Chung", "J.-J. E. Slotine"]
+    year: 2021
+    venue: "Annual Reviews in Control"
+    url: "https://arxiv.org/abs/2110.00675"
+    note: "arXiv API 확인(2021-10). journal_ref: Annual Reviews in Control 52:135-169"
+    verified: true
+    role: survey
+  - id: hogan1985-impedance
+    title: "Impedance control: an approach to manipulation (Part II: Implementation)"
+    authors: ["N. Hogan"]
+    year: 1985
+    venue: "ASME J. Dynamic Systems, Measurement, and Control"
+    url: "https://doi.org/10.1115/1.3140713"
+    note: "확인된 것은 Part II/III 의 1985 JDSMC 판이다. Part I 은 ACC 1984 (10.23919/ACC.1984.4788393), Part III 은 10.1115/1.3140701"
+    verified: true
+    role: seminal
+  - id: colgate1988-coupled-stability
+    title: "Robust control of dynamically interacting systems"
+    authors: ["J. E. Colgate", "N. Hogan"]
+    year: 1988
+    venue: "Int. J. Control"
+    url: "https://doi.org/10.1080/00207178808906161"
+    note: "Crossref 확인(1988-07). 결합 안정성(coupled stability)과 포트 수동성"
+    verified: true
+    role: seminal
+  - id: colgate1997-sampled-passivity
+    title: "Passivity of a class of sampled-data systems: application to haptic interfaces"
+    authors: ["J. E. Colgate", "G. G. Schenkel"]
+    year: 1997
+    venue: "J. Robotic Systems"
+    url: "https://doi.org/10.1002/(SICI)1097-4563(199701)14:1<37::AID-ROB4>3.0.CO;2-V"
+    note: "Crossref 확인(1997-01). ACC 1994 판은 10.1109/ACC.1994.735172"
+    verified: true
+    role: standard
+  - id: ortega2002-ida-pbc
+    title: "Stabilization of a class of underactuated mechanical systems via interconnection and damping assignment"
+    authors: ["R. Ortega", "M. W. Spong", "F. Gómez-Estern", "et al."]
+    year: 2002
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.2002.800770"
+    note: "Crossref 확인(2002-08). 제4저자 G. Blankenstein"
+    verified: true
+    role: standard
+  - id: colgate1994-zwidth
+    title: "Factors affecting the Z-Width of a haptic display"
+    authors: ["J. E. Colgate", "J. M. Brown"]
+    year: 1994
+    venue: "IEEE ICRA"
+    url: "https://doi.org/10.1109/ROBOT.1994.351077"
+    note: "Crossref 확인. date 필드가 비어 있어 연도는 프로시딩 제목에서 읽었다"
+    verified: true
+    role: standard
+  - id: slotine1987-adaptive-manipulator
+    title: "On the adaptive control of robot manipulators"
+    authors: ["J.-J. E. Slotine", "W. Li"]
+    year: 1987
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/027836498700600303"
+    verified: true
+    role: seminal
+  - id: boyd1986-pe
+    title: "Necessary and sufficient conditions for parameter convergence in adaptive control"
+    authors: ["S. Boyd", "S. S. Sastry"]
+    year: 1986
+    venue: "Automatica"
+    url: "https://doi.org/10.1016/0005-1098(86)90002-6"
+    note: "Crossref 확인(1986-11). 1983 Systems & Control Letters 판(10.1016/0167-6911(83)90071-3)과 다른 논문이다"
+    verified: true
+    role: standard
+  - id: rohrs1985-unmodeled-dynamics
+    title: "Robustness of continuous-time adaptive control algorithms in the presence of unmodeled dynamics"
+    authors: ["C. E. Rohrs", "L. Valavani", "M. Athans", "et al."]
+    year: 1985
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.1985.1104070"
+    note: "Crossref 확인(1985-09). 제4저자 G. Stein. 같은 호에 Åström 의 논평(10.1109/TAC.1985.1104066)이 있다"
+    verified: true
+    role: critique
+  - id: cao2006-l1-adaptive
+    title: "Design and analysis of a novel L1 adaptive controller, Part II: Guaranteed transient performance"
+    authors: ["C. Cao", "N. Hovakimyan"]
+    year: 2006
+    venue: "ACC"
+    url: "https://doi.org/10.1109/ACC.2006.1657244"
+    note: "Crossref 확인(2006)"
+    verified: true
+    role: standard
+  - id: ames2017-cbf
+    title: "Control barrier function based quadratic programs for safety critical systems"
+    authors: ["A. D. Ames", "X. Xu", "J. W. Grizzle", "et al."]
+    year: 2017
+    venue: "IEEE T-AC"
+    url: "https://arxiv.org/abs/1609.06408"
+    note: "arXiv 2016 게재, T-AC 2017. 제4저자 P. Tabuada"
+    verified: true
+    role: seminal
+  - id: ames2019-cbf-survey
+    title: "Control barrier functions: theory and applications"
+    authors: ["A. D. Ames", "S. Coogan", "M. Egerstedt", "et al."]
+    year: 2019
+    venue: "ECC"
+    url: "https://arxiv.org/abs/1903.11199"
+    note: "arXiv API 확인(2019-03). 공저자 G. Notomista, K. Sreenath, P. Tabuada"
+    verified: true
+    role: survey
+  - id: nguyen2016-ecbf
+    title: "Exponential control barrier functions for enforcing high relative-degree safety-critical constraints"
+    authors: ["Q. Nguyen", "K. Sreenath"]
+    year: 2016
+    venue: "ACC"
+    url: "https://doi.org/10.1109/ACC.2016.7524935"
+    note: "Crossref 확인(2016-07)"
+    verified: true
+    role: standard
 
   # ── C4 최적 제어·궤적 최적화 ─────────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
