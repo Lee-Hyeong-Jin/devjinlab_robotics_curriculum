@@ -1,0 +1,137 @@
+id: c6-sampling-completeness
+lang: en
+activities:
+  c6-sampling-completeness-reading: Read the lesson and follow the derivations
+  c6-sampling-completeness-papers: >-
+    Read the three must-read papers and write a one-page note on each
+  c6-sampling-completeness-problems: >-
+    Problem set (2 derivations, 2 proofs, 1 numerical, 1 implementation, 1 counterexample, 1 paper)
+  c6-sampling-completeness-reproduction: >-
+    Reproduction task - success rate versus passage width, and the measured exponential decay rate (R2)
+  c6-sampling-completeness-quiz: Concept-check quiz
+resources:
+  "LaValle, Planning Algorithms":
+    note: >-
+      ch.5 (sampling-based motion planning) - 5.2 sampling theory and dispersion, 5.4 PRM, 5.5 RRT.
+      Free in full.
+  "Kavraki, Svestka, Latombe & Overmars — Probabilistic roadmaps for path planning in high-dimensional configuration spaces (1996)":
+    note: Must-read 1. The primary source for PRM - roadmap construction and the first completeness argument.
+  "LaValle & Kuffner — Randomized kinodynamic planning (2001)":
+    note: >-
+      Must-read 2. The primary source for RRT (the IJRR version). The Voronoi bias and the extension
+      to differential constraints.
+  "Hsu, Latombe & Motwani — Path planning in expansive configuration spaces (1999)":
+    note: >-
+      Must-read 3. $\epsilon$-goodness and $(\epsilon,\alpha,\beta)$-expansiveness - the only
+      framework that quantifies a narrow passage.
+  "Kleinbort, Solovey, Littlefield, Bekris & Halperin — Probabilistic completeness of RRT for geometric and kinodynamic planning (2019)":
+    note: >-
+      Optional. Closes a gap in the RRT completeness proof and improves the bound. R1 of this lesson
+      follows this paper's construction.
+  "Hsu, Jiang, Reif & Sun — The bridge test for sampling narrow passages with probabilistic roadmaps (2003)":
+    note: >-
+      Optional. A sampler that targets narrow passages - the practical way around the $\delta^d$
+      barrier of uniform sampling.
+  "Ladd & Kavraki — Measure theoretic analysis of probabilistic path planning (2004)":
+    note: Optional. Rebuilds the completeness argument measure-theoretically and separates the assumptions.
+  "Kuffner & LaValle — RRT-Connect (2000)":
+    note: Optional. Bidirectional RRT - the textbook case of same completeness, different constants.
+quiz:
+  - id: q1
+    prompt: >-
+      Why is the ball radius taken to be $\eta/4$ and the point spacing $\eta/2$ in the ball cover of
+      R1?
+    choices:
+      - Because it maximizes the volume of the ball
+      - >-
+        Because $\eta/4 + \eta/2 + \eta/4 = \eta$, which guarantees that the distance from the nearest
+        node to the sample is at most one step
+      - Because it minimizes the ball count $m$
+      - Because it makes the result independent of the clearance $\delta$
+    explanation: >-
+      The triangle inequality $\lVert v - s\rVert \le \eta/4 + \eta/2 + \eta/4 = \eta$ is the crux.
+      Once it holds, the nearest node $u$ also satisfies $\lVert u-s\rVert \le \eta$, so the RRT
+      extension reaches the sample itself and the new node lands inside the next ball. With radius
+      $\eta/2$ the sum would be $3\eta/2$ and the argument breaks.
+    concept:
+      front: Choosing the radius and spacing of the ball cover
+      back: $2\rho + h \le \eta$ - so that the nearest node is within one step of the sample
+  - id: q2
+    prompt: >-
+      What is the structural reason the sample count needed for a given $\gamma$ depends on the ball
+      count $m$ logarithmically for PRM but linearly for RRT?
+    choices:
+      - Because PRM uses more memory
+      - >-
+        Because RRT must hit the balls in order and therefore needs $m$ successes, while PRM only
+        needs every ball to be filled
+      - Because PRM's connection radius exceeds RRT's step size
+      - Because RRT uses a goal bias
+    explanation: >-
+      RRT's advance lemma is a sequential event ("hit $B_{i+1}$ while the tree is in $B_i$"), so $m$
+      successes are needed and $n \gtrsim m/p$. PRM only needs no ball to be empty, so the union
+      bound gives $n \ge p^{-1}\ln(m/\gamma)$ - a coupon-collector form.
+    concept:
+      front: How the PRM and RRT bounds depend on $m$
+      back: PRM $\ln m$ (unordered, union bound) versus RRT $m$ (sequential advance, binomial tail)
+  - id: q3
+    prompt: Select everything probabilistic completeness does **not** guarantee.
+    choices:
+      - The cost of the solution found converges to the optimum
+      - It outputs "infeasible" in finite time when no solution exists
+      - Random sampling is faster than a deterministic low-dispersion sequence
+      - If a solution of clearance $\delta > 0$ exists, the probability of finding it tends to 1 as $n \to \infty$
+    explanation: >-
+      The last item is exactly the definition of probabilistic completeness. None of the other three
+      is guaranteed - the cost of an RRT solution does not converge to the optimum (next lesson),
+      infeasibility cannot be declared (the decision problem is not solved), and a deterministic
+      low-dispersion sequence is complete under the same conditions and faster in low dimension.
+    concept:
+      front: The scope of probabilistic completeness
+      back: >-
+        If a solution exists it will be found - optimality, termination and any advantage of
+        randomness are all separate questions
+  - id: q4
+    prompt: >-
+      If the measured decay rate of the failure probability is far faster than the bound computed from
+      the $p$ of equation (5), the theorem of R1 is wrong.
+    explanation: >-
+      Equation (5) is a **lower** bound on $p$ and (1) is an **upper** bound on the failure
+      probability, so reality being faster is not a contradiction but a statement that the bound is
+      conservative. The reproduction task measures that conservatism as a factor $6\times10^3$, and
+      the cause is that (5) makes no use of RRT's Voronoi bias.
+    concept:
+      front: The direction of the bounds on $p$ and on failure
+      back: A faster measurement is normal - it only means the bound is conservative
+  - id: q5
+    prompt: >-
+      By what factor does the one-step probability $p$ of uniform sampling change when the passage
+      width is halved (in $d$ dimensions)?
+    answers: ["2^{-d}", "2^-d", "1/2^d", "(1/2)^d", "1/(2^d)", "a factor 2^{-d}"]
+    explanation: >-
+      Since $p \ge \zeta_d(\eta/4)^d/\mu$ and $\eta \le \delta/2$, we have $p \propto \delta^d$.
+      Halving the width multiplies $p$ by $2^{-d}$ and the iterations needed for the same success rate
+      by $2^d$ - a factor 128 at 7 degrees of freedom. That is the quantitative content of the narrow
+      passage problem.
+    concept:
+      front: The narrow passage problem, quantified
+      back: $p \propto \delta^d$ - halving the width costs a factor $2^d$ in iterations
+  - id: q6
+    prompt: >-
+      What do $\epsilon$-goodness and $(\epsilon,\alpha,\beta)$-expansiveness buy over the clearance
+      $\delta$?
+    choices:
+      - They are easier to compute
+      - >-
+        They do not put the dimension $d$ in an exponent, and they separate the width of a passage
+        from the number of passages into different parameters
+      - They also guarantee optimality
+      - They apply to deterministic sampling as well
+    explanation: >-
+      $\epsilon$ measures "the fraction visible from any point", $\alpha$ "the fraction of footholds
+      that can see outside", and $\beta$ "the probability of crossing from such a foothold", so width
+      and number are separated and $d$ does not enter as an exponent. All three, however, are
+      **not computable** - their definitions quantify over every connected subset.
+    concept:
+      front: What the expansiveness parameters give, and their limit
+      back: They separate width from number and keep $d$ out of the exponent - but cannot be computed
