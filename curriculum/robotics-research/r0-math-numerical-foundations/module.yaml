@@ -1,0 +1,17 @@
+id: r0-math-numerical-foundations
+title: R0 수학·수치 기초 (브리지)
+summary: >-
+  학부 수학에서 대학원 로보틱스로 넘어가는 브리지 모듈. 수치선형대수(분해와 조건수, 희소성),
+  볼록·수치 최적화(쌍대성·KKT·Newton·SQP), 추정 이론(MAP, Cramer-Rao), 다양체와 행렬 리 군,
+  자동 미분과 적분기 7레슨. 1차 자료가 논문이 아니라 표준 교재여서 필독 논문 예외가 적용된다
+  (레슨 표준 §5). 진단으로 건너뛸 수 있는 선택 모듈이며, 근거는 CMU RI 가 Math Foundations
+  영역에 과목을 하나만(16-811) 둔다는 사실과 CS287·16-745 의 선수 요구다.
+level: 연구
+lessons:
+  - linear-algebra-decompositions
+  - sparse-linear-algebra
+  - convex-optimization
+  - numerical-optimization
+  - estimation-theory
+  - manifolds-lie-groups
+  - ad-and-integrators

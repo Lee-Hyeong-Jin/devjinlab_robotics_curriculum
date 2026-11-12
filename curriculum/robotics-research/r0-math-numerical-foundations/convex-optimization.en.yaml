@@ -1,0 +1,64 @@
+id: r0-convex-optimization
+lang: en
+activities:
+  r0-convex-optimization-reading: Read the lesson and follow the derivations
+  r0-convex-optimization-textbook: "Textbook reading (Boyd-Vandenberghe ch.2-5) + a one-page note"
+  r0-convex-optimization-problems: "Problem set (2 derivations, 2 proofs, 1 numerical, 1 implementation)"
+  r0-convex-optimization-reproduction: "Reproduction task - solve a QP through its dual and check the duality gap (R1)"
+  r0-convex-optimization-quiz: Concept check quiz
+resources:
+  "Boyd & Vandenberghe, Convex Optimization":
+    note: ch.2 (convex sets), 3 (convex functions), 4 (convex problems), 5 (duality). The primary source; free PDF.
+  "Boyd 의 EE364A 강의 슬라이드":
+    title: "Boyd's EE364A lecture slides"
+    note: The book page also hosts the slides and exercises.
+  "CVXPY 문서":
+    title: CVXPY documentation
+    note: The baseline for the reproduction task; learning the DCP rules lets you decide mechanically whether something is convex.
+quiz:
+  - id: q1
+    prompt: Weak duality $d^\star \le p^\star$ holds only when the problem is convex.
+    explanation: >-
+      The proof of weak duality uses only the sign conditions ($\lambda\ge0$, $f_i\le0$) and the
+      definition of an infimum - convexity is never used. That is why it bounds non-convex problems
+      from below and underpins dual relaxations such as SE-Sync.
+    concept:
+      front: The assumptions of weak duality
+      back: No convexity needed; only sign conditions and the definition of inf - so it bounds non-convex problems
+  - id: q2
+    prompt: What does complementary slackness $\lambda_i^\star f_i(x^\star)=0$ mean?
+    choices:
+      - Every constraint is active
+      - The multiplier of an inactive constraint ($f_i<0$) is zero - only active constraints carry multipliers
+      - All multipliers are zero
+      - The constraints become equalities
+    explanation: >-
+      Each term must vanish, so $f_i<0$ forces $\lambda_i=0$. The CBF safety filter of C3 agreeing
+      with the nominal control while inactive, and contact complementarity in C2, both have this structure.
+    concept:
+      front: Complementary slackness
+      back: Only active constraints carry multipliers; an inactive constraint ($f_i<0$) has multiplier zero
+  - id: q3
+    prompt: To which level does the friction cone constraint $\lVert f_t\rVert_2 \le \mu f_n$ reduce?
+    choices: ["LP", "QP", "SOCP", "Only SDP"]
+    explanation: >-
+      It has the form of a second-order cone $\{(z,t):\lVert z\rVert_2\le t\}$, so SOCP. It cannot
+      be written as a QP (the constraint is conic, not quadratic), and SDP is overkill. Knowing the
+      reduction level decides the solver and the scale.
+    concept:
+      front: The reduction level of a friction cone
+      back: SOCP (a second-order cone constraint). LP ⊂ QP ⊂ SOCP ⊂ SDP
+  - id: q4
+    prompt: For a convex problem, what is the status of the KKT conditions with respect to optimality?
+    choices:
+      - Necessary only
+      - Sufficient only
+      - Necessary and sufficient (when differentiable and strong duality holds)
+      - Unrelated to optimality
+    explanation: >-
+      For a convex differentiable problem with strong duality, KKT is necessary and sufficient. In
+      the non-convex case it is only necessary (a saddle point satisfies it too), so satisfying KKT
+      does not imply optimality.
+    concept:
+      front: The status of KKT
+      back: Necessary and sufficient for convex differentiable problems with strong duality; only necessary otherwise

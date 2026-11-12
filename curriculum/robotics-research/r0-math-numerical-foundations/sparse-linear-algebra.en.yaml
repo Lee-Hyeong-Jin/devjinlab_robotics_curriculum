@@ -1,0 +1,67 @@
+id: r0-sparse-linear-algebra
+lang: en
+activities:
+  r0-sparse-linear-algebra-reading: Read the lesson and follow the derivations
+  r0-sparse-linear-algebra-textbook: "Textbook reading (Barfoot ch.3, Nocedal-Wright ch.5, Davis) + a one-page note"
+  r0-sparse-linear-algebra-problems: "Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample)"
+  r0-sparse-linear-algebra-reproduction: "Reproduction task - fill-in by elimination ordering, and CG convergence (R1)"
+  r0-sparse-linear-algebra-quiz: Concept check quiz
+resources:
+  "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
+    note: ch.3 (linear-Gaussian estimation); treats sparse structure and elimination ordering in the context of estimation.
+  "Nocedal & Wright, Numerical Optimization (2nd ed.)":
+    note: ch.5 (conjugate gradients); the CG convergence bound and preconditioning. (official URL unverified)
+  "SciPy sparse 문서":
+    title: SciPy sparse documentation
+    note: csr/csc formats, splu, spsolve, cg - the tools for the reproduction task.
+  "SuiteSparse (Tim Davis)":
+    note: The original implementations of CHOLMOD and COLAMD; the standard for ordering algorithms.
+quiz:
+  - id: q1
+    prompt: What happens to the graph when variable $k$ is eliminated in a Cholesky factorisation?
+    choices:
+      - $k$ and its edges simply disappear
+      - The neighbours of $k$ become fully connected (a clique)
+      - The graph always becomes sparser
+      - The number of edges does not change
+    explanation: >-
+      The update $\Lambda_{ij} \mathrel{-}= \Lambda_{ik}\Lambda_{kj}/\Lambda_{kk}$ creates a new
+      edge for every pair of neighbours of $k$. That is why eliminating low-degree vertices first
+      (minimum degree) reduces fill-in.
+    concept:
+      front: Elimination and fill-in
+      back: The neighbours of the eliminated vertex become a clique - eliminate low-degree vertices first
+  - id: q2
+    prompt: The elimination ordering changes only the computational cost, not the accuracy of the solution.
+    explanation: >-
+      An ordering computes the same solution at a different cost (numerical error may differ
+      slightly, but the solution does not). Ordering is therefore a **cost** question - and it
+      matters because the cost differs by tens of times.
+    concept:
+      front: What the elimination ordering changes
+      back: Computational cost (fill-in); the solution is the same, so ordering is a performance matter
+  - id: q3
+    prompt: Why does bundle adjustment eliminate landmarks first with a Schur complement?
+    choices:
+      - Because landmarks matter less than poses
+      - Because landmarks share no edges, so eliminating them creates no fill-in among them and the remaining camera block is small
+      - Because the Schur complement reduces the condition number
+      - Because the information matrix of landmarks is always diagonal
+    explanation: >-
+      In a bipartite structure the landmarks have no edges among themselves, so each can be
+      eliminated independently and the remaining reduced camera system is far smaller. The
+      condition number may in fact get worse.
+    concept:
+      front: The Schur complement in bundle adjustment
+      back: Landmarks share no edges, so they eliminate cheaply and the remaining camera block is small
+  - id: q4
+    prompt: >-
+      The number of CG iterations needed to reduce the relative error scales with which function of
+      the condition number $\kappa$? (e.g. kappa, sqrt(kappa), kappa^2)
+    explanation: >-
+      From (3), $k = O(\sqrt\kappa\log(1/\delta))$ - in contrast to the $\kappa\epsilon$ accuracy
+      loss of a direct method. The goal of preconditioning is to reduce this by clustering eigenvalues.
+    answers: ["sqrt(kappa)", "sqrt κ", "kappa^0.5", "sqrt(k)"]
+    concept:
+      front: The CG iteration count
+      back: $O(\sqrt{\kappa}\log(1/\delta))$ - the square root of the condition number
