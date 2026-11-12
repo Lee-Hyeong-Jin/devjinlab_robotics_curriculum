@@ -82,6 +82,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   authoring guide `docs/curriculum/AUTHORING_RESEARCH_TRACK.md`. The track design (benchmark of
   graduate courses, 97-lesson blueprint, lesson standard, 134-paper reading list) is under
   `research_notes/연구 트랙 설계/`.
+- Research track module C5 (state estimation): the `c5-factor-graphs-map` lesson in Korean and
+  English — MAP on a factor graph proved equivalent to nonlinear least squares, Gaussian variable
+  elimination derived as the Schur complement, the Kalman filter re-derived from the normal
+  equations, and a two-lap SE(2) pose graph reproduction task with machine-checkable acceptance
+  criteria.
 
 ### Fixed
 

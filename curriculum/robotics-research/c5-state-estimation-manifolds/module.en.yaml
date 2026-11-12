@@ -1,0 +1,11 @@
+id: c5-state-estimation-manifolds
+lang: en
+title: "C5 State estimation"
+summary: >-
+  Set up robot state estimation as MAP inference on a factor graph rather than as a filter: the
+  MAP = nonlinear least squares equivalence, Gaussian variable elimination and the Schur
+  complement, sparsity and incremental inference (iSAM2), estimation on manifolds and the
+  invariant EKF, IMU preintegration, observability and estimator consistency, and robust and
+  globally optimal estimation. The graduate courses behind it are CMU 16-833, MIT 16.485 L16-30
+  and UPenn ESE 650 M1; the textbook is Barfoot SER (ch.3-5, 7-9). The module is designed as six
+  lessons (the C5 section of blueprint.md).
