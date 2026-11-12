@@ -10,3 +10,4 @@ summary: >-
 tags: [robotics, research, graduate]
 modules:
   - c1-rigid-body-geometry-lie-groups
+  - c7-perception-3d-representations

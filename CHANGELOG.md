@@ -82,6 +82,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   authoring guide `docs/curriculum/AUTHORING_RESEARCH_TRACK.md`. The track design (benchmark of
   graduate courses, 97-lesson blueprint, lesson standard, 134-paper reading list) is under
   `research_notes/연구 트랙 설계/`.
+- Research track module C7 (perception and 3D representations), starting with
+  `c7-two-view-geometry`: the epipolar constraint and the essential matrix derived from
+  coplanarity, the singular-value characterisation of essential matrices proved in both
+  directions, the eight-point and five-point algorithms, and the optimality and bias of
+  triangulation — with an eight-item problem set, a measured reproduction task (eight- against
+  five-point, plus the planar degeneracy) and four open problems, in Korean and English.
 
 ### Fixed
 
