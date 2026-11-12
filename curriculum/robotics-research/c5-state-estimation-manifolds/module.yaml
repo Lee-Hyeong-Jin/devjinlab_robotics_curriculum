@@ -15,3 +15,4 @@ lessons:
   - manifold-estimation
   - imu-preintegration
   - observability-consistency
+  - robust-global-estimation

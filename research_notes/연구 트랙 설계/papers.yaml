@@ -525,6 +525,43 @@ papers:
     verified: true
     lessons: [c5-manifold-estimation]
     role: standard
+  - id: lupton2012-preintegration
+    title: "Visual-inertial-aided navigation for high-dynamic motion in built environments without initial conditions"
+    authors: ["T. Lupton", "S. Sukkarieh"]
+    year: 2012
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2011.2170332"
+    verified: true
+    lessons: [c5-imu-preintegration]
+    role: seminal
+  - id: martinelli2012-closed-form-scale
+    title: "Vision and IMU data fusion: closed-form solutions for attitude, speed, absolute scale, and bias determination"
+    authors: ["A. Martinelli"]
+    year: 2012
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2011.2160468"
+    verified: true
+    lessons: [c5-imu-preintegration]
+    role: standard
+  - id: hermann1977-observability
+    title: "Nonlinear controllability and observability"
+    authors: ["R. Hermann", "A. Krener"]
+    year: 1977
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.1977.1101601"
+    verified: true
+    lessons: [c5-observability-consistency]
+    role: seminal
+  - id: hesch2014-vio-observability
+    title: "Camera-IMU-based localization: observability analysis and consistency improvement"
+    authors: ["J. A. Hesch", "D. G. Kottas", "S. L. Bowman", "S. I. Roumeliotis"]
+    year: 2014
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364913509675"
+    note: "온라인 선공개 2013-11-13, 지면 2014"
+    verified: true
+    lessons: [c5-observability-consistency]
+    role: standard
 
   # ── C6 동작 계획 이론 ────────────────────────────────────────────────
   - id: reif1979-complexity

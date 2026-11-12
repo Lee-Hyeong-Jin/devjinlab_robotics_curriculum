@@ -151,6 +151,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   algebraically identical Jacobian expressions. The reproduction task measures all of it by
   numerical rank, and reports honestly that null-space preservation did not improve NEES in either
   simulated setting.
+- Research track module C5: the `c5-robust-global-estimation` lesson in Korean and English — the
+  M-estimator / IRLS equivalence proved and verified numerically, influence functions used to
+  separate bounded from redescending kernels, and a four-line proof of the global optimality
+  certificate for SO(2) rotation synchronization (SE-Sync in miniature) together with the measured
+  fact that its tightness survives noise but not outliers.
 
 ### Fixed
 
