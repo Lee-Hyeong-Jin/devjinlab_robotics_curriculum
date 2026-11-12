@@ -145,6 +145,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the passivity theorem for feedback interconnections, energy shaping with damping injection, and
   a closed-form per-cycle energy of a sampled virtual wall that reproduces the Colgate-Schenkel
   passivity condition in the limit and quantifies where it is conservative.
+- Research-track lesson 5 of module C3, adaptive control and persistent excitation, in Korean and
+  English: the regressor of a two-link arm built column by column, the Slotine-Li Lyapunov
+  derivation of $\dot V = -s^\top K_D s$, persistent excitation as the necessary and sufficient
+  boundary of parameter convergence, and a reproduction task where tracking reaches $5\cdot10^{-14}$
+  at a set-point while the inertial parameters stay 34% wrong.
 
 ### Fixed
 
