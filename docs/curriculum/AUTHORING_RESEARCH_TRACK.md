@@ -271,6 +271,34 @@ for h in ['전제와 기호','핵심 결과','유도','증명 스케치','문제
 - [ ] `rc validate` 와 `rc site build` 통과
 - [ ] 외부 자료 본문을 복제하지 않았다
 
+## 8-1. 새 스키마로의 전환 (papers[], 활동·자료 kind, level: 연구)
+
+ADR 0014·0015 의 스키마 확장이 코드에 들어왔다. 전환 규칙(오케스트레이터 지시 2026-11-12):
+
+- **진행 중인 레슨은 현재 형태로 계속 쓴다.** 중간에 형식을 바꾸지 않는다.
+- **모듈의 전 레슨을 끝낸 뒤 한 커밋으로 일괄 전환**한다. 전환 내용:
+  1. 필독 논문을 `resources[]` 에서 **front matter 의 `papers[]`** 로 옮긴다
+     (`id`, `required: true`(최소 1개), `role`, `note`). 서지는 코스 레지스트리
+     `curriculum/robotics-research/papers.yaml` 에 두고 레슨은 id 로만 참조한다.
+  2. 활동 `kind` 를 실제 종류로 바꾼다: 논문 읽기 → `paper`, 재현 과제 → `reproduction`,
+     캡스톤 → `project`. 문제 세트는 `exercise` 그대로.
+  3. 교재가 아닌 자료의 `kind` 를 쓴다: `paper | dataset | code | notes`.
+  4. `module.yaml` 의 `level` 을 `연구` 로 바꾼다.
+- 전환 예시는 C1 모듈이다(`curriculum/robotics-research/c1-rigid-body-geometry-lie-groups/`).
+- **레지스트리는 자기 모듈 블록만** 수정한다(§9-1). 블록은 이미 만들어져 있다.
+- **레지스트리 항목은 그것을 참조하는 레슨과 같은 커밋에 추가한다.** 아직 쓰지 않은 레슨을 위해
+  미리 넣으면 게이트가 깨진다 — `tests/test_content.py::test_live_curriculum_validates` 와
+  `rc validate` 의 CLI 테스트가 `validate_course(course) == []` 을 요구하고, "레지스트리에 있는데
+  아무 레슨도 참조하지 않는 논문"이 **경고**이기 때문이다(경고도 실패다). 설계 단계의 전체 서지는
+  연구 트랙 설계 노트의 `papers.yaml` 에 있으니 거기서 자기 모듈 몫만 옮긴다.
+- **다른 세션의 작업 브랜치를 머지하지 않는다.** `next` 만 받는다.
+- 커밋 전 `bash scripts/harness/check.sh` **전체**를 돌린다(`--quick` 은 테스트를 건너뛴다).
+
+**주의 — `papers[].note` 는 아직 번역되지 않는다.** `LessonMetaTranslation`(`<lesson>.en.yaml`)에
+`papers` 필드가 없어서, Korean 으로 쓴 `note` 가 영어 레슨에도 그대로 나온다. 그래서 `note` 에는
+**언어 중립 위치표시만** 쓴다(`"§2-4"`, `"§II-III, App."`, `"ch.4"`). 왜 그 논문을 읽는지에 대한
+설명은 본문 `## 논문 읽기` 절에 쓴다 — 그 절은 `.en.md` 로 번역된다.
+
 ## 9-1. 공유 파일의 경계 (저자 간 규칙)
 
 여러 저자가 동시에 작업하므로 **공유 파일은 자기 모듈 몫만 건드린다**(오케스트레이터 승인 2026-11-12).
@@ -278,7 +306,8 @@ for h in ['전제와 기호','핵심 결과','유도','증명 스케치','문제
 
 | 파일 | 내가 고쳐도 되는 것 | 건드리지 않는 것 |
 |---|---|---|
-| `research_notes/연구 트랙 설계/papers.yaml` | 내 모듈 레슨이 쓰는 항목(추가·수정). **추가는 파일 끝이 아니라 자기 모듈 블록(`# ── C4 …` 주석 구간) 안에** | 다른 모듈 항목 — 읽기 전용. 같은 논문을 쓰면 id 를 **재사용**하고 `lessons[]` 에 내 레슨 id 만 더한다 |
+| `curriculum/robotics-research/papers.yaml` (**콘텐츠 원본**) | 내 모듈 레슨이 쓰는 항목(추가·수정). **추가는 파일 끝이 아니라 자기 모듈 블록(`# ── C4 …` 주석 구간) 안에** | 다른 모듈 항목 — 읽기 전용. 같은 논문을 쓰면 **id 만 재사용**하고 내 레슨의 `papers[]` 에만 쓴다. 레지스트리에 `lessons[]` 는 쓰지 않는다(남의 블록을 고치게 되고 즉시 어긋난다) |
+| `research_notes/연구 트랙 설계/papers.yaml` (설계 기록) | — | 전체. 코스 레지스트리가 원본이 된 뒤로는 갱신하지 않는다 |
 | `research_notes/연구 트랙 설계/blueprint.md` | 내 모듈 절·표의 행 | 다른 모듈 절, §1–§3(전제·구조·규약), §7–§10 |
 | `research_notes/연구 트랙 설계/lesson-standard.md` | — (표준 변경은 설계 담당에게 요청) | 전체 |
 | `docs/curriculum/*`, `CHANGELOG.md` | CHANGELOG 에 내 레슨 한 줄 | 나머지 |
