@@ -158,7 +158,14 @@ API는 **Markdown 원문**을 준다(`GET /api/v1/lessons/{id}` → `body`, `stu
 - `study_method`는 같은 파이프라인으로 렌더해 레슨 상단 강조 카드에 넣는다(Figma `11-307`의 "이 단계 공부법").
 - 변환 결과는 레슨 ID + 콘텐츠 SHA로 캐시한다(콘텐츠는 재배포 때만 바뀐다).
 
-## 5.1 보안 헤더
+## 5.1 연구 트랙 표시
+
+- **필독 논문**: `GET /lessons/{id}` 의 `papers[]`(필독 먼저 정렬, `citation` 한 줄 포함)를
+  `<PaperList>` 가 사이드바에 그린다. 역할(`seminal` 등)과 필독/선택은 Chip, 무엇을 읽는가는
+  `note`. `verified: false` 이고 링크가 있으면 "링크 미확인" Chip 을 붙인다 — 확인하지 않은 링크가
+  확인된 것과 같아 보이면 안 된다. 코스에 `papers.yaml` 이 없으면 절 자체가 없다(ADR 0014).
+
+## 5.2 보안 헤더
 
 API 가 자기 응답에 붙이는 헤더(`api/middleware.py`)는 브라우저가 받는 페이지에는 닿지 않는다
 (nginx 가 `web` 을 직접 서빙한다). 그래서 web 이 자기 몫을 붙인다 — `lib/security-headers.ts` 에
@@ -205,9 +212,11 @@ API 가 자기 응답에 붙이는 헤더(`api/middleware.py`)는 브라우저�
 4. ~~쓰기: 타이머·완료·퀴즈·복습.~~ 완료
 5. ~~자료실·검색·리포트(모듈 리포트 화면 포함).~~ 완료
 6. 관리자: ~~사용자·감사~~ 완료 / 콘텐츠·시스템 미구현
-7. 다크 모드·i18n ~~기본~~ 완료 / Lighthouse·부하 테스트 미실행
+7. 다크 모드·i18n ~~기본~~ 완료 / ~~부하 테스트~~ 완료(docs/operations/perf-baseline.md) /
+   Lighthouse 는 도구 미설치로 생략, LCP·CLS 는 Chromium 으로 직접 측정
+   (docs/operations/lighthouse.md)
 
-남은 것: `/admin/content`·`/admin/system`, Lighthouse·부하 테스트.
+남은 것: `/admin/content`·`/admin/system`, Lighthouse 도구 도입(의존성 추가 결정 필요).
 
 완료된 것 중 설계가 바뀐 것: OIDC 로그인 버튼은 `GET /api/v1/auth/providers`(설정된 제공자
 목록)를 계약에 넣어 해결했고, 퀴즈 해설 Markdown 은 Server Action 이 렌더한 React 트리를

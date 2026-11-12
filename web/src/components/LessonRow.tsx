@@ -27,7 +27,6 @@ export function LessonRow({
   meta,
   current = false,
 }: LessonRowProps) {
-  const locked = state === 'locked'
   const inner = (
     <>
       <StatusDot state={state} label={stateLabel} labelHidden />
@@ -39,14 +38,8 @@ export function LessonRow({
       {meta ? <span className="text-muted hidden shrink-0 text-xs sm:inline">{meta}</span> : null}
     </>
   )
+  // Every lesson is reachable: nothing is gated on finishing something else (ADR 0015).
   const base = 'flex items-center gap-3 rounded-lg px-3 py-2.5 text-left'
-  if (locked) {
-    return (
-      <li className={cx(base, 'bg-subtle')} data-locked="true">
-        {inner}
-      </li>
-    )
-  }
   return (
     <li>
       <Link

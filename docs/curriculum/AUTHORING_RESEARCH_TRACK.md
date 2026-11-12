@@ -63,8 +63,9 @@ uv run rc validate                 # 시작 시점이 깨끗한지 확인
 
 ## 2. 레슨 스켈레톤
 
-front matter 는 **현재 스키마에 있는 필드만** 쓴다. 스키마 확장(papers[], problemset 블록,
-`kind: paper`/`reproduction`, `level: 연구`)이 들어오기 전까지는 아래 임시 형태를 쓴다.
+front matter 는 코드의 스키마를 따른다(`docs/curriculum/CONTENT_MODEL.md` 가 기준). 논문
+레지스트리와 활동·자료 kind, `level: 연구` 는 **이미 들어와 있다**(ADR 0014·0015). 아직 없는 것은
+` ```problemset ` 블록뿐이므로 문제 세트는 본문 Markdown 으로 쓴다.
 
 ```yaml
 ---
@@ -81,21 +82,26 @@ difficulty: 5                        # 연구 트랙은 트랙 내 상대값 3�
 estimated_minutes: 480               # 연구 레슨은 300–900
 tags: [optimal-control, ddp, research]
 activities:
-  - { id: c4-ilqr-ddp-reading,      kind: reading,  title: 본문 읽기와 유도 따라가기, estimated_minutes: 90 }
-  - { id: c4-ilqr-ddp-papers,       kind: reading,  title: 필독 논문 2편 + 논문별 1페이지 노트, estimated_minutes: 120 }
-  - { id: c4-ilqr-ddp-problems,     kind: exercise, title: 문제 세트, estimated_minutes: 150 }
-  - { id: c4-ilqr-ddp-reproduction, kind: exercise, title: 재현 과제, estimated_minutes: 90 }
-  - { id: c4-ilqr-ddp-quiz,         kind: quiz,     title: 개념 점검 퀴즈, estimated_minutes: 15 }
-resources:                           # 필독 논문도 당분간 여기에 (kind: article)
+  - { id: c4-ilqr-ddp-reading,      kind: reading,      title: 본문 읽기와 유도 따라가기, estimated_minutes: 90 }
+  - { id: c4-ilqr-ddp-papers,       kind: paper,        title: 필독 논문 2편 + 논문별 1페이지 노트, estimated_minutes: 120 }
+  - { id: c4-ilqr-ddp-problems,     kind: exercise,     title: 문제 세트, estimated_minutes: 150 }
+  - { id: c4-ilqr-ddp-reproduction, kind: reproduction, title: 재현 과제, estimated_minutes: 90 }
+  - { id: c4-ilqr-ddp-quiz,         kind: quiz,         title: 개념 점검 퀴즈, estimated_minutes: 15 }
+resources:                           # 교재·데이터셋·코드. 논문은 papers[] 로 (중복 기재하지 않는다)
   - title: "Tedrake, Underactuated Robotics"
     url: https://underactuated.csail.mit.edu/
-    kind: book
+    kind: book                       # book | course | video | article | paper | dataset | code | notes | other
     note: ch.10 (Trajectory Optimization).
+papers:                              # 코스 papers.yaml 의 id 참조. 최소 1개는 required: true
+  - id: mayne1966-ddp
+    required: true
+    role: seminal                    # seminal | standard | frontier | critique | survey
+    note: "§3"                       # 언어 중립 위치표시만 — 아직 번역되지 않는다(§8-1)
 ---
 ```
 
-> **활동 kind 임시 규약**: 논문 읽기는 `reading`(제목에 "논문"을 넣는다), 문제 세트와 재현
-> 과제는 `exercise`. `paper`/`reproduction`/`project` kind 가 추가되면 일괄 전환한다.
+> **활동 kind**: 논문 읽기 `paper`, 재현 과제 `reproduction`, 캡스톤 `project`, 문제 세트
+> `exercise`, 본문 읽기 `reading`, 개념 점검 `quiz`.
 
 본문 섹션은 **이 순서, 이 제목**으로 고정한다(lesson-standard.md §1):
 
@@ -138,8 +144,12 @@ resources:                           # 필독 논문도 당분간 여기에 (kin
 
 ## 4. 논문 인용 규칙
 
-1. **레지스트리가 원본이다.** 필독 논문은 `research_notes/연구 트랙 설계/papers.yaml` 에 있다.
-   그 id 를 쓰고, 없으면 **항목을 먼저 추가**한다.
+1. **서지는 코스 레지스트리, 지정은 레슨.** 서지(제목·저자·연도·venue·url·verified)는
+   `curriculum/robotics-research/papers.yaml` 에 한 번만 쓰고, **어떤 논문을 필독으로 지정하는가는
+   레슨 front matter 의 `papers[]` 가 원본**이다(ADR 0014). 레슨 참조의 `role`·`note` 가 레지스트리
+   값을 덮어쓰고 `required` 는 레슨에만 있다. 레지스트리에 없는 논문이면 **자기 모듈 블록에**
+   항목을 먼저 추가한다 — 단, **그것을 참조하는 레슨과 같은 커밋에서**(§8-1).
+   설계 단계의 전체 서지 145편은 연구 트랙 설계 노트의 `papers.yaml` 에 있으니 거기서 가져온다.
 2. **확인되지 않은 URL 은 쓰지 않는다.** 새 항목은 `verified: true` 로 올리기 전에 실제로 열어
    제목·제1저자·연도가 맞는지 확인한다. 확인 방법(권장 순서):
    - arXiv: `http://export.arxiv.org/api/query?id_list=XXXX.XXXXX`
@@ -207,6 +217,11 @@ resources:                           # 필독 논문도 당분간 여기에 (kin
 - `## 전제와 기호` 에 **기호 표**를 둔다(기호 / 뜻). 모듈 안에서 기호를 바꾸지 않는다.
 - 차원과 좌표계를 식에 유지한다(예: $^A R_B \in SO(3)$, $\xi \in \mathbb{R}^6$).
 - 코드 블록은 Python 우선. `uv run ruff format` 을 통과하는 코드만 넣는다(문서의 코드 블록도 대상).
+- **다른 레슨을 가리킬 때 상대 링크를 쓰지 않는다.** 레슨 id 를 코드 서식으로만 쓴다
+  (`` `c1-manifold-optimization` ``). 저장소의 파일 이름은 `so3-se3-exponential.md` 인데 사이트는
+  레슨 id 로 페이지를 만들므로(`c1-so3-se3-exponential.html`), 양쪽에서 동시에 맞는 상대 링크가
+  없다. `.md` 로 링크하면 `rc site build` 가 "target is not found among documentation files"
+  경고를 낸다. 외부 자료는 정상적으로 링크한다.
 - 퀴즈 블록(YAML) 안의 수식은 백슬래시를 **두 번** 쓴다: `"$\\hat{\\omega}^3$"`.
 
 ## 8. 번역 규칙
@@ -216,8 +231,15 @@ resources:                           # 필독 논문도 당분간 여기에 (kin
   구조(prerequisites·difficulty·activities·resources)는 원문에만 둔다 — 다른 키는 에러다.
 - 섹션 제목은 §2 표의 영어 제목을 **그대로** 쓴다.
 - 수식·기호·식 번호·정리 번호·코드·논문 제목·데이터셋 이름은 번역하지 않는다.
-- ` ```quiz ` 블록은 **원문 파일에만** 둔다. 영어판에서는 그 절에서 무엇을 묻는지만 서술하고,
-  문항 번역은 별도 작업(i18n 담당)이다.
+- 번역 파일은 **두 개**다. 둘 다 같은 커밋에 넣는다.
+  - `<lesson>.en.md` — 산문(본문 전체). front matter 는 위 6개 키만.
+  - `<lesson>.en.yaml` — 구조화된 텍스트: `activities`, `resources`, `quiz`. 견본은
+    `curriculum/robotics-expert/m1-math-physics/vectors-matrices.en.yaml` 와
+    `curriculum/robotics-research/c1-rigid-body-geometry-lie-groups/so3-se3-exponential.en.yaml`.
+- 퀴즈 문항의 영어는 `<lesson>.en.yaml` 의 `quiz` 에 **문항 id 로 짝지어** 넣는다.
+  `type` 과 `answer` 는 번역하지 않는다(채점 기준은 언어와 무관해야 한다). `choices` 는 개수와
+  순서가 원문과 같아야 하고, `short` 문항은 그 언어의 허용 답을 `answers` 로 **추가**할 수 있다.
+- 모듈을 새로 만들면 `module.en.yaml`(title, summary)도 쓴다.
 
 ## 9. 검증 체크리스트
 
@@ -258,6 +280,53 @@ for h in ['전제와 기호','핵심 결과','유도','증명 스케치','문제
 - [ ] 영어판이 본문 전체를 담고 섹션 제목이 규정 문자열과 일치
 - [ ] `rc validate` 와 `rc site build` 통과
 - [ ] 외부 자료 본문을 복제하지 않았다
+
+## 8-1. 새 스키마로의 전환 (papers[], 활동·자료 kind, level: 연구)
+
+ADR 0014·0015 의 스키마 확장이 코드에 들어왔다. 전환 규칙(오케스트레이터 지시 2026-11-12):
+
+- **진행 중인 레슨은 현재 형태로 계속 쓴다.** 중간에 형식을 바꾸지 않는다.
+- **모듈의 전 레슨을 끝낸 뒤 한 커밋으로 일괄 전환**한다. 전환 내용:
+  1. 필독 논문을 `resources[]` 에서 **front matter 의 `papers[]`** 로 옮긴다
+     (`id`, `required: true`(최소 1개), `role`, `note`). 서지는 코스 레지스트리
+     `curriculum/robotics-research/papers.yaml` 에 두고 레슨은 id 로만 참조한다.
+  2. 활동 `kind` 를 실제 종류로 바꾼다: 논문 읽기 → `paper`, 재현 과제 → `reproduction`,
+     캡스톤 → `project`. 문제 세트는 `exercise` 그대로.
+  3. 교재가 아닌 자료의 `kind` 를 쓴다: `paper | dataset | code | notes`.
+  4. `module.yaml` 의 `level` 을 `연구` 로 바꾼다.
+- 전환 예시는 C1 모듈이다(`curriculum/robotics-research/c1-rigid-body-geometry-lie-groups/`).
+- **레지스트리는 자기 모듈 블록만** 수정한다(§9-1). 블록은 이미 만들어져 있다.
+- **레지스트리 항목은 그것을 참조하는 레슨과 같은 커밋에 추가한다.** 아직 쓰지 않은 레슨을 위해
+  미리 넣으면 게이트가 깨진다 — `tests/test_content.py::test_live_curriculum_validates` 와
+  `rc validate` 의 CLI 테스트가 `validate_course(course) == []` 을 요구하고, "레지스트리에 있는데
+  아무 레슨도 참조하지 않는 논문"이 **경고**이기 때문이다(경고도 실패다). 설계 단계의 전체 서지는
+  연구 트랙 설계 노트의 `papers.yaml` 에 있으니 거기서 자기 모듈 몫만 옮긴다.
+- **다른 세션의 작업 브랜치를 머지하지 않는다.** `next` 만 받는다.
+- 커밋 전 `bash scripts/harness/check.sh` **전체**를 돌린다(`--quick` 은 테스트를 건너뛴다).
+
+**주의 — `papers[].note` 는 아직 번역되지 않는다.** `LessonMetaTranslation`(`<lesson>.en.yaml`)에
+`papers` 필드가 없어서, Korean 으로 쓴 `note` 가 영어 레슨에도 그대로 나온다. 그래서 `note` 에는
+**언어 중립 위치표시만** 쓴다(`"§2-4"`, `"§II-III, App."`, `"ch.4"`). 왜 그 논문을 읽는지에 대한
+설명은 본문 `## 논문 읽기` 절에 쓴다 — 그 절은 `.en.md` 로 번역된다.
+
+## 9-1. 공유 파일의 경계 (저자 간 규칙)
+
+여러 저자가 동시에 작업하므로 **공유 파일은 자기 모듈 몫만 건드린다**(오케스트레이터 승인 2026-11-12).
+이 경계를 어기면 다른 저자의 작업이 조용히 사라진다 — 실제로 한 번 발생했다.
+
+| 파일 | 내가 고쳐도 되는 것 | 건드리지 않는 것 |
+|---|---|---|
+| `curriculum/robotics-research/papers.yaml` (**콘텐츠 원본**) | 내 모듈 레슨이 쓰는 항목(추가·수정). **추가는 파일 끝이 아니라 자기 모듈 블록(`# ── C4 …` 주석 구간) 안에** | 다른 모듈 항목 — 읽기 전용. 같은 논문을 쓰면 **id 만 재사용**하고 내 레슨의 `papers[]` 에만 쓴다. 레지스트리에 `lessons[]` 는 쓰지 않는다(남의 블록을 고치게 되고 즉시 어긋난다) |
+| `research_notes/연구 트랙 설계/papers.yaml` (설계 기록) | — | 전체. 코스 레지스트리가 원본이 된 뒤로는 갱신하지 않는다 |
+| `research_notes/연구 트랙 설계/blueprint.md` | 내 모듈 절·표의 행 | 다른 모듈 절, §1–§3(전제·구조·규약), §7–§10 |
+| `research_notes/연구 트랙 설계/lesson-standard.md` | — (표준 변경은 설계 담당에게 요청) | 전체 |
+| `docs/curriculum/*`, `CHANGELOG.md` | CHANGELOG 에 내 레슨 한 줄 | 나머지 |
+
+- 같은 파일을 건드려야 하면 **먼저 담당 세션에 알리고** 수락·일정을 받는다. 커밋 후 해시를 통보한다.
+- 다른 저자의 변경이 먼저 들어왔으면 **그 커밋을 머지한 뒤 그 위에** 자기 작업을 올린다.
+  자기 브랜치의 오래된 상태로 덮어쓰면 안 된다.
+- papers.yaml 에 항목을 추가할 때 **id 중복과 DOI 중복을 먼저 확인**한다
+  (`grep -c '^  - id:' papers.yaml` 로 총수를 보고, 같은 논문이 다른 id 로 들어가지 않게 한다).
 
 ## 10. 커밋
 

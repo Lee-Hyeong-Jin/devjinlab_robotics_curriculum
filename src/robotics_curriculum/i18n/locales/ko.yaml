@@ -4,7 +4,7 @@
 
 cli:
   error_prefix: "error: {message}"
-  warn_prereq: "warning: 선수 레슨이 끝나지 않았습니다: {ids}"
+  note_prereq: "참고: 권장 선수 레슨이 아직 완료되지 않았습니다: {ids} (그래도 진행할 수 있습니다)"
   timer:
     none: "열린 타이머: 없음"
     running: "열린 타이머: {lesson_id} (시작 {since} UTC)"
@@ -25,14 +25,13 @@ cli:
     done: "완료"
     in_progress: "진행 중"
     not_started: "시작 전"
-    locked: "잠김"
   start: "시작 {lesson_id} ({title}) {at} UTC"
   stop: "정지 {lesson_id}: {time}"
   stop_discarded: "세션 폐기 {lesson_id}"
   logged: "{lesson_id} 에 {time} 기록"
   done_line: "완료 {lesson_id} ({title}), 시간 {time}{extra}"
   done_understanding: ", 이해도 {value}"
-  unlocked: "  해금: {lesson_id} ({title})"
+  now_recommended: "  이제 추천 순서에 들어왔습니다: {lesson_id} ({title})"
   next:
     empty: "할 일 없음: 지금 가능한 레슨을 모두 끝냈습니다"
     hint: "시작: rc start {lesson_id}"
@@ -89,12 +88,27 @@ review:
     source: "출처"
     due: "예정일"
 
+paper:
+  none: "  (지정된 논문 없음)"
+  required: "필독"
+  optional: "선택"
+  unverified: "(미확인)"
+  role:
+    seminal: "원전"
+    standard: "표준"
+    frontier: "최신"
+    critique: "비판"
+    survey: "서베이"
 resource:
   kind:
     book: "교재"
     course: "강의"
     video: "영상"
     article: "글"
+    paper: "논문"
+    dataset: "데이터셋"
+    code: "구현"
+    notes: "노트"
     other: "기타"
   none: "  (등록된 자료 없음)"
   library_title: "{course} 자료 라이브러리 ({count}개)"
@@ -110,7 +124,7 @@ lesson:
 
 roadmap:
   no_level: "(레벨 미지정)"
-  legend: "[x] 완료  [>] 진행 중  [ ] 시작 전  [-] 잠김 (선수 레슨 미완료)"
+  legend: "[x] 완료  [>] 진행 중  [ ] 시작 전"
 
 site:
   title_fallback: "로보틱스 커리큘럼"
@@ -133,11 +147,11 @@ site:
     answer: "정답·해설"
     roadmap_page: "로드맵"
     resources_page: "자료실"
+    papers: "필독 논문"
   state:
     done: "완료"
     in_progress: "진행 중"
     not_started: "시작 전"
-    locked: "잠김"
   card:
     week_time: "이번 주 학습 시간"
     week_time_sub: "{sessions}회 세션 · {start}~"
@@ -171,6 +185,9 @@ site:
     reading: "읽기"
     quiz: "퀴즈"
     exercise: "실습"
+    paper: "논문 읽기"
+    reproduction: "재현"
+    project: "프로젝트"
   dashboard:
     module_progress: "({done}/{total} 레슨 완료)"
     study_guide_link: "공부법 보기"
@@ -187,8 +204,8 @@ site:
     meta: "**{stage_label}**: {stage} · **{lessons_label}** {count}개 · **{time_label}** {time} · {back}"
     back_to_roadmap: "로드맵으로"
   lesson:
-    locked_title: "잠김"
-    locked_body: "선수 레슨을 먼저 완료하면 이 레슨이 열립니다."
+    prereq_pending_title: "권장 선수 레슨"
+    prereq_pending_body: "먼저 보면 이해가 쉬운 레슨입니다(필수는 아닙니다):"
     study_tip: "이렇게 공부하세요"
     study_missing: "공부법이 아직 작성되지 않았습니다"
     study_missing_body: "학습 목표를 확인하고 본문을 읽은 뒤, 아래 학습 자료로 보충하세요."
@@ -235,6 +252,7 @@ level:
   foundation: "기초"
   intermediate: "중급"
   advanced: "고급"
+  research: "연구"
   none: "단계 미지정"
 
 duration:
@@ -249,7 +267,6 @@ report:
     done: "완료"
     in_progress: "진행 중"
     not_started: "시작 전"
-    locked: "잠김"
   stuck:
     days: "{days}일째 진행 중"
     understanding: "이해도 {value}/5"

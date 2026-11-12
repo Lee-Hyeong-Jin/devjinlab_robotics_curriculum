@@ -14,16 +14,30 @@ Rules:
 9. a ``<lesson>.<lang>.yaml`` translation only names activities, resources and quiz
    questions that the lesson actually has, with the same number of choices, and only
    gives ``answers`` for a ``short`` question
+10. a lesson's ``papers[]`` ids exist in the course's ``papers.yaml``, registry ids are
+    unique, registry urls are http(s), and a lesson that assigns papers marks at least one
+    as required (ADR 0014). Two *warnings*: a registry paper no lesson references, and a
+    registry ``lessons[]`` that disagrees with the lessons' own references.
+
+12. links in a lesson body (and in its translations) are either http(s) URLs, anchors, or
+    relative paths to a real asset — never a path to another lesson's file. ``mkdocs``
+    resolves such a path against the *generated* project, where lessons live elsewhere, so
+    it silently becomes a broken link on the site.
+
+Some rules only warn (:attr:`ContentError.severity`). :func:`blocking` filters those out
+for callers that must refuse invalid content.
 """
 
 from __future__ import annotations
 
+import re
 from collections.abc import Iterator
 from pathlib import Path
 from urllib.parse import urlsplit
 
 from robotics_curriculum.content.loader import ContentError, LoadError, load_courses
-from robotics_curriculum.content.models import Course, Lesson
+from robotics_curriculum.content.models import Course, Lesson, Paper
+from robotics_curriculum.content.papers import paper_index
 from robotics_curriculum.content.quiz_block import QuizParseError, parse_quiz
 
 
@@ -57,6 +71,7 @@ def validate_course(course: Course) -> list[ContentError]:
             for activity in lesson.activities:
                 claim(activity.id, lesson_path)
             errors.extend(_check_resources(lesson, lesson_path))
+            errors.extend(_check_body_links(lesson, lesson_path))
             errors.extend(_check_quiz(lesson, lesson_path))
             errors.extend(_check_translations(lesson))
             errors.extend(_check_meta_translations(lesson, lesson_path))
@@ -74,6 +89,79 @@ def validate_course(course: Course) -> list[ContentError]:
 
     # Rule 3: cycles (only over edges that resolve, so rule 2 errors are not duplicated).
     errors.extend(_find_cycles(lessons, course_dir))
+    # Rule 10: the paper registry and the lessons that reference it.
+    errors.extend(_check_papers(course, lessons, course_dir))
+    return errors
+
+
+def blocking(problems: list[ContentError]) -> list[ContentError]:
+    """Only the problems that must stop the content being used (warnings dropped)."""
+    return [problem for problem in problems if problem.blocking]
+
+
+def _check_papers(
+    course: Course, lessons: dict[str, Lesson], course_dir: Path
+) -> list[ContentError]:
+    """Rule 10. A course with no ``papers.yaml`` and no lesson references is silent."""
+    errors: list[ContentError] = []
+    papers_path = course_dir / "papers.yaml"
+
+    seen: dict[str, Paper] = {}
+    for paper in course.papers:
+        if paper.id in seen:
+            errors.append(ContentError(papers_path, f"duplicate paper id '{paper.id}'"))
+            continue
+        seen[paper.id] = paper
+        if paper.url is not None and not is_http_url(paper.url):
+            msg = f"paper '{paper.id}' has invalid url '{paper.url}' (need http(s))"
+            errors.append(ContentError(papers_path, msg))
+
+    index = paper_index(course)
+    referenced: dict[str, set[str]] = {paper_id: set() for paper_id in index}
+    for lesson in lessons.values():
+        path = lesson.path if lesson.path is not None else course_dir
+        ids: set[str] = set()
+        for ref in lesson.papers:
+            if ref.id in ids:
+                errors.append(
+                    ContentError(path, f"lesson '{lesson.id}' lists paper '{ref.id}' twice")
+                )
+            ids.add(ref.id)
+            if ref.id not in index:
+                msg = (
+                    f"lesson '{lesson.id}' references paper '{ref.id}', which is not in "
+                    f"{papers_path.name}"
+                )
+                errors.append(ContentError(path, msg))
+            else:
+                referenced[ref.id].add(lesson.id)
+        if lesson.papers and not any(ref.required for ref in lesson.papers):
+            msg = (
+                f"lesson '{lesson.id}' assigns {len(lesson.papers)} paper(s) but marks none "
+                f"'required: true'; a lesson with papers needs at least one required reading"
+            )
+            errors.append(ContentError(path, msg))
+
+    for paper_id, lesson_ids in referenced.items():
+        if not lesson_ids:
+            errors.append(
+                ContentError(
+                    papers_path,
+                    f"paper '{paper_id}' is in the registry but no lesson references it",
+                    severity="warning",
+                )
+            )
+            continue
+        declared = seen[paper_id].lessons
+        if declared is not None and set(declared) != lesson_ids:
+            errors.append(
+                ContentError(
+                    papers_path,
+                    f"paper '{paper_id}' lists lessons {sorted(declared)} but is referenced by "
+                    f"{sorted(lesson_ids)}; the lessons' own `papers` win",
+                    severity="warning",
+                )
+            )
     return errors
 
 
@@ -89,6 +177,74 @@ def _check_resources(lesson: Lesson, path: Path) -> list[ContentError]:
         if resource.url is not None and not is_http_url(resource.url):
             msg = f"resource '{resource.title}' has invalid url '{resource.url}' (need http(s))"
             errors.append(ContentError(path, msg))
+    return errors
+
+
+#: A Markdown inline link or image: ``[text](target "title")``, ``![alt](target)``.
+_LINK = re.compile(r"!?\[[^\]]*\]\(\s*<?([^)\s<>]+)>?(?:\s+[\"'][^\"']*[\"'])?\s*\)")
+_FENCE = re.compile(r"^\s{0,3}(`{3,}|~{3,})")
+#: Schemes an external link may use. Anything else is almost always a typo.
+_ALLOWED_SCHEMES = ("http", "https", "mailto")
+
+
+def _link_targets(markdown: str) -> Iterator[str]:
+    """Link targets outside fenced code blocks (a quiz block is one, and holds no links)."""
+    fence: str | None = None
+    for line in markdown.split("\n"):
+        marker = _FENCE.match(line)
+        if marker:
+            char = (marker.group(1) or "")[0]
+            if fence is None:
+                fence = char
+            elif char == fence:
+                fence = None
+            continue
+        if fence is not None:
+            continue
+        for match in _LINK.finditer(line):
+            yield match.group(1)
+
+
+def _check_body_links(lesson: Lesson, path: Path) -> list[ContentError]:
+    """Rule 12: body links are URLs, anchors or assets — never another lesson's file.
+
+    Checks the translations too: a ``<lesson>.<lang>.md`` can introduce its own bad link.
+    """
+    errors: list[ContentError] = []
+    bodies = [("", lesson.body)] + [
+        (f" ({lang})", translation.body)
+        for lang, translation in sorted(lesson.translations.items())
+    ]
+    for suffix, body in bodies:
+        if not body:
+            continue
+        for target in _link_targets(body):
+            where = f"lesson '{lesson.id}'{suffix}"
+            scheme = urlsplit(target).scheme.lower()
+            if target.startswith("#"):
+                continue
+            if scheme in ("http", "https"):
+                if not is_http_url(target):
+                    errors.append(ContentError(path, f"{where} has a malformed link '{target}'"))
+                continue
+            if scheme == "mailto":
+                continue
+            if scheme:
+                msg = (
+                    f"{where} links with the '{scheme}:' scheme ('{target}'); "
+                    f"only {', '.join(_ALLOWED_SCHEMES)} are allowed"
+                )
+                errors.append(ContentError(path, msg))
+                continue
+            # A relative path. Pointing at a Markdown file is the mistake worth catching:
+            # the site generates its own tree, so the path cannot resolve there.
+            if target.split("#", 1)[0].endswith(".md"):
+                msg = (
+                    f"{where} links to a lesson file ('{target}'). Lesson files are not laid "
+                    f"out the same way on the site, so this becomes a broken link; write the "
+                    f"lesson id in backticks instead, e.g. `m1-vectors-matrices`"
+                )
+                errors.append(ContentError(path, msg))
     return errors
 
 
