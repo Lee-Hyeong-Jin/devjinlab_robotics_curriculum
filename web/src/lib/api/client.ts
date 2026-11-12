@@ -26,6 +26,8 @@ export const CURRENT_PATH_HEADER = 'x-current-path'
  * (`deps.CSRF_COOKIE`); it is readable by JS on purpose, unlike `sid`.
  */
 export const CSRF_COOKIE = 'csrf_token'
+/** The API's session cookie (ADR 0009); named here so this module stays self-contained. */
+export const SESSION_COOKIE_NAME = 'sid'
 /** Header carrying the double-submit CSRF token on mutations. */
 export const CSRF_HEADER = 'X-CSRF-Token'
 
@@ -81,6 +83,20 @@ async function forwardedHeaders(method: string, locale: string): Promise<Headers
     out.set('Content-Type', 'application/json')
   }
   return out
+}
+
+/**
+ * Whether the browser sent a session cookie.
+ *
+ * Tells an expired session apart from an anonymous reader: the first should be sent to
+ * the login screen, the second is browsing published content and simply has no progress.
+ */
+export async function hasSessionCookie(): Promise<boolean> {
+  try {
+    return (await cookies()).has(SESSION_COOKIE_NAME)
+  } catch {
+    return false
+  }
 }
 
 async function currentPath(): Promise<string> {
@@ -189,11 +205,17 @@ export async function apiGetOrNull<P extends GetPath>(
   path: P,
   options: RequestOptions = {},
 ): Promise<GetResponse<P> | null> {
-  const { isUnimplemented } = await import('./errors')
+  const { isUnimplemented, isUnauthorized } = await import('./errors')
+  // An anonymous reader on a published page (ADR 0016) has no progress to fetch, so a 401
+  // there is an answer rather than an error — redirecting would make the published content
+  // unreadable. A signed-in reader whose session expired is still sent to the login screen,
+  // which is why the session cookie decides and not the status alone.
+  const anonymous = !(await hasSessionCookie())
   try {
-    return await apiGet(path, options)
+    return await apiGet(path, anonymous ? { ...options, redirectOnUnauthorized: false } : options)
   } catch (error) {
     if (isUnimplemented(error) || error instanceof ApiUnreachableError) return null
+    if (anonymous && isUnauthorized(error)) return null
     throw error
   }
 }
