@@ -1,0 +1,11 @@
+id: s1-slam-spatial-ai
+lang: en
+title: "S1 SLAM and spatial AI"
+summary: >-
+  From an anatomy of visual-inertial odometry through loop closure and lifelong operation, dense
+  and neural SLAM, semantic and object-level SLAM, certifiable SLAM, and the science of
+  evaluation: what is and is not guaranteed when a robot estimates its own pose and a map at the
+  same time. The recommended prerequisites in the design are C1 (Lie groups), C5 (state
+  estimation) and C7 (perception and 3D representations); the graduate courses behind it are
+  CMU 16-833, MIT 16.485, ETH Vision Algorithms and TUM Visual Navigation. The design calls for
+  six lessons (the S1 section of research_notes/연구 트랙 설계/blueprint.md).
