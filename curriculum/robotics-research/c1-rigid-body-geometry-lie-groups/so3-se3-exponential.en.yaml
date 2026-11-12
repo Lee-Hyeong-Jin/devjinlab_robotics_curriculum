@@ -1,0 +1,79 @@
+# English text of the structured fields of so3-se3-exponential.md (activity titles,
+# resource notes, quiz). The prose lives in so3-se3-exponential.en.md.
+id: c1-so3-se3-exponential
+lang: en
+activities:
+  c1-so3-se3-exponential-reading: Read the lesson and follow the derivations
+  c1-so3-se3-exponential-papers: Read the two must-read papers + a one-page note each
+  c1-so3-se3-exponential-problems: "Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  c1-so3-se3-exponential-reproduction: "Reproduction task - exp/log round trip and differential check (R1)"
+  c1-so3-se3-exponential-quiz: Concept check quiz
+resources:
+  "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
+    note: ch.7 (three-dimensional geometry) and ch.8 (matrix Lie groups). The primary textbook for this lesson; the full PDF is free.
+  "Lynch & Park, Modern Robotics":
+    note: ch.3 (Rigid-Body Motions) - 3.2 rotations, 3.3 rigid-body motion and screw axes. The full PDF is free.
+  "Murray, Li & Sastry, A Mathematical Introduction to Robotic Manipulation":
+    note: ch.2 (Rigid Body Motion). The set text of CMU 16-711 and Berkeley C106B. (official URL unverified)
+  "Solà, Deray & Atchuthan — A micro Lie theory for state estimation in robotics (2018)":
+    note: Must-read 1. The de facto standard reference for notation and Jacobian conventions.
+  "Forster, Carlone, Dellaert & Scaramuzza — On-manifold preintegration (2017)":
+    note: Must-read 2. Sections II-III, for the manifold notation and why the right Jacobian is needed.
+  "Grassia — Practical parameterization of rotations using the exponential map (1998)":
+    note: Recommended. How to use exponential coordinates numerically, including small-angle handling.
+  "Shoemake — Animating rotation with quaternion curves (1985)":
+    note: Recommended. The original source for quaternion interpolation (slerp).
+quiz:
+  - id: q1
+    prompt: For a unit vector $\omega$, express $\hat{\omega}^3$ in terms of $\hat{\omega}$.
+    explanation: >-
+      Since $\hat{\omega}^2 = \omega\omega^\top - I$, we get
+      $\hat{\omega}^3 = \hat{\omega}(\omega\omega^\top - I) = -\hat{\omega}$. This identity is what
+      closes the series in Rodrigues' formula.
+    concept:
+      front: $\hat{\omega}^3$ for a unit $\omega$
+      back: >-
+        $-\hat{\omega}$ - the powers close with period 4, which collapses the exponential series to
+        three terms
+  - id: q2
+    prompt: >-
+      Why does the logarithm $\hat{\omega} = (R - R^\top)/(2\sin\theta)$ break down as
+      $\theta \to \pi$?
+    choices:
+      - Because the argument leaves the domain of $\arccos$
+      - Because $R - R^\top$ vanishes, so the axis information disappears
+      - Because $R$ is no longer an orthogonal matrix
+      - Because the matrix exponential series stops converging
+    explanation: >-
+      At $\theta = \pi$ the matrix $R$ becomes symmetric, so $R - R^\top = 0$ while
+      $\sin\theta = 0$. Numerator and denominator vanish together, so the axis has to be recovered
+      from $(R+I)$ instead. Uniqueness also fails, since $\pm u$ give the same rotation.
+    concept:
+      front: The two singularities of exponential coordinates
+      back: >-
+        $\theta \to 0$ (axis undefined, 0/0) and $\theta \to \pi$ (axis information lost, $\pm u$
+        degenerate)
+  - id: q3
+    prompt: >-
+      With the right parameterisation, one can build a global singularity-free three-parameter
+      chart on $SO(3)$.
+    explanation: >-
+      $SO(3) \cong \mathbb{RP}^3$ is compact and $\mathbb{R}^3$ is not. Diffeomorphisms preserve
+      compactness, so no global three-parameter chart can exist. The remedy is to
+      over-parameterise (quaternions, rotation matrices) and represent only increments in local
+      coordinates.
+    concept:
+      front: Why there is no global three-parameter chart for rotations
+      back: >-
+        $SO(3)$ is compact ($\cong \mathbb{RP}^3$) and $\mathbb{R}^3$ is not, so they cannot be
+        diffeomorphic
+  - id: q4
+    prompt: What is the rotation angle of a rotation matrix with $\operatorname{tr} R = 0$?
+    choices:
+      - $\pi/3$
+      - $\pi/2$
+      - $2\pi/3$
+      - $\pi$
+    explanation: >-
+      $\theta = \arccos((\operatorname{tr} R - 1)/2) = \arccos(-1/2) = 2\pi/3$. The cyclic
+      permutation matrix of problem P3 is exactly this case.

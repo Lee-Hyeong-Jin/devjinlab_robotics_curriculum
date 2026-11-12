@@ -5,20 +5,13 @@ import { useMemo, useState } from 'react'
 
 import type { ResourceKind, ResourceRef } from '@/lib/api/types'
 import { hostnameOf } from '@/lib/format'
+import { RESOURCE_KIND_TONE } from '@/lib/resource-kind'
 
-import { Chip, type ChipTone } from './Chip'
+import { Chip } from './Chip'
 import { DataTable, type Column } from './DataTable'
 import { EmptyState } from './EmptyState'
 import { FilterBar, type FilterOption } from './FilterBar'
 import { SearchInput } from './SearchInput'
-
-const KIND_TONE: Record<ResourceKind, ChipTone> = {
-  book: 'accent',
-  course: 'accent',
-  video: 'warning',
-  article: 'neutral',
-  other: 'neutral',
-}
 
 const ALL = 'all'
 
@@ -81,7 +74,8 @@ export function ResourceExplorer({ resources }: { resources: ResourceRef[] }) {
     {
       key: 'kind',
       header: t('colKind'),
-      cell: (row) => (row.kind ? <Chip tone={KIND_TONE[row.kind]}>{tKind(row.kind)}</Chip> : null),
+      cell: (row) =>
+        row.kind ? <Chip tone={RESOURCE_KIND_TONE[row.kind]}>{tKind(row.kind)}</Chip> : null,
     },
     {
       key: 'note',

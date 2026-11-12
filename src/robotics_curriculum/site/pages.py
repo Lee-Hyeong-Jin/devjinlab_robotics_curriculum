@@ -57,7 +57,6 @@ STATE_SYMBOLS: dict[str, str] = {
     "done": "■",
     "in_progress": "▣",
     "not_started": "□",
-    "locked": "▨",
 }
 
 # resource kinds in display order; ``None`` shares the "other" label
@@ -66,6 +65,10 @@ KIND_KEYS: tuple[tuple[ResourceKind | None, str], ...] = (
     (ResourceKind.COURSE, "course"),
     (ResourceKind.VIDEO, "video"),
     (ResourceKind.ARTICLE, "article"),
+    (ResourceKind.PAPER, "paper"),
+    (ResourceKind.DATASET, "dataset"),
+    (ResourceKind.CODE, "code"),
+    (ResourceKind.NOTES, "notes"),
     (ResourceKind.OTHER, "other"),
     (None, "other"),
 )
@@ -120,7 +123,7 @@ def state_of(summary: LessonSummary) -> str:
         return "done"
     if summary.status is LessonStatus.IN_PROGRESS:
         return "in_progress"
-    return "locked" if summary.locked else "not_started"
+    return "not_started"
 
 
 def badge(state: str, t: Translator) -> str:
@@ -632,11 +635,13 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
         out.append(f"**{prereq_label}**: " + " · ".join(items))
     else:
         out.append(f"**{md_text(t('site.label.prerequisites'))}**: {md_text(t('site.label.none'))}")
-    if summary.locked and summary.status is not LessonStatus.DONE:
+    if summary.missing_prerequisites and summary.status is not LessonStatus.DONE:
+        # Informational: nothing stops a reader starting here (ADR 0015).
+        ids = " · ".join(f"`{md_text(i)}`" for i in summary.missing_prerequisites)
         out += [
             "",
-            f'!!! warning "{md_text(t("site.lesson.locked_title"))}"',
-            f"    {md_text(t('site.lesson.locked_body'))}",
+            f'!!! note "{md_text(t("site.lesson.prereq_pending_title"))}"',
+            f"    {md_text(t('site.lesson.prereq_pending_body'))} {ids}",
         ]
     out.append("")
     if text.tags:

@@ -153,9 +153,10 @@ def get_roadmap(
 ) -> Roadmap:
     """Level -> module -> lesson tree with the caller's states (``rc roadmap``).
 
-    Lesson state: done, in_progress, locked (a prerequisite is not done) or available. Module
-    state: done if every lesson is done, in_progress if any is started or done, locked if every
-    lesson is locked, else available. Progress values are fractions (0-1).
+    Lesson state: done, in_progress or available. Module state: done if every lesson is done,
+    in_progress if any is started or done, else available. Progress values are fractions (0-1).
+    Nothing is ever `locked` — lessons are not gated on finishing other lessons (ADR 0015);
+    the value stays in the enum so an existing client keeps parsing.
     """
     if course_id is not None:
         index.course(course_id)

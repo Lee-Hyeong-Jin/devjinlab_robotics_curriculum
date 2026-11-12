@@ -207,6 +207,11 @@ resources:                           # 필독 논문도 당분간 여기에 (kin
 - `## 전제와 기호` 에 **기호 표**를 둔다(기호 / 뜻). 모듈 안에서 기호를 바꾸지 않는다.
 - 차원과 좌표계를 식에 유지한다(예: $^A R_B \in SO(3)$, $\xi \in \mathbb{R}^6$).
 - 코드 블록은 Python 우선. `uv run ruff format` 을 통과하는 코드만 넣는다(문서의 코드 블록도 대상).
+- **다른 레슨을 가리킬 때 상대 링크를 쓰지 않는다.** 레슨 id 를 코드 서식으로만 쓴다
+  (`` `c1-manifold-optimization` ``). 저장소의 파일 이름은 `so3-se3-exponential.md` 인데 사이트는
+  레슨 id 로 페이지를 만들므로(`c1-so3-se3-exponential.html`), 양쪽에서 동시에 맞는 상대 링크가
+  없다. `.md` 로 링크하면 `rc site build` 가 "target is not found among documentation files"
+  경고를 낸다. 외부 자료는 정상적으로 링크한다.
 - 퀴즈 블록(YAML) 안의 수식은 백슬래시를 **두 번** 쓴다: `"$\\hat{\\omega}^3$"`.
 
 ## 8. 번역 규칙
@@ -216,8 +221,15 @@ resources:                           # 필독 논문도 당분간 여기에 (kin
   구조(prerequisites·difficulty·activities·resources)는 원문에만 둔다 — 다른 키는 에러다.
 - 섹션 제목은 §2 표의 영어 제목을 **그대로** 쓴다.
 - 수식·기호·식 번호·정리 번호·코드·논문 제목·데이터셋 이름은 번역하지 않는다.
-- ` ```quiz ` 블록은 **원문 파일에만** 둔다. 영어판에서는 그 절에서 무엇을 묻는지만 서술하고,
-  문항 번역은 별도 작업(i18n 담당)이다.
+- 번역 파일은 **두 개**다. 둘 다 같은 커밋에 넣는다.
+  - `<lesson>.en.md` — 산문(본문 전체). front matter 는 위 6개 키만.
+  - `<lesson>.en.yaml` — 구조화된 텍스트: `activities`, `resources`, `quiz`. 견본은
+    `curriculum/robotics-expert/m1-math-physics/vectors-matrices.en.yaml` 와
+    `curriculum/robotics-research/c1-rigid-body-geometry-lie-groups/so3-se3-exponential.en.yaml`.
+- 퀴즈 문항의 영어는 `<lesson>.en.yaml` 의 `quiz` 에 **문항 id 로 짝지어** 넣는다.
+  `type` 과 `answer` 는 번역하지 않는다(채점 기준은 언어와 무관해야 한다). `choices` 는 개수와
+  순서가 원문과 같아야 하고, `short` 문항은 그 언어의 허용 답을 `answers` 로 **추가**할 수 있다.
+- 모듈을 새로 만들면 `module.en.yaml`(title, summary)도 쓴다.
 
 ## 9. 검증 체크리스트
 
@@ -258,6 +270,24 @@ for h in ['전제와 기호','핵심 결과','유도','증명 스케치','문제
 - [ ] 영어판이 본문 전체를 담고 섹션 제목이 규정 문자열과 일치
 - [ ] `rc validate` 와 `rc site build` 통과
 - [ ] 외부 자료 본문을 복제하지 않았다
+
+## 9-1. 공유 파일의 경계 (저자 간 규칙)
+
+여러 저자가 동시에 작업하므로 **공유 파일은 자기 모듈 몫만 건드린다**(오케스트레이터 승인 2026-11-12).
+이 경계를 어기면 다른 저자의 작업이 조용히 사라진다 — 실제로 한 번 발생했다.
+
+| 파일 | 내가 고쳐도 되는 것 | 건드리지 않는 것 |
+|---|---|---|
+| `research_notes/연구 트랙 설계/papers.yaml` | 내 모듈 레슨이 쓰는 항목(추가·수정). **추가는 파일 끝이 아니라 자기 모듈 블록(`# ── C4 …` 주석 구간) 안에** | 다른 모듈 항목 — 읽기 전용. 같은 논문을 쓰면 id 를 **재사용**하고 `lessons[]` 에 내 레슨 id 만 더한다 |
+| `research_notes/연구 트랙 설계/blueprint.md` | 내 모듈 절·표의 행 | 다른 모듈 절, §1–§3(전제·구조·규약), §7–§10 |
+| `research_notes/연구 트랙 설계/lesson-standard.md` | — (표준 변경은 설계 담당에게 요청) | 전체 |
+| `docs/curriculum/*`, `CHANGELOG.md` | CHANGELOG 에 내 레슨 한 줄 | 나머지 |
+
+- 같은 파일을 건드려야 하면 **먼저 담당 세션에 알리고** 수락·일정을 받는다. 커밋 후 해시를 통보한다.
+- 다른 저자의 변경이 먼저 들어왔으면 **그 커밋을 머지한 뒤 그 위에** 자기 작업을 올린다.
+  자기 브랜치의 오래된 상태로 덮어쓰면 안 된다.
+- papers.yaml 에 항목을 추가할 때 **id 중복과 DOI 중복을 먼저 확인**한다
+  (`grep -c '^  - id:' papers.yaml` 로 총수를 보고, 같은 논문이 다른 id 로 들어가지 않게 한다).
 
 ## 10. 커밋
 

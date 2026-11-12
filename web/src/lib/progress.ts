@@ -4,33 +4,38 @@
 import type { LessonState, LessonStatus } from './api/types'
 
 /**
- * The four states a lesson or module is shown in. This is the UI's vocabulary —
- * it matches the `<StatusDot>` variants in Figma (`10-2` … `10-5`) — and is
- * derived from the API's `status` + `locked`, which is how the contract models it.
+ * The three states a lesson or module is shown in — the UI's vocabulary, matching the
+ * `<StatusDot>` variants in Figma (`10-2` … `10-4`).
+ *
+ * There is no `locked`: nothing in the course is gated on finishing something else
+ * (ADR 0015). The API's state union still carries `locked` so older clients keep
+ * compiling, and {@link normalizeState} maps it away at the boundary — so no screen can
+ * accidentally render a lock again.
  */
-export type LockState = 'done' | 'in_progress' | 'available' | 'locked'
+export type LockState = 'done' | 'in_progress' | 'available'
 
-/** The display state of one lesson: `locked` only matters while it is unfinished. */
-export function lessonLockState(state: {
-  status?: LessonStatus
-  locked?: boolean | null
-}): LockState {
+/** Narrow the API's wider state union; `locked` (never sent any more) reads as available. */
+export function normalizeState(state: string | null | undefined): LockState {
+  return state === 'done' || state === 'in_progress' ? state : 'available'
+}
+
+/** The display state of one lesson. `locked` from the API is ignored (ADR 0015). */
+export function lessonLockState(state: { status?: LessonStatus }): LockState {
   if (state.status === 'done') return 'done'
   if (state.status === 'in_progress') return 'in_progress'
-  return state.locked ? 'locked' : 'available'
+  return 'available'
 }
 
 /** The display state of a lesson known only by its progress status. */
 export function lockStateFromStatus(status: LessonStatus | undefined): LockState {
-  return lessonLockState({ status, locked: false })
+  return lessonLockState({ status })
 }
 
-/** Roll lesson states up to the module: done > in-progress > available > locked. */
+/** Roll lesson states up to the module: done > in-progress > available. */
 export function moduleState(states: readonly LockState[]): LockState {
   if (states.length === 0) return 'available'
   if (states.every((state) => state === 'done')) return 'done'
   if (states.some((state) => state === 'in_progress' || state === 'done')) return 'in_progress'
-  if (states.every((state) => state === 'locked')) return 'locked'
   return 'available'
 }
 

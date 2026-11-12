@@ -33,7 +33,8 @@ STUDY = """
 
 @pytest.fixture
 def curriculum(tmp_path: Path) -> Path:
-    """Fixture copy with a 공부법 section, math, and a locked lesson (dh needs rotation)."""
+    """Fixture copy with a 공부법 section, math, and a lesson whose prerequisite is pending
+    (dh needs rotation)."""
     root = tmp_path / "curriculum"
     shutil.copytree(FIXTURE, root)
     course = root / "sample-course"
@@ -122,7 +123,9 @@ def test_roadmap_groups_by_stage_with_statuses(docs: Path) -> None:
     assert page.index("## 기초") < page.index("## 중급") < page.index("## 단계 미지정")
     assert "■ 완료</span> [벡터와 행렬]" in page
     assert "▣ 진행 중</span> [회전 표현]" in page
-    assert "▨ 잠김</span> [DH 파라미터]" in page
+    # No locked badge any more (ADR 0015): a lesson whose prerequisite is unfinished shows
+    # as "not started", like any other.
+    assert "잠김" not in page and "▨" not in page
     assert "선수: 회전 표현" in page
 
 
@@ -141,7 +144,10 @@ def test_lesson_page_header_body_study_and_resources(docs: Path) -> None:
     assert "**학습 목표**" in page and "- DH 파라미터의 의미를 설명할 수 있다." in page
     assert "[회전 표현](../m1-math-physics/m1-rotation-representations.md)" in page
     assert "▣ 진행 중" in page  # prerequisite status
-    assert '!!! warning "잠김"' in page
+    # The pending prerequisite is a note, not a warning, and it names the lesson (ADR 0015).
+    assert '!!! note "권장 선수 레슨"' in page
+    assert "`m1-rotation-representations`" in page
+    assert "잠김" not in page
     assert "난이도 ●●●○○ (3/5)" in page
     # 공부법: moved out of the body into the callout, not duplicated.
     assert page.count("이 단계 공부법") == 2  # header link + section heading

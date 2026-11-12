@@ -1,0 +1,67 @@
+# English text of the structured fields of lie-group-derivatives.md (activity titles,
+# resource notes, quiz). The prose lives in lie-group-derivatives.en.md.
+id: c1-lie-group-derivatives
+lang: en
+activities:
+  c1-lie-group-derivatives-reading: Read the lesson and follow the derivations
+  c1-lie-group-derivatives-papers: Read the two must-read papers + a one-page note each
+  c1-lie-group-derivatives-problems: "Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample)"
+  c1-lie-group-derivatives-reproduction: "Reproduction task - Jacobian checks and the Fréchet mean (R1)"
+  c1-lie-group-derivatives-quiz: Concept check quiz
+resources:
+  "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
+    note: ch.7.1-7.3. Closed forms of the left and right Jacobians and their inverses, and the left/right representations of uncertainty.
+  "Solà, Deray & Atchuthan — A micro Lie theory for state estimation in robotics (2018)":
+    note: Must-read 1, sections 2-4. The standard reference for this lesson's notation and Jacobian conventions.
+  "Forster, Carlone, Dellaert & Scaramuzza — On-manifold preintegration (2017)":
+    note: Must-read 2, sections II-III and the appendix. Where the right Jacobian is actually used, in bias re-linearisation and uncertainty propagation.
+  "Lynch & Park, Modern Robotics":
+    note: ch.3.3 and appendix B. The $G(\theta)$ of the SE(3) exponential comes from the same integral as the left Jacobian.
+  "Absil, Mahony & Sepulchre, Optimization Algorithms on Matrix Manifolds (2008)":
+    note: Recommended. Chapter 4 on Riemannian gradient descent and its convergence; the textbook for the next lesson.
+quiz:
+  - id: q1
+    prompt: >-
+      In $\mathrm{Exp}(\phi + \delta) \approx \mathrm{Exp}(\phi)\mathrm{Exp}(X\delta)$, what is $X$?
+    choices:
+      - $J_l(\phi)$ (the left Jacobian)
+      - $J_r(\phi)$ (the right Jacobian)
+      - $I$ (no correction is needed)
+      - $\mathrm{Exp}(\phi)$
+    explanation: >-
+      The increment multiplies on the **right**, so it is the right Jacobian. In the left form
+      $\mathrm{Exp}(J_l(\phi)\delta)\mathrm{Exp}(\phi)$ it is the left Jacobian. The two are
+      related by $J_l(\phi) = \mathrm{Exp}(\phi)J_r(\phi)$.
+    concept:
+      front: What distinguishes the left from the right Jacobian
+      back: >-
+        Which side the increment multiplies on. Right ($R\,\mathrm{Exp}(\delta)$) gives $J_r$, left
+        gives $J_l$, and $J_l(\phi) = \mathrm{Exp}(\phi)J_r(\phi) = J_r(\phi)^\top$
+  - id: q2
+    prompt: $J_r(\phi)^{-1}$ exists for every $\phi \in \mathbb{R}^3$.
+    explanation: >-
+      Its closed form has $\sin\theta$ in a denominator and diverges as $\theta \to \pi$, so the
+      inverse exists only for $\theta < \pi$. That is the mathematical reason a large rotational
+      perturbation cannot be linearised in one step.
+    concept:
+      front: The range in which $J_r^{-1}$ exists
+      back: >-
+        $\theta < \pi$. It diverges as $\theta \to \pi$, so large rotational errors cannot be
+        linearised in a single step
+  - id: q3
+    prompt: >-
+      At small angles $J_r^{-1}(\phi) \approx I + \frac{1}{2}\hat{\phi} + c\,\hat{\phi}^2$. What is $c$?
+    explanation: >-
+      Multiplying by $J_r \approx I - \frac12\hat\phi + \frac16\hat\phi^2$ and cancelling the
+      second-order term gives $c - \frac14 + \frac16 = 0$, so $c = \frac1{12}$.
+  - id: q4
+    prompt: On $SO(3)$, how is the geodesic distance $\theta$ related to the Frobenius distance?
+    choices:
+      - $\lVert R_1-R_2\rVert_F = \theta$ (they are equal)
+      - $\lVert R_1-R_2\rVert_F = 2\sqrt{2}\,|\sin(\theta/2)|$
+      - $\lVert R_1-R_2\rVert_F = 2(1-\cos\theta)$
+      - The two distances are not comparable
+    explanation: >-
+      $\lVert R_1-R_2\rVert_F^2 = 6 - 2\operatorname{tr}(R_1^\top R_2) = 4(1-\cos\theta) =
+      8\sin^2(\theta/2)$. They are nearly proportional at small angles, but the Frobenius distance
+      saturates at $2\sqrt2$ when $\theta=\pi$ - which is why means of spread-out samples differ.

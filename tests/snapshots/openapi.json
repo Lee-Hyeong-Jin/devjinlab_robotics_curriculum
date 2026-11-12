@@ -523,7 +523,7 @@
           "content"
         ],
         "summary": "Get Roadmap",
-        "description": "Level -> module -> lesson tree with the caller's states (``rc roadmap``).\n\nLesson state: done, in_progress, locked (a prerequisite is not done) or available. Module\nstate: done if every lesson is done, in_progress if any is started or done, locked if every\nlesson is locked, else available. Progress values are fractions (0-1).",
+        "description": "Level -> module -> lesson tree with the caller's states (``rc roadmap``).\n\nLesson state: done, in_progress or available. Module state: done if every lesson is done,\nin_progress if any is started or done, else available. Progress values are fractions (0-1).\nNothing is ever `locked` — lessons are not gated on finishing other lessons (ADR 0015);\nthe value stays in the enum so an existing client keeps parsing.",
         "operationId": "get_roadmap_api_v1_roadmap_get",
         "parameters": [
           {
@@ -1209,7 +1209,7 @@
           "progress"
         ],
         "summary": "Done",
-        "description": "Mark a lesson done (stops its running timer); lists the lessons it unlocked.",
+        "description": "Mark a lesson done (stops its running timer).\n\n``unlocked_lesson_ids`` names the lessons whose last unfinished prerequisite was this one,\nso they are now next in the recommended order. They were never blocked (ADR 0015).",
         "operationId": "done_api_v1_progress_done_post",
         "requestBody": {
           "content": {
@@ -4021,10 +4021,14 @@
         "type": "string",
         "enum": [
           "reading",
+          "paper",
           "quiz",
-          "exercise"
+          "exercise",
+          "reproduction",
+          "project"
         ],
-        "title": "ActivityKind"
+        "title": "ActivityKind",
+        "description": "What kind of work an activity is.\n\n``reading`` is a textbook or notes; ``paper`` is a primary paper read with notes of one's\nown, which the research track has to tell apart from it. ``exercise`` is a problem set,\n``reproduction`` is reproducing a published result, and ``project`` is a capstone.\nSee ``research_notes/연구 트랙 설계/lesson-standard.md`` §11-2."
       },
       "ActivityProgress": {
         "properties": {
@@ -4882,7 +4886,7 @@
             },
             "type": "array",
             "title": "Unlocked Lesson Ids",
-            "description": "Lessons this completion unlocked."
+            "description": "Lessons whose last unfinished prerequisite was this one, so they are now next in the recommended order. They were never blocked (ADR 0015)."
           }
         },
         "additionalProperties": false,
@@ -5204,7 +5208,17 @@
           "locked": {
             "type": "boolean",
             "title": "Locked",
-            "description": "Some prerequisite is not done yet."
+            "description": "Always false. Lessons are never locked (ADR 0015); kept so existing clients keep parsing. Read `missing_prerequisites` instead.",
+            "default": false,
+            "deprecated": true
+          },
+          "missing_prerequisites": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing Prerequisites",
+            "description": "Prerequisite lesson ids that are not done yet. Advice about order, not a gate: the lesson can be started, logged and completed regardless."
           },
           "total_seconds": {
             "type": "integer",
@@ -5262,7 +5276,6 @@
         "required": [
           "lesson",
           "status",
-          "locked",
           "total_seconds",
           "started_at",
           "completed_at",
@@ -5458,7 +5471,8 @@
                 "enum": [
                   "기초",
                   "중급",
-                  "고급"
+                  "고급",
+                  "연구"
                 ]
               },
               {
@@ -5589,7 +5603,8 @@
                 "enum": [
                   "기초",
                   "중급",
-                  "고급"
+                  "고급",
+                  "연구"
                 ]
               },
               {
@@ -6224,9 +6239,14 @@
           "course",
           "video",
           "article",
+          "paper",
+          "dataset",
+          "code",
+          "notes",
           "other"
         ],
-        "title": "ResourceKind"
+        "title": "ResourceKind",
+        "description": "A paper normally belongs in the course's ``papers.yaml`` registry; ``paper`` here is\nfor a one-off. ``dataset`` (KITTI, TUM RGB-D), ``code`` (Drake, GTSAM) and ``notes``\n(lecture notes) are the research track's own categories (lesson-standard.md §11-5)."
       },
       "ResourceRef": {
         "properties": {
@@ -6553,7 +6573,8 @@
                 "enum": [
                   "기초",
                   "중급",
-                  "고급"
+                  "고급",
+                  "연구"
                 ]
               },
               {
@@ -6775,7 +6796,8 @@
                 "enum": [
                   "기초",
                   "중급",
-                  "고급"
+                  "고급",
+                  "연구"
                 ]
               },
               {
