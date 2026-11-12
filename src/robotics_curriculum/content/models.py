@@ -109,6 +109,80 @@ class ResourceText(ContentModel):
     note: str | None = Field(default=None, min_length=1)
 
 
+PaperRole = Literal["seminal", "standard", "frontier", "critique", "survey"]
+"""What a paper is to a lesson: the original result, the standard treatment, current work,
+a criticism, or a survey."""
+
+
+class Paper(ContentModel):
+    """One entry of a course's ``papers.yaml`` bibliography.
+
+    The registry holds the *bibliography* — who wrote what, where, and whether the link was
+    checked. Which papers a lesson assigns, and whether they are required, is an editorial
+    decision that belongs to the lesson (see :class:`PaperRef` and ADR 0014).
+    """
+
+    id: Id
+    title: str = Field(min_length=1)
+    authors: list[str] = Field(default_factory=list)
+    year: int | None = Field(default=None, ge=1800, le=2200)
+    venue: str | None = None
+    url: str | None = None
+    verified: bool = Field(
+        default=False,
+        description="Whether the url was actually opened and checked; false shows a badge.",
+    )
+    role: PaperRole | None = Field(
+        default=None, description="Default role, which a lesson's reference may override."
+    )
+    note: str | None = None
+    lessons: list[Id] | None = Field(
+        default=None,
+        description=(
+            "Optional reverse index kept while lessons are still being written. The lessons' "
+            "own `papers` are authoritative; `rc validate` only cross-checks this and warns."
+        ),
+    )
+
+
+class PapersFile(ContentModel):
+    """Schema of ``papers.yaml`` in a course directory. Absent means the course has none."""
+
+    papers: list[Paper] = Field(default_factory=list)
+
+
+class PaperRef(ContentModel):
+    """A lesson's reference to a paper in its course's registry.
+
+    This is the source of truth for "which papers does this lesson assign": ``role`` here
+    overrides the registry's default, because the same paper can be the seminal result in one
+    lesson and the thing being criticised in another.
+    """
+
+    id: Id
+    role: PaperRole | None = None
+    required: bool = Field(default=False, description="Required reading for this lesson.")
+    note: str | None = Field(default=None, description='What to read, e.g. "§3 only".')
+
+
+class LessonPaper(ContentModel):
+    """A paper as one lesson shows it: the registry's bibliography merged with the lesson's
+    own ``role``, ``required`` and ``note``. Built by
+    :func:`robotics_curriculum.content.papers.resolve_lesson_papers`.
+    """
+
+    id: str
+    title: str
+    authors: list[str] = Field(default_factory=list)
+    year: int | None = None
+    venue: str | None = None
+    url: str | None = None
+    verified: bool = False
+    role: PaperRole | None = None
+    required: bool = False
+    note: str | None = Field(default=None, description="The lesson's note, else the registry's.")
+
+
 class ConceptText(ContentModel):
     """A translated key-concept flashcard (mirrors ``quiz_block.Concept``)."""
 
@@ -221,6 +295,10 @@ class Lesson(ContentModel):
     tags: list[str] = Field(default_factory=list)
     activities: list[Activity] = Field(default_factory=list)
     resources: list[Resource] = Field(default_factory=list)
+    papers: list[PaperRef] = Field(
+        default_factory=list,
+        description="Papers from the course's papers.yaml, by id (ADR 0014).",
+    )
 
     # Filled by the loader, not by front matter.
     body: str = Field(default="", exclude=True)
@@ -403,6 +481,9 @@ class Course(ContentModel):
     summary: str
     tags: list[str] = Field(default_factory=list)
     modules: list[Module] = Field(default_factory=list)
+    papers: list[Paper] = Field(
+        default_factory=list, description="The course's papers.yaml registry, if it has one."
+    )
     path: Path | None = Field(default=None, exclude=True)
     translations: dict[str, CourseTranslation] = Field(default_factory=dict, exclude=True)
 

@@ -23,7 +23,7 @@ from robotics_curriculum.learn.review import (
     recent_accuracy,
     run_review,
 )
-from robotics_curriculum.library import resources, show
+from robotics_curriculum.library import papers, resources, show
 from robotics_curriculum.progress import (
     LessonSummary,
     ProgressError,
@@ -213,7 +213,12 @@ def validate(
     if not path.is_dir():
         typer.echo(f"error: {path} is not a directory", err=True)
         raise typer.Exit(code=1)
-    courses, errors = check(path)
+    courses, problems = check(path)
+    errors = [p for p in problems if p.blocking]
+    warnings = [p for p in problems if not p.blocking]
+    # Warnings first, so they are not scrolled off by a long error list.
+    for warning in warnings:
+        typer.echo(f"{warning.path}: warning: {warning.message}", err=True)
     if errors:
         for error in errors:
             typer.echo(f"{error.path}: {error.message}", err=True)
@@ -221,7 +226,8 @@ def validate(
         raise typer.Exit(code=1)
     modules = sum(len(course.modules) for course in courses)
     lessons = sum(len(course.iter_lessons()) for course in courses)
-    typer.echo(f"OK: {lessons} lessons in {modules} modules")
+    suffix = f" ({len(warnings)} warning(s))" if warnings else ""
+    typer.echo(f"OK: {lessons} lessons in {modules} modules{suffix}")
 
 
 @app.command()
@@ -571,6 +577,7 @@ def progress_import(
     typer.echo(f"imported {n_lessons} lesson rows, {n_sessions} sessions")
 
 
+app.command()(papers)
 app.command()(resources)
 app.command()(show)
 app.command()(roadmap)

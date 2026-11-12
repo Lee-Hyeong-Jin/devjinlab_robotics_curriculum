@@ -10,6 +10,7 @@
 curriculum/
 └── <course-dir>/                 # 코스(트랙) 하나 = 디렉터리 하나
     ├── course.yaml               # 코스 메타데이터 + 모듈 순서
+    ├── papers.yaml               # (선택) 코스 논문 서지 — ADR 0014
     └── <module-dir>/             # 모듈 하나 = 디렉터리 하나
         ├── module.yaml           # 모듈 메타데이터 + 레슨 순서
         └── <lesson>.md           # 레슨 하나 = YAML front matter + Markdown 본문
@@ -216,10 +217,53 @@ objectives:
 | `lang` 과 파일 이름 불일치 | `front matter says lang 'ko' but the file name says 'en'` |
 | 본문이 빈 번역 | `'en' translation of 'm1-vectors-matrices' has an empty body` |
 
+## `papers.yaml` (선택) — 코스 논문 서지
+
+연구 트랙처럼 논문을 다루는 코스는 서지를 코스 디렉터리에 한 번만 쓰고, 레슨은 id 로 참조한다
+(ADR 0014). **파일이 없으면 그 코스는 논문 기능을 쓰지 않는 것이고, 검증은 아무 말도 하지 않는다.**
+
+```yaml
+papers:
+  - id: mayne-1966                 # slug, 레지스트리 안에서 유일
+    title: "A second-order gradient method..."
+    authors: ["D. Q. Mayne"]       # 선택
+    year: 1966                     # 선택, 1800–2200
+    venue: "International Journal of Control"   # 선택
+    url: "https://doi.org/..."     # 선택, http(s)
+    verified: true                 # 링크를 실제로 확인했는가 (기본 false)
+    role: seminal                  # 선택, 기본 역할 — 레슨이 덮어쓸 수 있다
+    note: "전체"                   # 선택, 기본 메모 — 레슨이 덮어쓸 수 있다
+    lessons: [m-oc-ilqr]           # 선택, 역색인. 레슨 쪽이 원본이고 불일치는 경고
+```
+
+레슨 front matter 에서:
+
+| 필드 | 타입 | 필수 | 설명 |
+|---|---|---|---|
+| `id` | slug | O | `papers.yaml` 의 논문 id |
+| `role` | `seminal` \| `standard` \| `frontier` \| `critique` \| `survey` | - | 이 레슨에서의 역할. 생략 시 레지스트리 값 |
+| `required` | bool | - | 필독 여부(기본 false). 레슨에만 있는 필드 |
+| `note` | str | - | 무엇을 읽는가(`"§3 의 2차 전개"`). 생략 시 레지스트리 값 |
+
+```yaml
+papers:
+  - id: mayne-1966
+    required: true
+    note: "§3 의 2차 전개"
+```
+
+**원본은 레슨이다.** 어떤 논문을 필독으로 지정하는가는 교육적 결정이므로 레슨에 있고, 레지스트리는
+그 논문이 무엇인지만 말한다. 같은 논문이 레슨에 따라 `seminal` 이기도 `critique` 이기도 하므로
+레슨의 `role` 이 레지스트리 값을 덮어쓴다. 출력은 `rc papers <lesson_id>`.
+
 ## 검증 규칙 (`rc validate [PATH]`)
 
 `PATH`는 코스 디렉터리이거나 코스 디렉터리들을 담은 상위 디렉터리(기본 `curriculum/`).
 에러는 `파일경로: 메시지` 형식으로 모두 출력하고 종료 코드 1을 반환한다.
+
+일부 규칙은 **경고**다(`파일경로: warning: 메시지`). 경고는 출력하지만 종료 코드는 0 이고,
+콘텐츠를 거부해야 하는 쪽(API·CLI 의 진도 서비스)은 경고를 무시한다. 집필 중에 서지가 레슨보다
+먼저 들어오는 작업 방식을 CI 가 막지 않게 하려는 것이다. 로더가 내는 문제는 전부 에러다.
 
 | # | 규칙 | 검출 위치 |
 |---|---|---|
@@ -233,8 +277,10 @@ objectives:
 | 8 | 한 레슨 안에서 자료 `title`이 유일 | validate |
 | 9 | 레슨 번역 파일(`<lesson>.<lang>.md`)이 텍스트를 담고 있고 id·언어가 일치 (위 "레슨 번역" 절) | loader/validate |
 | 10 | 본문 ` ```quiz ` 블록이 파싱됨: YAML 오류, 모르는 `type`, `answer` 형태·범위, `explanation` 누락, 문항 `id` 중복, `activity` 참조 오류(없는 활동, quiz 활동이 둘 이상인데 생략)를 `lesson '<id>': quiz block N: question M: ...` 형식으로 보고 | validate |
+| 11 | 레슨이 참조한 논문 id 가 `papers.yaml` 에 있고, 레지스트리 id 가 유일하고, 레지스트리 `url` 이 http(s) 이고, 한 레슨이 같은 논문을 두 번 나열하지 않고, 논문을 지정한 레슨은 `required: true` 를 1개 이상 가짐 (ADR 0014) | validate |
+| 11w | **경고**: 아무 레슨도 참조하지 않는 레지스트리 논문 / 레지스트리 `lessons[]` 가 실제 참조와 다름 | validate |
 
-성공 시 `OK: N lessons in M modules`.
+성공 시 `OK: N lessons in M modules`(경고가 있으면 `(N warning(s))` 가 붙는다).
 
 ## 레슨 ID와 진도 데이터
 

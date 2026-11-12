@@ -76,6 +76,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and `Strict-Transport-Security` only when the request arrived over HTTPS.
 - `docs/adr/0013-signup-policy.md` (proposed, not implemented): `RC_AUTH_SIGNUP`
   (`open` | `closed` | `invite`) and how invitations would work.
+- A course may carry a `papers.yaml` bibliography that its lessons reference by id
+  (ADR 0014): the registry says what a paper is, the lesson decides which papers it assigns,
+  whether each is required, and what to read of it. `rc papers <lesson_id>` lists them,
+  required reading first, flagging a link that has not been checked. `rc validate` gains
+  rule 11 (referential integrity, unique ids, http(s) urls, at least one required reading per
+  lesson that assigns papers). A course with no `papers.yaml` is unaffected.
+- `rc validate` can now report a **warning**: it prints them, keeps exit code 0, and the API
+  and progress service ignore them. Used for a bibliography entry no lesson references yet,
+  and for a stale reverse index — both normal while lessons are still being written.
 - Content vocabulary for the research track (`lesson-standard.md` §11-2, §11-4, §11-5), all
   additive so the existing lessons validate unchanged: `ActivityKind` gains `paper`,
   `reproduction` and `project`; `ResourceKind` gains `paper`, `dataset`, `code` and `notes`;

@@ -89,6 +89,17 @@ review:
     source: "출처"
     due: "예정일"
 
+paper:
+  none: "  (지정된 논문 없음)"
+  required: "필독"
+  optional: "선택"
+  unverified: "(미확인)"
+  role:
+    seminal: "원전"
+    standard: "표준"
+    frontier: "최신"
+    critique: "비판"
+    survey: "서베이"
 resource:
   kind:
     book: "교재"

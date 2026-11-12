@@ -88,6 +88,17 @@ review:
     source: "source"
     due: "due"
 
+paper:
+  none: "  (no papers assigned)"
+  required: "required"
+  optional: "optional"
+  unverified: "(unverified)"
+  role:
+    seminal: "seminal"
+    standard: "standard"
+    frontier: "frontier"
+    critique: "critique"
+    survey: "survey"
 resource:
   kind:
     book: "Books"

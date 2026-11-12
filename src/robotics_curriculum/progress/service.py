@@ -19,6 +19,7 @@ from robotics_curriculum.content import (
     Lesson,
     LoadError,
     Module,
+    blocking,
     load_courses,
     validate_courses,
 )
@@ -148,7 +149,8 @@ class ProgressService:
             courses = load_courses(path)
         except LoadError as exc:
             raise ProgressError(f"cannot load curriculum (run `rc validate`):\n{exc}") from exc
-        problems = validate_courses(courses)
+        # Warnings are editorial smells; only blocking problems may stop the service.
+        problems = blocking(validate_courses(courses))
         if problems:
             listed = "\n".join(str(problem) for problem in problems[:10])
             more = "" if len(problems) <= 10 else f"\n... and {len(problems) - 10} more"
