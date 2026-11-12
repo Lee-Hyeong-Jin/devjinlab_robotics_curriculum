@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - 연구원 트랙에 S2 조작·접촉 모듈을 열었다 — `s2-grasp-mechanics`(접촉 역학과 파지 안정성),
-  `s2-contact-modes-dexterity`(접촉 모드와 외재적 손재주). 각 레슨은 한국어·영어.
+  `s2-contact-modes-dexterity`(접촉 모드와 외재적 손재주),
+  `s2-tactile-contact-estimation`(촉각과 접촉 상태 추정),
+  `s2-learned-grasping`(학습 기반 파지). 각 레슨은 한국어·영어.
 - 연구원 트랙에 C6 동작 계획 이론 모듈을 추가했다 — `c6-cspace-complexity`(구성공간과 복잡도),
   `c6-combinatorial-gcs`(조합적 계획과 볼록 분해), `c6-sampling-completeness`(샘플링 기반과
   확률적 완전성), `c6-asymptotic-optimality`(점근 최적성),

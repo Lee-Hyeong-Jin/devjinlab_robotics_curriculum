@@ -1029,6 +1029,195 @@ papers:
     verified: true
     role: frontier
     note: "2026-11-12 Crossref 확인."
+  - id: yuan2017-gelsight
+    title: "GelSight: High-Resolution Robot Tactile Sensors for Estimating Geometry and Force"
+    authors: ["W. Yuan", "S. Dong", "E. H. Adelson"]
+    year: 2017
+    venue: "Sensors"
+    url: "https://doi.org/10.3390/s17122762"
+    verified: true
+    role: seminal
+    note: "2026-11-12 Crossref 확인."
+  - id: koval2015-contact-manifold-pf
+    title: "Pose estimation for planar contact manipulation with manifold particle filters"
+    authors: ["M. C. Koval", "N. S. Pollard", "S. S. Srinivasa"]
+    year: 2015
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364915571007"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인. 2013 IROS 논문은 다른 논문이다."
+  - id: manuelli2016-contact-particle-filter
+    title: "Localizing external contact using proprioceptive sensors: the contact particle filter"
+    authors: ["L. Manuelli", "R. Tedrake"]
+    year: 2016
+    venue: "IROS"
+    url: "https://doi.org/10.1109/IROS.2016.7759743"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인. 촉각 없이 관절 토크로 외부 접촉을 찾는 축소 문제."
+  - id: petrovskaya2011-global-localization-touch
+    title: "Global Localization of Objects via Touch"
+    authors: ["A. Petrovskaya", "O. Khatib"]
+    year: 2011
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2011.2138450"
+    verified: true
+    role: seminal
+    note: "2026-11-12 Crossref 확인."
+  - id: bauza2019-tactile-mapping
+    title: "Tactile Mapping and Localization from High-Resolution Tactile Imprints"
+    authors: ["M. Bauza", "O. Canal", "A. Rodriguez"]
+    year: 2019
+    venue: "ICRA"
+    url: "https://arxiv.org/abs/1904.10944"
+    verified: true
+    role: standard
+    note: "arXiv 2019. journal_ref 없음 — 게재 venue(ICRA 2019)는 arXiv 로 확인되지 않았다."
+  - id: calandra2018-more-than-a-feeling
+    title: "More Than a Feeling: Learning to Grasp and Regrasp using Vision and Touch"
+    authors: ["R. Calandra", "A. Owens", "D. Jayaraman", "et al."]
+    year: 2018
+    venue: "IEEE RA-L"
+    url: "https://arxiv.org/abs/1805.11085"
+    verified: true
+    role: frontier
+    note: "arXiv 2018. journal_ref 없음 — 지면(RA-L 2018)은 arXiv 로 확인되지 않았다."
+  - id: mahler2017-dexnet2
+    title: "Dex-Net 2.0: Deep Learning to Plan Robust Grasps with Synthetic Point Clouds and Analytic Grasp Metrics"
+    authors: ["J. Mahler", "J. Liang", "S. Niyaz", "et al."]
+    year: 2017
+    venue: "RSS"
+    url: "https://arxiv.org/abs/1703.09312"
+    verified: true
+    role: seminal
+    note: "arXiv 2017. journal_ref 없음 — 게재 venue(RSS 2017)는 arXiv 로 확인되지 않았다."
+  - id: sundermeyer2021-contact-graspnet
+    title: "Contact-GraspNet: Efficient 6-DoF Grasp Generation in Cluttered Scenes"
+    authors: ["M. Sundermeyer", "A. Mousavian", "R. Triebel", "D. Fox"]
+    year: 2021
+    venue: "ICRA"
+    url: "https://arxiv.org/abs/2103.14127"
+    verified: true
+    role: standard
+    note: "arXiv 2021. journal_ref 없음 — 게재 venue(ICRA 2021)는 arXiv 로 확인되지 않았다."
+  - id: fang2023-anygrasp
+    title: "AnyGrasp: Robust and Efficient Grasp Perception in Spatial and Temporal Domains"
+    authors: ["H.-S. Fang", "C. Wang", "H. Fang", "et al."]
+    year: 2023
+    venue: "IEEE T-RO"
+    url: "https://arxiv.org/abs/2212.08333"
+    verified: true
+    role: frontier
+    note: "arXiv v1 2022, T-RO 2023."
+  - id: levine2018-hand-eye
+    title: "Learning Hand-Eye Coordination for Robotic Grasping with Deep Learning and Large-Scale Data Collection"
+    authors: ["S. Levine", "P. Pastor", "A. Krizhevsky", "et al."]
+    year: 2018
+    venue: "IJRR"
+    url: "https://arxiv.org/abs/1603.02199"
+    verified: true
+    role: seminal
+    note: "arXiv 2016 게재. journal_ref 없음 — 지면(IJRR 2018)은 arXiv 로 확인되지 않았다."
+  - id: kalashnikov2018-qtopt
+    title: "QT-Opt: Scalable Deep Reinforcement Learning for Vision-Based Robotic Manipulation"
+    authors: ["D. Kalashnikov", "A. Irpan", "P. Pastor", "et al."]
+    year: 2018
+    venue: "CoRL"
+    url: "https://arxiv.org/abs/1806.10293"
+    verified: true
+    role: standard
+    note: "arXiv 2018. journal_ref 없음 — 게재 venue(CoRL 2018)는 arXiv 로 확인되지 않았다."
+  - id: tobin2017-domain-randomization
+    title: "Domain Randomization for Transferring Deep Neural Networks from Simulation to the Real World"
+    authors: ["J. Tobin", "R. Fong", "A. Ray", "et al."]
+    year: 2017
+    venue: "IROS"
+    url: "https://arxiv.org/abs/1703.06907"
+    verified: true
+    role: standard
+    note: "arXiv 2017. journal_ref 없음 — 게재 venue(IROS 2017)는 arXiv 로 확인되지 않았다."
+  - id: fang2020-graspnet-1billion
+    title: "GraspNet-1Billion: A Large-Scale Benchmark for General Object Grasping"
+    authors: ["H.-S. Fang", "C. Wang", "M. Gou", "C. Lu"]
+    year: 2020
+    venue: "CVPR"
+    url: "https://doi.org/10.1109/CVPR42600.2020.01146"
+    verified: true
+    role: standard
+    note: "2026-11-12 Crossref 확인."
+  - id: chi2023-diffusion-policy
+    title: "Diffusion Policy: Visuomotor Policy Learning via Action Diffusion"
+    authors: ["C. Chi", "S. Feng", "Y. Du", "et al."]
+    year: 2023
+    venue: "RSS"
+    url: "https://arxiv.org/abs/2303.04137"
+    verified: true
+    role: frontier
+    note: "arXiv 2023. journal_ref 없음 — 게재 venue(RSS 2023)는 arXiv 로 확인되지 않았다."
+  - id: zhao2023-act
+    title: "Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware"
+    authors: ["T. Z. Zhao", "V. Kumar", "S. Levine", "C. Finn"]
+    year: 2023
+    venue: "RSS"
+    url: "https://arxiv.org/abs/2304.13705"
+    verified: true
+    role: frontier
+    note: "ACT / ALOHA. arXiv 2023. journal_ref 없음 — 게재 venue(RSS 2023)는 미확인."
+  - id: black2024-pi0
+    title: "pi0: A Vision-Language-Action Flow Model for General Robot Control"
+    authors: ["K. Black", "N. Brown", "D. Driess", "et al."]
+    year: 2024
+    venue: "arXiv 2024"
+    url: "https://arxiv.org/abs/2410.24164"
+    verified: true
+    role: frontier
+    note: "원 제목은 그리스 문자 pi_0 를 쓴다. arXiv 코멘트는 RSS 2025 이지만 게재는 미확인."
+  - id: vincent2011-score-matching
+    title: "A Connection Between Score Matching and Denoising Autoencoders"
+    authors: ["P. Vincent"]
+    year: 2011
+    venue: "Neural Computation"
+    url: "https://doi.org/10.1162/NECO_a_00142"
+    verified: true
+    role: seminal
+    note: "2026-11-12 Crossref 확인. denoising score matching 동등성의 1차 자료."
+  - id: ho2020-ddpm
+    title: "Denoising Diffusion Probabilistic Models"
+    authors: ["J. Ho", "A. Jain", "P. Abbeel"]
+    year: 2020
+    venue: "NeurIPS"
+    url: "https://arxiv.org/abs/2006.11239"
+    verified: true
+    role: seminal
+    note: "arXiv 2020. journal_ref 없음 — 게재 venue(NeurIPS 2020)는 arXiv 로 확인되지 않았다."
+  - id: song2021-score-sde
+    title: "Score-Based Generative Modeling through Stochastic Differential Equations"
+    authors: ["Y. Song", "J. Sohl-Dickstein", "D. P. Kingma", "et al."]
+    year: 2021
+    venue: "ICLR"
+    url: "https://arxiv.org/abs/2011.13456"
+    verified: true
+    role: standard
+    note: "arXiv 2020. journal_ref 없음 — 게재 venue(ICLR 2021)는 arXiv 로 확인되지 않았다."
+  - id: lipman2023-flow-matching
+    title: "Flow Matching for Generative Modeling"
+    authors: ["Y. Lipman", "R. T. Q. Chen", "H. Ben-Hamu", "et al."]
+    year: 2023
+    venue: "ICLR"
+    url: "https://arxiv.org/abs/2210.02747"
+    verified: true
+    role: standard
+    note: "arXiv 2022. journal_ref 없음 — 게재 venue(ICLR 2023)는 arXiv 로 확인되지 않았다."
+  - id: janner2022-diffuser
+    title: "Planning with Diffusion for Flexible Behavior Synthesis"
+    authors: ["M. Janner", "Y. Du", "J. B. Tenenbaum", "S. Levine"]
+    year: 2022
+    venue: "ICML"
+    url: "https://arxiv.org/abs/2205.09991"
+    verified: true
+    role: standard
+    note: "arXiv 2022. journal_ref 없음 — 게재 venue(ICML 2022)는 arXiv 로 확인되지 않았다."
 
   # ── S3 보행·언더액추에이티드 ──────────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)

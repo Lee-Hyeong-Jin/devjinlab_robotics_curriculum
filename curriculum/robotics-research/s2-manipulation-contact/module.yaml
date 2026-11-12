@@ -11,3 +11,6 @@ level: 연구
 lessons:
   - grasp-mechanics
   - contact-modes-dexterity
+  - tactile-contact-estimation
+  - learned-grasping
+  - generative-policies
