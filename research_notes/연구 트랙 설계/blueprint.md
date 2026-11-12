@@ -287,7 +287,7 @@ Barfoot SER 전권, UPenn ESE 650 M1.
 | 레슨 | 유도해야 할 핵심 결과 | 필독 | 교재 | 재현 과제 |
 |---|---|---|---|---|
 | `c6-cspace-complexity` 구성공간과 복잡도 | C-space 위상과 장애물 사상 **[D2]**; 일반 운동 계획의 PSPACE-hardness **[D2]**; 피아노 운반 문제의 대수적 해법 **[D1]** | `reif1979-complexity`, `canny1988-complexity` | PA ch.3–4,6 | R1: 2-링크 팔의 C-space 장애물을 격자로 계산하고 위상(구멍 수)을 확인 |
-| `c6-combinatorial-gcs` 조합적 계획과 볼록 분해 | 셀 분해의 완전성 **[D3]**; 가시성 그래프 최적성 **[D2]**; 측지 볼록 집합 그래프(GCS)의 혼합정수 완화 **[D2]** | `marcucci2023-gcs` | PA ch.6 | R2: 다각형 환경에서 가시성 그래프 최단경로를 구현, 샘플링 해보다 짧음을 확인 |
+| `c6-combinatorial-gcs` 조합적 계획과 볼록 분해 | 셀 분해의 완전성 **[D3]**; 가시성 그래프 최적성 **[D2]**; 측지 볼록 집합 그래프(GCS)의 혼합정수 완화 **[D2]** | `lozanoperez1979-visibility`, `marcucci2023-gcs`, `marcucci2024-spp-gcs` | PA ch.6 | R2: 다각형 환경에서 가시성 그래프 최단경로를 구현, 샘플링 해보다 짧음을 확인 |
 | `c6-sampling-completeness` 샘플링 기반과 확률적 완전성 | PRM/RRT 의 확률적 완전성 증명 **[D3]**; 확장 실패 확률의 지수 감소 **[D3]**; 좁은 통로와 $\epsilon$-good 가정 **[D2]** | `kavraki1996-prm`, `lavalle2001-rrt` | PA ch.5 | R2: RRT 를 구현해 좁은 통로 폭 대비 성공률 곡선을 그림(이론 경향과 일치) |
 | `c6-asymptotic-optimality` 점근 최적성 | RRT* 의 점근 최적성과 연결 반경 $r_n \propto (\log n/n)^{1/d}$ **[D3]**; informed/BIT* 의 수렴 가속 **[D2]**; 차원의 저주 **[D2]** | `karaman2011-rrtstar`, `gammell2015-bitstar` | PA ch.5(비교) | R2: RRT 와 RRT* 의 비용 수렴 곡선을 500회 반복 평균으로 비교, RRT* 가 최적 비용에 수렴 |
 | `c6-search-based-planning` 탐색 기반 계획 | A* 의 최적성·허용성 **[D3]**; weighted A* 의 $w$-준최적 한계 **[D3]**; ARA*/D* 의 일관성 복구 **[D2]**; Multi-Heuristic A* **[D2]** | `likhachev2003-ara`, `aine2016-mha` | 16-782 노트, PA ch.2 | R2: 격자 그래프에서 A*/weighted A*/ARA* 의 비용-시간 교환을 재현, 비용 ≤ $w\cdot C^*$ 확인 |

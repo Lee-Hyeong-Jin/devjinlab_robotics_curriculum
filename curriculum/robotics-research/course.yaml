@@ -11,3 +11,4 @@ tags: [robotics, research, graduate]
 modules:
   - c1-rigid-body-geometry-lie-groups
   - c3-nonlinear-robust-control
+  - c6-motion-planning-theory

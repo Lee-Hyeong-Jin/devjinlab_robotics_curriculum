@@ -553,6 +553,26 @@ papers:
     verified: true
     lessons: [c6-combinatorial-gcs, s2-planning-through-contact]
     role: frontier
+  - id: lozanoperez1979-visibility
+    title: "An algorithm for planning collision-free paths among polyhedral obstacles"
+    authors: ["T. Lozano-Pérez", "M. A. Wesley"]
+    year: 1979
+    venue: "CACM"
+    url: "https://doi.org/10.1145/359156.359164"
+    note: "2026-11-12 Crossref 로 제목·제1저자·연도·venue 확인(author-c6). 가시성 그래프의 원전."
+    verified: true
+    lessons: [c6-combinatorial-gcs]
+    role: seminal
+  - id: marcucci2024-spp-gcs
+    title: "Shortest Paths in Graphs of Convex Sets"
+    authors: ["T. Marcucci", "J. Umenberger", "P. A. Parrilo", "et al."]
+    year: 2024
+    venue: "SIAM J. Optimization"
+    url: "https://arxiv.org/abs/2101.11565"
+    note: "arXiv 2021 게재, journal_ref = SIAM J. Optim. 34(1):507-532 (2024). 2026-11-12 arXiv API 로 확인(author-c6). marcucci2023-gcs 의 이론 편."
+    verified: true
+    lessons: [c6-combinatorial-gcs]
+    role: standard
   - id: kavraki1996-prm
     title: "Probabilistic roadmaps for path planning in high-dimensional configuration spaces"
     authors: ["L. E. Kavraki", "P. Svestka", "J.-C. Latombe", "M. H. Overmars"]
