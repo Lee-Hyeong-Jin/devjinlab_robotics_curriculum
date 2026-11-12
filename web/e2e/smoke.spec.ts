@@ -23,7 +23,8 @@ async function blockingViolations(page: Page): Promise<string[]> {
 
 const SCREENS = [
   { path: '/', heading: /대시보드|Dashboard/ },
-  { path: '/roadmap', heading: /로드맵|Roadmap/ },
+  // `roadmap.courseTitle` names the course first, and the English word is lower-case there.
+  { path: '/roadmap', heading: /로드맵|roadmap/i },
   { path: '/resources', heading: /자료실|Resources/ },
   { path: '/login', heading: /로그인|Sign in/ },
 ]

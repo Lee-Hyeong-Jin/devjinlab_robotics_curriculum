@@ -1,0 +1,99 @@
+# English text of the structured fields of sparsity-isam.md (activity titles, resource notes,
+# quiz). The prose lives in sparsity-isam.en.md.
+id: c5-sparsity-isam
+lang: en
+activities:
+  c5-sparsity-isam-reading: Read the lesson and follow the derivations
+  c5-sparsity-isam-papers: Read the three must-read papers + a one-page note each
+  c5-sparsity-isam-problems: "Problem set (1 proof, 1 derivation, 2 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  c5-sparsity-isam-reproduction: "Reproduction task - fill-in per ordering, incremental QR, update-cost scaling, KL sparsification (R2)"
+  c5-sparsity-isam-quiz: Concept check quiz
+resources:
+  "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
+    note: ch.3.3 (sparsity, batch vs recursive). The way into this lesson's textbook material; the full PDF is free.
+  "CMU 16-833 Robot Localization and Mapping (Kaess)":
+    note: The reference course for this module. Its description names "efficient probabilistic inference", the subject of this lesson.
+quiz:
+  - id: q1
+    prompt: According to the fill-path theorem, when does $\{u,v\}$ become a filled edge?
+    choices:
+      - When $u$ and $v$ touch the same factor
+      - When $\mathcal{G}$ has a $u$-$v$ path all of whose interior vertices are eliminated before both $u$ and $v$
+      - When $u$ and $v$ both have degree at least 3
+      - When the numerical value of $\Lambda_{uv}$ exceeds a threshold
+    explanation: >-
+      This is (1). The condition **does not depend on the values at all**, which is why the sparsity
+      can be computed ahead of time by symbolic factorization. Touching the same factor is the
+      condition for an original edge; degree and magnitude are irrelevant.
+    concept:
+      front: The fill-path theorem
+      back: >-
+        $\{u,v\}$ is a fill edge $\iff$ there is a $u$-$v$ path whose interior vertices are all
+        eliminated before $\min(\sigma(u),\sigma(v))$ - decided by the order and the graph alone
+  - id: q2
+    prompt: An odometry-only pose graph (a chain) has zero fill-in under the natural order.
+    explanation: >-
+      A chain is chordal (no induced cycle of length four or more) and the natural order is a
+      perfect elimination ordering. Each variable's separator is just the next variable, so the
+      cliques never grow. Loop closures break this by creating cycles - a cycle $C_m$ produces
+      $m-3$ fill edges under every order.
+    concept:
+      front: Fill-in of a chain or a tree
+      back: >-
+        Zero - being chordal, it has a perfect elimination ordering. The structural reason filters
+        are cheap, and loop closures destroy it
+  - id: q3
+    prompt: >-
+      When a new factor touching a variable set $V$ is added to a Bayes tree, what has to be
+      re-eliminated?
+    choices:
+      - The whole tree
+      - Only the cliques containing $V$
+      - The cliques containing $V$ and their ancestors up to the root
+      - The cliques containing $V$ and their descendants
+    explanation: >-
+      The ancestors too. If the distribution of the variables of an affected clique changes, the
+      value entering its parent's separator changes, so the parent's conditional has to be
+      re-evaluated at that value. Descendants are unaffected - their factors are **conditionals**,
+      already normalized for every value their separator might take.
+    concept:
+      front: The reach of an iSAM2 incremental update
+      back: >-
+        The cliques containing $V$ plus the ancestors up to the root. Descendants are conditionals
+        and stay fixed - this is why a Bayes tree is used rather than a Bayes net
+  - id: q4
+    prompt: What sets the cost of folding one new measurement row into an incremental QR?
+    choices:
+      - The original number of nonzeros in that row
+      - The number of variables that row touches
+      - Its first nonzero column $k_0$ - the cost is bounded by $N - k_0 + 1$
+      - The condition number of $\Lambda$
+    explanation: >-
+      Each rotation spreads the new row rightwards along the sparsity pattern of $\mathsf{R}$, so
+      the cost is set by the **position of the first nonzero column**, not by the original nonzero
+      count. Hence a factor touching only the variables at the end of the order costs $O(1)$, while
+      a loop closure reaching pose 0 costs $\Theta(N)$.
+    concept:
+      front: The cost of a Givens incremental update
+      back: >-
+        Set by the first nonzero column $k_0$ (bounded by $N-k_0+1$). $O(1)$ when it touches only
+        recent variables, $\Theta(N)$ when it reaches an old one
+  - id: q5
+    prompt: >-
+      When sparsifying a dense Gaussian obtained by marginalization onto an allowed pattern
+      $\mathcal{T}$, which $q$ minimizes $\mathrm{KL}(p\Vert q)$?
+    choices:
+      - $\Lambda_p$ with the entries outside $\mathcal{T}$ set to zero
+      - $\Sigma_p$ with the entries outside $\mathcal{T}$ set to zero
+      - The $q$ whose $\Lambda_q^{-1}$ agrees with $\Sigma_p$ on $\mathcal{T}$
+      - The $q$ with $\Lambda_q = \mathrm{diag}(\Lambda_p)$
+    explanation: >-
+      This is (10) - put zeros in the information and **match the covariance (the moments) exactly
+      on the pattern**. Option 1 asserts conditional independence while keeping all the remaining
+      information, which over-counts it and, in problem P4, underestimates the marginal standard
+      deviations by 16%.
+    concept:
+      front: KL-optimal sparsification (the M-projection)
+      back: >-
+        $(\Lambda_q^{-1})_{ij} = (\Sigma_p)_{ij}$ on $\mathcal{T}$ - zeros in the information,
+        matched moments. Deleting information entries creates overconfidence

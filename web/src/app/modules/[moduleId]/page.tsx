@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { getLocale, getTranslations } from 'next-intl/server'
 
 import { Card } from '@/components/Card'
+import { JsonLd } from '@/components/JsonLd'
 import { Chip } from '@/components/Chip'
 import { LessonRow } from '@/components/LessonRow'
 import { PageHeader } from '@/components/PageHeader'
@@ -13,6 +14,8 @@ import { getLessonProgressList, getModule, getResources } from '@/lib/api/querie
 import { isNotFound } from '@/lib/api/errors'
 import type { LessonProgress, Module } from '@/lib/api/types'
 import { formatMinutes, formatPercent } from '@/lib/format'
+import { metaDescription, pageSeo } from '@/lib/seo'
+import { breadcrumbs, moduleSchema } from '@/lib/structured-data'
 import { doneCount, lockStateFromStatus, ratio, type LockState } from '@/lib/progress'
 
 interface Params {
@@ -30,10 +33,17 @@ async function loadModule(moduleId: string): Promise<Module> {
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { moduleId } = await params
+  const path = `/modules/${encodeURIComponent(moduleId)}`
   try {
     const mod = await getModule(moduleId)
-    return { title: mod.title ?? moduleId }
+    return pageSeo({
+      path,
+      title: mod.title ?? moduleId,
+      description: metaDescription(mod.summary),
+      publishable: true,
+    })
   } catch {
+    // Unreadable (not found, or not published): a bare title, and still noindex.
     return { title: moduleId }
   }
 }
@@ -66,6 +76,15 @@ export default async function ModulePage({ params }: Params) {
 
   return (
     <>
+      <JsonLd
+        data={[
+          moduleSchema(mod, `/modules/${encodeURIComponent(moduleId)}`),
+          breadcrumbs([
+            [t('backToRoadmap'), '/roadmap'],
+            [mod.title ?? moduleId, `/modules/${encodeURIComponent(moduleId)}`],
+          ]),
+        ]}
+      />
       <PageHeader
         title={mod.title ?? moduleId}
         subtitle={mod.summary}

@@ -1,0 +1,100 @@
+# English text of the structured fields of manifold-estimation.md (activity titles, resource
+# notes, quiz). The prose lives in manifold-estimation.en.md.
+id: c5-manifold-estimation
+lang: en
+activities:
+  c5-manifold-estimation-reading: Read the lesson and follow the derivations
+  c5-manifold-estimation-papers: Read the three must-read papers + a one-page note each
+  c5-manifold-estimation-problems: "Problem set (2 proofs, 1 derivation, 2 numerical, 1 implementation, 1 counterexample)"
+  c5-manifold-estimation-reproduction: "Reproduction task - NEES of an EKF against an invariant EKF on SE(3) (R2)"
+  c5-manifold-estimation-quiz: Concept check quiz
+resources:
+  "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
+    note: ch.7 (three-dimensional geometry) and ch.8 (matrix Lie groups). The primary textbook for left and right uncertainty representations; the full PDF is free.
+  "MIT 16.485 Visual Navigation for Autonomous Vehicles (OCW)":
+    note: Recommended. L18-19 cover optimization on manifolds.
+quiz:
+  - id: q1
+    prompt: >-
+      What does the condition $D\mathcal{R}_X(0) = \mathrm{id}$ in the definition of a retraction
+      $\mathcal{R}_X$ guarantee?
+    choices:
+      - That the global minimum of the lifted problem equals the global minimum of the original
+      - That the first-order model and the critical points of the lifted problem do not depend on the retraction
+      - That $\mathcal{R}_X$ is a bijection
+      - That the Hessian does not depend on the retraction
+    explanation: >-
+      By the chain rule $D\tilde F(0) = DF(X)\circ D\mathcal{R}_X(0) = DF(X)$, so the gradient, the
+      residual Jacobians and the critical points all agree. The Hessian agrees only at a critical
+      point (where the "gradient times the retraction's second derivative" term vanishes), and
+      neither global properties nor bijectivity follow at all.
+    concept:
+      front: The retraction condition $D\mathcal{R}_X(0)=\mathrm{id}$
+      back: >-
+        It makes the first-order model, the Jacobians and the critical points independent of the
+        retraction. The Hessian agrees only at a critical point
+  - id: q2
+    prompt: Transforming a left-invariant error covariance $\Sigma_L$ into the right convention gives
+    choices:
+      - $\Sigma_R = \Sigma_L$ - the convention is only a matter of notation
+      - $\Sigma_R = \mathrm{Ad}_{\hat X}\Sigma_L\mathrm{Ad}_{\hat X}^\top$
+      - $\Sigma_R = \mathrm{Ad}_{\hat X}^{-1}\Sigma_L\mathrm{Ad}_{\hat X}^{-\top}$
+      - $\Sigma_R = J_r\Sigma_L J_r^\top$
+    explanation: >-
+      Since $\xi_R = \mathrm{Ad}_{\hat X}\xi_L$, equation (2) holds. In $SE(3)$ the $\hat pR$ block
+      of $\mathrm{Ad}$ amplifies rotational uncertainty into translation in proportion to the lever
+      arm - at $\lVert p\rVert = 10$ m the position standard deviation goes from 0.01 to 0.1005, a
+      factor of ten.
+    concept:
+      front: The left/right covariance transformation
+      back: >-
+        $\Sigma_R = \mathrm{Ad}_{\hat X}\Sigma_L\mathrm{Ad}_{\hat X}^\top$ - the lever arm amplifies
+        rotational uncertainty into position linearly. A covariance without its convention is
+        meaningless
+  - id: q3
+    prompt: >-
+      For a group-affine dynamics, write the autonomous error dynamics $g_u(\eta)$ of the
+      right-invariant error in terms of $f_u$.
+    answers: ["f_u(eta) - eta f_u(I)", "f(eta) - eta f(I)", "f_u(eta)-eta*f_u(I)", "f_u(eta) - eta f_u(e)"]
+    explanation: >-
+      It is $g_u(\eta) = f_u(\eta) - \eta f_u(I)$, equation (4). The key step of the derivation is
+      that substituting $\hat X = \eta X$ and applying the group-affine condition cancels the
+      $\eta f_u(X)X^{-1}$ term exactly, so $X$ disappears. Not one line of approximation enters.
+    concept:
+      front: Invariant error dynamics of a group-affine system
+      back: >-
+        $g_u(\eta) = f_u(\eta) - \eta f_u(I)$ - the state $X$ cancels exactly. For body-frame
+        odometry $f_u(X)=X\hat u$ it gives $g_u \equiv 0$
+  - id: q4
+    prompt: >-
+      Thanks to the log-linear property, an invariant EKF is exact for arbitrarily large errors
+      including the measurement update.
+    explanation: >-
+      The log-linear property is a theorem about **propagation**. The measurement update is still a
+      first-order expansion, so at large errors the invariant EKF is not consistent either - in the
+      reproduction task the NEES/6 at the first observation epoch is 96.9 for the EKF and 33.3 for
+      the invariant EKF. The invariant EKF reduces inconsistency; it does not remove it.
+    concept:
+      front: The scope of the log-linear property
+      back: >-
+        Propagation only. The update is still linearized - at large errors the invariant EKF is
+        overconfident too (33 vs 97, neither of them 1)
+  - id: q5
+    prompt: >-
+      Measuring a filter's NEES as in the reproduction task, what does $\mathrm{ANEES}/\dim = 6.9$
+      mean?
+    choices:
+      - The estimation error is 6.9 times larger than the theoretical value
+      - The covariance is underestimated relative to the actual error (overconfident)
+      - The covariance is overestimated (conservative)
+      - The filter has diverged
+    explanation: >-
+      Consistency is measured against $\mathbb{E}[\mathrm{NEES}] = \dim$, so
+      $\mathrm{ANEES}/\dim > 1$ means the $\Sigma$ in the denominator is too small - overconfident.
+      That is a different statement from the size of the error itself: in the reproduction task the
+      two filters have nearly the same final RMSE while their ANEES differ by a factor of two.
+    concept:
+      front: Reading ANEES/dim
+      back: >-
+        $>1$ overconfident (covariance too small), $<1$ conservative. A different axis from accuracy
+        - the RMSE can match while the ANEES differs twofold

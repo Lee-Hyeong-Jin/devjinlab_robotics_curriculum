@@ -59,6 +59,11 @@ class Settings:
     cookie_secure: bool = True
     metrics: bool = True
     metrics_token: str | None = None
+    public_content: bool = False
+    """Serve the curriculum (courses, modules, lessons, resources, search) to anonymous
+    readers so it can be crawled and linked (ADR 0016). Progress, notes, quiz results,
+    reports and the admin API always need a session. Off by default: turning it on is a
+    deliberate decision about what a deployment publishes."""
 
     @property
     def server_mode(self) -> bool:
@@ -82,6 +87,7 @@ class Settings:
             cookie_secure=env.get("RC_AUTH_COOKIE_SECURE", "1") != "0",
             metrics=env.get("RC_API_METRICS", "1") != "0",
             metrics_token=(env.get("RC_API_METRICS_TOKEN") or "").strip() or None,
+            public_content=env.get("RC_PUBLIC_CONTENT", "0") == "1",
         )
         return base.with_overrides(
             host=env.get("RC_API_HOST") or None,

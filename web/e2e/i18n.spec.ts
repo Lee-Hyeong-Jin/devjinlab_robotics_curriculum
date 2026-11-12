@@ -74,5 +74,6 @@ test('switching the locale back to Korean still works', async ({ context, page, 
     { name: 'NEXT_LOCALE', value: 'ko', url: baseURL ?? 'http://127.0.0.1:3000' },
   ])
   await page.goto('/roadmap')
-  await expect(page.getByRole('heading', { level: 1, name: '로드맵' })).toBeVisible()
+  // The heading names the course and ends with the word for "roadmap" (`roadmap.courseTitle`).
+  await expect(page.getByRole('heading', { level: 1, name: /로드맵$/ })).toBeVisible()
 })
