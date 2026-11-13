@@ -46,6 +46,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   a reproduction task whose acceptance criteria were checked by running the code, and open
   problems.
 
+### Fixed
+
+- `docker-compose.yml` passed `RC_PUBLIC_CONTENT` to neither service and gave the web no
+  `RC_PUBLIC_URL`, so setting them in `.env` did nothing to the deployment that actually runs
+  — publishing stayed off and canonical links and the sitemap pointed at `localhost`. Both
+  values now reach both services, with a test over the compose file so it cannot silently
+  regress.
+
 ### Changed
 
 - SEO. With `RC_PUBLIC_CONTENT=1` (ADR 0016) the curriculum is readable without a session and
