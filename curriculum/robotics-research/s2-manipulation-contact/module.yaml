@@ -1,0 +1,17 @@
+id: s2-manipulation-contact
+title: S2 조작·접촉
+summary: >-
+  접촉을 통해 물체를 움직이는 문제를 역학·추정·학습·계획의 네 층에서 다룬다. 마찰 원뿔과
+  렌치 공간에서 force closure 를 판정하는 것으로 시작해, 접촉 모드와 비파지 조작(밀기)의
+  limit surface, 촉각에서 접촉 상태를 역추정하는 문제의 가해성, 학습 기반 파지의 라벨 노이즈와
+  sim-to-real 격차, 생성형 정책의 점수 기반 목적함수, 마지막으로 접촉을 명시적으로 넣은
+  계획·제어(접촉 암시 MPC, GCS)까지 간다. 권장 선수는 C1-C4 와 C6 이며, 특히 C2 의 접촉
+  동역학(상보성)과 C6 의 TAMP(접촉 모드 열거)가 이 모듈의 두 기둥이다.
+level: 연구
+lessons:
+  - grasp-mechanics
+  - contact-modes-dexterity
+  - tactile-contact-estimation
+  - learned-grasping
+  - generative-policies
+  - planning-through-contact

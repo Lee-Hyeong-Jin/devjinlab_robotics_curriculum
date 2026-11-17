@@ -1,0 +1,121 @@
+id: s2-contact-modes-dexterity
+lang: en
+activities:
+  s2-contact-modes-dexterity-reading: Read the lesson and follow the derivations
+  s2-contact-modes-dexterity-papers: Read the two must-read papers and write a one-page note on each
+  s2-contact-modes-dexterity-problems: >-
+    Problem set (2 derivations, 2 proofs, 2 numerical, 1 implementation, 1 counterexample)
+  s2-contact-modes-dexterity-reproduction: >-
+    Reproduction task - integrating the limit surface, normality, and the ellipsoidal error (R2)
+  s2-contact-modes-dexterity-quiz: Concept-check quiz
+resources:
+  "Mason, Mechanics of Robotic Manipulation (MIT Press, 2001)":
+    note: >-
+      ch.5-6 (work, kinematic constraints, quasi-static manipulation). The primary textbook for this
+      lesson. (official URL unverified)
+  "SciPy":
+    note: >-
+      The convexity check uses `scipy.spatial.ConvexHull`; a numpy grid quadrature is enough for the
+      integral.
+papers:
+  lynch1996-pushing: "§2-4"
+quiz:
+  - id: q1
+    prompt: Why does the limit surface not depend on the **magnitude** of the object's twist?
+    choices:
+      - Because the quasi-static assumption makes the velocity zero
+      - >-
+        Because the direction of a Coulomb friction force is determined by the **unit** vector of the
+        sliding direction only
+      - Because the pressure distribution is uniform
+      - Because the ellipsoidal approximation is used
+    explanation: >-
+      The integrand of (6) contains $\hat u(x) = s(x)/\lVert s(x)\rVert$, so doubling the twist leaves
+      the friction wrench unchanged. Hence $w_{support}$ is a function of the **direction** of $\xi$
+      only and its image is a two-dimensional surface. With velocity-dependent friction this property
+      fails and the notion of a limit surface must be redefined.
+    concept:
+      front: Why the limit surface is a surface
+      back: >-
+        Coulomb friction uses only the **unit** sliding direction, so the wrench depends on the twist
+        direction alone
+  - id: q2
+    prompt: Where does the normality rule (the twist is normal to the limit surface) come from?
+    choices:
+      - From energy conservation
+      - >-
+        From the pointwise **maximum work dissipation** of Coulomb friction being preserved by
+        integration
+      - From a property of the ellipsoidal approximation
+      - From the quasi-static assumption
+    explanation: >-
+      At a point $x$, the friction force maximizing the dissipation $-f^\top s(x)$ is uniquely
+      $-\mu p(x) s(x)/\lVert s(x)\rVert$, and since the total dissipation separates pointwise,
+      maximality survives integration. That maximality inequality $(w - w')^\top\xi \le 0$ is exactly
+      the statement "$\xi$ is a normal" — **not an extra assumption but a consequence of Coulomb
+      friction**.
+    concept:
+      front: The basis of the normality rule
+      back: >-
+        Pointwise maximum dissipation plus linearity of the integral → $(w-w')^\top\xi \le 0$, the
+        normal condition
+  - id: q3
+    prompt: >-
+      For a uniform-pressure disc (radius $R$, load $N$, friction $\mu$), what is $\tau_{\max}$?
+    choices: ["$\\mu N R$", "$\\tfrac12\\mu N R$", "$\\tfrac23\\mu N R$", "$\\tfrac13\\mu N R$"]
+    explanation: >-
+      $\tau_{\max} = \mu\int p\,r\,dA = \mu\frac{N}{\pi R^2}\int_0^R r(2\pi r)dr = \frac23\mu N R$,
+      and the characteristic length is $c = \tau_{\max}/f_{\max} = \frac23 R$. Pressure concentrated
+      at the rim gives $c \to R$ and at the centre $c \to 0$, so $c$ is fixed by the pressure
+      distribution.
+    concept:
+      front: $\tau_{\max}$ and the characteristic length of a uniform disc
+      back: >-
+        $\tau_{\max} = \frac23\mu NR$, $c = \frac23 R$. $c$ is set by the first moment of the pressure
+  - id: q4
+    prompt: >-
+      The ellipsoidal approximation approximates the limit surface from the inside, so it
+      underestimates the frictional capability.
+    explanation: >-
+      The direction is the opposite. It is exact at the two poles (pure translation and pure rotation)
+      and $g \le 1$ in between, i.e. **the true surface lies inside the ellipsoid**. So the ellipsoid
+      **overestimates** the frictional capability. On a uniform disc the maximum error is
+      $1 - g = 12.2\%$, occurring at $|r_c| = c = 2R/3$.
+    concept:
+      front: Which way the ellipsoidal approximation errs
+      back: >-
+        The true surface is **inside** the ellipsoid → capability overestimated. Worst at
+        $|r_c| = c$, 12.2%
+  - id: q5
+    prompt: >-
+      Select everything that is true of the set of admissible twists once a contact mode is fixed.
+    choices:
+      - It is a polyhedral cone defined by linear equalities and inequalities
+      - The coefficient vector of the non-penetration condition is the same vector as that contact's wrench
+      - The sticking mode gives two equalities in the plane
+      - It remains linear under rolling, where the contact point travels along the surface
+    explanation: >-
+      The contact-point velocity (4) is linear in the twist, so the non-penetration condition (5) is
+      linear and its coefficients coincide with the contact wrench (the duality between motion
+      constraints and forces). Sticking sets both the normal and the tangential relative velocity to
+      zero, two equalities in the plane. Under rolling the contact point $x_i$ depends on the
+      **integral** of the twist and the constraint becomes non-linear — which is why the contact
+      coordinates are put into the state.
+    concept:
+      front: The twist set with a mode fixed
+      back: >-
+        A polyhedral cone; coefficients equal the contact wrench (duality). Non-linear under rolling
+  - id: q6
+    prompt: >-
+      In the ellipsoidal approximation, write $\omega/\lVert v\rVert$ produced by a pushing wrench
+      $(f, \tau)$ in terms of the characteristic length $c$.
+    answers: ["tau/(|f| c^2)", "tau / (||f|| c^2)", "$\\tau/(\\lVert f\\rVert c^2)$", "tau/(f c^2)", "tau/(|f|c^2)"]
+    explanation: >-
+      The gradient of (8) is $\nabla g \propto (f/f_{\max}^2, \tau/\tau_{\max}^2)$ and by normality
+      (2) the twist points that way, so
+      $\omega/\lVert v\rVert = (\tau/\tau_{\max}^2)/(\lVert f\rVert/f_{\max}^2) =
+      \tau/(\lVert f\rVert c^2)$. Replacing the integral (6) by a single division is the whole reason
+      this approximation exists.
+    concept:
+      front: The force-motion formula of the ellipsoidal approximation
+      back: $\omega/\lVert v\rVert = \tau/(\lVert f\rVert c^2)$ - the integral becomes a division

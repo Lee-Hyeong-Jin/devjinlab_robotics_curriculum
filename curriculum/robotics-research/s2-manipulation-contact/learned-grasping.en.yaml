@@ -1,0 +1,122 @@
+id: s2-learned-grasping
+lang: en
+activities:
+  s2-learned-grasping-reading: Read the lesson and follow the derivations
+  s2-learned-grasping-papers: Read the three must-read papers and write a one-page note on each
+  s2-learned-grasping-problems: >-
+    Problem set (2 derivations, 2 proofs, 2 numerical, 1 implementation, 1 counterexample)
+  s2-learned-grasping-reproduction: >-
+    Reproduction task - the label-noise laws and the verdict gap of the robust metric (R2 + optional R3)
+  s2-learned-grasping-quiz: Concept-check quiz
+resources:
+  "GraspNet-1Billion 벤치마크":
+    title: The GraspNet-1Billion benchmark
+    note: >-
+      The public point-cloud and grasp-label benchmark used in the optional R3 tier. Downloading it
+      requires network access.
+  "scikit-learn (지표 계산)":
+    title: scikit-learn (metric computation)
+    note: >-
+      AUC, calibration curves and the Brier score. numpy alone suffices for the reproduction task,
+      but this is convenient for cross-validation.
+papers:
+  mahler2017-dexnet2: "§3-5"
+quiz:
+  - id: q1
+    prompt: >-
+      With labels flipped symmetrically with probability $\rho$, what is the Bayes-optimal prediction
+      for the noisy label?
+    choices:
+      - $p$ unchanged
+      - $(1-2\rho)p + \rho$ - it shrinks towards $1/2$
+      - $p/(1-\rho)$
+      - $\rho p + (1-\rho)$
+    explanation: >-
+      $\mathbb{P}[\tilde y = 1] = p(1-\rho) + (1-p)\rho = (1-2\rho)p + \rho$. For $\rho < 1/2$ this is
+      monotonically increasing and affine, so the **ranking is preserved** while the values shrink
+      towards $1/2$, and the shrinkage $\rho|1-2p|$ is **largest for confident predictions** — the
+      "almost certainly succeeds" region is damaged most.
+    concept:
+      front: Calibration shrinkage under label noise
+      back: $\hat p = (1-2\rho)p + \rho$ - ranking preserved, absolute probability shrunk towards $1/2$
+  - id: q2
+    prompt: With only the evaluation labels flipped with probability $\rho$, what is the measured AUC?
+    choices:
+      - Unchanged - AUC is a ranking metric
+      - $\mathrm{AUC}_{obs} - 1/2 = (1-2\rho)(\mathrm{AUC}_{true} - 1/2)$ for a balanced base rate
+      - $\mathrm{AUC}_{obs} = (1-\rho)\mathrm{AUC}_{true}$
+      - It decays exponentially in $\rho$
+    explanation: >-
+      Collecting the mixture terms gives $\mathrm{AUC}_{obs} - 1/2 = K(\mathrm{AUC}_{true} - 1/2)$,
+      and at a balanced base rate $K$ collapses to $1-2\rho$. **That AUC is a ranking metric protects
+      the model's ranking but not the measured value** — a difference in AUC between two benchmarks
+      with different label noise may not be a difference in models. With noisy training labels too,
+      the factor becomes $(1-2\rho)^2$.
+    concept:
+      front: Shrinkage of the measured AUC
+      back: >-
+        $\mathrm{AUC} - 1/2$ shrinks by $K$ ($= 1-2\rho$ when balanced) - comparing AUCs needs equal
+        $\rho$
+  - id: q3
+    prompt: >-
+      If the nominal Ferrari–Canny metric and the perturbation-marginalized robust metric agree in
+      rank, the two produce the same labels.
+    explanation: >-
+      Agreeing in rank still leaves **the verdicts different**. In the reproduction task the Spearman
+      correlation is $1.000$ (zero inversions), yet the two configurations with nominal $Q < 0$ (not
+      force closure) have robust success rates of $0.47$ and $0.195$. Labelling by the sign of $Q$
+      discards every grasp that works about half the time — the ranking is what **selection** needs,
+      the absolute probability is what **rejection** needs.
+    concept:
+      front: Rank agreement is not label agreement
+      back: >-
+        The sign verdict of $Q$ differs from the threshold verdict of $\Pi$. Selection needs rank,
+        rejection needs probability
+  - id: q4
+    prompt: >-
+      Why is the total-variation bound $|\mathbb{E}_{real}[\ell] - \mathbb{E}_{sim}[\ell]| \le
+      \mathrm{TV}$ vacuous for point-cloud observations?
+    choices:
+      - Because the loss is unbounded
+      - Because in high dimension the two supports are nearly disjoint, so $\mathrm{TV} \to 1$
+      - Because total variation is not symmetric
+      - Because the covariate-shift assumption is unnecessary
+    explanation: >-
+      With thousands of dimensions the two distributions barely overlap, so $\mathrm{TV} \to 1$ and
+      the bound becomes the uninformative statement "the gap is at most 1". Importance weighting is
+      unbiased but its variance grows with the $\chi^2$ divergence. So practice abandons tightening
+      the bound and instead **widens the support of $P_{sim}$** (domain randomization).
+    concept:
+      front: Why the TV bound is vacuous
+      back: >-
+        $\mathrm{TV} \to 1$ in high dimension; importance weights blow up in $\chi^2$ variance - so
+        widen the support instead
+  - id: q5
+    prompt: >-
+      Select everything that must be reported alongside a paper's "grasp success rate of $x\%$" for
+      it to be comparable with another paper.
+    choices:
+      - The object set
+      - The pose distribution (the scene-generation procedure)
+      - The definition of success (lift and hold for how long, and so on)
+      - The number of retries allowed
+    explanation: >-
+      All four. Changing any one moves the number by tens of percent. Adding the $\rho$ of label
+      generation (the perturbation distribution plus the threshold), a success rate reported without
+      these five **cannot be compared** with another paper. It is the same structural problem as "an
+      unspecified normalization of $Q$" in `s2-grasp-mechanics`, one layer up.
+    concept:
+      front: The four conditions for comparing success rates
+      back: Object set + pose distribution + definition of success + retries (+ the $\rho$ of label generation)
+  - id: q6
+    prompt: >-
+      What label flip probability makes a model with $\mathrm{AUC}_{true} = 0.9068$ appear to have a
+      measured AUC of 0.75?
+    answers: ["0.193", "0.1927", "about 0.19", "19%", "0.19", "~0.19"]
+    explanation: >-
+      From (4), $0.75 = 0.5 + (1-2\rho)(0.4068)$, so $1-2\rho = 0.6146$ and $\rho = 0.1927$.
+      **19% label noise alone makes an "AUC 0.91 model" look like an "AUC 0.75 model"** — that is the
+      quantitative reason comparing AUCs across benchmarks is dangerous.
+    concept:
+      front: How much label noise hides an AUC
+      back: At $\rho = 0.19$, AUC 0.91 appears as 0.75

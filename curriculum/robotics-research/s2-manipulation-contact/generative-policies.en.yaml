@@ -1,0 +1,119 @@
+id: s2-generative-policies
+lang: en
+activities:
+  s2-generative-policies-reading: Read the lesson and follow the derivations
+  s2-generative-policies-papers: Read the three must-read papers and write a one-page note on each
+  s2-generative-policies-problems: >-
+    Problem set (2 derivations, 2 proofs, 2 numerical, 1 implementation, 1 counterexample)
+  s2-generative-policies-reproduction: >-
+    Reproduction task - mode collapse versus score sampling, and the optimal chunk length (R2)
+  s2-generative-policies-quiz: Concept-check quiz
+resources:
+  "numpy (ODE 적분과 해석적 점수)":
+    title: numpy (ODE integration and the analytic score)
+    note: >-
+      The reproduction task needs no training - write the Gaussian mixture's score in closed form and
+      integrate the ODE.
+papers:
+  chi2023-diffusion-policy: "§3-4"
+quiz:
+  - id: q1
+    prompt: >-
+      What is the key step that makes denoising score matching equivalent to minimizing the distance
+      to the true score?
+    choices:
+      - That the conditional distribution is Gaussian
+      - >-
+        That the denominator $q(x_t\mid x_0)$ of the conditional score cancels against the measure, so
+        the integral over $x_0$ produces the gradient of the marginal
+      - Putting a $\sigma_t^2$ weight on the loss
+      - Using the $\epsilon$-prediction parameterization
+    explanation: >-
+      In the cross term $\mathbb{E}\langle s_\theta, \nabla\log q(x_t\mid x_0)\rangle$ the denominator
+      of $\nabla\log q = \nabla q/q$ cancels against the measure $q(x_t\mid x_0)$, and integrating the
+      remaining $\nabla_{x_t} q(x_t\mid x_0)$ over $x_0$ gives $\nabla q_t(x_t)$. Those four lines are
+      the whole theorem. Gaussianity is a convenience that makes the conditional score **closed form**
+      and is not needed for the equivalence itself.
+    concept:
+      front: The key step of the DSM equivalence
+      back: >-
+        Cancelling the denominator plus differentiating under the integral - the $x_0$ integral gives
+        the marginal's gradient
+  - id: q2
+    prompt: >-
+      For a bimodal action distribution with modes at $\pm m$, what is the minimizer of an $L^2$
+      regression?
+    choices:
+      - Whichever mode has more data
+      - Exactly the midpoint (the conditional expectation) - a distance $m$ from each mode
+      - It alternates between the modes
+      - It picks one mode at random
+    explanation: >-
+      The minimizer of an $L^2$ loss is $\mathbb{E}[a\mid o]$ (by orthogonal decomposition), which for
+      symmetric bimodal data is exactly the midpoint, a distance $m$ from each mode. In the
+      reproduction task $m = 1$ with mode standard deviation $0.25$, so the regression output falls
+      **within $3\sigma$ of neither mode** — an action that never appears in the data.
+    concept:
+      front: Mode collapse of MSE regression
+      back: >-
+        Minimizer = conditional expectation = the midpoint. Outside the support when $m/\varsigma$ is
+        large
+  - id: q3
+    prompt: Flow matching is more expressive than score-based diffusion.
+    explanation: >-
+      On a Gaussian path the velocity field and the score convert into each other one to one by the
+      **affine relation** (2) — they learn the same object under different parameterizations. The real
+      differences are (a) the implicit $t$-weighting of the loss, (b) the choice of path (a straight
+      path needs fewer integration steps) and (c) numerical conditioning (the score diverges at small
+      $\sigma_t$). A paper claiming "flow matching is better" is making a claim about (b) and (c). On a
+      non-Gaussian path (2) fails and they really are **different model families**.
+    concept:
+      front: The relation between flow matching and diffusion
+      back: >-
+        Affinely related on a Gaussian path - equal expressiveness. The differences are weighting,
+        path and numerics
+  - id: q4
+    prompt: As the length $H$ of an open-loop action chunk grows, the tracking cost
+    choices:
+      - is independent of $H$
+      - grows linearly as $\sigma_o^2 + \sigma_w^2(H-1)/2$
+      - decreases as $1/H$
+      - grows as $H^2$
+    explanation: >-
+      Just after a correction the variance is $\sigma_o^2 + \sigma_w^2$, and with $u = 0$ thereafter it
+      is a random walk with $\mathrm{Var}[x_j] = \sigma_o^2 + j\sigma_w^2$. The chunk average is
+      $\sigma_o^2 + \sigma_w^2(H-1)/2$, a **linear growth with slope $\sigma_w^2/2$**, and the measured
+      slope $0.004941$ matches the prediction $0.005$ to within 1.2%. Because the jitter falls roughly
+      as $1/H$, the total cost has an interior optimum.
+    concept:
+      front: The tracking cost of a chunk length
+      back: $\sigma_o^2 + \sigma_w^2(H-1)/2$ - linear growth with slope $\sigma_w^2/2$
+  - id: q5
+    prompt: Select everything that is true of action chunks.
+    choices:
+      - Without a jitter (action-change) cost, $H = 1$ is always optimal
+      - The closed form $H^\ast = \sqrt{2\lambda K/\sigma_w^2}$ overestimates the measured optimum
+      - Larger observation noise makes the optimal chunk longer
+      - Chunks are only meaningful with a generative model
+    explanation: >-
+      Without the jitter term the third term vanishes and only the tracking cost remains, which grows
+      in $H$, so $H=1$ is optimal — **the jitter cost is the chunk's only reason to exist**. Equation
+      (7) assumes the per-chunk jitter $K$ is independent of $H$ and so overestimates (10.18 against an
+      actual 8). Since $H^\ast \propto \sqrt{\lambda\sigma_o^2}/\sigma_w$, worse observations favour
+      longer chunks. Chunks are used without a generative model too (as in ACT), so the last is false.
+    concept:
+      front: Why chunks exist, and their optimum
+      back: >-
+        A jitter cost is needed for a chunk to pay. $H^\ast \propto \sqrt{\lambda\sigma_o^2}/\sigma_w$,
+        and the closed form overestimates
+  - id: q6
+    prompt: On a Gaussian path, write $\mathbb{E}[\epsilon \mid x_t = x]$ in terms of the score $s_t$.
+    answers: ["-sigma_t s_t(x)", "-sigma_t * s_t", "$-\\sigma_t s_t(x)$", "-sigma_t s_t", "minus sigma_t times the score"]
+    explanation: >-
+      This is Tweedie's identity: $\mathbb{E}[\epsilon\mid x_t] = -\sigma_t s_t(x)$, together with
+      $\mathbb{E}[x_0\mid x_t] = (x + \sigma_t^2 s_t)/\alpha_t$. Substituting both into
+      $u_t = \dot\alpha\mathbb{E}[x_0\mid x_t] + \dot\sigma\mathbb{E}[\epsilon\mid x_t]$ gives the
+      affine relation (2). Off a Gaussian path the identity fails.
+    concept:
+      front: Tweedie's identity
+      back: $\mathbb{E}[\epsilon\mid x_t] = -\sigma_t s_t$, $\mathbb{E}[x_0\mid x_t] = (x+\sigma_t^2 s_t)/\alpha_t$

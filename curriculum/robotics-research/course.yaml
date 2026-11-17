@@ -18,4 +18,5 @@ modules:
   - c6-motion-planning-theory
   - c7-perception-3d-representations
   - c8-decision-making-learning-theory
+  - s2-manipulation-contact
   - r1-research-methodology
