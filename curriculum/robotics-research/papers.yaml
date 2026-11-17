@@ -1660,8 +1660,51 @@ papers:
     note: "arXiv v1 2023. Nature 2025 게재는 미확인"
 
   # ── S1 SLAM·공간 지능 ───────────────────────────────────────────
-  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
-
+  - id: newcombe2011-kinectfusion
+    title: "KinectFusion: real-time dense surface mapping and tracking"
+    authors: ["R. A. Newcombe", "S. Izadi", "O. Hilliges", "et al."]
+    year: 2011
+    venue: "ISMAR"
+    url: "https://doi.org/10.1109/ISMAR.2011.6092378"
+    verified: true
+    role: seminal
+    note: "the GPU TSDF pipeline: fusion, raycasting and frame-to-model ICP"
+  - id: sucar2021-imap
+    title: "iMAP: implicit mapping and positioning in real-time"
+    authors: ["E. Sucar", "S. Liu", "J. Ortiz", "A. J. Davison"]
+    year: 2021
+    venue: "ICCV"
+    url: "https://arxiv.org/abs/2103.12352"
+    verified: true
+    role: frontier
+    note: "a single MLP as the map, with keyframe replay against forgetting"
+  - id: curless1996-vrip
+    title: "A volumetric method for building complex models from range images"
+    authors: ["B. Curless", "M. Levoy"]
+    year: 1996
+    venue: "SIGGRAPH"
+    url: "https://doi.org/10.1145/237170.237269"
+    verified: true
+    role: seminal
+    note: "the origin of the weighted signed-distance average and of truncation"
+  - id: galvez-lopez2012-dbow2
+    title: "Bags of binary words for fast place recognition in image sequences"
+    authors: ["D. Galvez-Lopez", "J. D. Tardos"]
+    year: 2012
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2012.2197158"
+    verified: true
+    role: seminal
+    note: "the binary bag-of-words place recogniser and its verification stages"
+  - id: yang2020-gnc
+    title: "Graduated non-convexity for robust spatial perception: from non-minimal solvers to global outlier rejection"
+    authors: ["H. Yang", "P. Antonante", "V. Tzoumas", "L. Carlone"]
+    year: 2020
+    venue: "IEEE RA-L"
+    url: "https://arxiv.org/abs/1909.08605"
+    verified: true
+    role: standard
+    note: "arXiv v1 2019-09-18, journal_ref RA-L 2020"
   # ── S2 조작·접촉 ────────────────────────────────────────────────
   - id: ferrari1992-grasp-quality
     title: "Planning optimal grasps"

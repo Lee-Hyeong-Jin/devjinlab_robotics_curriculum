@@ -261,6 +261,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   maximisation with a measured angular-velocity estimate on the public ECD dataset, the
   non-convexity of that objective, and GelSight photometric stereo with the measured failure
   condition of volume-based force estimation.
+- Research track module S1 (SLAM and spatial AI) under
+  `curriculum/robotics-research/s1-slam-spatial-ai/`, starting with `s1-vio-systems`: the filter
+  and optimisation architectures of VIO, a proof that MSCKF's null-space projection is exact
+  marginalisation, the four unobservable directions of monocular VIO with the measured weak
+  observability of roll, pitch and scale, and a Monte Carlo showing that a filter pays in the tail
+  of the consistency statistic rather than in RMSE.
+- `s1-loop-closure-lifelong`: the precision-recall law of place recognition (with the measured
+  threshold growing linearly in the log of the database size), the factor-of-22 damage a single
+  false loop does to a least-squares pose graph, the contamination rates at which Huber and GNC
+  give out, and why map sparsification is naturally overconfident, measured in KLD.
 - `curriculum/robotics-research/papers.yaml`: the course paper registry (ADR 0014) with the
   eleven papers the C7 lessons assign; both C7 lessons reference them through front-matter
   `papers:` and `rc papers <lesson_id>` lists them.
