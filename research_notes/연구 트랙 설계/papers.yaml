@@ -529,6 +529,15 @@ papers:
     verified: true
     lessons: [c4-contact-implicit-hybrid]
     role: standard
+  - id: bansal2017-hj-reachability
+    title: "Hamilton-Jacobi reachability: a brief overview and recent advances"
+    authors: ["S. Bansal", "M. Chen", "S. Herbert", "C. J. Tomlin"]
+    year: 2017
+    venue: "CDC"
+    url: "https://doi.org/10.1109/CDC.2017.8263977"
+    verified: true
+    lessons: [c4-robust-stochastic-oc]
+    role: survey
   - id: mitchell2005-hji-reachability
     title: "A time-dependent Hamilton-Jacobi formulation of reachable sets for continuous dynamic games"
     authors: ["I. M. Mitchell", "A. M. Bayen", "C. J. Tomlin"]

@@ -473,6 +473,34 @@ papers:
     role: standard
 
   # ── C4 최적 제어·궤적 최적화 ─────────────────────────────────────────
+  - id: mitchell2005-hji-reachability
+    title: "A time-dependent Hamilton-Jacobi formulation of reachable sets for continuous dynamic games"
+    authors: ["I. M. Mitchell", "A. M. Bayen", "C. J. Tomlin"]
+    year: 2005
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.2005.851439"
+    verified: true
+  - id: todorov2005-ilqg
+    title: "A generalized iterative LQG method for locally-optimal feedback control of constrained nonlinear stochastic systems"
+    authors: ["E. Todorov", "W. Li"]
+    year: 2005
+    venue: "ACC"
+    url: "https://doi.org/10.1109/ACC.2005.1469949"
+    verified: true
+  - id: mayne2005-tube-mpc
+    title: "Robust model predictive control of constrained linear systems with bounded disturbances"
+    authors: ["D. Q. Mayne", "M. M. Seron", "S. V. Rakovic"]
+    year: 2005
+    venue: "Automatica"
+    url: "https://doi.org/10.1016/j.automatica.2004.08.019"
+    verified: true
+  - id: bansal2017-hj-reachability
+    title: "Hamilton-Jacobi reachability: a brief overview and recent advances"
+    authors: ["S. Bansal", "M. Chen", "S. Herbert", "C. J. Tomlin"]
+    year: 2017
+    venue: "CDC"
+    url: "https://doi.org/10.1109/CDC.2017.8263977"
+    verified: true
   - id: posa2014-contact-implicit
     title: "A direct method for trajectory optimization of rigid bodies through contact"
     authors: ["M. Posa", "C. Cantu", "R. Tedrake"]
