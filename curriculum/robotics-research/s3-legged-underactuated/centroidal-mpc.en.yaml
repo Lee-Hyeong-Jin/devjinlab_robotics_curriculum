@@ -1,0 +1,78 @@
+# English text of the structured fields of centroidal-mpc.md (activity titles, resource
+# notes, paper notes, quiz). The prose lives in centroidal-mpc.en.md.
+id: s3-centroidal-mpc
+lang: en
+activities:
+  s3-centroidal-mpc-reading: Read the lesson and follow the derivations
+  s3-centroidal-mpc-papers: Read the two must-reads plus two recommended papers, with a one-page note each
+  s3-centroidal-mpc-problems: "Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample)"
+  s3-centroidal-mpc-reproduction: "Reproduction task - linear centroidal MPC and the recovery limit (R2)"
+  s3-centroidal-mpc-quiz: Concept check quiz
+resources:
+  "Kajita, Hirukawa, Harada & Yokoi, Introduction to Humanoid Robotics (2014)":
+    note: ch.4 - the textbook treatment of the ZMP, the LIPM and walking pattern generation. (official URL unverified)
+  "Tedrake, Underactuated Robotics":
+    note: ch.18-19 - the robotics-side entry point to centroidal dynamics, the ZMP and MPC. Free in full.
+  "CVXPY":
+    note: Solves the MPC QP of the reproduction task. Any solver will do (the reference implementation uses CLARABEL).
+papers:
+  kajita2003-zmp-preview: "§II, §III"
+  dicarlo2018-convex-mpc: "§III, §IV"
+  orin2013-centroidal: "§2, §4"
+quiz:
+  - id: q1
+    prompt: "Why do joint torques not appear in the centroidal dynamics (1)?"
+    choices:
+      - Because joint torques are small
+      - Because joint torques are internal forces and so do not contribute to the rate of change of total momentum
+      - Because the centre of mass was chosen as the reference point
+      - Because gravity dominates
+    explanation: >-
+      Summing every body's Newton-Euler equation cancels internal forces in action-reaction pairs,
+      leaving only gravity and contact forces. An **actuated ankle** is the exception, being an
+      external moment between the ground and the robot — which is why flat-footed robots are easier
+      than point-footed ones.
+    concept:
+      front: Why the centroidal dynamics have no joint torques
+      back: Internal forces cannot change total momentum; an actuated ankle is external and so is the exception
+  - id: q2
+    prompt: >-
+      Write the definition of the DCM (capture point) in the LIPM in terms of $x$, $\dot x$ and
+      $\omega$.
+    answers: ["x + xdot/omega", "x + v/omega", "x + xdot/w"]
+    explanation: >-
+      $\xi = x + \dot x/\omega$, which satisfies $\dot\xi = \omega(\xi - p)$ and so contains **only
+      the unstable mode**. The opposite combination $x - \dot x/\omega$ converges by itself like
+      $e^{-\omega t}$, so walking control becomes the problem of handling $\xi$ alone.
+    concept:
+      front: The DCM (capture point)
+      back: "$\\xi = x + \\dot x/\\omega$ with $\\dot\\xi = \\omega(\\xi-p)$ - the unstable mode of the LIPM"
+  - id: q3
+    prompt: >-
+      Putting the CoP at the capture point ($p = \xi$) makes the DCM converge to zero.
+    explanation: >-
+      With $p=\xi$, (4) gives $\dot\xi = 0$, so the DCM **stays where it is**. To shrink it the CoP
+      must go beyond $\xi$, and the available margin is the support polygon $p_{\max}$ — which is
+      how the recovery condition $|\xi| < p_{\max}$ arises.
+    concept:
+      front: What $p=\xi$ does
+      back: >-
+        The DCM freezes (it does not converge). Shrinking it needs $p$ beyond $\xi$, hence
+        $|\xi|<p_{\max}$ as the recovery condition.
+  - id: q4
+    prompt: >-
+      What is the typical symptom of a linear MPC without a terminal DCM constraint under a large
+      disturbance?
+    choices:
+      - The QP reports infeasible
+      - The QP reports optimal while the DCM at the end of the horizon diverges
+      - The CoP leaves the support polygon
+      - The computation time explodes
+    explanation: >-
+      Since $e^{\omega\Delta t}>1$, the cost only sees **inside** the horizon. In the
+      $\Delta v = 0.3$ m/s experiment the QP returned "optimal" with
+      $|\xi_N| = 39.3$ m — the QP succeeds and the robot falls. With the terminal constraint it
+      honestly reports infeasible for the same push.
+    concept:
+      front: The trap of MPC without a terminal constraint
+      back: The unstable mode diverges beyond the horizon - the QP succeeds and the robot falls over

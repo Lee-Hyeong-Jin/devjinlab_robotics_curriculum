@@ -20,5 +20,6 @@ modules:
   - c7-perception-3d-representations
   - c8-decision-making-learning-theory
   - s2-manipulation-contact
+  - s3-legged-underactuated
   - r1-research-methodology
   - r2-capstone

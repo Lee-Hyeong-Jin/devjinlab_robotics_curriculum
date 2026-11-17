@@ -1,0 +1,89 @@
+# English text of the structured fields of hybrid-limit-cycles.md (activity titles,
+# resource notes, paper notes, quiz). The prose lives in hybrid-limit-cycles.en.md.
+id: s3-hybrid-limit-cycles
+lang: en
+activities:
+  s3-hybrid-limit-cycles-reading: Read the lesson and follow the derivations
+  s3-hybrid-limit-cycles-papers: Read the three must-read papers + a one-page note each
+  s3-hybrid-limit-cycles-problems: "Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 paper)"
+  s3-hybrid-limit-cycles-reproduction: "Reproduction task - the Poincare map and eigenvalues of a compass gait (R2)"
+  s3-hybrid-limit-cycles-quiz: Concept check quiz
+resources:
+  "Tedrake, Underactuated Robotics":
+    note: >-
+      ch.4 (Simple Models of Walking and Running) and ch.17 - the entry point to passive walkers
+      and Poincare analysis. Free in full.
+  "Westervelt, Grizzle, Chevallereau, Choi & Morris, Feedback Control of Dynamic Bipedal Robot Locomotion (2007)":
+    note: >-
+      ch.3-4 - the standard textbook treatment of hybrid systems with impulse effects and their
+      Poincare analysis. (official URL unverified)
+  "SciPy":
+    note: Used for event detection (the `events` argument of solve_ivp) and root finding (fsolve) in the reproduction task.
+papers:
+  grizzle2001-asymptotically-stable-walking: "§II, §III"
+  goswami1998-compass-gait: "§3, §5"
+quiz:
+  - id: q1
+    prompt: >-
+      Why does the saltation matrix differ from $DR$ when a perturbation passes through an impact?
+    choices:
+      - Because the reset map is nonlinear
+      - "Because the perturbed trajectory **reaches the guard at a different time**, and comparing at the same instant requires correcting for that difference"
+      - Because the impact dissipates energy
+      - Because the guard is not a hyperplane
+    explanation: >-
+      The perturbed trajectory meets the guard slightly earlier or later. Flowing by that
+      difference, $\delta t = -\nabla h^\top\delta x^-/(\nabla h^\top f^-)$, under both vector
+      fields is the second term of (2). Omitting it leaves a first-order error - which the lesson
+      measures.
+    concept:
+      front: The second term of the saltation matrix
+      back: >-
+        The correction for the event-time perturbation $\delta t$ - omit it and the answer is wrong
+        at first order. $\Xi f^- = f^+$ is a structural identity.
+  - id: q2
+    prompt: >-
+      The Poincare map Jacobian $DP$ always has an eigenvalue 1 because of the direction tangent to
+      the orbit.
+    explanation: >-
+      The flow Jacobian $\Phi(T^\star)$ does have eigenvalue 1 along the tangent, but the section
+      $\Sigma$ removes that direction, so it never appears in the spectrum of $DP$. That is what
+      makes the test "all eigenvalues inside the unit circle" clean. For the compass gait the
+      eigenvalues came out as $-0.158\pm0.560i$ and $0.135$.
+    concept:
+      front: Why $DP$ has no eigenvalue 1
+      back: >-
+        The section removes the direction tangent to the orbit - the $\iota$ of
+        $DP = \Pi\,\Xi\,\Phi(T^\star)\,\iota$ does that job.
+  - id: q3
+    prompt: >-
+      On a limit cycle, which quantity must equal the energy lost in one impact? (as a formula)
+    answers: ["(2m+mH) g sin(gamma) * 2 l sin(alpha)", "total mass * g * sin gamma * step length", "M g sin gamma step length"]
+    explanation: >-
+      The work gravity puts in while descending the slope,
+      $(2m+m_H)g\sin\gamma\cdot2\ell\sin\alpha^\star$. In the lesson's numbers both sides are
+      5.17098115 J with a relative gap of 4.8e-10 - the strongest single check of the equations of
+      motion and the impact map together.
+    concept:
+      front: Energy balance of passive walking
+      back: >-
+        Impact loss = (total mass)$g\sin\gamma\times$step length. A necessary condition for a limit
+        cycle.
+  - id: q4
+    prompt: >-
+      Which two conservation laws are used to derive the impact map of the compass gait?
+    choices:
+      - Total linear momentum and total energy
+      - "Total angular momentum about the new stance foot, and the angular momentum of the (post-impact) swing leg about the hip"
+      - The kinetic energy of each leg
+      - Total angular momentum about the hip, and total energy
+    explanation: >-
+      Pick the two axes about which the impulses exert no moment: the impacting foot (the new
+      stance foot) for the whole system, and the hip pin for the leg that is now in the air. Energy
+      is not conserved (it is dissipated). Writing the two laws for different physical legs before
+      and after yields the identity map.
+    concept:
+      front: The two conservation laws of the impact map
+      back: >-
+        Total angular momentum about the new stance foot + the swing leg's angular momentum about
+        the hip. Energy is not conserved.

@@ -2007,8 +2007,114 @@ papers:
     note: "2026-11-13 Crossref 확인(RA-L, 2025-11)."
 
   # ── S3 보행·언더액추에이티드 ──────────────────────────────────────────
-  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
-
+  - id: grizzle2001-asymptotically-stable-walking
+    title: "Asymptotically stable walking for biped robots: analysis via systems with impulse effects"
+    authors: ["J. W. Grizzle", "G. Abba", "F. Plestan"]
+    year: 2001
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/9.898695"
+    note: "Crossref 확인(2001). 같은 해의 정정(erratum)은 10.1109/TAC.2001.911439 다"
+    verified: true
+    role: seminal
+  - id: garcia1998-simplest-walker
+    title: "The simplest walking model: stability, complexity, and scaling"
+    authors: ["M. Garcia", "A. Chatterjee", "A. Ruina", "et al."]
+    year: 1998
+    venue: "ASME J. Biomechanical Engineering"
+    url: "https://doi.org/10.1115/1.2798313"
+    note: "Crossref 확인(1998-04). 제4저자 M. Coleman"
+    verified: true
+    role: seminal
+  - id: sentis2005-wbc
+    title: "Synthesis of whole-body behaviors through hierarchical control of behavioral primitives"
+    authors: ["L. Sentis", "O. Khatib"]
+    year: 2005
+    venue: "Int. J. Humanoid Robotics"
+    url: "https://doi.org/10.1142/S0219843605000594"
+    note: "Crossref 확인(2005-12). 레코드의 제목은 전부 대문자로 저장되어 있다"
+    verified: true
+    role: seminal
+  - id: escande2014-hierarchical-qp
+    title: "Hierarchical quadratic programming: fast online humanoid-robot motion generation"
+    authors: ["A. Escande", "N. Mansard", "P.-B. Wieber"]
+    year: 2014
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364914521306"
+    note: "Crossref 확인(2014-05)"
+    verified: true
+    role: standard
+  - id: herzog2016-momentum-wbc
+    title: "Momentum control with hierarchical inverse dynamics on a torque-controlled humanoid"
+    authors: ["A. Herzog", "N. Rotella", "S. Mason", "et al."]
+    year: 2016
+    venue: "Autonomous Robots"
+    url: "https://doi.org/10.1007/s10514-015-9476-6"
+    note: "Crossref 확인. online-first 는 2015-08-04 이고 지면 게재는 Autonomous Robots 40 (2016). 공저자 F. Grimminger, S. Schaal, L. Righetti"
+    verified: true
+    role: standard
+  - id: kajita2003-zmp-preview
+    title: "Biped walking pattern generation by using preview control of zero-moment point"
+    authors: ["S. Kajita", "F. Kanehiro", "K. Kaneko", "et al."]
+    year: 2003
+    venue: "IEEE ICRA"
+    url: "https://doi.org/10.1109/ROBOT.2003.1241826"
+    note: "Crossref 확인. date 필드가 비어 있어 연도는 프로시딩 제목에서 읽었다"
+    verified: true
+    role: seminal
+  - id: dicarlo2018-convex-mpc
+    title: "Dynamic locomotion in the MIT Cheetah 3 through convex model-predictive control"
+    authors: ["J. Di Carlo", "P. M. Wensing", "B. Katz", "et al."]
+    year: 2018
+    venue: "IEEE IROS"
+    url: "https://doi.org/10.1109/IROS.2018.8594448"
+    note: "Crossref 확인(2018-10). 공저자 G. Bledt, S. Kim"
+    verified: true
+    role: standard
+  - id: pratt2006-capture-point
+    title: "Capture point: a step toward humanoid push recovery"
+    authors: ["J. Pratt", "J. Carff", "S. Drakunov", "et al."]
+    year: 2006
+    venue: "IEEE-RAS Humanoids"
+    url: "https://doi.org/10.1109/ICHR.2006.321385"
+    note: "Crossref 확인(2006-12). 제4저자 A. Goswami"
+    verified: true
+    role: seminal
+  - id: orin2013-centroidal
+    title: "Centroidal dynamics of a humanoid robot"
+    authors: ["D. E. Orin", "A. Goswami", "S.-H. Lee"]
+    year: 2013
+    venue: "Autonomous Robots"
+    url: "https://doi.org/10.1007/s10514-013-9341-4"
+    note: "Crossref 확인(2013-06)"
+    verified: true
+    role: standard
+  - id: westervelt2003-hzd
+    title: "Hybrid zero dynamics of planar biped walkers"
+    authors: ["E. R. Westervelt", "J. W. Grizzle", "D. E. Koditschek"]
+    year: 2003
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.2002.806653"
+    note: "Crossref 확인(2003-01). 2002 IFAC 판(10.3182/20020721-6-es-1901.00904)과 다른 논문이다"
+    verified: true
+    role: seminal
+  - id: ames2014-hzd-experimental
+    title: "Human-inspired control of bipedal walking robots"
+    authors: ["A. D. Ames"]
+    year: 2014
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.2014.2299342"
+    note: "Crossref 확인(2014-05). 사람 데이터에서 가상 제약을 만들어 NAO 에서 실기 검증한 사례"
+    verified: true
+    role: standard
+  - id: goswami1998-compass-gait
+    title: "A study of the passive gait of a compass-like biped robot: symmetry and chaos"
+    authors: ["A. Goswami", "B. Thuilot", "B. Espiau"]
+    year: 1998
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/027836499801701202"
+    note: "Crossref 확인(1998-12). 레코드의 제목에는 부제가 없다"
+    verified: true
+    role: standard
   # ── S4 로봇 학습·파운데이션 모델 ───────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 

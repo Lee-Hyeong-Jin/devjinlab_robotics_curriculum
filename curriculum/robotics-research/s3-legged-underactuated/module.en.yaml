@@ -1,0 +1,12 @@
+id: s3-legged-underactuated
+lang: en
+title: "S3 Legged and underactuated robots"
+summary: >-
+  Walking robots treated as hybrid dynamical systems. Stability of a periodic orbit with impacts
+  is decided with the Poincare map and the saltation matrix; gaits are designed with hybrid zero
+  dynamics; whole-body motion is planned with centroidal dynamics and MPC; task priorities are
+  kept by hierarchical QPs; what a reinforcement-learning pipeline does and does not guarantee is
+  examined; and dynamic manoeuvres over rough terrain are treated down to the design of hardware
+  evaluation. Recommended prerequisites are C1-C4; the graduate courses behind it are CMU 16-745,
+  MIT 6.8210 and ETH Robot Dynamics, and the textbooks are Westervelt et al. and Tedrake's
+  Underactuated Robotics ch.4 and ch.17.

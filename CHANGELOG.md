@@ -322,6 +322,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the minimum-intervention QP from the KKT conditions, the exponential CBF chain for a
   relative-degree-two constraint, and a reproduction task that measures how input limits break the
   guarantee (95 of 189 runs saturate at $u_{\max}=2$, worst $h = -0.138$).
+- Research-track module S3 (legged and underactuated robots) under
+  `curriculum/robotics-research/s3-legged-underactuated/`: lesson 1, hybrid dynamics and limit
+  cycles, in Korean and English — the Poincare map and orbital stability of a periodic orbit with
+  impacts, the saltation matrix derived from the event-time perturbation, the compass-gait
+  equations of motion and impact map derived from scratch, and a reproduction task whose numbers
+  (limit cycle, eigenvalues, energy balance, second-order saltation check) cross-validate each
+  other. It is the first lesson to use the structured ```problemset block.
+- Research-track lesson 2 of module S3, hybrid zero dynamics and gait generation, in Korean and
+  English: virtual constraints and the zero dynamics surface, impact invariance as the boundary
+  conditions of a Bezier virtual constraint, the one-dimensional affine return map that follows
+  from the hip torque having no moment about the stance foot, and a reproduction task in which the
+  reduced model's predicted rate matches the four-state model's dominant Poincare eigenvalue to
+  eight digits.
+- Research-track lesson 3 of module S3, centroidal dynamics and MPC walking, in Korean and
+  English: the centroidal dynamics derived from whole-body Newton-Euler (and verified on a
+  point-footed walker while the hip torque is swung), the CoP/ZMP equation, the LIPM and the DCM in
+  closed form, and a reproduction task that measures the recovery limit $\omega p_{\max}$ and shows
+  an MPC without a terminal constraint reporting "optimal" with a 39 m terminal DCM.
+- Research-track lesson 4 of module S3, whole-body control and hierarchical QPs, in Korean and
+  English: the null-space projection hierarchy and its priority-preservation proof, the equivalence
+  with a lexicographic QP for equality tasks, measurements showing that clipping a projection
+  solution destroys the priority while a weighted sum leaks in proportion to its weight, and what a
+  lexicographic QP guarantees when the top level is infeasible.
 - Module C3 moved onto the schema the paper registry added (AUTHORING §8-1): its 22 papers are
   registered in `curriculum/robotics-research/papers.yaml` (all with verified URLs), each lesson
   references them from front-matter `papers[]` with `required`/`role` and a language-neutral
