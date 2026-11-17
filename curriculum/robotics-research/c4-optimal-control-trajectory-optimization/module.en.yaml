@@ -1,0 +1,12 @@
+id: c4-optimal-control-trajectory-optimization
+lang: en
+title: "C4 Optimal control and trajectory optimization"
+summary: >-
+  Start from the first-order necessary conditions of optimal control (Pontryagin's minimum
+  principle) and work through dynamic programming, LQR and LQG, iLQR/DDP, direct methods
+  (collocation and SQP), MPC and its stability guarantees, trajectory optimization through
+  contact, and robust and stochastic optimal control. This is the central module of the research
+  track: every lesson derives its key results and reproduces the primary papers numerically. The
+  graduate courses behind it are all of CMU 16-745 and Stanford AA203 plus Berkeley CS287; the
+  textbooks are Tedrake's Underactuated Robotics ch.7-10 and 13 and Nocedal-Wright ch.18.
+  The module is designed as seven lessons.

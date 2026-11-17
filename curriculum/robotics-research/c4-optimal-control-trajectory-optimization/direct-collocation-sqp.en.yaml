@@ -1,0 +1,138 @@
+# English text of the structured fields of direct-collocation-sqp.md (activity titles,
+# resource notes, quiz). The prose lives in direct-collocation-sqp.en.md.
+id: c4-direct-collocation-sqp
+lang: en
+activities:
+  c4-direct-collocation-sqp-reading: Read the lesson and follow the derivations
+  c4-direct-collocation-sqp-papers: Read the three must-read papers + a one-page note each
+  c4-direct-collocation-sqp-problems: "Problem set (2 derivations, 1 proof, 2 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  c4-direct-collocation-sqp-reproduction: "Reproduction task - acrobot swing-up and separating the defect from the error (R2)"
+  c4-direct-collocation-sqp-quiz: Concept check quiz
+resources:
+  "Tedrake, Underactuated Robotics — Trajectory Optimization":
+    title: "Tedrake, Underactuated Robotics - Trajectory Optimization"
+    note: ch.10.2 is the direct methods. Read it alongside the indirect methods of 10.1. Free in full.
+  "Stanford AA203 Optimal and Learning-based Control":
+    note: The lecture notes and homework of the weeks covering direct methods and SQP are public.
+  "Nocedal & Wright, Numerical Optimization":
+    note: ch.18 (SQP), ch.12 (KKT and LICQ), ch.15.5 (the Maratos effect), ch.10 (Gauss-Newton). (official URL unverified)
+  "CasADi":
+    note: The de facto standard tool that handles transcription and automatic differentiation together. The reproduction task needs only numpy, but practice uses this.
+quiz:
+  - id: q1
+    prompt: What is the fundamental reason the transcribed NLP's constraint Jacobian is sparse?
+    choices:
+      - Because there are more state variables than control variables
+      - "Because the defect $\\zeta_k$ depends only on $(x_k, x_{k+1}, u_k, u_{k+1})$"
+      - Because Hermite-Simpson is a fourth-order method
+      - Because the cost function separates stagewise
+    explanation: >-
+      Because one interval's defect couples only the variables of two adjacent grid points. That
+      makes the nonzero count $n(2n+2m)N + 2n$, **linear** in $N$, while the dense size grows as
+      $N^2$, so the fill tends to $2/N$. Separability of the cost helps by making $W$ block
+      diagonal, but the Jacobian's sparsity comes from the locality of the defect. A higher-order
+      pseudospectral transcription couples every point inside an interval and loses this sparsity.
+    concept:
+      front: Why the transcribed Jacobian is sparse
+      back: >-
+        A defect couples only two adjacent grid points, giving nnz = $n(2n+2m)N + 2n$ and a fill
+        tending to $2/N$
+  - id: q2
+    prompt: >-
+      Why is the midpoint state of Hermite-Simpson
+      $x_m = \frac12(x_k + x_{k+1}) + \frac{h}{8}(f_k - f_{k+1})$?
+    choices:
+      - Because those are the weights of Simpson's quadrature rule
+      - "Because it is the cubic Hermite interpolant - matched to the values and derivatives at both ends - evaluated at $s = 1/2$"
+      - Because it is a free parameter used to satisfy the dynamics at the midpoint
+      - "Because it is a correction chosen after the fact to reach $O(h^4)$ accuracy"
+    explanation: >-
+      $x_m$ is not a decision variable but **the value of the interpolant**. Substituting
+      $H_{00}(1/2)=H_{01}(1/2)=1/2$, $H_{10}(1/2)=1/8$ and $H_{11}(1/2)=-1/8$ gives that
+      expression. And setting the interpolant's derivative at the midpoint equal to the dynamics
+      yields the Simpson defect $x_{k+1}-x_k = \frac{h}{6}(f_k + 4f_m + f_{k+1})$ as a
+      **conclusion** — the quadrature rule is not an assumption.
+    concept:
+      front: Where the $h/8$ term of $x_m$ comes from
+      back: >-
+        The cubic Hermite interpolant evaluated at the midpoint. The Simpson defect is the result
+        of collocating that interpolant at the midpoint
+  - id: q3
+    prompt: What is the global convergence order of Hermite-Simpson? (a number)
+    answers: ["4", "four", "O(h^4)", "h^4", "fourth order"]
+    explanation: >-
+      It coincides with three-stage Lobatto IIIA, so the order is $2s-2 = 4$ with local error
+      $O(h^5)$. The amplification factor is the $(2,2)$ Padé approximant of $e^z$ and the leading
+      error term is $z^5/720$. Numerically the observed order is $4.00$ on both a linear and a
+      nonlinear ODE.
+    concept:
+      front: The order of Hermite-Simpson
+      back: >-
+        Global order four, local $O(h^5)$. Identical to three-stage Lobatto IIIA, with the $(2,2)$
+        Padé approximant of $e^z$ as its amplification factor
+  - id: q4
+    prompt: >-
+      Reducing the defect to machine precision makes the interpolated trajectory satisfy the
+      dynamics to the same accuracy.
+    explanation: >-
+      The defect is a condition at only **three points** per interval ($t_k$, the midpoint,
+      $t_{k+1}$). The residual in between shrinks as $O(h^4)$ but is not small at all on a coarse
+      grid. On the acrobot, a defect of $9\times10^{-15}$ came with a residual of
+      $1.2\times10^{2}$ at the interior Gauss points — seventeen orders of magnitude. That is why
+      the error estimate for mesh refinement must be the **interpolant residual**, not the defect.
+    concept:
+      front: Defect is not trajectory error
+      back: >-
+        The defect is a condition only at the collocation points. Mesh refinement must judge by the
+        interpolant residual at non-collocation points
+  - id: q5
+    prompt: On what grounds does SQP converge locally at second order?
+    choices:
+      - Because the subproblem is a quadratic program
+      - "Because the subproblem's KKT conditions are the Newton equations of the nonlinear KKT system $F(z,\\lambda)=0$, and LICQ with SOSC make $\\nabla F$ invertible"
+      - Because the constraints are equalities
+      - Because the merit function decreases monotonically
+    explanation: >-
+      "It solves a QP" is not enough — approximating the Hessian destroys quadratic convergence.
+      The key points are that (16) and (17) are the same equations, and that invertibility follows
+      from the null-space argument on the KKT matrix (SOSC gives $d=0$, LICQ gives $v=0$).
+      Quasi-Newton gives superlinear and Gauss-Newton first-order convergence.
+    concept:
+      front: SQP = Newton on the KKT system
+      back: >-
+        The subproblem's KKT conditions are identical to the Newton equations of $F=0$. Quadratic
+        convergence needs LICQ + SOSC + the exact Hessian + unit steps
+  - id: q6
+    prompt: >-
+      Solving the KKT system with full Newton steps always reaches a minimum.
+    explanation: >-
+      Newton goes to a **solution** of $F(z,\lambda)=0$, i.e. a KKT point, which may be a maximum
+      or a saddle. Solving Hock-Schittkowski problem 7 from $x_0=(2,2)$ with full steps makes the
+      KKT residual converge quadratically but lands on $(0.4996, -1.5616)$, not the minimum
+      $(0,\sqrt3)$. Adding an $\ell_1$ merit function with backtracking reaches the minimum, but
+      only after a stretch of tiny steps, and brings in the Maratos effect — the same structure as
+      the merit discussion in iLQR.
+    concept:
+      front: Where Newton on KKT lands
+      back: >-
+        A KKT point (possibly a maximum or saddle). Reaching a minimum needs a merit function and a
+        line search, at the price of the Maratos effect
+  - id: q7
+    prompt: >-
+      On a linear-quadratic problem, what is the relation between "a direct method with a sparse
+      KKT factorisation" and the Riccati recursion?
+    choices:
+      - They are different approximations and Riccati is the more accurate one
+      - They are the same computation - the same banded matrix eliminated in the same order
+      - The direct method is more general but converges at a lower order
+      - Riccati is continuous-time and the direct method discrete-time, so they are not comparable
+    explanation: >-
+      Grouping $z$ stage by stage makes the KKT matrix block banded with bandwidth $O(n+m)$, and
+      the Schur complement produced by eliminating it from $k=N$ down to 0 is exactly $P_k$. All
+      the direct method adds on a nonlinear problem is to repeat that elimination once per SQP
+      iteration. iLQR's backward pass is the same elimination.
+    concept:
+      front: Riccati = sparse KKT elimination
+      back: >-
+        Eliminating the stagewise-grouped banded KKT matrix from the back yields $P_k$ as its Schur
+        complement - on a linear-quadratic problem the two methods are the same arithmetic

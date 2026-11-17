@@ -1,0 +1,147 @@
+# English text of the structured fields of robust-stochastic-oc.md (activity titles,
+# resource notes, quiz). The prose lives in robust-stochastic-oc.en.md.
+id: c4-robust-stochastic-oc
+lang: en
+activities:
+  c4-robust-stochastic-oc-reading: Read the lesson and follow the derivations
+  c4-robust-stochastic-oc-papers: Read the three must-read papers + a one-page note each
+  c4-robust-stochastic-oc-problems: "Problem set (2 derivations, 1 proof, 2 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  c4-robust-stochastic-oc-reproduction: "Reproduction task - the robust reachable set and the collapse of certainty equivalence (R2)"
+  c4-robust-stochastic-oc-quiz: Concept check quiz
+resources:
+  "Stanford AA203 Optimal and Learning-based Control":
+    note: W5 is stochastic and robust optimal control. Lecture notes and homework are public.
+  "Tedrake, Underactuated Robotics — Robust and Stochastic Control":
+    title: "Tedrake, Underactuated Robotics - Robust and Stochastic Control"
+    note: The chapter on robust and stochastic control. Free in full.
+  "helperOC / Level Set Toolbox":
+    note: The standard implementation of HJI level-set computation. Used in the optional part of the reproduction task to compare against your own implementation.
+quiz:
+  - id: q1
+    prompt: >-
+      In the HJI variational inequality $\min\{V_\tau - H,\; V - l\} = 0$, what does the second
+      term $V - l$ do?
+    choices:
+      - It enforces the boundary condition
+      - "It **freezes** the value at states that have reached the target once, so that the set does not shrink"
+      - It guarantees uniqueness of the viscosity solution
+      - It performs the maximization over the disturbance before the minimization over the control
+    explanation: >-
+      The definition of the value function contains $\min_{s\in[0,\tau]} l(x(s))$, which measures
+      "reached at least once during the interval", and that monotonicity appears as the second term
+      of the variational inequality. The set is therefore a **tube** that grows monotonically in
+      $\tau$. Remove the second term and you get the reachable **set**, "in the target exactly at
+      time $\tau$"; safety analysis almost always needs the tube.
+    concept:
+      front: The role of the second term of the variational inequality
+      back: >-
+        It freezes the value of states that have arrived, so the set grows monotonically - a reach
+        **tube**. Without it, a reach **set**
+  - id: q2
+    prompt: >-
+      What is the robust reachable set of the system $\dot x_2 = u + d$, $|u|\le1$, $|d|\le D$?
+    choices:
+      - The same as the set of the same system without disturbance
+      - "**Exactly** the set of the nominal system with the control bound reduced to $1-D$"
+      - "The set of the nominal system with the control bound increased to $1+D$"
+      - In general unrelated to the nominal set
+    explanation: >-
+      $H = p_1x_2 + \min_u p_2u + \max_d p_2d = p_1x_2 - |p_2| + D|p_2| = p_1x_2 - (1-D)|p_2|$,
+      character for character the Hamiltonian of the problem with no disturbance and bound $1-D$.
+      The disturbance is equivalent to taking away $D$ of the control authority. The reduction
+      holds only when $u$ and $d$ are **additive in the same channel** — in different channels the
+      two terms cannot be merged.
+    concept:
+      front: The reduction for an additive same-channel disturbance
+      back: >-
+        Robust set = nominal set with the control bound reduced to $1-D$. Only for the same
+        channel and additive entry
+  - id: q3
+    prompt: >-
+      In the minimax game Riccati equation $kP^2 - 2aP - q = 0$, $k = b^2/r - c^2/\gamma^2$, what
+      happens as $\gamma$ decreases?
+    choices:
+      - "$P$ decreases and performance improves"
+      - "$P$ increases, and for $\\gamma \\le c\\sqrt{r}/b$ the positive solution disappears"
+      - "$P$ is unchanged and only the closed-loop pole moves"
+      - The solution splits in two
+    explanation: >-
+      A smaller $\gamma$ makes the disturbance cheaper and stronger, so $k$ decreases and
+      $P = (a+\sqrt{a^2+kq})/k$ increases. $P$ is a cost, so **robustness costs performance** (at
+      $a=b=c=q=r=1$ the 2.414 of $\gamma=\infty$ becomes 7.012 at $\gamma=1.2$). For $k \le 0$,
+      that is $\gamma \le c\sqrt{r}/b = 1$, there is no positive solution — that performance level
+      is unachievable, and this is the $\mathcal{H}_\infty$ performance limit.
+    concept:
+      front: "The trade between $\\gamma$ and performance"
+      back: >-
+        Decreasing $\gamma$ increases $P$ (worse performance); below the critical
+        $\gamma = c\sqrt{r}/b$ there is no solution
+  - id: q4
+    prompt: >-
+      If the noise enters the control as a product ($x^+ = Ax + (B+C\xi)u$), the optimal gain
+      depends on the size of the noise.
+    explanation: >-
+      In $\mathbb{E}[(Ax+(B+C\xi)u)^2] = (Ax+Bu)^2 + C^2u^2$ the term $C^2u^2$ **depends on $u$**,
+      so the minimizer changes: $K = PAB/(R+P(B^2+C^2))$, with $PC^2$ in the denominator reducing
+      the gain (cautious control). Additive noise would only have added a constant and left the
+      gain unchanged (certainty equivalence, c4-dp-lqr-lqg R5). In numbers: at
+      $A=1.1,B=1,C=0.6,Q=R=1$ the gain shrinks by 13.90% and the Monte Carlo expected cost improves
+      from 2.2586 to 2.1984.
+    concept:
+      front: Multiplicative noise and certainty equivalence
+      back: >-
+        The $C^2u^2$ term depends on $u$ and the gain shrinks (caution). Certainty equivalence
+        holds only for **additive** noise
+  - id: q5
+    prompt: >-
+      How does tube MPC restore recursive feasibility under a disturbance?
+    choices:
+      - It lengthens the horizon to average out the effect of the disturbance
+      - "It binds the error with a fixed feedback so that it is confined to an invariant set $\\mathcal{Z}$, and tightens the constraints of the nominal problem to $\\mathbb{X}\\ominus\\mathcal{Z}$"
+      - It estimates the distribution of the disturbance and switches to expected constraints
+      - It measures the disturbance every cycle and compensates for it
+    explanation: >-
+      With $u = \bar u + K(x-\bar x)$ the error obeys $e^+ = (A+BK)e + w$, and if $\rho(A+BK)<1$
+      it stays in the minimal robust positively invariant set $\mathcal{Z}$. If the nominal
+      satisfies the tightened constraints $\mathbb{X}\ominus\mathcal{Z}$,
+      $\mathbb{U}\ominus K\mathcal{Z}$, the actual system satisfies the original ones, so the
+      nominal problem is a disturbance-free MPC and R1 and R2 of c4-mpc apply as they stand. The
+      price is the tightening, and if $\mathbb{W}$ is large the tightened constraints can become
+      **empty**.
+    concept:
+      front: The structure of tube MPC
+      back: >-
+        Nominal + error separation; the error is confined to the mRPI $\mathcal{Z}$ and the
+        constraints are tightened by $\ominus\mathcal{Z}$
+  - id: q6
+    prompt: >-
+      A robust design also improves the average performance when there is in fact no disturbance.
+    explanation: >-
+      The table of R3 is the counterexample: decreasing $\gamma$ raises $P$ (the nominal cost)
+      from 2.414 to 7.012. A robust design gives up the average as the price of guaranteeing the
+      **worst case**. Applying the minimax gain to a system without disturbance costs more than
+      LQR. Not confusing the two metrics (worst case versus average) is the basis of this topic.
+    concept:
+      front: The price of robustness
+      back: >-
+        The worst-case guarantee is bought with average performance. Decreasing $\gamma$ raises
+        the nominal cost $P$
+  - id: q7
+    prompt: >-
+      What changes when the Isaacs condition ($\min_u\max_d = \max_d\min_u$) fails?
+    choices:
+      - The viscosity solution does not exist
+      - "The upper and lower values give **different sets**, and a safety guarantee must use the conservative one"
+      - The reachable tube is no longer monotonically increasing
+      - The size of the disturbance becomes infinite
+    explanation: >-
+      In step 3 of the proof sketch it matters whether $\inf\sup$ or $\sup\inf$ is used as $H$.
+      The upper value gives the conservative set in which "the disturbance sees first", the lower
+      value the optimistic set in which "the control sees first". To guarantee safety use the
+      conservative side. For an additive same-channel disturbance (R2) the sign of $p_2$ fixes
+      both optimal choices at once, the Isaacs condition holds and the two coincide.
+    concept:
+      front: When the Isaacs condition fails
+      back: >-
+        The upper value (conservative) and the lower value (optimistic) give different sets. A
+        safety guarantee uses the upper value

@@ -473,7 +473,132 @@ papers:
     role: standard
 
   # ── C4 최적 제어·궤적 최적화 ─────────────────────────────────────────
-  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+  - id: mitchell2005-hji-reachability
+    title: "A time-dependent Hamilton-Jacobi formulation of reachable sets for continuous dynamic games"
+    authors: ["I. M. Mitchell", "A. M. Bayen", "C. J. Tomlin"]
+    year: 2005
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.2005.851439"
+    verified: true
+  - id: todorov2005-ilqg
+    title: "A generalized iterative LQG method for locally-optimal feedback control of constrained nonlinear stochastic systems"
+    authors: ["E. Todorov", "W. Li"]
+    year: 2005
+    venue: "ACC"
+    url: "https://doi.org/10.1109/ACC.2005.1469949"
+    verified: true
+  - id: mayne2005-tube-mpc
+    title: "Robust model predictive control of constrained linear systems with bounded disturbances"
+    authors: ["D. Q. Mayne", "M. M. Seron", "S. V. Rakovic"]
+    year: 2005
+    venue: "Automatica"
+    url: "https://doi.org/10.1016/j.automatica.2004.08.019"
+    verified: true
+  - id: bansal2017-hj-reachability
+    title: "Hamilton-Jacobi reachability: a brief overview and recent advances"
+    authors: ["S. Bansal", "M. Chen", "S. Herbert", "C. J. Tomlin"]
+    year: 2017
+    venue: "CDC"
+    url: "https://doi.org/10.1109/CDC.2017.8263977"
+    verified: true
+  - id: posa2014-contact-implicit
+    title: "A direct method for trajectory optimization of rigid bodies through contact"
+    authors: ["M. Posa", "C. Cantu", "R. Tedrake"]
+    year: 2014
+    venue: "IJRR"
+    url: "https://doi.org/10.1177/0278364913506757"
+    verified: true
+  - id: stewart1996-timestepping
+    title: "An implicit time-stepping scheme for rigid body dynamics with inelastic collisions and Coulomb friction"
+    authors: ["D. E. Stewart", "J. C. Trinkle"]
+    year: 1996
+    venue: "Int. J. Numer. Methods Eng."
+    url: "https://doi.org/10.1002/(SICI)1097-0207(19960815)39:15%3C2673::AID-NME972%3E3.0.CO;2-I"
+    verified: true
+  - id: howell2019-altro
+    title: "ALTRO: a fast solver for constrained trajectory optimization"
+    authors: ["T. A. Howell", "B. E. Jackson", "Z. Manchester"]
+    year: 2019
+    venue: "IROS"
+    url: "https://doi.org/10.1109/IROS40897.2019.8967788"
+    verified: true
+  - id: anitescu1997-lcp
+    title: "Formulating dynamic multi-rigid-body contact problems with friction as solvable linear complementarity problems"
+    authors: ["M. Anitescu", "F. A. Potra"]
+    year: 1997
+    venue: "Nonlinear Dynamics"
+    url: "https://doi.org/10.1023/A:1008292328909"
+    verified: true
+  - id: mordatch2012-cio
+    title: "Discovery of complex behaviors through contact-invariant optimization"
+    authors: ["I. Mordatch", "E. Todorov", "Z. Popovic"]
+    year: 2012
+    venue: "ACM Trans. Graphics (SIGGRAPH)"
+    url: "https://doi.org/10.1145/2185520.2185539"
+    verified: true
+  - id: burden2016-piecewise-flows
+    title: "Event-selected vector field discontinuities yield piecewise-differentiable flows"
+    authors: ["S. A. Burden", "S. Shankar Sastry", "D. E. Koditschek", "S. Revzen"]
+    year: 2016
+    venue: "SIAM J. Applied Dynamical Systems"
+    url: "https://doi.org/10.1137/15M1016588"
+    verified: true
+  - id: hargraves1987-collocation
+    title: "Direct trajectory optimization using nonlinear programming and collocation"
+    authors: ["C. R. Hargraves", "S. W. Paris"]
+    year: 1987
+    venue: "AIAA J. Guidance, Control, and Dynamics"
+    url: "https://doi.org/10.2514/3.20223"
+    verified: true
+  - id: betts1998-survey
+    title: "Survey of numerical methods for trajectory optimization"
+    authors: ["J. T. Betts"]
+    year: 1998
+    venue: "AIAA J. Guidance, Control, and Dynamics"
+    url: "https://doi.org/10.2514/2.4231"
+    verified: true
+  - id: mayne2000-constrained-mpc
+    title: "Constrained model predictive control: stability and optimality"
+    authors: ["D. Q. Mayne", "J. B. Rawlings", "C. V. Rao", "P. O. M. Scokaert"]
+    year: 2000
+    venue: "Automatica"
+    url: "https://doi.org/10.1016/S0005-1098(99)00214-9"
+    verified: true
+  - id: rawlings2017-mpc-theory
+    title: "Model Predictive Control: Theory, Computation, and Design"
+    authors: ["J. B. Rawlings", "D. Q. Mayne", "M. M. Diehl"]
+    year: 2017
+    venue: "Nob Hill Publishing (book)"
+    url: "https://sites.engineering.ucsb.edu/~jbraw/mpc/"
+    verified: true
+  - id: diehl2009-rti
+    title: "Efficient numerical methods for nonlinear MPC and moving horizon estimation"
+    authors: ["M. Diehl", "H. J. Ferreau", "N. Haverbeke"]
+    year: 2009
+    venue: "Nonlinear Model Predictive Control (LNCIS)"
+    url: "https://doi.org/10.1007/978-3-642-01094-1_32"
+    verified: true
+  - id: kelly2017-trajopt-tutorial
+    title: "An introduction to trajectory optimization: how to do your own direct collocation"
+    authors: ["M. Kelly"]
+    year: 2017
+    venue: "SIAM Review"
+    url: "https://doi.org/10.1137/16M1062569"
+    verified: true
+  - id: gill2005-snopt
+    title: "SNOPT: an SQP algorithm for large-scale constrained optimization"
+    authors: ["P. E. Gill", "W. Murray", "M. A. Saunders"]
+    year: 2005
+    venue: "SIAM Review"
+    url: "https://doi.org/10.1137/S0036144504446096"
+    verified: true
+  - id: wachter2006-ipopt
+    title: "On the implementation of an interior-point filter line-search algorithm for large-scale nonlinear programming"
+    authors: ["A. Wachter", "L. T. Biegler"]
+    year: 2006
+    venue: "Math. Program."
+    url: "https://doi.org/10.1007/s10107-004-0559-y"
+    verified: true
 
   # ── C5 상태 추정 ────────────────────────────────────────────────
   - id: dellaert2006-square-root-sam

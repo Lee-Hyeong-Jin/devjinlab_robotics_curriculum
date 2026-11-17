@@ -1,0 +1,152 @@
+# English text of the structured fields of mpc.md (activity titles, resource notes,
+# quiz). The prose lives in mpc.en.md.
+id: c4-mpc
+lang: en
+activities:
+  c4-mpc-reading: Read the lesson and follow the derivations
+  c4-mpc-papers: Read the three must-read papers + a one-page note each
+  c4-mpc-problems: "Problem set (1 derivation, 2 proofs, 2 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  c4-mpc-reproduction: "Reproduction task - how the terminal condition changes the stable region (R2)"
+  c4-mpc-quiz: Concept check quiz
+resources:
+  "Stanford AA203 Optimal and Learning-based Control":
+    note: Week 6 is MPC. The lecture notes and homework are public.
+  "Tedrake, Underactuated Robotics — Linear Quadratic Regulators":
+    title: "Tedrake, Underactuated Robotics - Linear Quadratic Regulators"
+    note: The TVLQR of ch.8 and this lesson's terminal cost use the same $P_\infty$. Free in full.
+  "acados":
+    note: A real-time NMPC solver including RTI. The practical counterpart of R5.
+  "Nocedal & Wright, Numerical Optimization":
+    note: ch.16 (QP), ch.18 (SQP). Background for the KKT derivation of explicit MPC and for RTI. (official URL unverified)
+quiz:
+  - id: q1
+    prompt: >-
+      Where is control invariance of the terminal set used in the proof of MPC's recursive
+      feasibility?
+    choices:
+      - In the step showing the optimal value function decreases
+      - "In the step that constructs the **control to append to the tail** after shifting the previous solution by one"
+      - In the step showing the QP has a unique solution
+      - In the step using the fact that the state constraints are polyhedral
+    explanation: >-
+      The proof constructs by hand a feasible candidate at $x^+$: reuse $u_1^*,\dots,u_{N-1}^*$
+      from the previous solution and append $\kappa_f(x_N^*)$ as the last entry. Control invariance
+      is what guarantees that this last entry respects the constraints and keeps the state inside
+      the terminal set. The decrease of the optimal value function is used in R2, where the
+      terminal **cost** is a CLF — the two hypotheses do different jobs.
+    concept:
+      front: What a control invariant terminal set does
+      back: >-
+        It guarantees a control exists to append to the tail after shifting the previous solution →
+        recursive feasibility. Stability is the terminal cost's job
+  - id: q2
+    prompt: >-
+      Where is the condition that the terminal cost is a control Lyapunov function,
+      $V_f(f(x,\kappa_f(x))) - V_f(x) \le -\ell(x,\kappa_f(x))$, used in the proof?
+    choices:
+      - In the step showing the candidate satisfies the state constraints
+      - "In the step that **removes the bracketed term** from the difference between the candidate's cost and the previous optimum"
+      - In the step determining the QP's active set
+      - In the step showing the region of attraction is polyhedral
+    explanation: >-
+      Subtracting the previous optimum from the candidate's cost leaves
+      $-\ell(x,u_0^*) + [\ell(x_N^*,\kappa_f) + V_f(f(x_N^*,\kappa_f)) - V_f(x_N^*)]$. The CLF
+      condition makes that bracket $\le 0$, giving
+      $J_N^*(x^+) \le J_N^*(x) - \ell(x,\mu_N(x))$. On a linear-quadratic problem
+      $V_f = \frac12x^\top P_\infty x$ satisfies the condition **with equality** — it is Riccati's
+      Lyapunov identity.
+    concept:
+      front: The role of the terminal cost's CLF condition
+      back: >-
+        It pushes the tail term in the candidate-minus-optimum difference below zero, making
+        $J_N^*$ a Lyapunov function
+  - id: q3
+    prompt: >-
+      Taking the terminal cost to be the infinite-horizon LQR $P_\infty$ makes linear-quadratic MPC
+      give the same feedback as infinite-horizon LQR regardless of horizon length (while no
+      constraint is active).
+    explanation: >-
+      $P_\infty$ is the fixed point of the Riccati recursion, so starting from
+      $P_N = P_\infty$ gives $P_k = P_\infty$ at every $k$ and $K_0 = K_\infty$. Numerically: on
+      the system (6), even $N=1$ gives a closed-loop $\rho = 0.4482078910$, the same as
+      $N=\infty$. With an active constraint it of course differs.
+    concept:
+      front: The effect of $V_f = P_\infty$
+      back: >-
+        It is the Riccati fixed point, so MPC = infinite-horizon LQR for every $N$ (on the
+        constraint-inactive region)
+  - id: q4
+    prompt: >-
+      Why do "feasible now, infeasible later" states arise in MPC without a terminal condition?
+    choices:
+      - Because of numerical error in the QP solver
+      - "Because nothing guarantees that the state reached after $N$ steps is feasible for the next cycle's $N$-step problem"
+      - Because the constraints are non-convex
+      - Because the cost function does not penalise the terminal state
+    explanation: >-
+      MPC looks $N$ steps ahead and applies the first control. At the resulting $x^+$ it must look
+      $N$ steps ahead again, but the previous solution only guaranteed $N$ steps, so there may be
+      no control to fill the $(N+1)$-th. Control invariance of the terminal set is exactly what
+      fills that one slot. Numerically: on the system (6) at $N=3$, **178** of the 507 feasible
+      points become infeasible later.
+    concept:
+      front: The mechanism by which recursive feasibility fails
+      back: >-
+        The previous solution guarantees only $N$ steps. With no control to fill the tail slot, the
+        next cycle's QP is infeasible
+  - id: q5
+    prompt: >-
+      Adding the terminal cost $P_\infty$ restores recursive feasibility and enlarges the region of
+      attraction.
+    explanation: >-
+      The terminal **cost** is what the stability argument (R2) needs; the feasibility argument
+      (R1) needs the terminal **set**. Measured: on the system (6) at $N=3$, the region of
+      attraction without a terminal condition is 329 points, and adding only
+      $V_f = \frac12x^\top P_\infty x$ **shrinks** it to 269. Imposing the terminal set
+      ($x_N=0$) shrinks the feasible set to 23 points but creates the guarantee inside it. A
+      terminal condition is not a device for enlarging the region but for making it honest.
+    concept:
+      front: The division of labour between terminal cost and terminal set
+      back: >-
+        Cost → stability (R2), set → feasibility (R1). Adding only the cost does not fix
+        feasibility
+  - id: q6
+    prompt: >-
+      On what grounds is the explicit solution of linear-quadratic MPC piecewise affine on a
+      polyhedral partition?
+    choices:
+      - Because the QP's objective is quadratic
+      - "Because fixing the active set makes the KKT conditions a linear system in $x$, so the solution is affine in $x$, and the set of $x$ for which that active set is optimal is given by linear inequalities"
+      - Because the constraints are box constraints
+      - Because the horizon is finite
+    explanation: >-
+      Fixing an active set $\mathcal{A}$ lets the KKT conditions (8) be solved for both
+      $\lambda_\mathcal{A}$ and $U$ as affine functions of $x$. And the conditions for that active
+      set actually to be optimal — (a) the inactive constraints hold, (b) the active multipliers are
+      nonnegative — are both affine in $x$, so each region is a polyhedron. The number of regions is
+      bounded by the number of active sets and is exponential in the number of constraints, which is
+      explicit MPC's limit.
+    concept:
+      front: Why explicit MPC is piecewise affine
+      back: >-
+        Fixing the active set makes KKT a linear system → affine solution; the region where that set
+        is optimal is cut out by linear inequalities → a polyhedron. The region count is exponential
+  - id: q7
+    prompt: How does RTI (real-time iteration) reduce the measurement-to-control latency?
+    choices:
+      - By switching to a faster QP solver
+      - By shortening the horizon
+      - "By finishing everything doable without the measurement (evaluating Jacobians and Hessians and factorising) in a preparation phase, then updating only the QP's right-hand side after the measurement arrives"
+      - By running SQP to convergence but in parallel
+    explanation: >-
+      RTI runs one SQP step per cycle and splits it into a preparation phase before the measurement
+      and a feedback phase after it. Most of the computation is in the preparation phase, so the
+      latency from measurement to control is the feedback phase's time rather than the total. The
+      price is using an unconverged solution, which is why the guarantees of R1 and R2 do not apply
+      as stated.
+    concept:
+      front: RTI's preparation/feedback split
+      back: >-
+        Jacobians, Hessians and the factorisation finish before the measurement; afterwards only the
+        right-hand side is updated → the latency shrinks to the feedback phase. The price is an
+        unconverged solution

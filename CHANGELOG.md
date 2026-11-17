@@ -14,6 +14,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `s2-learned-grasping`(학습 기반 파지), `s2-generative-policies`(생성형 정책),
   `s2-planning-through-contact`(접촉을 통한 계획·제어). 모듈 6 레슨 완성.
   각 레슨은 한국어·영어.
+- Research-track lesson `c4-contact-implicit-hybrid`: a proof that the complementarity set is
+  non-convex and breaks LICQ at every feasible point, the time-stepping through-contact
+  transcription, the saltation matrix derived from the variation in transition time and
+  verified against finite differences, and a measured relaxation study showing that the
+  relaxation is always tight and falsifies the contact schedule. Korean source plus the
+  English translation.
+- Research-track lesson `c4-mpc`: recursive feasibility from control invariance of the
+  terminal set and Lyapunov stability from a terminal cost that is a control Lyapunov
+  function, both proved by the shift-and-append construction; a grid study counting the 178
+  states that are feasible now and infeasible later without a terminal condition; explicit
+  MPC as a piecewise affine map; and real-time iteration. Korean source plus the English
+  translation.
+- Research-track lesson `c4-direct-collocation-sqp`: the exact nonzero count of the
+  transcribed constraint Jacobian and its identity with the Riccati recursion, Hermite-Simpson
+  derived from cubic Hermite interpolation with midpoint collocation (global order four), SQP
+  proved to be Newton's method on the KKT system, and a measurement showing a
+  machine-precision defect alongside an $O(10^2)$ interpolant residual. Korean source plus the
+  English translation.
+- Research-track lesson `c4-ilqr-ddp`: the second-order DDP backward pass derived in full,
+  why DDP is Newton on the control sequence (quadratic) and iLQR Gauss-Newton (linear), the
+  two regularizations and the merit-ratio line search, exact handling of control box
+  constraints against the impossibility for state constraints, and the locality of the
+  method. Korean source plus the English translation.
+- Research-track lesson `c4-dp-lqr-lqg`: the Bellman equation and the HJB, the verification
+  theorem as the sufficient condition the PMP lacks, the costate as the gradient of the value
+  function, LQR derived three ways (DP, PMP, completion of squares), monotone convergence of
+  the Riccati recursion with a worked detectability counterexample, and the LQG separation
+  theorem together with Doyle's margin critique. Korean source plus the English translation.
+- Research-track module C4 (optimal control and trajectory optimization) with its first
+  lesson, `c4-pontryagin-indirect`: Pontryagin's minimum principle proved from needle
+  variations and a separating hyperplane, the adjoint equation derived as the transpose of
+  the variational equation, bang-bang structure and singular arcs, the exponential
+  conditioning of single shooting, and the brachistochrone solved in closed form. Korean
+  source plus the English translation.
 - 연구원 트랙에 C6 동작 계획 이론 모듈을 추가했다 — `c6-cspace-complexity`(구성공간과 복잡도),
   `c6-combinatorial-gcs`(조합적 계획과 볼록 분해), `c6-sampling-completeness`(샘플링 기반과
   확률적 완전성), `c6-asymptotic-optimality`(점근 최적성),
