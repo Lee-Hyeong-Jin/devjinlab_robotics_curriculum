@@ -24,7 +24,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 110
   - id: c4-dp-lqr-lqg-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 3편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 150
   - id: c4-dp-lqr-lqg-problems
@@ -32,7 +32,7 @@ activities:
     title: 문제 세트 (유도 2 · 증명 1 · 계산 2 · 구현 1 · 반례 1 · 논문 1)
     estimated_minutes: 210
   - id: c4-dp-lqr-lqg-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — LQR 이득의 네 가지 계산과 세 유도의 일치 (R1)
     estimated_minutes: 110
   - id: c4-dp-lqr-lqg-quiz
@@ -52,30 +52,22 @@ resources:
     url: https://stanfordasl.github.io/aa203/
     kind: course
     note: W4–W5 가 DP·LQR·LQG. 강의 노트와 과제가 공개되어 있다.
-  - title: "Bellman — The theory of dynamic programming (1954)"
-    url: https://doi.org/10.1090/S0002-9904-1954-09848-8
-    kind: article
-    note: 필독 1. 최적성의 원리와 함수 방정식의 원전. 짧다(14쪽).
-  - title: "Kalman — Contributions to the theory of optimal control (1960)"
-    url: https://doi.org/10.1109/9780470544334.ch8
-    kind: article
-    note: 필독 2. LQR·Riccati 의 원전. 위 URL 은 2009 IEEE Press 선집의 재수록판이다(원문은 Bol. Soc. Mat. Mexicana 5, 1960, 102-119).
-  - title: "Doyle — Guaranteed margins for LQG regulators (1978)"
-    url: https://doi.org/10.1109/TAC.1978.1101812
-    kind: article
-    note: 필독 3. 두 쪽짜리 반론. 분리 정리의 "최적성"이 안정성 여유를 주지 않음을 반례로 보인다.
-  - title: "Athans — The role and use of the stochastic LQG problem in control system design (1971)"
-    url: https://doi.org/10.1109/TAC.1971.1099818
-    kind: article
-    note: 권장. LQG 를 설계 도구로 쓰는 방법과 한계를 당대의 시각으로 정리한 서베이.
-  - title: "Kleinman — On an iterative technique for Riccati equation computations (1968)"
-    url: https://doi.org/10.1109/TAC.1968.1098829
-    kind: article
-    note: 권장. 안정화 해로 수렴하는 Newton 류 반복(정책 반복의 선형 버전). R4 의 수치적 대안.
-  - title: "Crandall & Lions — Viscosity solutions of Hamilton-Jacobi equations (1983)"
-    url: https://doi.org/10.1090/S0002-9947-1983-0690039-8
-    kind: article
-    note: 권장. 값 함수가 미분 불가능할 때 HJB 를 어떤 뜻으로 푸는가. R2 의 실패 모드를 떠받치는 이론.
+papers:
+  - id: bellman1954-dp-theory
+    required: true
+    role: seminal
+  - id: kalman1960-optimal-control
+    required: true
+    role: seminal
+  - id: doyle1978-lqg-margins
+    required: true
+    role: critique
+  - id: athans1971-lqg
+    role: survey
+  - id: kleinman1968-riccati-iteration
+    role: standard
+  - id: crandall1983-viscosity
+    role: standard
 ---
 
 # 동적 계획법·LQR·LQG

@@ -7,9 +7,7 @@ summary: >-
   재현한다. 근거가 되는 대학원 과목은 CMU 16-745 전체와 Stanford AA203 전체, Berkeley CS287
   이고 교재는 Tedrake Underactuated Robotics ch.7-10,13 과 Nocedal-Wright ch.18 이다.
   설계상 레슨은 7개다(research_notes/연구 트랙 설계/blueprint.md §5 의 C4 표).
-# 설계상의 수준은 "연구"(research)다. Level 리터럴에 "연구"가 추가되기 전까지 "고급"으로 둔다
-# (research_notes/연구 트랙 설계/lesson-standard.md §11-4).
-level: 고급
+level: 연구
 lessons:
   - pontryagin-indirect
   - dp-lqr-lqg

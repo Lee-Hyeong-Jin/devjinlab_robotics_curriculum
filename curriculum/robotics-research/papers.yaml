@@ -592,6 +592,123 @@ papers:
     venue: "Math. Program."
     url: "https://doi.org/10.1007/s10107-004-0559-y"
     verified: true
+  - id: sussmann1997-300-years
+    title: "300 years of optimal control: from the brachystochrone to the maximum principle"
+    authors: ["H. J. Sussmann", "J. C. Willems"]
+    year: 1997
+    venue: "IEEE Control Systems"
+    url: "https://doi.org/10.1109/37.588098"
+    note: "2026-11-17 Crossref 확인(제목·저자·연도)"
+    verified: true
+    role: seminal
+  - id: hartl1995-pmp-state-constraints
+    title: "A survey of the maximum principles for optimal control problems with state constraints"
+    authors: ["R. F. Hartl", "S. P. Sethi", "R. G. Vickson"]
+    year: 1995
+    venue: "SIAM Review"
+    url: "https://doi.org/10.1137/1037043"
+    note: "2026-11-17 Crossref 확인(제목·저자·연도)"
+    verified: true
+    role: survey
+  - id: fuller1963-optimum-nonlinear
+    title: "Study of an optimum non-linear control system"
+    authors: ["A. T. Fuller"]
+    year: 1963
+    venue: "Journal of Electronics and Control"
+    url: "https://doi.org/10.1080/00207216308937555"
+    note: "2026-11-17 Crossref 확인(제목·저자·연도)"
+    verified: true
+    role: seminal
+  - id: bellman1954-dp-theory
+    title: "The theory of dynamic programming"
+    authors: ["R. Bellman"]
+    year: 1954
+    venue: "Bulletin of the AMS"
+    url: "https://doi.org/10.1090/S0002-9904-1954-09848-8"
+    note: "2026-11-17 Crossref 확인(제목·저자·연도)"
+    verified: true
+    role: seminal
+  - id: kalman1960-optimal-control
+    title: "Contributions to the theory of optimal control"
+    authors: ["R. E. Kalman"]
+    year: 1960
+    venue: "Bol. Soc. Mat. Mexicana (IEEE Press 재수록 2009)"
+    url: "https://doi.org/10.1109/9780470544334.ch8"
+    note: "URL 은 2009 IEEE Press 선집의 재수록판이다(원문은 Bol. Soc. Mat. Mexicana 5, 1960, 102-119). Crossref 레코드에 저자 필드가 비어 있어 저자는 원문 서지를 따랐다"
+    verified: true
+    role: seminal
+  - id: doyle1978-lqg-margins
+    title: "Guaranteed margins for LQG regulators"
+    authors: ["J. C. Doyle"]
+    year: 1978
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.1978.1101812"
+    note: "2026-11-17 Crossref 확인(제목·저자·연도)"
+    verified: true
+    role: critique
+  - id: athans1971-lqg
+    title: "The role and use of the stochastic linear-quadratic-Gaussian problem in control system design"
+    authors: ["M. Athans"]
+    year: 1971
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.1971.1099818"
+    note: "2026-11-17 Crossref 확인(제목·저자·연도)"
+    verified: true
+    role: survey
+  - id: kleinman1968-riccati-iteration
+    title: "On an iterative technique for Riccati equation computations"
+    authors: ["D. Kleinman"]
+    year: 1968
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.1968.1098829"
+    note: "2026-11-17 Crossref 확인(제목·저자·연도)"
+    verified: true
+    role: standard
+  - id: crandall1983-viscosity
+    title: "Viscosity solutions of Hamilton-Jacobi equations"
+    authors: ["M. G. Crandall", "P.-L. Lions"]
+    year: 1983
+    venue: "Transactions of the AMS"
+    url: "https://doi.org/10.1090/S0002-9947-1983-0690039-8"
+    note: "2026-11-17 Crossref 확인(제목·저자·연도)"
+    verified: true
+    role: standard
+  - id: mayne1966-ddp
+    title: "A second-order gradient method for determining optimal trajectories of non-linear discrete-time systems"
+    authors: ["D. Mayne"]
+    year: 1966
+    venue: "International Journal of Control"
+    url: "https://doi.org/10.1080/00207176608921369"
+    note: "2026-11-17 Crossref 확인(제목·저자·연도)"
+    verified: true
+    role: seminal
+  - id: liao1991-ddp-convergence
+    title: "Convergence in unconstrained discrete-time differential dynamic programming"
+    authors: ["L.-Z. Liao", "C. A. Shoemaker"]
+    year: 1991
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/9.86943"
+    note: "2026-11-17 Crossref 확인(제목·저자·연도)"
+    verified: true
+    role: standard
+  - id: tassa2012-ilqr
+    title: "Synthesis and stabilization of complex behaviors through online trajectory optimization"
+    authors: ["Y. Tassa", "T. Erez", "E. Todorov"]
+    year: 2012
+    venue: "IEEE/RSJ IROS"
+    url: "https://doi.org/10.1109/IROS.2012.6386025"
+    note: "2026-11-17 Crossref 확인(제목·저자·연도)"
+    verified: true
+    role: standard
+  - id: tassa2014-control-limited-ddp
+    title: "Control-limited differential dynamic programming"
+    authors: ["Y. Tassa", "N. Mansard", "E. Todorov"]
+    year: 2014
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ICRA.2014.6907001"
+    note: "2026-11-17 Crossref 확인(제목·저자·연도)"
+    verified: true
+    role: standard
 
   # ── C5 상태 추정 ────────────────────────────────────────────────
   - id: dellaert2006-square-root-sam

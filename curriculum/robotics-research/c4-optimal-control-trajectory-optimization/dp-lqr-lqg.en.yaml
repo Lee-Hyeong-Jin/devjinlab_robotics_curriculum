@@ -17,18 +17,6 @@ resources:
     note: ch.8. LQR and Riccati, plus how to use LQR locally (TVLQR). Free in full.
   "Stanford AA203 Optimal and Learning-based Control":
     note: Weeks 4-5 cover DP, LQR and LQG. Lecture notes and homework are public.
-  "Bellman — The theory of dynamic programming (1954)":
-    note: Must-read 1. The original source for the principle of optimality and the functional equation. Short (14 pages).
-  "Kalman — Contributions to the theory of optimal control (1960)":
-    note: Must-read 2. The original source for LQR and Riccati. The URL is the 2009 IEEE Press reprint (the original is Bol. Soc. Mat. Mexicana 5, 1960, 102-119).
-  "Doyle — Guaranteed margins for LQG regulators (1978)":
-    note: Must-read 3. A two-page critique showing by counterexample that the "optimality" of the separation theorem buys no stability margin.
-  "Athans — The role and use of the stochastic LQG problem in control system design (1971)":
-    note: Recommended. A contemporary survey of how to use LQG as a design tool, and of its limits.
-  "Kleinman — On an iterative technique for Riccati equation computations (1968)":
-    note: Recommended. A Newton-type iteration that converges to the stabilizing solution (the linear case of policy iteration). The numerical alternative for R4.
-  "Crandall & Lions — Viscosity solutions of Hamilton-Jacobi equations (1983)":
-    note: Recommended. In what sense the HJB is solved when the value function is not differentiable. The theory underpinning R2's failure mode.
 quiz:
   - id: q1
     prompt: What does the verification theorem give that the PMP does not?

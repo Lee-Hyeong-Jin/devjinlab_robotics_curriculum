@@ -13,16 +13,6 @@ resources:
     note: ch.10 (Trajectory Optimization) - 10.1 indirect methods against 10.2 direct methods. Free in full.
   "Stanford AA203 Optimal and Learning-based Control":
     note: Weeks 2-3 cover the calculus of variations, the PMP and indirect methods. Lecture notes and homework are public.
-  "Sussmann & Willems — 300 years of optimal control (1997)":
-    note: Must-read 1. The lineage from the brachistochrone to the PMP; §V is the modern statement and proof structure.
-  "Hartl, Sethi & Vickson — A survey of the maximum principles for optimal control problems with state constraints (1995)":
-    note: Must-read 2. Why the costate becomes a measure once state constraints are present. §2-§4.
-  "Betts — Survey of numerical methods for trajectory optimization (1998)":
-    note: Must-read 3. Indirect against direct methods; §3-§4 is why indirect methods lost out in practice.
-  "Kelly — An introduction to trajectory optimization (2017)":
-    note: Recommended. A guide to the next lesson (direct methods); covers the gap in implementation effort against indirect methods.
-  "Fuller — Study of an optimum non-linear control system (1963)":
-    note: Recommended. The original source for an optimal control that switches infinitely many times in finite time (Fuller's phenomenon).
 quiz:
   - id: q1
     prompt: >-

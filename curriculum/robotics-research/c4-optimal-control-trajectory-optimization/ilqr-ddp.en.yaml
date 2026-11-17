@@ -12,16 +12,6 @@ resources:
   "Tedrake, Underactuated Robotics — Trajectory Optimization":
     title: "Tedrake, Underactuated Robotics - Trajectory Optimization"
     note: ch.10.3 is DDP and iLQR. Free in full.
-  "Mayne — A second-order gradient method for determining optimal trajectories of non-linear discrete-time systems (1966)":
-    note: Must-read 1. The original source for DDP, and the form the second-order expansion first took.
-  "Liao & Shoemaker — Convergence in unconstrained discrete-time differential dynamic programming (1991)":
-    note: Must-read 2. Proves the convergence order of DDP by relating it to Newton's method. The primary source for R2.
-  "Tassa, Erez & Todorov — Synthesis and stabilization of complex behaviors through online trajectory optimization (2012)":
-    note: Must-read 3. §III has the regularization, line search and merit test of an iLQR that actually runs. The primary source for R3.
-  "Tassa, Mansard & Todorov — Control-limited differential dynamic programming (2014)":
-    note: Must-read 4. How to treat control box constraints exactly by projected Newton. The primary source for R4.
-  "Howell, Jackson & Manchester — ALTRO: a fast solver for constrained trajectory optimization (2019)":
-    note: Recommended. The route that adds state constraints by an augmented Lagrangian. A must-read of `c4-contact-implicit-hybrid`.
   "Nocedal & Wright, Numerical Optimization":
     note: Recommended. ch.3 (line search), ch.10 (Gauss-Newton), ch.4 (trust regions). Background for R2 and R3. (official URL unverified)
 quiz:

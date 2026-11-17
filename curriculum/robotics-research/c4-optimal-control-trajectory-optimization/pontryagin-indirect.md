@@ -23,7 +23,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 100
   - id: c4-pontryagin-indirect-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 3편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 150
   - id: c4-pontryagin-indirect-problems
@@ -31,7 +31,7 @@ activities:
     title: 문제 세트 (유도 2 · 증명 1 · 계산 1 · 구현 1 · 반례 1 · 논문 1)
     estimated_minutes: 180
   - id: c4-pontryagin-indirect-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — 브라키스토크론 간접법과 슈팅 민감도 (R2)
     estimated_minutes: 95
   - id: c4-pontryagin-indirect-quiz
@@ -47,26 +47,23 @@ resources:
     url: https://stanfordasl.github.io/aa203/
     kind: course
     note: W2–W3 가 변분법·PMP·간접법. 강의 노트와 과제가 공개되어 있다.
-  - title: "Sussmann & Willems — 300 years of optimal control (1997)"
-    url: https://doi.org/10.1109/37.588098
-    kind: article
-    note: 필독 1. 브라키스토크론에서 PMP 까지의 계보. §V 가 PMP 의 현대적 진술과 증명 구조.
-  - title: "Hartl, Sethi & Vickson — A survey of the maximum principles for optimal control problems with state constraints (1995)"
-    url: https://doi.org/10.1137/1037043
-    kind: article
-    note: 필독 2. 상태 제약이 들어오면 수반 변수가 왜 측도(measure)가 되는지. §2–§4.
-  - title: "Betts — Survey of numerical methods for trajectory optimization (1998)"
-    url: https://doi.org/10.2514/2.4231
-    kind: article
-    note: 필독 3. 간접법과 직접법의 비교. 간접법이 실무에서 밀려난 이유가 §3–§4 에 있다.
-  - title: "Kelly — An introduction to trajectory optimization (2017)"
-    url: https://doi.org/10.1137/16M1062569
-    kind: article
-    note: 권장. 다음 레슨(직접법)의 길잡이. 간접법 대비 직접법의 구현 난이도 차이를 다룬다.
-  - title: "Fuller — Study of an optimum non-linear control system (1963)"
-    url: https://doi.org/10.1080/00207216308937555
-    kind: article
-    note: 권장. 유한 시간에 무한히 많은 스위칭이 일어나는 예(Fuller 현상)의 원전.
+papers:
+  - id: sussmann1997-300-years
+    required: true
+    role: seminal
+    note: "§V"
+  - id: hartl1995-pmp-state-constraints
+    required: true
+    role: survey
+    note: "§2-§4"
+  - id: betts1998-survey
+    required: true
+    role: survey
+    note: "§3-§4"
+  - id: kelly2017-trajopt-tutorial
+    role: standard
+  - id: fuller1963-optimum-nonlinear
+    role: seminal
 ---
 
 # Pontryagin 최대 원리와 간접법

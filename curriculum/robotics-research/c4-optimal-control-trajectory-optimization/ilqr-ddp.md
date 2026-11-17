@@ -23,7 +23,7 @@ activities:
     title: 본문 읽기와 유도 따라가기
     estimated_minutes: 110
   - id: c4-ilqr-ddp-papers
-    kind: reading
+    kind: paper
     title: 필독 논문 4편 읽기 + 논문별 1페이지 노트
     estimated_minutes: 180
   - id: c4-ilqr-ddp-problems
@@ -31,7 +31,7 @@ activities:
     title: 문제 세트 (유도 2 · 증명 1 · 계산 1 · 구현 2 · 반례 1 · 논문 1)
     estimated_minutes: 210
   - id: c4-ilqr-ddp-reproduction
-    kind: exercise
+    kind: reproduction
     title: 재현 과제 — 진자의 수렴 차수와 카트폴 스윙업 (R2)
     estimated_minutes: 140
   - id: c4-ilqr-ddp-quiz
@@ -43,29 +43,25 @@ resources:
     url: https://underactuated.csail.mit.edu/trajopt.html
     kind: book
     note: ch.10.3 이 DDP·iLQR. 전문 무료.
-  - title: "Mayne — A second-order gradient method for determining optimal trajectories of non-linear discrete-time systems (1966)"
-    url: https://doi.org/10.1080/00207176608921369
-    kind: article
-    note: 필독 1. DDP 의 원전. 2차 전개가 어떤 형태로 처음 쓰였는지.
-  - title: "Liao & Shoemaker — Convergence in unconstrained discrete-time differential dynamic programming (1991)"
-    url: https://doi.org/10.1109/9.86943
-    kind: article
-    note: 필독 2. DDP 의 수렴 차수를 Newton 법과 연결해 증명한다. R2 의 1차 자료.
-  - title: "Tassa, Erez & Todorov — Synthesis and stabilization of complex behaviors through online trajectory optimization (2012)"
-    url: https://doi.org/10.1109/IROS.2012.6386025
-    kind: article
-    note: 필독 3. 실제로 돌아가는 iLQR 의 정규화·선탐색·merit 검정이 §III 에 있다. R3 의 1차 자료.
-  - title: "Tassa, Mansard & Todorov — Control-limited differential dynamic programming (2014)"
-    url: https://doi.org/10.1109/ICRA.2014.6907001
-    kind: article
-    note: 필독 4. 제어 상자 제약을 투영 Newton 으로 정확히 다루는 방법. R4 의 1차 자료.
-  - title: "Howell, Jackson & Manchester — ALTRO: a fast solver for constrained trajectory optimization (2019)"
-    url: https://doi.org/10.1109/IROS40897.2019.8967788
-    kind: article
-    note: 권장. 상태 제약을 증강 라그랑주로 얹는 길. `c4-contact-implicit-hybrid` 의 필독이다.
   - title: "Nocedal & Wright, Numerical Optimization"
     kind: book
     note: 권장. ch.3(선탐색), ch.10(Gauss-Newton), ch.4(신뢰영역). R2·R3 의 배경. (공식 URL 미확인)
+papers:
+  - id: mayne1966-ddp
+    required: true
+    role: seminal
+  - id: liao1991-ddp-convergence
+    required: true
+    role: standard
+  - id: tassa2012-ilqr
+    required: true
+    role: standard
+    note: "§III"
+  - id: tassa2014-control-limited-ddp
+    required: true
+    role: standard
+  - id: howell2019-altro
+    role: standard
 ---
 
 # iLQR/DDP 와 정규화
