@@ -1609,6 +1609,24 @@ papers:
     verified: true
     role: critique
     note: "NeurIPS 게재는 미확인"
+  - id: ahn2022-saycan
+    title: "Do as I can, not as I say: grounding language in robotic affordances (SayCan)"
+    authors: ["M. Ahn", "A. Brohan", "N. Brown", "et al."]
+    year: 2022
+    venue: "CoRL"
+    url: "https://arxiv.org/abs/2204.01691"
+    verified: true
+    role: seminal
+    note: "CoRL 게재는 미확인"
+  - id: liang2023-code-as-policies
+    title: "Code as Policies: language model programs for embodied control"
+    authors: ["J. Liang", "W. Huang", "F. Xia", "et al."]
+    year: 2023
+    venue: "ICRA"
+    url: "https://arxiv.org/abs/2209.07753"
+    verified: true
+    role: standard
+    note: "arXiv v1 2022, ICRA 게재는 미확인"
 
   # ── S5 다중 로봇·필드 로보틱스 ────────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)

@@ -1,0 +1,56 @@
+id: s4-language-and-planning
+lang: en
+activities:
+  s4-language-and-planning-reading: Read the text and follow the derivations
+  s4-language-and-planning-papers: Read the two must-read papers + a one-page note each
+  s4-language-and-planning-problems: Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample, 1 paper)
+  s4-language-and-planning-reproduction: Reproduction task - the failure-cause distribution, the exponential law, and the optimal granularity (R2)
+  s4-language-and-planning-quiz: Concept-check quiz
+resources:
+  "LaValle, Planning Algorithms":
+    note: ch.2 (discrete planning), ch.12 (sensor-based planning). The first-choice textbook on the symbolic-planning side. Free in full.
+  "Garrett et al. — Integrated task and motion planning (2021)":
+    note: Recommended. A TAMP survey; it organizes the failure of downward refinability and the response to it (coupling a geometric check) systematically.
+  "Toussaint — Logic-geometric programming (2015)":
+    note: Recommended. An approach that binds symbols and geometry into a single optimization (IJCAI proceedings PDF).
+quiz:
+  - id: q1
+    prompt: "Which failures can a symbolic verifier (precondition checking + re-planning) remove?"
+    choices:
+      - "Precondition violations only"
+      - "Precondition violations and the affordance gap"
+      - "All three kinds of failure"
+      - "Execution failures only"
+    explanation: "The verifier sees only the symbolic state, so it can decide only symbolic validity. The affordance gap is by definition the case that is 'symbolically valid but geometrically unrealizable', which is outside its field of view, and execution failure is a low-level probability. In the measurement only precondition failures vanished, 37.27% -> 0.00%."
+    concept:
+      front: "The boundary of a symbolic verifier"
+      back: "Precondition violations only. The affordance gap and execution failures depend on geometric information it cannot touch"
+  - id: q2
+    prompt: "Once a symbolic verifier is in place, improving the planner (LLM) raises success substantially."
+    explanation: "In the measurement, with the verifier on, a planner hallucinating 15% of the time (73.68%) differs from a perfect planner (73.92%) by 0.24 percentage points - the level of the standard error over 20,000 trials. The verifier absorbs precondition errors, so planner quality becomes nearly meaningless and the remaining 26% is the affordance gap plus execution noise - the lever is on the geometric-checker side."
+    concept:
+      front: "Planner quality behind a verifier"
+      back: "Nearly meaningless (0.24pp) - the investment belongs in deciding geometric feasibility"
+  - id: q3
+    prompt: "With independent per-step failures, write the success rate for a plan of length $T$ in terms of $p_{\\mathrm{aff}}$. (As an equation)"
+    explanation: "Success is the event that every step succeeds, and independence makes it a product, giving $(1-p_{\\mathrm{aff}})^T$. For $p \\ll 1$ it is approximately $e^{-p T}$. In the measurement the ratio to theory was 0.994-1.007 across $T=2$ to $40$. Improvements on the symbolic side **do not enter** this expression."
+    concept:
+      front: "The exponential law of feasibility"
+      back: "$(1-p_{\\mathrm{aff}})^T$ - symbolic verification does not reduce it; only a geometric check, a shorter plan, or recovery does"
+  - id: q4
+    prompt: "In the optimal granularity $g^\\star = a/\\sqrt{2e}$, what happens as the per-step execution risk $e$ gets smaller?"
+    choices:
+      - "$g^\\star$ shrinks (a coarser abstraction is better)"
+      - "$g^\\star$ grows (a finer abstraction is better)"
+      - "$g^\\star$ does not change"
+      - "$g^\\star$ is determined by the plan-length coefficient $c$"
+    explanation: "$g^\\star = a/\\sqrt{2e}$ varies inversely (as a square root) with $e$, so smaller $e$ makes it larger - if execution is reliable, chopping finer pays. In the measurement, lowering $e$ from 0.01 to 0.0025 doubles $g^\\star$ from 1.77 to 3.54. The plan-length coefficient $c$ **cancels** in the derivation."
+    concept:
+      front: "What the optimal granularity depends on"
+      back: "$g^\\star = a/\\sqrt{2e}$ - fine when execution is reliable, coarse when it is not. $c$ is irrelevant"
+  - id: q5
+    prompt: "The affordance share rising from 12% to 18% when the verifier is turned on means the verifier increased affordance failures."
+    explanation: "Shares are conditional. Removing precondition failures means **more trials reach the geometric stage**, which changes the denominator. Normalized by the trials that reached it, the per-step affordance failure rate is still $p_{\\mathrm{aff}}$. Failing to distinguish an absolute rate from a share gives you the opposite conclusion."
+    concept:
+      front: "Reading failure shares"
+      back: "Shares are conditional - normalize by the trials that reached the stage to see the absolute rate"
