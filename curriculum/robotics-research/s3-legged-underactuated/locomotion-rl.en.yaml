@@ -1,0 +1,131 @@
+# English text of the structured fields of locomotion-rl.md (activity titles, resource notes,
+# quiz). The prose lives in locomotion-rl.en.md.
+id: s3-locomotion-rl
+lang: en
+activities:
+  s3-locomotion-rl-reading: Read the lesson and follow the derivations
+  s3-locomotion-rl-papers: Read the three must-read papers + a one-page note each
+  s3-locomotion-rl-problems: "Problem set (3 derivations, 1 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  s3-locomotion-rl-reproduction: "Reproduction task - reduced reproduction of the teacher-student pipeline (R2; the legged-environment extension is optional, R4)"
+  s3-locomotion-rl-quiz: Concept check quiz
+resources:
+  "legged_gym (ETH RSL)":
+    note: A representative public training environment for legged RL. Used to actually run the teacher-student pipeline in the optional task (R4). Needs a GPU.
+  "Sutton & Barto, Reinforcement Learning: An Introduction (2nd ed.)":
+    note: ch.13 (policy gradient). Background for training the teacher. Full PDF is free.
+quiz:
+  - id: q1
+    prompt: >-
+      When a student that sees only a history imitates a teacher that sees privileged
+      information, under what condition can the student come close to the teacher?
+    choices:
+      - The student's neural network is large enough
+      - The environment information the teacher uses is identifiable from the student's history
+      - There is enough imitation data
+      - The teacher and the student have the same architecture
+    explanation: >-
+      In the linear-quadratic model the student's best is the teacher's policy with the posterior
+      mean plugged in, and the excess cost $\kappa\sigma_H^2$ is proportional to the posterior
+      variance. If the history reveals the action-relevant component of the environment variable
+      (the residual $r_k = d + w_k$) the gap shrinks as $1/H$; if it does not, no amount of
+      capacity or data shrinks it. The floor $K_d^2\sigma_H^2$ of the imitation loss is a limit of
+      information, not a failure of learning.
+    concept:
+      front: The teacher-student gap
+      back: >-
+        $\kappa\sigma_H^2$. Set by identifiability from the history. The floor of the imitation
+        loss is a limit of information
+  - id: q2
+    prompt: >-
+      What does a policy that neither knows the environment variable nor can use a history (purely
+      reactive) look like once optimized?
+    choices:
+      - It uses the same gain as the teacher
+      - "It raises its gain to suppress the unknown disturbance, at the price of a larger control cost"
+      - It takes no action
+      - It acts at random
+    explanation: >-
+      A memoryless policy cannot cancel the disturbance $d$, so it raises its gain to reduce the
+      steady-state error $d/(1-a+bK_0)$. In the model of the lesson the optimal gain is 2.2 times
+      the teacher's ($2.99$ against $1.36$) and the cost 1.96 times. This is why a policy learned
+      by domain randomization alone is stiff and energy hungry, and adaptation is the device that
+      removes that conservatism.
+    concept:
+      front: The optimum of a memoryless policy
+      back: >-
+        It holds on with a high gain. In the lesson: gain 2.2 times, cost 1.96 times. Adaptation
+        reduces the conservatism
+  - id: q3
+    prompt: >-
+      A student that matches the teacher's actions well on the training data (a small imitation
+      loss) is also stable when deployed.
+    explanation: >-
+      False. With a one-step history, the student trained on rollouts of the non-adaptive policy
+      has a small imitation loss of $0.016$, yet its weights are $(-5.17, +2.98)$ and its
+      closed-loop pole is $-1.68$, unstable. In the training data the state $x$ itself reveals the
+      disturbance $d$ (the steady state is proportional to $d$), but that correlation holds only
+      under the policy that collected the data. The distribution the loss measures and the
+      distribution of deployment differ.
+    concept:
+      front: Imitation loss and deployed stability
+      back: >-
+        Action distillation learns the correlations of the collecting policy. H=1: loss 0.016,
+        pole −1.68 (divergence)
+  - id: q4
+    prompt: >-
+      What is the advantage of the architecture (RMA) in which the adaptation module regresses the
+      **latent** from the history while the base policy is frozen?
+    choices:
+      - Training is faster
+      - "If the distribution of the environment information carried by the residual does not depend on the policy, the regression does not depend on the collecting policy, and stability is kept because the feedback gain is untouched"
+      - The latent recovers the environment variables exactly
+      - Privileged information is no longer needed
+    explanation: >-
+      In the linear model the residual $r_k = d + w_k$ has the same distribution whatever action
+      is used, so the regression weight of $\bar{r}_H \to d$ is the same on non-adaptive data and
+      on teacher data ($0.9384$; analytic $0.9396$). A student that plugs that estimate into the
+      teacher policy has the same pole $0.219$ as the teacher. In a real system, however, where
+      the effect of the environment depends on the state, this policy-independence fails, so the
+      data of the adaptation module has to be collected on that policy's own rollouts.
+    concept:
+      front: The advantage of latent regression
+      back: >-
+        Independent of the collecting policy (for an additive disturbance), feedback gain
+        unchanged, hence stable. On real systems train on its own rollouts
+  - id: q5
+    prompt: >-
+      The environment variable is three-dimensional. Why is no teacher performance lost by making
+      the latent one-dimensional?
+    choices:
+      - Because the environment variables are correlated with one another
+      - "Because the teacher's action depends on only one direction of the environment variables (their combined effect on the dynamics)"
+      - Because the neural network interpolates the rest
+      - In fact performance is lost
+    explanation: >-
+      The teacher's action depends on $e$ only along one direction, through $K_dc^\top e$. The
+      latent dimension needed is the number of directions in which the teacher depends on the
+      environment ($\operatorname{rank}L$), which does not exceed the action dimension. That
+      direction is identified from the history but the individual components are not — the
+      fractions explained by $d$ are $0.58, 0.26, 0.16$. The adaptation module does not get the
+      friction coefficient right; it estimates the summary the action needs.
+    concept:
+      front: The dimension of the latent
+      back: >-
+        The number of action-relevant directions. Individual environment variables need not be
+        identified
+  - id: q6
+    prompt: >-
+      If the training reward keeps rising, hardware performance can be taken to keep improving as
+      well.
+    explanation: >-
+      False. If the optimum of the reward (or of the simulator) is displaced from the true
+      objective in a weakly determined direction, true performance rises while the main direction
+      is being corrected and then falls as the slow drift along the displaced direction takes
+      over. In the model of the lesson true performance peaks at $-0.027$ at $t^\star = 2.86$ and
+      is $-1.125$ when optimized to the end. The reward curve increases monotonically and so does
+      not reveal the peak.
+    concept:
+      front: Over-optimizing the reward
+      back: >-
+        A displacement in a weakly determined direction makes true performance fall after a peak.
+        It is invisible in the reward curve

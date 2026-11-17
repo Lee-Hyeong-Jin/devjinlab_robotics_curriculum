@@ -2186,6 +2186,43 @@ papers:
     note: "Crossref 확인(1998-12). 레코드의 제목에는 부제가 없다"
     verified: true
     role: standard
+  - id: lee2020-blind-locomotion
+    title: "Learning quadrupedal locomotion over challenging terrain"
+    authors: ["J. Lee", "J. Hwangbo", "L. Wellhausen", "V. Koltun", "M. Hutter"]
+    year: 2020
+    venue: "Science Robotics"
+    url: "https://arxiv.org/abs/2010.11251"
+    note: 'Science Robotics 5(47), eabc5986. "blind" 는 통칭이고 원 제목에는 없다. 2026-11-17 arXiv API 확인(제목·저자 5인·2020-10-21)'
+    verified: true
+    role: seminal
+  - id: kumar2021-rma
+    title: "RMA: rapid motor adaptation for legged robots"
+    authors: ["A. Kumar", "Z. Fu", "D. Pathak", "J. Malik"]
+    year: 2021
+    venue: "RSS"
+    url: "https://arxiv.org/abs/2107.04034"
+    note: "2026-11-17 arXiv API 확인(제목·저자 4인·2021-07-08)"
+    verified: true
+    role: standard
+  - id: miki2022-anymal-wild
+    title: "Learning robust perceptive locomotion for quadrupedal robots in the wild"
+    authors: ["T. Miki", "J. Lee", "J. Hwangbo", "et al."]
+    year: 2022
+    venue: "Science Robotics"
+    url: "https://arxiv.org/abs/2201.08117"
+    note: "Science Robotics 7(62). 2026-11-17 arXiv API 확인(제목·제1저자·2022-01-20)"
+    verified: true
+    role: frontier
+  - id: hwangbo2019-agile-motor-skills
+    title: "Learning agile and dynamic motor skills for legged robots"
+    authors: ["J. Hwangbo", "J. Lee", "A. Dosovitskiy", "et al."]
+    year: 2019
+    venue: "Science Robotics (arXiv 2019; 학술지 권호는 미확인)"
+    url: "https://arxiv.org/abs/1901.08652"
+    note: "2026-11-17 arXiv API 확인(제목·제1저자·2019-01-24)"
+    verified: true
+    role: seminal
+
   # ── S4 로봇 학습·파운데이션 모델 ───────────────────────────────────────
   - id: kaplan2020-scaling-laws
     title: "Scaling laws for neural language models"
