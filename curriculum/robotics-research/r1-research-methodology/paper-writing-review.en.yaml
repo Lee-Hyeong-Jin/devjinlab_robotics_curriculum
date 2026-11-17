@@ -1,0 +1,61 @@
+id: r1-paper-writing-review
+lang: en
+activities:
+  r1-paper-writing-review-reading: Read the lesson and design the structure
+  r1-paper-writing-review-case: "Case study - analyse scholarship defects and dissect two introductions from your field"
+  r1-paper-writing-review-deliverable: "Deliverable - an eight-page draft, one review and a rebuttal draft"
+  r1-paper-writing-review-quiz: Concept check quiz
+resources:
+  "NeurIPS 2025 Reviewer Guidelines":
+    note: >-
+      The review form (summary, strengths and weaknesses, quality/clarity/significance/originality
+      rated 1-4, questions, limitations, overall score 1-6, confidence 1-5) and the double-blind and
+      confidentiality policies. Use it as the standard both when writing a review and when receiving one.
+quiz:
+  - id: q1
+    prompt: Which is an adequate contribution sentence?
+    choices:
+      - "We propose a novel and efficient manipulation framework"
+      - "We raise grasp success in heavily occluded shelf settings by 12 points (95% CI 5-19) over the baseline"
+      - "We are the first to apply a learning-based approach"
+      - "We comprehensively leverage state-of-the-art techniques"
+    explanation: >-
+      A contribution is verifiable only with a **condition, a target metric, a magnitude and an
+      uncertainty**. Adjectives such as "novel", "efficient" or "first" are modifiers, not claims,
+      and reviewers do not count them as contributions.
+    concept:
+      front: A verifiable contribution sentence
+      back: Condition + target metric + size of improvement + uncertainty. Adjectives are not contributions
+  - id: q2
+    prompt: Since the limitations section exposes weaknesses, it is better kept short and vague.
+    explanation: >-
+      A hidden weakness gets found by the reviewer, and then it carries the worse verdict that the
+      authors did not recognise it. Concrete limitations (low power, unverified assumptions, scope)
+      stated first increase trust. "More experiments are needed in future" is not a limitation.
+    concept:
+      front: The role of the limitations section
+      back: Disclose concrete weaknesses pre-emptively to earn trust; vague boilerplate is not a limitation
+  - id: q3
+    prompt: Which is the best weakness item in a review?
+    choices:
+      - "The experiments are weak overall"
+      - "Table 2 uses three seeds with no confidence intervals and therefore does not support the 10-point claim in Sec. 3.1; ten seeds and 95% intervals are needed"
+      - "The authors do not seem to know the related work"
+      - "You should cite my paper (reference [17])"
+    explanation: >-
+      A weakness needs **a pointer (section/table), evidence, and an actionable request**. A vague
+      verdict cannot be acted on, and speculating about authors or demanding self-citation violates
+      review norms.
+    concept:
+      front: The three parts of a good weakness
+      back: Pointer (section/table) + evidence + actionable request. No author speculation, no self-citation demands
+  - id: q4
+    prompt: "What is the principle for ordering points in a rebuttal? (briefly)"
+    explanation: >-
+      Reviewers first check how their own points were handled, and space and attention are limited.
+      Starting with minor typo fixes buries the key answers. Answer the most damaging issues first
+      with evidence (new numbers, a location in the text), and concede correct points at once with a
+      proposed revision.
+    concept:
+      front: Ordering a rebuttal
+      back: Most damaging point first, answered with evidence; concede correct points with a revision

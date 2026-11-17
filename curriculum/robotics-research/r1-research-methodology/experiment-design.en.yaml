@@ -1,0 +1,61 @@
+id: r1-experiment-design
+lang: en
+activities:
+  r1-experiment-design-reading: Read the lesson and follow the procedure
+  r1-experiment-design-cases: "Case study - audit the ablations and baseline fairness of two papers"
+  r1-experiment-design-deliverable: "Deliverable - an experiment plan, an ablation table and a pre-registration document"
+  r1-experiment-design-quiz: Concept check quiz
+resources:
+  "Berkeley CS285 Deep Reinforcement Learning":
+    note: Every homework is an implementation-plus-evaluation task; week 13 ("Challenges and Open Problems") treats the difficulty of evaluation.
+  "CMU 16-745 Optimal Control and Reinforcement Learning":
+    note: Its final project is a six-page report in ICRA/IROS format; used here as the format standard for reporting experiments.
+  "SciPy stats 문서":
+    title: SciPy stats documentation
+    note: For bootstrapping, tests and power calculations; read alongside the next lesson.
+quiz:
+  - id: q1
+    prompt: In a robotics experiment, which kind of variable are the random seed, the lighting and the battery level?
+    choices: ["Independent", "Dependent", "Confounding", "Not variables"]
+    explanation: >-
+      They are confounders: they affect the result but are not of interest. Each must be controlled
+      by fixing, randomising or measuring and reporting, and stated as a limitation if none is
+      possible. Robotics has many, which makes listing them explicitly especially important.
+    concept:
+      front: The three ways to control a confounder
+      back: Fix it, randomise it (many seeds), or measure and report it; otherwise state it as a limitation
+  - id: q2
+    prompt: Removing two components at once in an ablation reveals each component's contribution more efficiently.
+    explanation: >-
+      Removing two at once **mixes individual effects with their interaction** and cannot be
+      interpreted. Remove one at a time, and run two-component removals **in addition** when an
+      interaction is suspected.
+    concept:
+      front: The basic rule of ablations
+      back: Remove one at a time; check interactions with additional two-component removals
+  - id: q3
+    prompt: Which is **not** part of the "equal budget" rule for baseline fairness?
+    choices:
+      - Use the same number of hyper-parameter search trials
+      - Use the same number of training steps or samples
+      - Start from the baseline's official implementation and official hyper-parameters
+      - Tune the baseline less than your own method so the difference is clear
+    explanation: >-
+      Tuning only your own method heavily is the most common and most damaging defect. A difference
+      obtained that way is not a difference between methods but **a difference in tuning budget**.
+    concept:
+      front: The equal-budget rule
+      back: Match search counts and training budgets, start from the baseline's official setup, and publish any modification
+  - id: q4
+    prompt: What problem does pre-registration try to prevent?
+    choices:
+      - Exceeding the compute budget
+      - Choosing the metric or the analysis after seeing the results
+      - Bugs in the code
+      - Reviewer misunderstanding
+    explanation: >-
+      Fixing metrics, trial counts and analysis before running prevents post-hoc selection, such as
+      switching to "path length" when the success rate looks bad. It is the robotics version of p-hacking.
+    concept:
+      front: The purpose of pre-registration
+      back: Fixing metrics, trials and analysis before the experiment to prevent post-hoc selection

@@ -1,0 +1,60 @@
+id: r1-reproducibility-artifacts
+lang: en
+activities:
+  r1-reproducibility-artifacts-reading: Read the lesson and follow the procedure
+  r1-reproducibility-artifacts-case: "Case study - read the reproducibility report and audit two public repositories"
+  r1-reproducibility-artifacts-deliverable: "Deliverable - a reproducible repository and an artifact checklist"
+  r1-reproducibility-artifacts-quiz: Concept check quiz
+resources:
+  "uv: Locking and syncing":
+    note: "How to pin an environment with a lockfile; `uv run --locked` fails when the lockfile is stale."
+  "Zenodo":
+    note: Mints DOIs for code and data so they can be cited; GitHub integration preserves a repository snapshot.
+  "NeurIPS 2025 Reviewer Guidelines":
+    note: The review form includes reproducibility and limitations items - see what eyes an artifact is read with.
+quiz:
+  - id: q1
+    prompt: You trained twice on a GPU with the same seed and the results differ bit for bit. What is the most likely cause?
+    choices:
+      - A seed was not set
+      - Nondeterministic kernels and atomic accumulation, which seeds do not cover
+      - There is no lockfile
+      - The data split is random
+    explanation: >-
+      GPU atomic accumulation, nondeterministic kernels and parallel data-loader ordering are
+      nondeterminism outside the seed. Turn on a deterministic mode (at a performance cost) or
+      state that only statistical reproduction is guaranteed. This is separate from a missing seed.
+    concept:
+      front: Seeds vs nondeterminism
+      back: A seed only fixes the random stream; GPU atomics and nondeterministic kernels need a deterministic mode or an explicit statement
+  - id: q2
+    prompt: A public repository without a LICENSE file can still be used freely by anyone, since it was put on GitHub.
+    explanation: >-
+      Without a licence, **default copyright** applies and there is no permission to use, modify or
+      redistribute. Publishing is not permission. Code needs Apache-2.0/MIT and data and documents a
+      CC BY family licence before anyone can actually use them.
+    concept:
+      front: Release without a licence
+      back: Not permission - default copyright applies and use is barred. A LICENSE file is mandatory
+  - id: q3
+    prompt: "For an experiment whose full reproduction takes three days, what must the repository add so reviewers and successors actually check it? (one word or short phrase)"
+    explanation: >-
+      A smoke path that finishes within 10 minutes. With only the full path nobody runs it, so
+      provide both (`--full` and `--smoke`) and document the smoke path's expected output.
+    concept:
+      front: Smoke reproduction path
+      back: Ship a --smoke path that finishes in 10 minutes alongside the full path; without it nobody verifies
+  - id: q4
+    prompt: In real-robot experiments, what is the correct unit of "reproducible"?
+    choices:
+      - Bit-identical agreement of a single run
+      - Matching distributions within a stated trial count and confidence interval
+      - Success rate matching to two decimal places
+      - Agreement only on the same robot
+    explanation: >-
+      Hardware is nondeterministic in principle because of friction, temperature and battery state.
+      The unit of reproduction is therefore a **distribution**, not one run, and the trial count and
+      confidence interval must be stated - a direct link to the previous lesson's statistics.
+    concept:
+      front: The unit of real-robot reproduction
+      back: A distribution, not a single run; judge reproduction by trial count and confidence interval
