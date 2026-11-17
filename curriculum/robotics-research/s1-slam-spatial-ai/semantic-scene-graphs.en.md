@@ -482,7 +482,7 @@ import numpy as np
 
 SEED = 20261117
 N_CLASS = 4
-SIGMA_O, SIGMA_Z, RANGE, Q = 0.15, 0.10, 4.0, 0.9  # odometry/detection noise (m), range (m), accuracy
+SIGMA_O, SIGMA_Z, RANGE, Q = 0.15, 0.10, 4.0, 0.9  # noise (m), range (m), label accuracy
 
 
 def make_map(rng, n_pairs=20, size=20.0, sep=0.5):
