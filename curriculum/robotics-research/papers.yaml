@@ -1623,6 +1623,23 @@ papers:
     url: "https://doi.org/10.1109/TASE.2015.2445780"
     verified: true
     role: standard
+  - id: krause2008-submodular
+    title: "Near-optimal sensor placements in Gaussian processes: theory, efficient algorithms and empirical studies"
+    authors: ["A. Krause", "A. Singh", "C. Guestrin"]
+    year: 2008
+    venue: "JMLR"
+    url: "https://jmlr.org/papers/v9/krause08a.html"
+    note: "JMLR 9, 235-284. ICML 2005 축약판 DOI(10.1145/1102351.1102385)는 다른 논문이므로 쓰지 않는다"
+    verified: true
+    role: seminal
+  - id: atanasov2015-decentralized-active
+    title: "Decentralized active information acquisition: theory and application to multi-robot SLAM"
+    authors: ["N. Atanasov", "J. Le Ny", "K. Daniilidis", "G. J. Pappas"]
+    year: 2015
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ICRA.2015.7139863"
+    verified: true
+    role: standard
   # ── R0 수학·수치 기초 (브리지) ───────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 

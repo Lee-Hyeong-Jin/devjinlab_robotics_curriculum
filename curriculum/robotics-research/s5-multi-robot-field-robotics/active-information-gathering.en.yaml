@@ -1,0 +1,112 @@
+# English text of the structured fields of active-information-gathering.md (activity titles,
+# resource notes, quiz). The prose lives in active-information-gathering.en.md.
+id: s5-active-information-gathering
+lang: en
+activities:
+  s5-active-information-gathering-reading: Read the lesson and follow the derivations
+  s5-active-information-gathering-papers: Read the two must-read papers + a one-page note each
+  s5-active-information-gathering-problems: "Problem set (2 proofs, 1 derivation, 1 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  s5-active-information-gathering-reproduction: "Reproduction task - greedy sensor placement vs exhaustive search, submodularity and its limits (R2)"
+  s5-active-information-gathering-quiz: Concept check quiz
+resources:
+  "Boyd & Vandenberghe, Convex Optimization":
+    note: ch.7.5 (experiment design, D-optimal design) and ch.3.1.5 (concavity of log det). Full PDF is free.
+  "Krause & Golovin, Submodular Function Maximization (survey)":
+    note: A survey that collects the guarantees of submodular maximization in one place. Author's public copy.
+quiz:
+  - id: q1
+    prompt: >-
+      What is the most important consequence of the fact that in the linear-Gaussian model the
+      mutual information (1) **does not depend on the measured values**?
+    choices:
+      - The mutual information can be written as a log-determinant
+      - "Open-loop (non-adaptive) planning obtains the same information as an adaptive policy, so it is optimal"
+      - Submodularity holds
+      - Lazy greedy becomes possible
+    explanation: >-
+      The posterior covariance $\Sigma_S = \Lambda_S^{-1}$ is independent of $y$, so (5) holds and
+      active information gathering reduces to deterministic optimal control rather than a POMDP
+      (`atanasov2015-decentralized-active`). The log-determinant form is its **consequence**, and
+      submodularity comes from a separate assumption (conditional independence). With occlusion or
+      state-dependent noise this property breaks.
+    concept:
+      front: The separation property of the linear-Gaussian case
+      back: >-
+        The posterior covariance is independent of the measured values, so open-loop planning is
+        optimal. It breaks for state-dependent measurement models
+  - id: q2
+    prompt: >-
+      What is the key fact actually used in the proof that mutual information is submodular?
+    choices:
+      - "$\\log\\det$ is a concave function"
+      - "$S\\subseteq T \\Rightarrow \\Sigma_S \\succeq \\Sigma_T$, and $\\log\\det$ is monotone in the PSD order"
+      - Mutual information is non-negative
+      - The greedy algorithm picks the largest marginal gain
+      - Exhaustive search is exponential
+    explanation: >-
+      It is (7) — information matrices add, so $\Lambda_S\preceq\Lambda_T$; by the PSD order
+      reversal of the inverse, $\Sigma_S\succeq\Sigma_T$; and the marginal gain (6) is PSD-monotone
+      in $\Sigma_S$, so $\Delta_j(S)\ge\Delta_j(T)$. A combinatorial property reduces to three
+      lines of linear algebra. The concavity of $\log\det$ serves another purpose (continuous
+      relaxation), and non-negativity is used only for monotonicity.
+    concept:
+      front: Where submodularity comes from
+      back: >-
+        Additivity of information, then the PSD order reversal of the covariance, then
+        monotonicity of the marginal gain. The single assumption is conditional independence of
+        the measurements
+  - id: q3
+    prompt: >-
+      On sensor placement problems the greedy algorithm achieves roughly 63% of the optimum.
+    explanation: >-
+      False. $1-1/e \approx 0.632$ is the **worst-case guarantee over the whole class of monotone
+      submodular functions**. Measured over 50 Gaussian mutual-information instances the mean is
+      $0.9941$, the minimum $0.9621$, and 60% are exactly optimal. The family on which the bound
+      becomes tight comes from max coverage ($0.6724$ at $k=5$, $0.6417$ at $k=20$), and the
+      log-determinant objective does not belong to it. "At least 63%" is right; "about 63%" is
+      wrong.
+    concept:
+      front: The difference between a guarantee and expected performance
+      back: >-
+        $1-1/e$ is the worst-case guarantee of the whole class. On Gaussian mutual information the
+        measured value is 99%; the tight family comes from coverage
+  - id: q4
+    prompt: >-
+      What happens if the measurement noises of the sensors are correlated with each other?
+    choices:
+      - The mutual information decreases and greedy gets worse
+      - "Marginal gains can increase, so submodularity breaks and the $(1-1/e)$ guarantee disappears"
+      - Nothing - correlation affects only the prior
+      - Greedy is guaranteed to find the optimum
+    explanation: >-
+      The counterexample of the reproduction task: at $\rho=0.99$,
+      $f(\{1\})=f(\{2\})=1.5726$ but $f(\{1,2\})=5.1027$, so the marginal gain of sensor 2
+      **increases** from $1.5726$ to $3.5302$ (a synergy of $+1.9576$). The cause is that
+      $\Lambda_{S\cup j} = \Lambda_S + A_j^\top R_j^{-1}A_j$ no longer holds. Note that the
+      information **increases** — correlation is not bad; it is what the **analysis** of greedy
+      cannot handle.
+    concept:
+      front: Correlated noise and submodularity
+      back: >-
+        Information contributions do not add, so (7) breaks. Synergy makes marginal gains grow and
+        the guarantee disappears (the information itself increases)
+  - id: q5
+    prompt: >-
+      When several robots select sensors, what does **one round of communication** buy?
+    choices:
+      - Computation time
+      - "The $(1-1/e)$ guarantee - sequential selection is the same algorithm as central greedy, whereas simultaneous selection has no constant-factor guarantee"
+      - Independence of the measurement noise
+      - Open-loop optimality
+    explanation: >-
+      Sequential selection (the later robot sees the earlier choice) is **the same algorithm** as
+      central greedy for the cardinality constraint $k$, so (3) applies unchanged and the measured
+      mean is $0.9968$. Simultaneous selection without communication has both pick the same
+      sensors and wastes the budget: measured mean $0.5654$ and minimum $0.4386$, below $1/2$ —
+      there is no constant-factor guarantee. Under a partition matroid constraint, where each
+      robot picks only from its own candidates, sequential greedy also drops to $1/2$.
+    concept:
+      front: The value of communication in distributed selection
+      back: >-
+        Sequential = central greedy, hence $(1-1/e)$. Simultaneous (no communication) has no
+        guarantee (measured minimum 0.4386). Under a matroid constraint sequential also gives 1/2
