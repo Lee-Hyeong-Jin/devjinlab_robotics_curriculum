@@ -2244,6 +2244,51 @@ papers:
     note: "2026-11-17 Crossref 확인(주제목·저자 2인·2014-11). 부제는 Crossref 레코드에 없어 학술지 표기를 따랐다"
     verified: true
     role: critique
+  - id: angelopoulos2021-conformal
+    title: "A gentle introduction to conformal prediction and distribution-free uncertainty quantification"
+    authors: ["A. N. Angelopoulos", "S. Bates"]
+    year: 2021
+    venue: "arXiv (Foundations and Trends 2023)"
+    url: "https://arxiv.org/abs/2107.07511"
+    note: "2026-11-17 arXiv API 확인(제목·저자 2인·2021-07-15)"
+    verified: true
+    role: standard
+  - id: sinha2022-system-level-ood
+    title: "A system-level view on out-of-distribution data in robotics"
+    authors: ["R. Sinha", "A. Sharma", "S. Banerjee", "et al."]
+    year: 2022
+    venue: "arXiv"
+    url: "https://arxiv.org/abs/2212.14020"
+    note: "2026-11-17 arXiv API 확인(제목·제1저자·2022-12-28)"
+    verified: true
+    role: survey
+  - id: ren2023-knowno
+    title: "Robots that ask for help: uncertainty alignment for large language model planners"
+    authors: ["A. Z. Ren", "A. Dixit", "A. Bodrova", "et al."]
+    year: 2023
+    venue: "arXiv 2023"
+    url: "https://arxiv.org/abs/2307.01928"
+    note: "KnowNo 는 통칭. 2026-11-17 arXiv API 확인(제목·제1저자·2023-07-04). 학회 게재는 미확인"
+    verified: true
+    role: frontier
+  - id: lakshminarayanan2017-deep-ensembles
+    title: "Simple and scalable predictive uncertainty estimation using deep ensembles"
+    authors: ["B. Lakshminarayanan", "A. Pritzel", "C. Blundell"]
+    year: 2017
+    venue: "arXiv 2016 (NeurIPS 2017 게재는 미확인)"
+    url: "https://arxiv.org/abs/1612.01474"
+    note: "2026-11-17 arXiv API 확인(제목·저자 3인·2016-12-05)"
+    verified: true
+    role: standard
+  - id: chow1970-reject-tradeoff
+    title: "On optimum recognition error and reject tradeoff"
+    authors: ["C. K. Chow"]
+    year: 1970
+    venue: "IEEE Transactions on Information Theory"
+    url: "https://doi.org/10.1109/TIT.1970.1054406"
+    note: "2026-11-17 Crossref 확인(제목·저자·1970-01)"
+    verified: true
+    role: seminal
 
   # ── S5 다중 로봇·필드 로보틱스 ────────────────────────────────────────
   - id: olfati-saber2007-consensus
