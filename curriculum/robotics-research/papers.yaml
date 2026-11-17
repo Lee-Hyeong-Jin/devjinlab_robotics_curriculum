@@ -1535,6 +1535,33 @@ papers:
     note: "arXiv v1 2023. Nature 2025 게재는 미확인"
 
   # ── S1 SLAM·공간 지능 ───────────────────────────────────────────
+  - id: newcombe2011-kinectfusion
+    title: "KinectFusion: real-time dense surface mapping and tracking"
+    authors: ["R. A. Newcombe", "S. Izadi", "O. Hilliges", "et al."]
+    year: 2011
+    venue: "ISMAR"
+    url: "https://doi.org/10.1109/ISMAR.2011.6092378"
+    verified: true
+    role: seminal
+    note: "the GPU TSDF pipeline: fusion, raycasting and frame-to-model ICP"
+  - id: sucar2021-imap
+    title: "iMAP: implicit mapping and positioning in real-time"
+    authors: ["E. Sucar", "S. Liu", "J. Ortiz", "A. J. Davison"]
+    year: 2021
+    venue: "ICCV"
+    url: "https://arxiv.org/abs/2103.12352"
+    verified: true
+    role: frontier
+    note: "a single MLP as the map, with keyframe replay against forgetting"
+  - id: curless1996-vrip
+    title: "A volumetric method for building complex models from range images"
+    authors: ["B. Curless", "M. Levoy"]
+    year: 1996
+    venue: "SIGGRAPH"
+    url: "https://doi.org/10.1145/237170.237269"
+    verified: true
+    role: seminal
+    note: "the origin of the weighted signed-distance average and of truncation"
   - id: galvez-lopez2012-dbow2
     title: "Bags of binary words for fast place recognition in image sequences"
     authors: ["D. Galvez-Lopez", "J. D. Tardos"]

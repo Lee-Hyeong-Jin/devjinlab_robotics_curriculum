@@ -11,3 +11,4 @@ level: 연구
 lessons:
   - vio-systems
   - loop-closure-lifelong
+  - dense-neural-slam
