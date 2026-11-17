@@ -1,0 +1,12 @@
+id: s4-robot-learning-foundation-models
+lang: en
+title: S4 Robot learning and foundation models
+summary: >-
+  Large-scale robot data and foundation models from a researcher's standpoint: the form of
+  scaling laws and the bias floor a data mixture creates, action representations and
+  quantization error in VLAs, the limits of evaluating pretrained representations, the
+  feasibility gap in coupling language with planning, sample sizes and statistical power for
+  hardware evaluation, and how conformal prediction buys a guarantee. The recommended
+  prerequisites are C7 (perception) and C8 (decision making and learning theory), and every
+  reproduction task is designed to be judged on a CPU without a GPU (large-scale fine-tuning
+  is an optional extension).

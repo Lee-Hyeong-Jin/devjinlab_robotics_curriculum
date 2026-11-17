@@ -1,0 +1,59 @@
+id: s4-vla-architectures
+lang: en
+activities:
+  s4-vla-architectures-reading: Read the text and follow the derivations
+  s4-vla-architectures-papers: Read the three must-read papers + a one-page note each
+  s4-vla-architectures-problems: Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample, 1 paper)
+  s4-vla-architectures-reproduction: Reproduction task - quantization error laws, the transfer crossover, multimodal collapse (R2)
+  s4-vla-architectures-quiz: Concept-check quiz
+resources:
+  "Gersho & Gray, Vector Quantization and Signal Compression":
+    note: ch.5-6 (scalar quantization, Lloyd-Max, the high-resolution approximation). The primary textbook on the quantization side. (official URL unverified)
+  "Panter & Dite — Quantization distortion in pulse-count modulation (1951)":
+    note: Recommended. The origin of the classical result that the optimal bin density is proportional to $p^{1/3}$.
+  "Chi et al. — Diffusion policy (2023)":
+    note: Recommended. How a diffusion head handles a multimodal action distribution.
+  "Zhao et al. — Learning fine-grained bimanual manipulation with low-cost hardware (2023)":
+    note: Recommended. The effect of action chunking on compound error and multimodality.
+quiz:
+  - id: q1
+    prompt: "Under squared error, the bin density that minimizes the MSE is proportional to what?"
+    choices:
+      - "$p(a)$ — i.e. quantile (equal-mass) bins"
+      - "$p(a)^{1/3}$"
+      - "A constant — i.e. uniform bins"
+      - "$p(a)^{1/2}$"
+    explanation: "Minimizing (2) subject to $\\int\\lambda=1$ gives, via Hölder's equality condition, $\\lambda^\\star \\propto p^{1/3}$ with minimum distortion (3). Quantile bins use $\\lambda\\propto p$ and so over-allocate bins where the density is high while neglecting the tails — measured at $B=64$ they were 3.4 times worse than uniform bins."
+    concept:
+      front: "The MSE-optimal bin density"
+      back: "$p^{1/3}$ (Panter-Dite). Neither quantile ($p$) nor uniform (constant) is optimal"
+  - id: q2
+    prompt: "Increasing the number of action tokens $B$ always reduces the task cost on a multimodal action distribution."
+    explanation: "With sharp peaks the cost is governed not by bin width but by the **distance from the nearest representative to a mode**, equation (6). Measured, $B=2$ put its representatives exactly on the modes at $\\pm1$ for a cost of $0$, while $B=4$ was **worse** at $0.25$. $\\Delta^2/12$ is an average for a flat density, not an upper bound for a peaked one."
+    concept:
+      front: "What governs a token head's cost"
+      back: "Alignment $\\min_k(c_k-A)^2$ - not monotone in $B$"
+  - id: q3
+    prompt: "Why is the task cost of a regression (MSE) head on multimodal expert actions equal to $A^2$ (the squared half-gap between modes)?"
+    choices:
+      - "Because regression overfits"
+      - "Because the squared-error minimizer is the conditional mean, and that mean sits midway between the two modes"
+      - "Because the bins are too wide"
+      - "Because there is not enough training data"
+    explanation: "The deterministic output minimizing squared error is the conditional mean, which is $0$ when $\\pm A$ have equal weight. If the cost is 'distance to the nearer mode', the cost at $0$ is $A^2$ — the **worst** among possible outputs. It is a structural collapse, unrelated to data volume or overfitting."
+    concept:
+      front: "The multimodal collapse of a regression head"
+      back: "The conditional mean is an infeasible midpoint between modes, at cost $A^2$"
+  - id: q4
+    prompt: "Write the condition under which a frozen pretrained representation beats one trained from scratch, in terms of the approximation error $\\varepsilon$, $\\sigma^2$, the dimension gap $\\Delta p$ and the sample size $N$ (as an inequality)."
+    answers: ["eps < sigma^2 * dp / N", "eps < sigma^2 dp / N", "\\varepsilon < \\sigma^2 \\Delta p / N", "epsilon < sigma^2*Delta p/N"]
+    explanation: "It is (4): $\\varepsilon_{\\mathrm{approx}} < \\sigma^2(p_{\\mathrm{task}}-p_{\\mathrm{pre}})/N$. The value of pretraining is **borrowed variance savings while data is scarce**, with shelf life $N^\\star$. The better the representation (the smaller $\\varepsilon$), the longer it wins — measured, $N^\\star$ rose through 54, 140, 411."
+    concept:
+      front: "When transfer pays"
+      back: "$\\varepsilon_{\\mathrm{approx}} < \\sigma^2\\Delta p/N$ - past the shelf life $N^\\star$ the frozen one loses"
+  - id: q5
+    prompt: "If the action distribution is multimodal you should use a diffusion or flow head instead of a regression head."
+    explanation: "Multimodality alone does not settle it. If the task cost is smooth and convex in the mean action (a tracking error, say), the conditional mean is the **right answer** and the regression head is optimal. Diffusion and flow are needed when the distribution is **multimodal and the cost is mode-selective**. Missing that distinction only adds inference cost."
+    concept:
+      front: "When a diffusion head is needed"
+      back: "Multimodality **and** a mode-selective cost - with a convex cost, regression is optimal"

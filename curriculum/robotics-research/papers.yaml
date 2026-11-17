@@ -2159,7 +2159,89 @@ papers:
     verified: true
     role: standard
   # ── S4 로봇 학습·파운데이션 모델 ───────────────────────────────────────
+  - id: kaplan2020-scaling-laws
+    title: "Scaling laws for neural language models"
+    authors: ["J. Kaplan", "S. McCandlish", "T. Henighan", "et al."]
+    year: 2020
+    venue: "arXiv"
+    url: "https://arxiv.org/abs/2001.08361"
+    verified: true
+    role: standard
+  - id: oxe2023-open-x-embodiment
+    title: "Open X-Embodiment: robotic learning datasets and RT-X models"
+    authors: ["Open X-Embodiment Collaboration"]
+    year: 2023
+    venue: "ICRA 2024"
+    url: "https://arxiv.org/abs/2310.08864"
+    verified: true
+    role: frontier
+    note: "arXiv 2023; ICRA 2024 게재는 미확인"
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+
+  - id: brohan2023-rt2
+    title: "RT-2: vision-language-action models transfer web knowledge to robotic control"
+    authors: ["A. Brohan", "N. Brown", "J. Carbajal", "et al."]
+    year: 2023
+    venue: "CoRL"
+    url: "https://arxiv.org/abs/2307.15818"
+    verified: true
+    role: seminal
+    note: "CoRL 게재는 미확인"
+  - id: kim2024-openvla
+    title: "OpenVLA: an open-source vision-language-action model"
+    authors: ["M. J. Kim", "K. Pertsch", "S. Karamcheti", "et al."]
+    year: 2024
+    venue: "CoRL"
+    url: "https://arxiv.org/abs/2406.09246"
+    verified: true
+    role: frontier
+    note: "CoRL 게재는 미확인"
+  - id: black2024-pi0
+    title: "pi0: a vision-language-action flow model for general robot control"
+    authors: ["K. Black", "N. Brown", "D. Driess", "et al."]
+    year: 2024
+    venue: "arXiv 2024 (arXiv 코멘트는 RSS 2025)"
+    url: "https://arxiv.org/abs/2410.24164"
+    verified: true
+    role: frontier
+    note: "원 제목은 그리스 문자 pi_0 를 쓴다"
+
+  - id: nair2022-r3m
+    title: "R3M: a universal visual representation for robot manipulation"
+    authors: ["S. Nair", "A. Rajeswaran", "V. Kumar", "et al."]
+    year: 2022
+    venue: "CoRL"
+    url: "https://arxiv.org/abs/2203.12601"
+    verified: true
+    role: standard
+    note: "arXiv 코멘트가 CoRL 2022 로 적고 있다"
+  - id: majumdar2023-vc1
+    title: "Where are we in the search for an artificial visual cortex for embodied intelligence? (VC-1)"
+    authors: ["A. Majumdar", "K. Yadav", "S. Arnaud", "et al."]
+    year: 2023
+    venue: "NeurIPS"
+    url: "https://arxiv.org/abs/2303.18240"
+    verified: true
+    role: critique
+    note: "NeurIPS 게재는 미확인"
+  - id: ahn2022-saycan
+    title: "Do as I can, not as I say: grounding language in robotic affordances (SayCan)"
+    authors: ["M. Ahn", "A. Brohan", "N. Brown", "et al."]
+    year: 2022
+    venue: "CoRL"
+    url: "https://arxiv.org/abs/2204.01691"
+    verified: true
+    role: seminal
+    note: "CoRL 게재는 미확인"
+  - id: liang2023-code-as-policies
+    title: "Code as Policies: language model programs for embodied control"
+    authors: ["J. Liang", "W. Huang", "F. Xia", "et al."]
+    year: 2023
+    venue: "ICRA"
+    url: "https://arxiv.org/abs/2209.07753"
+    verified: true
+    role: standard
+    note: "arXiv v1 2022, ICRA 게재는 미확인"
 
   # ── S5 다중 로봇·필드 로보틱스 ────────────────────────────────────────
   - id: olfati-saber2007-consensus

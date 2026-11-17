@@ -22,6 +22,7 @@ modules:
   - s1-slam-spatial-ai
   - s2-manipulation-contact
   - s3-legged-underactuated
+  - s4-robot-learning-foundation-models
   - s5-multi-robot-field-robotics
   - r1-research-methodology
   - r2-capstone

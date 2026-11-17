@@ -1,0 +1,59 @@
+id: s4-pretrained-representations
+lang: en
+activities:
+  s4-pretrained-representations-reading: Read the text and follow the derivations
+  s4-pretrained-representations-papers: Read the two must-read papers + a one-page note each
+  s4-pretrained-representations-problems: Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample, 1 paper)
+  s4-pretrained-representations-reproduction: Reproduction task - probe capacity and ranking reversal, CCA and the slow subspace (R2)
+  s4-pretrained-representations-quiz: Concept-check quiz
+resources:
+  "Hotelling — Relations between two sets of variates (1936)":
+    note: Recommended. The origin of CCA, which is the linear limit of a temporal contrastive objective.
+  "Oord, Li & Vinyals — Representation learning with contrastive predictive coding (2018)":
+    note: Recommended. InfoNCE and the mutual-information lower bound; the standard form of a temporal contrastive objective.
+  "Wiskott & Sejnowski — Slow feature analysis (2002)":
+    note: Recommended. The first paper to make "slow features" an objective; its relation to CCA is explicit.
+  "Hastie, Tibshirani & Friedman, The Elements of Statistical Learning (2nd ed.)":
+    note: ch.3.7 (subspace methods), ch.14.5 (CCA and related decompositions). Full PDF free.
+quiz:
+  - id: q1
+    prompt: "What does the linear probe loss (1) measure?"
+    choices:
+      - "The mutual information $I(\\phi; y)$ the representation carries"
+      - "$\\sigma^2$ plus the projection residual of the target function - i.e. the **linear accessibility** of the information"
+      - "The number of dimensions of the representation"
+      - "How much variance the representation explains"
+    explanation: "(1) is $\\sigma^2 + \\lVert(I-\\Pi_\\phi)h\\rVert^2$. Mutual information is invariant under invertible transformations while $\\mathrm{span}(\\phi)$ can be changed arbitrarily by one, so the two quantities differ. A linear probe score is 'how far the information is aligned with a linear coordinate system'."
+    concept:
+      front: "What a linear probe measures"
+      back: "$\\sigma^2$ + projection residual = linear accessibility. Not information content (which is invertible-invariant)"
+  - id: q2
+    prompt: "A representation holding all of the information always scores better on a linear probe than one that has discarded some."
+    explanation: "The linear residual of a lossless but nonlinearly coded representation B is $3/11 = 0.2727$ by (2), while a linear representation C that discarded only $1/6$ has a smaller residual. Measured, the linear probe rates C (0.1699) above B (0.2724), while the oracle probe rates B (0.0025) above C (0.1699) by 67.8x — **the ranking flips**."
+    concept:
+      front: "Ranking reversal with the probe"
+      back: "The linear probe picks the lossy-linear representation; the oracle picks the lossless-nonlinear one"
+  - id: q3
+    prompt: "If the loss barely changes as the probe capacity $m$ grows, what does that mean?"
+    choices:
+      - "The information is present in the representation but inaccessible"
+      - "The information is **absent** from the representation (destroyed)"
+      - "The probe has overfitted"
+      - "The noise level is high"
+    explanation: "This is the diagnostic (6). Measured, the lossless nonlinear representation B falls monotonically with capacity ($0.2724 \\to 0.0305$ — the information was there and access was blocked), while the lossy representation C does not come down ($0.1699 \\to 0.1789$ — there is nothing to find). A single probe score cannot make this distinction."
+    concept:
+      front: "The capacity-slope diagnostic"
+      back: "Slope < 0 → inaccessible; slope ~ 0 → information destroyed. One score cannot tell you"
+  - id: q4
+    prompt: "Restricting an adjacent-frame contrastive objective to a linear encoder makes the population optimum which analysis? (name)"
+    answers: ["CCA", "cca", "canonical correlation analysis", "Canonical Correlation Analysis"]
+    explanation: "(7) is the problem of maximizing the correlation between consecutive frames, so the solution is CCA between $x_t$ and $x_{t+1}$, obtained from the generalized eigenvalue problem (8). With independent AR(1) latents the canonical correlations recover the autocorrelations $\\rho_i$ — measured 0.972-0.980 against $\\rho=0.98$."
+    concept:
+      front: "The linear limit of a temporal contrastive objective"
+      back: "CCA between consecutive frames - the canonical correlations recover the latents' autocorrelations"
+  - id: q5
+    prompt: "A reconstruction (PCA) objective and a temporal contrastive objective pick the same subspace."
+    explanation: "PCA picks the **high-variance** directions and temporal contrast the **slow (time-predictable)** ones. The two axes are unrelated. Measured, giving the fast nuisance components nine times the variance of the slow ones lets CCA recover the slow subspace to $5.4^\\circ$ while PCA picks something $78.7^\\circ$ away."
+    concept:
+      front: "The axis each objective picks"
+      back: "PCA = large variance, temporal contrast = slowness. Variance and slowness are different axes"
