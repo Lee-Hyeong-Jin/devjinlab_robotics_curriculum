@@ -12,4 +12,5 @@ lessons:
   - vio-systems
   - loop-closure-lifelong
   - dense-neural-slam
+  - certifiable-slam
   - slam-benchmarking

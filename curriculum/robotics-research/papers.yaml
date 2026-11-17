@@ -1723,6 +1723,24 @@ papers:
     note: "2026-11-17 Crossref 확인(제목·저자·1991-04)"
     verified: true
     role: seminal
+  - id: boumal2016-burer-monteiro
+    title: "The non-convex Burer-Monteiro approach works on smooth semidefinite programs"
+    authors: ["N. Boumal", "V. Voroninski", "A. S. Bandeira"]
+    year: 2016
+    venue: "arXiv 2016 (NeurIPS 2016 게재는 미확인)"
+    url: "https://arxiv.org/abs/1606.04970"
+    note: "2026-11-17 arXiv API 확인(제목·저자 3인·2016-06-15)"
+    verified: true
+    role: standard
+  - id: bandeira2017-tightness
+    title: "Tightness of the maximum likelihood semidefinite relaxation for angular synchronization"
+    authors: ["A. S. Bandeira", "N. Boumal", "A. Singer"]
+    year: 2017
+    venue: "arXiv 2014 (Mathematical Programming 2017 게재는 미확인)"
+    url: "https://arxiv.org/abs/1411.3272"
+    note: "2026-11-17 arXiv API 확인(제목·저자 3인·2014-11-12). id 의 2017 은 학술지 연도로 알려진 값"
+    verified: true
+    role: standard
 
   # ── S2 조작·접촉 ────────────────────────────────────────────────
   - id: ferrari1992-grasp-quality
