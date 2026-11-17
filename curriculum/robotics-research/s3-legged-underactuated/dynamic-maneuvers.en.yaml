@@ -1,0 +1,124 @@
+# English text of the structured fields of dynamic-maneuvers.md (activity titles, resource
+# notes, quiz). The prose lives in dynamic-maneuvers.en.md.
+id: s3-dynamic-maneuvers
+lang: en
+activities:
+  s3-dynamic-maneuvers-reading: Read the lesson and follow the derivations
+  s3-dynamic-maneuvers-papers: Read the two must-read papers + a one-page note each
+  s3-dynamic-maneuvers-problems: "Problem set (3 derivations, 1 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  s3-dynamic-maneuvers-reproduction: "Reproduction task - analysing maneuver success rates and re-analysing published results (R3)"
+  s3-dynamic-maneuvers-quiz: Concept check quiz
+resources:
+  "TOWR — trajectory optimizer for walking robots":
+    title: "TOWR - trajectory optimizer for walking robots"
+    note: Public implementation of (phase-based) trajectory optimization that optimizes contact timings as continuous variables. One of the remedies of R1.
+  "OCS2 (ETH RSL)":
+    note: A toolbox for optimal control of switched systems. The underlying implementation of the must-read paper on perceptive locomotion MPC.
+quiz:
+  - id: q1
+    prompt: >-
+      What happens to the number of contact schedules under the constraint that every stance and
+      flight segment must last at least 5 steps?
+    choices:
+      - It becomes polynomial
+      - "It still grows exponentially, but the base drops from 2 to about 1.32"
+      - It becomes constant
+      - It does not change
+    explanation: >-
+      The number of binary sequences in which every run is at least $m$ obeys
+      $c_N = c_{N-1} + c_{N-m}$, with growth rate the largest root of $x^m = x^{m-1} + 1$; for
+      $m = 5$ that is $1.325$. At $N = 20$ there are 68 for one leg and $2.1\times10^7$ for four,
+      far below the unconstrained $1.2\times10^{24}$, but it explodes again as the horizon grows.
+      Hence one fixes the schedule, makes the timings continuous variables, or treats contact
+      implicitly.
+    concept:
+      front: The number of contact schedules
+      back: >-
+        $2^{nN}$. A minimum dwell time $m$ only lowers the base to $\rho_m$ ($m=5$: 1.325); the
+        exponential remains
+  - id: q2
+    prompt: >-
+      For a robot with a leg stroke of 0.25 m to jump to a height of 0.5 m (constant force), what
+      ground reaction force and stance time are required?
+    choices:
+      - "Twice body weight, 0.32 s"
+      - "Three times body weight, 0.16 s"
+      - "1.5 times body weight, 0.5 s"
+      - "Five times body weight, 0.05 s"
+    explanation: >-
+      $F/mg = 1 + h/L = 3$, takeoff speed $v = \sqrt{2gh} = 3.13$ m/s, $T_s = 2L/v = 0.160$ s.
+      The stance that minimizes the effort ($\int F^2dt$) is $T^\star = v/g = 0.32$ s with
+      $F = 2mg$, but that requires a stroke equal to the jump height. With a shorter stroke the
+      stance shortens and the force grows — the contact schedule is set by the mechanism and the
+      actuators.
+    concept:
+      front: The stance of a jump
+      back: >-
+        $T_s = 2L/v$, $F/mg = 1 + h/L$. Effort-optimal: $T^\star = v/g$, $F = 2mg$, $L = h$
+  - id: q3
+    prompt: >-
+      The shorter the stance time of a maneuver, the less sensitive it is to an error in contact
+      timing.
+    explanation: >-
+      False. The relative error of the jump height is $\delta h/h = 2\,\delta T/T_s$, inversely
+      proportional to the stance time. At $T_s = 0.16$ s an error of 10 ms changes the height by
+      12.5%. A robot with a short stroke and therefore a short stance is shaken more by the same
+      timing error, and in a gap crossing that becomes an error in the landing point.
+    concept:
+      front: Sensitivity to contact timing
+      back: >-
+        $\delta h/h = 2\delta T/T_s$. The shorter the stance the more sensitive. 10 ms → 12.5%
+        ($T_s=0.16$ s)
+  - id: q4
+    prompt: >-
+      A gap was attempted 10 times and crossed all 10 times. What can be said at 95% confidence?
+    choices:
+      - The success rate is 100%
+      - The success rate is at least about 69%
+      - The success rate is at least 95%
+      - The success rate is at least 90%
+    explanation: >-
+      The Clopper–Pearson lower limit is $0.025^{1/10} = 0.692$. The statistical content of
+      "crosses reliably" is "a success rate of at least 69%". Demonstrating a 90% success rate at
+      90% confidence takes 22 consecutive successes. Fitting the whole success curve over varying
+      difficulty tells more about the operating limit for the same number of trials.
+    concept:
+      front: What 10/10 means
+      back: >-
+        95% lower limit 0.692. A clean sweep at one level carries almost no information about the
+        limit
+  - id: q5
+    prompt: >-
+      Which placement of 60 trials estimates the operating limit of a maneuver (the difficulty of
+      90% success) most accurately?
+    choices:
+      - All 60 at an easy difficulty
+      - "A staircase that makes it harder after successes and easier after a failure, gathering the trials near the limit"
+      - All 60 at the hardest difficulty
+      - 30 each at two difficulties
+    explanation: >-
+      Trials at a difficulty whose success probability is near 0 or 1 carry little information
+      (the Fisher information is proportional to $p(1-p)$). In simulation the RMSE of $g_{90}$ is
+      $0.036$ for 6 uniform levels, $0.044$ for two levels and $0.026$ m for the staircase, which
+      is 27% better. A staircase gathers near the limit by itself without knowing where it is.
+      But trials near the limit fail often and are expensive for the hardware.
+    concept:
+      front: The placement of trials
+      back: >-
+        Adaptively near the limit. Staircase RMSE 0.026 against uniform 0.036. The informative
+        trials are the dangerous ones
+  - id: q6
+    prompt: >-
+      The hardest difficulty at which a robot has succeeded even once is its operating limit.
+    explanation: >-
+      False. In the log of the reproduction task the $0.72$ m gap was crossed once in 10 attempts,
+      yet the true success probability at that difficulty is 8% and the operating limit
+      ($g_{90}$) is $0.49$ m. The largest difficulty at which it once succeeded is not a measure
+      of capability but the tail of a distribution, and reported without the number of attempts it
+      cannot be interpreted. The operating limit is estimated, with its interval, by fitting the
+      success curve.
+    concept:
+      front: Largest successful difficulty ≠ operating limit
+      back: >-
+        A single success is the tail. 0.72 m has a true success rate of 8%; the operating limit is
+        0.49 m

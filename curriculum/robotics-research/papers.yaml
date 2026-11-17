@@ -2222,6 +2222,42 @@ papers:
     note: "2026-11-17 arXiv API 확인(제목·제1저자·2019-01-24)"
     verified: true
     role: seminal
+  - id: bledt2018-mit-cheetah
+    title: "MIT Cheetah 3: design and control of a robust, dynamic quadruped robot"
+    authors: ["G. Bledt", "M. J. Powell", "B. Katz", "J. Di Carlo", "P. M. Wensing", "S. Kim"]
+    year: 2018
+    venue: "IEEE/RSJ IROS"
+    url: "https://doi.org/10.1109/IROS.2018.8593885"
+    note: "2026-11-17 Crossref 확인(제목·저자 6인·2018-10)"
+    verified: true
+    role: standard
+  - id: grandia2023-perceptive-locomotion
+    title: "Perceptive locomotion through nonlinear model predictive control"
+    authors: ["R. Grandia", "F. Jenelten", "S. Yang", "F. Farshidian", "M. Hutter"]
+    year: 2023
+    venue: "IEEE T-RO (arXiv 2022; 학술지 권호는 미확인)"
+    url: "https://arxiv.org/abs/2208.08373"
+    note: "2026-11-17 arXiv API 확인(제목·저자 5인·2022-08-17)"
+    verified: true
+    role: frontier
+  - id: winkler2018-phase-based
+    title: "Gait and trajectory optimization for legged systems through phase-based end-effector parameterization"
+    authors: ["A. W. Winkler", "C. D. Bellicoso", "M. Hutter", "J. Buchli"]
+    year: 2018
+    venue: "IEEE RA-L"
+    url: "https://doi.org/10.1109/LRA.2018.2798285"
+    note: "2026-11-17 Crossref 확인(제목·저자 4인·2018-07)"
+    verified: true
+    role: standard
+  - id: katz2019-mini-cheetah
+    title: "Mini Cheetah: a platform for pushing the limits of dynamic quadruped control"
+    authors: ["B. Katz", "J. Di Carlo", "S. Kim"]
+    year: 2019
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ICRA.2019.8793865"
+    note: "2026-11-17 Crossref 확인(제목·저자 3인·2019-05)"
+    verified: true
+    role: standard
 
   # ── S4 로봇 학습·파운데이션 모델 ───────────────────────────────────────
   - id: kaplan2020-scaling-laws
