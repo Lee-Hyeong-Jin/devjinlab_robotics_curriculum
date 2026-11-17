@@ -1,0 +1,129 @@
+# English text of the structured fields of field-deployment.md (activity titles, resource
+# notes, quiz). The prose lives in field-deployment.en.md.
+id: s5-field-deployment
+lang: en
+activities:
+  s5-field-deployment-reading: Read the lesson and follow the derivations
+  s5-field-deployment-papers: Read the two must-read papers + a one-page note each
+  s5-field-deployment-problems: "Problem set (2 derivations, 1 proof, 2 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  s5-field-deployment-reproduction: "Reproduction task - reliability analysis of a field log and failure-mode classification of published reports (R2)"
+  s5-field-deployment-quiz: Concept check quiz
+resources:
+  "NIST/SEMATECH e-Handbook of Statistical Methods — Assessing Product Reliability":
+    title: "NIST/SEMATECH e-Handbook of Statistical Methods - Assessing Product Reliability"
+    note: Chapter 8. Exponential and Weibull models, confidence intervals, reliability growth. Free in full.
+  "DARPA Subterranean Challenge":
+    note: Overview of the competition. The background of the field trials the must-read papers report.
+quiz:
+  - id: q1
+    prompt: >-
+      There were 3 failures in 40 hours of field trial. What can be said about the MTBF?
+    choices:
+      - The MTBF is 13.3 hours
+      - "The point estimate is 13.3 hours and the 95% interval is about 4.6 to 64.7 hours"
+      - With only 3 failures nothing can be said
+      - The MTBF is at least 40 hours
+    explanation: >-
+      At a constant failure rate the number of failures is Poisson, and inverting its tails gives
+      the interval
+      $[2T/\chi^2_{0.975,2r+2},\ 2T/\chi^2_{0.025,2r}] = [4.56, 64.65]$ hours. The interval spans
+      a factor of 14 — 3 failures tell only the order of magnitude of the MTBF. For the same MTBF,
+      15 failures in 200 hours narrow it to $[8.1, 23.8]$.
+    concept:
+      front: The interval of the MTBF
+      back: >-
+        $2T/\chi^2_{1-\alpha/2,2r+2}$ to $2T/\chi^2_{\alpha/2,2r}$. 3 failures in 40 h give 4.6 to
+        64.7 h
+  - id: q2
+    prompt: >-
+      Four subsystems of MTBF 50 hours each are in series (the failure of any one fails the
+      mission). What is the system MTBF?
+    choices:
+      - 50 hours
+      - 200 hours
+      - 12.5 hours
+      - 25 hours
+    explanation: >-
+      In a series system failure rates add: $\lambda_{sys} = 4/50$, MTBF $= 12.5$ hours. The
+      reliability of a one-hour mission is $e^{-1/12.5} = 0.923$. Parts that are each fairly
+      reliable do not make a reliable system, and removing the weakest link entirely leaves the
+      next link waiting.
+    concept:
+      front: The MTBF of a series system
+      back: >-
+        Failure rates add. $1/\mathrm{MTBF}_{sys} = \sum 1/\mathrm{MTBF}_k$
+  - id: q3
+    prompt: >-
+      Using several robots, the probability that the whole team fails can be made as small as
+      desired.
+    explanation: >-
+      False. Redundancy works only on **independent** failures. If part of the failures comes from
+      common causes that strike the whole team at once (communication infrastructure, corruption
+      of a shared map, the same software bug), the team reliability cannot exceed $R_{cc}$. In the
+      example of the lesson a 10% common cause multiplies the failure probability of "at least 1
+      of 3" by 8, from $0.0016$ to $0.0134$.
+    concept:
+      front: Common-cause failures
+      back: >-
+        $R_{team} \le R_{cc}$. Redundancy helps only against independent failures. Team
+        reliability is set by what is shared
+  - id: q4
+    prompt: >-
+      A system dominated by early failures ($\beta < 1$) was tested on two-hour missions and an
+      exponential model was fitted. What happens when that model predicts the reliability of a
+      30-minute mission?
+    choices:
+      - It is accurate
+      - "It is optimistic - the actual reliability is below the prediction"
+      - "It is pessimistic - the actual reliability is above the prediction"
+      - It cannot be predicted
+    explanation: >-
+      The ratio of predicted to true cumulative hazard is $(t/t_0)^{1-\beta}$. For $\beta < 1$ and
+      $t < t_0$ it is below 1, so the hazard is under-predicted — the failures cluster early in
+      the mission and the exponential model spreads them evenly over the two hours. Measured:
+      prediction $0.933$ against truth $0.889$ for a 0.5-hour mission. For a long mission (8
+      hours) it is pessimistic instead ($0.329$ against $0.421$).
+    concept:
+      front: Extrapolating the exponential model
+      back: >-
+        Ratio of cumulative hazards $(t/t_0)^{1-\beta}$. With early failures: optimistic for short
+        missions, pessimistic for long ones
+  - id: q5
+    prompt: >-
+      In a field log no power failure was ever observed (19 failures in total). Which conclusion
+      is correct?
+    choices:
+      - Power is not a failure mode
+      - "The share of power failures is at most about 18% at 95% confidence - it cannot be called zero"
+      - The MTBF of power is infinite
+      - Power can safely be dropped from the improvement priorities
+    explanation: >-
+      The 95% Clopper–Pearson upper bound for 0/19 is $17.6\%$. In the log of the lesson the true
+      MTBF of power is 150 hours while the observation time is 137 hours, so never seeing one is
+      if anything the natural outcome. Failure modes that are rare but of large consequence are
+      not caught by the frequencies of a field log and have to be handled separately through
+      subsystem tests or failure-mode analysis.
+    concept:
+      front: An unobserved failure mode
+      back: >-
+        0 failures ≠ 0. The 95% upper bound for 0/19 is 17.6%. With an observation time shorter
+        than the MTBF, not seeing it is normal
+  - id: q6
+    prompt: >-
+      How many consecutive failure-free missions are needed to demonstrate a mission reliability
+      of 95% at a confidence level of 90%?
+    choices:
+      - "10"
+      - "20"
+      - "45"
+      - "230"
+    explanation: >-
+      $n = \lceil\ln(1-C)/\ln R\rceil = \lceil\ln 0.1/\ln 0.95\rceil = 45$. It means that the
+      probability of 45 consecutive successes when the true reliability is below 0.95 is at most
+      10%. Demonstrating 99% takes 230, which is why high-reliability requirements are argued by
+      decomposition into subsystems rather than by system tests. The common "10 failure-free
+      trials" demonstrates only about 79%.
+    concept:
+      front: The number of failure-free trials
+      back: >-
+        $n = \ln(1-C)/\ln R$. 90% → 22, 95% → 45, 99% → 230 (C=0.9)

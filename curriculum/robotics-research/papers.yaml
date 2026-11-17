@@ -2445,6 +2445,43 @@ papers:
     note: "2026-11-17 Crossref 확인(제목·저자·2002-07)"
     verified: true
     role: standard
+  - id: ebadi2022-darpa-subt
+    title: "Present and future of SLAM in extreme underground environments"
+    authors: ["K. Ebadi", "L. Bernreiter", "H. Biggie", "et al."]
+    year: 2022
+    venue: "arXiv 2022"
+    url: "https://arxiv.org/abs/2208.01787"
+    note: "2026-11-17 arXiv API 확인(제목·제1저자 Kamak Ebadi·2022-08-02). 학술지 게재는 미확인"
+    verified: true
+    role: survey
+  - id: roucek2019-darpa-subt-system
+    title: "DARPA Subterranean Challenge: multi-robotic exploration of underground environments"
+    authors: ["T. Roucek", "M. Pecka", "P. Cizek", "et al."]
+    year: 2020
+    venue: "MESAS 2019 (LNCS, 2020)"
+    url: "https://doi.org/10.1007/978-3-030-43890-6_22"
+    note: "2026-11-17 Crossref 확인(제목·제1저자 Tomas Roucek·2020). id 의 2019 는 학회 개최 연도"
+    verified: true
+    role: standard
+  - id: carlson2005-ugv-failures
+    title: "How UGVs physically fail in the field"
+    authors: ["J. Carlson", "R. R. Murphy"]
+    year: 2005
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2004.838027"
+    note: "2026-11-17 Crossref 확인(제목·저자 2인·2005-06)"
+    verified: true
+    role: seminal
+  - id: tranzatto2022-cerberus
+    title: "CERBERUS in the DARPA Subterranean Challenge"
+    authors: ["M. Tranzatto", "T. Miki", "M. Dharmadhikari", "et al."]
+    year: 2022
+    venue: "Science Robotics"
+    url: "https://doi.org/10.1126/scirobotics.abp9742"
+    note: "2026-11-17 Crossref 확인(제목·제1저자·2022-05-25)"
+    verified: true
+    role: frontier
+
   # ── R0 수학·수치 기초 (브리지) ───────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
