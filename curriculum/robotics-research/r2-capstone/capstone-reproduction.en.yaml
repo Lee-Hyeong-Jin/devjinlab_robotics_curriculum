@@ -1,0 +1,62 @@
+id: r2-capstone-reproduction
+lang: en
+activities:
+  r2-capstone-reproduction-reading: Read the lesson and decide the target and tolerance
+  r2-capstone-reproduction-extract: Close reading of the target paper and writing the experiment specification
+  r2-capstone-reproduction-run: Run the R3-tier reproduction and trace the discrepancies
+  r2-capstone-reproduction-report: "Deliverable - a reproduction report and a reproduction repository"
+  r2-capstone-reproduction-quiz: Concept check quiz
+resources:
+  "uv: Locking and syncing":
+    note: Pin the reproduction environment with a lockfile; if you guessed the original's dependency versions, record that guess too.
+  "Zenodo":
+    note: Give the reproduction repository and report a DOI so they can be cited alongside the original paper.
+quiz:
+  - id: q1
+    prompt: When your reproduced value differs from the reported one, what should you suspect first?
+    choices:
+      - A reporting error by the authors
+      - Your own implementation (units, frame conventions, normalisation, evaluation script)
+      - The quality of the dataset
+      - A hardware difference
+    explanation: >-
+      Most discrepancies come from the reproducer's implementation - units, conventions such as
+      angular-before-linear ordering, normalisation, the alignment used in evaluation. Only after
+      excluding your own code against the paper's intermediate values (loss curves, parameter counts,
+      inference time) will a later "reporting gap" conclusion be trusted.
+    concept:
+      front: Order of discrepancy decomposition
+      back: Implementation error, then assumption difference, then reporting gap - suspect your own code first
+  - id: q2
+    prompt: Setting the tolerance after running the reproduction and seeing the results gives a more realistic criterion.
+    explanation: >-
+      A tolerance set afterwards is a rationalisation, not a judgment: any result can be made into
+      "reproduced" or "failed". Write the per-metric criterion before running and commit it to leave a
+      timestamp - pre-registration applied to reproduction.
+    concept:
+      front: Setting the tolerance in advance
+      back: Define it per metric before running and prove the time by commit; defining it afterwards is rationalisation
+  - id: q3
+    prompt: On a failed reproduction, which counts as "establishing the cause with evidence"?
+    choices:
+      - Reporting that you checked the implementation three times and the numbers did not come out
+      - Changing assumptions one at a time to measure sensitivity and showing the searched range in which no combination reaches the reported value
+      - Noting that you emailed the authors and got no reply
+      - Noting that reproduction is impossible because no code was released
+    explanation: >-
+      The evidence for a failure is the **sensitivity analysis**: systematically varying the
+      assumptions you had to make, then showing the range searched and that the reported value is not
+      reached within it. Author contact and missing code belong in the report as context, but are not
+      themselves an explanation.
+    concept:
+      front: Evidence for an established failure
+      back: A sensitivity analysis over assumptions - present the searched range and the shortfall within it
+  - id: q4
+    prompt: "In a tier-R3 reproduction, *what* should be the object of reproduction? (briefly)"
+    explanation: >-
+      One or two **claims**, not the whole paper (e.g. "in Table 3 of §5.2, method A has a 15-point
+      higher success rate than B"). Narrowing the scope to a claim makes a reduced-scale run and a
+      clear judgment possible; attempting the whole paper explodes the scope.
+    concept:
+      front: Scope of an R3 reproduction
+      back: One or two claims written as sentences, reproduced at reduced scale - not the whole paper
