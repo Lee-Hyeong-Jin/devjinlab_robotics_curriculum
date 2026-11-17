@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Research track complete: all 105 lessons of the design (17 modules) are now in Korean and
+  English. This closes S1 (`s1-dense-neural-slam`, `s1-semantic-scene-graphs`,
+  `s1-certifiable-slam`, `s1-slam-benchmarking`), S3 (`s3-locomotion-rl`,
+  `s3-dynamic-maneuvers`), S4 (`s4-evaluation-science`, `s4-safety-ood`), S5
+  (`s5-active-information-gathering`, `s5-comms-constrained-estimation`, `s5-field-deployment`),
+  C4 (`c4-robust-stochastic-oc`) and adds the R2 capstone module (`r2-capstone-survey`,
+  `r2-capstone-reproduction`, `r2-capstone-contribution`). The numbers in each reproduction task
+  come from running its code; comparisons against public tools and datasets that were not run are
+  marked as such in the lesson.
+- `curriculum/README.md` lists the research-track modules and the current translation status.
 - 연구원 트랙에 S2 조작·접촉 모듈을 열었다 — `s2-grasp-mechanics`(접촉 역학과 파지 안정성),
   `s2-contact-modes-dexterity`(접촉 모드와 외재적 손재주),
   `s2-tactile-contact-estimation`(촉각과 접촉 상태 추정),
@@ -112,6 +122,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   regress.
 
 ### Changed
+- C4 lessons `c4-pontryagin-indirect`, `c4-dp-lqr-lqg` and `c4-ilqr-ddp` cite their papers through
+  the course registry (`papers[]`) instead of article resources, use the `paper` and
+  `reproduction` activity kinds, and the C4 module level is `연구`.
 
 - SEO. With `RC_PUBLIC_CONTENT=1` (ADR 0016) the curriculum is readable without a session and
   the pages that hold it become indexable: per-page title and description, canonical URL,
