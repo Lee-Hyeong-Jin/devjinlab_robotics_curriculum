@@ -1,0 +1,60 @@
+id: r2-capstone-survey
+lang: en
+activities:
+  r2-capstone-survey-reading: Read the lesson and design the scope and axis
+  r2-capstone-survey-dissect: "Case study - dissect the classification axes of two model surveys"
+  r2-capstone-survey-corpus: Collect and filter 40+ papers and build the comparison table
+  r2-capstone-survey-deliverable: "Deliverable - a 10-15 page survey, a classification table and a citation verification log"
+  r2-capstone-survey-quiz: Concept check quiz
+resources:
+  "Zenodo":
+    note: Publish the classification table and bibliography with a DOI so the survey becomes a citable artifact.
+quiz:
+  - id: q1
+    prompt: What counts as a survey's contribution?
+    choices:
+      - Summarising 40 papers in the field one paragraph each
+      - Rearranging the field on a classification axis existing surveys do not use, and showing the empty cells it reveals
+      - Including every recent paper without omission
+      - Selecting only highly cited papers
+      - Collecting every paper's performance numbers into one table
+    explanation: >-
+      A survey's contribution is the **grid** (the classification axis). A list of summaries is an
+      annotated bibliography, and recency or coverage is not a contribution. If the axis matches an
+      existing one there is no reason to write, which is why dissecting existing surveys comes first.
+    concept:
+      front: A survey's contribution
+      back: The classification axis itself - it reveals what existing axes hid and shows the empty cells
+  - id: q2
+    prompt: If time is short, it is acceptable to fill the classification table from abstracts alone.
+    explanation: >-
+      An abstract is the authors' claim; assumptions, evaluation conditions and limitations live in
+      the body. Cells filled from abstracts (especially assumptions, guarantee strength and
+      evaluation setting) are nearly always wrong. Do not table a paper you have not read - exclude
+      it honestly under the scope criteria instead.
+    concept:
+      front: The rule for the classification table
+      back: Only papers you read. Abstracts cannot tell you the assumptions, guarantees or evaluation conditions
+  - id: q3
+    prompt: You saw paper C state "paper A proved X" and cited it that way in your survey. What is wrong?
+    choices:
+      - The citation format is wrong
+      - It is a second-hand citation and may differ from A's actual claim and assumptions
+      - You should cite C
+      - Nothing is wrong
+    explanation: >-
+      Second-hand citation is the main source of misattribution. C's summary may have dropped A's
+      assumptions (a particular noise model, compactness). **Check the primary source**, and if you
+      have not read A, do not make the claim.
+    concept:
+      front: The primary-source rule
+      back: Cite a claim from the original paper; second-hand citation propagates dropped assumptions and misattribution
+  - id: q4
+    prompt: "When a publisher page blocks automated access so the reference cannot be confirmed, what belongs in the citation verification log? (briefly)"
+    explanation: >-
+      Record the block, the **alternative confirmation route** (the authors' lab publication list,
+      the conference programme) and the date. If no route confirms it, mark it (unverified) or remove
+      it. A guessed reference is a credibility problem.
+    concept:
+      front: Handling an unconfirmable reference
+      back: Log the alternative route, method and date; if still unconfirmed, mark it or remove it
