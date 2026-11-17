@@ -2217,6 +2217,33 @@ papers:
     verified: true
     role: standard
     note: "arXiv v1 2022, ICRA 게재는 미확인"
+  - id: li2024-simpler
+    title: "Evaluating real-world robot manipulation policies in simulation"
+    authors: ["X. Li", "K. Hsu", "J. Gu", "et al."]
+    year: 2024
+    venue: "arXiv 2024"
+    url: "https://arxiv.org/abs/2405.05941"
+    note: "SIMPLER 는 통칭이고 원 제목에 없다. 제1저자 Xuanlin Li. CoRL 게재는 미확인"
+    verified: true
+    role: frontier
+  - id: brown2001-binomial-intervals
+    title: "Interval estimation for a binomial proportion"
+    authors: ["L. D. Brown", "T. T. Cai", "A. DasGupta"]
+    year: 2001
+    venue: "Statistical Science"
+    url: "https://doi.org/10.1214/ss/1009213286"
+    note: "2026-11-17 Crossref 확인(제목·저자 3인·2001-05)"
+    verified: true
+    role: standard
+  - id: gelman2014-type-s-m
+    title: "Beyond power calculations: assessing type S (sign) and type M (magnitude) errors"
+    authors: ["A. Gelman", "J. Carlin"]
+    year: 2014
+    venue: "Perspectives on Psychological Science"
+    url: "https://doi.org/10.1177/1745691614551642"
+    note: "2026-11-17 Crossref 확인(주제목·저자 2인·2014-11). 부제는 Crossref 레코드에 없어 학술지 표기를 따랐다"
+    verified: true
+    role: critique
 
   # ── S5 다중 로봇·필드 로보틱스 ────────────────────────────────────────
   - id: olfati-saber2007-consensus
