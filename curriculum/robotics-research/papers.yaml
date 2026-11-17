@@ -1698,6 +1698,32 @@ papers:
     verified: true
     role: standard
     note: "arXiv v1 2019-09-18, journal_ref RA-L 2020"
+  - id: sturm2012-tum-rgbd
+    title: "A benchmark for the evaluation of RGB-D SLAM systems"
+    authors: ["J. Sturm", "N. Engelhard", "F. Endres", "W. Burgard", "D. Cremers"]
+    year: 2012
+    venue: "IEEE/RSJ IROS"
+    url: "https://doi.org/10.1109/IROS.2012.6385773"
+    verified: true
+    role: seminal
+  - id: geiger2012-kitti
+    title: "Are we ready for autonomous driving? The KITTI vision benchmark suite"
+    authors: ["A. Geiger", "P. Lenz", "R. Urtasun"]
+    year: 2012
+    venue: "CVPR"
+    url: "https://doi.org/10.1109/CVPR.2012.6248074"
+    verified: true
+    role: standard
+  - id: umeyama1991-least-squares
+    title: "Least-squares estimation of transformation parameters between two point patterns"
+    authors: ["S. Umeyama"]
+    year: 1991
+    venue: "IEEE T-PAMI"
+    url: "https://doi.org/10.1109/34.88573"
+    note: "2026-11-17 Crossref 확인(제목·저자·1991-04)"
+    verified: true
+    role: seminal
+
   # ── S2 조작·접촉 ────────────────────────────────────────────────
   - id: ferrari1992-grasp-quality
     title: "Planning optimal grasps"
