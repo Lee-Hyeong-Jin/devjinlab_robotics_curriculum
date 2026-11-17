@@ -12,3 +12,4 @@ lessons:
   - distributed-optimization
   - multi-agent-planning
   - active-information-gathering
+  - comms-constrained-estimation

@@ -2312,6 +2312,41 @@ papers:
     url: "https://doi.org/10.1109/ICRA.2015.7139863"
     verified: true
     role: standard
+  - id: julier1997-covariance-intersection
+    title: "A non-divergent estimation algorithm in the presence of unknown correlations"
+    authors: ["S. J. Julier", "J. K. Uhlmann"]
+    year: 1997
+    venue: "American Control Conference"
+    url: "https://doi.org/10.1109/ACC.1997.609105"
+    verified: true
+    role: seminal
+  - id: sinopoli2004-intermittent-observations
+    title: "Kalman filtering with intermittent observations"
+    authors: ["B. Sinopoli", "L. Schenato", "M. Franceschetti", "K. Poolla", "M. I. Jordan", "S. S. Sastry"]
+    year: 2004
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.2004.834121"
+    note: "2026-11-17 Crossref 확인(제목·저자 6인·2004-09)"
+    verified: true
+    role: standard
+  - id: grime1994-decentralized-data-fusion
+    title: "Data fusion in decentralized sensor networks"
+    authors: ["S. Grime", "H. F. Durrant-Whyte"]
+    year: 1994
+    venue: "Control Engineering Practice"
+    url: "https://doi.org/10.1016/0967-0661(94)90349-2"
+    note: "2026-11-17 Crossref 확인(제목·저자·1994-10)"
+    verified: true
+    role: standard
+  - id: bar-shalom2002-oosm
+    title: "Update with out-of-sequence measurements in tracking: exact solution"
+    authors: ["Y. Bar-Shalom"]
+    year: 2002
+    venue: "IEEE T-AES"
+    url: "https://doi.org/10.1109/TAES.2002.1039398"
+    note: "2026-11-17 Crossref 확인(제목·저자·2002-07)"
+    verified: true
+    role: standard
   # ── R0 수학·수치 기초 (브리지) ───────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
