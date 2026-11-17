@@ -2119,8 +2119,99 @@ papers:
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 
   # ── S5 다중 로봇·필드 로보틱스 ────────────────────────────────────────
-  # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
+  - id: olfati-saber2007-consensus
+    title: "Consensus and cooperation in networked multi-agent systems"
+    authors: ["R. Olfati-Saber", "J. A. Fax", "R. M. Murray"]
+    year: 2007
+    venue: "Proceedings of the IEEE"
+    url: "https://doi.org/10.1109/JPROC.2006.887293"
+    verified: true
+    role: survey
+  - id: jadbabaie2003-coordination
+    title: "Coordination of groups of mobile autonomous agents using nearest neighbor rules"
+    authors: ["A. Jadbabaie", "J. Lin", "A. S. Morse"]
+    year: 2003
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.2003.812781"
+    note: "CDC 2002 학회판(10.1109/CDC.2002.1184304)은 다른 레코드이므로 쓰지 않는다"
+    verified: true
+    role: seminal
+  - id: fiedler1973-algebraic-connectivity
+    title: "Algebraic connectivity of graphs"
+    authors: ["M. Fiedler"]
+    year: 1973
+    venue: "Czechoslovak Mathematical Journal"
+    url: "https://doi.org/10.21136/CMJ.1973.101168"
+    verified: true
+    role: seminal
 
+  - id: boyd2011-admm
+    title: "Distributed optimization and statistical learning via the alternating direction method of multipliers"
+    authors: ["S. Boyd", "N. Parikh", "E. Chu", "et al."]
+    year: 2011
+    venue: "Foundations and Trends in Machine Learning"
+    url: "https://doi.org/10.1561/9781601984616"
+    note: "널리 쓰이는 저널 DOI 10.1561/2200000016 은 이 조사에서 확인하지 못했다. 확인된 것은 단행본 레코드(Crossref year 2010)이고 저널 권호는 FnT ML 3(1), 2011"
+    verified: true
+    role: standard
+  - id: choudhary2017-distributed-slam
+    title: "Distributed mapping with privacy and communication constraints: lightweight algorithms and object-based models"
+    authors: ["S. Choudhary", "L. Carlone", "C. Nieto", "et al."]
+    year: 2017
+    venue: "IJRR"
+    url: "https://arxiv.org/abs/1702.03435"
+    note: "IJRR 게재는 미확인"
+    verified: true
+    role: standard
+  - id: tian2021-distributed-certifiable
+    title: "Distributed certifiably correct pose-graph optimization"
+    authors: ["Y. Tian", "K. Khosoussi", "D. M. Rosen", "J. P. How"]
+    year: 2021
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2021.3072346"
+    verified: true
+    role: seminal
+  - id: sharon2015-cbs
+    title: "Conflict-based search for optimal multi-agent pathfinding"
+    authors: ["G. Sharon", "R. Stern", "A. Felner", "N. R. Sturtevant"]
+    year: 2015
+    venue: "Artificial Intelligence"
+    url: "https://doi.org/10.1016/j.artint.2014.11.006"
+    verified: true
+    role: seminal
+  - id: yu2013-mapf-complexity
+    title: "Structure and intractability of optimal multi-robot path planning on graphs"
+    authors: ["J. Yu", "S. M. LaValle"]
+    year: 2013
+    venue: "AAAI"
+    url: "https://doi.org/10.1609/aaai.v27i1.8541"
+    verified: true
+    role: seminal
+  - id: cap2015-prioritized-planning
+    title: "Prioritized planning algorithms for trajectory coordination of multiple mobile robots"
+    authors: ["M. Cap", "P. Novak", "A. Kleiner", "M. Selecky"]
+    year: 2015
+    venue: "IEEE T-ASE"
+    url: "https://doi.org/10.1109/TASE.2015.2445780"
+    verified: true
+    role: standard
+  - id: krause2008-submodular
+    title: "Near-optimal sensor placements in Gaussian processes: theory, efficient algorithms and empirical studies"
+    authors: ["A. Krause", "A. Singh", "C. Guestrin"]
+    year: 2008
+    venue: "JMLR"
+    url: "https://jmlr.org/papers/v9/krause08a.html"
+    note: "JMLR 9, 235-284. ICML 2005 축약판 DOI(10.1145/1102351.1102385)는 다른 논문이므로 쓰지 않는다"
+    verified: true
+    role: seminal
+  - id: atanasov2015-decentralized-active
+    title: "Decentralized active information acquisition: theory and application to multi-robot SLAM"
+    authors: ["N. Atanasov", "J. Le Ny", "K. Daniilidis", "G. J. Pappas"]
+    year: 2015
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ICRA.2015.7139863"
+    verified: true
+    role: standard
   # ── R0 수학·수치 기초 (브리지) ───────────────────────────────────────
   # (담당 저자가 레슨 전환 커밋에서 자기 항목을 여기에 추가한다)
 

@@ -21,5 +21,6 @@ modules:
   - c8-decision-making-learning-theory
   - s2-manipulation-contact
   - s3-legged-underactuated
+  - s5-multi-robot-field-robotics
   - r1-research-methodology
   - r2-capstone

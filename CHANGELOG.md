@@ -48,6 +48,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the variational equation, bang-bang structure and singular arcs, the exponential
   conditioning of single shooting, and the brachistochrone solved in closed form. Korean
   source plus the English translation.
+- 연구 트랙 S5 모듈 세 번째 레슨 `s5-multi-agent-planning`(다중 로봇 경로 계획): CBS 의 완전성·최적성 증명, 우선순위 계획이 모든 순서에서 실패하는 반례, 고정 예산 아래 성공률 역전의 실측. 한국어·영어 동시 제공.
+- 연구원 트랙 S5 에 `s5-distributed-optimization`(분산 최적화와 분산 SLAM, ko/en)을 추가했다.
+  2블록 ADMM 의 수렴을 증명하고 2차 문제에서 ADMM 이 아핀 반복임을 보여 수렴률을 명시적
+  스펙트럼 반경으로 쓰고, 블록 Gauss-Seidel 의 수렴률이 정확히 1 − λ_min(Λ₂₂⁻¹S)(S 는 Schur
+  보완)임을 증명해 Λ ≻ 0 이면 항상 수렴함을 보였다. 2대 로봇 포즈 그래프에서 중앙집중 해와
+  186 라운드에 1e-4 이내로 일치하고, 로봇 간 공유를 늘리면 정확도는 올라가지만 수렴률이
+  나빠지는 교환을 수치로 측정했다.
+- 연구원 트랙에 S5 다중 로봇·필드 로보틱스 모듈을 시작했다 — `s5-graph-consensus`(그래프
+  이론과 합의, ko/en). 연속시간 합의의 수렴률이 정확히 대수적 연결성 λ₂ 임을 증명하고, 이산시간
+  합의의 최적 보폭 2/(λ₂+λₙ)과 그 수렴률 (κ−1)/(κ+1)을 닫힌 형태로 유도하고, 방향 그래프의
+  합의값이 좌 영벡터 가중 평균임을 보이고, 시변 그래프에서는 결합 연결성만이 문제임을
+  (각각 λ₂ = 0 인 두 그래프를 번갈아 써도 합의에 도달함을) 수치로 확인했다.
 - 연구원 트랙에 C6 동작 계획 이론 모듈을 추가했다 — `c6-cspace-complexity`(구성공간과 복잡도),
   `c6-combinatorial-gcs`(조합적 계획과 볼록 분해), `c6-sampling-completeness`(샘플링 기반과
   확률적 완전성), `c6-asymptotic-optimality`(점근 최적성),
