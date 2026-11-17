@@ -64,7 +64,7 @@ papers:
     required: true
     role: standard
     note: "§III-§IV"
-  - id: anitescu1997-lcp
+  - id: anitescu1997-lcp-contact
     role: standard
     note: "§3"
   - id: mordatch2012-cio
