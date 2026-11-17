@@ -1,0 +1,127 @@
+# English text of the structured fields of semantic-scene-graphs.md (activity titles, resource
+# notes, quiz). The prose lives in semantic-scene-graphs.en.md.
+id: s1-semantic-scene-graphs
+lang: en
+activities:
+  s1-semantic-scene-graphs-reading: Read the lesson and follow the derivations
+  s1-semantic-scene-graphs-papers: Read the two must-read papers + a one-page note each
+  s1-semantic-scene-graphs-problems: "Problem set (3 derivations, 1 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  s1-semantic-scene-graphs-reproduction: "Reproduction task - the error rate of object-level data association and its gain over geometry alone (R3)"
+  s1-semantic-scene-graphs-quiz: Concept check quiz
+resources:
+  "Kimera (MIT SPARK Lab)":
+    note: Public implementation of the must-read paper. Builds the metric-semantic mesh and the 3D dynamic scene graph.
+  "Hydra (MIT SPARK Lab)":
+    note: The follow-up system that builds and optimizes scene graphs in real time. Used in the optional task.
+quiz:
+  - id: q1
+    prompt: >-
+      Two objects are so close that geometry hardly separates them (separation ratio $r \to 0$)
+      and they have different classes. What is the error probability of maximum-a-posteriori
+      association using a classifier of accuracy $q$?
+    choices:
+      - It converges to 0.5
+      - "It converges to $1 - q$"
+      - It converges to 0
+      - "It converges to $q$"
+    explanation: >-
+      As the geometric log-likelihood ratio goes to 0 the decision is made by the label alone, and
+      the label is wrong with probability $1-q$. In the formula
+      $q\,\Phi(-r/2-\lambda/r) + (1-q)\,\Phi(-r/2+\lambda/r)$, as $r \to 0$ the first term goes to
+      0 and the second to $1-q$. With geometry alone that limit is 0.5. Semantics replace the
+      floor at which geometry collapses by the error rate of the classifier.
+    concept:
+      front: The limit of association with semantics
+      back: >-
+        As $r \to 0$ the error goes to $1-q$ (0.5 with geometry alone). For large $r$ geometry
+        dominates
+  - id: q2
+    prompt: >-
+      Where do many association errors remain in object SLAM even after class labels are used?
+    choices:
+      - On large objects
+      - Where several objects of the same class are close together
+      - Where objects of different classes touch
+      - In a room with a single object
+    explanation: >-
+      If the two candidates have the same class the likelihood ratio of the label is exactly 0 and
+      the decision is made by geometry alone. In the measurement, with semantics the error of
+      pairs of different classes drops by a factor of 3.5, $7.1\% \to 2.0\%$, while pairs of the
+      same class only go $5.2\% \to 3.8\%$, and $3.0\%$ remains even with the classifier raised to
+      99%. Repeated things such as chairs, doors and windows are where the confusion of object
+      SLAM gathers.
+    concept:
+      front: The wall of the same class
+      back: >-
+        Label likelihood ratio = 0. It remains however the classifier improves. Instance cues,
+        pose and relations are needed
+  - id: q3
+    prompt: >-
+      Believing the confidence of a classifier to be higher than its actual accuracy and using it
+      in association is, even in the worst case, still better than using geometry alone.
+    explanation: >-
+      False. Under overconfidence the weight $\hat\lambda$ of the label grows and the cases in
+      which **a wrong label overturns a right geometry** multiply. The second term of the error
+      probability $q\,\Phi(-r/2 - \hat\lambda/r) + (1-q)\,\Phi(-r/2 + \hat\lambda/r)$ tends to
+      $1-q$ as $\hat\lambda \to \infty$, so when geometry is good (large $r$) the total error
+      exceeds $\Phi(-r/2)$. The optimum is $\hat{q} = q$, which is why a calibrated classifier is
+      needed.
+    concept:
+      front: An overconfident classifier
+      back: >-
+        An inflated $\hat\lambda$ lets wrong labels overturn the geometry. The error can exceed
+        that of geometry alone
+  - id: q4
+    prompt: >-
+      Which statement best summarizes the effect of wrong data associations on localization?
+    choices:
+      - They merely raise the mean error a little
+      - "In most runs the effect is small, but in some runs they produce large errors - the maximum deteriorates far more than the mean"
+      - They make every run worse to the same degree
+      - They enlarge the covariance and so reveal themselves
+    explanation: >-
+      In the measurement the mean ATE is $0.172$ for geometry, $0.146$ with semantics and
+      $0.129$ m for the oracle, while the maximum is $1.05$, $0.37$ and $0.38$ m. A wrong
+      association accepts a wrong measurement with full confidence, so it drags the estimate
+      **while shrinking** the covariance, and the shrunken covariance pushes the right candidate
+      out of the next association, producing a chain. The filter does not know it is wrong.
+    concept:
+      front: The effect of association errors
+      back: >-
+        They inflate the tail (maximum 1.05 against 0.37 m). The covariance shrinks and invites a
+        chain of errors
+  - id: q5
+    prompt: >-
+      When the type of a room is inferred from the objects inside it, what happens if the label
+      accuracy of the object detector falls from 1.0 to 0.7?
+    choices:
+      - The inference becomes impossible
+      - "The error exponent (the Chernoff information) drops, so about three times the objects are needed for the same confidence"
+      - Nothing - majority voting removes the noise
+      - The error rises by exactly 30 points
+    explanation: >-
+      Label noise blurs the observed class distribution towards uniform and makes the
+      distributions of the two rooms less distinguishable. For the distributions of the lesson the
+      Chernoff information drops from $0.172$ to $0.055$, and since the error decays as
+      $e^{-n\mathcal{C}}$ the same error needs $0.172/0.055 = 3.1$ times the objects. Hierarchical
+      inference is made robust by the **number** below, but the quality below sets the rate.
+    concept:
+      front: Label noise and hierarchical inference
+      back: >-
+        The Chernoff information is cut ($0.172 \to 0.055$). 3.1 times the objects for the same
+        confidence
+  - id: q6
+    prompt: >-
+      The hierarchy of a scene graph (rooms, buildings) only enriches the representation and has
+      no effect on the cost of search or association.
+    explanation: >-
+      False. The upper layers are an index of the lower ones. With $N$ objects spread evenly over
+      $R$ rooms, a search that chooses the room first costs $R + N/R$, which is $2\sqrt{N}$ at
+      $R = \sqrt{N}$. Loop-closure candidates are filtered the same way, which reduces the
+      competitors of an association. The price is that if the inference at the upper layer is
+      wrong, everything below searches among the wrong candidates.
+    concept:
+      front: The role of the hierarchy
+      back: >-
+        An index: cost $R + N/R$. Fewer candidates also means fewer association errors. Errors at
+        the top propagate down

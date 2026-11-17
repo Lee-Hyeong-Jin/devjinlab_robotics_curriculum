@@ -1741,6 +1741,42 @@ papers:
     note: "2026-11-17 arXiv API 확인(제목·저자 3인·2014-11-12). id 의 2017 은 학술지 연도로 알려진 값"
     verified: true
     role: standard
+  - id: rosinol2021-kimera
+    title: "Kimera: from SLAM to spatial perception with 3D dynamic scene graphs"
+    authors: ["A. Rosinol", "A. Violette", "M. Abate", "et al."]
+    year: 2021
+    venue: "IJRR"
+    url: "https://arxiv.org/abs/2101.06894"
+    note: "2026-11-17 arXiv API 확인(제목·제1저자·2021-01-18). 학술지 권호는 미확인"
+    verified: true
+    role: frontier
+  - id: salas-moreno2013-slampp
+    title: "SLAM++: simultaneous localisation and mapping at the level of objects"
+    authors: ["R. F. Salas-Moreno", "R. A. Newcombe", "H. Strasdat", "P. H. J. Kelly", "A. J. Davison"]
+    year: 2013
+    venue: "CVPR"
+    url: "https://doi.org/10.1109/CVPR.2013.178"
+    note: "2026-11-17 Crossref 확인(제목·저자 5인·2013-06)"
+    verified: true
+    role: seminal
+  - id: bowman2017-probabilistic-data-association
+    title: "Probabilistic data association for semantic SLAM"
+    authors: ["S. L. Bowman", "N. Atanasov", "K. Daniilidis", "G. J. Pappas"]
+    year: 2017
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ICRA.2017.7989203"
+    note: "2026-11-17 Crossref 확인(제목·저자 4인·2017-05)"
+    verified: true
+    role: standard
+  - id: armeni2019-3d-scene-graph
+    title: "3D scene graph: a structure for unified semantics, 3D space, and camera"
+    authors: ["I. Armeni", "Z.-Y. He", "J. Gwak", "et al."]
+    year: 2019
+    venue: "arXiv 2019 (ICCV 2019 게재는 미확인)"
+    url: "https://arxiv.org/abs/1910.02527"
+    note: "2026-11-17 arXiv API 확인(제목·제1저자·2019-10-06)"
+    verified: true
+    role: standard
 
   # ── S2 조작·접촉 ────────────────────────────────────────────────
   - id: ferrari1992-grasp-quality
