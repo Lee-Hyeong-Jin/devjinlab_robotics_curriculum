@@ -1,0 +1,124 @@
+# English text of the structured fields of evaluation-science.md (activity titles, resource
+# notes, quiz). The prose lives in evaluation-science.en.md.
+id: s4-evaluation-science
+lang: en
+activities:
+  s4-evaluation-science-reading: Read the lesson and follow the derivations
+  s4-evaluation-science-papers: Read the two must-read papers + a one-page note each
+  s4-evaluation-science-problems: "Problem set (1 proof, 2 derivations, 2 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  s4-evaluation-science-reproduction: "Reproduction task - coverage, power, the winner's curse, selection bias, attenuation of the correlation (R2)"
+  s4-evaluation-science-quiz: Concept check quiz
+resources:
+  "rliable (Agarwal et al.)":
+    note: Reference implementation of the IQM, stratified bootstrap intervals and performance profiles. Used when applying R5 to real results.
+  "SIMPLER project page":
+    note: The simulated evaluation environments and the real-world correspondence results. Used in problem P8 and the optional part of the reproduction task.
+quiz:
+  - id: q1
+    prompt: >-
+      A policy succeeded in 20 out of 20 trials. What can be said about its true success rate?
+    choices:
+      - The success rate is 100%
+      - At the 95% confidence level the success rate is at least about 83%
+      - At the 95% confidence level the success rate is at least 99%
+      - With only 20 trials nothing can be said
+    explanation: >-
+      The lower limit of the two-sided Clopper–Pearson interval is $0.025^{1/20} = 0.832$. Used
+      one-sided, the 95% upper bound on the failure rate is $1 - 0.05^{1/20} = 0.139 \approx 3/20$
+      (the rule of three). The Wald interval has a standard error of 0 and gives a zero-width
+      interval, that is "$p = 1$ for certain", which is wrong.
+    concept:
+      front: What 20/20 means
+      back: >-
+        95% lower limit 0.832. Upper bound on the failure rate is about 3/n. The Wald interval has
+        zero width and gives false certainty
+  - id: q2
+    prompt: >-
+      How many trials per policy are needed to detect the difference between success rates 0.6
+      and 0.8 at the two-sided 5% level with power 0.8?
+    choices:
+      - About 20
+      - About 40
+      - About 80
+      - About 400
+    explanation: >-
+      $n \approx (1.960\sqrt{2\cdot0.7\cdot0.3} + 0.842\sqrt{0.24+0.16})^2/0.2^2 = 81.2$. By exact
+      computation the power is $0.807$ at $n = 82$. The power of $n = 20$ is only $0.291$. The
+      required number of trials is proportional to $1/\Delta^2$, so a 10-point difference ($0.5$
+      vs $0.6$) needs about 390.
+    concept:
+      front: Trials needed for a 20-point difference
+      back: >-
+        About 82 per arm. $n \propto 1/\Delta^2$, so 10 points need about 390. The power of
+        $n=20$ is 0.29
+  - id: q3
+    prompt: >-
+      If a low-powered experiment produced a statistically significant result, its estimated
+      effect size is a good estimate of the truth.
+    explanation: >-
+      False. At low power, rejection happens only when the sample difference is large by chance,
+      so the estimates of significant results are systematically exaggerated. With a true
+      difference of $0.10$ and $n = 20$, the mean estimated difference among significant results
+      is $0.384$ — 3.8 times. The smallest difference that can be significant at $n = 20$ is
+      $0.20$, so **every** significant result reports at least twice the truth. The exaggeration
+      ratio comes down to $1.1$ only when the power reaches $0.8$.
+    concept:
+      front: The winner's curse (type M error)
+      back: >-
+        Low power + a significance filter = an exaggerated effect. Truth 0.10, n=20 is reported as
+        0.384 on average
+  - id: q4
+    prompt: >-
+      Twenty checkpoints of equal skill were each evaluated with 50 trials and the success rate of
+      the best one was reported. That number is:
+    choices:
+      - Unbiased - because each evaluation is unbiased
+      - About 13 points above the true success rate on average
+      - About 1 point above the true success rate on average
+      - Below the true success rate
+    explanation: >-
+      Each $\hat{p}_i$ is unbiased but the **maximum** is not. The exact value at $p = 0.5$,
+      $n = 50$, $K = 20$ is $+0.131$ and the bound is $\sqrt{pq/n}\sqrt{2\ln K} = 0.173$. The bias
+      grows only as $\sqrt{\ln K}$, so comparing just 5 already gives $+0.082$. Re-evaluating the
+      chosen checkpoint with new trials makes the bias 0.
+    concept:
+      front: The bias of picking the best
+      back: >-
+        $\le \sqrt{pq/n}\sqrt{2\ln K}$. +13 points at n=50, K=20. A holdout re-evaluation removes
+        it exactly
+  - id: q5
+    prompt: >-
+      For 10 policies the Pearson correlation between simulated evaluation and real-world
+      evaluation (20 trials per policy) came out as 0.88. Which interpretation is the most
+      defensible?
+    choices:
+      - The simulator has a 12% error
+      - "The noise of 20 real trials alone makes a perfect simulator produce about that correlation, so this number says nothing about a defect of the simulator"
+      - The simulator can replace real-world evaluation
+      - The ranking of the policies is fully preserved
+    explanation: >-
+      For 10 policies with success rates spread over $0.2$–$0.8$ and 20 real trials per policy,
+      a simulator that matches the true success rates **perfectly** has an expected correlation of
+      $\sqrt{\sigma_p^2/(\sigma_p^2 + \overline{pq}/n)} = 0.880$. The observed correlation is
+      attenuated by the reliability of the real-world measurement. A sim-to-real correlation must
+      therefore be reported with the number of real trials and the bound at that number.
+    concept:
+      front: Attenuation of the correlation
+      back: >-
+        $r_{obs} \le \sqrt{\sigma_p^2/(\sigma_p^2+\overline{pq}/n)}$. With 20 real trials even a
+        perfect simulator gives 0.88
+  - id: q6
+    prompt: >-
+      A paired design, which evaluates both policies on the same initial conditions, needs more
+      trials than an independent design for the same power.
+    explanation: >-
+      False. On a hard initial condition both tend to fail, so the outcomes are positively
+      correlated and the variance of the difference shrinks to
+      $p_1q_1 + p_2q_2 - 2\rho\sqrt{p_1q_1p_2q_2}$. For $0.6$ vs $0.8$ and $\rho = 0.5$ the
+      required number of trials is roughly halved. It is the largest gain available at no cost in
+      real-world evaluation.
+    concept:
+      front: The gain of a paired design
+      back: >-
+        Sharing initial conditions makes the outcomes positively correlated and reduces the
+        variance of the difference. With $\rho=0.5$ about half the trials

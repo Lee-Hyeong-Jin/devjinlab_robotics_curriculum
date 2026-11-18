@@ -1,0 +1,88 @@
+# English text of the structured fields of hzd-gait-generation.md (activity titles,
+# resource notes, paper notes, quiz). The prose lives in hzd-gait-generation.en.md.
+id: s3-hzd-gait-generation
+lang: en
+activities:
+  s3-hzd-gait-generation-reading: Read the lesson and follow the derivations
+  s3-hzd-gait-generation-papers: Read the two must-reads plus one recommended paper, with a one-page note each
+  s3-hzd-gait-generation-problems: "Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample)"
+  s3-hzd-gait-generation-reproduction: "Reproduction task - design a virtual constraint and verify the reduced model (R2)"
+  s3-hzd-gait-generation-quiz: Concept check quiz
+resources:
+  "Westervelt, Grizzle, Chevallereau, Choi & Morris, Feedback Control of Dynamic Bipedal Robot Locomotion (2007)":
+    note: ch.5-6 - the textbook treatment of HZD; R1-R3 of this lesson are its scaled-down version. (official URL unverified)
+  "Tedrake, Underactuated Robotics":
+    note: ch.4-5 - partial feedback linearisation and the intuition for virtual constraints. Free in full.
+  "NumPy":
+    note: The reproduction task needs nothing else - four Bezier coefficients and an RK4 integrator.
+papers:
+  westervelt2003-hzd: "§III, §IV"
+  ames2014-hzd-experimental: "§II, §V"
+  grizzle2001-asymptotically-stable-walking: "§III"
+quiz:
+  - id: q1
+    prompt: >-
+      Why can the hip torque not change the **total angular momentum about the stance foot**
+      $\sigma$?
+    choices:
+      - Because the torque is small
+      - "Because the hip torque is an internal force between the legs and so exerts no moment about the stance foot"
+      - "Because $\\sigma$ is a conserved quantity"
+      - "Because the impact dominates $\\sigma$"
+    explanation: >-
+      Internal forces do not contribute to the total angular momentum, and the ground reaction acts
+      at the stance foot and so has no moment about it. Only gravity is left, giving
+      $\dot\sigma = \tau_g$. In the lesson, swinging the torque over $\pm50$ N·m changed it by at
+      most $7.6\cdot10^{-9}$ — that is the physical basis of the HZD reduction.
+    concept:
+      front: Why the HZD reduction works physically
+      back: >-
+        The hip torque has no moment about the stance foot, so $\dot\sigma = \tau_g$ is independent
+        of the torque
+  - id: q2
+    prompt: >-
+      If a feedback drives the output to zero, the zero dynamics surface is invariant for the whole
+      hybrid system.
+    explanation: >-
+      It is invariant only under the continuous flow. If the impact throws the state off the
+      surface, a transient repeats at every step and the reduced model's prediction breaks. That is
+      why $\Delta(S\cap Z)\subset Z$ must be imposed as a **design condition** — and that H is the H
+      of HZD.
+    concept:
+      front: The "H" in HZD
+      back: >-
+        Impact invariance $\Delta(S\cap Z)\subset Z$ - translated into boundary conditions on the
+        virtual constraint
+  - id: q3
+    prompt: >-
+      Write the fixed point of the step map $\zeta^+_{k+1} = \delta^2(\zeta^+_k - \Delta V)$ on $Z$
+      in terms of $\delta$ and $\Delta V$.
+    answers: ["-delta^2 dV/(1-delta^2)", "zeta* = -delta^2 deltaV/(1-delta^2)", "-d^2 dV/(1-d^2)"]
+    explanation: >-
+      Solving $\zeta^\star = \delta^2(\zeta^\star-\Delta V)$ gives
+      $\zeta^\star = -\delta^2\Delta V/(1-\delta^2)$. Downhill $\Delta V<0$ makes it positive; on
+      level or uphill ground it is negative, so **there is no solution**. Numerically
+      $-0.760\cdot(-49.657)/(1-0.760) = 157.41$.
+    concept:
+      front: Fixed point of the reduced gait
+      back: >-
+        $\zeta^\star = -\delta^2\Delta V/(1-\delta^2)$. Existence is $\zeta^\star>0$, stability is
+        $\delta^2<1$ - they separate.
+  - id: q4
+    prompt: >-
+      What is the most accurate reason the reduced model's rate $\delta_{\mathrm{zero}}^2 = 0.760$
+      matched the four-state model's dominant eigenvalue to eight digits?
+    choices:
+      - Because the model is linear
+      - "Because $Z$ is hybrid invariant and the transverse directions die much faster than a step, so the Poincare map is block triangular"
+      - Because the integrator is accurate
+      - It is a coincidence
+    explanation: >-
+      Impact invariance keeps the trajectory on $Z$, and the transverse eigenvalues collapse to
+      $4.6\cdot10^{-5}$ and $0$, so the spectrum is decided by the single reduced direction
+      $\delta^2$. Breaking impact invariance, or lowering $K_p$ and $K_d$, destroys the match.
+    concept:
+      front: When the reduced prediction matches the full model
+      back: >-
+        Hybrid invariance plus fast transverse convergence gives a Poincare spectrum
+        {$\delta^2$, ≈0, ≈0}

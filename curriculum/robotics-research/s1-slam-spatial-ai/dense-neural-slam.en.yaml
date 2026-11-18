@@ -1,0 +1,90 @@
+# English text of the structured fields of dense-neural-slam.md (activity titles, resource notes,
+# quiz items). The prose lives in dense-neural-slam.en.md.
+id: s1-dense-neural-slam
+lang: en
+activities:
+  s1-dense-neural-slam-reading: Read the lesson and follow the derivations
+  s1-dense-neural-slam-papers: Read the two must-read papers and write a one-page note on each
+  s1-dense-neural-slam-problems: "Problem set (2 derivations, 1 proof, 2 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  s1-dense-neural-slam-reproduction: "Reproduction task: the fusion identity, the ray-wise distance error and measuring forgetting (R2, with an optional R3 extension)"
+  s1-dense-neural-slam-quiz: Concept-check quiz
+resources:
+  "Open3D":
+    note: Recommended baseline. Its `ScalableTSDFVolume` and marching cubes let you check your own implementation.
+  "TUM RGB-D SLAM dataset and benchmark":
+    note: "The input for the optional extension (R3): short sequences such as `freiburg1_xyz` with ground-truth trajectories."
+  "iMAP / NICE-SLAM 계열 구현 모음 (NICE-SLAM)":
+    title: "NICE-SLAM (an implementation in the iMAP line)"
+    note: Recommended. A public neural-SLAM implementation whose keyframe replay strategy is right there in the code.
+quiz:
+  - id: q1
+    prompt: What is the one-line TSDF update $D \leftarrow (WD + wd)/(W+w)$ with respect to the batch estimate?
+    choices:
+      - "An approximation that saves storage, losing a little accuracy"
+      - "**Exactly** the batch precision-weighted average under the independent Gaussian assumption"
+      - "An exponential moving average, so it forgets the past"
+      - "A median estimate"
+    explanation: >-
+      One line of induction gives
+      $D_n = \\sum_{i\\le n}w_id_i/\\sum_{i\\le n}w_i$. Measured: at $n=100$ the recursion and the
+      batch differ by $3.3\\times10^{-16}$, the posterior sd matches $1/\\sqrt{\\sum w}$, and the
+      Monte Carlo variance ratio is 1.0007. Capping $W$, however, turns it into an exponential moving
+      average and abandons the ML interpretation.
+    concept:
+      front: The nature of the one-line TSDF update
+      back: An exact sequential computation of the precision-weighted average; storage is just the two numbers $(D,W)$
+  - id: q2
+    prompt: At incidence angle $\theta$, by what factor does the ray-wise signed distance exceed the true point-to-surface distance? (as a formula)
+    answers: ["1/cos(theta)", "1/cos theta", "sec(theta)", "sec theta"]
+    explanation: >-
+      $s_\\parallel = s_\\perp/\\cos\\theta$. Measured: 1.1547 at $30^\\circ$, 2.0000 at
+      $60^\\circ$ and 11.4737 at $85^\\circ$, matching $1/\\cos\\theta$ to within $10^{-12}$. The
+      fused field is therefore **not a distance field**, with
+      $|\\nabla D| = 1/\\cos\\theta$.
+    concept:
+      front: The overstatement of the ray-wise distance
+      back: "$1/\\cos\\theta$ - a factor of 2 at $60^\\circ$ and 11.5 at $85^\\circ$; the field stops being a distance field"
+  - id: q3
+    prompt: Using the ray-wise distance at grazing incidence pushes the TSDF's surface (zero crossing) away.
+    explanation: >-
+      The error is proportional to the signed distance, hence an **odd function**, so it vanishes at
+      the zero crossing and averaging with positive weights preserves the zero. Measured (four
+      incidence combinations with truncation and noise, 4000 runs): the bias of the crossing is at
+      most 0.17 mm while its standard deviation is 5.7-6.3 mm — a fiftieth of the noise. What breaks
+      is the gradient (normals and scale) and the truncation band, which narrows to
+      $\\mu\\cos\\theta$. At edges and high curvature the oddness itself fails and the crossing does
+      move.
+    concept:
+      front: What grazing incidence breaks
+      back: Not the surface position but the field's gradient and the truncation band. On a plane the zero crossing is preserved
+  - id: q4
+    prompt: Do spatially local parameters (narrow RBFs) avoid forgetting in incremental learning?
+    choices:
+      - "Yes - non-overlapping regions do not interfere"
+      - "No - $B$'s objective has no data term for $A$-only parameters, so the regulariser erases them"
+      - "Yes, but at a higher memory cost"
+      - "Locality is irrelevant; only the learning rate matters"
+    explanation: >-
+      Measured: at an RBF width of 0.01 the Gram overlap between $A$ and $B$ is 0.0081 (nearly
+      orthogonal) and yet 93.8% of parameters changed by more than 1%, with a forgetting factor of
+      960. In a ridge fit on $B$ alone, a coordinate whose column of $\\Phi_B$ is zero has a zero
+      numerator and only $\\lambda$ in the denominator, so it goes **exactly to zero**. What prevents
+      it is replay or a prior anchored at $w_A$.
+    concept:
+      front: Locality and forgetting
+      back: Locality alone does not prevent it - a parameter the data does not speak about is erased by the regulariser. Replay or a prior is needed
+  - id: q5
+    prompt: What is commonly left out when the memory advantage of neural SLAM is assessed?
+    choices:
+      - "The precision of the network weights (float32 against float16)"
+      - "The **keyframe replay buffer** kept in order to prevent forgetting"
+      - "The working memory of the GPU kernels"
+      - "The voxel resolution"
+    explanation: >-
+      As R5 showed, forgetting is total without replay ($\\mathrm{err}_A\\vert_B$ reaches the signal
+      RMS of 0.7896), so real systems retain past keyframes and keep feeding them into the loss. Not
+      counting that buffer makes the claim of $O(\\text{parameters})$ memory untrue. A voxel grid has
+      structurally no forgetting at the cost of $O(\\text{volume})$ — that is the real trade-off.
+    concept:
+      front: The hidden memory of a neural map
+      back: The keyframe replay buffer. Leaving it uncounted makes the memory comparison unfair

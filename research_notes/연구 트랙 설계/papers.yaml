@@ -327,6 +327,42 @@ papers:
     role: seminal
 
   # ── C4 최적 제어·궤적 최적화 ─────────────────────────────────────────
+  - id: sussmann1997-300-years
+    title: "300 years of optimal control: from the brachystochrone to the maximum principle"
+    authors: ["H. J. Sussmann", "J. C. Willems"]
+    year: 1997
+    venue: "IEEE Control Systems Magazine"
+    url: "https://doi.org/10.1109/37.588098"
+    verified: true
+    lessons: [c4-pontryagin-indirect]
+    role: standard
+  - id: hartl1995-pmp-state-constraints
+    title: "A survey of the maximum principles for optimal control problems with state constraints"
+    authors: ["R. F. Hartl", "S. P. Sethi", "R. G. Vickson"]
+    year: 1995
+    venue: "SIAM Review"
+    url: "https://doi.org/10.1137/1037043"
+    verified: true
+    lessons: [c4-pontryagin-indirect]
+    role: survey
+  - id: bellman1954-dp-theory
+    title: "The theory of dynamic programming"
+    authors: ["R. Bellman"]
+    year: 1954
+    venue: "Bull. Amer. Math. Soc."
+    url: "https://doi.org/10.1090/S0002-9904-1954-09848-8"
+    verified: true
+    lessons: [c4-dp-lqr-lqg]
+    role: seminal
+  - id: doyle1978-lqg-margins
+    title: "Guaranteed margins for LQG regulators"
+    authors: ["J. C. Doyle"]
+    year: 1978
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/TAC.1978.1101812"
+    verified: true
+    lessons: [c4-dp-lqr-lqg]
+    role: critique
   - id: mayne1966-ddp
     title: "A second-order gradient method for determining optimal trajectories of non-linear discrete-time systems"
     authors: ["D. Q. Mayne"]
@@ -342,6 +378,24 @@ papers:
     year: 2012
     venue: "IROS"
     url: "https://doi.org/10.1109/IROS.2012.6386025"
+    verified: true
+    lessons: [c4-ilqr-ddp]
+    role: standard
+  - id: liao1991-ddp-convergence
+    title: "Convergence in unconstrained discrete-time differential dynamic programming"
+    authors: ["L.-Z. Liao", "C. A. Shoemaker"]
+    year: 1991
+    venue: "IEEE T-AC"
+    url: "https://doi.org/10.1109/9.86943"
+    verified: true
+    lessons: [c4-ilqr-ddp]
+    role: standard
+  - id: tassa2014-control-limited-ddp
+    title: "Control-limited differential dynamic programming"
+    authors: ["Y. Tassa", "N. Mansard", "E. Todorov"]
+    year: 2014
+    venue: "ICRA"
+    url: "https://doi.org/10.1109/ICRA.2014.6907001"
     verified: true
     lessons: [c4-ilqr-ddp]
     role: standard
@@ -361,15 +415,52 @@ papers:
     venue: "AIAA J. Guidance, Control, and Dynamics"
     url: "https://doi.org/10.2514/2.4231"
     verified: true
-    lessons: [c4-direct-collocation-sqp]
+    lessons: [c4-pontryagin-indirect, c4-direct-collocation-sqp]
     role: survey
+  - id: kelly2017-trajopt-tutorial
+    title: "An introduction to trajectory optimization: how to do your own direct collocation"
+    authors: ["M. Kelly"]
+    year: 2017
+    venue: "SIAM Review"
+    url: "https://doi.org/10.1137/16M1062569"
+    verified: true
+    lessons: [c4-direct-collocation-sqp]
+    role: standard
+  - id: gill2005-snopt
+    title: "SNOPT: an SQP algorithm for large-scale constrained optimization"
+    authors: ["P. E. Gill", "W. Murray", "M. A. Saunders"]
+    year: 2005
+    venue: "SIAM Review"
+    url: "https://doi.org/10.1137/S0036144504446096"
+    verified: true
+    lessons: [c4-direct-collocation-sqp]
+    role: standard
+  - id: wachter2006-ipopt
+    title: "On the implementation of an interior-point filter line-search algorithm for large-scale nonlinear programming"
+    authors: ["A. Wachter", "L. T. Biegler"]
+    year: 2006
+    venue: "Math. Program."
+    url: "https://doi.org/10.1007/s10107-004-0559-y"
+    note: "Crossref 의 published 는 2005-04-28(온라인 선공개), 지면은 Math. Program. 106(1), 2006."
+    verified: true
+    lessons: [c4-direct-collocation-sqp]
+    role: standard
+  - id: mayne2000-constrained-mpc
+    title: "Constrained model predictive control: stability and optimality"
+    authors: ["D. Q. Mayne", "J. B. Rawlings", "C. V. Rao", "P. O. M. Scokaert"]
+    year: 2000
+    venue: "Automatica"
+    url: "https://doi.org/10.1016/S0005-1098(99)00214-9"
+    verified: true
+    lessons: [c4-mpc]
+    role: seminal
   - id: rawlings2017-mpc-theory
     title: "Model Predictive Control: Theory, Computation, and Design"
     authors: ["J. B. Rawlings", "D. Q. Mayne", "M. M. Diehl"]
     year: 2017
     venue: "Nob Hill Publishing (book)"
     url: "https://sites.engineering.ucsb.edu/~jbraw/mpc/"
-    note: "URL 미확인 (출판사 페이지 미확인)"
+    note: "2026-11-12 재확인: 페이지 제목이 서지와 일치(저자 페이지)."
     verified: true
     lessons: [c4-mpc]
     role: standard
@@ -381,6 +472,43 @@ papers:
     url: "https://doi.org/10.1007/978-3-642-01094-1_32"
     verified: true
     lessons: [c4-mpc]
+    role: standard
+  - id: stewart1996-timestepping
+    title: "An implicit time-stepping scheme for rigid body dynamics with inelastic collisions and Coulomb friction"
+    authors: ["D. E. Stewart", "J. C. Trinkle"]
+    year: 1996
+    venue: "Int. J. Numer. Methods Eng."
+    url: "https://doi.org/10.1002/(SICI)1097-0207(19960815)39:15%3C2673::AID-NME972%3E3.0.CO;2-I"
+    note: "DOI 에 괄호·부등호가 있어 URL 은 퍼센트 인코딩했다. doi.org 리다이렉트는 확인되고 Wiley 가 자동 접근을 403 으로 막는다 — 서지는 Crossref 로 확인."
+    verified: true
+    lessons: [c4-contact-implicit-hybrid]
+    role: seminal
+  - id: anitescu1997-lcp
+    title: "Formulating dynamic multi-rigid-body contact problems with friction as solvable linear complementarity problems"
+    authors: ["M. Anitescu", "F. A. Potra"]
+    year: 1997
+    venue: "Nonlinear Dynamics"
+    url: "https://doi.org/10.1023/A:1008292328909"
+    verified: true
+    lessons: [c4-contact-implicit-hybrid]
+    role: standard
+  - id: mordatch2012-cio
+    title: "Discovery of complex behaviors through contact-invariant optimization"
+    authors: ["I. Mordatch", "E. Todorov", "Z. Popovic"]
+    year: 2012
+    venue: "ACM Trans. Graphics (SIGGRAPH)"
+    url: "https://doi.org/10.1145/2185520.2185539"
+    verified: true
+    lessons: [c4-contact-implicit-hybrid]
+    role: standard
+  - id: burden2016-piecewise-flows
+    title: "Event-selected vector field discontinuities yield piecewise-differentiable flows"
+    authors: ["S. A. Burden", "S. Shankar Sastry", "D. E. Koditschek", "S. Revzen"]
+    year: 2016
+    venue: "SIAM J. Applied Dynamical Systems"
+    url: "https://doi.org/10.1137/15M1016588"
+    verified: true
+    lessons: [c4-contact-implicit-hybrid]
     role: standard
   - id: posa2014-contact-implicit
     title: "A direct method for trajectory optimization of rigid bodies through contact"
@@ -401,6 +529,15 @@ papers:
     verified: true
     lessons: [c4-contact-implicit-hybrid]
     role: standard
+  - id: bansal2017-hj-reachability
+    title: "Hamilton-Jacobi reachability: a brief overview and recent advances"
+    authors: ["S. Bansal", "M. Chen", "S. Herbert", "C. J. Tomlin"]
+    year: 2017
+    venue: "CDC"
+    url: "https://doi.org/10.1109/CDC.2017.8263977"
+    verified: true
+    lessons: [c4-robust-stochastic-oc]
+    role: survey
   - id: mitchell2005-hji-reachability
     title: "A time-dependent Hamilton-Jacobi formulation of reachable sets for continuous dynamic games"
     authors: ["I. M. Mitchell", "A. M. Bayen", "C. J. Tomlin"]
@@ -410,6 +547,25 @@ papers:
     verified: true
     lessons: [c4-robust-stochastic-oc]
     role: seminal
+  - id: todorov2005-ilqg
+    title: "A generalized iterative LQG method for locally-optimal feedback control of constrained nonlinear stochastic systems"
+    authors: ["E. Todorov", "W. Li"]
+    year: 2005
+    venue: "ACC"
+    url: "https://doi.org/10.1109/ACC.2005.1469949"
+    note: "Crossref 레코드에 발행 연도 필드가 없다(proceedings-article). 연도는 프로시딩 제목(2005 ACC)으로 확인했다."
+    verified: true
+    lessons: [c4-robust-stochastic-oc]
+    role: standard
+  - id: mayne2005-tube-mpc
+    title: "Robust model predictive control of constrained linear systems with bounded disturbances"
+    authors: ["D. Q. Mayne", "M. M. Seron", "S. V. Rakovic"]
+    year: 2005
+    venue: "Automatica"
+    url: "https://doi.org/10.1016/j.automatica.2004.08.019"
+    verified: true
+    lessons: [c4-robust-stochastic-oc]
+    role: standard
 
   - id: featherstone2010-6d-vectors-part1
     title: "A beginner's guide to 6-D vectors (part 1)"
@@ -516,7 +672,7 @@ papers:
     url: "https://doi.org/10.1109/9780470544334.ch8"
     note: "원문(Bol. Soc. Mat. Mexicana 5, 1960, pp. 102-119)의 영구 링크는 확인하지 못했다. 확인된 것은 2009 IEEE Press 선집 Control Theory 의 재수록판 DOI 다 — 인용할 때 재수록판임을 밝힐 것"
     verified: true
-    lessons: [c4-pontryagin-indirect, c4-dp-lqr-lqg]
+    lessons: [c4-dp-lqr-lqg]
     role: seminal
 
   # ── C5 상태 추정 ─────────────────────────────────────────────────────
@@ -1669,6 +1825,33 @@ papers:
     role: critique
 
   # ── S5 다중 로봇·필드 로보틱스 ──────────────────────────────────────
+  - id: cap2015-prioritized-planning
+    title: "Prioritized planning algorithms for trajectory coordination of multiple mobile robots"
+    authors: ["M. Cap", "P. Novak", "A. Kleiner", "M. Selecky"]
+    year: 2015
+    venue: "IEEE T-ASE"
+    url: "https://doi.org/10.1109/TASE.2015.2445780"
+    verified: true
+    lessons: [s5-multi-agent-planning]
+    role: standard
+  - id: tian2021-distributed-certifiable
+    title: "Distributed certifiably correct pose-graph optimization"
+    authors: ["Y. Tian", "K. Khosoussi", "D. M. Rosen", "J. P. How"]
+    year: 2021
+    venue: "IEEE T-RO"
+    url: "https://doi.org/10.1109/TRO.2021.3072346"
+    verified: true
+    lessons: [s5-distributed-optimization]
+    role: seminal
+  - id: fiedler1973-algebraic-connectivity
+    title: "Algebraic connectivity of graphs"
+    authors: ["M. Fiedler"]
+    year: 1973
+    venue: "Czechoslovak Mathematical Journal"
+    url: "https://doi.org/10.21136/CMJ.1973.101168"
+    verified: true
+    lessons: [s5-graph-consensus]
+    role: seminal
   - id: olfati-saber2007-consensus
     title: "Consensus and cooperation in networked multi-agent systems"
     authors: ["R. Olfati-Saber", "J. A. Fax", "R. M. Murray"]

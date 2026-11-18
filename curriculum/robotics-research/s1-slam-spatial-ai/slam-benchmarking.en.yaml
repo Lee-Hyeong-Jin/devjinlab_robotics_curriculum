@@ -1,0 +1,130 @@
+# English text of the structured fields of slam-benchmarking.md (activity titles, resource
+# notes, quiz). The prose lives in slam-benchmarking.en.md.
+id: s1-slam-benchmarking
+lang: en
+activities:
+  s1-slam-benchmarking-reading: Read the lesson and follow the derivations
+  s1-slam-benchmarking-papers: Read the three must-read papers + a one-page note each
+  s1-slam-benchmarking-problems: "Problem set (1 proof, 2 derivations, 1 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  s1-slam-benchmarking-reproduction: "Reproduction task - implement the evaluation tool and compare with a public one, confidence intervals over runs and sequences (R2)"
+  s1-slam-benchmarking-quiz: Concept check quiz
+resources:
+  "evo — Python package for the evaluation of odometry and SLAM":
+    title: "evo - Python package for the evaluation of odometry and SLAM"
+    note: The public evaluation tool the reproduction task is compared against. Provides APE/RPE and alignment options.
+  "TUM RGB-D benchmark — 평가 도구와 파일 형식":
+    title: "TUM RGB-D benchmark - evaluation tools and file formats"
+    note: The trajectory file format (timestamp tx ty tz qx qy qz qw) and the original evaluation scripts.
+  "KITTI odometry benchmark":
+    note: Definition of the relative-error metric by segment length, and the leaderboard.
+  "rpg_trajectory_evaluation (Zhang & Scaramuzza)":
+    note: Reference implementation of the must-read paper. Provides alignment per sensor configuration (sim3, se3, posyaw).
+quiz:
+  - id: q1
+    prompt: >-
+      What does the $S = \operatorname{diag}(1, 1, \det(U)\det(V))$ of Umeyama alignment do?
+    choices:
+      - It fixes the scale to 1
+      - "When the singular value decomposition gives a mirror image (determinant $-1$), it flips the direction of the smallest singular value to make a proper rotation"
+      - It sets the translation to 0
+      - It normalizes the singular values for numerical stability
+    explanation: >-
+      Maximizing $\operatorname{tr}(R^\top C)$ over all orthogonal matrices gives $UV^\top$, whose
+      determinant can be $-1$. The maximizer restricted to $SO(3)$ is $USV^\top$, which gives the
+      $-1$ to the smallest singular value, with value $d_1 + d_2 - d_3$. For a nearly planar
+      trajectory with noise this case is common (measured 935/2000). Aligning without the
+      correction gives a mirror image that nevertheless looks fine within the plane.
+    concept:
+      front: The reflection correction of Umeyama
+      back: >-
+        $R = USV^\top$, $S_{33} = \det(U)\det(V)$. Often needed for noisy nearly planar data
+  - id: q2
+    prompt: >-
+      What is the problem with reporting the ATE of a stereo SLAM trajectory after
+      $\mathrm{Sim}(3)$ alignment?
+    choices:
+      - The ATE is overestimated
+      - "Stereo observes scale, so a scale error is a real error, yet the alignment absorbs and hides it"
+      - The solution of the alignment is not unique
+      - RPE can no longer be computed
+    explanation: >-
+      Alignment must remove only the degrees of freedom the estimator **cannot** observe (the
+      gauge). The gauge of stereo and RGB-D is the 6-DoF rigid transform, and scale is observed
+      through the baseline and is the estimator's responsibility. In the example of the lesson the
+      ATE of a 5% scale error is $0.1728$ m under $SE(3)$ alignment and $0.0290$ m under
+      $\mathrm{Sim}(3)$ alignment: the scale error disappears whole. By the same logic, $SE(3)$
+      alignment of a VIO hides the gravity-direction error.
+    concept:
+      front: Alignment and gauge
+      back: >-
+        Alignment group = unobservable degrees of freedom. Monocular Sim(3), stereo SE(3), VIO yaw
+        + translation. A larger group hides real error
+  - id: q3
+    prompt: >-
+      For the same odometry system the ATE on a 100 m sequence and on a 400 m sequence should come
+      out similar.
+    explanation: >-
+      False. The ATE of a drifting system grows with length — $\propto\sqrt{N}$ for random-walk
+      drift and faster with rotational drift (measured: 2.06 times the ATE for twice the length).
+      So the ATEs of sequences of different length cannot be compared directly, and KITTI
+      normalizes the error by the distance travelled. What is independent of length is RPE
+      (measured $0.0109, 0.0110, 0.0110$).
+    concept:
+      front: ATE and trajectory length
+      back: >-
+        For a drifting system ATE grows at least as √N. RPE is independent of length. ATE is a
+        property of system × trajectory
+  - id: q4
+    prompt: >-
+      In the evaluation of a platform moving at 2 m/s, what happens if a clock offset of 20 ms
+      remains between the estimate and the reference?
+    choices:
+      - Nothing, since the rigid alignment absorbs it
+      - About 4 cm is added to the ATE (in quadrature)
+      - Only RPE is affected
+      - The ATE exactly doubles
+    explanation: >-
+      $p(t + \delta t) - \hat{p}(t) \approx (p - \hat{p}) + v\,\delta t$, so
+      $\mathrm{ATE}^2 \approx \mathrm{ATE}_0^2 + v_{\mathrm{rms}}^2\delta t^2$, and
+      $2\times0.02 = 0.04$ m. A time misalignment is not a rigid transform, so the alignment cannot
+      absorb it. In the setting of the lesson this 4 cm exceeds the odometry drift ATE (2.9 cm).
+      Nearest-frame association alone introduces up to ±16.7 ms at 30 Hz.
+    concept:
+      front: Timestamp offset
+      back: >-
+        ATE² ≈ ATE₀² + (v·δt)². Alignment cannot absorb it. Interpolate the reference, estimate and
+        report the offset
+  - id: q5
+    prompt: >-
+      Two SLAM systems are compared on 11 sequences. What is most effective for raising the power?
+    choices:
+      - Raising the number of runs per sequence from 5 to 50
+      - Raising the number of sequences (and analysing paired by sequence)
+      - Comparing only the best runs
+      - Looking at the difference of mean ATE instead of ATE
+    explanation: >-
+      The standard error of the paired difference is
+      $\sqrt{(\sigma_{int}^2 + 2\sigma_{run}^2/r)/n}$. The number of runs $r$ reduces the second
+      term only, and the system × sequence interaction $\sigma_{int}^2/n$ shrinks only with the
+      number of sequences. Measured: power $0.665 \to 0.696$ for 5 → 50 runs, and
+      $0.665 \to 0.942$ for 11 → 22 sequences. Without pairing, the variance of sequence
+      difficulty covers everything and the power is 0.
+    concept:
+      front: Runs versus sequences
+      back: >-
+        SE² = (σ_int² + 2σ_run²/r)/n. Runs reduce only the second term, sequences the whole.
+        Always analyse paired
+  - id: q6
+    prompt: >-
+      RPE does not change when an arbitrary rigid transform is applied to the whole estimated
+      trajectory.
+    explanation: >-
+      True. RPE uses only the relative poses $\hat{T}_i^{-1}\hat{T}_{i+\Delta}$, and multiplying a
+      global transform $G$ on the left cancels:
+      $(G\hat{T}_i)^{-1}(G\hat{T}_{i+\Delta}) = \hat{T}_i^{-1}\hat{T}_{i+\Delta}$. RPE therefore
+      needs no alignment and is unaffected by the choice of alignment. Scale, however, does not
+      cancel, so the RPE of a monocular system requires the scale to be matched first.
+    concept:
+      front: The invariance of RPE
+      back: >-
+        Invariant to a global rigid transform, so no alignment is needed. Not invariant to scale

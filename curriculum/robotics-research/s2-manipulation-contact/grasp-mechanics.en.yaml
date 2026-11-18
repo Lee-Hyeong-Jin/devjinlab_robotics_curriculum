@@ -1,0 +1,134 @@
+id: s2-grasp-mechanics
+lang: en
+activities:
+  s2-grasp-mechanics-reading: Read the lesson and follow the derivations
+  s2-grasp-mechanics-papers: Read the two must-read papers and write a one-page note on each
+  s2-grasp-mechanics-problems: >-
+    Problem set (2 derivations, 2 proofs, 2 numerical, 1 implementation, 1 counterexample)
+  s2-grasp-mechanics-reproduction: >-
+    Reproduction task - the LP test for force closure and the feasible-region chart (R2)
+  s2-grasp-mechanics-quiz: Concept-check quiz
+resources:
+  "Murray, Li & Sastry, A Mathematical Introduction to Robotic Manipulation":
+    note: >-
+      ch.5 (Multifingered Hand Kinematics) - the contact models of 5.2 and the grasp constraints of
+      5.3. (official URL unverified)
+  "Prattichizzo & Trinkle — Grasping (Springer Handbook of Robotics, 2016)":
+    note: >-
+      The second entry point for this lesson - the standard summary of contact models, force closure
+      and quality metrics.
+  "SciPy":
+    note: >-
+      The reproduction task's LP uses `scipy.optimize.linprog(method="highs")` and the convex hull
+      uses `scipy.spatial.ConvexHull`.
+papers:
+  ferrari1992-grasp-quality: "§2-3"
+  rodriguez2012-caging: "§1-2, §6"
+quiz:
+  - id: q1
+    prompt: >-
+      Why is the LP's $\epsilon^\ast > 0$ not sufficient for deciding force closure, so that
+      $\mathrm{rank}\,W = d'$ must be checked separately?
+    choices:
+      - Because the LP is numerically unstable
+      - >-
+        Because if all generators lie in one subspace, $\epsilon^\ast > 0$ can hold while wrench space
+        is still not spanned
+      - Because the friction cone is non-convex
+      - Because the units of $\epsilon$ differ from those of a wrench
+    explanation: >-
+      $0 \in \mathrm{int\,conv}(W)$ is two conditions: "the origin is a strictly positive combination"
+      **and** "the generators affinely span the space". The LP only sees the first. The frictionless
+      unit disc is the exact counterexample - with $n$ equally spaced contacts, $\lambda_j = 1/(2n)$
+      gives the origin, but every torque is zero, so $\mathrm{rank}\,W = 2$ and no torque disturbance
+      can be resisted.
+    concept:
+      front: The two conditions of the force-closure LP test
+      back: >-
+        $\epsilon^\ast > 0$ (origin as a positive combination) + $\mathrm{rank}\,W = d'$ (spanning) -
+        the LP cannot see the second
+  - id: q2
+    prompt: >-
+      Without friction, enough contacts can make a force-closure grasp of the unit disc.
+    explanation: >-
+      Every normal of a disc passes through the centre, so a frictionless force satisfies
+      $f_i \parallel p_i$ and the torque $p_{i,x}f_{i,y} - p_{i,y}f_{i,x}$ vanishes **identically**.
+      The generators never cover the torque axis, so $\mathrm{rank}\,W \le 2$ and there is no force
+      closure regardless of the number of contacts. The frictionless lower bounds (4 in the plane, 7
+      in space) are for **generic** objects and do not apply to a disc or a sphere.
+    concept:
+      front: The frictionless disc or sphere
+      back: >-
+        All normals pass through the centre, so the torque vanishes identically - more contacts never
+        give force closure
+  - id: q3
+    prompt: >-
+      Which friction coefficient maximizes the Ferrari–Canny metric $Q$ for an antipodal pair of
+      contacts on the unit disc?
+    choices:
+      - $\mu = 1$ (a cone half-angle of $45^\circ$)
+      - $\mu = 2^{1/4} \approx 1.189$
+      - $\mu \to \infty$ - more friction is always better
+      - $\mu = 1/\sqrt2$
+    explanation: >-
+      Substituting $u = \cos^2\alpha$ into
+      $Q = \sin\alpha\cos\alpha/\sqrt{1+\cos^2\alpha}$ gives $Q^2 = u(1-u)/(1+u)$, whose stationary
+      point solves $u^2 + 2u - 1 = 0$, i.e. $u = \sqrt2 - 1$. Then $\tan^2\alpha = \sqrt2$, so
+      $\mu^\ast = 2^{1/4}$ and $Q_{\max} = \sqrt2 - 1$. Beyond that, the unit-length extreme rays lie
+      down towards the tangent direction and lose their normal component, so $Q$ **decreases**.
+    concept:
+      front: The non-monotonicity of $Q$
+      back: >-
+        $\mu^\ast = 2^{1/4}$, $Q_{\max} = \sqrt2-1$ - under unit-ray normalization more friction does
+        not help
+  - id: q4
+    prompt: Select everything that is true of caging and force closure.
+    choices:
+      - Force closure is a condition on forces, caging a condition on configuration space
+      - Neither implies the other
+      - An antipodal two-point grasp held by friction is also a cage
+      - >-
+        Deciding a cage is a topological computation on configuration space, so no practical
+        algorithm exists in high dimension
+    explanation: >-
+      Force closure means "blocks any disturbance immediately"; caging means "the free component is
+      bounded, so the object is never lost in the end". An antipodal two-point grasp is force closure
+      but **not a cage** - spread the fingers or push tangentially and the object escapes. Deciding a
+      cage inherits the topological cost of `c6-cspace-complexity`, making a planar rigid body
+      (3-dimensional) the practical limit.
+    concept:
+      front: Caging versus force closure
+      back: >-
+        Boundedness in configuration space versus spanning of wrench space. Independent, and caging is
+        open under position error
+  - id: q5
+    prompt: >-
+      For a spatial (3D) contact, discretizing the friction cone into $k$ extreme rays errs in which
+      direction?
+    choices:
+      - >-
+        Conservatively - a verdict of force closure is true, but a verdict of no force closure may be
+        wrong
+      - Optimistically - something without force closure may be declared force closure
+      - It does not err - it is exact for $k \ge 3$
+      - It is conservative only for even $k$
+    explanation: >-
+      The cone spanned by $k$ rays is a **subset** of the true cone, so
+      $\mathcal{W}_k \subseteq \mathcal{W}$. Hence $\mathcal{W}_k = \mathbb{R}^6$ implies
+      $\mathcal{W} = \mathbb{R}^6$ but not conversely - only false negatives occur. In the plane there
+      are exactly two extreme rays, so there is **no** discretization error.
+    concept:
+      front: The direction of cone discretization error
+      back: An inner approximation, so false negatives only; the plane is exact with two extreme rays
+  - id: q6
+    prompt: >-
+      Write the probability of force closure for two independent uniform contacts on the unit disc, in
+      terms of $\mu$.
+    answers: ["2 arctan(mu)/pi", "(2/pi) arctan mu", "2*atan(mu)/pi", "$\\frac{2}{\\pi}\\arctan\\mu$", "2arctan(mu)/pi", "2/pi * arctan(mu)"]
+    explanation: >-
+      The base angles of the triangle $Op_1p_2$ are $(\pi - \Delta\theta)/2$, so the chord lies inside
+      both cones iff $\Delta\theta \ge \pi - 2\alpha$. The apex angle $\Delta\theta$ is uniform on
+      $[0,\pi]$, so the probability is $2\alpha/\pi = (2/\pi)\arctan\mu$, exactly $1/2$ at $\mu = 1$.
+    concept:
+      front: Force-closure probability for two contacts on a disc
+      back: $(2/\pi)\arctan\mu$ - exactly 1/2 at $\mu = 1$

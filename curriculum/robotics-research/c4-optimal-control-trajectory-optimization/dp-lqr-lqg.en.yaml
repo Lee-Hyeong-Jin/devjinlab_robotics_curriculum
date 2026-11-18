@@ -1,0 +1,124 @@
+# English text of the structured fields of dp-lqr-lqg.md (activity titles, resource
+# notes, quiz). The prose lives in dp-lqr-lqg.en.md.
+id: c4-dp-lqr-lqg
+lang: en
+activities:
+  c4-dp-lqr-lqg-reading: Read the lesson and follow the derivations
+  c4-dp-lqr-lqg-papers: Read the three must-read papers + a one-page note each
+  c4-dp-lqr-lqg-problems: "Problem set (2 derivations, 1 proof, 2 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  c4-dp-lqr-lqg-reproduction: "Reproduction task - four computations of the LQR gain and agreement of the three derivations (R1)"
+  c4-dp-lqr-lqg-quiz: Concept check quiz
+resources:
+  "Tedrake, Underactuated Robotics — Dynamic Programming":
+    title: "Tedrake, Underactuated Robotics - Dynamic Programming"
+    note: ch.7. Value functions and discretised DP. Free in full.
+  "Tedrake, Underactuated Robotics — Linear Quadratic Regulators":
+    title: "Tedrake, Underactuated Robotics - Linear Quadratic Regulators"
+    note: ch.8. LQR and Riccati, plus how to use LQR locally (TVLQR). Free in full.
+  "Stanford AA203 Optimal and Learning-based Control":
+    note: Weeks 4-5 cover DP, LQR and LQG. Lecture notes and homework are public.
+quiz:
+  - id: q1
+    prompt: What does the verification theorem give that the PMP does not?
+    choices:
+      - The terminal condition on the costate
+      - "The **sufficient** condition for optimality - find a $C^1$ function satisfying the HJB and it is the value function"
+      - A way to handle the control constraint $U$
+      - An improvement in computational complexity
+    explanation: >-
+      The PMP is necessary only, so an extremal need not be optimal. The verification theorem is
+      the converse: find, by any means, one $C^1$ function satisfying the HJB and the terminal
+      condition, and it is the value function and its minimiser is the optimal control. The proof
+      has two steps - integrate the HJB along an arbitrary trajectory to get a lower bound
+      (inequality), then attain that bound along the minimiser's trajectory (equality).
+    concept:
+      front: What DP adds to the PMP
+      back: >-
+        Sufficiency. Finding one $C^1$ solution of the HJB proves optimality - at the price of the
+        curse of dimensionality
+  - id: q2
+    prompt: >-
+      Along the optimal trajectory, the costate $\lambda(t)$ equals what object derived from the
+      value function? (one word or symbol)
+    answers: ["gradient", "the gradient", "V_x", "dV/dx", "∂V/∂x", "partial derivative"]
+    explanation: >-
+      $\lambda = (\partial V/\partial x)^\top$. Differentiating the HJB in $x$ and taking $d/dt$
+      along the optimal trajectory cancels the $V_{xx}f$ term and recovers the adjoint equation
+      exactly. For LQR, $V = \frac12 x^\top Px$, so $\lambda = Px$ - that is the sweep ansatz of
+      indirect methods.
+    concept:
+      front: What the costate really is
+      back: >-
+        The gradient of the value function, $\lambda = (\partial V/\partial x)^\top$. The PMP
+        carries only the gradient; DP carries the whole function
+  - id: q3
+    prompt: >-
+      Why use the Joseph form of the Riccati recursion,
+      $P_k = Q + K^\top RK + (A-BK)^\top P_{k+1}(A-BK)$?
+    choices:
+      - It needs fewer operations
+      - "Because all three terms are $\\succeq 0$, so symmetry and positive semidefiniteness survive round-off"
+      - Because $K$ need not be computed separately
+      - Because it is guaranteed to converge to the stabilizing DARE solution
+    explanation: >-
+      The two forms are algebraically identical. The standard form
+      $Q + A^\top PA - A^\top PBS^{-1}B^\top PA$ is a **difference** of two large positive
+      quantities, so when $P$ is nearly singular, cancellation costs it symmetry and definiteness.
+      The Joseph form is a sum of PSD terms, so that cannot happen. It actually needs slightly
+      more operations.
+    concept:
+      front: The advantage of the Joseph (square-root) form
+      back: >-
+        A sum of PSD terms, so $P \succeq 0$ and symmetry survive round-off - it is used for
+        numerical stability, not for speed
+  - id: q4
+    prompt: >-
+      If $Q \succeq 0$, $R \succ 0$ and $(A,B)$ is stabilizable, the infinite-horizon LQR closed
+      loop is necessarily stable.
+    explanation: >-
+      Detectability of $(A, Q^{1/2})$ is also needed. For $A=2$, $B=1$, $Q=0$, $R=1$ the DARE has
+      the PSD solutions $P \in \{0,3\}$, and the recursion from $Q_f=0$ goes to $P=0$, giving
+      $K=0$ and an unstable closed loop with $\rho=2$. Since the cost is zero, that really is
+      optimal - "optimal" and "stable" are different things.
+    concept:
+      front: The two hypotheses behind LQR closed-loop stability
+      back: >-
+        Stabilizability of $(A,B)$ gives **boundedness** of $P$; detectability of $(A,Q^{1/2})$
+        gives **stabilization** of the limit
+  - id: q5
+    prompt: >-
+      On what grounds is the LQR gain $K_k$ of the LQG separation theorem independent of the noise
+      covariances $W$ and $V$?
+    choices:
+      - Because the noise has zero mean
+      - "Because the estimation error is orthogonal to every function of the measurement history, so the cost splits into control-dependent and control-independent parts, and additive noise adds only a trace term independent of $u$"
+      - Because the Kalman filter is the optimal estimator
+      - Because $Q$ and $R$ are chosen independently of the noise
+    explanation: >-
+      There are two steps. First, splitting $x = \hat x + e$ gives
+      $\mathbb{E}[e^\top Q\hat x] = 0$, so the cost separates into a $\hat x$ term and a
+      $\mathrm{tr}(Q\Sigma_k)$ term, the latter independent of $u$. Second, the $\hat x$ dynamics
+      are a linear system with additive white noise, and all additive noise adds to a quadratic
+      cost is a constant of the form $\frac12\mathrm{tr}(P\Lambda)$, so the minimiser is the same
+      as in the deterministic case. That is certainty equivalence, and it fails under
+      multiplicative noise.
+    concept:
+      front: When certainty equivalence holds
+      back: >-
+        Linear dynamics + quadratic cost + additive independent noise. If the noise enters
+        multiplicatively or the cost is not quadratic, the optimal gain depends on the covariance
+  - id: q6
+    prompt: >-
+      Doyle 1978 showed that LQG designs are too fragile to be used in practice.
+    explanation: >-
+      The proposition Doyle refutes is that there are **guaranteed** gain and phase margins, and a
+      single counterexample suffices for that. The counterexample is an extreme in which the
+      weights $q$ and $\sigma$ are both driven large; it does not say every LQG design is fragile.
+      The lesson is "optimality is not robustness, so margins must be designed and verified
+      separately", and the consequences are $\mathcal{H}_\infty$, LQG/LTR, and MPC with explicit
+      constraints.
+    concept:
+      front: What Doyle 1978 refuted
+      back: >-
+        The proposition that "LQG has guaranteed stability margins". One counterexample suffices;
+        it is not a claim that LQG is always fragile

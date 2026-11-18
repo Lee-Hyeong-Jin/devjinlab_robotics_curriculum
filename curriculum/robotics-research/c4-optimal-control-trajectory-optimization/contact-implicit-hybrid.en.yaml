@@ -1,0 +1,142 @@
+# English text of the structured fields of contact-implicit-hybrid.md (activity titles,
+# resource notes, quiz). The prose lives in contact-implicit-hybrid.en.md.
+id: c4-contact-implicit-hybrid
+lang: en
+activities:
+  c4-contact-implicit-hybrid-reading: Read the lesson and follow the derivations
+  c4-contact-implicit-hybrid-papers: Read the three must-read papers + a one-page note each
+  c4-contact-implicit-hybrid-problems: "Problem set (2 derivations, 2 proofs, 1 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  c4-contact-implicit-hybrid-reproduction: "Reproduction task - complementarity, relaxation and the saltation matrix (R2)"
+  c4-contact-implicit-hybrid-quiz: Concept check quiz
+resources:
+  "Tedrake, Underactuated Robotics — Contact":
+    title: "Tedrake, Underactuated Robotics - Contact"
+    note: ch.17 is contact dynamics and complementarity. Free in full.
+  "Drake":
+    note: The toolbox containing the implementation of Posa 2014. The reproduction task needs only numpy, but this is the practical comparison.
+  "Nocedal & Wright, Numerical Optimization":
+    note: ch.12 (the constraint qualifications LICQ and MFCQ), ch.19 (interior point). Background for R1. (official URL unverified)
+quiz:
+  - id: q1
+    prompt: >-
+      At which points does the complementarity constraint $0 \le a \perp b \ge 0$ break LICQ?
+    choices:
+      - "Only at $a = b = 0$"
+      - At **every** point of the feasible set
+      - "At points with $a > 0$ and $b > 0$"
+      - It does not break, since the constraints are linear
+    explanation: >-
+      At a feasible point necessarily $a=0$ or $b=0$. If $a=0$, the gradient $(1,0)$ of the active
+      inequality $a\ge0$ and the gradient $(b,a)=(b,0)$ of the equality $ab=0$ are **parallel**, so
+      the rank drops; $b=0$ is symmetric. At $a=b=0$ the equality gradient is $(0,0)$ outright, the
+      strongest failure. This is why complementarity problems use a dedicated theory (MPCC).
+    concept:
+      front: Complementarity and LICQ
+      back: >-
+        It fails at **every** point of the feasible set; at $a=b=0$ the equality gradient is the
+        zero vector
+  - id: q2
+    prompt: >-
+      The complementarity set $\{a\ge0, b\ge0, ab=0\}$ is convex.
+    explanation: >-
+      $(0,1)$ and $(1,0)$ are in the set but the midpoint $(0.5,0.5)$ has $ab=0.25\ne0$ and is not.
+      Complementarity is a **logical or** — "at least one of the two is zero" — and a disjunction
+      breaks convexity. The set is a union of two rays, bent at the origin.
+    concept:
+      front: The shape of the complementarity set
+      back: >-
+        A union of two rays - non-convex. The logical or is the source of the non-convexity
+  - id: q3
+    prompt: >-
+      How does the through-contact transcription (Posa 2014) dispense with a mode schedule?
+    choices:
+      - It approximates contact by a smooth spring-damper
+      - "By lifting the contact force $\\lambda_k$ into the decision variables and imposing complementarity as a constraint, letting the optimization choose at which steps contact occurs"
+      - It enumerates every mode sequence, solves each and takes the best
+      - It stops the integration at each guard and applies the reset map
+    explanation: >-
+      The classical approach fixes the schedule first and solves a smooth problem within each mode —
+      and there are $2^{mN}$ schedules. Posa 2014 lifts $\lambda_k$ into the variables and lets the
+      optimization pick $\lambda_k>0$ (contact) or $\phi>0$ (no contact) by itself, so the schedule
+      becomes an **output** of the solution. The price is the non-convexity of complementarity and
+      the failure of LICQ.
+    concept:
+      front: The core of through-contact
+      back: >-
+        Lift the contact forces into the decision variables so the schedule is an output. The price
+        is non-convexity and LICQ failure
+  - id: q4
+    prompt: >-
+      Where does the saltation matrix's correction term
+      $(f^+ - DR f^-)\nabla g^\top/(\nabla g^\top f^-)$ come from?
+    choices:
+      - From the reset map being nonlinear
+      - "From the fact that perturbing the initial state also **changes the time at which the guard is met**"
+      - From the vector field being discontinuous at the transition surface
+      - From the collision dissipating energy
+    explanation: >-
+      The perturbed trajectory meets the guard at $t_i + \delta t$ with
+      $\delta t = -\nabla g^\top\delta x^-/(\nabla g^\top f^-)$. Comparing the two trajectories at
+      the same time requires undoing that time offset, and that undoing leaves
+      $(DR f^- - f^+)\delta t$. Using $DR$ alone therefore ignores the change in "when" the surface
+      is met entirely, and measuring it gives an $O(1)$ error (in the author's implementation the
+      $DR$-only error was $10^8$ times the error using $\Xi$).
+    concept:
+      front: What the saltation correction really is
+      back: >-
+        The variation in the transition **time**. Comparing two trajectories at the same instant
+        requires undoing that offset
+  - id: q5
+    prompt: >-
+      When complementarity is relaxed to $ab \le \varepsilon$, what happens to that constraint at
+      the optimum?
+    choices:
+      - It is usually inactive - the relaxation is left as a safety margin
+      - It is always active as an equality - the optimizer spends the relaxation to lower the cost
+      - "It ends up with $ab = 0$ regardless of $\\varepsilon$"
+      - Whether it is active depends on the initial guess
+    explanation: >-
+      Measured: $\max\phi\lambda$ was exactly $\varepsilon$ at every stage. Leaving slack unused
+      costs more, so the optimizer uses all of it. At $\varepsilon = 10^{-1}$ the cost is 22% below
+      the limit, and that trajectory is **physically false** — the ground pushes the ball while it
+      is airborne. The cost error is $O(\varepsilon)$.
+    concept:
+      front: Relaxation is not free
+      back: >-
+        At the optimum $ab=\varepsilon$ always. The cost error is $O(\varepsilon)$, and when loose
+        the contact schedule itself becomes false
+  - id: q6
+    prompt: >-
+      Which measurement best shows that the contact schedule cannot be trusted at a loose
+      relaxation?
+    choices:
+      - The cost is below the limiting value
+      - "That the number of steps with $\\lambda_k > 10^{-6}$ equals the total number of steps when $\\varepsilon$ is loose, and drops sharply when it is tightened"
+      - "That the iteration count varies with $\\varepsilon$"
+      - That the terminal constraint residual grows
+    explanation: >-
+      In the author's implementation, at $\varepsilon \ge 10^{-6}$ contact force was applied at
+      **all 20** steps — including while the ball was in flight — and only at
+      $\varepsilon \le 10^{-8}$ did it drop to 6 and recover the physical schedule. Since the
+      contact schedule is the **output** of through-contact, a loose relaxation makes that output
+      false; to use the schedule you must confirm the relaxation was tightened enough.
+    concept:
+      front: How relaxation ruins the contact schedule
+      back: >-
+        When loose, a free contact force appears at every step. To trust the schedule, confirm the
+        count of steps with $\lambda>0$ has converged in $\varepsilon$
+  - id: q7
+    prompt: >-
+      In semi-implicit time stepping, updating the position before the velocity still lets the
+      complementarity constraint prevent penetration.
+    explanation: >-
+      Updating the position first makes $q_{k+1}$ independent of $\lambda_k$, so there is no way to
+      satisfy $\phi(q_{k+1})\ge0$ with a contact force. A penetration of about the approach velocity
+      $\times\,h$ then appears and shrinks only at first order in $h$. The velocity must be updated
+      first and the position with that new velocity, so that $q_{k+1}$ is controlled through
+      $\lambda_k$.
+    concept:
+      front: Why the order of the semi-implicit update matters
+      back: >-
+        The velocity must be updated first so that $q_{k+1}$ depends on $\lambda_k$ and penetration
+        can be prevented

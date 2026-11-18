@@ -1,0 +1,14 @@
+id: r2-capstone
+title: R2 캡스톤
+summary: >-
+  트랙의 마지막 단계. 선택한 전문 분야에서 서베이 → 재현 → 작은 기여를 순서대로 수행한다.
+  3레슨 모두 산출물이 심사 대상이며, 통과 기준은 "읽었다"가 아니라 **남이 검증할 수 있는 결과물**이다:
+  10–15페이지 서베이(논문 40편 이상 분류), 원 논문 1편의 R3 티어 재현과 재현 보고서,
+  워크숍 논문 형식 8페이지 초안과 20분 구술 방어. 근거는 CMU RI 의 Research Qualifier 4요소와
+  Georgia Tech 구술시험 형식(주제 배정 → 서면 요약 → 15–20분 발표)이다
+  (연구 트랙 설계 노트의 benchmark §7·§9-3).
+level: 연구
+lessons:
+  - capstone-survey
+  - capstone-reproduction
+  - capstone-contribution

@@ -1,0 +1,13 @@
+id: r1-research-methodology
+lang: en
+title: "R1 Research methodology"
+summary: >-
+  The module that trains how research is actually done. Six lessons: literature search and writing
+  a survey, forming research questions and hypotheses, experiment design, evaluation and statistics
+  in robotics, reproducibility and artifacts, and paper writing and reviewing. The output of each
+  lesson is not something to read but something you **make** (a classification table, a two-page
+  proposal, an experiment plan, an evaluation protocol, a reproducible repository, an eight-page
+  draft). The justification comes from the four components of CMU RI's Research Qualifier, the
+  format of Georgia Tech's oral examination, the conference-format reports of CMU 16-745 and
+  Berkeley CS287, and the research proposal with peer review of Stanford CS326 (see benchmark §7
+  and §9-3 in the research-track design notes).

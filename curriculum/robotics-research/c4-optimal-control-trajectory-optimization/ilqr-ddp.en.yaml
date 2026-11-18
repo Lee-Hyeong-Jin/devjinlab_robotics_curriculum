@@ -1,0 +1,137 @@
+# English text of the structured fields of ilqr-ddp.md (activity titles, resource
+# notes, quiz). The prose lives in ilqr-ddp.en.md.
+id: c4-ilqr-ddp
+lang: en
+activities:
+  c4-ilqr-ddp-reading: Read the lesson and follow the derivations
+  c4-ilqr-ddp-papers: Read the four must-read papers + a one-page note each
+  c4-ilqr-ddp-problems: "Problem set (2 derivations, 1 proof, 1 numerical, 2 implementation, 1 counterexample, 1 paper)"
+  c4-ilqr-ddp-reproduction: "Reproduction task - convergence order on a pendulum and cart-pole swing-up (R2)"
+  c4-ilqr-ddp-quiz: Concept check quiz
+resources:
+  "Tedrake, Underactuated Robotics — Trajectory Optimization":
+    title: "Tedrake, Underactuated Robotics - Trajectory Optimization"
+    note: ch.10.3 is DDP and iLQR. Free in full.
+  "Nocedal & Wright, Numerical Optimization":
+    note: Recommended. ch.3 (line search), ch.10 (Gauss-Newton), ch.4 (trust regions). Background for R2 and R3. (official URL unverified)
+quiz:
+  - id: q1
+    prompt: Which term of (2) separates iLQR from DDP?
+    choices:
+      - "Terms like $f_x^\\top V'_{xx} f_x$ - iLQR drops these"
+      - "Terms like $V'_x \\cdot f_{xx}$ - iLQR drops these"
+      - "$\\ell_{uu}$ - iLQR approximates it by the identity"
+      - "$Q_{ux}$ - iLQR uses no feedback gain"
+    explanation: >-
+      iLQR drops the three terms in which the **second** derivative of the dynamics enters
+      ($V'_x\cdot f_{xx}$, $V'_x\cdot f_{ux}$, $V'_x\cdot f_{uu}$). Terms like
+      $f_x^\top V'_{xx}f_x$ use only first derivatives and are present in both. Both use $K$, and
+      what is dropped lowers the convergence order from second to first.
+    concept:
+      front: The difference between iLQR and DDP
+      back: >-
+        Drop the second-derivative-of-dynamics terms ($V'_x \cdot f_{xx}$ and friends) and you have
+        iLQR; keep them and you have DDP. The terms using only first derivatives are common to both
+  - id: q2
+    prompt: On what grounds does DDP converge locally at second order?
+    choices:
+      - Because the value function was expanded to second order
+      - "Because the backward pass is equivalent to solving exactly the Newton linear system of the reduced problem $\\min_u \\hat{J}(u)$"
+      - "Because $Q_{uu}$ is positive definite"
+      - Because the line search satisfies the Armijo condition
+    explanation: >-
+      "Expanded to second order" is necessary but not sufficient — iLQR also uses a second-order
+      value function. The key is the result of Liao & Shoemaker 1991: DDP's backward elimination is
+      equivalent to solving $\nabla^2\hat{J}\,\delta u = -\nabla\hat{J}$. iLQR uses a fixed
+      approximation $B$ instead of $\nabla^2\hat{J}$, so its rate is the first-order
+      $\rho(I - B^{-1}\nabla^2\hat{J})$.
+    concept:
+      front: DDP = Newton, iLQR = Gauss-Newton
+      back: >-
+        DDP's backward pass solves the reduced problem's Newton system exactly (Liao-Shoemaker
+        1991). iLQR approximates the Hessian, giving first-order rate $\rho(I-B^{-1}H) < 1$
+  - id: q3
+    prompt: >-
+      Why does Tassa 2012 regularize with $V'_{xx} + \mu I$ rather than $Q_{uu} + \mu I$?
+    choices:
+      - Because it needs fewer operations
+      - "Because as $\\mu \\to \\infty$ the feedback $K$ tends to a nonzero limit, giving a closed loop that tracks the previous trajectory"
+      - "Because $Q_{uu}$ then need not be factorised"
+      - Because it can handle control constraints at the same time
+    explanation: >-
+      With $Q_{uu} + \mu I$, as $\mu\to\infty$ both $k \to 0$ **and** $K \to 0$, so the forward
+      pass rolls out the open-loop $\bar{u}$ with no feedback. With $V'_{xx} + \mu I$,
+      $K \to -(f_u^\top f_u)^{-1}f_u^\top f_x$, leaving a least-squares feedback that cancels
+      $\delta x$, so the centre of the trust region is the **trajectory**. That is far safer at
+      the same $\mu$.
+    concept:
+      front: Why state regularization beats control regularization
+      back: >-
+        As $\mu\to\infty$ the feedback survives and tracks the previous trajectory - the trust
+        region is centred on a trajectory, not on an open-loop control sequence
+  - id: q4
+    prompt: >-
+      In the forward pass, the step size $\alpha$ should multiply both the feedforward term $k$ and
+      the feedback gain $K$.
+    explanation: >-
+      $\alpha$ multiplies only $k$: $u_k = \bar{u}_k + \alpha k_k + K_k(x_k - \bar{x}_k)$.
+      Multiplying $K$ too would make feedback vanish as $\alpha \to 0$, letting the nonlinear
+      dynamics drift off the nominal trajectory, so a **small step gives a worse trajectory**.
+      $\alpha$ is "how much to change the nominal trajectory", not "how much feedback to use".
+    concept:
+      front: What the line-search step multiplies
+      back: >-
+        Only $k$. Multiply $K$ as well and small $\alpha$ removes the feedback, making the
+        trajectory worse
+  - id: q5
+    prompt: >-
+      What breaks if the expected-reduction ratio test
+      $z = (J - J')/(-\Delta J(\alpha))$ is omitted?
+    choices:
+      - The control constraint is violated
+      - "Steps are accepted in regions where the quadratic model is wrong, so $\\mu$ never grows and the solver diverges"
+      - The cost stops decreasing monotonically
+      - The convergence order drops to first
+    explanation: >-
+      With only "$J' < J$", a large step for which the quadratic model is utterly wrong passes
+      whenever the cost happens to dip. Since the step was accepted, $\mu$ shrinks, the next
+      iteration tries a larger step, and it diverges. $z$ measures "did it decrease by as much as
+      the model predicted", so where the model is wrong it is the signal to **raise** $\mu$ — the
+      trust-region version of the Armijo condition.
+    concept:
+      front: The role of the $z$ test
+      back: >-
+        It measures model reliability. Omit it and large steps where the model is wrong get
+        accepted, $\mu$ shrinks, and the solver diverges
+  - id: q6
+    prompt: >-
+      Why can a state constraint $g(x_k) \le 0$ not be put into the backward pass's box-constrained QP?
+    choices:
+      - Because $g$ is nonlinear
+      - "Because the backward pass's only decision variable is $\\delta u$, while $\\delta x$ is a value handed over by the forward pass"
+      - "Because $Q_{uu}$ becomes singular"
+      - Because state constraints are always active
+    explanation: >-
+      (8) is a minimisation over $\delta u$, and a control box is directly a box on $\delta u$. A
+      state constraint affects $\delta u$ only several stages later, so there is no place for it in
+      that QP; and clamping the state in the forward pass would violate the dynamics. That leaves
+      only routes that **put it in the cost**: penalty, augmented Lagrangian, barrier.
+    concept:
+      front: Why control constraints work and state constraints do not
+      back: >-
+        The backward QP's only decision variable is $\delta u$. A control box is a box on
+        $\delta u$; a state constraint is a consequence several stages later, with nowhere to go
+  - id: q7
+    prompt: >-
+      Since DDP converges at second order, it converges faster than iLQR from any initial guess.
+    explanation: >-
+      Second-order convergence is a **local** property and appears only where the regularization is
+      off and $\alpha=1$ is accepted. Far from the optimum the $V'_x\cdot f_{xx}$ term makes
+      $Q_{uu}$ indefinite, which makes DDP the riskier choice — in the reproduction task, from a
+      random initial guess DDP hits the regularization ceiling and fails while iLQR converges to
+      the same solution. That is why the practical default is iLQR.
+    concept:
+      front: The scope of DDP's quadratic convergence
+      back: >-
+        Only in the local region where regularization is off and $\alpha=1$. Far away, the
+        second-order terms are the main culprit in making $Q_{uu}$ indefinite

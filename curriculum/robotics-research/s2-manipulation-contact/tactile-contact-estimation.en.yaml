@@ -1,0 +1,123 @@
+id: s2-tactile-contact-estimation
+lang: en
+activities:
+  s2-tactile-contact-estimation-reading: Read the lesson and follow the derivations
+  s2-tactile-contact-estimation-papers: Read the two must-read papers and write a one-page note on each
+  s2-tactile-contact-estimation-problems: >-
+    Problem set (2 derivations, 2 proofs, 2 numerical, 1 implementation, 1 counterexample)
+  s2-tactile-contact-estimation-reproduction: >-
+    Reproduction task - the spectrum of the inverse problem and a manifold particle filter (R2)
+  s2-tactile-contact-estimation-quiz: Concept-check quiz
+resources:
+  "Johnson, Contact Mechanics (Cambridge, 1985)":
+    note: >-
+      ch.2-3 (the Boussinesq and Cerruti solutions for a half-space). The Green's function of R1 comes
+      from here. (official URL unverified)
+  "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
+    note: ch.4 (non-linear, non-Gaussian estimation) - the standard account of particle filters. Free in full.
+  "SciPy / numpy FFT":
+    note: >-
+      The forward operator is a periodic convolution, so the FFT gives its eigenvalues exactly.
+papers:
+  yuan2017-gelsight: "§2-4"
+  koval2015-contact-manifold-pf: "§3-5"
+quiz:
+  - id: q1
+    prompt: What is the Fourier multiplier of the tactile forward operator in the Boussinesq solution?
+    choices:
+      - $\lambda(k) \propto 1$ (frequency-independent)
+      - $\lambda(k) \propto 1/|k|$ - the inverse problem is ill-posed of degree 1
+      - $\lambda(k) \propto e^{-|k|t}$ - the inverse problem is exponentially ill-posed
+      - $\lambda(k) \propto |k|$ - the inverse problem is smoothing
+    explanation: >-
+      The surface displacement under a point normal force is $1/r$ and the two-dimensional transform
+      is $\mathcal{F}[1/r] = 2\pi/|k|$, so $\hat w = \frac{2(1-\nu^2)}{E}\hat p/|k|$. The inversion
+      amplifies **linearly** in $|k|$, hence degree-1 ill-posedness, and the grid condition number
+      grows linearly in the resolution. Exponential ill-posedness appears for a **finite-thickness**
+      layer (where the thickness sets the physical resolution ceiling).
+    concept:
+      front: The degree of ill-posedness of the tactile inverse problem
+      back: $\lambda \propto 1/|k|$ → degree 1. With finite thickness, $e^{-|k|t}$ → exponential
+  - id: q2
+    prompt: >-
+      The degeneracy of a standard particle filter in contact-state estimation is fixed by using
+      enough particles.
+    explanation: >-
+      Contact is an equality constraint, so the contact manifold has **Lebesgue measure zero** in
+      pose space. A continuous proposal assigns probability zero to a measure-zero set, so no particle
+      lands on the manifold, and if the likelihood is zero off it then every weight is zero. That
+      probability is **independent of the particle count**. The fix is to represent particles on the
+      manifold, at the cost of mode enumeration and a Jacobian correction for the projection.
+    concept:
+      front: Why a particle filter dies in contact estimation
+      back: >-
+        The posterior concentrates on a measure-zero manifold, so a continuous proposal gives
+        probability zero - independent of the particle count
+  - id: q3
+    prompt: >-
+      For two modes whose observation models are equal-variance Gaussians differing by $d$ in the
+      mean, what is the relation between the mean and the variance of one observation's
+      log-likelihood ratio?
+    choices:
+      - mean = variance
+      - mean = half the variance
+      - mean = twice the variance
+      - the mean and the variance are unrelated
+    explanation: >-
+      $\mathrm{LLR} \sim \mathcal{N}(d^2/2\sigma^2,\ d^2/\sigma^2)$, so the mean is **half** the
+      variance. Hence after $T$ observations the mean is $Td^2/2\sigma^2$ and the standard deviation
+      is $d\sqrt T/\sigma$, and taking "the mean is twice the standard deviation" gives
+      $T \gtrsim 16\sigma^2/d^2$ — the number of observations needed is **inversely proportional to
+      the square of the distance between the modes**.
+    concept:
+      front: The rate at which mode ambiguity resolves
+      back: $\mathrm{LLR} \sim \mathcal{N}(d^2/2\sigma^2, d^2/\sigma^2)$, needing $T \sim 16\sigma^2/d^2$
+  - id: q4
+    prompt: >-
+      Why does the measured mean posterior of 0.828 differ from the 0.950 computed from the mean LLR?
+    choices:
+      - Because there were too few particles
+      - >-
+        Because the posterior is a non-linear (logistic) function of the LLR, so
+        $\mathbb{E}[\sigma(X)] \ne \sigma(\mathbb{E}[X])$
+      - Because the observation noise is not Gaussian
+      - Because the manifold projection distorts the distribution
+    explanation: >-
+      It is the Jensen gap. The logistic function is non-linear, so expectation and function
+      application do not commute. Mixing the two numbers in one table is a common error; a report must
+      **explicitly distinguish** "the mean posterior" from "the probability corresponding to the mean
+      LLR".
+    concept:
+      front: Mean posterior versus mean LLR
+      back: The Jensen gap - $\mathbb{E}[\sigma(X)] \ne \sigma(\mathbb{E}[X])$; never report them interchangeably
+  - id: q5
+    prompt: Select every cost a manifold particle filter pays.
+    choices:
+      - The possible contact modes must be enumerated
+      - The projection's Jacobian must be reflected in the weights
+      - A separate proposal is needed to move between modes
+      - The particle count becomes exponential in the dimension
+    explanation: >-
+      The enumeration cost inherits the $3^{n_c}$ of `c6-tamp` R3; the projection distorts the
+      distribution, so without a Jacobian correction a bias appears; and mode transitions need a
+      proposal connecting manifolds. The exponential particle count is the problem of **relaxing the
+      likelihood to a band of width $\epsilon$** (the effective sample falls as $\epsilon^{m}$), which
+      is exactly what the manifold representation avoids.
+    concept:
+      front: The three costs of a manifold particle filter
+      back: Mode enumeration + a Jacobian correction for the projection + a cross-mode proposal
+  - id: q6
+    prompt: >-
+      In an elastic layer of finite thickness $t$ at noise level $\eta$, write the smallest
+      recoverable feature size in terms of $t$ and $\eta$.
+    answers: ["2 pi t / ln(1/eta)", "~ t/ln(1/eta)", "2*pi*t/log(1/eta)", "O(t/ln(1/eta))", "of order t / ln(1/eta)"]
+    explanation: >-
+      The layer's boundary conditions introduce a decay $e^{-|k|t}$, so recovery requires
+      $e^{-|k|t} \gtrsim \eta$, i.e. $|k| \lesssim \ln(1/\eta)/t$, and the wavelength is
+      $\lambda = 2\pi/|k| \gtrsim 2\pi t/\ln(1/\eta)$. **The sensor thickness sets the physical
+      ceiling on spatial resolution**, and adding pixels beyond that ceiling buys nothing.
+    concept:
+      front: The resolution limit set by the gel thickness
+      back: >-
+        $\lambda_{\min} \sim 2\pi t/\ln(1/\eta)$ - the thickness is the physical ceiling; more
+        resolution is useless

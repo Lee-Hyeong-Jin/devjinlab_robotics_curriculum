@@ -1,0 +1,98 @@
+# English text of the structured fields of vio-systems.md (activity titles, resource notes,
+# quiz items). The prose lives in vio-systems.en.md.
+id: s1-vio-systems
+lang: en
+activities:
+  s1-vio-systems-reading: Read the lesson and follow the derivations
+  s1-vio-systems-papers: Read the two must-read papers and write a one-page note on each
+  s1-vio-systems-problems: "Problem set (2 derivations, 1 proof, 2 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  s1-vio-systems-reproduction: "Reproduction task: the null-space identity, observability and consistency (R2, with an optional R4 extension)"
+  s1-vio-systems-quiz: Concept-check quiz
+resources:
+  "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
+    note: >-
+      ch.4 (nonlinear filters) and ch.10. Used to compare a filter and a batch solver in one
+      notation. Free full PDF.
+  "EuRoC MAV dataset":
+    note: "The input for the optional extension (R4): stereo plus IMU with Leica/Vicon ground truth."
+  "OpenVINS":
+    note: >-
+      Used in the optional extension (R4). A public MSCKF-family implementation in which the
+      null-space projection appears directly in the code.
+  "VINS-Mono":
+    note: Recommended. The public optimisation-based implementation; read its sliding-window marginalisation code.
+quiz:
+  - id: q1
+    prompt: What does MSCKF's null-space projection do while taking the feature out of the state?
+    choices:
+      - "An approximation that discards the feature's information, losing a little accuracy"
+      - "It marginalises the feature **exactly** - the information reaching the state is identical to the Schur complement"
+      - "It treats the feature as a fixed value"
+      - "It replaces the feature's prior with an uninformative one"
+    explanation: >-
+      Since $I - P_f = NN^\\top$, we have
+      $H_x^\\top(I-P_f)H_x = (N^\\top H_x)^\\top(N^\\top H_x)$. Measured: the relative differences
+      of the information matrix and vector are at the $3\\times10^{-16}$ level. The filter's real
+      cost is not the null-space technique but the frozen linearisation of the marginalisation
+      outside the window and the resulting loss of consistency.
+    concept:
+      front: The nature of the null-space projection
+      back: Exact marginalisation ($I-P_f = NN^\top$). Not an approximation - the same theorem as the Schur complement
+  - id: q2
+    prompt: How many degrees of freedom are unobservable in monocular VIO with known gravity? (number only)
+    answers: ["4", "four"]
+    explanation: >-
+      One yaw about the gravity axis plus three global translations. Measured: rank deficiency 4,
+      with the four generators at $2.3$ to $6.6\\times10^{-12}$. With a camera alone the similarity
+      gauge is seven-dimensional; the IMU makes the scale and the gravity direction observable and
+      reduces it to four.
+    concept:
+      front: Unobservable dimension of monocular VIO
+      back: "4 = 1 yaw about gravity + 3 translations (7 with a camera alone)"
+  - id: q3
+    prompt: That roll, pitch and scale are observable means they can actually be estimated over a short window.
+    explanation: >-
+      Observability is a binary property but **sensitivity** is continuous. The only path by which
+      roll and pitch reach the residual is the gravity term of the IMU factor, so the sensitivity is
+      proportional to $\\Delta t$. Measured (same scene, only $\\Delta t$ changed): the sensitivity
+      of roll grows from $3.0\\times10^{-7}$ to $1.7\\times10^{-5}$, a factor of 56, and over a
+      short window the numerical rank deficiency looks like 5-7 rather than 4. Yaw stays at
+      $2.98\\times10^{-12}$ regardless of $\\Delta t$.
+    concept:
+      front: Weak observability
+      back: >-
+        Sensitivity scales with $\Delta t$ and excitation. Over a short window it is numerically
+        indistinguishable from unobservable - that is what makes VIO initialisation hard
+  - id: q4
+    prompt: Under what condition does the null-space projection let **spurious information** into the state?
+    choices:
+      - "When the feature was seen in too many views"
+      - "When $H_f$ does not have full column rank (a feature with no parallax)"
+      - "When $N$ has $2n-3$ columns"
+      - "When the noise is not isotropic"
+    explanation: >-
+      If $\\operatorname{rank}H_f < 3$ the left null space is larger than $2n-3$ and the feature's
+      depth direction is not filtered out. Measured: making one column dependent gives $N$ a
+      dimension of 10 instead of 9 and $\\operatorname{cond}(H_f^\\top H_f) = 1.24\\times10^{16}$.
+      The residual does not detect it, so a parallax test (on $\\sigma_3(H_f)$) must precede the
+      projection.
+    concept:
+      front: The only trap of the null-space technique
+      back: A rank-deficient $H_f$ (no parallax) inflates the null space and injects spurious information. Test parallax first
+  - id: q5
+    prompt: >-
+      When EKF-SLAM and batch optimisation are run on the same measurements, which metric reveals the
+      difference first?
+    choices:
+      - "Position RMSE"
+      - "The tail of the NEES distribution (the fraction exceeding the 95% bound)"
+      - "The final cost"
+      - "Only the runtime; the estimation quality is the same"
+    explanation: >-
+      Measured (planar SLAM, 60 runs): the position RMSE differs by only 0.5% (0.0616 against
+      0.0619 m), while $P(\\mathrm{NEES} > 7.815)$ is 0.117 for the EKF against 0.067 for the batch
+      (nominal 0.05), more than a factor of two apart. A comparison reporting only ATE or RMSE
+      misses this structural difference.
+    concept:
+      front: Where a filter and an optimiser part ways
+      back: Not RMSE but the tail of the consistency statistic (NEES). It surfaces in the modules that consume the covariance

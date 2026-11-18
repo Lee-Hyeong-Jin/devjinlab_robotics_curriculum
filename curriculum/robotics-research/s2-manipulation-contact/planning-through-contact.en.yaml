@@ -1,0 +1,132 @@
+id: s2-planning-through-contact
+lang: en
+activities:
+  s2-planning-through-contact-reading: Read the lesson and follow the derivations
+  s2-planning-through-contact-papers: Read the two must-read papers and write a one-page note on each
+  s2-planning-through-contact-problems: >-
+    Problem set (2 derivations, 2 proofs, 2 numerical, 1 implementation, 1 counterexample)
+  s2-planning-through-contact-reproduction: >-
+    Reproduction task - contact-implicit MPC for planar pushing, and the relaxation gap (R3)
+  s2-planning-through-contact-quiz: Concept-check quiz
+resources:
+  "scipy.linalg.cho_factor / cho_solve (사전 분해 + 역대입)":
+    title: scipy.linalg.cho_factor / cho_solve (factor once, then back-substitute)
+    note: >-
+      The real-time claim rests on the ADMM $z$-step matrix being **constant** once the penalty is
+      fixed - factor it once and only back-substitute per iteration.
+papers:
+  aydinoglu2024-contact-implicit-mpc: "§3-5"
+  marcucci2023-gcs: "§3"
+quiz:
+  - id: q1
+    prompt: >-
+      Relaxing complementarity to $\varphi\lambda = \varepsilon$ produces what at a contact step?
+    choices:
+      - The body penetrates more deeply
+      - >-
+        The body **floats** by $h^2\varepsilon/\lvert f\rvert$ while taking force (force at a
+        distance)
+      - The contact force becomes exactly zero
+      - No bias at all, only faster convergence
+    explanation: >-
+      The root of (6) is $\varphi^+ = (f + \sqrt{f^2 + 4h^2\varepsilon})/2 > 0$, so the gap is
+      **positive** - force is taken without touching. Its first-order term is
+      $h^2\varepsilon/\lvert f\rvert$ and the force bias is $\varepsilon/\lvert f\rvert$; the two
+      measured ratios agree to five decimals.
+    concept:
+      front: The bias of the $\varepsilon$ relaxation
+      back: >-
+        Gap $h^2\varepsilon/\lvert f\rvert$, force $\varepsilon/\lvert f\rvert$ - an artifact that
+        pushes from a distance
+  - id: q2
+    prompt: >-
+      At a resting contact ($\lvert f\rvert = h^2 g$), what happens if $h$ shrinks at fixed
+      $\varepsilon$?
+    choices:
+      - Both the gap and the force bias shrink
+      - >-
+        The gap stays at $\varepsilon/g$ while the force bias **grows** as $\varepsilon/(h^2 g)$
+      - Only the gap shrinks, as $h^2$
+      - Neither changes
+    explanation: >-
+      This is (2). Substituting $\lvert f\rvert = h^2 g$ into (1) cancels the $h^2$ in the gap,
+      leaving $\varepsilon/g$, while the force bias is divided by $h^2$ and diverges. So integrating
+      more finely while leaving $\varepsilon$ alone makes the contact force wrong by $h^{-2}$ - the
+      correct coupling is $\varepsilon \propto h^2$.
+    concept:
+      front: Coupling $\varepsilon$ and $h$
+      back: >-
+        Resting contact: gap $\varepsilon/g$ (invariant), force $\varepsilon/(h^2g)$ (diverges)
+        → $\varepsilon \propto h^2$
+  - id: q3
+    prompt: >-
+      Why is projection onto the complementarity set $S = \{(a,b)\ge 0 : ab = 0\}$ closed form?
+    choices:
+      - Because $S$ is convex
+      - >-
+        Because $S$ is a **union of two convex rays**, so project onto each and take the nearer
+      - Because $S$ is compact
+      - Because the projection is unique
+    explanation: >-
+      $S$ is nonconvex and the projection need not even be unique (when the two distances tie). But
+      each piece is convex, so the piecewise projections are closed form and projection onto the
+      union is whichever is nearer - one comparison, $O(1)$. That $O(1)$ is what makes the real-time
+      iteration linear in the number of contacts.
+    concept:
+      front: Projection onto the complementarity set
+      back: >-
+        A union of two convex rays → piecewise projection plus a distance comparison, $O(1)$
+  - id: q4
+    prompt: >-
+      If ADMM's complementarity residual is zero to machine precision, the solution is a good plan.
+    explanation: >-
+      The measurements say the opposite. The fixed point at $\rho = 1$ has residual
+      $1.7\times10^{-12}$ and is **perfectly feasible**, yet costs $2.443$ times $J^\ast$ with
+      $u_0 = 0$ - in closed loop the slider never moves at all. ADMM on a nonconvex set gives
+      feasibility, not optimality. The schedule that **tolerates** a residual of
+      $7.8\times10^{-3}$ is the one that finishes the task ($1.132\,J^\ast$).
+    concept:
+      front: Residual and quality are different
+      back: >-
+        A feasible fixed point is not a good plan. Fixed $\rho$: residual $10^{-12}$, cost
+        $2.44\times$, does nothing
+  - id: q5
+    prompt: >-
+      What is the convex hull of a complementarity pair on the box $[0,\Lambda]\times[0,\Phi]$?
+    choices:
+      - The whole box
+      - >-
+        The triangle $\{a/\Lambda + b/\Phi \le 1,\ a,b \ge 0\}$ - exactly half the box's area
+      - The union of the two rays (it is its own hull)
+      - A quarter disc centred at the origin
+    explanation: >-
+      This is (5). Computing the hull of the two segments as a corollary of (4) gives the triangle
+      with vertices $(0,0)$, $(\Lambda,0)$, $(0,\Phi)$. It is **the same** as relaxing $y$ to a
+      continuous variable in the big-M encoding $\lambda \le \Lambda y$, $\varphi \le \Phi(1-y)$ and
+      eliminating it - per step nothing tighter exists.
+    concept:
+      front: The hull of a complementarity pair
+      back: >-
+        The triangle $a/\Lambda + b/\Phi \le 1$ = the big-M relaxation = half the box
+  - id: q6
+    prompt: >-
+      Even at the smallest force bound that still contains the optimizer, the per-step hull leaves an
+      $82.5\%$ gap. What is the main reason?
+    choices:
+      - Because the hull formula (5) is loose
+      - >-
+        Because the intersection of per-step hulls is **not the hull of the trajectory set** - the
+        remaining gap comes from the mode **sequence**, not the geometry
+      - Because the force bound was not tightened further
+      - Because the enumerated optimum is wrong
+    explanation: >-
+      (5) is the **exact** hull for one pair and cannot be tightened. But each pair's hull is half its
+      box, so 12 pairs give a volume ratio of $2^{-12}$, and that intersection still holds
+      trajectories realizable by no mode sequence. The measurement that only **42** of 4096 branches
+      are feasible shows how sparse the combinatorial structure is. Hence GCS makes a whole mode, not
+      a pair, the vertex of its graph.
+    concept:
+      front: The limit of per-step convexification
+      back: >-
+        Per-pair hulls are exact, but their intersection is not the trajectory set's hull - the gap
+        that remains is combinatorial

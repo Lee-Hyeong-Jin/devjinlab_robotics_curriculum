@@ -1,0 +1,18 @@
+id: c4-optimal-control-trajectory-optimization
+title: C4 최적 제어·궤적 최적화
+summary: >-
+  최적 제어의 1차 필요조건(Pontryagin 최소 원리)에서 출발해 동적 계획법·LQR·LQG, iLQR/DDP,
+  직접법(collocation·SQP), MPC 와 그 안정성, 접촉을 포함한 궤적 최적화, 강건·확률 최적 제어까지
+  다룬다. 연구 트랙의 중심 모듈이며 레슨마다 핵심 결과를 직접 유도하고 원 논문을 수치적으로
+  재현한다. 근거가 되는 대학원 과목은 CMU 16-745 전체와 Stanford AA203 전체, Berkeley CS287
+  이고 교재는 Tedrake Underactuated Robotics ch.7-10,13 과 Nocedal-Wright ch.18 이다.
+  설계상 레슨은 7개다(research_notes/연구 트랙 설계/blueprint.md §5 의 C4 표).
+level: 연구
+lessons:
+  - pontryagin-indirect
+  - dp-lqr-lqg
+  - ilqr-ddp
+  - direct-collocation-sqp
+  - mpc
+  - contact-implicit-hybrid
+  - robust-stochastic-oc

@@ -1,0 +1,129 @@
+# English text of the structured fields of safety-ood.md (activity titles, resource notes,
+# quiz). The prose lives in safety-ood.en.md.
+id: s4-safety-ood
+lang: en
+activities:
+  s4-safety-ood-reading: Read the lesson and follow the derivations
+  s4-safety-ood-papers: Read the two must-read papers + a one-page note each
+  s4-safety-ood-problems: "Problem set (1 proof, 2 derivations, 1 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  s4-safety-ood-reproduction: "Reproduction task - 90% coverage of conformal intervals, its distribution, collapse under shift, ensembles, abstention (R2)"
+  s4-safety-ood-quiz: Concept check quiz
+resources:
+  "Angelopoulos & Bates — conformal prediction 코드 모음":
+    title: "Angelopoulos & Bates - conformal prediction code collection"
+    note: The example notebooks of the must-read paper. Compare with your own implementation after finishing the reproduction task.
+  "Tibshirani, Conformal Prediction (Berkeley Stat 241B 강의 노트)":
+    title: "Tibshirani, Conformal Prediction (Berkeley Stat 241B lecture notes)"
+    note: Lecture notes that set out the exchangeability proof and weighted conformal prediction concisely.
+quiz:
+  - id: q1
+    prompt: >-
+      What assumption does the coverage guarantee $\Pr[y \in C(x)] \ge 1-\alpha$ of split
+      conformal prediction require?
+    choices:
+      - The predictor is sufficiently accurate
+      - "The calibration scores and the test score are exchangeable - no assumption on the predictor or the distribution"
+      - The residuals are Gaussian
+      - There are sufficiently many calibration samples
+    explanation: >-
+      The proof uses only the fact that "among $n+1$ exchangeable values the rank of the last one
+      is uniform". A bad predictor merely widens the interval while coverage is kept, and neither
+      the shape of the distribution nor the sample size matters (it holds exactly in finite
+      samples). In return, that one assumption — the test data comes from the same distribution as
+      the calibration data — is the one most easily broken in robot deployment.
+    concept:
+      front: The assumption of conformal prediction
+      back: >-
+        Exchangeability alone. Independent of the predictor, the distribution and the sample size.
+        The guarantee is about honesty, not accuracy
+  - id: q2
+    prompt: >-
+      A 90% conformal interval built from 20 calibration samples is deployed on one robot. Which
+      statement about the coverage that robot actually experiences is correct?
+    choices:
+      - It is exactly 90%
+      - At least 90% is guaranteed
+      - "It is a random variable following $\\mathrm{Beta}(19, 2)$, below 85% with a probability of about 18%"
+      - With so few calibration samples it can be 0%
+    explanation: >-
+      The guarantee (1) is an average that includes redrawing the calibration set. With one
+      calibration set fixed the coverage follows $\mathrm{Beta}(k, n+1-k)$,
+      $k = \lceil 21\times0.9\rceil = 19$, with a standard deviation of $0.063$. A deployed robot
+      lives with one calibration set, so a statement of the form "coverage $\ge 1-\alpha$ with
+      probability $1-\delta$" is more honest, and it requires a larger $k$.
+    concept:
+      front: The distribution of the realized coverage
+      back: >-
+        $\mathrm{Beta}(k, n+1-k)$ for a fixed calibration set. Variance about
+        $\alpha(1-\alpha)/n$. At n=20, 17.6% fall below 85%
+  - id: q3
+    prompt: >-
+      When the input leaves the training distribution, a conformal prediction interval widens
+      automatically and so signals the uncertainty.
+    explanation: >-
+      False. $\hat{q}$ is a constant fixed at calibration time, so the width of the interval stays
+      the same when the input leaves the distribution (even if the score function uses an
+      input-dependent scale, that scale itself cannot be trusted outside the distribution). If the
+      residual scale doubles, the coverage falls to $2\Phi(1.645/2) - 1 = 0.589$. Conformal
+      prediction **does not detect** OOD — detection is the job of a separate runtime monitor.
+    concept:
+      front: Conformal prediction and OOD
+      back: >-
+        The interval does not widen. The coverage collapses silently (0.589 at $\kappa=2$).
+        Detection is the job of a separate device
+  - id: q4
+    prompt: >-
+      The predictions of 5 ensemble members almost coincide (the variance is small). What does
+      this mean?
+    choices:
+      - The prediction is accurate
+      - "Only that the members are not wrong in different ways - they may be wrong together"
+      - The input is inside the training distribution
+      - There is no need to enlarge the ensemble
+    explanation: >-
+      Splitting the error into a shared and an individual component, the shared component cancels
+      in the subtraction inside the sample variance: $\mathbb{E}[S^2] = \sigma^2(1-c)$. The actual
+      error variance is $\sigma^2(c + (1-c)/M)$. With correlation $c = 0.8$ the actual error is
+      $4.2$ times the variance and the measured coverage of the nominal 90% interval is $0.534$.
+      Adding members does not reduce the shared error (the limit of the ratio is $c/(1-c)$).
+    concept:
+      front: What the ensemble variance measures
+      back: >-
+        Only the difference between members, $\sigma^2(1-c)$. The shared error is invisible. No
+        guarantee - coverage is restored only by conformal calibration
+  - id: q5
+    prompt: >-
+      With failure cost $c_f = 10$ and help-request cost $c_h = 1$, which abstention rule minimizes
+      the expected cost?
+    choices:
+      - Abstain when the failure probability exceeds 50%
+      - Abstain when the failure probability exceeds 10%
+      - Abstain when the failure probability exceeds 1%
+      - Always act
+    explanation: >-
+      Comparing pointwise the expected cost of acting, $c_f\pi(u)$, with the cost of abstaining,
+      $c_h$, the condition for acting is $\pi(u) < c_h/c_f = 0.1$ (Chow's rule). In the example of
+      the lesson this rule cuts the cost from $2.20$ to $0.805$ but calls a human in 63.5% of
+      trials. Safety is paid for in intervention load, and if $c_h$ changes the whole answer
+      changes.
+    concept:
+      front: The optimal abstention threshold
+      back: >-
+        Act only when $\pi(u) < c_h/c_f$. The threshold is set by the cost ratio and the price is
+        paid in abstention rate (intervention load)
+  - id: q6
+    prompt: >-
+      An abstention policy improves safety even if the uncertainty score does not output exact
+      probabilities, as long as it gives higher scores to dangerous trials (the ranking is right).
+    explanation: >-
+      True. What the threshold rule needs is that $\pi(u)$ is increasing in $u$, that is, rank
+      validity. The **value** of the threshold can be chosen on calibration data so that the
+      selective risk is below the target (conformal risk control). But that very rank validity is
+      not guaranteed outside the distribution — if a neural network outputs high confidence on OOD
+      inputs the most dangerous trials pass the threshold, and the abstention policy can even be
+      worse than always acting.
+    concept:
+      front: What an abstention policy rests on
+      back: >-
+        The rank validity of the score. The value is fixed by calibration. If the ranking flips
+        outside the distribution the defence collapses

@@ -1,0 +1,132 @@
+# English text of the structured fields of certifiable-slam.md (activity titles, resource
+# notes, quiz). The prose lives in certifiable-slam.en.md.
+id: s1-certifiable-slam
+lang: en
+activities:
+  s1-certifiable-slam-reading: Read the lesson and follow the derivations
+  s1-certifiable-slam-papers: Read the two must-read papers + a one-page note each
+  s1-certifiable-slam-problems: "Problem set (2 proofs, 2 derivations, 1 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  s1-certifiable-slam-reproduction: "Reproduction task - computing the optimality certificate of a pose-graph solution (R3)"
+  s1-certifiable-slam-quiz: Concept check quiz
+resources:
+  "SE-Sync (reference implementation)":
+    note: Reference implementation of the must-read paper (C++ and MATLAB). The comparison in the public-data part of the reproduction task.
+  "Pose graph optimization datasets (L. Carlone)":
+    note: Public pose graphs in g2o format (2D and 3D). The input of Part G of the reproduction task.
+  "Boyd & Vandenberghe, Convex Optimization":
+    note: ch.5 (duality, weak duality and KKT). Background for R2. Full PDF is free.
+quiz:
+  - id: q1
+    prompt: >-
+      For a solution $\hat{R}$ of pose-graph optimization, what follows if the certificate matrix
+      $S = Q - \Lambda$ is positive semidefinite?
+    choices:
+      - "Only that $\\hat{R}$ is a stationary point"
+      - "$\\hat{R}$ is a global minimizer and the semidefinite relaxation is tight"
+      - The measurements contain no outliers
+      - The map agrees with the truth
+    explanation: >-
+      For any feasible $R$,
+      $\operatorname{tr}(QR^\top R) = \operatorname{tr}(SR^\top R) + \operatorname{tr}\Lambda \ge \operatorname{tr}\Lambda = f(\hat{R})$
+      — $\Lambda$ is block diagonal, so the second term is constant on the feasible set, and
+      $S\succeq0$ makes the first non-negative. The same computation holds for the variable $Z$ of
+      the relaxation, so the solution of the relaxation is $\hat{R}^\top\hat{R}$. The certificate
+      speaks of optimality for the given measurements; it does not say the measurements are right
+      or the map accurate.
+    concept:
+      front: What the certificate means
+      back: >-
+        $S\succeq0$ implies global optimality and a tight relaxation. A statement about the given
+        $Q$, not about the accuracy of the map
+  - id: q2
+    prompt: >-
+      If the minimum eigenvalue of the certificate matrix is negative, the solution is not
+      globally optimal.
+    explanation: >-
+      False. $S\succeq0$ is a **sufficient condition** for global optimality. If the relaxation is
+      not tight (high noise), $S\not\succeq0$ at the global minimum as well. A failed
+      certification is undecided, and all that remains is the lower bound
+      $f^\star \ge f(\hat{R}) + nd\,\lambda_{\min}(S)$. Measured: at $\sigma_R = 0.6$ rad the best
+      solution is uncertified on almost every graph and its gap to the relaxation value has a
+      median of 2.6%.
+    concept:
+      front: What a failed certification means
+      back: >-
+        Undecided. It may be a local minimum, or the relaxation may not be tight. The lower bound
+        (4) is always valid
+  - id: q3
+    prompt: >-
+      An iterative optimization converged with zero gradient. What does the ring-graph experiment
+      show?
+    choices:
+      - It converged, so it is globally optimal
+      - "About 2/3 of random initializations converge to uncertified local minima whose ATE is at the level of 5 m"
+      - Local minima arise only when the noise is large
+      - The initialization does not affect the result
+    explanation: >-
+      On the ring of 30 poses with 1 loop closure only 103 of 300 reach the global minimum
+      ($f = 1.712$) and are certified; 197 are local minima (the nearest has $f = 1522$, the
+      solution that closes the ring with one twist, ATE 5.2 m). The convergence condition is met
+      in all 197. What sets the landscape is the connectivity of the graph rather than the noise —
+      on the graph with many loops 200/200 go to the global minimum.
+    concept:
+      front: Convergence ≠ global optimality
+      back: >-
+        Ring graph: only 103/300 are global. The local minima are twisted configurations.
+        Connectivity sets the landscape
+  - id: q4
+    prompt: >-
+      A pose graph containing 2 loop closures displaced by one place through perceptual aliasing
+      was solved and the solution was certified. Which interpretation is correct?
+    choices:
+      - It is certified, so the map is accurate
+      - "The solver did not fail (global optimum for the given measurements). Whether the map is right has to be examined separately, for example through the goodness of fit of the residual"
+      - The computation of the certificate is wrong
+      - Certification always fails when a loop closure is wrong
+    explanation: >-
+      An aliased measurement contradicts the others only slightly and does not break the tightness
+      of the problem. In the measurement the solution stays certified while the ATE goes
+      $0.064 \to 0.235$, a factor of 3.7. The certificate separates failure of the solver (a local
+      minimum) from failure of the data (a wrong measurement) — when a certified solution is bad,
+      suspect the data. Here the residual $f = 454$ lies far from the expectation $60 \pm 11$ and
+      signals the rejection of the model.
+    concept:
+      front: Certified ≠ accurate
+      back: >-
+        Plausible false measurements pass certification. The certificate separates solver failure
+        from data failure. Model validity is judged by goodness of fit
+  - id: q5
+    prompt: >-
+      Why can the translations be eliminated to give the rotation-only problem
+      $\min\operatorname{tr}(QR^\top R)$?
+    choices:
+      - Because translations matter less than rotations
+      - "Because once the rotations are fixed the problem in the translations is linear least squares and is solved in closed form"
+      - Because the translation measurements are noise free
+      - Because the translations are unobservable
+    explanation: >-
+      The translation term of (1) is a convex quadratic in $t$ whose solution
+      $t^\star = RV\Omega A^\top(A\Omega A^\top)^\dagger$ is linear in $R$. Substituting makes the
+      translation term $\operatorname{tr}(RV\Omega^{1/2}\Pi\Omega^{1/2}V^\top R^\top)$, a quadratic
+      in $R$, which adds to the connection Laplacian of the rotation term to give $Q$. The problem
+      that remains has a quadratic objective and quadratic equality constraints, so its dual is
+      closed form.
+    concept:
+      front: Eliminating the translations
+      back: >-
+        Given the rotations, the translations are linear least squares. $Q$ = connection Laplacian
+        + projected translation term
+  - id: q6
+    prompt: >-
+      Even at a solution where certification fails, the certificate matrix gives a valid lower
+      bound on the optimum.
+    explanation: >-
+      True. $\operatorname{tr}(SR^\top R) \ge \lambda_{\min}(S)\lVert R\rVert_F^2 = nd\,\lambda_{\min}(S)$,
+      so $f^\star \ge f(\hat{R}) + nd\,\lambda_{\min}(S)$ holds whatever the sign of $S$. At the
+      local minimum of the ring graph ($f = 1522.2$, $\lambda_{\min} = -26.3$) the bound is $-56$,
+      below the truth $1.712$ — valid but loose. A tight bound requires actually solving the
+      relaxation.
+    concept:
+      front: The lower bound on failure
+      back: >-
+        $f^\star \ge f(\hat{R}) + nd\lambda_{\min}(S)$. Always valid, usually loose

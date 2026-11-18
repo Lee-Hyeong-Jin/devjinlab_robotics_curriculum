@@ -1,0 +1,102 @@
+# English text of the structured fields of pontryagin-indirect.md (activity titles,
+# resource notes, quiz). The prose lives in pontryagin-indirect.en.md.
+id: c4-pontryagin-indirect
+lang: en
+activities:
+  c4-pontryagin-indirect-reading: Read the lesson and follow the derivations
+  c4-pontryagin-indirect-papers: Read the three must-read papers + a one-page note each
+  c4-pontryagin-indirect-problems: "Problem set (2 derivations, 1 proof, 1 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  c4-pontryagin-indirect-reproduction: "Reproduction task - brachistochrone by indirect method and shooting sensitivity (R2)"
+  c4-pontryagin-indirect-quiz: Concept check quiz
+resources:
+  "Tedrake, Underactuated Robotics":
+    note: ch.10 (Trajectory Optimization) - 10.1 indirect methods against 10.2 direct methods. Free in full.
+  "Stanford AA203 Optimal and Learning-based Control":
+    note: Weeks 2-3 cover the calculus of variations, the PMP and indirect methods. Lecture notes and homework are public.
+quiz:
+  - id: q1
+    prompt: >-
+      Why is (3) of the PMP written as a minimisation over $U$ rather than as
+      $\partial H/\partial u = 0$?
+    choices:
+      - Because $H$ may be non-differentiable in $u$
+      - Because $u^*$ may lie on the boundary of $U$, where only one-sided variations are admissible
+      - Because the sign convention for $\lambda$ is the minimum principle
+      - Because the Hamiltonian is conserved
+    explanation: >-
+      This is why the proof uses short needle variations rather than small $\delta u$. If $u^*$ is
+      on the boundary you only get $\partial H/\partial u \cdot \delta u \ge 0$, and if $U$ is
+      non-convex the first variation is unusable at all. The minimisation form holds whatever the
+      shape of $U$.
+    concept:
+      front: Why the PMP's minimisation condition is stronger than a derivative condition
+      back: >-
+        Two-sided variations are impossible when $u^*$ is on the boundary of $U$ (and when $U$ is
+        non-convex) - needle variations never use the shape of $U$
+  - id: q2
+    prompt: >-
+      For an autonomous problem whose terminal cost does not depend on $t_f$ and whose $t_f$ is
+      free, what is the value of the Hamiltonian $H$ along the optimal trajectory?
+    answers: ["0", "zero", "H=0", "H = 0", "it is zero"]
+    explanation: >-
+      Autonomy gives $dH/dt = \partial H/\partial t = 0$, so $H$ is constant, and the free-$t_f$
+      condition $H(t_f) + \lambda_0\,\partial\varphi/\partial t_f = 0$ pins that constant to zero.
+      This makes $\max_t|H(t)|$ the first-choice convergence diagnostic for indirect methods -
+      though on a non-autonomous problem the same diagnostic raises false alarms.
+    concept:
+      front: The value of $H$ for an autonomous problem with free terminal time
+      back: >-
+        $H \equiv 0$. Autonomy makes $H$ constant and the free-$t_f$ condition fixes that constant
+        at zero
+  - id: q3
+    prompt: What bounds the number of switches at one for the minimum-time double integrator?
+    choices:
+      - That the control is bounded, $|u| \le 1$
+      - That $H$ is affine in $u$
+      - That the switching function $\lambda_2(t) = c_2 - c_1 t$ is affine in $t$, and being identically zero would violate $(\lambda_0,\lambda) \ne 0$
+      - That the minimum-time solution is unique
+    explanation: >-
+      Affineness only gives the bang-bang form (a sign test); the *number* of switches is set by
+      the number of zeros of the switching function. The adjoint equations $\dot\lambda_1 = 0$ and
+      $\dot\lambda_2 = -\lambda_1$ make $\lambda_2$ affine, so it has at most one zero. And
+      $\lambda_2 \equiv 0$ would force $\lambda \equiv 0$, hence $\lambda_0 = 0$ via $H \equiv 0$,
+      breaking non-triviality - which is also why there is no singular arc.
+    concept:
+      front: What sets the number of bang-bang switches
+      back: >-
+        The number of zeros of the switching function $s = F^\top\lambda$. For the double
+        integrator $s$ is affine, so at most one
+  - id: q4
+    prompt: >-
+      The condition number of single shooting grows exponentially in the horizon because the
+      two-point boundary value problem itself is ill-conditioned.
+    explanation: >-
+      The solution operator of the boundary value problem is $O(1)$ - propagate the unstable
+      directions forwards and the stable ones backwards. The ill-conditioning comes from the
+      reduction, "collect every unknown at $t=0$ and integrate the whole interval forwards". That
+      is why multiple shooting and collocation solve the same problem well.
+    concept:
+      front: Why shooting blows up but collocation does not
+      back: >-
+        The ill-conditioning lives in the IVP reduction, not in the BVP. Splitting into $N$
+        segments turns $e^{\sigma T}$ into $e^{\sigma T/N}$
+  - id: q5
+    prompt: >-
+      Why do the eigenvalues of the linearisation of the Hamiltonian system
+      $\dot z = J\nabla_z H$ come in $\pm$ pairs?
+    choices:
+      - Because $\nabla_z^2 H$ is positive definite
+      - Because $J\nabla_z^2 H$ is a Hamiltonian matrix, so its characteristic polynomial is even in $\mu$
+      - Because the adjoint equation flows backwards in time
+      - Because $J^2 = -I$
+    explanation: >-
+      $\mathcal{A} = J\mathcal{S}$ (with $\mathcal{S} = \nabla_z^2H$ symmetric) satisfies
+      $\mathcal{A}^\top J + J\mathcal{A} = 0$, which makes $\mathcal{A}$ similar to
+      $-\mathcal{A}^\top$, so the spectrum is symmetric about the origin. In the scalar example
+      (22) that symmetry shows up as $\operatorname{tr} M = 0$. The stable and unstable directions
+      splitting at the same rate is what produces the $e^{2\sigma T}$ of (7).
+    concept:
+      front: Spectral symmetry of a Hamiltonian matrix
+      back: >-
+        If $\mu$ is an eigenvalue so is $-\mu$. The singular values of $e^{\mathcal{A}T}$ split as
+        $e^{\pm\sigma T}$, making the shooting Jacobian's condition number $e^{2\sigma T}$

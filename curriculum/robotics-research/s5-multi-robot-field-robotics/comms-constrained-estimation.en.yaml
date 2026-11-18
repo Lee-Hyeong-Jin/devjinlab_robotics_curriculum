@@ -1,0 +1,126 @@
+# English text of the structured fields of comms-constrained-estimation.md (activity titles,
+# resource notes, quiz). The prose lives in comms-constrained-estimation.en.md.
+id: s5-comms-constrained-estimation
+lang: en
+activities:
+  s5-comms-constrained-estimation-reading: Read the lesson and follow the derivations
+  s5-comms-constrained-estimation-papers: Read the two must-read papers + a one-page note each
+  s5-comms-constrained-estimation-problems: "Problem set (2 derivations, 2 proofs, 1 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  s5-comms-constrained-estimation-reproduction: "Reproduction task - overconfidence from double counting, the conservatism of CI, the critical arrival probability, delay (R1)"
+  s5-comms-constrained-estimation-quiz: Concept check quiz
+resources:
+  "Barfoot, State Estimation for Robotics (2nd ed., 2024)":
+    note: ch.3 (linear-Gaussian estimation and the information form). Author's public PDF.
+  "Boyd & Vandenberghe, Convex Optimization":
+    note: ch.3 (matrix convexity) and appendix A.5 (Schur complement). Background for the proof of R3. Full PDF is free.
+quiz:
+  - id: q1
+    prompt: >-
+      What is the direct reason that fusing the estimates of two nodes that started from the same
+      prior, as if they were independent, is overconfident?
+    choices:
+      - The measurement noises are correlated
+      - "The prior information $\\Lambda_0$ enters the fused information matrix **twice**"
+      - The Kalman gain is not optimal
+      - The two nodes have different measurement models
+    explanation: >-
+      The two errors share the prior error $e_0$, so $P_{ab} = P_a\Lambda_0P_b \ne 0$. The
+      information $P_a^{-1} + P_b^{-1}$ of independence-assuming fusion contains $\Lambda_0$ twice,
+      and the actual covariance is $P_n + 2P_n\Lambda_0P_n$. Correct fusion subtracts one copy
+      ($P_a^{-1} + P_b^{-1} - \Lambda_0$). The measurement noises are independent in this setting.
+    concept:
+      front: The cause of double counting
+      back: >-
+        The shared prior information is added twice. Actual covariance
+        $P_n + 2P_n\Lambda_0P_n$; the remedy is to subtract $\Lambda_0$ once
+  - id: q2
+    prompt: >-
+      When independence-assuming fusion is overconfident, the actual error of its point estimate
+      (the mean) is necessarily larger than that of a single node that did not fuse.
+    explanation: >-
+      False. In the measurement the actual $\operatorname{tr}\tilde{P}$ of independence-assuming
+      fusion is $0.8283$, smaller than the $1.0294$ of a single node. What lies is not the point
+      estimate but the **reported covariance** ($0.6436$). The trouble comes at the next stage —
+      an overconfident estimate trusts later measurements less, and when fused again its NEES
+      grows geometrically.
+    concept:
+      front: Overconfidence and the point estimate
+      back: >-
+        A single independence-assuming fusion can improve the point estimate. What is wrong is the
+        reported covariance, and the cost is paid at later stages
+  - id: q3
+    prompt: >-
+      Why does the cross-covariance $P_{ab}$ not appear in the consistency proof of covariance
+      intersection (CI)?
+    choices:
+      - "Because CI assumes $P_{ab} = 0$"
+      - "Because the convexity identity the proof uses holds regardless of the joint distribution of $p$ and $q$"
+      - "Because optimizing $\\omega$ cancels the cross term"
+      - Because for Gaussian distributions the cross-covariance is always 0
+    explanation: >-
+      $\omega pp^\top + (1-\omega)qq^\top - (\omega p + (1-\omega)q)(\cdot)^\top = \omega(1-\omega)(p-q)(p-q)^\top \succeq 0$
+      is an identity for any two vectors. The inequality survives the expectation, and all that
+      remains is the consistency of the inputs ($\mathbb{E}[pp^\top] \preceq P_a^{-1}$). CI is
+      therefore consistent for **every** $\omega$ and **every** correlation, and $\omega$ is chosen
+      by a performance criterion only.
+    concept:
+      front: Why CI does not need to know the correlation
+      back: >-
+        The convexity identity is independent of the joint distribution. The only assumption
+        needed is the consistency of the inputs
+  - id: q4
+    prompt: >-
+      What happens when two **independent** scalar estimates of equal variance are fused by CI
+      ($\omega = 1/2$)?
+    choices:
+      - The result equals optimal fusion
+      - "The point estimate equals that of optimal fusion but the reported covariance is twice as large, so $\\mathbb{E}[\\mathrm{NEES}] = 0.5$"
+      - It is overconfident
+      - The fusion is undefined
+    explanation: >-
+      $P_{\mathrm{CI}} = \sigma^2$ while the actual error is $\sigma^2/2$. The mean is the plain
+      average, the same as optimal fusion, but the covariance is reported as if nothing had been
+      fused — half the information is thrown away. CI is exact at the worst correlation
+      ($\rho = 1$) and independence-assuming fusion at $\rho = 0$. That is why CI is not applied to
+      information known to be independent, such as a new measurement from one's own sensor (split
+      CI).
+    concept:
+      front: The price of CI
+      back: >-
+        Under independence the NEES is $(1+\rho)/2 = 0.5$. It is the fusion that assumes the worst
+        correlation, so it is not used on independent information
+  - id: q5
+    prompt: >-
+      For the scalar system with $a = 1.2$, what is observed when the measurement arrival
+      probability is $\gamma = 0.2 < \gamma_c$?
+    choices:
+      - The covariance of every trajectory goes to infinity
+      - "The median of the covariance is finite while the mean diverges - rare long runs of losses dominate the mean"
+      - The filter becomes inconsistent
+      - Both the mean and the median are finite
+    explanation: >-
+      The measured median is stable at about $10.5$ while the mean is in the thousands to tens of
+      thousands and differs from sample to sample. A run of $n$ consecutive losses has probability
+      $(1-\gamma)^n$ and multiplies the covariance by $a^{2n}$, so if $(1-\gamma)a^2 \ge 1$ the
+      sum for the expectation diverges. The filter itself knows about the losses and is therefore
+      **consistent** — what breaks is not consistency but the expectation of the performance.
+    concept:
+      front: What happens below the critical probability
+      back: >-
+        The median is finite, the mean diverges. The cause is the tail (long runs of losses).
+        Consistency is preserved
+  - id: q6
+    prompt: >-
+      A filter that uses delayed measurements as if they were current can detect the delay by
+      itself, because its reported covariance grows with the delay.
+    explanation: >-
+      False. The recursion of that filter is character for character the standard Kalman filter,
+      so the reported covariance is $P_\infty$ regardless of the delay. Only the actual error grows
+      to $P_\infty + dq$, making the NEES $1 + dq/P_\infty$. The filter does not know that it is
+      late. With a known delay it can be fixed by a $d$-step prediction, but that requires
+      timestamps and clock synchronization.
+    concept:
+      front: Delay and the reported covariance
+      back: >-
+        The report is $P_\infty$ regardless of the delay. The actual value is $P_\infty + dq$. The
+        remedy is a $d$-step prediction

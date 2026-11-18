@@ -1,0 +1,66 @@
+id: r2-capstone-contribution
+lang: en
+activities:
+  r2-capstone-contribution-reading: Read the lesson and set the contribution's scope
+  r2-capstone-contribution-design: "Contribution design - hypothesis, baselines, ablation, power"
+  r2-capstone-contribution-experiments: Run the experiments and analyse the results
+  r2-capstone-contribution-paper: "Deliverable - an eight-page draft and a reproduction repository"
+  r2-capstone-contribution-defense: "Deliverable - a 20-minute oral defence with questions"
+  r2-capstone-contribution-quiz: Concept check quiz
+resources:
+  "NeurIPS 2025 Reviewer Guidelines":
+    note: The review form and score scale; grade your own draft against it before submitting.
+  "Zenodo":
+    note: Mint a DOI for the code snapshot the paper cites.
+quiz:
+  - id: q1
+    prompt: Which capstone contribution candidate should be discarded first?
+    choices:
+      - One that fills an empty cell in the survey but whose effect size is expected to be small
+      - One that is a large contribution if the hypothesis holds but has nothing to report if it does not
+      - One that systematically investigates an assumption the reproduction was sensitive to
+      - One that tests whether a reproduction failure's cause is a general phenomenon
+    explanation: >-
+      A design that is only valuable when the hypothesis is true is risky. Good design is **worth
+      reporting whichever way the result goes** ("X does not work" is knowledge too). A small expected
+      effect size is handled by setting the trial count with a power analysis or by narrowing the claim.
+    concept:
+      front: The risk criterion for a research design
+      back: Is it worth reporting even if it fails? Discard designs that are only valuable when the hypothesis holds
+  - id: q2
+    prompt: If a better hypothesis occurs to you mid-experiment and you switch, the final paper need only state the new hypothesis.
+    explanation: >-
+      The change, its timing and its reason must be recorded and reported. Changing the hypothesis
+      after seeing results and hiding it is post-hoc selection (HARKing), an ethics problem. The rule
+      is that a changed hypothesis needs a new pre-registration and new data.
+    concept:
+      front: Handling a changed hypothesis
+      back: Record and report when and why it changed; where possible, re-test under a new pre-registration with new data
+  - id: q3
+    prompt: In the oral defence, what is the best response to a question you cannot answer?
+    choices:
+      - State the most plausible guess confidently
+      - Say you do not know, and state which experiment or analysis would settle it
+      - Dispute the question's premise
+      - Redirect to another related result
+    explanation: >-
+      "I don't know, and here is how to find out" is a researcher's answer and costs nothing. Marks
+      are lost by stating a guess as fact - which also discounts every other claim you made. Back-up
+      slides exist to supply evidence for the questions you *can* answer.
+    concept:
+      front: Answering questions in a defence
+      back: Say what you do not know and give a route to find out; never state a guess as fact
+  - id: q4
+    prompt: Which practice damages baseline fairness most?
+    choices:
+      - Using the baseline's official implementation
+      - Searching many hyper-parameters for your own method while leaving the baseline at defaults
+      - Using the same evaluation metric as the baseline
+      - Citing the baseline's reported numbers
+    explanation: >-
+      Asymmetric search budget is the most common and most damaging defect. A difference obtained that
+      way is not a difference between methods but **a difference in tuning budget**. Match search
+      counts and training steps and state those numbers in the paper.
+    concept:
+      front: The equal-budget rule
+      back: Match search counts and training budgets and publish the numbers; asymmetric tuning is not a method difference

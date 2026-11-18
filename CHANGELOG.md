@@ -8,6 +8,68 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Research track complete: all 105 lessons of the design (17 modules) are now in Korean and
+  English. This closes S1 (`s1-dense-neural-slam`, `s1-semantic-scene-graphs`,
+  `s1-certifiable-slam`, `s1-slam-benchmarking`), S3 (`s3-locomotion-rl`,
+  `s3-dynamic-maneuvers`), S4 (`s4-evaluation-science`, `s4-safety-ood`), S5
+  (`s5-active-information-gathering`, `s5-comms-constrained-estimation`, `s5-field-deployment`),
+  C4 (`c4-robust-stochastic-oc`) and adds the R2 capstone module (`r2-capstone-survey`,
+  `r2-capstone-reproduction`, `r2-capstone-contribution`). The numbers in each reproduction task
+  come from running its code; comparisons against public tools and datasets that were not run are
+  marked as such in the lesson.
+- `curriculum/README.md` lists the research-track modules and the current translation status.
+- 연구원 트랙에 S2 조작·접촉 모듈을 열었다 — `s2-grasp-mechanics`(접촉 역학과 파지 안정성),
+  `s2-contact-modes-dexterity`(접촉 모드와 외재적 손재주),
+  `s2-tactile-contact-estimation`(촉각과 접촉 상태 추정),
+  `s2-learned-grasping`(학습 기반 파지), `s2-generative-policies`(생성형 정책),
+  `s2-planning-through-contact`(접촉을 통한 계획·제어). 모듈 6 레슨 완성.
+  각 레슨은 한국어·영어.
+- Research-track lesson `c4-contact-implicit-hybrid`: a proof that the complementarity set is
+  non-convex and breaks LICQ at every feasible point, the time-stepping through-contact
+  transcription, the saltation matrix derived from the variation in transition time and
+  verified against finite differences, and a measured relaxation study showing that the
+  relaxation is always tight and falsifies the contact schedule. Korean source plus the
+  English translation.
+- Research-track lesson `c4-mpc`: recursive feasibility from control invariance of the
+  terminal set and Lyapunov stability from a terminal cost that is a control Lyapunov
+  function, both proved by the shift-and-append construction; a grid study counting the 178
+  states that are feasible now and infeasible later without a terminal condition; explicit
+  MPC as a piecewise affine map; and real-time iteration. Korean source plus the English
+  translation.
+- Research-track lesson `c4-direct-collocation-sqp`: the exact nonzero count of the
+  transcribed constraint Jacobian and its identity with the Riccati recursion, Hermite-Simpson
+  derived from cubic Hermite interpolation with midpoint collocation (global order four), SQP
+  proved to be Newton's method on the KKT system, and a measurement showing a
+  machine-precision defect alongside an $O(10^2)$ interpolant residual. Korean source plus the
+  English translation.
+- Research-track lesson `c4-ilqr-ddp`: the second-order DDP backward pass derived in full,
+  why DDP is Newton on the control sequence (quadratic) and iLQR Gauss-Newton (linear), the
+  two regularizations and the merit-ratio line search, exact handling of control box
+  constraints against the impossibility for state constraints, and the locality of the
+  method. Korean source plus the English translation.
+- Research-track lesson `c4-dp-lqr-lqg`: the Bellman equation and the HJB, the verification
+  theorem as the sufficient condition the PMP lacks, the costate as the gradient of the value
+  function, LQR derived three ways (DP, PMP, completion of squares), monotone convergence of
+  the Riccati recursion with a worked detectability counterexample, and the LQG separation
+  theorem together with Doyle's margin critique. Korean source plus the English translation.
+- Research-track module C4 (optimal control and trajectory optimization) with its first
+  lesson, `c4-pontryagin-indirect`: Pontryagin's minimum principle proved from needle
+  variations and a separating hyperplane, the adjoint equation derived as the transpose of
+  the variational equation, bang-bang structure and singular arcs, the exponential
+  conditioning of single shooting, and the brachistochrone solved in closed form. Korean
+  source plus the English translation.
+- 연구 트랙 S5 모듈 세 번째 레슨 `s5-multi-agent-planning`(다중 로봇 경로 계획): CBS 의 완전성·최적성 증명, 우선순위 계획이 모든 순서에서 실패하는 반례, 고정 예산 아래 성공률 역전의 실측. 한국어·영어 동시 제공.
+- 연구원 트랙 S5 에 `s5-distributed-optimization`(분산 최적화와 분산 SLAM, ko/en)을 추가했다.
+  2블록 ADMM 의 수렴을 증명하고 2차 문제에서 ADMM 이 아핀 반복임을 보여 수렴률을 명시적
+  스펙트럼 반경으로 쓰고, 블록 Gauss-Seidel 의 수렴률이 정확히 1 − λ_min(Λ₂₂⁻¹S)(S 는 Schur
+  보완)임을 증명해 Λ ≻ 0 이면 항상 수렴함을 보였다. 2대 로봇 포즈 그래프에서 중앙집중 해와
+  186 라운드에 1e-4 이내로 일치하고, 로봇 간 공유를 늘리면 정확도는 올라가지만 수렴률이
+  나빠지는 교환을 수치로 측정했다.
+- 연구원 트랙에 S5 다중 로봇·필드 로보틱스 모듈을 시작했다 — `s5-graph-consensus`(그래프
+  이론과 합의, ko/en). 연속시간 합의의 수렴률이 정확히 대수적 연결성 λ₂ 임을 증명하고, 이산시간
+  합의의 최적 보폭 2/(λ₂+λₙ)과 그 수렴률 (κ−1)/(κ+1)을 닫힌 형태로 유도하고, 방향 그래프의
+  합의값이 좌 영벡터 가중 평균임을 보이고, 시변 그래프에서는 결합 연결성만이 문제임을
+  (각각 λ₂ = 0 인 두 그래프를 번갈아 써도 합의에 도달함을) 수치로 확인했다.
 - 연구원 트랙에 C6 동작 계획 이론 모듈을 추가했다 — `c6-cspace-complexity`(구성공간과 복잡도),
   `c6-combinatorial-gcs`(조합적 계획과 볼록 분해), `c6-sampling-completeness`(샘플링 기반과
   확률적 완전성), `c6-asymptotic-optimality`(점근 최적성),
@@ -36,6 +98,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `docs/curriculum/GLOSSARY.md`: the ko ↔ en term list every translation follows.
 - `scripts/i18n/audit.py` and `docs/reviews/i18n-gap-audit.md`: the English build is driven
   end to end (API, static site, CLI) and every Korean string that is left is reported.
+- Research-track specialization module `s4-robot-learning-foundation-models` (S4, robot
+  learning and foundation models) at `level: 연구`. Every reproduction task is judged on a CPU
+  without a GPU; large-scale fine-tuning is an optional extension. Lessons so far:
+  `s4-robot-data-scaling`, `s4-vla-architectures`,
+  `s4-pretrained-representations`, `s4-language-and-planning`.
 - Research-track module `c8-decision-making-learning-theory` (C8, decision making and
   learning theory) at `level: 연구`, complete with all eight lessons in Korean and English:
   `c8-mdp-pomdp-bellman`, `c8-policy-gradient`, `c8-value-based-rl`,
@@ -55,6 +122,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   regress.
 
 ### Changed
+- C4 lessons `c4-pontryagin-indirect`, `c4-dp-lqr-lqg` and `c4-ilqr-ddp` cite their papers through
+  the course registry (`papers[]`) instead of article resources, use the `paper` and
+  `reproduction` activity kinds, and the C4 module level is `연구`.
 
 - SEO. With `RC_PUBLIC_CONTENT=1` (ADR 0016) the curriculum is readable without a session and
   the pages that hold it become indexable: per-page title and description, canonical URL,
@@ -209,6 +279,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   maximisation with a measured angular-velocity estimate on the public ECD dataset, the
   non-convexity of that objective, and GelSight photometric stereo with the measured failure
   condition of volume-based force estimation.
+- Research track module S1 (SLAM and spatial AI) under
+  `curriculum/robotics-research/s1-slam-spatial-ai/`, starting with `s1-vio-systems`: the filter
+  and optimisation architectures of VIO, a proof that MSCKF's null-space projection is exact
+  marginalisation, the four unobservable directions of monocular VIO with the measured weak
+  observability of roll, pitch and scale, and a Monte Carlo showing that a filter pays in the tail
+  of the consistency statistic rather than in RMSE.
+- `s1-loop-closure-lifelong`: the precision-recall law of place recognition (with the measured
+  threshold growing linearly in the log of the database size), the factor-of-22 damage a single
+  false loop does to a least-squares pose graph, the contamination rates at which Huber and GNC
+  give out, and why map sparsification is naturally overconfident, measured in KLD.
 - `curriculum/robotics-research/papers.yaml`: the course paper registry (ADR 0014) with the
   eleven papers the C7 lessons assign; both C7 lessons reference them through front-matter
   `papers:` and `rc papers <lesson_id>` lists them.
@@ -282,6 +362,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the minimum-intervention QP from the KKT conditions, the exponential CBF chain for a
   relative-degree-two constraint, and a reproduction task that measures how input limits break the
   guarantee (95 of 189 runs saturate at $u_{\max}=2$, worst $h = -0.138$).
+- Research-track module S3 (legged and underactuated robots) under
+  `curriculum/robotics-research/s3-legged-underactuated/`: lesson 1, hybrid dynamics and limit
+  cycles, in Korean and English — the Poincare map and orbital stability of a periodic orbit with
+  impacts, the saltation matrix derived from the event-time perturbation, the compass-gait
+  equations of motion and impact map derived from scratch, and a reproduction task whose numbers
+  (limit cycle, eigenvalues, energy balance, second-order saltation check) cross-validate each
+  other. It is the first lesson to use the structured ```problemset block.
+- Research-track lesson 2 of module S3, hybrid zero dynamics and gait generation, in Korean and
+  English: virtual constraints and the zero dynamics surface, impact invariance as the boundary
+  conditions of a Bezier virtual constraint, the one-dimensional affine return map that follows
+  from the hip torque having no moment about the stance foot, and a reproduction task in which the
+  reduced model's predicted rate matches the four-state model's dominant Poincare eigenvalue to
+  eight digits.
+- Research-track lesson 3 of module S3, centroidal dynamics and MPC walking, in Korean and
+  English: the centroidal dynamics derived from whole-body Newton-Euler (and verified on a
+  point-footed walker while the hip torque is swung), the CoP/ZMP equation, the LIPM and the DCM in
+  closed form, and a reproduction task that measures the recovery limit $\omega p_{\max}$ and shows
+  an MPC without a terminal constraint reporting "optimal" with a 39 m terminal DCM.
+- Research-track lesson 4 of module S3, whole-body control and hierarchical QPs, in Korean and
+  English: the null-space projection hierarchy and its priority-preservation proof, the equivalence
+  with a lexicographic QP for equality tasks, measurements showing that clipping a projection
+  solution destroys the priority while a weighted sum leaks in proportion to its weight, and what a
+  lexicographic QP guarantees when the top level is infeasible.
 - Module C3 moved onto the schema the paper registry added (AUTHORING §8-1): its 22 papers are
   registered in `curriculum/robotics-research/papers.yaml` (all with verified URLs), each lesson
   references them from front-matter `papers[]` with `required`/`role` and a language-neutral

@@ -1,0 +1,16 @@
+id: s4-robot-learning-foundation-models
+title: S4 로봇 학습·파운데이션 모델
+summary: >-
+  대규모 로봇 데이터와 파운데이션 모델을 연구자 관점에서 다룬다. 스케일링 법칙의 형태와
+  데이터 혼합이 만드는 편향 바닥, VLA 의 행동 표현과 양자화 오차, 사전학습 표현의 평가 한계,
+  언어·계획 결합의 실현가능성 공백, 실기 평가의 표본 수와 검정력, 그리고 공형 예측으로 보장을
+  얻는 방법까지 간다. 선수는 C7(지각)과 C8(의사결정·학습 이론)이며, 재현 과제는 GPU 없이
+  CPU 에서 판정 가능하게 설계했다(대규모 미세조정은 선택 확장).
+level: 연구
+lessons:
+  - robot-data-scaling
+  - vla-architectures
+  - pretrained-representations
+  - language-and-planning
+  - evaluation-science
+  - safety-ood

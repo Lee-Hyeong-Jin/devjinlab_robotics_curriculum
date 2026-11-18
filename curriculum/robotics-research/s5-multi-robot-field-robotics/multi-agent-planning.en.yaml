@@ -1,0 +1,100 @@
+# English text of the structured fields of multi-agent-planning.md (activity titles, resource
+# notes, quiz). The prose lives in multi-agent-planning.en.md.
+id: s5-multi-agent-planning
+lang: en
+activities:
+  s5-multi-agent-planning-reading: Read the lesson and follow the derivations
+  s5-multi-agent-planning-papers: Read the three must-read papers + a one-page note each
+  s5-multi-agent-planning-problems: "Problem set (2 proofs, 1 derivation, 1 numerical, 1 implementation, 1 counterexample, 1 paper)"
+  s5-multi-agent-planning-reproduction: "Reproduction task - CBS and prioritized planning, the counterexample and the budget effect (R2)"
+  s5-multi-agent-planning-quiz: Concept check quiz
+resources:
+  "LaValle, Planning Algorithms":
+    note: ch.7.2 (multi-robot planning) and ch.6. The configuration-space entry point. Full HTML and PDF are free.
+  "Boyd & Vandenberghe, Convex Optimization":
+    note: Recommended. Background for the flow-based relaxation (LP) of problem P6.
+quiz:
+  - id: q1
+    prompt: In the optimality proof of CBS, what makes the node cost $\mathrm{cost}(N)$ a lower bound?
+    choices:
+      - That the cost increases monotonically as constraints accumulate
+      - That the low-level A* returns an **optimal** path for each robot under the constraints
+      - That the best-first search pops nodes in cost order
+      - That the branching factor of the CT is 2
+    explanation: >-
+      It is (4) - for any solution $\{\sigma_i\}$ respecting $N$'s constraints, low-level optimality
+      gives $\lvert\pi_i\rvert \le \lvert\sigma_i\rvert$, and summing makes $\mathrm{cost}(N)$ a lower
+      bound. Approximating the low level (weighted A*) loosens that bound and weakens the conclusion to
+      $w$-optimality. The best-first search **uses** the bound; it is not its source.
+    concept:
+      front: The source of the CBS lower bound
+      back: >-
+        The optimality of the low-level A* under the constraints. Approximate it and the bound loosens,
+        leaving only $w$-optimality
+  - id: q2
+    prompt: Why does CBS constrain **one robot only** when branching on a conflict $(i,j,t,v)$?
+    choices:
+      - To keep the tree small
+      - Because forbidding both leaves the solutions in which only one of the two steps aside in neither child, so solutions are lost
+      - Because edge constraints are oriented
+      - Because the low-level A* can only handle one constraint
+    explanation: >-
+      What (5) guarantees is that any solution satisfies **at least one** of the two constraints, which
+      is why the two children **cover** all solutions of $N$. Forbidding both at once breaks the cover
+      and loses completeness - a common implementation bug. The CT is a cover, not a partition (the
+      children's solution sets may overlap).
+    concept:
+      front: Why the CBS branching must be a cover
+      back: >-
+        Any solution satisfies at least one of the two constraints - forbidding both at once loses
+        solutions
+  - id: q3
+    prompt: >-
+      Prioritized planning can solve every solvable MAPF instance if the priority order is chosen well.
+    explanation: >-
+      False. The 2x5 corridor-plus-alcove counterexample of the reproduction task is solvable (CBS finds
+      a solution of cost 11), yet with only 2 robots there are two possible orders and **both fail**. The
+      cause is that the first-planned robot stays at its goal forever and blocks the only passage of the
+      later one, and the structure of prioritized planning cannot express "the robot that went first
+      steps aside for a moment".
+    concept:
+      front: The incompleteness of prioritized planning
+      back: >-
+        There exist solvable instances on which every order fails. Completeness needs a well-formed
+        condition on the environment
+  - id: q4
+    prompt: What chiefly sets the cost of CBS (its CT node count)?
+    choices:
+      - The size of the grid
+      - The robot density - density sets the number of conflicts and the conflicts set the CT depth
+      - The branching factor of the CT
+      - The consistency of the heuristic
+    explanation: >-
+      The branching factor is **always 2**, so what sets the cost is the depth, i.e. the number of
+      conflicts to resolve. In the reproduction task, 8 robots on $12\times12$ take 6 times the CT nodes
+      of 8 robots on $16\times16$ - a larger grid is actually cheaper. This is why MAPF benchmarks are
+      always reported as "map x agent count".
+    concept:
+      front: What dominates the cost of CBS
+      back: >-
+        Robot density -> conflict count -> CT depth. The branching factor is fixed at 2 and grid size by
+        itself does not raise the cost
+  - id: q5
+    prompt: >-
+      In the reproduction task the success rate of CBS under a fixed node budget came out below that of
+      prioritized planning. What does that mean?
+    choices:
+      - That CBS is in fact incomplete
+      - That CBS is complete but did not finish within the budget - every failure is a cap hit and raising the cap solves them
+      - That prioritized planning is the better algorithm
+      - That there is a bug in the conflict detection
+    explanation: >-
+      There were **zero** tree exhaustions, every failure was a cap hit, and raising the cap from 3000 to
+      30000 solves the 2 hard instances 2/2. Theoretical completeness and success rate under a fixed
+      budget are different axes. Look at the price too - the prioritized solutions are 15-19% above
+      optimal.
+    concept:
+      front: Completeness vs success rate under a budget
+      back: >-
+        Every CBS failure is a budget matter (0 exhaustions, solved when the cap rises). The three axes
+        (completeness, success rate, cost) must be reported separately

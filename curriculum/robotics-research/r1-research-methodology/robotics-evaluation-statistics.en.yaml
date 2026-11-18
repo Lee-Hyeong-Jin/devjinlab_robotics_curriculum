@@ -1,0 +1,61 @@
+id: r1-robotics-evaluation-statistics
+lang: en
+activities:
+  r1-robotics-evaluation-statistics-reading: Read the lesson and follow the procedure
+  r1-robotics-evaluation-statistics-cases: "Case study - read the metric definitions of two benchmarks and their limits"
+  r1-robotics-evaluation-statistics-deliverable: "Deliverable - evaluation protocol, power analysis and bootstrap code"
+  r1-robotics-evaluation-statistics-quiz: Concept check quiz
+resources:
+  "SciPy stats 문서":
+    title: SciPy stats documentation
+    note: bootstrap, ttest_ind, binomtest and power calculations - the tool for the deliverable.
+  "TUM RGB-D SLAM Dataset and Benchmark":
+    note: Ground-truth trajectories and an automated evaluation tool; the primary source for how an evaluation criterion gets defined.
+  "The KITTI Vision Benchmark Suite":
+    note: Per-task evaluation protocols and leaderboards; the background for the benchmark-overfitting discussion.
+quiz:
+  - id: q1
+    prompt: "To separate success rates of 60% and 70% at level 0.05 with power 0.8, roughly how many trials per condition are needed? (in hundreds)"
+    explanation: >-
+      The power-analysis formula gives about 350 per condition. On real hardware 350 is usually
+      impossible, so you must then claim only **larger effects** or back the claim with simulation.
+      Skip this computation and you end up claiming an undetectable difference.
+    concept:
+      front: Trials needed to detect a 10-point gap
+      back: "Success 0.6 vs 0.7 at alpha=0.05 and power 0.8 gives about 350 trials per condition"
+  - id: q2
+    prompt: The difference was not significant at $n=5$, so the two methods do not differ in performance.
+    explanation: >-
+      With low power, **even large differences** come out non-significant. "Not significant" is not
+      "no difference". The correct statement is "at $n=5$ the minimum detectable effect size is X,
+      and differences smaller than that cannot be judged".
+    concept:
+      front: What "not significant" means
+      back: Not "no difference" - it may be low power, so report the minimum detectable effect size too
+  - id: q3
+    prompt: What is wrong with comparing all 20 pairs of an ablation table and reporting the best result?
+    choices:
+      - The compute cost is high
+      - Without a multiple-comparison correction, about one result is significant by chance
+      - Ablations must not be compared
+      - Nothing is wrong
+    explanation: >-
+      At $\alpha=0.05$, 20 comparisons give an expected one false positive. Correct with Holm or
+      Benjamini-Hochberg; reporting only the best without correction is post-hoc selection.
+    concept:
+      front: Multiple-comparison correction
+      back: "$m$ comparisons inflate false positives; correct with Bonferroni (conservative), Holm or BH (FDR)"
+  - id: q4
+    prompt: What do you miss when you report ATE alone?
+    choices:
+      - The overall size of the trajectory
+      - It cannot separate long-horizon drift from short-scale jitter
+      - Compute time
+      - Success rate
+    explanation: >-
+      ATE is a global error after alignment, so it mixes drift with local jitter. Reading RPE
+      (relative pose error) with it separates them - the core point of Zhang & Scaramuzza (2018).
+      You need the habit of writing down what each metric hides.
+    concept:
+      front: ATE and RPE
+      back: ATE is global error (mixing drift and jitter), RPE is local error; report both

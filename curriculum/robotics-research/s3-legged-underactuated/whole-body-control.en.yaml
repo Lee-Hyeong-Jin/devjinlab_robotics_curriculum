@@ -1,0 +1,80 @@
+# English text of the structured fields of whole-body-control.md (activity titles,
+# resource notes, paper notes, quiz). The prose lives in whole-body-control.en.md.
+id: s3-whole-body-control
+lang: en
+activities:
+  s3-whole-body-control-reading: Read the lesson and follow the derivations
+  s3-whole-body-control-papers: Read the three must-read papers + a one-page note each
+  s3-whole-body-control-problems: "Problem set (1 derivation, 1 proof, 1 numerical, 1 implementation, 2 counterexamples)"
+  s3-whole-body-control-reproduction: "Reproduction task - verifying priority preservation of a hierarchical QP (R2)"
+  s3-whole-body-control-quiz: Concept check quiz
+resources:
+  "Siciliano & Khatib (eds.), Springer Handbook of Robotics (2nd ed., 2016)":
+    note: ch.11 (Motion Control) and ch.3 - the standard treatment of task priorities and null-space projection. (official URL unverified)
+  "Tedrake, Underactuated Robotics":
+    note: ch.19 - QP-based whole-body control and contact-force variables. Free in full.
+  "CVXPY":
+    note: Solves the QPs of the reproduction task; the reference implementation uses CLARABEL.
+papers:
+  sentis2005-wbc: "§3, §4"
+  escande2014-hierarchical-qp: "§2, §4"
+  herzog2016-momentum-wbc: "§III, §V"
+quiz:
+  - id: q1
+    prompt: >-
+      In hierarchical null-space projection, why is what the higher-priority task achieves unaffected
+      by the lower-priority one?
+    choices:
+      - Because the higher task has a larger weight
+      - "Because the lower level's correction lies in the range of $N_1$ and $J_1N_1 = 0$"
+      - Because the higher task was computed first
+      - Because the pseudo-inverse gives the minimum-norm solution
+    explanation: >-
+      $J_1N_1 = 0$ follows immediately from $J_1J_1^+J_1 = J_1$. The lower level moves only within
+      the range of $N_1$, so $J_1\dot q$ is preserved. It is guaranteed by **algebraic structure**,
+      not by weights or by the order of computation.
+    concept:
+      front: The basis of priority preservation
+      back: "$J_1N_1 = 0$ - lower levels move only inside $\\mathrm{range}(N_1)$"
+  - id: q2
+    prompt: >-
+      With small enough weights, a weighted-sum QP becomes the same as a strict priority.
+    explanation: >-
+      The level-1 leakage only shrinks **proportionally** to $w_2$; it never becomes zero (measured:
+      a hundredfold smaller $w_2$ gives a hundredfold smaller error,
+      $1.03\cdot10^{-3}\to1.03\cdot10^{-5}$). And $w_2\to0$ raises the condition number like
+      $1/w_2$ and breaks numerically. A strict priority exists only in the limit.
+    concept:
+      front: Weighted sum versus priority
+      back: >-
+        Leakage $\propto w_2$. No finite weight gives an exact priority, and small weights wreck the
+        conditioning.
+  - id: q3
+    prompt: >-
+      With joint velocity limits, what breaks if the null-space projection solution is computed and
+      then clipped?
+    choices:
+      - The limit constraint
+      - "What the higher-priority task achieves - because clipping leaves $\\mathrm{range}(N_1)$"
+      - Only the minimum-norm property of the solution
+      - Nothing breaks
+    explanation: >-
+      Clipping is a componentwise operation, so it leaves the range of $N_1$ and $J_1\dot q$ is not
+      preserved. Measured: at $\bar v = 0.35$ the projection solution has
+      $\max|\dot q| = 1.099$, and after clipping the level-1 error rises to $0.172$ rad/s.
+      Constraints belong in the formulation, not in post-processing.
+    concept:
+      front: Clipping a projection solution
+      back: The higher-priority task breaks - constraints must go inside the QP formulation
+  - id: q4
+    prompt: >-
+      When the higher level is infeasible (its target cannot be met within the constraints), what does
+      a lexicographic QP guarantee for the lower level? (one sentence)
+    answers: ["the higher level's optimal residual is not made worse", "level-1 residual unchanged", "the optimal residual of the higher level is preserved"]
+    explanation: >-
+      Level 1's **optimal residual** is fixed first and then imposed as a constraint, so whatever
+      level 2 becomes, level 1's residual does not change. Measured: a level-1 optimal residual of
+      3.12603864 changed by zero across 60 level-2 targets.
+    concept:
+      front: The guarantee under infeasibility
+      back: The higher level's **optimal residual** is preserved (the residual, not the achieved value)
