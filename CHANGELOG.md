@@ -113,6 +113,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   a reproduction task whose acceptance criteria were checked by running the code, and open
   problems.
 
+### Security
+- The Security workflow's `npm audit (web)` job now applies an allowlist
+  (`web/audit-allowlist.txt`, checked by `scripts/ops/npm_audit_gate.py`). One exception is
+  recorded: GHSA-fc5q-39xc-vjpf (picomatch ReDoS, reached through next-intl's file watcher), for
+  which no patched release exists yet. Every other high or critical advisory still fails the job,
+  and the entry fails the job once it no longer applies.
+
 ### Fixed
 
 - `docker-compose.yml` passed `RC_PUBLIC_CONTENT` to neither service and gave the web no

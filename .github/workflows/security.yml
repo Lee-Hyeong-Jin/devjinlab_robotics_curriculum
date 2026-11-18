@@ -82,9 +82,15 @@ jobs:
           cache-dependency-path: web/package-lock.json
 
       # No install step: `npm audit` resolves straight from the lockfile.
+      # Blocking on high and critical. `npm audit` cannot ignore a single advisory, so the gate
+      # script applies web/audit-allowlist.txt: a justified exception is one GHSA id there with a
+      # comment and a CHANGELOG Security entry, and a stale entry fails the job.
       - name: Audit runtime dependencies
         working-directory: web
-        run: npm audit --omit=dev --audit-level=high
+        run: |
+          set -o pipefail
+          (npm audit --omit=dev --json || true) \
+            | python3 ../scripts/ops/npm_audit_gate.py --allow audit-allowlist.txt
 
       - name: Audit the dev toolchain (informational)
         continue-on-error: true
