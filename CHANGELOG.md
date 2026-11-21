@@ -126,6 +126,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   recorded: GHSA-fc5q-39xc-vjpf (picomatch ReDoS, reached through next-intl's file watcher), for
   which no patched release exists yet. Every other high or critical advisory still fails the job,
   and the entry fails the job once it no longer applies.
+- Removed that exception again: GHSA-fc5q-39xc-vjpf was withdrawn upstream on 2026-11-18, so
+  `npm audit` reports nothing for the web lockfile and the allowlist is empty.
 
 ### Fixed
 

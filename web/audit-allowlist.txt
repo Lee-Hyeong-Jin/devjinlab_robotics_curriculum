@@ -2,6 +2,4 @@
 # (scripts/ops/npm_audit_gate.py). One GHSA id per line, with the reason and the date.
 # An entry that no longer matches any advisory fails the gate, so remove it once it is fixed.
 
-# picomatch ReDoS, reached through next-intl -> @parcel/watcher. No patched picomatch release
-# exists (affected: <= 4.0.7, the latest). Added 2026-11-18; remove when a fixed version ships.
-GHSA-fc5q-39xc-vjpf
+# (no exceptions at present)
