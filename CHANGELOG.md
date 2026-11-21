@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Web: a responsive layout for phones and tablets (frontend.md §4.2). The top navigation no
+  longer overflows below 1280px: on a phone it collapses into a menu, on a tablet the page links
+  stay in the bar and the account, language and theme controls move into the menu. No page
+  scrolls sideways from 320px up; a long formula, a table or a code block scrolls inside its own
+  block. Data tables (resources, admin, profile) stack each row as a card on a phone, buttons,
+  inputs, tabs and quiz options have a 44px touch height, and Korean text breaks between words.
+  Checked by `e2e/smoke-responsive.spec.ts` at 320, 390, 768 and 1024px.
 - Research track complete: all 105 lessons of the design (17 modules) are now in Korean and
   English. This closes S1 (`s1-dense-neural-slam`, `s1-semantic-scene-graphs`,
   `s1-certifiable-slam`, `s1-slam-benchmarking`), S3 (`s3-locomotion-rl`,

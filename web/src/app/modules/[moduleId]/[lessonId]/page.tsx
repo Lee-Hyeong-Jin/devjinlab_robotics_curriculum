@@ -145,7 +145,7 @@ export default async function LessonPage({ params }: Params) {
         }
       />
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
         <div className="flex min-w-0 flex-col gap-6">
           {missingPrerequisites.length > 0 ? (
             <Card as="section" aria-labelledby="prereq-heading">
@@ -158,7 +158,7 @@ export default async function LessonPage({ params }: Params) {
                   <li key={id}>
                     <Link
                       href={`/lessons/${encodeURIComponent(id)}`}
-                      className="bg-subtle text-primary border-border-default hover:bg-surface inline-flex rounded-lg border px-3 py-1.5 font-mono text-xs"
+                      className="bg-subtle text-primary border-border-default hover:bg-surface inline-flex min-h-11 items-center rounded-lg border px-3 py-1.5 font-mono text-xs wrap-anywhere"
                     >
                       {id}
                     </Link>
@@ -239,7 +239,7 @@ export default async function LessonPage({ params }: Params) {
           </nav>
         </div>
 
-        <aside className="flex flex-col gap-6" aria-label={t('onThisPage')}>
+        <aside className="flex min-w-0 flex-col gap-6" aria-label={t('onThisPage')}>
           <Card as="section" aria-labelledby="quiz-link-heading">
             <h2 id="quiz-link-heading" className="text-primary mb-2 text-sm font-semibold">
               {tQuiz('title')}

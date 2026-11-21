@@ -121,7 +121,7 @@ export function ReviewDeck({ cards }: { cards: DeckCard[] }) {
                       name="rating"
                       value={rating}
                       disabled={pending}
-                      className={`rounded-lg border px-4 py-2 text-sm font-medium disabled:opacity-50 ${TONE[rating]}`}
+                      className={`min-h-11 rounded-lg border px-4 py-2 text-sm font-medium disabled:opacity-50 ${TONE[rating]}`}
                     >
                       {t(rating)}
                     </button>
@@ -133,7 +133,7 @@ export function ReviewDeck({ cards }: { cards: DeckCard[] }) {
             <button
               type="button"
               onClick={() => setRevealedId(card.card_id)}
-              className="bg-accent-solid text-on-accent rounded-lg border border-transparent px-4 py-2 text-sm font-medium"
+              className="bg-accent-solid text-on-accent min-h-11 rounded-lg border border-transparent px-4 py-2 text-sm font-medium"
             >
               {t('reveal')}
             </button>

@@ -55,12 +55,15 @@ export function ActionForm({
 
         if (field.kind === 'checkbox') {
           return (
-            <label key={field.name} className="text-primary flex items-center gap-2 text-sm">
+            <label
+              key={field.name}
+              className="text-primary flex min-h-11 cursor-pointer items-center gap-3 text-sm"
+            >
               <input
                 type="checkbox"
                 name={field.name}
                 defaultChecked={field.defaultValue === 'on'}
-                className="border-border-default size-4 rounded"
+                className="border-border-default size-5 shrink-0 rounded"
               />
               {field.label}
             </label>
@@ -79,7 +82,7 @@ export function ActionForm({
                 defaultValue={field.defaultValue}
                 aria-invalid={error ? true : undefined}
                 aria-describedby={error ? `${id}-error` : undefined}
-                className="bg-surface border-border-default text-primary w-full rounded-lg border px-3 py-2 text-sm"
+                className="bg-surface border-border-default text-primary min-h-11 w-full rounded-lg border px-3 py-2 text-base sm:text-sm"
               >
                 {(field.options ?? []).map((option) => (
                   <option key={option.value} value={option.value}>
@@ -102,11 +105,14 @@ export function ActionForm({
             <fieldset key={field.name} className="flex flex-col gap-1.5">
               <legend className="text-primary text-sm font-medium">{field.label}</legend>
               {(field.options ?? []).map((option) => (
-                <label key={option.value} className="text-primary flex items-center gap-2 text-sm">
+                <label
+                  key={option.value}
+                  className="text-primary flex min-h-11 cursor-pointer items-center gap-3 text-sm"
+                >
                   <input
                     type="checkbox"
                     name={`${field.name}:${option.value}`}
-                    className="border-border-default size-4 rounded"
+                    className="border-border-default size-5 shrink-0 rounded"
                   />
                   {option.mono ? (
                     <code className="font-mono text-xs">{option.label}</code>

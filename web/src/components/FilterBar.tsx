@@ -30,7 +30,7 @@ export function FilterBar({ label, options, value, onChange }: FilterBarProps) {
             <label
               key={option.value}
               className={cx(
-                'cursor-pointer rounded-full border px-3 py-1 text-xs font-medium transition-colors',
+                'inline-flex min-h-9 cursor-pointer items-center rounded-full border px-3 py-1 text-xs font-medium transition-colors',
                 selected
                   ? 'bg-accent-light text-accent border-border-accent'
                   : 'bg-surface text-muted border-border-default hover:bg-subtle',

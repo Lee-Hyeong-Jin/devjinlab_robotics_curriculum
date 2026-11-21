@@ -73,7 +73,7 @@ export default async function ModuleReportPage({ params }: Params) {
 
       {summary ? (
         <>
-          <div className="mb-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <StatTile
               label={t('course')}
               value={<span className="text-base">{summary.course_title}</span>}

@@ -13,7 +13,7 @@ export function Card({ children, className, as: Tag = 'div' }: CardProps) {
   return (
     <Tag
       className={cx(
-        'bg-surface border-border-default rounded-[var(--radius-card)] border p-5',
+        'bg-surface border-border-default rounded-[var(--radius-card)] border p-4 sm:p-5',
         className,
       )}
     >

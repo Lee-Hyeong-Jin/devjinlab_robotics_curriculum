@@ -82,7 +82,7 @@ export function QuizForm({ moduleId, lessonId, questions }: QuizFormProps) {
                 }
               >
                 <fieldset>
-                  <legend className="mb-2 flex flex-wrap items-center gap-2">
+                  <legend className="mb-2 flex max-w-full flex-wrap items-center gap-2">
                     <span className="text-muted text-xs font-semibold">
                       {t('of', { n: index + 1, total: questions.length })}
                     </span>
@@ -91,7 +91,9 @@ export function QuizForm({ moduleId, lessonId, questions }: QuizFormProps) {
                         {result.correct ? t('correct') : t('incorrect')}
                       </Chip>
                     ) : null}
-                    <span className="text-primary block w-full font-medium">{question.prompt}</span>
+                    <span className="text-primary block w-full overflow-x-auto font-medium">
+                      {question.prompt}
+                    </span>
                     {question.type === 'multiple' ? (
                       <span className="text-muted block w-full text-xs">{t('multipleHint')}</span>
                     ) : null}
@@ -103,46 +105,46 @@ export function QuizForm({ moduleId, lessonId, questions }: QuizFormProps) {
                       <input
                         type="text"
                         name={name}
-                        className="bg-surface border-border-default text-primary w-full rounded-lg border px-3 py-2 text-sm"
+                        className="bg-surface border-border-default text-primary min-h-11 w-full rounded-lg border px-3 py-2 text-base sm:text-sm"
                       />
                     </label>
                   ) : question.type === 'truefalse' ? (
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-1">
                       {[
                         { value: 'o', label: t('true') },
                         { value: 'x', label: t('false') },
                       ].map((option) => (
                         <label
                           key={option.value}
-                          className="text-primary flex items-center gap-2 text-sm"
+                          className="text-primary hover:bg-subtle -mx-2 flex min-h-11 cursor-pointer items-center gap-3 rounded-lg px-2 text-sm"
                         >
                           <input
                             type="radio"
                             name={name}
                             value={option.value}
-                            className="border-border-default size-4"
+                            className="border-border-default size-5 shrink-0"
                           />
                           {option.label}
                         </label>
                       ))}
                     </div>
                   ) : (
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-1">
                       {question.choices.map((choice, choiceIndex) => (
                         <label
                           key={choiceValue(choiceIndex)}
-                          className="text-primary flex items-start gap-2 text-sm"
+                          className="text-primary hover:bg-subtle -mx-2 flex min-h-11 cursor-pointer items-center gap-3 rounded-lg px-2 py-2 text-sm"
                         >
                           <input
                             type={question.type === 'multiple' ? 'checkbox' : 'radio'}
                             name={name}
                             value={choiceValue(choiceIndex)}
-                            className="border-border-default mt-0.5 size-4"
+                            className="border-border-default size-5 shrink-0"
                           />
-                          <span className="markdown-body">
-                            <span className="text-muted mr-1 font-mono text-xs">
-                              {choiceValue(choiceIndex)}
-                            </span>
+                          <span className="text-muted shrink-0 font-mono text-xs">
+                            {choiceValue(choiceIndex)}
+                          </span>
+                          <span className="markdown-body min-w-0 flex-1 overflow-x-auto">
                             {choice}
                           </span>
                         </label>

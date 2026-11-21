@@ -53,7 +53,7 @@ export default async function ReportsPage() {
       />
 
       {isWeeklySummary(summary) ? (
-        <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatTile
             label={t('period')}
             value={
@@ -93,7 +93,7 @@ export default async function ReportsPage() {
               <li key={mod.id}>
                 <Link
                   href={`/reports/modules/${encodeURIComponent(mod.id)}`}
-                  className="bg-subtle text-primary border-border-default hover:bg-surface inline-flex rounded-lg border px-3 py-1.5 text-sm"
+                  className="bg-subtle text-primary border-border-default hover:bg-surface inline-flex min-h-11 items-center rounded-lg border px-3 py-1.5 text-sm"
                 >
                   {mod.title ?? mod.id}
                 </Link>

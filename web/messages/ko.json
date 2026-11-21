@@ -18,7 +18,9 @@
     "language": "언어",
     "search": "검색",
     "review": "복습",
-    "reports": "리포트"
+    "reports": "리포트",
+    "openMenu": "메뉴 열기",
+    "closeMenu": "메뉴 닫기"
   },
   "dashboard": {
     "title": "대시보드",

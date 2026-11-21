@@ -59,7 +59,7 @@ export function ThemeToggle({ labels, groupLabel }: ThemeToggleProps) {
           aria-pressed={theme === option}
           onClick={() => choose(option)}
           className={cx(
-            'rounded-md px-2 py-1 text-xs font-medium transition-colors',
+            'min-h-10 rounded-md px-3 py-1 text-sm font-medium whitespace-nowrap transition-colors xl:min-h-0 xl:px-2 xl:text-xs',
             theme === option ? 'bg-surface text-primary' : 'text-muted hover:text-primary',
           )}
         >

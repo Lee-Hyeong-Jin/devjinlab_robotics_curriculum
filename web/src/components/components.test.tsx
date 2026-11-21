@@ -212,6 +212,30 @@ describe('DataTable', () => {
     expect(screen.getByRole('columnheader', { name: '이름' })).toHaveAttribute('scope', 'col')
   })
 
+  it('names each value for the stacked phone layout without repeating it to assistive tech', () => {
+    const wide: ReadonlyArray<Column<Row>> = [
+      { key: 'name', header: '이름', cell: (row) => row.name },
+      { key: 'id', header: '식별자', cell: (row) => row.id },
+    ]
+    render(
+      <DataTable
+        caption="모듈 목록"
+        columns={wide}
+        rows={[{ id: 'a', name: '모듈 A' }]}
+        rowKey={(row) => row.id}
+      />,
+    )
+    // The first column is the row's title and needs no label; every other cell carries one.
+    const [title, value] = screen.getAllByRole('cell')
+    expect(title?.querySelector('[aria-hidden="true"]')).toBeNull()
+    const label = value?.querySelector('[aria-hidden="true"]')
+    expect(label).toHaveTextContent('식별자')
+    // Screen readers already announce the column header, so the visible label is hidden from
+    // them, and the cell's accessible text stays the value alone.
+    expect(screen.getByRole('cell', { name: 'a' })).toBe(value)
+    expect(screen.getAllByRole('columnheader')).toHaveLength(2)
+  })
+
   it('renders the empty slot instead of an empty table body', () => {
     render(
       <DataTable

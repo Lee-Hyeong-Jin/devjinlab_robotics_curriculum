@@ -5,6 +5,7 @@ import { getMe } from '@/lib/auth'
 
 import { AccountMenu } from './AccountMenu'
 import { LocaleSwitcher } from './LocaleSwitcher'
+import { NavMenu } from './NavMenu'
 import { NavTab } from './NavTab'
 import { ThemeToggle } from './ThemeToggle'
 
@@ -15,35 +16,45 @@ export async function TopNav() {
     <header className="bg-surface border-border-default sticky top-0 z-40 border-b">
       <nav
         aria-label={t('app.mainNavigation')}
-        className="mx-auto flex h-16 max-w-[var(--content-max)] items-center gap-4 px-4 sm:px-6"
+        className="mx-auto flex h-[var(--nav-height)] max-w-[var(--content-max)] items-center gap-2 px-4 sm:px-6 md:gap-3 xl:gap-4"
       >
-        <Link href="/" className="text-primary flex items-center gap-2 font-bold">
+        <Link
+          href="/"
+          className="text-primary flex min-h-11 shrink-0 items-center gap-2 font-bold whitespace-nowrap"
+        >
           <span aria-hidden="true" className="bg-accent-solid size-2.5 rounded-full" />
-          <span className="hidden sm:inline">{t('app.title')}</span>
-          <span className="sm:hidden">{t('app.shortTitle')}</span>
+          <span className="hidden xl:inline">{t('app.title')}</span>
+          <span className="xl:hidden">{t('app.shortTitle')}</span>
         </Link>
-        <div className="flex items-center gap-1">
-          <NavTab href="/">{t('nav.dashboard')}</NavTab>
-          <NavTab href="/roadmap" matchPrefixes={['/modules']}>
-            {t('nav.roadmap')}
-          </NavTab>
-          <NavTab href="/resources">{t('nav.resources')}</NavTab>
-          <NavTab href="/review">{t('nav.review')}</NavTab>
-          <NavTab href="/reports">{t('nav.reports')}</NavTab>
-          <NavTab href="/search">{t('nav.search')}</NavTab>
-        </div>
-        <div className="ml-auto flex items-center gap-2">
-          <AccountMenu user={user} />
-          <LocaleSwitcher />
-          <ThemeToggle
-            groupLabel={t('nav.theme')}
-            labels={{
-              system: t('nav.themeSystem'),
-              light: t('nav.themeLight'),
-              dark: t('nav.themeDark'),
-            }}
-          />
-        </div>
+        <NavMenu
+          labels={{ open: t('nav.openMenu'), close: t('nav.closeMenu') }}
+          tabs={
+            <>
+              <NavTab href="/">{t('nav.dashboard')}</NavTab>
+              <NavTab href="/roadmap" matchPrefixes={['/modules']}>
+                {t('nav.roadmap')}
+              </NavTab>
+              <NavTab href="/resources">{t('nav.resources')}</NavTab>
+              <NavTab href="/review">{t('nav.review')}</NavTab>
+              <NavTab href="/reports">{t('nav.reports')}</NavTab>
+              <NavTab href="/search">{t('nav.search')}</NavTab>
+            </>
+          }
+          utilities={
+            <>
+              <AccountMenu user={user} />
+              <LocaleSwitcher />
+              <ThemeToggle
+                groupLabel={t('nav.theme')}
+                labels={{
+                  system: t('nav.themeSystem'),
+                  light: t('nav.themeLight'),
+                  dark: t('nav.themeDark'),
+                }}
+              />
+            </>
+          }
+        />
       </nav>
     </header>
   )
