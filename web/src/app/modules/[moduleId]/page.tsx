@@ -14,7 +14,8 @@ import { getLessonProgressList, getModule, getResources } from '@/lib/api/querie
 import { isNotFound } from '@/lib/api/errors'
 import type { LessonProgress, Module } from '@/lib/api/types'
 import { formatMinutes, formatPercent } from '@/lib/format'
-import { metaDescription, pageSeo } from '@/lib/seo'
+import { metaDescription } from '@/lib/seo'
+import { localizedPageSeo } from '@/lib/seo-server'
 import { breadcrumbs, moduleSchema } from '@/lib/structured-data'
 import { doneCount, lockStateFromStatus, ratio, type LockState } from '@/lib/progress'
 
@@ -36,7 +37,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const path = `/modules/${encodeURIComponent(moduleId)}`
   try {
     const mod = await getModule(moduleId)
-    return pageSeo({
+    return localizedPageSeo({
       path,
       title: mod.title ?? moduleId,
       description: metaDescription(mod.summary),

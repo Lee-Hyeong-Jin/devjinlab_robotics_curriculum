@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Web SEO, second pass (frontend.md §5.2, RUNBOOK §8.2):
+  - On a deployment that publishes its curriculum, `/` is a public landing page for a visitor
+    without a session — the courses, stages and modules, all linked — and is indexable. It used
+    to be the dashboard for everybody, so the site's root URL was a `noindex` page of zeroes.
+    A signed-in reader still gets their dashboard there.
+  - Site verification for Google Search Console and Naver Search Advisor through
+    `RC_GOOGLE_SITE_VERIFICATION` and `RC_NAVER_SITE_VERIFICATION`.
+  - A favicon, an app icon, a web app manifest and a 1200x630 share image on every page
+    (`summary_large_image`).
+  - Structured data: `WebSite`, `Organization` and a course `ItemList` on the home page,
+    `CollectionPage` on the resource library.
 - Web: a responsive layout for phones and tablets (frontend.md §4.2). The top navigation no
   longer overflows below 1280px: on a phone it collapses into a menu, on a tablet the page links
   stay in the bar and the account, language and theme controls move into the menu. No page
@@ -130,6 +141,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `npm audit` reports nothing for the web lockfile and the allowlist is empty.
 
 ### Fixed
+- Web SEO: descriptions no longer show TeX source. A summary such as `$\Phi(-r/2)$` reached the
+  meta description, the share preview and JSON-LD with its dollar signs and backslashes; it is
+  now plain text (`Φ(-r/2)`).
+- Web SEO: crawlers always get `<title>`, the description, the canonical link and the robots tag
+  inside `<head>`. For Googlebot and the KakaoTalk scraper a cold request for a lesson had none
+  of them there, because Next streamed the metadata into the body.
+- Web SEO: `og:locale` follows the language the page is rendered in (`ko_KR` / `en_US`); the
+  English alternate used to say `ko`. The sitemap lists `/` and no longer lists the default
+  course's roadmap twice.
 
 - `docker-compose.yml` passed `RC_PUBLIC_CONTENT` to neither service and gave the web no
   `RC_PUBLIC_URL`, so setting them in `.env` did nothing to the deployment that actually runs

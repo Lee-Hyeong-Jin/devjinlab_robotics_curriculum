@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 import { publicContentEnabled, siteUrl } from './api/config'
-import { DEFAULT_LOCALE, LOCALE_PARAM, LOCALES } from '@/i18n/locales'
+import { DEFAULT_LOCALE, LOCALE_PARAM, LOCALES, type Locale } from '@/i18n/locales'
 
 /** `x-default` points at the address with no language pinned, which serves `ko`. */
 const X_DEFAULT = 'x-default'
@@ -43,6 +43,36 @@ export interface PageSeoOptions {
   publishable?: boolean
   /** `article` for a lesson, `website` otherwise. */
   type?: 'website' | 'article'
+  /** Language the page is rendered in; decides `og:locale`. Defaults to `ko`. */
+  locale?: Locale
+  /** Site name in that language, for `og:site_name`. */
+  siteName?: string
+  /** Use `title` as the whole `<title>`, without the site-name suffix (the home page). */
+  absoluteTitle?: boolean
+}
+
+/** OpenGraph wants a territory as well as a language (`ko_KR`), unlike `hreflang`. */
+const OG_LOCALE: Record<Locale, string> = { ko: 'ko_KR', en: 'en_US' }
+const DEFAULT_SITE_NAME = 'Robotics Expert Course'
+
+/**
+ * The card image shown when a page is shared (`public/og-image.png`, 1200x630).
+ *
+ * Named in every page's metadata rather than left to the `opengraph-image` file convention: a
+ * page that sets its own `openGraph` replaces the inherited object, which silently dropped the
+ * image from every route below the root.
+ */
+export const OG_IMAGE = { path: '/og-image.png', width: 1200, height: 630 } as const
+
+/** Tokens a search engine's verification page asks to find in the markup, when configured. */
+export function siteVerification(): Metadata['verification'] {
+  const google = process.env.RC_GOOGLE_SITE_VERIFICATION?.trim()
+  const naver = process.env.RC_NAVER_SITE_VERIFICATION?.trim()
+  if (!google && !naver) return undefined
+  return {
+    ...(google ? { google } : {}),
+    ...(naver ? { other: { 'naver-site-verification': naver } } : {}),
+  }
 }
 
 /**
@@ -59,11 +89,15 @@ export function pageSeo({
   description,
   publishable = false,
   type = 'website',
+  locale = DEFAULT_LOCALE,
+  siteName = DEFAULT_SITE_NAME,
+  absoluteTitle = false,
 }: PageSeoOptions): Metadata {
   const indexable = publishable && publicContentEnabled()
   const url = absoluteUrl(path)
+  const image = absoluteUrl(OG_IMAGE.path)
   return {
-    title,
+    title: absoluteTitle ? { absolute: title } : title,
     ...(description ? { description } : {}),
     alternates: { canonical: url, languages: languageAlternates(path) },
     robots: indexable
@@ -74,20 +108,197 @@ export function pageSeo({
       url,
       title,
       ...(description ? { description } : {}),
-      siteName: 'Robotics Expert Course',
-      locale: DEFAULT_LOCALE,
+      siteName,
+      images: [{ url: image, width: OG_IMAGE.width, height: OG_IMAGE.height, alt: siteName }],
+      locale: OG_LOCALE[locale],
+      alternateLocale: LOCALES.filter((other) => other !== locale).map((other) => OG_LOCALE[other]),
     },
     twitter: {
-      card: 'summary',
+      card: 'summary_large_image',
+      images: [image],
       title,
       ...(description ? { description } : {}),
     },
   }
 }
 
+/** TeX commands that have a plain character a search result can show. */
+const TEX_SYMBOLS: Record<string, string> = {
+  alpha: 'α',
+  beta: 'β',
+  gamma: 'γ',
+  delta: 'δ',
+  epsilon: 'ε',
+  varepsilon: 'ε',
+  zeta: 'ζ',
+  eta: 'η',
+  theta: 'θ',
+  kappa: 'κ',
+  lambda: 'λ',
+  mu: 'μ',
+  nu: 'ν',
+  xi: 'ξ',
+  pi: 'π',
+  rho: 'ρ',
+  sigma: 'σ',
+  tau: 'τ',
+  phi: 'φ',
+  varphi: 'φ',
+  chi: 'χ',
+  psi: 'ψ',
+  omega: 'ω',
+  Gamma: 'Γ',
+  Delta: 'Δ',
+  Theta: 'Θ',
+  Lambda: 'Λ',
+  Xi: 'Ξ',
+  Pi: 'Π',
+  Sigma: 'Σ',
+  Phi: 'Φ',
+  Psi: 'Ψ',
+  Omega: 'Ω',
+  to: '→',
+  rightarrow: '→',
+  Rightarrow: '⇒',
+  leftarrow: '←',
+  mapsto: '↦',
+  le: '≤',
+  leq: '≤',
+  ge: '≥',
+  geq: '≥',
+  ne: '≠',
+  neq: '≠',
+  approx: '≈',
+  sim: '~',
+  equiv: '≡',
+  times: '×',
+  cdot: '·',
+  pm: '±',
+  infty: '∞',
+  partial: '∂',
+  nabla: '∇',
+  in: '∈',
+  notin: '∉',
+  subset: '⊂',
+  subseteq: '⊆',
+  cup: '∪',
+  cap: '∩',
+  sum: 'Σ',
+  prod: 'Π',
+  int: '∫',
+  propto: '∝',
+  succeq: '⪰',
+  preceq: '⪯',
+  succ: '≻',
+  prec: '≺',
+  top: 'ᵀ',
+  dots: '…',
+  ldots: '…',
+  cdots: '…',
+  quad: ' ',
+  qquad: ' ',
+  ell: 'ℓ',
+  forall: '∀',
+  exists: '∃',
+  neg: '¬',
+  circ: '∘',
+  star: '*',
+  sqrt: '√',
+  log: 'log ',
+  ln: 'ln ',
+  exp: 'exp ',
+  min: 'min ',
+  max: 'max ',
+  sin: 'sin ',
+  cos: 'cos ',
+  tan: 'tan ',
+  det: 'det ',
+}
+
+const SUPERSCRIPT: Record<string, string> = {
+  '0': '⁰',
+  '1': '¹',
+  '2': '²',
+  '3': '³',
+  '4': '⁴',
+  '5': '⁵',
+  '6': '⁶',
+  '7': '⁷',
+  '8': '⁸',
+  '9': '⁹',
+  '-': '⁻',
+  '+': '⁺',
+}
+
+/** `a` stays `a`; `1-q` becomes `(1-q)`, so a fraction or an exponent keeps its grouping. */
+function group(text: string): string {
+  const trimmed = text.trim()
+  return /^[\p{L}\p{N}.]+$/u.test(trimmed) ? trimmed : `(${trimmed})`
+}
+
+/** `^{-1}` → `⁻¹` when every character has a superscript form, `^(…)` otherwise. */
+function script(mark: string, body: string): string {
+  const trimmed = body.trim()
+  if (mark === '^' && trimmed === 'ᵀ') return 'ᵀ'
+  if (mark === '^' && [...trimmed].every((char) => char in SUPERSCRIPT)) {
+    return [...trimmed].map((char) => SUPERSCRIPT[char]).join('')
+  }
+  return `${mark}${group(trimmed)}`
+}
+
+/** One TeX formula as the closest plain text: `\Phi(-r/2)` → `Φ(-r/2)`, `\frac{a}{b}` → `a/b`. */
+function texToText(tex: string): string {
+  let out = tex
+    .replace(/\\(?:left|right|big|Big|bigg|Bigg|displaystyle|textstyle|,|;|:|!)/g, '')
+    .replace(/\\[dt]?frac\s*(\d)\s*(\d)/g, '$1/$2')
+  // Innermost groups first, so nested fractions, exponents and styled arguments all resolve.
+  for (let pass = 0; pass < 6; pass += 1) {
+    out = out
+      .replace(
+        /\\[dt]?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g,
+        (_match, top: string, bottom: string) => `${group(top)}/${group(bottom)}`,
+      )
+      .replace(/([\^_])\s*\{([^{}]*)\}/g, (_match, mark: string, body: string) =>
+        script(mark, texSymbols(body)),
+      )
+      // A command that only styles its argument (`\mathcal{C}`, `\text{…}`) keeps the argument.
+      .replace(/\\([A-Za-z]+)\*?\s*\{([^{}]*)\}/g, (_match, name: string, inner: string) =>
+        name in TEX_SYMBOLS ? `${TEX_SYMBOLS[name]}${inner}` : inner,
+      )
+  }
+  return texSymbols(out)
+    .replace(/\^\s*(ᵀ|[0-9])/g, (_match, body: string) => script('^', body))
+    .replace(/\\ /g, ' ')
+    .replace(/\\(.)/g, '$1')
+    .replace(/[{}]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function texSymbols(tex: string): string {
+  return tex.replace(/\\([A-Za-z]+)/g, (match, name: string) => TEX_SYMBOLS[name] ?? match)
+}
+
+/**
+ * Lesson and module summaries are Markdown with inline TeX. A search result, a link preview and
+ * JSON-LD show the string as it is, so `$\Phi(-r/2)$` would appear with its dollar signs and
+ * backslashes. This is the reading text: formulas become plain characters and Markdown marks go.
+ */
+export function plainText(text: string | null | undefined): string {
+  return (text ?? '')
+    .replace(/\$\$([\s\S]+?)\$\$/g, (_match, tex: string) => texToText(tex))
+    .replace(/\$([^$\n]+?)\$/g, (_match, tex: string) => texToText(tex))
+    .replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/`([^`]*)`/g, '$1')
+    .replace(/(\*\*|__)(.+?)\1/g, '$2')
+    .replace(/(^|[\s(])[*_]([^*_\n]+)[*_](?=$|[\s).,;:!?])/g, '$1$2')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
 /** One sentence, trimmed to something a search result can show without cutting mid-word. */
 export function metaDescription(text: string | null | undefined, limit = 160): string {
-  const flat = (text ?? '').replace(/\s+/g, ' ').trim()
+  const flat = plainText(text)
   if (flat.length <= limit) return flat
   const cut = flat.slice(0, limit)
   const lastSpace = cut.lastIndexOf(' ')

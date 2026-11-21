@@ -1,15 +1,17 @@
 import type { Metadata } from 'next'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 
 import { EmptyState } from '@/components/EmptyState'
+import { JsonLd } from '@/components/JsonLd'
 import { PageHeader } from '@/components/PageHeader'
 import { ResourceExplorer } from '@/components/ResourceExplorer'
 import { getResources } from '@/lib/api/queries'
-import { pageSeo } from '@/lib/seo'
+import { localizedPageSeo } from '@/lib/seo-server'
+import { breadcrumbs, collectionPageSchema } from '@/lib/structured-data'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('resources')
-  return pageSeo({
+  return localizedPageSeo({
     path: '/resources',
     title: t('title'),
     description: t('subtitle'),
@@ -19,7 +21,11 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /** Resources — `GET /resources`, filtered client-side by kind and search (AC-WEB.5). */
 export default async function ResourcesPage() {
-  const t = await getTranslations('resources')
+  const [t, tApp, locale] = await Promise.all([
+    getTranslations('resources'),
+    getTranslations('app'),
+    getLocale(),
+  ])
   const resources = await getResources()
 
   if (!resources) {
@@ -33,6 +39,15 @@ export default async function ResourcesPage() {
 
   return (
     <>
+      <JsonLd
+        data={[
+          collectionPageSchema(t('title'), t('subtitle'), '/resources', locale),
+          breadcrumbs([
+            [tApp('title'), '/'],
+            [t('title'), '/resources'],
+          ]),
+        ]}
+      />
       <PageHeader title={t('title')} subtitle={t('subtitle')} />
       <ResourceExplorer resources={resources} />
     </>

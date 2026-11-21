@@ -228,7 +228,8 @@ API 가 커리큘럼 읽기를 익명에게 열고, 웹은 그 페이지를 색�
 - **noindex 가 기본값**이다(`layout.tsx`). 공개 페이지가 `pageSeo({ publishable: true })` 로
   빠져나오고, 그것도 `RC_PUBLIC_CONTENT` 가 켜져 있을 때만 `index` 가 된다. 실수로 색인된 페이지는
   나중에 코드를 고쳐도 색인에서 빠지지 않으므로 방향을 이렇게 잡았다.
-- **색인 대상**: `/roadmap`(코스별), `/modules/{id}`, `/modules/{id}/{lesson}`, `/resources`.
+- **색인 대상**: `/`(익명 랜딩), `/roadmap`(코스별), `/modules/{id}`, `/modules/{id}/{lesson}`,
+  `/resources`.
   대시보드·복습·리포트·검색·프로필·관리자·퀴즈는 개인 데이터이거나 정답을 담으므로 제외한다.
 - **언어는 `?lang=` 로 고정한다.** URL 에 로케일 세그먼트가 없어서 영어판에 **주소가 없었다** —
   `hreflang` 과 사이트맵은 언어마다 URL 이 하나씩 있어야 성립한다. `?lang=` 은 그 요청에 대해
@@ -239,10 +240,40 @@ API 가 커리큘럼 읽기를 익명에게 열고, 웹은 그 페이지를 색�
   정적으로 프리렌더돼서 빌드 환경의 값(= 비공개)이 굳어 `Disallow: /` 가 배포된 적이 있다.
 - **JSON-LD** 는 `<JsonLd>` 가 **nonce 를 붙여** 넣는다. CSP 가 nonce 기반이고 브라우저는 type 이
   무엇이든 `<script>` 에 `script-src` 를 적용하므로, nonce 가 없으면 블록이 통째로 사라진다.
-  타입: 코스 = `Course`, 모듈·레슨 = `LearningResource`, 모든 페이지 = `BreadcrumbList`.
+  타입: 코스 = `Course`, 모듈·레슨 = `LearningResource`, 자료실 = `CollectionPage`, 그 페이지들
+  모두 `BreadcrumbList`.
 - **익명 독자의 진행도 호출은 리다이렉트하지 않는다.** `apiGetOrNull` 은 세션 쿠키가 없을 때 401 을
   `null` 로 바꾼다 — 공개 페이지를 읽는 사람에게 진행도가 없는 것은 오류가 아니다. 세션이 있는데
   만료된 경우는 그대로 로그인으로 보낸다(그래서 쿠키 유무로 판단한다).
+- **`/` 는 익명 방문자에게 랜딩 페이지다**(`<Landing>`, 공개 배포에서만). 전에는 누구에게나
+  대시보드여서, 사이트의 첫 주소가 크롤러와 처음 온 사람에게 `noindex` 가 붙은 0% 타일이었다.
+  랜딩은 코스·단계·모듈을 모두 링크하므로 공개 페이지 전부가 루트에서 두 번 안에 닿는다. 세션이
+  있으면 같은 주소가 그 사람의 대시보드이고 색인되지 않는다. JSON-LD: `WebSite`, `Organization`,
+  `ItemList`, 코스마다 `Course`.
+- **설명은 평문으로 만든다**(`plainText`). 요약은 인라인 TeX 가 든 Markdown 이라, 그대로 두면 검색
+  결과와 링크 미리보기에 `$\Phi(-r/2)$` 가 달러·역슬래시째 나온다. meta description, OpenGraph,
+  JSON-LD 의 `description` 이 모두 이 변환을 거친다(`Φ(-r/2)`, `q/(1-q)`, `S⁻¹`).
+- **`og:locale` 은 실제 렌더 언어를 따른다**(`localizedPageSeo`: `ko_KR` / `en_US`, 반대쪽이
+  `og:locale:alternate`). 전에는 `?lang=en` 페이지도 `ko` 였다.
+- **공유 이미지는 모든 페이지에 명시한다**(`public/og-image.png`, 1200×630, `summary_large_image`).
+  `opengraph-image` 파일 규약에 맡기면 안 된다 — 자기 `openGraph` 를 정하는 페이지는 상속받은
+  객체를 통째로 바꾸므로 루트 아래 모든 경로에서 이미지가 조용히 사라진다.
+- **아이콘·매니페스트**: `app/icon.svg`, `app/favicon.ico`, `app/apple-icon.png`,
+  `app/manifest.ts`(+ `public/icon-192.png`, `icon-512.png`). 컨테이너 이미지는 `public/` 을 따로
+  복사해야 한다(standalone 번들에 들어가지 않는다 — `Dockerfile`).
+- **크롤러에게는 메타데이터를 반드시 `<head>` 에 넣는다**(`next.config.ts` 의 `htmlLimitedBots`).
+  Next 는 동적 페이지의 메타데이터를 본문으로 스트리밍하고, 내장 목록에 든 봇에게만 `<head>` 를
+  보장한다. 그 목록에 Googlebot 과 카카오톡 스크래퍼가 없어서, 콜드 요청의 레슨 페이지에는
+  `<head>` 에 title·description·canonical·robots 가 **하나도 없었다**(372개 URL 크롤로 확인).
+  목록 대신 일반 패턴(`bot|crawl|spider|scrap|preview|…`)을 쓴다. 인앱 브라우저(`KAKAOTALK`,
+  `NAVER(inapp…)`)는 사람이므로 걸리지 않게 했다.
+- **소유 확인 태그**: `RC_GOOGLE_SITE_VERIFICATION`, `RC_NAVER_SITE_VERIFICATION` 이 있으면
+  `<meta>` 로 내보낸다(RUNBOOK §8.2).
+- **사이트맵**은 `/` 를 포함하고, 기본 코스의 `/roadmap?course=<기본>` 은 넣지 않는다 — 그 주소의
+  canonical 이 `/roadmap` 이라 같은 페이지를 두 번 알려 주는 셈이었다.
+- **알려진 한계 — 없는 모듈·레슨은 HTTP 200 이다.** 루트 `loading.tsx` 때문에 `notFound()` 전에
+  응답이 시작된다. Next 가 그 페이지에 `noindex` 를 넣으므로 색인되지는 않지만 상태 코드는 404 가
+  아니다(소프트 404). 고치려면 로딩 경계를 없애거나 미들웨어에서 존재를 확인해야 한다.
 - `/roadmap` 은 익명일 때 `/courses/{id}`(구조만)로 만든다 — 로드맵 자체는 호출자의 진행도를 담아
   익명에 열리지 않는다(`toStageViewsFromCourse`).
 

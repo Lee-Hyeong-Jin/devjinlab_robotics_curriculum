@@ -46,6 +46,19 @@
     "weeklySessions": "{count} sessions",
     "unavailable": "Progress could not be loaded from the API."
   },
+  "landing": {
+    "free": "Every lesson is free to read. Sign up to keep your progress, quiz results and review cards.",
+    "viewRoadmap": "View the roadmap",
+    "signUp": "Start for free",
+    "statCourses": "Courses",
+    "statModules": "Modules",
+    "statLessons": "Lessons",
+    "moduleCount": "{count, plural, one {# module} other {# modules}}",
+    "openRoadmap": "See the full {course} roadmap",
+    "resourcesTitle": "Resource library",
+    "resourcesBody": "The textbooks, lectures, papers, code and datasets chosen for each lesson, in one place.",
+    "openResources": "Open the library"
+  },
   "course": {
     "switcher": "Course",
     "lessonCount": "{count} lessons",

@@ -6,6 +6,7 @@ import { getLocale, getMessages, getTranslations } from 'next-intl/server'
 import { SkipLink } from '@/components/SkipLink'
 import { TopNav } from '@/components/TopNav'
 import { siteUrl } from '@/lib/api/config'
+import { siteVerification } from '@/lib/seo'
 import { THEME_INIT_SCRIPT } from '@/lib/theme'
 import { NONCE_HEADER } from '@/middleware'
 
@@ -22,6 +23,11 @@ export async function generateMetadata(): Promise<Metadata> {
     // noindex is the default for the whole app; a published page asks out of it through
     // `pageSeo` (ADR 0016). A page indexed by accident cannot be un-indexed by a later fix.
     robots: { index: false, follow: false },
+    applicationName: t('title'),
+    // Search Console / Naver Search Advisor ownership tokens, when the deployment sets them.
+    verification: siteVerification(),
+    // Home-screen name and colours; the icons come from `app/icon.svg` and its siblings.
+    manifest: '/manifest.webmanifest',
   }
 }
 
@@ -29,6 +35,10 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   colorScheme: 'light dark',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: 'white' },
+    { media: '(prefers-color-scheme: dark)', color: 'black' },
+  ],
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
