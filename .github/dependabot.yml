@@ -21,3 +21,15 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: "build"
+    ignore:
+      # The Python minor is one decision made in four places that must agree: the uv build
+      # image (`ghcr.io/astral-sh/uv:python3.12-…`), the two runtime images, `.python-version`
+      # and `[tool.mypy] python_version`. Dependabot only moves the runtime images, which puts a
+      # virtualenv built for 3.12 under a 3.15 interpreter and breaks the container at start
+      # (compose smoke and the restore drill fail). Patch releases still come through.
+      - dependency-name: "python"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      # Node moves between LTS lines by hand, together with `engines` in web/package.json and
+      # `node-version` in the workflows. Odd majors (23, 25) are not LTS.
+      - dependency-name: "node"
+        update-types: ["version-update:semver-major"]
