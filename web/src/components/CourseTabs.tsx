@@ -25,16 +25,19 @@ export function CourseTabs({ courses, selected, basePath }: CourseTabsProps) {
 
   return (
     <nav aria-label={t('switcher')} className="mb-6">
-      <ul className="border-border-default flex flex-wrap gap-1 border-b">
+      {/* One row that scrolls sideways on a phone instead of wrapping into a second row of tabs.
+          The baseline is an inset shadow, not a border: a scroll container clips anything that
+          overlaps its border, and the current tab has to cover the line. */}
+      <ul className="flex gap-1 overflow-x-auto shadow-[inset_0_-1px_0_var(--border-default)]">
         {courses.map((course) => {
           const current = course.id === selected
           return (
-            <li key={course.id}>
+            <li key={course.id} className="shrink-0">
               <Link
                 href={`${basePath}?course=${encodeURIComponent(course.id)}`}
                 aria-current={current ? 'page' : undefined}
                 className={cx(
-                  '-mb-px inline-flex items-center gap-2 rounded-t-lg border border-b-0 px-4 py-2 text-sm font-medium',
+                  'inline-flex min-h-11 items-center gap-2 rounded-t-lg border border-b-0 px-3 py-2 text-sm font-medium whitespace-nowrap sm:px-4',
                   current
                     ? 'bg-surface border-border-default text-primary'
                     : 'text-muted hover:bg-subtle hover:text-primary border-transparent',

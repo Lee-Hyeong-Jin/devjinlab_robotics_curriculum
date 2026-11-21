@@ -13,7 +13,7 @@ export interface SearchInputProps {
 export function SearchInput({ label, placeholder, value, onChange }: SearchInputProps) {
   const id = useId()
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex w-full flex-col gap-1 sm:w-auto">
       <label htmlFor={id} className="text-muted text-xs font-medium">
         {label}
       </label>
@@ -23,7 +23,7 @@ export function SearchInput({ label, placeholder, value, onChange }: SearchInput
         value={value}
         placeholder={placeholder}
         onChange={(event) => onChange(event.target.value)}
-        className="bg-surface border-border-default text-primary placeholder:text-muted w-full rounded-lg border px-3 py-2 text-sm sm:w-64"
+        className="bg-surface border-border-default text-primary placeholder:text-muted min-h-11 w-full rounded-lg border px-3 py-2 text-base sm:w-64 sm:text-sm"
       />
     </div>
   )

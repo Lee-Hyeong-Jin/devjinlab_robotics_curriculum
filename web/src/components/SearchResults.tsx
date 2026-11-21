@@ -34,8 +34,10 @@ export async function SearchResults({ query, hits }: SearchResultsProps) {
                   <Chip tone={hit.kind === 'lesson' ? 'accent' : 'neutral'}>{t(hit.kind)}</Chip>
                   <span className="text-primary font-medium">{hit.title}</span>
                 </span>
-                <span className="text-muted block text-sm">{hit.snippet}</span>
-                <span className="text-muted mt-1 block font-mono text-xs">{hit.lesson_id}</span>
+                <span className="text-muted block text-sm wrap-anywhere">{hit.snippet}</span>
+                <span className="text-muted mt-1 block font-mono text-xs wrap-anywhere">
+                  {hit.lesson_id}
+                </span>
               </Link>
             </Card>
           </li>

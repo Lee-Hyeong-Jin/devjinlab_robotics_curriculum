@@ -145,3 +145,29 @@ test('an admin screen refuses a learner (AC-WEB.4)', async ({ page }) => {
   await expect(page.getByText(/권한이 없습니다|do not have permission/)).toBeVisible()
   await expect(page.getByRole('table')).toHaveCount(0)
 })
+
+test('a signed-in learner reaches the account controls on a phone', async ({ page }) => {
+  // The signed-in bar is the widest one (name, sign-out, language, theme), so this is the
+  // state in which a phone layout breaks first (frontend.md §4.2).
+  await signUpAndIn(page, freshAccount())
+  await page.setViewportSize({ width: 360, height: 740 })
+
+  for (const path of ['/', '/profile', '/review', '/reports']) {
+    await page.goto(path)
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    )
+    expect(overflow, `horizontal overflow on ${path}`).toBeLessThanOrEqual(0)
+  }
+
+  const nav = page.getByRole('navigation', { name: /주요 메뉴|Main navigation/ })
+  const signOut = nav.getByRole('button', { name: /로그아웃|Sign out/ })
+  await expect(signOut).toBeHidden()
+  await nav.getByRole('button', { name: /메뉴 열기|Open menu/ }).click()
+  await expect(signOut).toBeVisible()
+  await expect(nav.getByRole('link', { name: /^(프로필|Profile)$/ })).toBeVisible()
+
+  await signOut.click()
+  await page.waitForURL(/\/login/)
+})

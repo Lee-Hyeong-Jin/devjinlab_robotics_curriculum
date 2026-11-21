@@ -52,7 +52,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <NextIntlClientProvider locale={locale} messages={messages}>
           <SkipLink label={t('skipToContent')} />
           <TopNav />
-          <main id="main" className="mx-auto max-w-[var(--content-max)] px-4 py-8 sm:px-6">
+          <main id="main" className="mx-auto max-w-[var(--content-max)] px-4 py-6 sm:px-6 sm:py-8">
             {children}
           </main>
         </NextIntlClientProvider>

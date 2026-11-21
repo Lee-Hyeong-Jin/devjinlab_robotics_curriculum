@@ -120,7 +120,7 @@ export default async function ModulePage({ params }: Params) {
         showValue
       />
 
-      <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
         <Card as="section" className="p-2" aria-labelledby="lessons-heading">
           <h2 id="lessons-heading" className="text-primary px-3 py-2 font-semibold">
             {t('lessons')}

@@ -73,7 +73,7 @@ export default async function DashboardPage() {
     <>
       <PageHeader title={t('title')} subtitle={t('subtitle')} />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatTile
           label={t('courseProgress')}
           value={formatPercent(progress, locale)}
@@ -100,7 +100,7 @@ export default async function DashboardPage() {
         />
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[2fr_1fr]">
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]">
         <div className="flex flex-col gap-6">
           <Card as="section" aria-labelledby="current-heading">
             <h2 id="current-heading" className="text-primary mb-3 font-semibold">

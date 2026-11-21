@@ -12,7 +12,7 @@ export default async function Loading() {
       <span className="sr-only">{t('loading')}</span>
       <span className="bg-subtle h-8 w-64 animate-pulse rounded" aria-hidden="true" />
       <span className="bg-subtle h-4 w-96 max-w-full animate-pulse rounded" aria-hidden="true" />
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-hidden="true">
+      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-hidden="true">
         {[0, 1, 2, 3].map((index) => (
           <span
             key={index}

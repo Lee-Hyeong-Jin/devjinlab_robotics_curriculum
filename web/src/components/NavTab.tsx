@@ -23,7 +23,7 @@ export function NavTab({ href, children, matchPrefixes = [] }: NavTabProps) {
       href={href}
       aria-current={active ? 'page' : undefined}
       className={cx(
-        'rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+        'flex min-h-11 items-center rounded-lg px-3 py-2 text-base font-medium whitespace-nowrap transition-colors md:px-2.5 md:py-2 md:text-sm lg:px-3',
         active ? 'bg-accent-light text-accent' : 'text-muted hover:bg-subtle hover:text-primary',
       )}
     >

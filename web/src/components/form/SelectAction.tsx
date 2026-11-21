@@ -40,7 +40,7 @@ export function SelectAction({ action, hidden, selects, label, pendingLabel }: S
             id={`${prefix}-${select.name}`}
             name={select.name}
             defaultValue={select.value}
-            className="bg-surface border-border-default text-primary rounded-lg border px-2 py-1.5 text-sm"
+            className="bg-surface border-border-default text-primary min-h-11 rounded-lg border px-2 py-1.5 text-base sm:text-sm"
           >
             {select.options.map((option) => (
               <option key={option.value} value={option.value}>

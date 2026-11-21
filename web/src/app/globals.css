@@ -149,6 +149,11 @@
 /* 8px spacing grid, 1440px desktop reference (frontend.md §3). */
 html {
   color-scheme: light dark;
+  /* Phones in landscape must not inflate text on their own; the layout already adapts. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* In-page anchors (the lesson contents list) land below the sticky bar, not under it. */
+  scroll-padding-top: calc(var(--nav-height) + 0.5rem);
 }
 
 body {
@@ -156,6 +161,16 @@ body {
   color: var(--text-primary);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  /* Korean breaks between words, not inside them; on a narrow screen the default breaks a
+   * word after any syllable. A string with no break at all still wraps instead of overflowing. */
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* A fieldset is as wide as its longest unbreakable child by default, which lets one long
+ * formula in a quiz prompt widen the whole page on a phone. */
+fieldset {
+  min-width: 0;
 }
 
 /* Focus ring: 2px accent, visible on every interactive element (§6). */
@@ -182,6 +197,21 @@ body {
 
 .markdown-body {
   line-height: 1.75;
+  /* A long URL or identifier breaks instead of widening a phone screen. */
+  overflow-wrap: anywhere;
+}
+/* An inline formula cannot wrap. Where one is wider than the screen, its block scrolls sideways
+ * on its own so the page never does (frontend.md §4.2). The inline padding keeps a focus ring at
+ * the edge of the block from being clipped by the scroll container. */
+.markdown-body > :is(p, ul, ol, blockquote),
+p.markdown-body,
+li.markdown-body {
+  overflow-x: auto;
+}
+.markdown-body > p,
+p.markdown-body {
+  margin-inline: -4px;
+  padding-inline: 4px;
 }
 .markdown-body > * + * {
   margin-top: 1rem;

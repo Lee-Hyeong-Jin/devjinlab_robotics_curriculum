@@ -40,7 +40,7 @@ export function Field({ label, name, error, hint, className, ...rest }: FieldPro
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy || undefined}
         className={cx(
-          'bg-surface text-primary placeholder:text-muted w-full rounded-lg border px-3 py-2 text-sm',
+          'bg-surface text-primary placeholder:text-muted min-h-11 w-full rounded-lg border px-3 py-2 text-base sm:text-sm',
           error ? 'border-danger' : 'border-border-default',
           className,
         )}

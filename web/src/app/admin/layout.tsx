@@ -22,7 +22,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   if (!hasRole(user, 'admin')) return <Forbidden />
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[12rem_minmax(0,1fr)]">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[12rem_minmax(0,1fr)]">
       <nav aria-label={t('nav')} className="lg:sticky lg:top-20 lg:self-start">
         <ul className="flex flex-wrap gap-1 lg:flex-col">
           <li>

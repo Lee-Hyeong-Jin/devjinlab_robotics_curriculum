@@ -19,7 +19,7 @@ export async function AccountMenu({ user }: { user: User | null }) {
     return (
       <Link
         href="/login"
-        className="text-muted hover:text-primary rounded-lg px-3 py-2 text-sm font-medium"
+        className="text-muted hover:text-primary flex min-h-11 items-center rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap"
       >
         {t('signIn')}
       </Link>
@@ -27,11 +27,11 @@ export async function AccountMenu({ user }: { user: User | null }) {
   }
 
   return (
-    <div className="flex items-center gap-1" aria-label={t('menu')}>
+    <div className="flex flex-wrap items-center gap-1" aria-label={t('menu')}>
       {hasRole(user, 'admin') ? (
         <Link
           href="/admin/users"
-          className="text-muted hover:text-primary rounded-lg px-3 py-2 text-sm font-medium"
+          className="text-muted hover:text-primary flex min-h-11 items-center rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap"
         >
           {t('admin')}
         </Link>
@@ -39,7 +39,7 @@ export async function AccountMenu({ user }: { user: User | null }) {
       <Link
         href="/profile"
         aria-label={t('profile')}
-        className="text-primary max-w-[12rem] truncate rounded-lg px-3 py-2 text-sm font-medium"
+        className="text-primary max-w-[12rem] truncate rounded-lg px-3 py-3 text-sm font-medium"
       >
         {user.display_name || user.email}
       </Link>

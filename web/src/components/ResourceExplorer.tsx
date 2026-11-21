@@ -81,7 +81,6 @@ export function ResourceExplorer({ resources }: { resources: ResourceRef[] }) {
       key: 'note',
       header: t('colNote'),
       cell: (row) => <span className="text-muted">{row.note ?? '—'}</span>,
-      hideOnMobile: true,
     },
     {
       key: 'lessons',

@@ -36,7 +36,7 @@ export function LocaleSwitcher() {
         value={current}
         disabled={pending}
         onChange={(event) => choose(event.target.value)}
-        className="bg-subtle text-primary border-border-default rounded-lg border px-2 py-1 text-xs"
+        className="bg-subtle text-primary border-border-default min-h-11 rounded-lg border px-2 py-1 text-sm xl:min-h-0 xl:text-xs"
       >
         {LOCALES.map((locale) => (
           <option key={locale} value={locale}>

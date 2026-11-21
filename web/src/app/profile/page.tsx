@@ -170,7 +170,7 @@ export default async function ProfilePage() {
     <>
       <PageHeader title={t('title')} subtitle={t('subtitle')} />
 
-      <div className="grid gap-6 lg:grid-cols-[14rem_minmax(0,1fr)]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[14rem_minmax(0,1fr)]">
         <nav aria-label={t('onThisPage')} className="lg:sticky lg:top-20 lg:self-start">
           <ul className="flex flex-wrap gap-1 lg:flex-col">
             {SECTIONS.map((section) => (
@@ -191,7 +191,7 @@ export default async function ProfilePage() {
             <h2 id="account" className="text-primary mb-4 font-semibold">
               {t('account')}
             </h2>
-            <dl className="mb-5 grid gap-3 sm:grid-cols-2">
+            <dl className="mb-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
                 <dt className="text-muted text-xs">{t('email')}</dt>
                 <dd className="text-primary flex flex-wrap items-center gap-2 text-sm">
