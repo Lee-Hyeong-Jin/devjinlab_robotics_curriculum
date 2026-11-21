@@ -20,7 +20,8 @@ import type { Lesson, Module } from '@/lib/api/types'
 import { formatMinutes } from '@/lib/format'
 import { renderInlineMarkdown, renderMarkdown } from '@/lib/markdown/render'
 import { stripLessonSections } from '@/lib/markdown/sections'
-import { metaDescription, pageSeo } from '@/lib/seo'
+import { metaDescription } from '@/lib/seo'
+import { localizedPageSeo } from '@/lib/seo-server'
 import { breadcrumbs, lessonSchema } from '@/lib/structured-data'
 import { lockStateFromStatus } from '@/lib/progress'
 
@@ -42,7 +43,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const path = `/modules/${encodeURIComponent(moduleId)}/${encodeURIComponent(lessonId)}`
   try {
     const lesson = await getLesson(lessonId)
-    return pageSeo({
+    return localizedPageSeo({
       path,
       title: lesson.title ?? lessonId,
       description: metaDescription(lesson.summary),

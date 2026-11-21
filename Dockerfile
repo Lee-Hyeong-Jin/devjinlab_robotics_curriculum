@@ -117,9 +117,10 @@ ENV NODE_ENV=production \
 WORKDIR /app
 
 # The standalone bundle carries its own node_modules; .next/static and public/ do not travel
-# with it. `web/public` does not exist yet, so nothing is copied for it.
+# with it. public/ holds the manifest icons (icon-192.png, icon-512.png).
 COPY --from=web-build --chown=node:node /app/web/.next/standalone ./
 COPY --from=web-build --chown=node:node /app/web/.next/static ./.next/static
+COPY --from=web-build --chown=node:node /app/web/public ./public
 
 EXPOSE 3000
 

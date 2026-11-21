@@ -264,6 +264,27 @@ SMTP 를 설정하지 않은 서버는 인증 링크를 **보낼 수 없다**. �
 3. 끄려면 `RC_PUBLIC_CONTENT=0` 으로 되돌리고 재시작한다. `robots.txt` 가 `Disallow: /` 로 돌아가고
    모든 페이지가 `noindex` 가 된다. 이미 색인된 페이지는 검색 엔진이 다시 크롤링할 때까지 남는다.
 
+4. **검색 엔진에 등록한다(선택이지만 색인 속도가 크게 달라진다).** 공개 후에도 검색 엔진은 이
+   사이트를 모른다. 소유 확인 토큰을 `.env` 에 넣고 재시작한 뒤, 각 도구에서 사이트맵을 제출한다.
+
+   | 변수 | 어디서 받나 | 넣을 값 |
+   |---|---|---|
+   | `RC_GOOGLE_SITE_VERIFICATION` | Google Search Console → 속성 추가(URL 접두어) → HTML 태그 | `<meta name="google-site-verification" content="…">` 의 `content` 값 |
+   | `RC_NAVER_SITE_VERIFICATION` | 네이버 서치어드바이저 → 사이트 등록 → HTML 태그 | `<meta name="naver-site-verification" content="…">` 의 `content` 값 |
+
+   ```bash
+   curl -s https://<주소>/ | grep -o '<meta name="[a-z-]*site-verification"[^>]*>'   # 넣은 토큰이 보여야 한다
+   ```
+
+   확인이 끝나면 두 도구 모두에 `https://<주소>/sitemap.xml` 을 제출한다. 토큰은 비밀이 아니다
+   (페이지 소스에 그대로 나간다). 값을 비우면 태그가 사라지고, 그러면 소유 확인도 풀린다.
+5. **공유 미리보기 확인.** 카카오톡·슬랙 등은 링크를 한 번 긁으면 결과를 캐시한다. 제목·설명·
+   이미지(`/og-image.png`)를 바꾼 뒤 미리보기가 그대로면 각 서비스의 캐시 초기화 도구를 쓴다
+   (카카오: 공유 디버거의 캐시 초기화).
+
+익명 방문자의 `/` 는 대시보드가 아니라 **공개 랜딩 페이지**다(코스·모듈 목록, 색인 대상). 로그인한
+사람에게는 그대로 자기 대시보드가 나온다.
+
 API·`/metrics`·DB 는 이 플래그와 무관하게 계속 비공개다. 브라우저는 API 를 직접 부르지 않는다.
 
 ## 9. 자주 겪는 문제

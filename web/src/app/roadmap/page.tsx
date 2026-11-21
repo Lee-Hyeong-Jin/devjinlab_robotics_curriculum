@@ -13,7 +13,8 @@ import { JsonLd } from '@/components/JsonLd'
 import { getCourse, getCourses, getRoadmap } from '@/lib/api/queries'
 import { defaultCourseId } from '@/lib/api/config'
 import { selectedCourseId } from '@/lib/courses'
-import { metaDescription, pageSeo } from '@/lib/seo'
+import { metaDescription } from '@/lib/seo'
+import { localizedPageSeo } from '@/lib/seo-server'
 import { breadcrumbs, courseSchema } from '@/lib/structured-data'
 import { formatPercent } from '@/lib/format'
 import type { LockState } from '@/lib/progress'
@@ -28,7 +29,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const courseId = selectedCourseId(courses, params.course, defaultCourseId())
   const course = courses.find((candidate) => candidate.id === courseId)
   const isDefault = courseId === defaultCourseId()
-  return pageSeo({
+  return localizedPageSeo({
     // The default course lives at the bare `/roadmap`, so the two addresses do not compete
     // for the same content.
     path: isDefault ? '/roadmap' : `/roadmap?course=${encodeURIComponent(courseId)}`,

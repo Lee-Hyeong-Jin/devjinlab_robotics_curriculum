@@ -46,6 +46,19 @@
     "weeklySessions": "세션 {count}회",
     "unavailable": "API 서버에서 진행 상황을 받아오지 못했습니다."
   },
+  "landing": {
+    "free": "모든 레슨은 무료로 공개되어 있고, 가입하면 진행도·퀴즈·복습 카드가 저장됩니다.",
+    "viewRoadmap": "로드맵 보기",
+    "signUp": "무료로 시작하기",
+    "statCourses": "코스",
+    "statModules": "모듈",
+    "statLessons": "레슨",
+    "moduleCount": "모듈 {count}개",
+    "openRoadmap": "{course} 로드맵 전체 보기",
+    "resourcesTitle": "자료실",
+    "resourcesBody": "레슨마다 고른 교재·강의·논문·코드·데이터셋을 한곳에서 찾아볼 수 있습니다.",
+    "openResources": "자료실 열기"
+  },
   "course": {
     "switcher": "코스 선택",
     "lessonCount": "레슨 {count}개",

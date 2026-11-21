@@ -146,6 +146,10 @@ services:
       # them to only one service leaves the two disagreeing (ADR 0016, RUNBOOK §8.2).
       RC_PUBLIC_CONTENT: ${RC_PUBLIC_CONTENT:-0}
       RC_PUBLIC_URL: ${RC_PUBLIC_URL:-http://localhost:3000}
+      # Ownership tokens for Google Search Console and Naver Search Advisor (the `content` value
+      # of the meta tag each one asks for). Empty = no tag.
+      RC_GOOGLE_SITE_VERIFICATION: ${RC_GOOGLE_SITE_VERIFICATION:-}
+      RC_NAVER_SITE_VERIFICATION: ${RC_NAVER_SITE_VERIFICATION:-}
       PORT: "3000"
       HOSTNAME: 0.0.0.0
     ports:

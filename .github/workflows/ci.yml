@@ -168,10 +168,14 @@ jobs:
       matrix:
         include:
           - suite: smoke
+            # `smoke` also matches smoke-responsive; seo and i18n run against the same
+            # local-mode stack and adapt to whether the curriculum is published.
+            specs: smoke seo i18n
             auth_mode: local
             cookie_secure: "1"
             e2e_auth: ""
           - suite: journey
+            specs: journey
             auth_mode: server
             # The browser talks to the app over plain http, so the session cookie cannot be Secure.
             cookie_secure: "0"
@@ -225,7 +229,7 @@ jobs:
         working-directory: web
         env:
           E2E_AUTH: ${{ matrix.e2e_auth }}
-        run: npx playwright test ${{ matrix.suite }}
+        run: npx playwright test ${{ matrix.specs }}
 
       - name: Upload the Playwright report
         if: always()

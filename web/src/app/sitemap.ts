@@ -1,11 +1,11 @@
 import type { MetadataRoute } from 'next'
 
-import { publicContentEnabled } from '@/lib/api/config'
+import { defaultCourseId, publicContentEnabled } from '@/lib/api/config'
 import { getCourse, getCourses } from '@/lib/api/queries'
 import { absoluteUrl, languageAlternates } from '@/lib/seo'
 
 /** Static pages worth listing, most important first. */
-const ROOTS = ['/roadmap', '/resources'] as const
+const ROOTS = ['/', '/roadmap', '/resources'] as const
 
 /**
  * Built per request, not at build time: `RC_PUBLIC_CONTENT` and `RC_PUBLIC_URL` are runtime
@@ -16,7 +16,7 @@ const ROOTS = ['/roadmap', '/resources'] as const
 export const dynamic = 'force-dynamic'
 
 /**
- * `sitemap.xml`: the roadmap, the resource library, and every course, module and lesson, each
+ * `sitemap.xml`: the home page, the roadmap, the resource library, and every course, module and lesson, each
  * with its `hreflang` alternates (ko, en, x-default).
  *
  * Empty while nothing is published (ADR 0016) — advertising URLs that answer with a login
@@ -31,18 +31,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = ROOTS.map((path) => ({
     url: absoluteUrl(path),
     changeFrequency: 'weekly' as const,
-    priority: 0.8,
+    priority: path === '/' ? 1 : 0.9,
     alternates: { languages: languageAlternates(path) },
   }))
 
   for (const summary of courses) {
-    const path = `/roadmap?course=${encodeURIComponent(summary.id)}`
-    entries.push({
-      url: absoluteUrl(path),
-      changeFrequency: 'weekly',
-      priority: 0.9,
-      alternates: { languages: languageAlternates(path) },
-    })
+    // The default course is the bare `/roadmap`, already listed above. `/roadmap?course=<it>`
+    // names that page as its canonical, so listing it would hand the crawler a duplicate.
+    if (summary.id !== defaultCourseId()) {
+      const path = `/roadmap?course=${encodeURIComponent(summary.id)}`
+      entries.push({
+        url: absoluteUrl(path),
+        changeFrequency: 'weekly',
+        priority: 0.9,
+        alternates: { languages: languageAlternates(path) },
+      })
+    }
 
     const course = await getCourse(summary.id)
     for (const stage of course?.stages ?? []) {

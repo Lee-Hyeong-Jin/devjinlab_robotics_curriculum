@@ -6,15 +6,39 @@ import { ButtonLink } from '@/components/Button'
 import { Card } from '@/components/Card'
 import { Chip } from '@/components/Chip'
 import { EmptyState } from '@/components/EmptyState'
+import { Landing } from '@/components/Landing'
 import { PageHeader } from '@/components/PageHeader'
 import { ProgressBar } from '@/components/ProgressBar'
 import { StageProgress } from '@/components/StageProgress'
 import { StatTile } from '@/components/StatTile'
+import { publicContentEnabled } from '@/lib/api/config'
 import { getCourses, getNextLessons, getRoadmap, getStatus } from '@/lib/api/queries'
+import { getMe } from '@/lib/auth'
 import { formatDateTime, formatMinutes, formatPercent } from '@/lib/format'
 import { courseProgress, lessonLockState, type LockState } from '@/lib/progress'
+import { localizedPageSeo } from '@/lib/seo-server'
+
+/**
+ * Whether this request gets the public landing page instead of the dashboard: the deployment
+ * publishes its curriculum (ADR 0016) and the visitor has no session. A crawler is always such a
+ * visitor, so the root URL is indexable; a signed-in reader still gets their own dashboard here,
+ * which is never indexed.
+ */
+async function isPublicVisitor(): Promise<boolean> {
+  return publicContentEnabled() && (await getMe()) === null
+}
 
 export async function generateMetadata(): Promise<Metadata> {
+  if (await isPublicVisitor()) {
+    const t = await getTranslations('app')
+    return localizedPageSeo({
+      path: '/',
+      title: t('title'),
+      description: t('description'),
+      publishable: true,
+      absoluteTitle: true,
+    })
+  }
   const t = await getTranslations('dashboard')
   return { title: t('title') }
 }
@@ -26,6 +50,8 @@ export async function generateMetadata(): Promise<Metadata> {
  * study streak, cards due today and the next-lesson recommendation.
  */
 export default async function DashboardPage() {
+  if (await isPublicVisitor()) return <Landing />
+
   const [t, tState, tCourse, locale] = await Promise.all([
     getTranslations('dashboard'),
     getTranslations('state'),
