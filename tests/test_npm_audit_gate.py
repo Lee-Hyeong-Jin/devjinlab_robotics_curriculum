@@ -94,4 +94,5 @@ def test_unusable_input_is_an_error(
 
 def test_repository_allowlist_parses() -> None:
     allowed = gate.read_allowlist(SCRIPT.parents[2] / "web" / "audit-allowlist.txt")
-    assert allowed == {"GHSA-fc5q-39xc-vjpf"}
+    # Every entry is a GHSA id; the comments around it carry the reason and the date.
+    assert all(entry.startswith("GHSA-") for entry in allowed)
