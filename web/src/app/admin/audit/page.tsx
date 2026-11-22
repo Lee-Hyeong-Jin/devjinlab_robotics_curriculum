@@ -32,7 +32,8 @@ function detailText(detail: AuditEntry['detail']): string {
 /**
  * Admin audit log — `GET /admin/audit` with filters, cursor paging and a CSV export (P3-1).
  *
- * The date inputs are whole UTC days; `to` includes the day picked.
+ * The date inputs are whole days in the service's time zone (KST by default); `to` includes
+ * the day picked.
  */
 export default async function AdminAuditPage({ searchParams }: Props) {
   const [t, locale, params] = await Promise.all([

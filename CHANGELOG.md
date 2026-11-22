@@ -182,6 +182,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `npm audit` reports nothing for the web lockfile and the allowlist is empty.
 
 ### Fixed
+- An audit log filter time written with an offset other than UTC (`since=…+09:00`) matched the
+  wrong rows on SQLite, which compares stored times as text. Filter times are converted to UTC
+  before the query.
 - `rc api serve` no longer lets uvicorn rewrite the caller's address from `X-Forwarded-For`; the
   app applies `RC_API_TRUSTED_PROXIES` itself. With both active, a web tier on the same host
   looked like the browser it was speaking for.
@@ -207,6 +210,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   regress.
 
 ### Changed
+- The service runs in Korea Standard Time (`RC_TIMEZONE`, default `Asia/Seoul`; RUNBOOK §8
+  "시간대"). Every container sets `TZ`, PostgreSQL logs and displays in that zone, API log lines
+  carry `+09:00`, and every date and time on screen is shown in it. A day now begins at local
+  midnight for visit counts, the sign-up trend, weekly reports, study streaks, review due dates
+  and the daily traffic chart; it used to begin at 09:00 KST (UTC midnight). Stored times are
+  absolute instants and are unchanged, as are the times in API responses.
+- Backup files are named with local time and its offset (`rc-20261122T020000+0900.dump`) and the
+  deploy and restore-drill logs use the same form. Existing `…Z.dump` files restore as before.
+- The audit CSV export writes `at` in the service's time zone, and the audit date filter in the
+  admin console selects whole local days.
 - C4 lessons `c4-pontryagin-indirect`, `c4-dp-lqr-lqg` and `c4-ilqr-ddp` cite their papers through
   the course registry (`papers[]`) instead of article resources, use the `paper` and
   `reproduction` activity kinds, and the C4 module level is `연구`.

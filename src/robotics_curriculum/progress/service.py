@@ -219,7 +219,8 @@ class ProgressService:
             if open_ is not None:
                 raise ProgressError(
                     f"a session for '{open_.lesson_id}' is already running "
-                    f"(since {open_.started_at:%Y-%m-%d %H:%M} UTC); run `rc stop` first"
+                    f"(since {open_.started_at.astimezone():%Y-%m-%d %H:%M %Z}); "
+                    "run `rc stop` first"
                 )
             now = self.clock()
             session = self.store.add_session(

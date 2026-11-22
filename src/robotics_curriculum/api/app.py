@@ -139,6 +139,7 @@ def build_auth(
         mailer=mailer,
         clock=clock,
         erase_learning_data=erase_learning_data,
+        timezone=settings.timezone,
     )
 
 
@@ -215,7 +216,7 @@ def create_app(
         state.visit_key = secret.encode() if secret else secrets.token_bytes(32)
         engine = getattr(state.auth.store, "engine", None)
         if engine is not None and settings.ops_metrics:
-            state.ops = Recorder(OpsStore(engine), clock)
+            state.ops = Recorder(OpsStore(engine), clock, tz=settings.timezone)
     state.started_at = clock()
 
     @asynccontextmanager

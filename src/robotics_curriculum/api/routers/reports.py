@@ -63,17 +63,17 @@ def weekly(
 ) -> Report | MarkdownResponse:
     """Weekly report (``rc report weekly``): time, completions, stuck points, next lessons.
 
-    Weeks run Monday to Sunday in the server's local timezone.
+    Weeks run Monday to Sunday in the service's time zone (``RC_TIMEZONE``).
     """
     now = state.clock()
-    today = now.astimezone().date()
+    today = state.local_now().date()
     try:
         iso = IsoWeek.parse(week) if week else IsoWeek.of(today)
     except ValueError as exc:
         raise HTTPException(422, str(exc)) from None
     lang = lang_var.get()
     with progress.open() as service:
-        data = build_weekly_report(service, iso, today=today, lang=lang)
+        data = build_weekly_report(service, iso, today=today, tz=state.settings.timezone, lang=lang)
     report = Report(
         kind="weekly",
         period=str(iso),

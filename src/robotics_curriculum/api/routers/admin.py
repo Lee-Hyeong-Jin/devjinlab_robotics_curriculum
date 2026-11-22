@@ -10,7 +10,7 @@ from __future__ import annotations
 import csv
 import io
 from collections.abc import Iterable
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
@@ -84,10 +84,19 @@ def _cursor(value: str | None) -> int | None:
 
 
 def _aware(name: str, value: datetime | None) -> datetime | None:
-    """A filter time must carry its offset: a naive one would silently mean server time."""
-    if value is not None and value.tzinfo is None:
-        raise HTTPException(422, f"'{name}' must include a UTC offset, e.g. 2026-11-22T00:00:00Z")
-    return value
+    """A filter time as a UTC instant.
+
+    It must carry its offset: a naive one would silently mean server time. It is then moved to
+    UTC, because SQLite stores times without an offset and compares them as text, so a filter
+    written as ``+09:00`` would otherwise be compared as if it were nine hours later.
+    """
+    if value is None:
+        return None
+    if value.tzinfo is None:
+        raise HTTPException(
+            422, f"'{name}' must include its offset, e.g. 2026-11-22T00:00:00+09:00"
+        )
+    return value.astimezone(UTC)
 
 
 def _audit_entries(auth: AuthService, entries: Iterable[models.AuditEntry]) -> list[AuditEntry]:
@@ -295,8 +304,12 @@ def list_audit(
     action: ActionPrefix = None,
     target_type: Annotated[str | None, Query(max_length=50)] = None,
     target_id: Annotated[str | None, Query(max_length=100)] = None,
-    since: Annotated[datetime | None, Query(description="Inclusive, with a UTC offset.")] = None,
-    until: Annotated[datetime | None, Query(description="Exclusive, with a UTC offset.")] = None,
+    since: Annotated[
+        datetime | None, Query(description="Inclusive; an ISO time with its offset (e.g. +09:00).")
+    ] = None,
+    until: Annotated[
+        datetime | None, Query(description="Exclusive; an ISO time with its offset (e.g. +09:00).")
+    ] = None,
 ) -> AuditPage:
     """Audit log, newest first (reading it is itself audited)."""
     entries = auth.list_audit(
@@ -334,16 +347,22 @@ def export_audit(
     principal: AdminPrincipal,
     auth: Auth,
     ctx: Ctx,
+    state: State,
     actor_user_id: int | None = None,
     action: ActionPrefix = None,
     target_type: Annotated[str | None, Query(max_length=50)] = None,
     target_id: Annotated[str | None, Query(max_length=100)] = None,
-    since: Annotated[datetime | None, Query(description="Inclusive, with a UTC offset.")] = None,
-    until: Annotated[datetime | None, Query(description="Exclusive, with a UTC offset.")] = None,
+    since: Annotated[
+        datetime | None, Query(description="Inclusive; an ISO time with its offset (e.g. +09:00).")
+    ] = None,
+    until: Annotated[
+        datetime | None, Query(description="Exclusive; an ISO time with its offset (e.g. +09:00).")
+    ] = None,
 ) -> Response:
     """The audit log as CSV with the same filters, newest first, at most 10,000 rows.
 
-    The ``X-Truncated`` header is ``true`` when more rows matched than were exported.
+    Times are written in the service's time zone with their offset. The ``X-Truncated``
+    header is ``true`` when more rows matched than were exported.
     """
     entries = auth.list_audit(
         AUDIT_EXPORT_LIMIT + 1,
@@ -378,7 +397,8 @@ def export_audit(
         writer.writerow(
             [
                 row.id,
-                row.at.isoformat(),
+                # Local time with its offset: readable in a spreadsheet, still an exact instant.
+                row.at.astimezone(state.settings.timezone).isoformat(),
                 csv_cell(row.action),
                 row.actor_user_id if row.actor_user_id is not None else "",
                 csv_cell(row.actor_email),

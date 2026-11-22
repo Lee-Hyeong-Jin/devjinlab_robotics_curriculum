@@ -12,7 +12,7 @@ import logging
 import threading
 from collections.abc import Callable
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, tzinfo
 
 from robotics_curriculum.ops.store import OpsStore, StatDelta, StatKey
 from robotics_curriculum.ops.traffic import (
@@ -21,6 +21,7 @@ from robotics_curriculum.ops.traffic import (
     latency_bucket,
     status_class,
 )
+from robotics_curriculum.timezone import default_timezone, local_day
 
 logger = logging.getLogger("robotics_curriculum.api")
 
@@ -50,12 +51,15 @@ class Recorder:
         flush_interval: float = 15.0,
         purge_interval: timedelta = timedelta(hours=6),
         retention: Retention | None = None,
+        tz: tzinfo | None = None,
     ) -> None:
         self.store = store
         self.clock = clock
         self.flush_interval = flush_interval
         self.purge_interval = purge_interval
         self.retention = retention or Retention()
+        self.tz: tzinfo = tz or default_timezone()
+        """Zone the per-day tables are keyed in (``RC_TIMEZONE``)."""
         self._lock = threading.Lock()
         self._flush_lock = threading.Lock()
         self._buffer: dict[StatKey, StatDelta] = {}
@@ -169,6 +173,6 @@ class Recorder:
             stats_before=now - keep.request_stats,
             errors_before=now - keep.request_errors,
             errors_keep=keep.request_errors_max,
-            views_before=(now - keep.page_views).date(),
-            visitors_before=(now - keep.visitors).date(),
+            views_before=local_day(now - keep.page_views, self.tz),
+            visitors_before=local_day(now - keep.visitors, self.tz),
         )

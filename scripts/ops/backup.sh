@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Back up the PostgreSQL database to a compressed custom-format dump (P2-5, AC-OPS.4).
 #
-#   bash scripts/ops/backup.sh                  # -> backups/rc-<utc timestamp>.dump
+#   bash scripts/ops/backup.sh                  # -> backups/rc-<local time+offset>.dump
 #   BACKUP_DIR=/srv/backups bash scripts/ops/backup.sh
 #   RETENTION_DAYS=30 bash scripts/ops/backup.sh   # prune older dumps (0 = keep everything)
 #
@@ -20,7 +20,9 @@ backup_dir="${BACKUP_DIR:-$root/backups}"
 retention="${RETENTION_DAYS:-30}"
 db_user="${POSTGRES_USER:-rc}"
 db_name="${POSTGRES_DB:-rc}"
-stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+# Local time in the service's zone (KST by default) with its offset, e.g. 20261122T020000+0900:
+# the name reads as the time on the operator's clock and is still an exact instant.
+stamp="$(TZ="${RC_TIMEZONE:-Asia/Seoul}" date +%Y%m%dT%H%M%S%z)"
 target="$backup_dir/rc-$stamp.dump"
 
 mkdir -p "$backup_dir"

@@ -48,8 +48,8 @@ def page_view(body: PageViewIn, request: Request, state: State) -> Response:
         raise HTTPException(404, "monitoring is not enabled on this server")
     if not _from_trusted_proxy(request, state):
         raise HTTPException(403, "page views are accepted from the web tier only")
-    now = state.clock()
-    day = now.date()
+    # A visit belongs to the day it is in the service's zone, not to the UTC day.
+    day = state.local_now().date()
     user_agent = request.headers.get("user-agent")
     bot = is_bot(user_agent)
     address = client_address(

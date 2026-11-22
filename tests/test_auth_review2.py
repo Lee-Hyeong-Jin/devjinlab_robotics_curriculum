@@ -132,7 +132,7 @@ def test_create_app_refuses_local_mode_on_public_address(tmp_path: Path) -> None
 def test_serve_reports_the_refusal_without_a_traceback(monkeypatch: pytest.MonkeyPatch) -> None:
     calls: list[str] = []
     monkeypatch.setattr(uvicorn, "run", lambda app, **kw: calls.append(kw["host"]))
-    monkeypatch.setattr("robotics_curriculum.api.log.configure_logging", lambda level: None)
+    monkeypatch.setattr("robotics_curriculum.api.log.configure_logging", lambda *args: None)
     monkeypatch.delenv("RC_API_ALLOW_REMOTE_LOCAL", raising=False)
     monkeypatch.setenv("RC_AUTH_MODE", "local")
     r = CliRunner().invoke(

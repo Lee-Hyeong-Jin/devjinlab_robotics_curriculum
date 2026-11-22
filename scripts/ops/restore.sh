@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Restore a dump produced by scripts/ops/backup.sh (P2-5, AC-OPS.4).
 #
-#   bash scripts/ops/restore.sh backups/rc-20261111T020000Z.dump
+#   bash scripts/ops/restore.sh backups/rc-20261111T020000+0900.dump
 #   FORCE=1 bash scripts/ops/restore.sh <dump>   # skip the confirmation prompt
 #
 # This REPLACES the contents of the target database: every object in the dump is dropped and

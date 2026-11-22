@@ -66,7 +66,7 @@ request_errors = Table(
 page_views = Table(
     "ops_page_views",
     ops_metadata,
-    Column("day", Date, primary_key=True, comment="UTC day"),
+    Column("day", Date, primary_key=True, comment="day in the service time zone (RC_TIMEZONE)"),
     Column("path", Text, primary_key=True, comment="normalized; unknown paths are '(other)'"),
     Column("locale", Text, primary_key=True),
     Column("bot", Boolean, primary_key=True),
@@ -77,7 +77,7 @@ page_views = Table(
 visitors = Table(
     "ops_visitors",
     ops_metadata,
-    Column("day", Date, primary_key=True),
+    Column("day", Date, primary_key=True, comment="day in the service time zone (RC_TIMEZONE)"),
     Column("visitor", Text, primary_key=True, comment="daily-salted hash, see ADR 0017"),
     Column("signed_in", Boolean, nullable=False),
 )
@@ -85,7 +85,7 @@ visitors = Table(
 referrers = Table(
     "ops_referrers",
     ops_metadata,
-    Column("day", Date, primary_key=True),
+    Column("day", Date, primary_key=True, comment="day in the service time zone (RC_TIMEZONE)"),
     Column("host", Text, primary_key=True, comment="host only, never the full URL"),
     Column("count", BigInteger, nullable=False),
 )

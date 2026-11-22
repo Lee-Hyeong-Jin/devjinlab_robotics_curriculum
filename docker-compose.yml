@@ -14,6 +14,9 @@ services:
     profiles: ["cli"]
     build: .
     image: robotics-curriculum:local
+    environment:
+      RC_TIMEZONE: ${RC_TIMEZONE:-Asia/Seoul}
+      TZ: ${RC_TIMEZONE:-Asia/Seoul}
     volumes:
       - rc-data:/data
       - ./curriculum:/app/curriculum:ro
@@ -24,6 +27,17 @@ services:
       POSTGRES_DB: rc
       POSTGRES_USER: rc
       POSTGRES_PASSWORD: ${RC_DB_PASSWORD:?set RC_DB_PASSWORD (see docs/operations/RUNBOOK.md §8)}
+      TZ: ${RC_TIMEZONE:-Asia/Seoul}
+      PGTZ: ${RC_TIMEZONE:-Asia/Seoul}
+    # The zone the server writes its log in and shows a timestamp in when a session does not
+    # ask for one (psql, a dump read by a person). Stored times are instants either way. Given
+    # as flags because an existing data directory keeps the zone it was initialised with.
+    command:
+      - postgres
+      - -c
+      - timezone=${RC_TIMEZONE:-Asia/Seoul}
+      - -c
+      - log_timezone=${RC_TIMEZONE:-Asia/Seoul}
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
@@ -45,6 +59,7 @@ services:
     entrypoint: ["alembic"]
     command: ["upgrade", "head"]
     environment:
+      TZ: ${RC_TIMEZONE:-Asia/Seoul}
       RC_DATABASE_URL: postgresql://rc:${RC_DB_PASSWORD:?set RC_DB_PASSWORD (see docs/operations/RUNBOOK.md §8)}@db:5432/rc
     read_only: true
     tmpfs:
@@ -63,6 +78,11 @@ services:
       target: api
     image: robotics-curriculum-api:local
     environment:
+      # The service's time zone (Korea Standard Time by default): where a day begins for
+      # visits, sign-up trends, streaks and weekly reports, and the zone of log lines. TZ
+      # sets the container's own clock to match. Stored times remain absolute instants.
+      RC_TIMEZONE: ${RC_TIMEZONE:-Asia/Seoul}
+      TZ: ${RC_TIMEZONE:-Asia/Seoul}
       RC_AUTH_MODE: server
       RC_DATABASE_URL: postgresql://rc:${RC_DB_PASSWORD:?set RC_DB_PASSWORD (see docs/operations/RUNBOOK.md §8)}@db:5432/rc
       RC_AUTH_SECRET: ${RC_AUTH_SECRET:?set RC_AUTH_SECRET (see docs/operations/RUNBOOK.md §8)}
@@ -122,8 +142,10 @@ services:
     image: postgres:16.13
     entrypoint: ["/bin/sh", "-c"]
     command:
-      - 'exec pg_dump -Fc -h db -U "$$POSTGRES_USER" -d "$$POSTGRES_DB" > "/backups/rc-$$(date -u +%Y%m%dT%H%M%SZ).dump"'
+      - 'exec pg_dump -Fc -h db -U "$$POSTGRES_USER" -d "$$POSTGRES_DB" > "/backups/rc-$$(date +%Y%m%dT%H%M%S%z).dump"'
     environment:
+      # The stamp in the file name is local time with its offset (…T020000+0900).
+      TZ: ${RC_TIMEZONE:-Asia/Seoul}
       POSTGRES_USER: rc
       POSTGRES_DB: rc
       PGPASSWORD: ${RC_DB_PASSWORD:?set RC_DB_PASSWORD (see docs/operations/RUNBOOK.md §8)}
@@ -147,6 +169,9 @@ services:
     environment:
       # Inside the compose network the api answers on its service name.
       RC_API_BASE_URL: http://api:8000
+      # The same zone as the api: both cut days at the same midnight and show the same times.
+      RC_TIMEZONE: ${RC_TIMEZONE:-Asia/Seoul}
+      TZ: ${RC_TIMEZONE:-Asia/Seoul}
       RC_DEFAULT_COURSE_ID: ${RC_DEFAULT_COURSE_ID:-robotics-expert}
       RC_API_TIMEOUT_MS: ${RC_API_TIMEOUT_MS:-10000}
       # Same two values as the api: RC_PUBLIC_CONTENT gates indexing here, and RC_PUBLIC_URL

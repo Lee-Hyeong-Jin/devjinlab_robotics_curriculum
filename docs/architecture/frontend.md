@@ -339,6 +339,11 @@ API 가 자기 응답에 붙이는 헤더(`api/middleware.py`)는 브라우저�
 
 ## 6. i18n과 접근성
 
+**시간대**: 화면의 모든 날짜·시각은 서비스 시간대(`RC_TIMEZONE`, 기본 `Asia/Seoul`)로 표시한다
+(`lib/timezone.ts`, `lib/format.ts`). 서버 프로세스의 시간대를 따르지 않는다 — 컨테이너가 UTC 로 떠도
+화면의 시각이 9시간 밀리지 않아야 한다. 날짜 필터는 고른 날의 그 시간대 자정을 API 에 보낸다
+(`dayToInstant`). API 가 주는 시각은 오프셋이 붙은 절대 시각이라 변환은 표시할 때 한 번만 한다.
+
 - `next-intl`. 메시지 `messages/ko.json`, `messages/en.json`. 기본 `ko`.
 - 언어 결정: `users.locale` → `Accept-Language` → `ko`. 프로필에서 변경하면 `PATCH /me`.
 - 레슨 콘텐츠는 번역 대상이 아니다(한국어 본문 + 영어 용어 병기).

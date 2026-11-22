@@ -10,7 +10,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
-from datetime import UTC, date, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta, tzinfo
 from typing import Any
 
 from robotics_curriculum.auth.crypto import (
@@ -37,6 +37,7 @@ from robotics_curriculum.auth.models import (
 from robotics_curriculum.auth.oidc import Claims
 from robotics_curriculum.auth.store import AuthStore
 from robotics_curriculum.i18n import DEFAULT_LANG, normalize_lang, translator
+from robotics_curriculum.timezone import default_timezone
 
 logger = logging.getLogger("robotics_curriculum.api")
 
@@ -100,7 +101,8 @@ class AccountsOverview:
     new_7d: int
     new_30d: int
     signups_daily: list[tuple[date, int]]
-    """One entry per UTC day for the last 14 days, oldest first, zero days included."""
+    """One entry per day (in the service's zone) for the last 14 days, oldest first, zero
+    days included."""
     active_sessions: int
     logins_24h: tuple[int, int]
     """(successful, failed)."""
@@ -224,6 +226,7 @@ class AuthService:
         passwords: Passwords | None = None,
         clock: Callable[[], datetime] = _utcnow,
         erase_learning_data: Callable[[int], None] | None = None,
+        timezone: tzinfo | None = None,
     ) -> None:
         self.store = store
         self.config = config or AuthConfig()
@@ -231,6 +234,8 @@ class AuthService:
         self.passwords = passwords or Passwords(self.config.pepper)
         self.clock = clock
         self.erase_learning_data = erase_learning_data
+        self.timezone: tzinfo = timezone or default_timezone()
+        """Zone in which a day begins for per-day figures (``RC_TIMEZONE``)."""
 
     def _audit(self, ctx: Context, action: str, actor: int | None, **kwargs: Any) -> None:
         self.store.audit(
@@ -723,13 +728,15 @@ class AuthService:
         """Totals for the admin overview, read in one go from the auth tables."""
         now = self.clock()
         count = self.store.count_users
-        first_day = (now - timedelta(days=SIGNUP_TREND_DAYS - 1)).astimezone(UTC).date()
+        tz = self.timezone
+        first_day = (now - timedelta(days=SIGNUP_TREND_DAYS - 1)).astimezone(tz).date()
         per_day: dict[date, int] = {
             first_day + timedelta(days=offset): 0 for offset in range(SIGNUP_TREND_DAYS)
         }
-        start = datetime(first_day.year, first_day.month, first_day.day, tzinfo=UTC)
-        for created in self.store.signup_times(start):
-            day = created.astimezone(UTC).date()
+        # Local midnight of the first day, as an instant for the query.
+        start = datetime(first_day.year, first_day.month, first_day.day, tzinfo=tz)
+        for created in self.store.signup_times(start.astimezone(UTC)):
+            day = created.astimezone(tz).date()
             if day in per_day:
                 per_day[day] += 1
         return AccountsOverview(

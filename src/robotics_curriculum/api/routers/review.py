@@ -44,7 +44,7 @@ def get_due(
     """Cards due today (earliest due first), optionally limited to one lesson."""
     if lesson_id is not None:
         index.lesson(lesson_id)
-    today = state.clock().astimezone().date()
+    today = state.local_now().date()
     with progress.open() as service:
         cards = review_queue(
             service.store,
@@ -60,7 +60,7 @@ def get_due(
 def rate(card_id: str, body: RateRequest, progress: Progress, state: State) -> ReviewResult:
     """Rate a card (again / hard / good / easy) and get its next review date."""
     now = state.clock()
-    today = now.astimezone().date()
+    today = state.local_now().date()
     with progress.open() as service:
         try:
             saved = rate_card(

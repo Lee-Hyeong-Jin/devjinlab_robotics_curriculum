@@ -62,7 +62,8 @@ def get_status(
     with progress.open() as service:
         summaries = service.status(course_id)
         running = service.current_session()
-        stats = dashboard_stats(service, now=state.clock())
+        # In the service's zone: the week and the streak turn over at local midnight.
+        stats = dashboard_stats(service, now=state.local_now())
     return Status(
         open_session=StudySession.of(running) if running else None,
         lessons=[LessonState.of(s, lang) for s in summaries],

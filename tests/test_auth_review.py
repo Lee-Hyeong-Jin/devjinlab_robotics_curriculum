@@ -93,7 +93,7 @@ def test_serve_refuses_local_mode_on_public_address(monkeypatch: pytest.MonkeyPa
     """SRV-01: local mode (no login) binds only to loopback unless explicitly allowed."""
     calls: list[str] = []
     monkeypatch.setattr(uvicorn, "run", lambda app, **kw: calls.append(kw["host"]))
-    monkeypatch.setattr("robotics_curriculum.api.log.configure_logging", lambda level: None)
+    monkeypatch.setattr("robotics_curriculum.api.log.configure_logging", lambda *args: None)
     monkeypatch.delenv("RC_API_ALLOW_REMOTE_LOCAL", raising=False)
     monkeypatch.setenv("RC_AUTH_MODE", "local")
     runner = CliRunner()

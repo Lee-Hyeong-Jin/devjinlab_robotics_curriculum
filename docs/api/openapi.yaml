@@ -1095,7 +1095,7 @@ paths:
       description: |-
         Weekly report (``rc report weekly``): time, completions, stuck points, next lessons.
 
-        Weeks run Monday to Sunday in the server's local timezone.
+        Weeks run Monday to Sunday in the service's time zone (``RC_TIMEZONE``).
       operationId: weekly_api_v1_reports_weekly_get
       parameters:
       - name: week
@@ -2776,9 +2776,9 @@ paths:
           - type: string
             format: date-time
           - type: 'null'
-          description: Inclusive, with a UTC offset.
+          description: Inclusive; an ISO time with its offset (e.g. +09:00).
           title: Since
-        description: Inclusive, with a UTC offset.
+        description: Inclusive; an ISO time with its offset (e.g. +09:00).
       - name: until
         in: query
         required: false
@@ -2787,9 +2787,9 @@ paths:
           - type: string
             format: date-time
           - type: 'null'
-          description: Exclusive, with a UTC offset.
+          description: Exclusive; an ISO time with its offset (e.g. +09:00).
           title: Until
-        description: Exclusive, with a UTC offset.
+        description: Exclusive; an ISO time with its offset (e.g. +09:00).
       responses:
         '200':
           description: Successful Response
@@ -2835,7 +2835,8 @@ paths:
       description: |-
         The audit log as CSV with the same filters, newest first, at most 10,000 rows.
 
-        The ``X-Truncated`` header is ``true`` when more rows matched than were exported.
+        Times are written in the service's time zone with their offset. The ``X-Truncated``
+        header is ``true`` when more rows matched than were exported.
       operationId: export_audit_api_v1_admin_audit_export_get
       parameters:
       - name: actor_user_id
@@ -2883,9 +2884,9 @@ paths:
           - type: string
             format: date-time
           - type: 'null'
-          description: Inclusive, with a UTC offset.
+          description: Inclusive; an ISO time with its offset (e.g. +09:00).
           title: Since
-        description: Inclusive, with a UTC offset.
+        description: Inclusive; an ISO time with its offset (e.g. +09:00).
       - name: until
         in: query
         required: false
@@ -2894,9 +2895,9 @@ paths:
           - type: string
             format: date-time
           - type: 'null'
-          description: Exclusive, with a UTC offset.
+          description: Exclusive; an ISO time with its offset (e.g. +09:00).
           title: Until
-        description: Exclusive, with a UTC offset.
+        description: Exclusive; an ISO time with its offset (e.g. +09:00).
       responses:
         '200':
           description: The matching rows as CSV.
@@ -3116,7 +3117,8 @@ paths:
       description: |-
         Page views and unique visitors per day, the most viewed pages and where visits came from.
 
-        Days are UTC. A visitor is counted once per day by a pseudonym that changes daily, so the
+        Days are in the service's time zone (``RC_TIMEZONE``, Korea Standard Time by default). A
+        visitor is counted once per day by a pseudonym that changes daily, so the
         daily figures are exact and their sum is *visitor-days*, not unique people over the range.
         Signed-in accounts active in the last 7 and 30 days come from the audit log instead.
       operationId: visits_api_v1_admin_monitoring_visits_get
@@ -4205,7 +4207,7 @@ components:
           type: string
           format: date
           title: Day
-          description: UTC calendar day.
+          description: Calendar day in the service's time zone (RC_TIMEZONE).
         count:
           type: integer
           title: Count
@@ -5384,7 +5386,7 @@ components:
             $ref: '#/components/schemas/DayCount'
           type: array
           title: Signups Daily
-          description: Last 14 UTC days, oldest first.
+          description: Last 14 days in the service's time zone, oldest first.
       additionalProperties: false
       type: object
       required:
@@ -7092,7 +7094,7 @@ components:
             $ref: '#/components/schemas/VisitDay'
           type: array
           title: Series
-          description: One entry per UTC day, zero days included.
+          description: One entry per day in the service's time zone, zero days included.
         top_pages:
           items:
             $ref: '#/components/schemas/PageCount'

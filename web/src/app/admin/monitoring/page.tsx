@@ -21,6 +21,7 @@ import type {
   SystemStatus,
 } from '@/lib/api/types'
 import { cx } from '@/lib/cx'
+import { serviceTimeZone, timeZoneLabel } from '@/lib/timezone'
 import {
   formatBytes,
   formatDateTime,
@@ -162,6 +163,8 @@ export default async function MonitoringPage({ searchParams }: Props) {
   const visitRange = oneOf(param(params.v), VISIT_RANGES) ?? '30d'
   const errorCursor = param(params.cursor)
   const query = { t: trafficRange, v: visitRange }
+  const timeZone = serviceTimeZone()
+  const zone = timeZoneLabel(timeZone, locale)
 
   const [system, traffic, errors, visits, kpi] = await Promise.all([
     apiGetOrNull('/api/v1/admin/monitoring/system'),
@@ -205,6 +208,7 @@ export default async function MonitoringPage({ searchParams }: Props) {
       month: 'short',
       day: 'numeric',
       ...(traffic.bucket_seconds < 86400 ? { hour: 'numeric' } : {}),
+      timeZone,
     }).format(new Date(iso))
 
   const routeColumns = (kind: 'busiest' | 'slowest' | 'failing'): Column<RouteStats>[] => [
@@ -326,7 +330,7 @@ export default async function MonitoringPage({ searchParams }: Props) {
     <>
       <PageHeader
         title={t('title')}
-        subtitle={t('subtitle', { time: formatDateTime(system.generated_at, locale) })}
+        subtitle={t('subtitle', { time: formatDateTime(system.generated_at, locale), zone })}
         actions={<AutoRefresh refreshLabel={t('refresh')} autoLabel={t('autoRefresh')} />}
       />
 
@@ -826,7 +830,7 @@ export default async function MonitoringPage({ searchParams }: Props) {
             anchor="visits"
           />
         </div>
-        <p className="text-muted mb-3 max-w-3xl text-sm">{t('visitsHint')}</p>
+        <p className="text-muted mb-3 max-w-3xl text-sm">{t('visitsHint', { zone })}</p>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatTile
             label={t('views')}

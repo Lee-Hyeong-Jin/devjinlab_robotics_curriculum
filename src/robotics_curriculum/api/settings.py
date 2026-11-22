@@ -25,9 +25,11 @@ import os
 from collections.abc import Mapping
 from dataclasses import dataclass, field, replace
 from pathlib import Path
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from robotics_curriculum.api.clientip import Network, TrustedProxyError, parse_trusted_proxies
 from robotics_curriculum.progress import default_curriculum_dir, default_data_dir
+from robotics_curriculum.timezone import DEFAULT_TIMEZONE
 
 LOG_LEVELS = ("critical", "error", "warning", "info", "debug")
 AUTH_MODES = ("local", "server")
@@ -60,6 +62,11 @@ class Settings:
     cookie_secure: bool = True
     metrics: bool = True
     metrics_token: str | None = None
+    timezone: ZoneInfo = field(default_factory=lambda: ZoneInfo(DEFAULT_TIMEZONE))
+    """The service's time zone (``RC_TIMEZONE``, default ``Asia/Seoul``): where a day begins for
+    visits, sign-up trends, streaks and weekly reports, and the zone log lines and exports are
+    written in. Stored times stay absolute instants; this only decides how they are cut into
+    days and shown."""
     ops_metrics: bool = True
     """Record request statistics, failed requests and visits for the admin monitoring page
     (``RC_OPS_METRICS=0`` turns it off; server mode only, ADR 0017)."""
@@ -98,6 +105,7 @@ class Settings:
             metrics_token=(env.get("RC_API_METRICS_TOKEN") or "").strip() or None,
             public_content=env.get("RC_PUBLIC_CONTENT", "0") == "1",
             ops_metrics=env.get("RC_OPS_METRICS", "1") != "0",
+            timezone=parse_timezone(env.get("RC_TIMEZONE")),
             trusted_proxies=_parse_proxies(env.get("RC_API_TRUSTED_PROXIES")),
         )
         return base.with_overrides(
@@ -132,6 +140,21 @@ class Settings:
             port=port or self.port,
             log_level=log_level or self.log_level,
         )
+
+
+def parse_timezone(value: str | None) -> ZoneInfo:
+    """An IANA zone name (``Asia/Seoul``) as a zone; blank means the default.
+
+    Raises:
+        SettingsError: The name is not a zone this system knows.
+    """
+    name = (value or "").strip() or DEFAULT_TIMEZONE
+    try:
+        return ZoneInfo(name)
+    except (ZoneInfoNotFoundError, ValueError):
+        raise SettingsError(
+            f"invalid RC_TIMEZONE '{name}' (use an IANA name such as Asia/Seoul or UTC)"
+        ) from None
 
 
 def _parse_proxies(value: str | None) -> tuple[Network, ...]:

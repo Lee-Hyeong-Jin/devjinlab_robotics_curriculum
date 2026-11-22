@@ -75,7 +75,7 @@ def serve(
     except ImportError:
         raise _fail(INSTALL_HINT) from None
     settings = _settings(ctx, host=host, port=port, log_level=log_level)
-    configure_logging(settings.log_level)
+    configure_logging(settings.log_level, settings.timezone)
     try:
         # create_app refuses an unauthenticated or unreliable configuration (SRV-11, SRV-15).
         app = create_app(settings)

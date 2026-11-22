@@ -224,3 +224,38 @@ def test_compose_tells_the_api_which_proxies_to_trust() -> None:
     assert client_address("172.18.0.4", "198.51.100.7", trusted) == "198.51.100.7"
     # A public address is never a trusted proxy by default.
     assert client_address("198.51.100.9", "203.0.113.1", trusted) == "198.51.100.9"
+
+
+def test_compose_runs_every_service_in_the_service_time_zone() -> None:
+    """Korea Standard Time everywhere, from one variable (RUNBOOK §8 "시간대").
+
+    A container without ``TZ`` runs in UTC, so its clock, its log lines and anything that asks
+    the system which day it is are nine hours behind the operator. Each service takes the zone
+    from ``RC_TIMEZONE`` with the same default; the api and the web also receive the variable
+    itself, because they cut days and format times with it rather than with the process zone.
+    """
+    default = "${RC_TIMEZONE:-Asia/Seoul}"
+    compose = yaml.safe_load((ROOT / "docker-compose.yml").read_text("utf-8"))
+    for name, service in compose["services"].items():
+        env = service.get("environment", {})
+        assert env.get("TZ") == default, f"{name} has no TZ: {sorted(env)}"
+    for name in ("api", "web", "cli"):
+        assert _compose_service(name)["environment"].get("RC_TIMEZONE") == default, name
+    db = _compose_service("db")
+    assert db["environment"].get("PGTZ") == default
+    # An existing data directory keeps the zone it was initialised with unless told at start.
+    assert f"timezone={default}" in db["command"] and f"log_timezone={default}" in db["command"]
+    # The images default to the same zone when run without compose.
+    dockerfile = (ROOT / "Dockerfile").read_text("utf-8")
+    assert dockerfile.count("TZ=Asia/Seoul") == 3
+
+
+def test_ops_scripts_stamp_time_in_the_service_zone() -> None:
+    """Backup names and deploy log lines are local time with an offset, never bare UTC."""
+    for script in ("backup.sh", "deploy_pull.sh", "restore_drill.sh"):
+        text = (ROOT / "scripts" / "ops" / script).read_text("utf-8")
+        assert "date -u" not in text, script
+        assert 'TZ="${RC_TIMEZONE:-Asia/Seoul}" date' in text, script
+        assert "%z" in text, script
+    backup = _compose_service("backup")["command"][0]
+    assert "date -u" not in backup and "%z" in backup
