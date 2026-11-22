@@ -64,6 +64,7 @@ from robotics_curriculum.ops.traffic import (
     hour_bucket,
     level,
 )
+from robotics_curriculum.timezone import day_start
 
 router = APIRouter(
     prefix="/api/v1/admin/monitoring",
@@ -304,10 +305,12 @@ def traffic(
     ops.flush()
     now = state.clock()
     back, step = _RANGES[range]
-    # Whole buckets, ending with the one in progress.
+    # Whole buckets, ending with the one in progress. Daily buckets are days in the service's
+    # zone: "yesterday" on the chart is yesterday for the person reading it.
     end = hour_bucket(now) + timedelta(hours=1)
     if step >= timedelta(days=1):
-        end = end.replace(hour=0) + timedelta(days=1) if end.hour else end
+        tomorrow = state.local_now().date() + timedelta(days=1)
+        end = day_start(tomorrow, state.settings.timezone).astimezone(UTC)
     start = end - back
     rows = ops.store.request_stats(start, end)
 
@@ -459,12 +462,13 @@ def visits(
 ) -> Visits:
     """Page views and unique visitors per day, the most viewed pages and where visits came from.
 
-    Days are UTC. A visitor is counted once per day by a pseudonym that changes daily, so the
+    Days are in the service's time zone (``RC_TIMEZONE``, Korea Standard Time by default). A
+    visitor is counted once per day by a pseudonym that changes daily, so the
     daily figures are exact and their sum is *visitor-days*, not unique people over the range.
     Signed-in accounts active in the last 7 and 30 days come from the audit log instead.
     """
     now = state.clock()
-    today = now.astimezone(UTC).date()
+    today = state.local_now().date()
     days = _VISIT_DAYS[range]
     since = today - timedelta(days=days - 1)
     by_day = {entry.day: entry for entry in ops.store.daily_visits(since, today)}
@@ -541,7 +545,7 @@ def kpis(principal: AdminPrincipal, auth: Auth, ctx: Ctx, state: State, ops: Ops
       because a visitor is only recognisable within one day (ADR 0017).
     """
     now = state.clock()
-    today = now.astimezone(UTC).date()
+    today = state.local_now().date()
     daily, weekly, monthly = (auth.active_users(1), auth.active_users(7), auth.active_users(30))
 
     accounts = auth.accounts_overview()

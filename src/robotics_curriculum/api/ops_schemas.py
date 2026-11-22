@@ -231,7 +231,9 @@ class Visits(Schema):
     range: VisitRange
     since: date
     totals: VisitTotals
-    series: list[VisitDay] = Field(description="One entry per UTC day, zero days included.")
+    series: list[VisitDay] = Field(
+        description="One entry per day in the service's time zone, zero days included."
+    )
     top_pages: list[PageCount]
     referrers: list[ReferrerCount]
     by_locale: dict[str, int]

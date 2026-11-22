@@ -1665,7 +1665,7 @@
           "reports"
         ],
         "summary": "Weekly",
-        "description": "Weekly report (``rc report weekly``): time, completions, stuck points, next lessons.\n\nWeeks run Monday to Sunday in the server's local timezone.",
+        "description": "Weekly report (``rc report weekly``): time, completions, stuck points, next lessons.\n\nWeeks run Monday to Sunday in the service's time zone (``RC_TIMEZONE``).",
         "operationId": "weekly_api_v1_reports_weekly_get",
         "parameters": [
           {
@@ -4375,10 +4375,10 @@
                   "type": "null"
                 }
               ],
-              "description": "Inclusive, with a UTC offset.",
+              "description": "Inclusive; an ISO time with its offset (e.g. +09:00).",
               "title": "Since"
             },
-            "description": "Inclusive, with a UTC offset."
+            "description": "Inclusive; an ISO time with its offset (e.g. +09:00)."
           },
           {
             "name": "until",
@@ -4394,10 +4394,10 @@
                   "type": "null"
                 }
               ],
-              "description": "Exclusive, with a UTC offset.",
+              "description": "Exclusive; an ISO time with its offset (e.g. +09:00).",
               "title": "Until"
             },
-            "description": "Exclusive, with a UTC offset."
+            "description": "Exclusive; an ISO time with its offset (e.g. +09:00)."
           }
         ],
         "responses": {
@@ -4470,7 +4470,7 @@
           "admin"
         ],
         "summary": "Export Audit",
-        "description": "The audit log as CSV with the same filters, newest first, at most 10,000 rows.\n\nThe ``X-Truncated`` header is ``true`` when more rows matched than were exported.",
+        "description": "The audit log as CSV with the same filters, newest first, at most 10,000 rows.\n\nTimes are written in the service's time zone with their offset. The ``X-Truncated``\nheader is ``true`` when more rows matched than were exported.",
         "operationId": "export_audit_api_v1_admin_audit_export_get",
         "parameters": [
           {
@@ -4556,10 +4556,10 @@
                   "type": "null"
                 }
               ],
-              "description": "Inclusive, with a UTC offset.",
+              "description": "Inclusive; an ISO time with its offset (e.g. +09:00).",
               "title": "Since"
             },
-            "description": "Inclusive, with a UTC offset."
+            "description": "Inclusive; an ISO time with its offset (e.g. +09:00)."
           },
           {
             "name": "until",
@@ -4575,10 +4575,10 @@
                   "type": "null"
                 }
               ],
-              "description": "Exclusive, with a UTC offset.",
+              "description": "Exclusive; an ISO time with its offset (e.g. +09:00).",
               "title": "Until"
             },
-            "description": "Exclusive, with a UTC offset."
+            "description": "Exclusive; an ISO time with its offset (e.g. +09:00)."
           }
         ],
         "responses": {
@@ -4915,7 +4915,7 @@
           "admin"
         ],
         "summary": "Visits",
-        "description": "Page views and unique visitors per day, the most viewed pages and where visits came from.\n\nDays are UTC. A visitor is counted once per day by a pseudonym that changes daily, so the\ndaily figures are exact and their sum is *visitor-days*, not unique people over the range.\nSigned-in accounts active in the last 7 and 30 days come from the audit log instead.",
+        "description": "Page views and unique visitors per day, the most viewed pages and where visits came from.\n\nDays are in the service's time zone (``RC_TIMEZONE``, Korea Standard Time by default). A\nvisitor is counted once per day by a pseudonym that changes daily, so the\ndaily figures are exact and their sum is *visitor-days*, not unique people over the range.\nSigned-in accounts active in the last 7 and 30 days come from the audit log instead.",
         "operationId": "visits_api_v1_admin_monitoring_visits_get",
         "parameters": [
           {
@@ -6383,7 +6383,7 @@
             "type": "string",
             "format": "date",
             "title": "Day",
-            "description": "UTC calendar day."
+            "description": "Calendar day in the service's time zone (RC_TIMEZONE)."
           },
           "count": {
             "type": "integer",
@@ -8054,7 +8054,7 @@
             },
             "type": "array",
             "title": "Signups Daily",
-            "description": "Last 14 UTC days, oldest first."
+            "description": "Last 14 days in the service's time zone, oldest first."
           }
         },
         "additionalProperties": false,
@@ -10500,7 +10500,7 @@
             },
             "type": "array",
             "title": "Series",
-            "description": "One entry per UTC day, zero days included."
+            "description": "One entry per day in the service's time zone, zero days included."
           },
           "top_pages": {
             "items": {

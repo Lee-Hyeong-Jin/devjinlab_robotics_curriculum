@@ -499,7 +499,7 @@ export interface paths {
          * Weekly
          * @description Weekly report (``rc report weekly``): time, completions, stuck points, next lessons.
          *
-         *     Weeks run Monday to Sunday in the server's local timezone.
+         *     Weeks run Monday to Sunday in the service's time zone (``RC_TIMEZONE``).
          */
         get: operations["weekly_api_v1_reports_weekly_get"];
         put?: never;
@@ -1118,7 +1118,8 @@ export interface paths {
          * Export Audit
          * @description The audit log as CSV with the same filters, newest first, at most 10,000 rows.
          *
-         *     The ``X-Truncated`` header is ``true`` when more rows matched than were exported.
+         *     Times are written in the service's time zone with their offset. The ``X-Truncated``
+         *     header is ``true`` when more rows matched than were exported.
          */
         get: operations["export_audit_api_v1_admin_audit_export_get"];
         put?: never;
@@ -1210,7 +1211,8 @@ export interface paths {
          * Visits
          * @description Page views and unique visitors per day, the most viewed pages and where visits came from.
          *
-         *     Days are UTC. A visitor is counted once per day by a pseudonym that changes daily, so the
+         *     Days are in the service's time zone (``RC_TIMEZONE``, Korea Standard Time by default). A
+         *     visitor is counted once per day by a pseudonym that changes daily, so the
          *     daily figures are exact and their sum is *visitor-days*, not unique people over the range.
          *     Signed-in accounts active in the last 7 and 30 days come from the audit log instead.
          */
@@ -1831,7 +1833,7 @@ export interface components {
             /**
              * Day
              * Format: date
-             * @description UTC calendar day.
+             * @description Calendar day in the service's time zone (RC_TIMEZONE).
              */
             day: string;
             /** Count */
@@ -2518,7 +2520,7 @@ export interface components {
             new_30d: number;
             /**
              * Signups Daily
-             * @description Last 14 UTC days, oldest first.
+             * @description Last 14 days in the service's time zone, oldest first.
              */
             signups_daily: components["schemas"]["DayCount"][];
         };
@@ -3530,7 +3532,7 @@ export interface components {
             totals: components["schemas"]["VisitTotals"];
             /**
              * Series
-             * @description One entry per UTC day, zero days included.
+             * @description One entry per day in the service's time zone, zero days included.
              */
             series: components["schemas"]["VisitDay"][];
             /** Top Pages */
@@ -7058,9 +7060,9 @@ export interface operations {
                 action?: string | null;
                 target_type?: string | null;
                 target_id?: string | null;
-                /** @description Inclusive, with a UTC offset. */
+                /** @description Inclusive; an ISO time with its offset (e.g. +09:00). */
                 since?: string | null;
-                /** @description Exclusive, with a UTC offset. */
+                /** @description Exclusive; an ISO time with its offset (e.g. +09:00). */
                 until?: string | null;
             };
             header?: never;
@@ -7133,9 +7135,9 @@ export interface operations {
                 action?: string | null;
                 target_type?: string | null;
                 target_id?: string | null;
-                /** @description Inclusive, with a UTC offset. */
+                /** @description Inclusive; an ISO time with its offset (e.g. +09:00). */
                 since?: string | null;
-                /** @description Exclusive, with a UTC offset. */
+                /** @description Exclusive; an ISO time with its offset (e.g. +09:00). */
                 until?: string | null;
             };
             header?: never;

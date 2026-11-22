@@ -599,7 +599,7 @@ def test_rc_api_serve_runs_uvicorn(monkeypatch: pytest.MonkeyPatch, tmp_path: Pa
 
     calls: list[dict[str, Any]] = []
     monkeypatch.setattr(uvicorn, "run", lambda app, **kw: calls.append({"app": app, **kw}))
-    monkeypatch.setattr("robotics_curriculum.api.log.configure_logging", lambda level: None)
+    monkeypatch.setattr("robotics_curriculum.api.log.configure_logging", lambda *args: None)
     monkeypatch.setenv("RC_API_ALLOW_REMOTE_LOCAL", "1")  # local mode on 0.0.0.0 needs opt-in
     result = CliRunner().invoke(
         cli_app,

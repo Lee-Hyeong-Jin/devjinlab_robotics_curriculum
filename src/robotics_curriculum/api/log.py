@@ -11,7 +11,7 @@ import json
 import logging
 import sys
 from contextvars import ContextVar
-from datetime import UTC, datetime
+from datetime import UTC, datetime, tzinfo
 
 LOGGER_NAME = "robotics_curriculum.api"
 
@@ -27,11 +27,22 @@ _STANDARD_ATTRS = frozenset(
 
 
 class JsonFormatter(logging.Formatter):
-    """One JSON object per line: ts, level, logger, message, request_id, extra fields."""
+    """One JSON object per line: ts, level, logger, message, request_id, extra fields.
+
+    ``ts`` is written in the service's time zone with its offset
+    (``2026-11-22T19:11:34.120+09:00``): an operator reading the log reads local time, and the
+    offset keeps every line an unambiguous instant for a tool that parses it.
+    """
+
+    def __init__(self, tz: tzinfo = UTC) -> None:
+        super().__init__()
+        self.tz = tz
 
     def format(self, record: logging.LogRecord) -> str:
         payload: dict[str, object] = {
-            "ts": datetime.fromtimestamp(record.created, UTC).isoformat(timespec="milliseconds"),
+            "ts": datetime.fromtimestamp(record.created, self.tz).isoformat(
+                timespec="milliseconds"
+            ),
             "level": record.levelname.lower(),
             "logger": record.name,
             "message": record.getMessage(),
@@ -47,10 +58,15 @@ class JsonFormatter(logging.Formatter):
         return json.dumps(payload, ensure_ascii=False, default=str)
 
 
-def configure_logging(level: str = "info") -> None:
-    """Send the root logger (and uvicorn's loggers) to one JSON handler on stderr."""
+def configure_logging(level: str = "info", tz: tzinfo = UTC) -> None:
+    """Send the root logger (and uvicorn's loggers) to one JSON handler on stderr.
+
+    Args:
+        level: Log level name.
+        tz: Zone the ``ts`` field is written in (``Settings.timezone``).
+    """
     handler = logging.StreamHandler(sys.stderr)
-    handler.setFormatter(JsonFormatter())
+    handler.setFormatter(JsonFormatter(tz))
     root = logging.getLogger()
     root.handlers[:] = [handler]
     root.setLevel(level.upper())

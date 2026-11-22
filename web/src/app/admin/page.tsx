@@ -10,6 +10,7 @@ import { StatTile } from '@/components/StatTile'
 import { apiGetOrNull } from '@/lib/api/client'
 import type { AdminOverview, AuditEntry } from '@/lib/api/types'
 import { formatDateTime, formatMinutes, formatPercent } from '@/lib/format'
+import { serviceTimeZone, timeZoneLabel } from '@/lib/timezone'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('admin')
@@ -239,7 +240,7 @@ export default async function AdminOverviewPage() {
       <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card as="section" aria-labelledby="signups-heading">
           <h2 id="signups-heading" className="text-primary mb-1 font-semibold">
-            {t('secSignups')}
+            {t('secSignups', { zone: timeZoneLabel(serviceTimeZone(), locale) })}
           </h2>
           <p className="text-muted mb-3 text-sm">{t('signupsTotal', { count: signupTotal })}</p>
           {/* A bar per day. The list is the accessible form of the same data: each item reads

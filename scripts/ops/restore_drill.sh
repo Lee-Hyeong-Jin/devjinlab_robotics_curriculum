@@ -20,7 +20,7 @@ cd "$root"
 
 base="http://127.0.0.1:8000"
 log="docs/ops/restore-drills.md"
-started="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+started="$(TZ="${RC_TIMEZONE:-Asia/Seoul}" date +%Y-%m-%dT%H:%M:%S%z)"
 db_user="${POSTGRES_USER:-rc}"
 db_name="${POSTGRES_DB:-rc}"
 
@@ -110,7 +110,7 @@ after="$(marker_count)"
 [ "$after" = "$before" ] || fail "done lessons: $before before, $after after the restore"
 echo "  OK   done lessons after restore: $after"
 
-finished="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+finished="$(TZ="${RC_TIMEZONE:-Asia/Seoul}" date +%Y-%m-%dT%H:%M:%S%z)"
 mkdir -p "$(dirname "$log")"
 if [ ! -f "$log" ]; then
   cat >"$log" <<'HEADER'

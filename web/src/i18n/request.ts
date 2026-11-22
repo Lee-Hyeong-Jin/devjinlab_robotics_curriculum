@@ -2,6 +2,7 @@ import { cookies, headers } from 'next/headers'
 import { getRequestConfig } from 'next-intl/server'
 
 import { CURRENT_PATH_HEADER } from '@/lib/api/client'
+import { serviceTimeZone } from '@/lib/timezone'
 
 import { LOCALE_COOKIE, LOCALE_PARAM, resolveLocale } from './locales'
 
@@ -27,6 +28,7 @@ export default getRequestConfig(async () => {
   return {
     locale,
     messages: (await import(`../../messages/${locale}.json`)).default,
-    timeZone: 'Asia/Seoul',
+    // The same zone as every date the app formats itself (`lib/timezone.ts`).
+    timeZone: serviceTimeZone(),
   }
 })

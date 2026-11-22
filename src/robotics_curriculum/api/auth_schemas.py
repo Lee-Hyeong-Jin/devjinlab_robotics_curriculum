@@ -245,7 +245,7 @@ class AuthProvider(Schema):
 
 
 class DayCount(Schema):
-    day: date = Field(description="UTC calendar day.")
+    day: date = Field(description="Calendar day in the service's time zone (RC_TIMEZONE).")
     count: int
 
 
@@ -262,7 +262,9 @@ class OverviewUsers(Schema):
     stale_unverified: int = Field(description="Of those, the ones older than seven days.")
     new_7d: int
     new_30d: int
-    signups_daily: list[DayCount] = Field(description="Last 14 UTC days, oldest first.")
+    signups_daily: list[DayCount] = Field(
+        description="Last 14 days in the service's time zone, oldest first."
+    )
 
 
 class OverviewSecurity(Schema):

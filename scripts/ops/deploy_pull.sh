@@ -35,7 +35,8 @@ REQUIRE_CI="${DEPLOY_REQUIRE_CI:-1}"
 WORKFLOW="${DEPLOY_CI_WORKFLOW:-CI}"
 HEALTH_URLS="${DEPLOY_HEALTH_URLS:-http://127.0.0.1:8000/readyz http://127.0.0.1:3000/login}"
 
-log() { printf '%s deploy: %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*"; }
+# Log lines carry local time in the service's zone (KST by default) with its offset.
+log() { printf '%s deploy: %s\n' "$(TZ="${RC_TIMEZONE:-Asia/Seoul}" date +%Y-%m-%dT%H:%M:%S%z)" "$*"; }
 
 cd "$DEPLOY_DIR"
 

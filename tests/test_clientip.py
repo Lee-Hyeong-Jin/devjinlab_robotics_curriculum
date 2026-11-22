@@ -175,7 +175,7 @@ def test_the_server_leaves_forwarded_headers_to_the_app(monkeypatch: pytest.Monk
 
     seen: list[dict[str, object]] = []
     monkeypatch.setattr(uvicorn, "run", lambda app, **kw: seen.append(kw))
-    monkeypatch.setattr("robotics_curriculum.api.log.configure_logging", lambda level: None)
+    monkeypatch.setattr("robotics_curriculum.api.log.configure_logging", lambda *args: None)
     monkeypatch.setenv("RC_AUTH_MODE", "local")
     result = CliRunner().invoke(cli_app, ["--curriculum", str(CURRICULUM), "api", "serve"])
     assert result.exit_code == 0, result.output

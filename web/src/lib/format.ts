@@ -1,7 +1,9 @@
 /**
- * Locale-aware formatters. Dates and times use the user's timezone when the
- * profile supplies one (frontend.md §6); until P2-2 the caller passes it in.
+ * Locale-aware formatters. Dates and times are shown in the service's time zone
+ * (`lib/timezone.ts`: KST by default) unless the caller passes another.
  */
+
+import { serviceTimeZone } from './timezone'
 
 export const DEFAULT_LOCALE = 'ko'
 
@@ -33,11 +35,15 @@ export function formatSeconds(seconds: number | null | undefined, locale = DEFAU
   return formatMinutes(Math.round((seconds ?? 0) / 60), locale)
 }
 
-/** An ISO timestamp as a short local date-time, or `""` when absent/invalid. */
+/**
+ * An ISO timestamp as a short date-time in the service's time zone (KST unless `RC_TIMEZONE`
+ * says otherwise), or `""` when absent/invalid. Never the process's own zone: a container
+ * left on UTC must not move every time on screen by nine hours.
+ */
 export function formatDateTime(
   iso: string | null | undefined,
   locale = DEFAULT_LOCALE,
-  timeZone?: string,
+  timeZone: string = serviceTimeZone(),
 ): string {
   if (!iso) return ''
   const date = new Date(iso)
@@ -45,23 +51,20 @@ export function formatDateTime(
   return new Intl.DateTimeFormat(locale, {
     dateStyle: 'medium',
     timeStyle: 'short',
-    ...(timeZone ? { timeZone } : {}),
+    timeZone,
   }).format(date)
 }
 
-/** An ISO timestamp as a short local date, or `""` when absent/invalid. */
+/** An ISO timestamp as a short date in the service's time zone, or `""` when absent/invalid. */
 export function formatDate(
   iso: string | null | undefined,
   locale = DEFAULT_LOCALE,
-  timeZone?: string,
+  timeZone: string = serviceTimeZone(),
 ): string {
   if (!iso) return ''
   const date = new Date(iso)
   if (Number.isNaN(date.getTime())) return ''
-  return new Intl.DateTimeFormat(locale, {
-    dateStyle: 'medium',
-    ...(timeZone ? { timeZone } : {}),
-  }).format(date)
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeZone }).format(date)
 }
 
 /** A hostname for display next to an external resource link. */

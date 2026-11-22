@@ -33,7 +33,8 @@ COPY --chown=rc:rc LICENSE NOTICE ./
 ENV PATH="/app/.venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    RC_DATA_DIR=/data
+    RC_DATA_DIR=/data \
+    TZ=Asia/Seoul
 
 RUN mkdir -p /data && chown rc:rc /data
 VOLUME ["/data"]
@@ -68,7 +69,8 @@ ENV PATH="/app/.venv/bin:$PATH" \
     RC_CURRICULUM_DIR=/app/curriculum \
     RC_AUTH_MODE=server \
     RC_API_HOST=0.0.0.0 \
-    RC_API_PORT=8000
+    RC_API_PORT=8000 \
+    TZ=Asia/Seoul
 
 RUN mkdir -p /data && chown rc:rc /data
 VOLUME ["/data"]
@@ -112,7 +114,8 @@ FROM node:22-bookworm-slim AS web
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
     PORT=3000 \
-    HOSTNAME=0.0.0.0
+    HOSTNAME=0.0.0.0 \
+    TZ=Asia/Seoul
 
 WORKDIR /app
 

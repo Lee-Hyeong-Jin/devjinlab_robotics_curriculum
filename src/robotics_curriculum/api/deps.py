@@ -114,6 +114,15 @@ class AppState:
     """Secret the daily visitor-hash salt is derived from."""
     started_at: datetime | None = None
 
+    def local_now(self) -> datetime:
+        """The current time in the service's zone (``RC_TIMEZONE``).
+
+        ``clock()`` is an instant and is what gets stored. Anything that asks "which day is
+        it" — today's visits, this week's report, a streak — has to ask in the zone the
+        service is read in, or the day turns over at nine in the morning in Korea.
+        """
+        return self.clock().astimezone(self.settings.timezone)
+
 
 def get_state(request: Request) -> AppState:
     state = request.app.state.rc

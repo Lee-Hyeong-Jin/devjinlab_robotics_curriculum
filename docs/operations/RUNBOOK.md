@@ -87,7 +87,7 @@ docker compose run --rm cli validate   # 콘텐츠 검증 같은 일회성 작�
 목표는 RPO 24시간, RTO 4시간이다(PRD 7절).
 
 ```bash
-bash scripts/ops/backup.sh                       # backups/rc-<UTC>.dump
+bash scripts/ops/backup.sh                       # backups/rc-<KST 시각+0900>.dump
 BACKUP_DIR=/srv/backups RETENTION_DAYS=30 bash scripts/ops/backup.sh
 docker compose --profile ops run --rm backup     # 저장소 없이 cron 에서 돌릴 때
 ```
@@ -109,7 +109,7 @@ cron 예시(매일 02:00, 호스트):
 ## 5. 복구
 
 ```bash
-bash scripts/ops/restore.sh backups/rc-20261111T020000Z.dump
+bash scripts/ops/restore.sh backups/rc-20261111T020000+0900.dump
 ```
 
 덤프에 있는 객체를 모두 지우고 다시 만든다(`pg_restore --clean --if-exists --exit-on-error`).
@@ -188,11 +188,47 @@ curl -fsS localhost:8000/version                     # 4. 확인
 | `RC_API_LOG_LEVEL` | `info` | 로그 수준 |
 | `RC_API_METRICS` | `1` | `0` 이면 `/metrics` 404 |
 | `RC_API_METRICS_TOKEN` | 비어 있음 | 설정하면 `/metrics` 가 해당 베어러 토큰을 요구(미설정 시 무인증) |
+| `RC_TIMEZONE` | `Asia/Seoul` | 서비스 시간대(IANA 이름). 아래 "시간대" 참고. compose 가 모든 컨테이너의 `TZ` 에도 같은 값을 넣는다 |
 | `RC_OPS_METRICS` | `1` | 요청 집계·실패 기록·방문 집계를 저장한다(`/admin/monitoring`, ADR 0017). `0` 이면 끄고 화면은 404 |
 | `RC_API_TRUSTED_PROXIES` | `127.0.0.1,::1` (compose: 사설 대역 포함) | `X-Forwarded-For` 로 브라우저 주소를 알려 줄 수 있는 프록시(웹 컨테이너, 리버스 프록시)의 주소·CIDR 목록. 아래 "클라이언트 주소" 참고 |
 
 비밀은 환경 변수 또는 Docker secret 으로 주입하고 저장소에 커밋하지 않는다. `.env` 는 읽지도
 커밋하지도 않는다(`.env.example` 만 둔다).
+
+### 시간대 (`RC_TIMEZONE`)
+
+서비스 전체가 **한국 표준시(KST, `Asia/Seoul`)** 로 돈다. 값 하나(`RC_TIMEZONE`)가 정하는 것:
+
+| 대상 | KST 로 바뀐 것 |
+|---|---|
+| 컨테이너(api·web·db·migrate·backup·cli) | `TZ` — 컨테이너 시계, `date`, 프로세스의 현지 시각 |
+| PostgreSQL | `timezone`·`log_timezone` — 서버 로그와 `psql` 에서 보이는 시각 |
+| API | 하루의 경계: 방문 집계의 날짜, 가입 추이, 주간 리포트의 주, 학습 연속일, 복습 "오늘", 30일 차트의 일 구분 |
+| API 로그 | `ts` 필드가 `2026-11-22T19:11:34.120+09:00` 형식 |
+| 감사 로그 CSV | `at` 열이 `+09:00` 시각 |
+| 웹 화면 | 모든 날짜·시각 표시, 감사 로그 날짜 필터(고른 날의 KST 자정부터) |
+| 운영 스크립트 | 백업 파일 이름(`rc-20261122T020000+0900.dump`), 배포·복구 리허설 로그 시각 |
+
+바뀌지 않는 것: **DB 에 저장된 시각**(절대 시각이라 시간대가 없다), API 응답의 시각(ISO 8601, 오프셋 포함),
+요청 집계의 시간 버킷(절대 시각 — KST 는 정시 단위 오프셋이라 화면의 시간 구분과 일치한다).
+
+확인:
+
+```bash
+docker compose exec api date                      # … KST …
+docker compose exec db psql -U rc -d rc -tAc "show timezone"   # Asia/Seoul
+docker compose logs --tail 1 api                  # "ts":"…+09:00"
+```
+
+알아 둘 점:
+
+- 다른 시간대로 운영하려면 `.env` 에 `RC_TIMEZONE=<IANA 이름>` (예: `UTC`, `America/New_York`). 약어(`KST`)나
+  오프셋(`+09:00`)은 받지 않는다 — API 가 시작을 거부한다.
+- 이 변경 전에 쌓인 방문 집계(`ops_page_views` 등)는 UTC 날짜로 저장돼 있다. 집계라서 다시 나눌 수
+  없으므로, 전환 전후 하루 이틀은 날짜 경계에서 최대 9시간 어긋난다.
+- 기존 백업 파일(`…Z.dump`)은 그대로 복구할 수 있다. 보존 기간 정리는 파일 이름이 아니라 수정 시각으로 한다.
+- 호스트의 cron(배포, 백업)은 호스트 시간대로 돈다. 이 서버의 호스트는 이미 `Asia/Seoul` 이다
+  (`timedatectl`).
 
 ### 클라이언트 주소 (`RC_API_TRUSTED_PROXIES`)
 
@@ -357,6 +393,7 @@ API·`/metrics`·DB 는 이 플래그와 무관하게 계속 비공개다. 브�
   `docker compose logs api | grep <요청 ID>`. 전체 스택은 로그에 있고 화면에는 예외 종류와 메시지만 있다.
 - **성공률은 5xx 만 실패로 센다.** 4xx(틀린 비밀번호, 없는 페이지)는 옆에 따로 나온다. 공개 배포에서는
   익명 독자의 진행도 조회가 401 이라 4xx 가 늘 많다 — 정상이다.
+- **날짜는 서비스 시간대(KST) 기준이다.** 하루는 KST 자정에 바뀐다.
 - **순 방문자는 날짜별로만 정확하다.** 식별값이 매일 바뀌므로 "기간 순 방문자"가 아니라 일별 합이다.
   로그인 계정의 DAU·WAU·MAU 는 세션 사용 기록에서 따로 센다.
 - **시스템 값은 컨테이너에서 읽는다.** 부하·메모리·온도는 호스트 값이고 디스크는 데이터 볼륨이다.

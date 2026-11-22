@@ -1,5 +1,7 @@
 /** Query-string helpers for the admin lists, whose filters live in the URL. */
 
+import { serviceTimeZone, zonedDayStart } from './timezone'
+
 /** The first value of a search parameter, trimmed; `undefined` when absent or empty. */
 export function param(value: string | string[] | undefined): string | undefined {
   const first = Array.isArray(value) ? value[0] : value
@@ -25,17 +27,27 @@ export function positiveInt(value: string | undefined): number | undefined {
 const DAY = /^\d{4}-\d{2}-\d{2}$/
 
 /**
- * A `YYYY-MM-DD` day from a date input as the UTC instant the API filters on.
+ * A `YYYY-MM-DD` day from a date input as the instant the API filters on: midnight at the start
+ * of that day in the service's time zone (KST by default), not in UTC. Somebody who picks
+ * "22 Nov" means the 22nd where they are.
  *
  * `endOfDay` returns the start of the *next* day, because the API's `until` is exclusive and a
  * reader who picks "to 22 Nov" expects that day to be included.
  */
-export function dayToInstant(value: string | undefined, endOfDay = false): string | undefined {
+export function dayToInstant(
+  value: string | undefined,
+  endOfDay = false,
+  timeZone: string = serviceTimeZone(),
+): string | undefined {
   if (!value || !DAY.test(value)) return undefined
-  const date = new Date(`${value}T00:00:00Z`)
-  if (Number.isNaN(date.getTime())) return undefined
-  if (endOfDay) date.setUTCDate(date.getUTCDate() + 1)
-  return date.toISOString()
+  let day = value
+  if (endOfDay) {
+    const next = new Date(`${value}T00:00:00Z`)
+    if (Number.isNaN(next.getTime())) return undefined
+    next.setUTCDate(next.getUTCDate() + 1)
+    day = next.toISOString().slice(0, 10)
+  }
+  return zonedDayStart(day, timeZone)?.toISOString()
 }
 
 /** `path?a=1&b=2` from the defined entries of `query`, in the order given. */
