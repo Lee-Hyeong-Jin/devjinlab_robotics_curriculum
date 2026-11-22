@@ -40,6 +40,13 @@ export function RowAction({ action, hidden, label, pendingLabel, confirm }: RowA
           {state.error}
         </p>
       ) : null}
+      {/* An action whose effect is not visible in the row (a mail was sent, tokens were
+          revoked) has to say that it happened. */}
+      {state.message && !state.error ? (
+        <p role="status" className="text-success text-xs">
+          {state.message}
+        </p>
+      ) : null}
     </form>
   )
 }

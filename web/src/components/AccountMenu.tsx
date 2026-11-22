@@ -38,7 +38,9 @@ export async function AccountMenu({ user }: { user: User | null }) {
       ) : null}
       <Link
         href="/profile"
-        aria-label={t('profile')}
+        // The accessible name has to contain the visible text (WCAG 2.5.3), so the address is
+        // part of it rather than replaced by the word "profile".
+        aria-label={`${t('profile')}: ${user.display_name || user.email}`}
         className="text-primary max-w-[12rem] truncate rounded-lg px-3 py-3 text-sm font-medium"
       >
         {user.display_name || user.email}

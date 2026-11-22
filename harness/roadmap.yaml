@@ -230,3 +230,17 @@ milestones:
         - AC-A11Y.2 키보드만으로 로그인 → 레슨 완료 표시까지 가능하고 포커스 표시·건너뛰기 링크·폼 레이블·명도 대비 4.5:1 이 다크 모드에서도 WCAG 2.1 AA 를 충족한다
         - AC-A11Y.3 로드맵 그래프·진행률 등 시각 정보에 텍스트 대안(표 또는 목록)이 있다
       note: i18n ko/en (CLI, API, site, web), lesson translation files + 14 en lessons, site a11y tests, web axe e2e. Follow-ups: translate M5-M10, translated quizzes
+
+    - id: P3-1
+      title: 관리자 콘솔 운영 기능 (개요·사용자 검색/상세·감사 로그 필터/내보내기)
+      status: done
+      depends_on: [P2-2, P2-4]
+      goal: 관리자 화면을 사용자 목록·감사 로그 조회에서 운영자가 실제로 쓰는 콘솔로 올린다 — 한눈에 보는 개요, 사용자 검색·필터·상세·조치, 감사 로그 필터와 CSV 내보내기(docs/specs/P3-1.md).
+      acceptance:
+        - AC-ADM.1 `GET /admin/overview` 가 사용자(전체·역할·상태·미인증·최근 가입), 로그인(성공·실패), 활성 세션, 학습 활동, 시스템 상태를 한 번에 주고 관리자만 호출할 수 있다
+        - AC-ADM.2 `GET /admin/users` 가 검색어·역할·상태·이메일 인증 여부로 걸러지고 전체 건수를 준다. 커서 페이지가 필터와 함께 동작한다
+        - AC-ADM.3 `GET /admin/users/{id}/overview` 가 세션·토큰·외부 로그인·학습 요약·최근 감사 기록을 주고, 관리자가 토큰 일괄 폐기와 비밀번호 재설정 메일 발송을 할 수 있다. 모든 조치가 감사 로그에 남는다
+        - AC-ADM.4 `GET /admin/audit` 가 행위·행위자·대상·기간으로 걸러지고 같은 필터로 CSV 를 내려받을 수 있다. CSV 는 수식 주입을 막는다
+        - AC-ADM.5 웹 `/admin`(개요), `/admin/users`(검색·필터), `/admin/users/{id}`(상세·조치), `/admin/audit`(필터·내보내기)가 ko/en 으로 동작하고 휴대폰 폭에서 가로로 넘치지 않으며 axe 심각 위반이 없다
+        - AC-ADM.6 새 엔드포인트가 역할 매트릭스(익명 401, learner·author 403, admin 2xx)와 OpenAPI 스냅샷·`schema.d.ts` 에 반영된다
+      note: admin console: overview, user search/detail/actions, audit filters + CSV; browser address behind the web tier

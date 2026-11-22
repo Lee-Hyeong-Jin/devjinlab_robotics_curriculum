@@ -10,7 +10,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from typing import Any
 
 from robotics_curriculum.auth.crypto import (
@@ -82,6 +82,47 @@ class Throttled(AuthError):
 
 class Unavailable(AuthError):
     status = 503
+
+
+# -- operator views (P3-1) ----------------------------------------------------------------
+
+
+@dataclass(frozen=True, slots=True)
+class AccountsOverview:
+    """Account, sign-in and session totals for the admin overview."""
+
+    total: int
+    by_role: dict[Role, int]
+    by_status: dict[UserStatus, int]
+    unverified: int
+    stale_unverified: int
+    """Active accounts older than a week whose address was never verified."""
+    new_7d: int
+    new_30d: int
+    signups_daily: list[tuple[date, int]]
+    """One entry per UTC day for the last 14 days, oldest first, zero days included."""
+    active_sessions: int
+    logins_24h: tuple[int, int]
+    """(successful, failed)."""
+    logins_7d: tuple[int, int]
+    mail_enabled: bool
+    audit_retention_days: int
+
+
+@dataclass(frozen=True, slots=True)
+class UserDetail:
+    """Everything an operator needs to answer "what is going on with this account"."""
+
+    user: User
+    sessions: list[AuthSession]
+    tokens: list[ApiToken]
+    identities: list[Identity]
+    failed_logins_24h: int
+    recent_audit: list[AuditEntry]
+
+
+SIGNUP_TREND_DAYS = 14
+STALE_UNVERIFIED_AFTER = timedelta(days=7)
 
 
 # -- config / context ---------------------------------------------------------------------
@@ -653,8 +694,81 @@ class AuthService:
     def _is_last_admin(self, user_id: int) -> bool:
         return self.store.count_users(role=Role.ADMIN, status=UserStatus.ACTIVE) <= 1
 
-    def list_users(self, limit: int, after_id: int = 0) -> list[User]:
-        return self.store.list_users(limit, after_id)
+    def list_users(
+        self,
+        limit: int,
+        after_id: int = 0,
+        *,
+        q: str | None = None,
+        role: Role | None = None,
+        status: UserStatus | None = None,
+        verified: bool | None = None,
+    ) -> list[User]:
+        return self.store.list_users(
+            limit, after_id, q=q, role=role, status=status, verified=verified
+        )
+
+    def count_users(
+        self,
+        *,
+        q: str | None = None,
+        role: Role | None = None,
+        status: UserStatus | None = None,
+        verified: bool | None = None,
+    ) -> int:
+        """How many users the same filters match in total (not just one page)."""
+        return self.store.count_users(q=q, role=role, status=status, verified=verified)
+
+    def accounts_overview(self) -> AccountsOverview:
+        """Totals for the admin overview, read in one go from the auth tables."""
+        now = self.clock()
+        count = self.store.count_users
+        first_day = (now - timedelta(days=SIGNUP_TREND_DAYS - 1)).astimezone(UTC).date()
+        per_day: dict[date, int] = {
+            first_day + timedelta(days=offset): 0 for offset in range(SIGNUP_TREND_DAYS)
+        }
+        start = datetime(first_day.year, first_day.month, first_day.day, tzinfo=UTC)
+        for created in self.store.signup_times(start):
+            day = created.astimezone(UTC).date()
+            if day in per_day:
+                per_day[day] += 1
+        return AccountsOverview(
+            total=count(),
+            by_role={role: count(role=role) for role in Role},
+            by_status={status: count(status=status) for status in UserStatus},
+            unverified=count(verified=False, status=UserStatus.ACTIVE),
+            stale_unverified=count(
+                verified=False,
+                status=UserStatus.ACTIVE,
+                created_before=now - STALE_UNVERIFIED_AFTER,
+            ),
+            new_7d=count(created_since=now - timedelta(days=7)),
+            new_30d=count(created_since=now - timedelta(days=30)),
+            signups_daily=sorted(per_day.items()),
+            active_sessions=self.store.count_active_sessions(now),
+            logins_24h=self.store.login_counts(now - timedelta(hours=24)),
+            logins_7d=self.store.login_counts(now - timedelta(days=7)),
+            mail_enabled=self.mail_enabled,
+            audit_retention_days=self.config.audit_retention.days,
+        )
+
+    def user_detail(self, user_id: int, *, audit_limit: int = 20) -> UserDetail:
+        """One account with its sessions, tokens, external logins and recent audit trail."""
+        user = self.get_user(user_id)
+        now = self.clock()
+        failed, _ = self.store.failed_logins(user.email, None, now - timedelta(hours=24))
+        return UserDetail(
+            user=user,
+            sessions=self.store.list_sessions(user.id, now),
+            tokens=self.store.list_tokens(user.id),
+            identities=self.store.list_identities(user.id),
+            failed_logins_24h=failed,
+            recent_audit=self.store.list_audit(audit_limit, involving_user_id=user.id),
+        )
+
+    def user_emails(self, user_ids: set[int]) -> dict[int, str]:
+        """Email addresses for audit display; ids of deleted accounts are simply absent."""
+        return self.store.user_emails(user_ids)
 
     def get_user(self, user_id: int) -> User:
         user = self.store.get_user(user_id)
@@ -724,10 +838,69 @@ class AuthService:
         )
         return count
 
+    def admin_revoke_tokens(self, actor: User, user_id: int, ctx: Context) -> int:
+        """Revoke every personal access token of a user (a leaked token, an offboarding)."""
+        self.get_user(user_id)
+        count = self.store.revoke_user_tokens(user_id, self.clock())
+        self._audit(
+            ctx,
+            "auth.tokens.revoked_by_admin",
+            actor.id,
+            target_type="user",
+            target_id=str(user_id),
+            detail={"count": count},
+        )
+        return count
+
+    def admin_send_password_reset(self, actor: User, user_id: int, ctx: Context) -> None:
+        """Mail the user a password-reset link on an operator's request.
+
+        The operator never sees the link or sets the password: the only thing this does that
+        the user could not do from the sign-in page is skip typing their address.
+
+        Raises:
+            Unavailable: Mail is not configured, so no link could be delivered.
+            Conflict: The account is not active.
+            NotFound: No such user.
+        """
+        if self.mailer is None:
+            raise Unavailable("password reset is disabled: mail is not configured on this server")
+        target = self.get_user(user_id)
+        if not target.is_active:
+            raise Conflict("a password reset can only be sent to an active account")
+        # Only the newest reset link is valid (SRV-04).
+        self.store.expire_one_time(target.id, TokenKind.RESET_PASSWORD, self.clock())
+        self._send_token(target, TokenKind.RESET_PASSWORD, self.config.reset_ttl, ctx)
+        self._audit(
+            ctx,
+            "auth.password.reset_sent_by_admin",
+            actor.id,
+            target_type="user",
+            target_id=str(target.id),
+        )
+
     def list_audit(
-        self, limit: int, before_id: int | None = None, actor_user_id: int | None = None
+        self,
+        limit: int,
+        before_id: int | None = None,
+        actor_user_id: int | None = None,
+        *,
+        action_prefix: str | None = None,
+        target_type: str | None = None,
+        target_id: str | None = None,
+        since: datetime | None = None,
+        until: datetime | None = None,
     ) -> list[AuditEntry]:
-        return self.store.list_audit(limit, before_id, actor_user_id)
+        return self.store.list_audit(
+            limit,
+            before_id,
+            actor_user_id,
+            action_prefix=action_prefix,
+            target_type=target_type,
+            target_id=target_id,
+            since=since,
+            until=until,
+        )
 
     def purge_audit(self) -> int:
         """Anonymize audit entries older than the retention period (AC-AUTH.6)."""

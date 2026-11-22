@@ -2,6 +2,7 @@ import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
 import { apiBaseUrl, apiTimeoutMs } from '@/lib/api/config'
+import { browserIdentity } from '@/lib/api/forward'
 
 /**
  * Streams `GET /api/v1/me/export` back to the browser as a download.
@@ -13,7 +14,7 @@ import { apiBaseUrl, apiTimeoutMs } from '@/lib/api/config'
 export async function GET(request: Request): Promise<Response> {
   const jar = await cookies()
   const all = jar.getAll()
-  const headers = new Headers({ Accept: 'application/json' })
+  const headers = new Headers({ Accept: 'application/json', ...(await browserIdentity()) })
   if (all.length > 0) {
     headers.set('Cookie', all.map((cookie) => `${cookie.name}=${cookie.value}`).join('; '))
   }

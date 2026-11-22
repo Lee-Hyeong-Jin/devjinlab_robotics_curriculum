@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { getTranslations } from 'next-intl/server'
 
-import { apiDelete, apiPatch } from '../api/client'
+import { apiDelete, apiPatch, apiPost } from '../api/client'
 import type { Role, UserStatus } from '../api/types'
 import { toActionState } from './problem'
 import type { ActionState } from './result'
@@ -41,6 +41,7 @@ export async function updateUser(_previous: ActionState, form: FormData): Promis
     return toActionState(error, t('updateFailed'))
   }
   revalidatePath(USERS_PATH)
+  revalidatePath(userPath(id))
   return { message: t('updated') }
 }
 
@@ -57,5 +58,52 @@ export async function revokeUserSessions(
     return toActionState(error, t('revokeFailed'))
   }
   revalidatePath(USERS_PATH)
+  revalidatePath(userPath(id))
   return { message: t('revoked') }
+}
+
+/** Path of one user's admin page; revalidated after an action so its lists are fresh. */
+function userPath(id: string): string {
+  return `${USERS_PATH}/${encodeURIComponent(id)}`
+}
+
+/** `DELETE /admin/users/{id}/tokens` — revoke every personal access token of a user. */
+export async function revokeUserTokens(
+  _previous: ActionState,
+  form: FormData,
+): Promise<ActionState> {
+  const t = await getTranslations('admin')
+  const id = text(form, 'userId')
+  let revoked = 0
+  try {
+    const result = await apiDelete<{ revoked: number }>(
+      `/api/v1/admin/users/${encodeURIComponent(id)}/tokens`,
+    )
+    revoked = result?.revoked ?? 0
+  } catch (error) {
+    return toActionState(error, t('revokeTokensFailed'))
+  }
+  revalidatePath(userPath(id))
+  return { message: t('tokensRevoked', { count: revoked }) }
+}
+
+/**
+ * `POST /admin/users/{id}/password-reset` — mail the user a reset link.
+ *
+ * The link goes to the user's inbox only. The API answers 503 when the server has no mail
+ * configuration and 409 for an account that is not active; both arrive here as the form error.
+ */
+export async function sendPasswordReset(
+  _previous: ActionState,
+  form: FormData,
+): Promise<ActionState> {
+  const t = await getTranslations('admin')
+  const id = text(form, 'userId')
+  try {
+    await apiPost(`/api/v1/admin/users/${encodeURIComponent(id)}/password-reset`)
+  } catch (error) {
+    return toActionState(error, t('sendResetFailed'))
+  }
+  revalidatePath(userPath(id))
+  return { message: t('resetSent') }
 }
