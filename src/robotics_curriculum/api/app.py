@@ -11,10 +11,12 @@ import logging
 import os
 import secrets
 import sys
-from collections.abc import Callable, Mapping
+from collections.abc import AsyncIterator, Callable, Mapping
+from contextlib import asynccontextmanager
 from datetime import UTC, datetime
 from typing import Any
 
+import anyio
 import httpx
 from fastapi import FastAPI, Request
 
@@ -36,16 +38,21 @@ from robotics_curriculum.api.routers import (
     content,
     health,
     me,
+    monitoring,
     progress,
     quiz,
     reports,
     review,
 )
+from robotics_curriculum.api.routers import telemetry as telemetry_router
 from robotics_curriculum.api.settings import ALLOW_REMOTE_LOCAL_ENV, Settings, is_loopback
+from robotics_curriculum.api.telemetry import OpsMiddleware
 from robotics_curriculum.auth.mailer import Mailer, SmtpConfig, SmtpMailer
 from robotics_curriculum.auth.oidc import OidcClient, OidcProvider, parse_providers
 from robotics_curriculum.auth.service import AuthConfig, AuthError, AuthService
 from robotics_curriculum.auth.store import SqlAuthStore
+from robotics_curriculum.ops.recorder import Recorder
+from robotics_curriculum.ops.store import OpsStore
 from robotics_curriculum.progress import ProgressError, ProgressService
 
 logger = logging.getLogger(LOGGER_NAME)
@@ -107,6 +114,7 @@ def build_auth(
     *,
     config: AuthConfig | None = None,
     mailer: Mailer | None = _FROM_ENV,
+    on_erase: Callable[[int], None] | None = None,
 ) -> AuthService:
     """Server mode: the auth service over ``RC_DATABASE_URL`` (or SQLite ``auth.db``)."""
     url = settings.database_url or f"sqlite:///{settings.data_dir / 'auth.db'}"
@@ -122,6 +130,8 @@ def build_auth(
             store.delete_user(user_id)
         finally:
             store.close()
+        if on_erase is not None:
+            on_erase(user_id)
 
     return AuthService(
         SqlAuthStore.from_url(url),
@@ -170,7 +180,15 @@ def create_app(
     state = AppState(settings=settings, clock=clock)
     load_content(state)
     if settings.server_mode:
-        state.auth = build_auth(settings, clock, config=auth_config, mailer=mailer)
+
+        def forget_in_monitoring(user_id: int) -> None:
+            # Account deletion also detaches the user from the failed-request log.
+            if state.ops is not None:
+                state.ops.store.erase_user(user_id)
+
+        state.auth = build_auth(
+            settings, clock, config=auth_config, mailer=mailer, on_erase=forget_in_monitoring
+        )
         providers = oidc_providers if oidc_providers is not None else parse_providers(os.environ)
         http = oidc_http or httpx.Client(follow_redirects=False)
         state.oidc = {pid: OidcClient(p, http, clock) for pid, p in providers.items()}
@@ -191,16 +209,35 @@ def create_app(
                 "in-flight login cookie and must be identical on every worker and replica"
             )
         state.flow_key = secret.encode() if secret else secrets.token_bytes(32)
+        # Monitoring (ADR 0017) lives in the same database as the accounts. Without a
+        # configured secret the visitor salt is per process: a restart starts the day's
+        # unique-visitor count over, which is the safe failure.
+        state.visit_key = secret.encode() if secret else secrets.token_bytes(32)
+        engine = getattr(state.auth.store, "engine", None)
+        if engine is not None and settings.ops_metrics:
+            state.ops = Recorder(OpsStore(engine), clock)
+    state.started_at = clock()
+
+    @asynccontextmanager
+    async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
+        yield
+        # Write what is still buffered, so a deploy does not lose the last seconds of traffic.
+        if state.ops is not None:
+            await anyio.to_thread.run_sync(state.ops.flush)
 
     app = FastAPI(
         title=API_TITLE,
         version=__version__,
         summary="Curriculum content, learner progress and reports over HTTP.",
         license_info={"name": "Apache-2.0", "identifier": "Apache-2.0"},
+        lifespan=lifespan,
     )
     app.state.rc = state
     metrics = Metrics(pools=lambda: _pools(state))
     app.state.metrics = metrics
+    if state.ops is not None:
+        # Added first, so it is the innermost: an exception passes through it on the way out.
+        app.add_middleware(OpsMiddleware, recorder=state.ops)
     app.add_middleware(MetricsMiddleware, metrics=metrics)
     app.add_middleware(
         SecurityHeadersMiddleware, hsts=settings.server_mode and settings.cookie_secure
@@ -208,7 +245,19 @@ def create_app(
     app.add_middleware(RequestContextMiddleware)
     install_problem_handlers(app)
     app.add_exception_handler(AuthError, _auth_error)
-    for module in (health, content, progress, quiz, review, reports, auth, me, admin):
+    for module in (
+        health,
+        content,
+        progress,
+        quiz,
+        review,
+        reports,
+        auth,
+        me,
+        admin,
+        monitoring,
+        telemetry_router,
+    ):
         app.include_router(module.router)
 
     def openapi() -> dict[str, Any]:

@@ -1,10 +1,14 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  formatBytes,
   formatDate,
   formatDateTime,
+  formatDuration,
   formatMinutes,
+  formatMs,
   formatPercent,
+  formatRatio,
   formatSeconds,
   hostnameOf,
   percentValue,
@@ -71,5 +75,38 @@ describe('hostnameOf', () => {
   it('returns an empty string for a non-URL', () => {
     expect(hostnameOf('book, chapter 3')).toBe('')
     expect(hostnameOf(undefined)).toBe('')
+  })
+})
+
+describe('monitoring formatters', () => {
+  it('writes bytes in binary units', () => {
+    expect(formatBytes(512, 'en')).toBe('512 B')
+    expect(formatBytes(1536, 'en')).toBe('1.5 KB')
+    expect(formatBytes(16428158976, 'en')).toBe('15.3 GB')
+    expect(formatBytes(249792454656, 'en')).toBe('233 GB')
+    expect(formatBytes(null)).toBe('—')
+    expect(formatBytes(-1)).toBe('—')
+  })
+
+  it('writes latencies in milliseconds or seconds', () => {
+    expect(formatMs(0.42, 'en')).toBe('<1 ms')
+    expect(formatMs(37.5, 'en')).toBe('38 ms')
+    expect(formatMs(2400, 'en')).toBe('2.4 s')
+    expect(formatMs(undefined)).toBe('—')
+  })
+
+  it('writes uptimes in the two largest units', () => {
+    expect(formatDuration(93784, 'ko')).toBe('1일 2시간')
+    expect(formatDuration(93784, 'en')).toBe('1d 2h')
+    expect(formatDuration(7500, 'en')).toBe('2h 5m')
+    expect(formatDuration(59, 'ko')).toBe('0분')
+    expect(formatDuration(null)).toBe('—')
+  })
+
+  it('keeps the decimal an availability figure needs', () => {
+    expect(formatRatio(0.9991, 'en')).toBe('99.9%')
+    expect(formatRatio(0.42, 'en')).toBe('42%')
+    expect(formatRatio(1, 'en')).toBe('100%')
+    expect(formatRatio(null)).toBe('—')
   })
 })

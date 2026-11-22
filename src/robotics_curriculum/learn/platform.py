@@ -11,7 +11,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
-from robotics_curriculum.progress import LessonProgress, LessonStatus, Session
+from robotics_curriculum.progress import LessonProgress, LessonStatus, QuizRun, Review, Session
 
 
 @dataclass(frozen=True, slots=True)
@@ -130,3 +130,64 @@ def learner_summary(
         study_seconds=seconds,
         last_activity_at=latest,
     )
+
+
+@dataclass(frozen=True, slots=True)
+class LearningKpis:
+    """Learning outcomes over a window, for the operator's KPI view."""
+
+    window_days: int
+    active_learners: int
+    lessons_completed: int
+    study_seconds: int
+    quiz_runs: int
+    quiz_mean_score: float | None
+    """Mean share of correct answers across quiz runs (0–1); ``None`` with no runs."""
+    reviews: int
+
+
+def learning_kpis(
+    lessons: Iterable[LessonProgress],
+    sessions: Iterable[Session],
+    quiz_runs: Iterable[QuizRun],
+    reviews: Iterable[Review],
+    now: datetime,
+    *,
+    window_days: int,
+) -> LearningKpis:
+    """What learners did in the last ``window_days`` days, across all users.
+
+    Args:
+        lessons: Lesson progress rows of all users.
+        sessions: Study sessions of all users.
+        quiz_runs: Finished quiz runs of all users.
+        reviews: Review answers of all users.
+        now: The reference time (timezone-aware).
+        window_days: Length of the window.
+
+    Returns:
+        Counts for the window. The quiz score is the mean of each run's own share correct, so
+        a long quiz does not outweigh a short one.
+    """
+    activity = platform_activity(lessons, sessions, now, window_days=window_days)
+    since = now - timedelta(days=window_days)
+    shares = [
+        run.correct / run.total for run in quiz_runs if run.finished_at >= since and run.total > 0
+    ]
+    return LearningKpis(
+        window_days=window_days,
+        active_learners=activity.active_learners,
+        lessons_completed=activity.lessons_completed,
+        study_seconds=activity.study_seconds,
+        quiz_runs=len(shares),
+        quiz_mean_score=sum(shares) / len(shares) if shares else None,
+        reviews=sum(1 for review in reviews if review.reviewed_at >= since),
+    )
+
+
+def activated(user_ids: Iterable[int], lessons: Iterable[LessonProgress]) -> set[int]:
+    """Of ``user_ids``, those who completed at least one lesson: the product's "aha" moment."""
+    wanted = set(user_ids)
+    return {
+        row.user_id for row in lessons if row.user_id in wanted and row.status is LessonStatus.DONE
+    }

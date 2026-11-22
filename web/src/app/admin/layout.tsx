@@ -15,7 +15,10 @@ import { requireUser } from '@/lib/auth'
  * refuses the request behind it either way.
  */
 export default async function AdminLayout({ children }: { children: ReactNode }) {
-  const t = await getTranslations('admin')
+  const [t, tMonitoring] = await Promise.all([
+    getTranslations('admin'),
+    getTranslations('monitoring'),
+  ])
   await requireUser('/admin')
   const user = await getMe()
 
@@ -27,6 +30,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
         label={t('nav')}
         items={[
           { href: '/admin', label: t('overview'), exact: true },
+          { href: '/admin/monitoring', label: tMonitoring('nav') },
           { href: '/admin/users', label: t('users') },
           { href: '/admin/audit', label: t('audit') },
         ]}

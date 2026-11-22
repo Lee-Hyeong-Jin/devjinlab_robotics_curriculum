@@ -8,6 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Monitoring for operators at `/admin/monitoring` (P3-2, ADR 0017, RUNBOOK §8.4):
+  - **API traffic**: requests, success rate, latency p50/p95/p99, Apdex, an error budget against
+    a 99.9% availability target, and the busiest, slowest and failing routes, over 24 hours,
+    7 days or 30 days. Counts are stored per hour and survive a restart.
+  - **Failed requests**: every 5xx with its time, route, exception and request id, to look up
+    in the server log. Query strings and bodies are never recorded.
+  - **System resources**: CPU load and usage, memory, swap, disk, temperature sensors, open
+    files, uptime, and the database's response time, size and connections.
+  - **Visits**: page views and unique visitors per day, crawler views, the most viewed pages,
+    referring sites and languages — counted by the server, with no browser script, no cookie
+    and no stored IP address or user agent.
+  - **Product KPIs**: DAU / WAU / MAU and stickiness, sign-ups, visit-to-sign-up, activation
+    rate, week-1 retention, learning volume and mean quiz score.
+  - Readings past a threshold are listed at the top and on the admin overview.
+- `RC_OPS_METRICS` (default on) turns the recording off.
 - Web SEO, third pass — content and technical (frontend.md §5.2):
   - Titles and headings carry the words people search with: the home page is "로보틱스 강의 —
     …" / "Learn Robotics — Free Robotics Tutorials and Courses", and a lesson is
@@ -167,6 +182,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `npm audit` reports nothing for the web lockfile and the allowlist is empty.
 
 ### Fixed
+- `rc api serve` no longer lets uvicorn rewrite the caller's address from `X-Forwarded-For`; the
+  app applies `RC_API_TRUSTED_PROXIES` itself. With both active, a web tier on the same host
+  looked like the browser it was speaking for.
 - Web SEO: the English version of a page (`?lang=en`) is now its own canonical URL. It pointed at
   the Korean address, which tells a search engine the English text is a duplicate, so English
   queries could not find the site.

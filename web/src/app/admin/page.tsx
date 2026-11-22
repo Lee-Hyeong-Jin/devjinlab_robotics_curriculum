@@ -26,8 +26,16 @@ interface Attention {
 function attentionItems(
   data: AdminOverview,
   t: Awaited<ReturnType<typeof getTranslations<'admin'>>>,
+  monitoringAlerts: number,
 ): Attention[] {
   const items: Attention[] = []
+  if (monitoringAlerts > 0) {
+    items.push({
+      key: 'monitoring',
+      text: t('attentionMonitoring', { count: monitoringAlerts }),
+      href: '/admin/monitoring',
+    })
+  }
   if (data.system.lesson_count === null) {
     items.push({ key: 'content', text: t('attentionContent') })
   }
@@ -72,10 +80,13 @@ function attentionItems(
 /** Admin overview — `GET /admin/overview` plus the latest admin actions (P3-1). */
 export default async function AdminOverviewPage() {
   const [t, locale] = await Promise.all([getTranslations('admin'), getLocale()])
-  const [data, recent] = await Promise.all([
+  const [data, recent, machine, traffic] = await Promise.all([
     apiGetOrNull('/api/v1/admin/overview'),
     // What operators did lately: changes to users, not every page view.
     apiGetOrNull('/api/v1/admin/audit', { query: { action: 'user.', limit: 8 } }),
+    // Only their alerts are used here; the readings themselves are on the monitoring page.
+    apiGetOrNull('/api/v1/admin/monitoring/system'),
+    apiGetOrNull('/api/v1/admin/monitoring/traffic', { query: { range: '24h' } }),
   ])
 
   if (!data) {
@@ -90,7 +101,11 @@ export default async function AdminOverviewPage() {
   const { users, security, learning, system } = data
   const attempts = security.logins_24h.succeeded + security.logins_24h.failed
   const failRate = attempts > 0 ? security.logins_24h.failed / attempts : 0
-  const attention = attentionItems(data, t)
+  const attention = attentionItems(
+    data,
+    t,
+    (machine?.alerts.length ?? 0) + (traffic?.alerts.length ?? 0),
+  )
   const peak = Math.max(1, ...users.signups_daily.map((day) => day.count))
   const signupTotal = users.signups_daily.reduce((sum, day) => sum + day.count, 0)
 

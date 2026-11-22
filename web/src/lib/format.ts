@@ -73,3 +73,55 @@ export function hostnameOf(url: string | null | undefined): string {
     return ''
   }
 }
+
+/** A byte count in binary units: `1536` → `"1.5 KB"`, `16428158976` → `"15.3 GB"`. */
+export function formatBytes(bytes: number | null | undefined, locale = DEFAULT_LOCALE): string {
+  if (bytes === null || bytes === undefined || !Number.isFinite(bytes) || bytes < 0) return '—'
+  const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
+  let value = bytes
+  let unit = 0
+  while (value >= 1024 && unit < units.length - 1) {
+    value /= 1024
+    unit += 1
+  }
+  const digits = unit === 0 || value >= 100 ? 0 : 1
+  return `${new Intl.NumberFormat(locale, { maximumFractionDigits: digits }).format(value)} ${units[unit]}`
+}
+
+/** Milliseconds as a latency: `0.42` → `"<1 ms"`, `37.5` → `"38 ms"`, `2400` → `"2.4 s"`. */
+export function formatMs(ms: number | null | undefined, locale = DEFAULT_LOCALE): string {
+  if (ms === null || ms === undefined || !Number.isFinite(ms)) return '—'
+  if (ms < 1) return '<1 ms'
+  if (ms < 1000)
+    return `${new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(ms)} ms`
+  return `${new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(ms / 1000)} s`
+}
+
+/** Seconds as an uptime: `93784` → `"1일 2시간"` (ko) / `"1d 2h"` (en); under an hour in minutes. */
+export function formatDuration(
+  seconds: number | null | undefined,
+  locale = DEFAULT_LOCALE,
+): string {
+  if (seconds === null || seconds === undefined || !Number.isFinite(seconds)) return '—'
+  const total = Math.max(0, Math.floor(seconds))
+  const days = Math.floor(total / 86400)
+  const hours = Math.floor((total % 86400) / 3600)
+  const minutes = Math.floor((total % 3600) / 60)
+  const ko = locale.startsWith('ko')
+  if (days > 0) return ko ? `${days}일 ${hours}시간` : `${days}d ${hours}h`
+  if (hours > 0) return ko ? `${hours}시간 ${minutes}분` : `${hours}h ${minutes}m`
+  return ko ? `${minutes}분` : `${minutes}m`
+}
+
+/** A 0–1 ratio with one decimal where it matters: `0.9991` → `"99.9%"`, `0.42` → `"42%"`. */
+export function formatRatio(
+  ratio: number | null | undefined,
+  locale = DEFAULT_LOCALE,
+  fractionDigits = 1,
+): string {
+  if (ratio === null || ratio === undefined || !Number.isFinite(ratio)) return '—'
+  return new Intl.NumberFormat(locale, {
+    style: 'percent',
+    maximumFractionDigits: fractionDigits,
+  }).format(ratio)
+}

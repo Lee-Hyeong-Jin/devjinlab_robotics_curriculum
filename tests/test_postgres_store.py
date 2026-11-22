@@ -53,7 +53,14 @@ AUTH_TABLES = {
     "login_attempts",
     "audit_log",
 }
-TABLES = PROGRESS_TABLES | AUTH_TABLES
+OPS_TABLES = {
+    "ops_request_stats",
+    "ops_request_errors",
+    "ops_page_views",
+    "ops_visitors",
+    "ops_referrers",
+}
+TABLES = PROGRESS_TABLES | AUTH_TABLES | OPS_TABLES
 
 
 @pytest.fixture
@@ -191,8 +198,8 @@ def test_models_match_migrations(engine: Engine) -> None:
     pg.upgrade(engine)
     with engine.connect() as conn:
         diff = compare_metadata(MigrationContext.configure(conn), pg.metadata)
-    # auth tables belong to robotics_curriculum.auth.schema, not to this metadata
-    assert [entry for entry in diff if not _mentions(entry, AUTH_TABLES)] == []
+    # auth and monitoring tables belong to their own metadata (auth.schema, ops.schema)
+    assert [entry for entry in diff if not _mentions(entry, AUTH_TABLES | OPS_TABLES)] == []
     engine.dispose()
 
 
@@ -317,4 +324,99 @@ def test_auth_migration_matches_auth_schema(engine: Engine) -> None:
         diff = compare_metadata(MigrationContext.configure(conn), auth_metadata)
     # The progress tables show up as "extra" here: auth_metadata does not describe them.
     assert [entry for entry in diff if _mentions(entry, set(auth_metadata.tables))] == []
+    engine.dispose()
+
+
+def test_ops_migration_matches_ops_schema(engine: Engine) -> None:
+    """Alembic 0004 must stay in step with robotics_curriculum.ops.schema (ADR 0017)."""
+    from alembic.autogenerate import compare_metadata
+    from alembic.migration import MigrationContext
+
+    from robotics_curriculum.ops.schema import ops_metadata
+
+    pg.upgrade(engine)
+    with engine.connect() as conn:
+        diff = compare_metadata(MigrationContext.configure(conn), ops_metadata)
+    assert [entry for entry in diff if _mentions(entry, set(ops_metadata.tables))] == []
+    engine.dispose()
+
+
+def test_ops_store_on_postgres(engine: Engine) -> None:
+    """The monitoring upserts and readings on the backend production runs (ADR 0017)."""
+    from datetime import date, timedelta
+
+    from robotics_curriculum.ops.store import OpsStore, StatDelta
+    from robotics_curriculum.ops.traffic import BUCKET_COUNT, hour_bucket, latency_bucket
+
+    pg.upgrade(engine)
+    store = OpsStore(engine)
+    now = datetime(2026, 11, 22, 10, 30, tzinfo=UTC)
+    bucket = hour_bucket(now)
+
+    def delta(count: int, ms: float) -> StatDelta:
+        histogram = [0] * BUCKET_COUNT
+        histogram[latency_bucket(ms)] = count
+        return StatDelta(count, ms * count, ms, histogram)
+
+    key = (bucket, "/api/v1/courses", "GET", 2)
+    store.add_request_stats({key: delta(3, 20)})
+    store.add_request_stats({key: delta(2, 400)})
+    (row,) = store.request_stats(bucket, bucket + timedelta(hours=1))
+    assert (row.count, row.duration_ms_max) == (5, 400)
+    assert row.duration_ms_sum == pytest.approx(860)
+    assert row.histogram[latency_bucket(20)] == 3 and row.histogram[latency_bucket(400)] == 2
+    assert row.bucket == bucket
+
+    day = date(2026, 11, 22)
+    for visitor, signed_in in (("aaaa", False), ("aaaa", True), ("bbbb", False)):
+        store.add_page_view(
+            day=day,
+            path="/",
+            locale="ko",
+            bot=False,
+            signed_in=signed_in,
+            visitor=visitor,
+            referrer="google.com",
+        )
+    store.add_page_view(
+        day=day, path="/", locale="ko", bot=True, signed_in=False, visitor=None, referrer=None
+    )
+    (today,) = store.daily_visits(day, day)
+    assert (today.views, today.bot_views, today.visitors, today.signed_in_visitors) == (3, 1, 2, 1)
+    assert store.top_referrers(day, day, 5) == [("google.com", 3)]
+    assert store.top_pages(day, day, 5) == [("/", 3)]
+
+    store.add_request_error(
+        at=now,
+        method="GET",
+        route="/x",
+        path="/x",
+        status=500,
+        duration_ms=12.5,
+        request_id="r1",
+        user_id=None,
+        error_type="RuntimeError",
+        error_message="boom",
+    )
+    assert store.request_errors(5)[0].error_type == "RuntimeError"
+    assert store.count_request_errors(now - timedelta(hours=1)) == 1
+
+    assert (store.ping_ms() or 0) >= 0
+    assert (store.database_size_bytes() or 0) > 0
+    connections = store.connections()
+    assert connections is not None and 0 < connections[0] <= connections[1]
+    removed = store.purge(
+        stats_before=now + timedelta(days=1),
+        errors_before=now + timedelta(days=1),
+        errors_keep=10,
+        views_before=day + timedelta(days=1),
+        visitors_before=day + timedelta(days=1),
+    )
+    assert removed == {
+        "request_stats": 1,
+        "request_errors": 1,
+        "page_views": 3,  # signed-out, signed-in and automated views of "/"
+        "referrers": 1,
+        "visitors": 2,
+    }
     engine.dispose()

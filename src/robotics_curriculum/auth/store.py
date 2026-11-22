@@ -153,6 +153,8 @@ class AuthStore(Protocol):
     def record_login(self, email: str, ip: str | None, success: bool, now: datetime) -> None: ...
     def failed_logins(self, email: str, ip: str | None, since: datetime) -> tuple[int, int]: ...
     def login_counts(self, since: datetime) -> tuple[int, int]: ...
+    def active_user_ids(self, since: datetime) -> set[int]: ...
+    def user_ids_created(self, since: datetime, until: datetime) -> set[int]: ...
 
     # audit
     def audit(
@@ -763,6 +765,32 @@ class SqlAuthStore:
             ok = conn.execute(base.where(login_attempts.c.success.is_(True))).scalar_one()
             failed = conn.execute(base.where(login_attempts.c.success.is_(False))).scalar_one()
         return int(ok), int(failed)
+
+    def active_user_ids(self, since: datetime) -> set[int]:
+        """Accounts seen since ``since``: a session of theirs was used in that time.
+
+        ``last_seen_at`` moves on every authenticated request, so this counts people who
+        came back, not only people who typed a password (a session lasts two weeks).
+        """
+        with self._tx() as conn:
+            rows = conn.execute(
+                select(func.distinct(sessions_auth.c.user_id)).where(
+                    sessions_auth.c.last_seen_at >= since
+                )
+            ).all()
+        return {int(row[0]) for row in rows}
+
+    def user_ids_created(self, since: datetime, until: datetime) -> set[int]:
+        """Accounts created in ``[since, until)`` that still exist as active accounts."""
+        with self._tx() as conn:
+            rows = conn.execute(
+                select(users.c.id).where(
+                    users.c.created_at >= since,
+                    users.c.created_at < until,
+                    users.c.status == UserStatus.ACTIVE.value,
+                )
+            ).all()
+        return {int(row[0]) for row in rows}
 
     # -- audit ----------------------------------------------------------------------------
 

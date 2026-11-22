@@ -766,6 +766,20 @@ class AuthService:
             recent_audit=self.store.list_audit(audit_limit, involving_user_id=user.id),
         )
 
+    def active_user_ids(self, days: float) -> set[int]:
+        """Accounts that used the service during the last ``days`` days."""
+        return self.store.active_user_ids(self.clock() - timedelta(days=days))
+
+    def active_users(self, days: float) -> int:
+        return len(self.active_user_ids(days))
+
+    def cohort(self, from_days_ago: float, to_days_ago: float) -> set[int]:
+        """Active accounts created between ``from_days_ago`` and ``to_days_ago`` days ago."""
+        now = self.clock()
+        # "Up to now" includes an account created this very instant.
+        until = now - timedelta(days=to_days_ago) if to_days_ago > 0 else now + timedelta(seconds=1)
+        return self.store.user_ids_created(now - timedelta(days=from_days_ago), until)
+
     def user_emails(self, user_ids: set[int]) -> dict[int, str]:
         """Email addresses for audit display; ids of deleted accounts are simply absent."""
         return self.store.user_emails(user_ids)

@@ -512,6 +512,12 @@ MATRIX = [
     ("POST", "/api/v1/admin/users/{learner}/password-reset", 401, 403, 403, 202),
     ("GET", "/api/v1/admin/audit?action=user.", 401, 403, 403, 200),
     ("GET", "/api/v1/admin/audit/export", 401, 403, 403, 200),
+    # Monitoring (P3-2, AC-MON.7).
+    ("GET", "/api/v1/admin/monitoring/system", 401, 403, 403, 200),
+    ("GET", "/api/v1/admin/monitoring/traffic?range=7d", 401, 403, 403, 200),
+    ("GET", "/api/v1/admin/monitoring/errors", 401, 403, 403, 200),
+    ("GET", "/api/v1/admin/monitoring/visits", 401, 403, 403, 200),
+    ("GET", "/api/v1/admin/monitoring/kpi", 401, 403, 403, 200),
 ]
 
 

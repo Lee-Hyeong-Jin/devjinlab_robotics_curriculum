@@ -76,6 +76,9 @@ services:
       # the web container's address. The api port is published on the host's loopback only, so
       # nothing outside this host reaches it directly.
       RC_API_TRUSTED_PROXIES: ${RC_API_TRUSTED_PROXIES:-127.0.0.1,::1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
+      # Request statistics, failed requests and visits for /admin/monitoring (ADR 0017).
+      # 0 turns the recording off.
+      RC_OPS_METRICS: ${RC_OPS_METRICS:-1}
       RC_PUBLIC_CONTENT: ${RC_PUBLIC_CONTENT:-0}
       RC_OIDC_PROVIDERS: ${RC_OIDC_PROVIDERS:-}
       RC_SMTP_HOST: ${RC_SMTP_HOST:-}
