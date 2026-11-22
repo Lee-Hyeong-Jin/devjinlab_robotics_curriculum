@@ -13,7 +13,7 @@ import { JsonLd } from '@/components/JsonLd'
 import { getCourse, getCourses, getRoadmap } from '@/lib/api/queries'
 import { defaultCourseId } from '@/lib/api/config'
 import { selectedCourseId } from '@/lib/courses'
-import { metaDescription } from '@/lib/seo'
+import { composeTitle, metaDescription } from '@/lib/seo'
 import { localizedPageSeo } from '@/lib/seo-server'
 import { breadcrumbs, courseSchema } from '@/lib/structured-data'
 import { formatPercent } from '@/lib/format'
@@ -21,8 +21,9 @@ import type { LockState } from '@/lib/progress'
 import { doneCount } from '@/lib/progress'
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
-  const [t, params, courses] = await Promise.all([
+  const [t, tSeo, params, courses] = await Promise.all([
     getTranslations('roadmap'),
+    getTranslations('seo'),
     searchParams,
     getCourses(),
   ])
@@ -35,7 +36,12 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     path: isDefault ? '/roadmap' : `/roadmap?course=${encodeURIComponent(courseId)}`,
     // Names the course *and* what the page is: the course title alone would not say that
     // this is its roadmap, and the bare word "roadmap" says nothing about which course.
-    title: course ? t('courseTitle', { course: course.title }) : t('title'),
+    title: composeTitle(
+      tSeo('roadmapName', { course: course?.title ?? t('title') }),
+      tSeo('roadmapLabel'),
+      tSeo('brand'),
+    ),
+    absoluteTitle: true,
     description: metaDescription(course?.summary) || t('subtitle'),
     publishable: true,
   })

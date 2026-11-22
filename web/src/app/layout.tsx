@@ -3,6 +3,7 @@ import { headers } from 'next/headers'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages, getTranslations } from 'next-intl/server'
 
+import { SiteFooter } from '@/components/SiteFooter'
 import { SkipLink } from '@/components/SkipLink'
 import { TopNav } from '@/components/TopNav'
 import { siteUrl } from '@/lib/api/config'
@@ -65,6 +66,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <main id="main" className="mx-auto max-w-[var(--content-max)] px-4 py-6 sm:px-6 sm:py-8">
             {children}
           </main>
+          <SiteFooter />
         </NextIntlClientProvider>
       </body>
     </html>

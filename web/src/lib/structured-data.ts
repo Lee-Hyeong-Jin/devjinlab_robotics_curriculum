@@ -14,6 +14,8 @@ export function webSiteSchema(
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name,
+    // What people actually type when they look for a site like this one.
+    alternateName: ['Learn Robotics', '로보틱스 강의'],
     description,
     url: absoluteUrl('/'),
     inLanguage: locale,
@@ -28,6 +30,39 @@ export function organizationSchema(name: string): Record<string, unknown> {
     name,
     url: absoluteUrl('/'),
     logo: absoluteUrl('/icon-512.png'),
+  }
+}
+
+/** schema.org `FAQPage` from `[question, answer]` pairs that are visible on the page. */
+export function faqSchema(items: ReadonlyArray<[string, string]>): Record<string, unknown> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map(([question, answer]) => ({
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: { '@type': 'Answer', text: answer },
+    })),
+  }
+}
+
+/** schema.org `Article` for an editorial page such as the study guide. */
+export function articleSchema(
+  headline: string,
+  description: string,
+  path: string,
+  locale: string,
+): Record<string, unknown> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline,
+    description,
+    url: absoluteUrl(path),
+    inLanguage: locale,
+    author: PROVIDER,
+    publisher: PROVIDER,
+    isAccessibleForFree: true,
   }
 }
 
@@ -82,10 +117,14 @@ export function breadcrumbs(trail: ReadonlyArray<[string, string]>): Record<stri
 /**
  * schema.org `Course` for a track.
  *
- * `hasCourseInstance` is deliberately absent: the course is self-paced with no scheduled
- * run, and inventing a date would be a false claim about the content.
+ * The course is self-paced, so its one `CourseInstance` states the mode and the workload (the sum
+ * of the lessons' estimated minutes) and no dates: inventing a start date would be a false claim.
  */
 export function courseSchema(course: Course, path: string): Record<string, unknown> {
+  const minutes = (course.stages ?? [])
+    .flatMap((stage) => stage.modules ?? [])
+    .reduce((sum, module) => sum + (module.estimated_minutes ?? 0), 0)
+  const workload = isoDuration(minutes)
   return {
     '@context': 'https://schema.org',
     '@type': 'Course',
@@ -94,8 +133,15 @@ export function courseSchema(course: Course, path: string): Record<string, unkno
     url: absoluteUrl(path),
     inLanguage: course.lang,
     provider: PROVIDER,
-    courseMode: 'online',
     isAccessibleForFree: true,
+    // Free, so an offer of zero: the course-info result asks for one either way.
+    offers: { '@type': 'Offer', category: 'Free', price: 0, priceCurrency: 'USD' },
+    // Self-paced and online: there is no start date to state, only how much work it is.
+    hasCourseInstance: {
+      '@type': 'CourseInstance',
+      courseMode: 'Online',
+      ...(workload ? { courseWorkload: workload } : {}),
+    },
     teaches: (course.stages ?? []).flatMap((stage) =>
       (stage.modules ?? []).map((module) => module.title),
     ),

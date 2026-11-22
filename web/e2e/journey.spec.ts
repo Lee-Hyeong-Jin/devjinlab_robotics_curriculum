@@ -61,7 +61,11 @@ test('a learner signs up, studies a lesson, takes its quiz and reviews', async (
   await expect(page.getByRole('heading', { level: 1, name: /대시보드|Dashboard/ })).toBeVisible()
 
   // Roadmap → first module → first lesson.
-  await page.getByRole('link', { name: /로드맵|Roadmap/ }).click()
+  // The link in the main navigation: a published deployment has a second one in the footer.
+  await page
+    .getByRole('navigation', { name: /주요 메뉴|Main navigation/ })
+    .getByRole('link', { name: /로드맵|Roadmap/ })
+    .click()
   await page.waitForURL(/\/roadmap$/)
   await expect(page.getByRole('heading', { level: 1, name: /로드맵|roadmap/i })).toBeVisible()
 

@@ -2,6 +2,7 @@ import { describe, expect, it, afterEach } from 'vitest'
 
 import {
   absoluteUrl,
+  composeTitle,
   languageAlternates,
   metaDescription,
   pageSeo,
@@ -94,6 +95,27 @@ describe('pageSeo', () => {
     })
   })
 
+  it('makes a language-pinned URL its own canonical, with the same alternates', () => {
+    process.env.RC_PUBLIC_URL = 'https://x.test'
+    const en = pageSeo({ path: '/modules/m1', title: 'M1', locale: 'en', pinnedLocale: 'en' })
+    expect(en.alternates?.canonical).toBe('https://x.test/modules/m1?lang=en')
+    expect(en.openGraph).toMatchObject({ url: 'https://x.test/modules/m1?lang=en' })
+    expect(en.alternates?.languages).toMatchObject({
+      ko: 'https://x.test/modules/m1',
+      en: 'https://x.test/modules/m1?lang=en',
+      'x-default': 'https://x.test/modules/m1',
+    })
+    // The default language pinned explicitly is the bare address, not a second URL for it.
+    const ko = pageSeo({ path: '/modules/m1', title: 'M1', pinnedLocale: 'ko' })
+    expect(ko.alternates?.canonical).toBe('https://x.test/modules/m1')
+    // English chosen by the browser at the bare address is still that address.
+    const negotiated = pageSeo({ path: '/modules/m1', title: 'M1', locale: 'en' })
+    expect(negotiated.alternates?.canonical).toBe('https://x.test/modules/m1')
+    // A path that already has a query keeps it.
+    const course = pageSeo({ path: '/roadmap?course=r', title: 'R', pinnedLocale: 'en' })
+    expect(course.alternates?.canonical).toBe('https://x.test/roadmap?course=r&lang=en')
+  })
+
   it('can use the title as the whole <title>, for the home page', () => {
     expect(pageSeo({ path: '/', title: '사이트', absoluteTitle: true }).title).toEqual({
       absolute: '사이트',
@@ -172,5 +194,23 @@ describe('metaDescription', () => {
   it('handles a missing summary', () => {
     expect(metaDescription(null)).toBe('')
     expect(metaDescription(undefined)).toBe('')
+  })
+})
+
+describe('composeTitle', () => {
+  it('uses subject, label and brand when they fit', () => {
+    expect(composeTitle('Forward kinematics', 'Robotics Tutorial', 'Learn Robotics')).toBe(
+      'Forward kinematics — Robotics Tutorial | Learn Robotics',
+    )
+  })
+
+  it('drops the brand, then the label, and never cuts the subject', () => {
+    const medium = 'Camera model, calibration, and image features'
+    expect(composeTitle(medium, 'Robotics Tutorial', 'Learn Robotics')).toBe(
+      `${medium} — Robotics Tutorial`,
+    )
+    const long =
+      'Programming nodes, topics, services, actions, parameters, and launch files in ROS 2'
+    expect(composeTitle(long, 'Robotics Tutorial', 'Learn Robotics')).toBe(long)
   })
 })

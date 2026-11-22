@@ -164,7 +164,9 @@ test('the home page is the front door when the curriculum is published', async (
       return (Array.isArray(parsed) ? parsed : [parsed]).map((item) => item?.['@type'])
     }),
   )
-  expect(types).toEqual(expect.arrayContaining(['WebSite', 'Organization', 'ItemList', 'Course']))
+  expect(types).toEqual(
+    expect.arrayContaining(['WebSite', 'Organization', 'ItemList', 'Course', 'FAQPage']),
+  )
 
   // The landing page is new markup, so it gets the same accessibility bar as the read screens.
   const axe = await new AxeBuilder({ page })
@@ -219,9 +221,83 @@ test('a personal page is never indexable, however the site is configured', async
 test('the english alternate really renders in english', async ({ page }) => {
   await page.goto(`${MODULE}?lang=en`)
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')
-  // The canonical of an alternate points back at the one address for the page.
+  // Each language version is its own canonical. Pointing the English page at the Korean
+  // address would tell a search engine it is a copy, and only the Korean one would be indexed.
   const canonical = await page.locator('link[rel="canonical"]').getAttribute('href')
-  expect(canonical).not.toContain('lang=')
+  expect(canonical).toContain(`${MODULE}?lang=en`)
+  expect(await property(page, 'og:url')).toBe(canonical)
+  const alternates = await page
+    .locator('link[rel="alternate"][hreflang]')
+    .evaluateAll((links) =>
+      links.map((link) => `${link.getAttribute('hreflang')}|${link.getAttribute('href')}`),
+    )
+  expect(alternates.some((entry) => entry.startsWith('ko|') && !entry.includes('lang='))).toBe(true)
+  expect(alternates).toContain(`en|${canonical}`)
   expect(await property(page, 'og:locale')).toBe('en_US')
   expect(await property(page, 'og:locale:alternate')).toBe('ko_KR')
+})
+
+test('the titles carry the words people search with', async ({ page }) => {
+  if (!(await publishing(page))) test.skip(true, 'the curriculum is not published here')
+  const title = async (path: string) => {
+    await page.goto(path)
+    await expect(page.locator('main h1')).toHaveCount(1)
+    return page.title()
+  }
+  expect(await title('/?lang=ko')).toMatch(/로보틱스 강의/)
+  expect(await title('/?lang=en')).toMatch(/Learn Robotics/)
+  expect(await title('/?lang=en')).toMatch(/Robotics Tutorials/)
+  // A lesson with a short name, so the label fits (a long name drops it: `composeTitle`).
+  const short = '/modules/m2-kinematics/m2-forward-kinematics'
+  expect(await title(`${short}?lang=ko`)).toMatch(/로보틱스 강의/)
+  // A lesson title says what kind of page it is (the label is dropped only when the lesson's
+  // own name leaves no room for it).
+  expect(await title(`${short}?lang=en`)).toBe(
+    'Forward kinematics — Robotics Tutorial | Learn Robotics',
+  )
+  expect(await title('/guide?lang=en')).toMatch(/How to Learn Robotics/)
+  // The words are in the visible heading too, not only in the tab title.
+  await page.goto('/?lang=en')
+  await expect(page.locator('main h1')).toContainText(/Learn robotics/i)
+  await page.goto('/?lang=ko')
+  await expect(page.locator('main h1')).toContainText('로보틱스 강의')
+})
+
+test('the study guide is a published page built from the curriculum', async ({ page }) => {
+  const response = await page.goto('/guide?lang=ko')
+  expect(response?.status()).toBe(200)
+  await expect(page.locator('main h1')).toHaveCount(1)
+  if (!(await publishing(page))) {
+    expect((await meta(page, 'robots')) ?? '').toContain('noindex')
+    return
+  }
+  expect((await meta(page, 'robots')) ?? '').not.toContain('noindex')
+  // The learning path links real modules, and the FAQ is on the page as text.
+  await expect(page.locator('main a[href^="/modules/"]').first()).toBeVisible()
+  expect(await page.locator('main dl dt').count()).toBeGreaterThanOrEqual(4)
+  const types = await page.locator('script[type="application/ld+json"]').evaluateAll((scripts) =>
+    scripts.flatMap((script) => {
+      const parsed = JSON.parse(script.textContent ?? 'null')
+      return (Array.isArray(parsed) ? parsed : [parsed]).map((item) => item?.['@type'])
+    }),
+  )
+  expect(types).toEqual(['Article', 'BreadcrumbList', 'FAQPage'])
+  expect(await (await page.request.get('/sitemap.xml')).text()).toContain('/guide</loc>')
+  // Every page links to it from the footer.
+  await page.goto(LESSON)
+  await expect(page.locator('footer a[href="/guide"]')).toBeVisible()
+})
+
+test('missing content answers 404 and the lesson shortcut redirects', async ({ page }) => {
+  // Statuses a crawler reads from the first line of the response, not from the page text.
+  if (!(await publishing(page))) test.skip(true, 'an anonymous request gets no answer here')
+  for (const path of ['/modules/no-such-module', `${MODULE}/no-such-lesson`]) {
+    const response = await page.request.get(path, { maxRedirects: 0 })
+    expect(response.status(), path).toBe(404)
+  }
+  const lessonId = LESSON.split('/').pop() ?? ''
+  const shortcut = await page.request.get(`/lessons/${lessonId}`, { maxRedirects: 0 })
+  expect(shortcut.status()).toBe(308)
+  expect(new URL(shortcut.headers()['location'] ?? '', 'http://x').pathname).toBe(LESSON)
+  expect((await page.request.get(LESSON, { maxRedirects: 0 })).status()).toBe(200)
 })
