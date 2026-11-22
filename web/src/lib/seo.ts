@@ -49,6 +49,15 @@ export interface PageSeoOptions {
   siteName?: string
   /** Use `title` as the whole `<title>`, without the site-name suffix (the home page). */
   absoluteTitle?: boolean
+  /**
+   * The language the URL itself pins with `?lang=`, if any.
+   *
+   * `/x?lang=en` is the English page and has to be its own canonical: pointing it at `/x`
+   * tells a search engine that the English text is a copy of the Korean page, so only the
+   * Korean one is indexed and an English query never finds the site. Each language version
+   * names itself as canonical and the others through `hreflang`.
+   */
+  pinnedLocale?: Locale
 }
 
 /** OpenGraph wants a territory as well as a language (`ko_KR`), unlike `hreflang`. */
@@ -92,14 +101,16 @@ export function pageSeo({
   locale = DEFAULT_LOCALE,
   siteName = DEFAULT_SITE_NAME,
   absoluteTitle = false,
+  pinnedLocale,
 }: PageSeoOptions): Metadata {
   const indexable = publishable && publicContentEnabled()
-  const url = absoluteUrl(path)
+  const alternates = languageAlternates(path)
+  const url = (pinnedLocale && alternates[pinnedLocale]) || absoluteUrl(path)
   const image = absoluteUrl(OG_IMAGE.path)
   return {
     title: absoluteTitle ? { absolute: title } : title,
     ...(description ? { description } : {}),
-    alternates: { canonical: url, languages: languageAlternates(path) },
+    alternates: { canonical: url, languages: alternates },
     robots: indexable
       ? { index: true, follow: true }
       : { index: false, follow: false, nocache: true },
@@ -120,6 +131,29 @@ export function pageSeo({
       ...(description ? { description } : {}),
     },
   }
+}
+
+/** About where a search result cuts a title off. */
+export const TITLE_LIMIT = 65
+
+/**
+ * `<subject> — <label> | <brand>`, shortened to fit a search result.
+ *
+ * The subject is the page's own name and is never cut. The label ("Robotics Tutorial") says what
+ * kind of page it is and the brand names the site; when the three do not fit, the brand goes
+ * first and then the label, because a title that ends in "…" has lost its last words anyway and
+ * the subject is the part a searcher is matching.
+ */
+export function composeTitle(
+  subject: string,
+  label: string,
+  brand: string,
+  limit = TITLE_LIMIT,
+): string {
+  const full = `${subject} — ${label} | ${brand}`
+  if (full.length <= limit) return full
+  const labelled = `${subject} — ${label}`
+  return labelled.length <= limit ? labelled : subject
 }
 
 /** TeX commands that have a plain character a search result can show. */

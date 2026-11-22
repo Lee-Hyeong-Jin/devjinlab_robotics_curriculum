@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Web SEO, third pass — content and technical (frontend.md §5.2):
+  - Titles and headings carry the words people search with: the home page is "로보틱스 강의 —
+    …" / "Learn Robotics — Free Robotics Tutorials and Courses", and a lesson is
+    "<topic> — 로보틱스 강의 | Learn Robotics" / "<topic> — Robotics Tutorial | Learn Robotics"
+    (shortened when the topic is long).
+  - The landing page has real content: an introduction, what the course teaches (module
+    summaries), how it works, and a FAQ with `FAQPage` structured data.
+  - `/guide`, "로보틱스 공부 방법" / "How to learn robotics": prerequisites, the learning path with
+    hours computed from the curriculum, how to work through a lesson, and a FAQ.
+  - A footer on every published page linking the roadmap, the guide and the resource library.
+  - `Course` structured data states that the course is free and its workload.
 - Admin console for operators (P3-1, RUNBOOK §8.3):
   - `/admin` overview: what needs attention, account, session and sign-in totals, learning
     activity for the last seven days, a 14-day sign-up trend and the system settings
@@ -156,6 +167,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `npm audit` reports nothing for the web lockfile and the allowlist is empty.
 
 ### Fixed
+- Web SEO: the English version of a page (`?lang=en`) is now its own canonical URL. It pointed at
+  the Korean address, which tells a search engine the English text is a duplicate, so English
+  queries could not find the site.
+- Web SEO: an unknown module or lesson answers HTTP 404 and `/lessons/{id}` answers 308. Both used
+  to answer 200 (a not-found screen, a client-side redirect).
 - Web SEO: descriptions no longer show TeX source. A summary such as `$\Phi(-r/2)$` reached the
   meta description, the share preview and JSON-LD with its dollar signs and backslashes; it is
   now plain text (`Φ(-r/2)`).

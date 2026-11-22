@@ -10,11 +10,12 @@ import { localizedPageSeo } from '@/lib/seo-server'
 import { breadcrumbs, collectionPageSchema } from '@/lib/structured-data'
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('resources')
+  const [t, resources] = await Promise.all([getTranslations('seo'), getResources()])
   return localizedPageSeo({
     path: '/resources',
-    title: t('title'),
-    description: t('subtitle'),
+    title: t('resourcesTitle'),
+    absoluteTitle: true,
+    description: t('resourcesDescription', { count: resources?.length ?? 0 }),
     publishable: true,
   })
 }

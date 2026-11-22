@@ -14,7 +14,7 @@ import { getLessonProgressList, getModule, getResources } from '@/lib/api/querie
 import { isNotFound } from '@/lib/api/errors'
 import type { LessonProgress, Module } from '@/lib/api/types'
 import { formatMinutes, formatPercent } from '@/lib/format'
-import { metaDescription } from '@/lib/seo'
+import { composeTitle, metaDescription, plainText } from '@/lib/seo'
 import { localizedPageSeo } from '@/lib/seo-server'
 import { breadcrumbs, moduleSchema } from '@/lib/structured-data'
 import { doneCount, lockStateFromStatus, ratio, type LockState } from '@/lib/progress'
@@ -36,11 +36,20 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { moduleId } = await params
   const path = `/modules/${encodeURIComponent(moduleId)}`
   try {
-    const mod = await getModule(moduleId)
+    const [mod, t, locale] = await Promise.all([
+      getModule(moduleId),
+      getTranslations('seo'),
+      getLocale(),
+    ])
+    const context = t('moduleContext', {
+      lessons: mod.lesson_count ?? mod.lessons?.length ?? 0,
+      time: formatMinutes(mod.estimated_minutes, locale),
+    })
     return localizedPageSeo({
       path,
-      title: mod.title ?? moduleId,
-      description: metaDescription(mod.summary),
+      title: composeTitle(mod.title ?? moduleId, t('moduleLabel'), t('brand')),
+      absoluteTitle: true,
+      description: metaDescription(`${plainText(mod.summary)} ${context}`),
       publishable: true,
     })
   } catch {

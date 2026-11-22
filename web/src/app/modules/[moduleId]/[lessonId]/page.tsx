@@ -15,12 +15,18 @@ import { ProblemSet, type RenderedProblem } from '@/components/ProblemSet'
 import { ResourceRow } from '@/components/ResourceRow'
 import { StudyPanel } from '@/components/StudyPanel'
 import { isNotFound } from '@/lib/api/errors'
-import { getLesson, getLessonProgress, getModule, getStatus } from '@/lib/api/queries'
+import {
+  getLesson,
+  getLessonProgress,
+  getModule,
+  getModuleOrNull,
+  getStatus,
+} from '@/lib/api/queries'
 import type { Lesson, Module } from '@/lib/api/types'
 import { formatMinutes } from '@/lib/format'
 import { renderInlineMarkdown, renderMarkdown } from '@/lib/markdown/render'
 import { stripLessonSections } from '@/lib/markdown/sections'
-import { metaDescription } from '@/lib/seo'
+import { composeTitle, metaDescription, plainText } from '@/lib/seo'
 import { localizedPageSeo } from '@/lib/seo-server'
 import { breadcrumbs, lessonSchema } from '@/lib/structured-data'
 import { lockStateFromStatus } from '@/lib/progress'
@@ -42,11 +48,25 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { moduleId, lessonId } = await params
   const path = `/modules/${encodeURIComponent(moduleId)}/${encodeURIComponent(lessonId)}`
   try {
-    const lesson = await getLesson(lessonId)
+    const [lesson, t, locale] = await Promise.all([
+      getLesson(lessonId),
+      getTranslations('seo'),
+      getLocale(),
+    ])
+    // The summary says what the lesson teaches; the second sentence says what kind of page it
+    // is and how long it takes, which is what a one-line summary leaves a searcher guessing.
+    const parent = await getModuleOrNull(lesson.module_id)
+    const context = t('lessonContext', {
+      module: parent?.title ?? moduleId,
+      time: formatMinutes(lesson.estimated_minutes, locale),
+    })
     return localizedPageSeo({
       path,
-      title: lesson.title ?? lessonId,
-      description: metaDescription(lesson.summary),
+      // Says what kind of page this is as well as its topic: "Forward kinematics" alone does
+      // not tell a searcher that it is a tutorial.
+      title: composeTitle(lesson.title ?? lessonId, t('lessonLabel'), t('brand')),
+      absoluteTitle: true,
+      description: metaDescription(`${plainText(lesson.summary)} ${context}`),
       publishable: true,
       // A lesson is a written piece, not a landing page.
       type: 'article',

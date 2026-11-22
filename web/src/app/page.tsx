@@ -30,11 +30,14 @@ async function isPublicVisitor(): Promise<boolean> {
 
 export async function generateMetadata(): Promise<Metadata> {
   if (await isPublicVisitor()) {
-    const t = await getTranslations('app')
+    const [t, courses] = await Promise.all([getTranslations('seo'), getCourses()])
+    const lessons = courses.reduce((sum, course) => sum + (course.lesson_count ?? 0), 0)
     return localizedPageSeo({
       path: '/',
-      title: t('title'),
-      description: t('description'),
+      // The words people search with ("learn robotics", "로보틱스 강의") lead the title; the
+      // site's own name follows.
+      title: t('homeTitle'),
+      description: t('homeDescription', { lessons }),
       publishable: true,
       absoluteTitle: true,
     })

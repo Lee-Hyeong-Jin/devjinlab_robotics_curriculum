@@ -4,10 +4,12 @@ import { getLocale, getTranslations } from 'next-intl/server'
 import { getCourse, getCourses } from '@/lib/api/queries'
 import { defaultCourseId } from '@/lib/api/config'
 import { formatMinutes } from '@/lib/format'
-import { plainText } from '@/lib/seo'
+import { courseTotals, roundHours } from '@/lib/landing'
+import { metaDescription, plainText } from '@/lib/seo'
 import {
-  courseSchema,
   courseListSchema,
+  courseSchema,
+  faqSchema,
   organizationSchema,
   webSiteSchema,
 } from '@/lib/structured-data'
@@ -15,6 +17,7 @@ import {
 import { ButtonLink } from './Button'
 import { Card } from './Card'
 import { Chip } from './Chip'
+import { Faq } from './Faq'
 import { JsonLd } from './JsonLd'
 
 /** Where a course's roadmap lives; the default course owns the bare `/roadmap` (ADR 0016). */
@@ -46,6 +49,31 @@ export async function Landing() {
   )
   const moduleCount = courses.reduce((sum, course) => sum + (course.module_count ?? 0), 0)
   const lessonCount = courses.reduce((sum, course) => sum + (course.lesson_count ?? 0), 0)
+  // The course a newcomer starts with, and the one that follows it.
+  const main = courses.find((course) => course.id === defaultCourseId()) ?? courses[0]
+  const advanced = courses.find((course) => course.id !== main?.id)
+  const mainTotals = courseTotals(main)
+  const faq: Array<[string, string]> = [
+    [t('faq1Q'), t('faq1A')],
+    [t('faq2Q'), t('faq2A')],
+    [t('faq3Q'), t('faq3A')],
+    [
+      t('faq4Q'),
+      t('faq4A', {
+        expertLessons: mainTotals.lessons,
+        expertHours: roundHours(mainTotals.minutes),
+        researchLessons: courseTotals(advanced).lessons,
+      }),
+    ],
+    [t('faq5Q'), t('faq5A')],
+    [t('faq6Q'), t('faq6A')],
+  ]
+  const how: Array<[string, string]> = [
+    [t('how1Title'), t('how1Body')],
+    [t('how2Title'), t('how2Body')],
+    [t('how3Title'), t('how3Body')],
+    [t('how4Title'), t('how4Body')],
+  ]
 
   return (
     <>
@@ -55,6 +83,7 @@ export async function Landing() {
           organizationSchema(tApp('title')),
           courseListSchema(courses.map((course) => [course.title, roadmapPath(course.id)])),
           ...courses.map((course) => courseSchema(course, roadmapPath(course.id))),
+          faqSchema(faq),
         ]}
       />
 
@@ -63,14 +92,17 @@ export async function Landing() {
           id="landing-title"
           className="text-primary max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl"
         >
-          {tApp('title')}
+          {t('h1')}
         </h1>
-        <p className="text-muted mt-3 max-w-2xl text-base sm:text-lg">{tApp('description')}</p>
+        <p className="text-muted mt-3 max-w-2xl text-base sm:text-lg">{t('lead')}</p>
         <p className="text-muted mt-2 max-w-2xl text-sm">{t('free')}</p>
         <div className="mt-6 flex flex-wrap gap-3">
           <ButtonLink href="/roadmap">{t('viewRoadmap')}</ButtonLink>
           <ButtonLink href="/signup" kind="secondary">
             {t('signUp')}
+          </ButtonLink>
+          <ButtonLink href="/guide" kind="secondary">
+            {t('readGuide')}
           </ButtonLink>
         </div>
         <dl className="mt-8 grid max-w-xl grid-cols-3 gap-4">
@@ -88,6 +120,49 @@ export async function Landing() {
       </section>
 
       <div className="flex flex-col gap-8">
+        {main ? (
+          <section aria-labelledby="landing-what">
+            <h2 id="landing-what" className="text-primary text-xl font-bold">
+              {t('whatTitle')}
+            </h2>
+            <p className="text-muted mt-2 max-w-3xl text-sm">{t('whatBody')}</p>
+            <ol className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+              {(main.stages ?? [])
+                .flatMap((stage) => stage.modules ?? [])
+                .map((module) => (
+                  <li key={module.id}>
+                    <Link
+                      href={`/modules/${encodeURIComponent(module.id)}`}
+                      className="bg-surface border-border-default hover:border-border-accent flex h-full flex-col gap-1 rounded-[var(--radius-card)] border p-4"
+                    >
+                      <span className="text-primary font-semibold">{module.title}</span>
+                      <span className="text-muted text-sm">
+                        {metaDescription(module.summary, 140)}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+            </ol>
+          </section>
+        ) : null}
+
+        <section aria-labelledby="landing-how">
+          <h2 id="landing-how" className="text-primary text-xl font-bold">
+            {t('howTitle')}
+          </h2>
+          <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {how.map(([title, body]) => (
+              <li
+                key={title}
+                className="bg-surface border-border-default rounded-[var(--radius-card)] border p-4"
+              >
+                <h3 className="text-primary font-semibold">{title}</h3>
+                <p className="text-muted mt-1 text-sm">{body}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
         {courses.map((course) => (
           <Card as="section" key={course.id} aria-labelledby={`course-${course.id}`}>
             <div className="flex flex-wrap items-start justify-between gap-3">
@@ -141,6 +216,8 @@ export async function Landing() {
             </p>
           </Card>
         ))}
+
+        <Faq id="landing-faq" title={t('faqTitle')} items={faq} />
 
         <Card as="section" aria-labelledby="landing-resources">
           <h2 id="landing-resources" className="text-primary text-lg font-bold">
