@@ -23,9 +23,10 @@ from __future__ import annotations
 import ipaddress
 import os
 from collections.abc import Mapping
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 
+from robotics_curriculum.api.clientip import Network, TrustedProxyError, parse_trusted_proxies
 from robotics_curriculum.progress import default_curriculum_dir, default_data_dir
 
 LOG_LEVELS = ("critical", "error", "warning", "info", "debug")
@@ -59,6 +60,11 @@ class Settings:
     cookie_secure: bool = True
     metrics: bool = True
     metrics_token: str | None = None
+    trusted_proxies: tuple[Network, ...] = field(
+        default_factory=lambda: parse_trusted_proxies(None)
+    )
+    """Addresses of the web tier and reverse proxies allowed to name the client through
+    ``X-Forwarded-For`` (``RC_API_TRUSTED_PROXIES``). Loopback by default."""
     public_content: bool = False
     """Serve the curriculum (courses, modules, lessons, resources, search) to anonymous
     readers so it can be crawled and linked (ADR 0016). Progress, notes, quiz results,
@@ -88,6 +94,7 @@ class Settings:
             metrics=env.get("RC_API_METRICS", "1") != "0",
             metrics_token=(env.get("RC_API_METRICS_TOKEN") or "").strip() or None,
             public_content=env.get("RC_PUBLIC_CONTENT", "0") == "1",
+            trusted_proxies=_parse_proxies(env.get("RC_API_TRUSTED_PROXIES")),
         )
         return base.with_overrides(
             host=env.get("RC_API_HOST") or None,
@@ -121,6 +128,13 @@ class Settings:
             port=port or self.port,
             log_level=log_level or self.log_level,
         )
+
+
+def _parse_proxies(value: str | None) -> tuple[Network, ...]:
+    try:
+        return parse_trusted_proxies(value)
+    except TrustedProxyError as exc:
+        raise SettingsError(str(exc)) from None
 
 
 def _parse_port(text: str) -> int:

@@ -71,6 +71,11 @@ services:
       RC_PUBLIC_URL: ${RC_PUBLIC_URL:-http://localhost:3000}
       # Anonymous read-only access to the curriculum (ADR 0016). Both api and web need it:
       # the api decides what it serves, the web decides what may be indexed.
+      # Who may name the browser through X-Forwarded-For: the web container and a reverse proxy
+      # on the same Docker network. Without it every sign-in, session and audit entry carries
+      # the web container's address. The api port is published on the host's loopback only, so
+      # nothing outside this host reaches it directly.
+      RC_API_TRUSTED_PROXIES: ${RC_API_TRUSTED_PROXIES:-127.0.0.1,::1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16}
       RC_PUBLIC_CONTENT: ${RC_PUBLIC_CONTENT:-0}
       RC_OIDC_PROVIDERS: ${RC_OIDC_PROVIDERS:-}
       RC_SMTP_HOST: ${RC_SMTP_HOST:-}

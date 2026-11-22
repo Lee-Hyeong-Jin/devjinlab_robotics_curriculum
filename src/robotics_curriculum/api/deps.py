@@ -15,6 +15,7 @@ from typing import Annotated
 
 from fastapi import Depends, HTTPException, Request
 
+from robotics_curriculum.api.clientip import client_address
 from robotics_curriculum.api.log import lang_var, request_id_var
 from robotics_curriculum.api.settings import Settings
 from robotics_curriculum.auth.models import Role, Scope, User
@@ -141,8 +142,20 @@ LOCAL_PRINCIPAL = Principal(user=_LOCAL_USER)
 
 
 def request_context(request: Request) -> Context:
+    """Who is calling, for the audit log and the sign-in throttle.
+
+    The address is the browser's, not the web tier's: ``X-Forwarded-For`` is honoured when the
+    connection comes from a trusted proxy (see :mod:`robotics_curriculum.api.clientip`). The
+    web app forwards the browser's ``User-Agent`` as its own.
+    """
+    state = request.app.state.rc
+    assert isinstance(state, AppState)
     return Context(
-        ip=request.client.host if request.client else None,
+        ip=client_address(
+            request.client.host if request.client else None,
+            request.headers.get("x-forwarded-for"),
+            state.settings.trusted_proxies,
+        ),
         user_agent=request.headers.get("user-agent"),
         request_id=request_id_var.get(),
         lang=lang_var.get(),

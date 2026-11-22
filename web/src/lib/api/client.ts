@@ -17,6 +17,7 @@ import { DEFAULT_LOCALE } from '@/i18n/locales'
 
 import { apiBaseUrl, apiTimeoutMs } from './config'
 import { ApiError, ApiUnreachableError } from './errors'
+import { browserIdentity } from './forward'
 import type { GetPath, GetResponse, Problem } from './types'
 
 /** Header set by `src/middleware.ts` so a 401 can redirect back to the current page. */
@@ -72,6 +73,7 @@ async function currentLocale(): Promise<string> {
 
 async function forwardedHeaders(method: string, locale: string): Promise<Headers> {
   const out = new Headers({ Accept: 'application/json', 'Accept-Language': locale })
+  for (const [name, value] of Object.entries(await browserIdentity())) out.set(name, value)
   const jar = await cookies()
   const all = jar.getAll()
   if (all.length > 0) {

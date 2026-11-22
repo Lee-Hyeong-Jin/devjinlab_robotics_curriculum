@@ -205,3 +205,22 @@ def test_srv09_api_container_is_hardened() -> None:
         assert "no-new-privileges:true" in service.get("security_opt", []), name
     dockerfile = (ROOT / "Dockerfile").read_text(encoding="utf-8")
     assert "HEALTHCHECK" in dockerfile and "RC_AUTH_MODE=server" in dockerfile
+
+
+def test_compose_tells_the_api_which_proxies_to_trust() -> None:
+    """In compose the api's only callers are the web container and a reverse proxy.
+
+    Without the setting the api keeps its loopback default, the web container is not trusted,
+    and every sign-in, session and audit entry carries the web container's address — which also
+    makes the per-address sign-in limit count all visitors as one (RUNBOOK §8).
+    """
+    from robotics_curriculum.api.clientip import client_address, parse_trusted_proxies
+
+    env = _compose_service("api")["environment"]
+    assert "RC_API_TRUSTED_PROXIES" in env, sorted(env)
+    default = env["RC_API_TRUSTED_PROXIES"].split(":-", 1)[1].rstrip("}")
+    trusted = parse_trusted_proxies(default)
+    # A web container on a Docker bridge network passing on a public address.
+    assert client_address("172.18.0.4", "198.51.100.7", trusted) == "198.51.100.7"
+    # A public address is never a trusted proxy by default.
+    assert client_address("198.51.100.9", "203.0.113.1", trusted) == "198.51.100.9"
