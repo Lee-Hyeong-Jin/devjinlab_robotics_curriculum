@@ -504,6 +504,14 @@ MATRIX = [
     ("PATCH", "/api/v1/admin/users/{learner}", 401, 403, 403, 200),
     ("DELETE", "/api/v1/admin/users/{learner}/sessions", 401, 403, 403, 204),
     ("GET", "/api/v1/admin/audit", 401, 403, 403, 200),
+    # Operator console (P3-1, AC-ADM.6).
+    ("GET", "/api/v1/admin/overview", 401, 403, 403, 200),
+    ("GET", "/api/v1/admin/users?q=learner&role=learner", 401, 403, 403, 200),
+    ("GET", "/api/v1/admin/users/{learner}/overview", 401, 403, 403, 200),
+    ("DELETE", "/api/v1/admin/users/{learner}/tokens", 401, 403, 403, 200),
+    ("POST", "/api/v1/admin/users/{learner}/password-reset", 401, 403, 403, 202),
+    ("GET", "/api/v1/admin/audit?action=user.", 401, 403, 403, 200),
+    ("GET", "/api/v1/admin/audit/export", 401, 403, 403, 200),
 ]
 
 

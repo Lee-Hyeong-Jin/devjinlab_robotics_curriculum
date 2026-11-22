@@ -4,7 +4,7 @@ the PAT in :class:`ApiTokenCreated` and the CSRF token in :class:`LoginResult`."
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -105,6 +105,7 @@ class AdminUser(User):
 class UserPage(Schema):
     items: list[AdminUser]
     next_cursor: str | None = Field(description="Pass as `cursor` for the next page.")
+    total: int = Field(description="Users matching the filters in all, not only on this page.")
 
 
 class UserUpdate(Schema):
@@ -187,6 +188,10 @@ class AuditEntry(Schema):
     id: int
     at: datetime
     actor_user_id: int | None
+    actor_email: str | None = Field(
+        default=None,
+        description="The actor's current address; null for system events and deleted accounts.",
+    )
     actor_ip: str | None
     action: str
     target_type: str | None
@@ -234,3 +239,86 @@ class AuthProvider(Schema):
             "deployment that can complete a login can also start one."
         )
     )
+
+
+# -- operator console (P3-1) ---------------------------------------------------------------
+
+
+class DayCount(Schema):
+    day: date = Field(description="UTC calendar day.")
+    count: int
+
+
+class LoginCounts(Schema):
+    succeeded: int
+    failed: int
+
+
+class OverviewUsers(Schema):
+    total: int
+    by_role: dict[Role, int]
+    by_status: dict[UserStatus, int]
+    unverified: int = Field(description="Active accounts with an unverified address.")
+    stale_unverified: int = Field(description="Of those, the ones older than seven days.")
+    new_7d: int
+    new_30d: int
+    signups_daily: list[DayCount] = Field(description="Last 14 UTC days, oldest first.")
+
+
+class OverviewSecurity(Schema):
+    active_sessions: int
+    logins_24h: LoginCounts
+    logins_7d: LoginCounts
+
+
+class OverviewLearning(Schema):
+    window_days: int
+    active_learners: int
+    lessons_completed: int
+    study_minutes: int
+    lessons_completed_total: int
+    learners_total: int
+
+
+class OverviewSystem(Schema):
+    version: str
+    lesson_count: int | None = Field(description="null when the curriculum failed to load.")
+    course_count: int | None
+    mail_enabled: bool
+    public_content: bool
+    signup_open: bool
+    auth_providers: list[str]
+    audit_retention_days: int
+
+
+class AdminOverview(Schema):
+    """One screen of platform state for an operator."""
+
+    generated_at: datetime
+    users: OverviewUsers
+    security: OverviewSecurity
+    learning: OverviewLearning
+    system: OverviewSystem
+
+
+class LearnerSummary(Schema):
+    lessons_done: int
+    lessons_in_progress: int
+    study_minutes: int
+    last_activity_at: datetime | None
+
+
+class AdminUserOverview(Schema):
+    """One account as an operator needs to see it. Never contains a secret or a token hash."""
+
+    user: AdminUser
+    sessions: list[AuthSession]
+    tokens: list[ApiToken]
+    identities: list[Identity]
+    failed_logins_24h: int
+    learning: LearnerSummary
+    recent_audit: list[AuditEntry]
+
+
+class RevokedCount(Schema):
+    revoked: int

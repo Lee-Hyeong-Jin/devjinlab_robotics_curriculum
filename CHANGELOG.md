@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Admin console for operators (P3-1, RUNBOOK §8.3):
+  - `/admin` overview: what needs attention, account, session and sign-in totals, learning
+    activity for the last seven days, a 14-day sign-up trend and the system settings
+    (`GET /admin/overview`).
+  - User search by email or name with role, status and verification filters and a total count;
+    a page per account with its sessions, API tokens, external sign-ins, learning summary and
+    recent audit trail (`GET /admin/users/{id}/overview`).
+  - Admin actions on an account: revoke every API token (`DELETE /admin/users/{id}/tokens`) and
+    send a password-reset email the admin never sees (`POST /admin/users/{id}/password-reset`).
+  - Audit log filters (action prefix, actor, target, period), the actor's email on each entry,
+    and a CSV export that is safe to open in a spreadsheet (`GET /admin/audit/export`).
+- `RC_API_TRUSTED_PROXIES`: the proxies allowed to tell the API the browser's address.
 - Web SEO, second pass (frontend.md §5.2, RUNBOOK §8.2):
   - On a deployment that publishes its curriculum, `/` is a public landing page for a visitor
     without a session — the courses, stages and modules, all linked — and is indexable. It used
@@ -132,6 +144,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   problems.
 
 ### Security
+- Sessions, audit entries and the per-address sign-in limit now use the browser's address and
+  user agent instead of the web server's. The web forwards them and the API accepts
+  `X-Forwarded-For` only from a trusted proxy (RUNBOOK §8, "클라이언트 주소").
 - The Security workflow's `npm audit (web)` job now applies an allowlist
   (`web/audit-allowlist.txt`, checked by `scripts/ops/npm_audit_gate.py`). One exception is
   recorded: GHSA-fc5q-39xc-vjpf (picomatch ReDoS, reached through next-intl's file watcher), for

@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright'
 import { expect, test, type Page } from '@playwright/test'
 
 /**
@@ -15,6 +16,16 @@ import { expect, test, type Page } from '@playwright/test'
 const AUTH_ENABLED = process.env.E2E_AUTH === '1'
 
 test.skip(!AUTH_ENABLED, 'needs an API in server mode (RC_AUTH_MODE=server); set E2E_AUTH=1')
+
+/** Serious and critical axe violations on the current page (AC-A11Y.1). */
+async function seriousViolations(page: Page): Promise<string[]> {
+  const results = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+    .analyze()
+  return results.violations
+    .filter((violation) => ['serious', 'critical'].includes(violation.impact ?? ''))
+    .map((violation) => `${violation.id}: ${violation.help}`)
+}
 
 /** A fresh account per run, so the journey always starts from zero progress. */
 function freshAccount() {
@@ -166,8 +177,74 @@ test('a signed-in learner reaches the account controls on a phone', async ({ pag
   await expect(signOut).toBeHidden()
   await nav.getByRole('button', { name: /메뉴 열기|Open menu/ }).click()
   await expect(signOut).toBeVisible()
-  await expect(nav.getByRole('link', { name: /^(프로필|Profile)$/ })).toBeVisible()
+  await expect(nav.getByRole('link', { name: /^(프로필|Profile): / })).toBeVisible()
 
   await signOut.click()
   await page.waitForURL(/\/login/)
+})
+
+test('an operator works through the admin console (AC-ADM.5)', async ({ page }) => {
+  // The first account of a fresh server-mode stack cannot be made an admin from the browser,
+  // so the suite needs one prepared for it. Without it this test has nothing to sign in as.
+  const email = process.env.E2E_ADMIN_EMAIL
+  const password = process.env.E2E_ADMIN_PASSWORD
+  test.skip(!email || !password, 'set E2E_ADMIN_EMAIL and E2E_ADMIN_PASSWORD (an admin account)')
+
+  // Somebody to look up.
+  const learner = freshAccount()
+  await signUpAndIn(page, learner)
+  await page.getByRole('button', { name: /로그아웃|Sign out/ }).click()
+  await page.waitForURL(/\/login/)
+
+  await page.locator('input[name="email"]').fill(email ?? '')
+  await page.locator('input[name="password"]').fill(password ?? '')
+  await page.locator('form button[type="submit"]').click()
+  await page.waitForURL((url) => !url.pathname.startsWith('/login'), { timeout: 15_000 })
+
+  // Overview: the numbers and the system card.
+  await page.goto('/admin')
+  await expect(
+    page.getByRole('heading', { level: 1, name: /운영 개요|Operations overview/ }),
+  ).toBeVisible()
+  await expect(page.getByText(/전체 사용자|^Users$/).first()).toBeVisible()
+  await expect(page.getByRole('heading', { name: /^(시스템|System)$/ })).toBeVisible()
+  expect(await seriousViolations(page), 'axe on /admin').toEqual([])
+
+  // Find the learner by part of the address and open the account.
+  await page.goto('/admin/users')
+  await page.getByRole('searchbox').fill(learner.email.split('@')[0] ?? '')
+  await page.getByRole('button', { name: /^(적용|Apply)$/ }).click()
+  await page.waitForURL(/q=/)
+  await expect(page.getByRole('status').filter({ hasText: /1명|1 user/ })).toBeVisible()
+  expect(await seriousViolations(page), 'axe on /admin/users').toEqual([])
+  await page.getByRole('link', { name: learner.email }).click()
+  await page.waitForURL(/\/admin\/users\/\d+$/)
+  await expect(page.getByRole('heading', { level: 1, name: learner.email })).toBeVisible()
+  expect(await seriousViolations(page), 'axe on the user page').toEqual([])
+
+  // An action asks first, runs, and says what happened.
+  page.once('dialog', (dialog) => void dialog.accept())
+  await page.getByRole('button', { name: /API 토큰 모두 폐기|Revoke all API tokens/ }).click()
+  await expect(page.getByText(/토큰 0개를 폐기했습니다|Revoked 0 tokens/)).toBeVisible()
+
+  // The audit log shows it, with the operator named, and exports as CSV.
+  await page.goto('/admin/audit?action=auth.tokens.revoked_by_admin')
+  await expect(page.getByRole('table')).toContainText('auth.tokens.revoked_by_admin')
+  await expect(page.getByRole('table')).toContainText(email ?? '')
+  expect(await seriousViolations(page), 'axe on /admin/audit').toEqual([])
+  const exported = await page.request.get('/admin/audit/export?action=auth.tokens.revoked_by_admin')
+  expect(exported.ok()).toBe(true)
+  expect(exported.headers()['content-type']).toContain('text/csv')
+  expect((await exported.text()).split('\r\n')[0]).toContain('actor_email')
+
+  // None of it scrolls sideways on a phone.
+  await page.setViewportSize({ width: 360, height: 740 })
+  for (const path of ['/admin', '/admin/users', '/admin/audit']) {
+    await page.goto(path)
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    )
+    expect(overflow, `horizontal overflow on ${path}`).toBeLessThanOrEqual(0)
+  }
 })

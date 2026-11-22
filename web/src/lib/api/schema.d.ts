@@ -938,6 +938,29 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Overview
+         * @description Accounts, sign-ins, sessions, learning activity and system settings on one screen.
+         *
+         *     A summary read from the database on each request; the time series an alert needs live in
+         *     ``/metrics``.
+         */
+        get: operations["overview_api_v1_admin_overview_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/users": {
         parameters: {
             query?: never;
@@ -947,7 +970,7 @@ export interface paths {
         };
         /**
          * List Users
-         * @description Users by id, cursor-paginated.
+         * @description Users by id, cursor-paginated, optionally narrowed by search text and filters.
          */
         get: operations["list_users_api_v1_admin_users_get"];
         put?: never;
@@ -980,6 +1003,28 @@ export interface paths {
         patch: operations["update_user_api_v1_admin_users__user_id__patch"];
         trace?: never;
     };
+    "/api/v1/admin/users/{user_id}/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * User Overview
+         * @description One account with its sessions, tokens, external logins, learning and recent audit trail.
+         *
+         *     Tokens are listed by name and prefix only; the secret and its hash never leave the server.
+         */
+        get: operations["user_overview_api_v1_admin_users__user_id__overview_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/users/{user_id}/sessions": {
         parameters: {
             query?: never;
@@ -1000,6 +1045,48 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/users/{user_id}/tokens": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Revoke User Tokens
+         * @description Revoke every personal access token of the user.
+         */
+        delete: operations["revoke_user_tokens_api_v1_admin_users__user_id__tokens_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/users/{user_id}/password-reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send Password Reset
+         * @description Mail the user a password-reset link. The operator never sees the link.
+         *
+         *     503 when the server has no mail configuration, 409 when the account is not active.
+         */
+        post: operations["send_password_reset_api_v1_admin_users__user_id__password_reset_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/audit": {
         parameters: {
             query?: never;
@@ -1012,6 +1099,28 @@ export interface paths {
          * @description Audit log, newest first (reading it is itself audited).
          */
         get: operations["list_audit_api_v1_admin_audit_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/audit/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Export Audit
+         * @description The audit log as CSV with the same filters, newest first, at most 10,000 rows.
+         *
+         *     The ``X-Truncated`` header is ``true`` when more rows matched than were exported.
+         */
+        get: operations["export_audit_api_v1_admin_audit_export_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1073,6 +1182,21 @@ export interface components {
              */
             updated_at: string;
         };
+        /**
+         * AdminOverview
+         * @description One screen of platform state for an operator.
+         */
+        AdminOverview: {
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            users: components["schemas"]["OverviewUsers"];
+            security: components["schemas"]["OverviewSecurity"];
+            learning: components["schemas"]["OverviewLearning"];
+            system: components["schemas"]["OverviewSystem"];
+        };
         /** AdminUser */
         AdminUser: {
             /** Id */
@@ -1107,6 +1231,24 @@ export interface components {
              * Format: date-time
              */
             updated_at: string;
+        };
+        /**
+         * AdminUserOverview
+         * @description One account as an operator needs to see it. Never contains a secret or a token hash.
+         */
+        AdminUserOverview: {
+            user: components["schemas"]["AdminUser"];
+            /** Sessions */
+            sessions: components["schemas"]["AuthSession"][];
+            /** Tokens */
+            tokens: components["schemas"]["ApiToken"][];
+            /** Identities */
+            identities: components["schemas"]["Identity"][];
+            /** Failed Logins 24H */
+            failed_logins_24h: number;
+            learning: components["schemas"]["LearnerSummary"];
+            /** Recent Audit */
+            recent_audit: components["schemas"]["AuditEntry"][];
         };
         /** AdminUserUpdate */
         AdminUserUpdate: {
@@ -1189,6 +1331,11 @@ export interface components {
             at: string;
             /** Actor User Id */
             actor_user_id: number | null;
+            /**
+             * Actor Email
+             * @description The actor's current address; null for system events and deleted accounts.
+             */
+            actor_email?: string | null;
             /** Actor Ip */
             actor_ip: string | null;
             /** Action */
@@ -1388,6 +1535,17 @@ export interface components {
              */
             lang: string;
         };
+        /** DayCount */
+        DayCount: {
+            /**
+             * Day
+             * Format: date
+             * @description UTC calendar day.
+             */
+            day: string;
+            /** Count */
+            count: number;
+        };
         /** DeleteAccount */
         DeleteAccount: {
             /** Password */
@@ -1444,6 +1602,17 @@ export interface components {
              * Format: date-time
              */
             linked_at: string;
+        };
+        /** LearnerSummary */
+        LearnerSummary: {
+            /** Lessons Done */
+            lessons_done: number;
+            /** Lessons In Progress */
+            lessons_in_progress: number;
+            /** Study Minutes */
+            study_minutes: number;
+            /** Last Activity At */
+            last_activity_at: string | null;
         };
         /** Lesson */
         Lesson: {
@@ -1688,6 +1857,13 @@ export interface components {
             /** Note */
             note?: string | null;
         };
+        /** LoginCounts */
+        LoginCounts: {
+            /** Succeeded */
+            succeeded: number;
+            /** Failed */
+            failed: number;
+        };
         /** LoginRequest */
         LoginRequest: {
             /** Email */
@@ -1806,6 +1982,82 @@ export interface components {
              * @description Why it is recommended.
              */
             reason: string;
+        };
+        /** OverviewLearning */
+        OverviewLearning: {
+            /** Window Days */
+            window_days: number;
+            /** Active Learners */
+            active_learners: number;
+            /** Lessons Completed */
+            lessons_completed: number;
+            /** Study Minutes */
+            study_minutes: number;
+            /** Lessons Completed Total */
+            lessons_completed_total: number;
+            /** Learners Total */
+            learners_total: number;
+        };
+        /** OverviewSecurity */
+        OverviewSecurity: {
+            /** Active Sessions */
+            active_sessions: number;
+            logins_24h: components["schemas"]["LoginCounts"];
+            logins_7d: components["schemas"]["LoginCounts"];
+        };
+        /** OverviewSystem */
+        OverviewSystem: {
+            /** Version */
+            version: string;
+            /**
+             * Lesson Count
+             * @description null when the curriculum failed to load.
+             */
+            lesson_count: number | null;
+            /** Course Count */
+            course_count: number | null;
+            /** Mail Enabled */
+            mail_enabled: boolean;
+            /** Public Content */
+            public_content: boolean;
+            /** Signup Open */
+            signup_open: boolean;
+            /** Auth Providers */
+            auth_providers: string[];
+            /** Audit Retention Days */
+            audit_retention_days: number;
+        };
+        /** OverviewUsers */
+        OverviewUsers: {
+            /** Total */
+            total: number;
+            /** By Role */
+            by_role: {
+                [key: string]: number;
+            };
+            /** By Status */
+            by_status: {
+                [key: string]: number;
+            };
+            /**
+             * Unverified
+             * @description Active accounts with an unverified address.
+             */
+            unverified: number;
+            /**
+             * Stale Unverified
+             * @description Of those, the ones older than seven days.
+             */
+            stale_unverified: number;
+            /** New 7D */
+            new_7d: number;
+            /** New 30D */
+            new_30d: number;
+            /**
+             * Signups Daily
+             * @description Last 14 UTC days, oldest first.
+             */
+            signups_daily: components["schemas"]["DayCount"][];
         };
         /**
          * Paper
@@ -2210,6 +2462,11 @@ export interface components {
              */
             due_tomorrow: number;
         };
+        /** RevokedCount */
+        RevokedCount: {
+            /** Revoked */
+            revoked: number;
+        };
         /** Roadmap */
         Roadmap: {
             /**
@@ -2502,6 +2759,11 @@ export interface components {
              * @description Pass as `cursor` for the next page.
              */
             next_cursor: string | null;
+            /**
+             * Total
+             * @description Users matching the filters in all, not only on this page.
+             */
+            total: number;
         };
         /**
          * UserStatus
@@ -5469,11 +5731,82 @@ export interface operations {
             };
         };
     };
+    overview_api_v1_admin_overview_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminOverview"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
     list_users_api_v1_admin_users_get: {
         parameters: {
             query?: {
                 limit?: number;
                 cursor?: string | null;
+                /** @description Matches part of the email address or the display name. */
+                q?: string | null;
+                role?: components["schemas"]["Role"] | null;
+                status?: components["schemas"]["UserStatus"] | null;
+                /** @description Whether the email address is verified. */
+                verified?: boolean | null;
             };
             header?: never;
             path?: never;
@@ -5675,6 +6008,73 @@ export interface operations {
             };
         };
     };
+    user_overview_api_v1_admin_users__user_id__overview_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminUserOverview"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
     revoke_user_sessions_api_v1_admin_users__user_id__sessions_delete: {
         parameters: {
             query?: never;
@@ -5740,12 +6140,163 @@ export interface operations {
             };
         };
     };
+    revoke_user_tokens_api_v1_admin_users__user_id__tokens_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevokedCount"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    send_password_reset_api_v1_admin_users__user_id__password_reset_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                user_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
     list_audit_api_v1_admin_audit_get: {
         parameters: {
             query?: {
                 limit?: number;
                 cursor?: string | null;
                 actor_user_id?: number | null;
+                /** @description Start of the action name: `user.` finds every change to a user. */
+                action?: string | null;
+                target_type?: string | null;
+                target_id?: string | null;
+                /** @description Inclusive, with a UTC offset. */
+                since?: string | null;
+                /** @description Exclusive, with a UTC offset. */
+                until?: string | null;
             };
             header?: never;
             path?: never;
@@ -5760,6 +6311,81 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AuditPage"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    export_audit_api_v1_admin_audit_export_get: {
+        parameters: {
+            query?: {
+                actor_user_id?: number | null;
+                /** @description Start of the action name: `user.` finds every change to a user. */
+                action?: string | null;
+                target_type?: string | null;
+                target_id?: string | null;
+                /** @description Inclusive, with a UTC offset. */
+                since?: string | null;
+                /** @description Exclusive, with a UTC offset. */
+                until?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The matching rows as CSV. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": unknown;
                 };
             };
             /** @description Unauthorized */

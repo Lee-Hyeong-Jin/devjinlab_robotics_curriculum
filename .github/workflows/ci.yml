@@ -212,6 +212,8 @@ jobs:
         run: |
           # A throwaway data directory per leg: the journey suite creates accounts and progress.
           export RC_DATA_DIR="$(mktemp -d)"
+          # The admin step below runs `rc api promote-admin` against the same data.
+          echo "RC_DATA_DIR=$RC_DATA_DIR" >> "$GITHUB_ENV"
           uv run rc api serve --host 127.0.0.1 --port 8000 --log-level warning \
             >"$RUNNER_TEMP/api.log" 2>&1 &
           for _ in $(seq 1 60); do
@@ -219,6 +221,22 @@ jobs:
             sleep 1
           done
           curl -fsS --max-time 5 http://127.0.0.1:8000/healthz
+
+      # The admin console test needs an admin. A browser cannot create one (the first admin
+      # comes from the operator: RC_AUTH_BOOTSTRAP_ADMIN_EMAIL or this command), and this stack
+      # has no mail, so the address is promoted unverified.
+      - name: Create an admin account (journey)
+        if: matrix.suite == 'journey'
+        env:
+          RC_AUTH_MODE: ${{ matrix.auth_mode }}
+          RC_AUTH_SECRET: e2e-${{ github.run_id }}-${{ matrix.suite }}
+        run: |
+          curl -fsS --max-time 10 -H 'content-type: application/json' \
+            -d '{"email":"e2e-admin@example.test","password":"Correct-Horse-Battery-7"}' \
+            http://127.0.0.1:8000/api/v1/auth/signup >/dev/null
+          uv run rc api promote-admin e2e-admin@example.test --force
+          echo "E2E_ADMIN_EMAIL=e2e-admin@example.test" >> "$GITHUB_ENV"
+          echo "E2E_ADMIN_PASSWORD=Correct-Horse-Battery-7" >> "$GITHUB_ENV"
 
       - name: Build the web app
         working-directory: web

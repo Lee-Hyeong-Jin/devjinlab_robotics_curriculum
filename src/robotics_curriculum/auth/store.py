@@ -8,7 +8,7 @@ mode). On SQLite the tables are created on open; on PostgreSQL Alembic owns the 
 from __future__ import annotations
 
 import json
-from collections.abc import Iterator
+from collections.abc import Collection, Iterator
 from contextlib import contextmanager
 from datetime import UTC, datetime
 from typing import Any, Protocol
@@ -27,6 +27,7 @@ from sqlalchemy import (
     update,
 )
 from sqlalchemy.engine import RowMapping
+from sqlalchemy.sql.elements import ColumnElement
 
 from robotics_curriculum.auth.models import (
     ApiToken,
@@ -75,8 +76,28 @@ class AuthStore(Protocol):
     def get_user_by_email(self, email: str) -> User | None: ...
     def password_hash(self, user_id: int) -> str | None: ...
     def update_user(self, user_id: int, now: datetime, **fields: Any) -> User: ...
-    def list_users(self, limit: int, after_id: int = 0) -> list[User]: ...
-    def count_users(self, *, role: Role | None = None, status: UserStatus | None = None) -> int: ...
+    def list_users(
+        self,
+        limit: int,
+        after_id: int = 0,
+        *,
+        q: str | None = None,
+        role: Role | None = None,
+        status: UserStatus | None = None,
+        verified: bool | None = None,
+    ) -> list[User]: ...
+    def count_users(
+        self,
+        *,
+        role: Role | None = None,
+        status: UserStatus | None = None,
+        q: str | None = None,
+        verified: bool | None = None,
+        created_since: datetime | None = None,
+        created_before: datetime | None = None,
+    ) -> int: ...
+    def user_emails(self, user_ids: Collection[int]) -> dict[int, str]: ...
+    def signup_times(self, since: datetime) -> list[datetime]: ...
     def erase_user(self, user_id: int, now: datetime) -> None: ...
 
     # browser sessions
@@ -99,6 +120,7 @@ class AuthStore(Protocol):
         self, user_id: int, now: datetime, *, keep: int | None = None
     ) -> int: ...
     def list_sessions(self, user_id: int, now: datetime) -> list[AuthSession]: ...
+    def count_active_sessions(self, now: datetime) -> int: ...
 
     # personal access tokens
     def create_token(
@@ -130,6 +152,7 @@ class AuthStore(Protocol):
     # login throttling
     def record_login(self, email: str, ip: str | None, success: bool, now: datetime) -> None: ...
     def failed_logins(self, email: str, ip: str | None, since: datetime) -> tuple[int, int]: ...
+    def login_counts(self, since: datetime) -> tuple[int, int]: ...
 
     # audit
     def audit(
@@ -145,7 +168,17 @@ class AuthStore(Protocol):
         request_id: str | None = None,
     ) -> None: ...
     def list_audit(
-        self, limit: int, before_id: int | None = None, actor_user_id: int | None = None
+        self,
+        limit: int,
+        before_id: int | None = None,
+        actor_user_id: int | None = None,
+        *,
+        action_prefix: str | None = None,
+        target_type: str | None = None,
+        target_id: str | None = None,
+        since: datetime | None = None,
+        until: datetime | None = None,
+        involving_user_id: int | None = None,
     ) -> list[AuditEntry]: ...
     def anonymize_audit(self, before: datetime) -> int: ...
     def anonymize_actor(self, user_id: int) -> int: ...
@@ -283,25 +316,117 @@ class SqlAuthStore:
             )
         return self._user(row)
 
-    def list_users(self, limit: int, after_id: int = 0) -> list[User]:
-        with self._tx() as conn:
-            rows = (
-                conn.execute(
-                    select(users).where(users.c.id > after_id).order_by(users.c.id).limit(limit)
+    @staticmethod
+    def _user_filters(
+        *,
+        q: str | None = None,
+        role: Role | None = None,
+        status: UserStatus | None = None,
+        verified: bool | None = None,
+        created_since: datetime | None = None,
+        created_before: datetime | None = None,
+    ) -> list[ColumnElement[bool]]:
+        """WHERE clauses shared by the user list and its count, so the two cannot disagree."""
+        clauses: list[ColumnElement[bool]] = []
+        needle = (q or "").strip().lower()
+        if needle:
+            # The search text is a literal: `%` and `_` in it must not act as wildcards.
+            escaped = needle.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+            pattern = f"%{escaped}%"
+            clauses.append(
+                or_(
+                    func.lower(users.c.email).like(pattern, escape="\\"),
+                    func.lower(func.coalesce(users.c.display_name, "")).like(pattern, escape="\\"),
                 )
-                .mappings()
-                .all()
             )
+        if role is not None:
+            clauses.append(users.c.role == role.value)
+        if status is not None:
+            clauses.append(users.c.status == status.value)
+        if verified is True:
+            clauses.append(users.c.email_verified_at.is_not(None))
+        elif verified is False:
+            clauses.append(users.c.email_verified_at.is_(None))
+        if created_since is not None:
+            clauses.append(users.c.created_at >= created_since)
+        if created_before is not None:
+            clauses.append(users.c.created_at < created_before)
+        return clauses
+
+    def list_users(
+        self,
+        limit: int,
+        after_id: int = 0,
+        *,
+        q: str | None = None,
+        role: Role | None = None,
+        status: UserStatus | None = None,
+        verified: bool | None = None,
+    ) -> list[User]:
+        """Users by id after ``after_id``, optionally narrowed by search text and filters."""
+        query = (
+            select(users)
+            .where(
+                users.c.id > after_id,
+                *self._user_filters(q=q, role=role, status=status, verified=verified),
+            )
+            .order_by(users.c.id)
+            .limit(limit)
+        )
+        with self._tx() as conn:
+            rows = conn.execute(query).mappings().all()
         return [self._user(r) for r in rows]
 
-    def count_users(self, *, role: Role | None = None, status: UserStatus | None = None) -> int:
-        query = select(func.count()).select_from(users)
-        if role is not None:
-            query = query.where(users.c.role == role.value)
-        if status is not None:
-            query = query.where(users.c.status == status.value)
+    def count_users(
+        self,
+        *,
+        role: Role | None = None,
+        status: UserStatus | None = None,
+        q: str | None = None,
+        verified: bool | None = None,
+        created_since: datetime | None = None,
+        created_before: datetime | None = None,
+    ) -> int:
+        query = (
+            select(func.count())
+            .select_from(users)
+            .where(
+                *self._user_filters(
+                    q=q,
+                    role=role,
+                    status=status,
+                    verified=verified,
+                    created_since=created_since,
+                    created_before=created_before,
+                )
+            )
+        )
         with self._tx() as conn:
             return int(conn.execute(query).scalar_one())
+
+    def user_emails(self, user_ids: Collection[int]) -> dict[int, str]:
+        """Email by user id for the ids that still exist (audit rows outlive accounts)."""
+        if not user_ids:
+            return {}
+        with self._tx() as conn:
+            rows = conn.execute(
+                select(users.c.id, users.c.email).where(users.c.id.in_(sorted(set(user_ids))))
+            ).all()
+        return {int(row[0]): str(row[1]) for row in rows}
+
+    def signup_times(self, since: datetime) -> list[datetime]:
+        """Creation time of every account made since ``since``, oldest first.
+
+        Bucketing by day is left to the caller: the day depends on a timezone, and a SQL
+        ``date()`` would differ between SQLite and PostgreSQL.
+        """
+        with self._tx() as conn:
+            rows = conn.execute(
+                select(users.c.created_at)
+                .where(users.c.created_at >= since)
+                .order_by(users.c.created_at)
+            ).all()
+        return [_req(row[0]) for row in rows]
 
     def erase_user(self, user_id: int, now: datetime) -> None:
         """Account deletion: drop credentials and identities, anonymize the user row."""
@@ -420,6 +545,17 @@ class SqlAuthStore:
                 .all()
             )
         return [self._session(r) for r in rows]
+
+    def count_active_sessions(self, now: datetime) -> int:
+        """Browser sessions that are neither revoked nor expired, across all users."""
+        with self._tx() as conn:
+            return int(
+                conn.execute(
+                    select(func.count())
+                    .select_from(sessions_auth)
+                    .where(sessions_auth.c.revoked_at.is_(None), sessions_auth.c.expires_at > now)
+                ).scalar_one()
+            )
 
     # -- personal access tokens ----------------------------------------------------------
 
@@ -612,6 +748,22 @@ class SqlAuthStore:
             )
         return int(by_email), int(by_ip)
 
+    def login_counts(self, since: datetime) -> tuple[int, int]:
+        """Successful and failed sign-ins since ``since``, across all accounts.
+
+        Password-reset requests share this table under a prefixed key (see
+        ``AuthService.forgot_password``); they are not sign-ins and are left out.
+        """
+        base = (
+            select(func.count())
+            .select_from(login_attempts)
+            .where(login_attempts.c.at >= since, login_attempts.c.email.not_like("reset:%"))
+        )
+        with self._tx() as conn:
+            ok = conn.execute(base.where(login_attempts.c.success.is_(True))).scalar_one()
+            failed = conn.execute(base.where(login_attempts.c.success.is_(False))).scalar_one()
+        return int(ok), int(failed)
+
     # -- audit ----------------------------------------------------------------------------
 
     def audit(
@@ -641,13 +793,51 @@ class SqlAuthStore:
             )
 
     def list_audit(
-        self, limit: int, before_id: int | None = None, actor_user_id: int | None = None
+        self,
+        limit: int,
+        before_id: int | None = None,
+        actor_user_id: int | None = None,
+        *,
+        action_prefix: str | None = None,
+        target_type: str | None = None,
+        target_id: str | None = None,
+        since: datetime | None = None,
+        until: datetime | None = None,
+        involving_user_id: int | None = None,
     ) -> list[AuditEntry]:
+        """Audit entries, newest first.
+
+        ``action_prefix`` matches the start of the action name (``user.`` finds every user
+        change). ``involving_user_id`` finds entries the user made *or* was the target of,
+        which is what an operator looking at one account needs.
+        """
         query = select(audit_log).order_by(audit_log.c.id.desc()).limit(limit)
         if before_id is not None:
             query = query.where(audit_log.c.id < before_id)
         if actor_user_id is not None:
             query = query.where(audit_log.c.actor_user_id == actor_user_id)
+        if action_prefix:
+            query = query.where(
+                func.substr(audit_log.c.action, 1, len(action_prefix)) == action_prefix
+            )
+        if target_type:
+            query = query.where(audit_log.c.target_type == target_type)
+        if target_id:
+            query = query.where(audit_log.c.target_id == target_id)
+        if since is not None:
+            query = query.where(audit_log.c.at >= since)
+        if until is not None:
+            query = query.where(audit_log.c.at < until)
+        if involving_user_id is not None:
+            query = query.where(
+                or_(
+                    audit_log.c.actor_user_id == involving_user_id,
+                    and_(
+                        audit_log.c.target_type == "user",
+                        audit_log.c.target_id == str(involving_user_id),
+                    ),
+                )
+            )
         with self._tx() as conn:
             rows = conn.execute(query).mappings().all()
         return [

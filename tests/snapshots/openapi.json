@@ -3506,13 +3506,85 @@
         }
       }
     },
+    "/api/v1/admin/overview": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Overview",
+        "description": "Accounts, sign-ins, sessions, learning activity and system settings on one screen.\n\nA summary read from the database on each request; the time series an alert needs live in\n``/metrics``.",
+        "operationId": "overview_api_v1_admin_overview_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminOverview"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/admin/users": {
       "get": {
         "tags": [
           "admin"
         ],
         "summary": "List Users",
-        "description": "Users by id, cursor-paginated.",
+        "description": "Users by id, cursor-paginated, optionally narrowed by search text and filters.",
         "operationId": "list_users_api_v1_admin_users_get",
         "parameters": [
           {
@@ -3542,6 +3614,75 @@
               ],
               "title": "Cursor"
             }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Matches part of the email address or the display name.",
+              "title": "Q"
+            },
+            "description": "Matches part of the email address or the display name."
+          },
+          {
+            "name": "role",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/Role"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Role"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/UserStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "verified",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Whether the email address is verified.",
+              "title": "Verified"
+            },
+            "description": "Whether the email address is verified."
           }
         ],
         "responses": {
@@ -3781,6 +3922,89 @@
         }
       }
     },
+    "/api/v1/admin/users/{user_id}/overview": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "User Overview",
+        "description": "One account with its sessions, tokens, external logins, learning and recent audit trail.\n\nTokens are listed by name and prefix only; the secret and its hash never leave the server.",
+        "operationId": "user_overview_api_v1_admin_users__user_id__overview_get",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "User Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminUserOverview"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/admin/users/{user_id}/sessions": {
       "delete": {
         "tags": [
@@ -3857,6 +4081,180 @@
         }
       }
     },
+    "/api/v1/admin/users/{user_id}/tokens": {
+      "delete": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Revoke User Tokens",
+        "description": "Revoke every personal access token of the user.",
+        "operationId": "revoke_user_tokens_api_v1_admin_users__user_id__tokens_delete",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "User Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevokedCount"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users/{user_id}/password-reset": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Send Password Reset",
+        "description": "Mail the user a password-reset link. The operator never sees the link.\n\n503 when the server has no mail configuration, 409 when the account is not active.",
+        "operationId": "send_password_reset_api_v1_admin_users__user_id__password_reset_post",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "User Id"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/admin/audit": {
       "get": {
         "tags": [
@@ -3909,6 +4307,97 @@
               ],
               "title": "Actor User Id"
             }
+          },
+          {
+            "name": "action",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Start of the action name: `user.` finds every change to a user.",
+              "title": "Action"
+            },
+            "description": "Start of the action name: `user.` finds every change to a user."
+          },
+          {
+            "name": "target_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 50
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Target Type"
+            }
+          },
+          {
+            "name": "target_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Target Id"
+            }
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Inclusive, with a UTC offset.",
+              "title": "Since"
+            },
+            "description": "Inclusive, with a UTC offset."
+          },
+          {
+            "name": "until",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Exclusive, with a UTC offset.",
+              "title": "Until"
+            },
+            "description": "Exclusive, with a UTC offset."
           }
         ],
         "responses": {
@@ -3920,6 +4409,183 @@
                   "$ref": "#/components/schemas/AuditPage"
                 }
               }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/audit/export": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Export Audit",
+        "description": "The audit log as CSV with the same filters, newest first, at most 10,000 rows.\n\nThe ``X-Truncated`` header is ``true`` when more rows matched than were exported.",
+        "operationId": "export_audit_api_v1_admin_audit_export_get",
+        "parameters": [
+          {
+            "name": "actor_user_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Actor User Id"
+            }
+          },
+          {
+            "name": "action",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Start of the action name: `user.` finds every change to a user.",
+              "title": "Action"
+            },
+            "description": "Start of the action name: `user.` finds every change to a user."
+          },
+          {
+            "name": "target_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 50
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Target Type"
+            }
+          },
+          {
+            "name": "target_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Target Id"
+            }
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Inclusive, with a UTC offset.",
+              "title": "Since"
+            },
+            "description": "Inclusive, with a UTC offset."
+          },
+          {
+            "name": "until",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Exclusive, with a UTC offset.",
+              "title": "Until"
+            },
+            "description": "Exclusive, with a UTC offset."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The matching rows as CSV.",
+            "content": {
+              "text/csv": {}
             }
           },
           "401": {
@@ -4065,6 +4731,38 @@
         "title": "ActivityProgress",
         "description": "Per-activity state (platform-design §4.1); Phase 1 only records quiz activities."
       },
+      "AdminOverview": {
+        "properties": {
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Generated At"
+          },
+          "users": {
+            "$ref": "#/components/schemas/OverviewUsers"
+          },
+          "security": {
+            "$ref": "#/components/schemas/OverviewSecurity"
+          },
+          "learning": {
+            "$ref": "#/components/schemas/OverviewLearning"
+          },
+          "system": {
+            "$ref": "#/components/schemas/OverviewSystem"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "generated_at",
+          "users",
+          "security",
+          "learning",
+          "system"
+        ],
+        "title": "AdminOverview",
+        "description": "One screen of platform state for an operator."
+      },
       "AdminUser": {
         "properties": {
           "id": {
@@ -4160,6 +4858,61 @@
           "updated_at"
         ],
         "title": "AdminUser"
+      },
+      "AdminUserOverview": {
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/AdminUser"
+          },
+          "sessions": {
+            "items": {
+              "$ref": "#/components/schemas/AuthSession"
+            },
+            "type": "array",
+            "title": "Sessions"
+          },
+          "tokens": {
+            "items": {
+              "$ref": "#/components/schemas/ApiToken"
+            },
+            "type": "array",
+            "title": "Tokens"
+          },
+          "identities": {
+            "items": {
+              "$ref": "#/components/schemas/Identity"
+            },
+            "type": "array",
+            "title": "Identities"
+          },
+          "failed_logins_24h": {
+            "type": "integer",
+            "title": "Failed Logins 24H"
+          },
+          "learning": {
+            "$ref": "#/components/schemas/LearnerSummary"
+          },
+          "recent_audit": {
+            "items": {
+              "$ref": "#/components/schemas/AuditEntry"
+            },
+            "type": "array",
+            "title": "Recent Audit"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "user",
+          "sessions",
+          "tokens",
+          "identities",
+          "failed_logins_24h",
+          "learning",
+          "recent_audit"
+        ],
+        "title": "AdminUserOverview",
+        "description": "One account as an operator needs to see it. Never contains a secret or a token hash."
       },
       "AdminUserUpdate": {
         "properties": {
@@ -4386,6 +5139,18 @@
               }
             ],
             "title": "Actor User Id"
+          },
+          "actor_email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actor Email",
+            "description": "The actor's current address; null for system events and deleted accounts."
           },
           "actor_ip": {
             "anyOf": [
@@ -4817,6 +5582,27 @@
         ],
         "title": "CourseSummary"
       },
+      "DayCount": {
+        "properties": {
+          "day": {
+            "type": "string",
+            "format": "date",
+            "title": "Day",
+            "description": "UTC calendar day."
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "day",
+          "count"
+        ],
+        "title": "DayCount"
+      },
       "DeleteAccount": {
         "properties": {
           "password": {
@@ -4962,6 +5748,43 @@
         ],
         "title": "Identity",
         "description": "A linked external login (OIDC provider)."
+      },
+      "LearnerSummary": {
+        "properties": {
+          "lessons_done": {
+            "type": "integer",
+            "title": "Lessons Done"
+          },
+          "lessons_in_progress": {
+            "type": "integer",
+            "title": "Lessons In Progress"
+          },
+          "study_minutes": {
+            "type": "integer",
+            "title": "Study Minutes"
+          },
+          "last_activity_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Activity At"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "lessons_done",
+          "lessons_in_progress",
+          "study_minutes",
+          "last_activity_at"
+        ],
+        "title": "LearnerSummary"
       },
       "Lesson": {
         "properties": {
@@ -5522,6 +6345,25 @@
         ],
         "title": "LogRequest"
       },
+      "LoginCounts": {
+        "properties": {
+          "succeeded": {
+            "type": "integer",
+            "title": "Succeeded"
+          },
+          "failed": {
+            "type": "integer",
+            "title": "Failed"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "succeeded",
+          "failed"
+        ],
+        "title": "LoginCounts"
+      },
       "LoginRequest": {
         "properties": {
           "email": {
@@ -5799,6 +6641,201 @@
           "reason"
         ],
         "title": "NextLesson"
+      },
+      "OverviewLearning": {
+        "properties": {
+          "window_days": {
+            "type": "integer",
+            "title": "Window Days"
+          },
+          "active_learners": {
+            "type": "integer",
+            "title": "Active Learners"
+          },
+          "lessons_completed": {
+            "type": "integer",
+            "title": "Lessons Completed"
+          },
+          "study_minutes": {
+            "type": "integer",
+            "title": "Study Minutes"
+          },
+          "lessons_completed_total": {
+            "type": "integer",
+            "title": "Lessons Completed Total"
+          },
+          "learners_total": {
+            "type": "integer",
+            "title": "Learners Total"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "window_days",
+          "active_learners",
+          "lessons_completed",
+          "study_minutes",
+          "lessons_completed_total",
+          "learners_total"
+        ],
+        "title": "OverviewLearning"
+      },
+      "OverviewSecurity": {
+        "properties": {
+          "active_sessions": {
+            "type": "integer",
+            "title": "Active Sessions"
+          },
+          "logins_24h": {
+            "$ref": "#/components/schemas/LoginCounts"
+          },
+          "logins_7d": {
+            "$ref": "#/components/schemas/LoginCounts"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "active_sessions",
+          "logins_24h",
+          "logins_7d"
+        ],
+        "title": "OverviewSecurity"
+      },
+      "OverviewSystem": {
+        "properties": {
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "lesson_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lesson Count",
+            "description": "null when the curriculum failed to load."
+          },
+          "course_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Course Count"
+          },
+          "mail_enabled": {
+            "type": "boolean",
+            "title": "Mail Enabled"
+          },
+          "public_content": {
+            "type": "boolean",
+            "title": "Public Content"
+          },
+          "signup_open": {
+            "type": "boolean",
+            "title": "Signup Open"
+          },
+          "auth_providers": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Auth Providers"
+          },
+          "audit_retention_days": {
+            "type": "integer",
+            "title": "Audit Retention Days"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "version",
+          "lesson_count",
+          "course_count",
+          "mail_enabled",
+          "public_content",
+          "signup_open",
+          "auth_providers",
+          "audit_retention_days"
+        ],
+        "title": "OverviewSystem"
+      },
+      "OverviewUsers": {
+        "properties": {
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "by_role": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/Role"
+            },
+            "type": "object",
+            "title": "By Role"
+          },
+          "by_status": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/UserStatus"
+            },
+            "type": "object",
+            "title": "By Status"
+          },
+          "unverified": {
+            "type": "integer",
+            "title": "Unverified",
+            "description": "Active accounts with an unverified address."
+          },
+          "stale_unverified": {
+            "type": "integer",
+            "title": "Stale Unverified",
+            "description": "Of those, the ones older than seven days."
+          },
+          "new_7d": {
+            "type": "integer",
+            "title": "New 7D"
+          },
+          "new_30d": {
+            "type": "integer",
+            "title": "New 30D"
+          },
+          "signups_daily": {
+            "items": {
+              "$ref": "#/components/schemas/DayCount"
+            },
+            "type": "array",
+            "title": "Signups Daily",
+            "description": "Last 14 UTC days, oldest first."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "total",
+          "by_role",
+          "by_status",
+          "unverified",
+          "stale_unverified",
+          "new_7d",
+          "new_30d",
+          "signups_daily"
+        ],
+        "title": "OverviewUsers"
       },
       "Paper": {
         "properties": {
@@ -6699,6 +7736,20 @@
         "title": "ReviewResult",
         "description": "The card's new schedule after a rating."
       },
+      "RevokedCount": {
+        "properties": {
+          "revoked": {
+            "type": "integer",
+            "title": "Revoked"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "revoked"
+        ],
+        "title": "RevokedCount"
+      },
       "Roadmap": {
         "properties": {
           "stages": {
@@ -7407,13 +8458,19 @@
             ],
             "title": "Next Cursor",
             "description": "Pass as `cursor` for the next page."
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total",
+            "description": "Users matching the filters in all, not only on this page."
           }
         },
         "additionalProperties": false,
         "type": "object",
         "required": [
           "items",
-          "next_cursor"
+          "next_cursor",
+          "total"
         ],
         "title": "UserPage"
       },

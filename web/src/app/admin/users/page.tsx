@@ -2,13 +2,13 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getLocale, getTranslations } from 'next-intl/server'
 
+import { ButtonLink, Button } from '@/components/Button'
 import { Card } from '@/components/Card'
 import { Chip } from '@/components/Chip'
 import { DataTable, type Column } from '@/components/DataTable'
-import { RowAction } from '@/components/form/RowAction'
-import { SelectAction } from '@/components/form/SelectAction'
+import { FilterInput, FilterSelect } from '@/components/form/FilterControls'
 import { PageHeader } from '@/components/PageHeader'
-import { revokeUserSessions, updateUser } from '@/lib/actions/admin'
+import { oneOf, param, withQuery } from '@/lib/admin-query'
 import { apiGetOrNull } from '@/lib/api/client'
 import type { AdminUser, Role, UserStatus } from '@/lib/api/types'
 import { formatDate } from '@/lib/format'
@@ -18,14 +18,20 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('usersTitle') }
 }
 
-const ROLES: Role[] = ['learner', 'author', 'admin']
-const ASSIGNABLE_STATUS: UserStatus[] = ['active', 'disabled']
+const ROLES: readonly Role[] = ['learner', 'author', 'admin']
+const STATUSES: readonly UserStatus[] = ['active', 'disabled', 'pending_deletion', 'deleted']
+const VERIFIED = ['true', 'false'] as const
 
 interface Props {
-  searchParams: Promise<{ cursor?: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }
 
-/** Admin users (Figma `23-221`) — `GET/PATCH /admin/users` with cursor paging. */
+/**
+ * Admin users (Figma `23-221`) — `GET /admin/users` with search, filters and cursor paging.
+ *
+ * The table finds an account; changing it happens on the account's own page, where the
+ * operator can see what they are about to change.
+ */
 export default async function AdminUsersPage({ searchParams }: Props) {
   const [t, tRole, tStatus, locale, params] = await Promise.all([
     getTranslations('admin'),
@@ -34,20 +40,41 @@ export default async function AdminUsersPage({ searchParams }: Props) {
     getLocale(),
     searchParams,
   ])
+  const q = param(params.q)
+  const role = oneOf(param(params.role), ROLES)
+  const status = oneOf(param(params.status), STATUSES)
+  const verified = oneOf(param(params.verified), VERIFIED)
+  const filters = { q, role, status, verified }
+  const filtered = Object.values(filters).some((value) => value !== undefined)
+
   const page = await apiGetOrNull('/api/v1/admin/users', {
-    query: { cursor: params.cursor, limit: 50 },
+    query: {
+      ...filters,
+      verified: verified === undefined ? undefined : verified === 'true',
+      cursor: param(params.cursor),
+      limit: 50,
+    },
   })
 
+  const any = { value: '', label: t('any') }
   const columns: ReadonlyArray<Column<AdminUser>> = [
     {
       key: 'user',
       header: t('colUser'),
       cell: (row) => (
-        <span className="flex flex-col">
-          <span className="text-primary font-medium">{row.display_name || row.email}</span>
-          <span className="text-muted text-xs">{row.email}</span>
-          {row.email_verified ? null : <Chip tone="warning">{t('unverified')}</Chip>}
-        </span>
+        <Link href={`/admin/users/${row.id}`} className="flex flex-col">
+          <span className="text-accent font-medium underline underline-offset-2">
+            {row.display_name || row.email}
+          </span>
+          {row.display_name ? <span className="text-muted text-xs">{row.email}</span> : null}
+        </Link>
+      ),
+    },
+    {
+      key: 'role',
+      header: t('colRole'),
+      cell: (row) => (
+        <Chip tone={row.role === 'learner' ? 'neutral' : 'accent'}>{tRole(row.role)}</Chip>
       ),
     },
     {
@@ -58,59 +85,79 @@ export default async function AdminUsersPage({ searchParams }: Props) {
       ),
     },
     {
+      key: 'verified',
+      header: t('colVerified'),
+      cell: (row) =>
+        row.email_verified ? (
+          <span className="text-muted">{t('verified')}</span>
+        ) : (
+          <Chip tone="warning">{t('unverified')}</Chip>
+        ),
+    },
+    {
       key: 'created',
       header: t('colCreated'),
       cell: (row) => formatDate(row.created_at, locale),
       hideOnMobile: true,
-    },
-    {
-      key: 'change',
-      header: t('colRole'),
-      cell: (row) => (
-        <SelectAction
-          action={updateUser}
-          hidden={{ userId: String(row.id) }}
-          label={t('save')}
-          pendingLabel={t('saving')}
-          selects={[
-            {
-              name: 'role',
-              label: t('colRole'),
-              value: row.role,
-              options: ROLES.map((role) => ({ value: role, label: tRole(role) })),
-            },
-            {
-              name: 'status',
-              label: t('colStatus'),
-              value: ASSIGNABLE_STATUS.includes(row.status) ? row.status : 'active',
-              options: ASSIGNABLE_STATUS.map((status) => ({
-                value: status,
-                label: tStatus(status),
-              })),
-            },
-          ]}
-        />
-      ),
-    },
-    {
-      key: 'sessions',
-      header: t('colActions'),
-      cell: (row) => (
-        <RowAction
-          action={revokeUserSessions}
-          hidden={{ userId: String(row.id) }}
-          label={t('revokeSessions')}
-          pendingLabel={t('revoking')}
-          confirm={t('revokeConfirm')}
-        />
-      ),
     },
   ]
 
   return (
     <>
       <PageHeader title={t('usersTitle')} subtitle={t('usersSubtitle')} />
-      <Card className="p-0">
+
+      <form
+        method="get"
+        role="search"
+        aria-label={t('userFiltersLabel')}
+        className="mb-4 grid grid-cols-1 items-end gap-3 sm:grid-cols-2 lg:grid-cols-[minmax(0,2fr)_repeat(3,minmax(0,1fr))_auto]"
+      >
+        <FilterInput
+          label={t('searchLabel')}
+          name="q"
+          type="search"
+          defaultValue={q ?? ''}
+          placeholder={t('searchPlaceholder')}
+          maxLength={200}
+          autoComplete="off"
+        />
+        <FilterSelect
+          label={t('filterRole')}
+          name="role"
+          value={role ?? ''}
+          options={[any, ...ROLES.map((value) => ({ value, label: tRole(value) }))]}
+        />
+        <FilterSelect
+          label={t('filterStatus')}
+          name="status"
+          value={status ?? ''}
+          options={[any, ...STATUSES.map((value) => ({ value, label: tStatus(value) }))]}
+        />
+        <FilterSelect
+          label={t('filterVerified')}
+          name="verified"
+          value={verified ?? ''}
+          options={[
+            any,
+            { value: 'true', label: t('verifiedYes') },
+            { value: 'false', label: t('verifiedNo') },
+          ]}
+        />
+        <div className="flex gap-2">
+          <Button type="submit">{t('apply')}</Button>
+          {filtered ? (
+            <ButtonLink href="/admin/users" kind="secondary">
+              {t('reset')}
+            </ButtonLink>
+          ) : null}
+        </div>
+      </form>
+
+      <p className="text-muted mb-3 text-sm" role="status">
+        {t('resultCount', { count: page?.total ?? 0 })}
+      </p>
+
+      <Card className="p-0 sm:p-0">
         <DataTable
           caption={t('usersTableCaption')}
           columns={columns}
@@ -119,10 +166,11 @@ export default async function AdminUsersPage({ searchParams }: Props) {
           empty={<p className="text-muted p-5 text-sm">{t('noUsers')}</p>}
         />
       </Card>
+
       {page?.next_cursor ? (
         <p className="mt-4">
           <Link
-            href={`/admin/users?cursor=${encodeURIComponent(page.next_cursor)}`}
+            href={withQuery('/admin/users', { ...filters, cursor: page.next_cursor })}
             className="text-accent text-sm underline underline-offset-2"
           >
             {t('more')}

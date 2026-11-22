@@ -25,8 +25,8 @@ GET. 진행도·노트·퀴즈 기록·리포트·`/me`·`/admin`·모든 쓰기
 | `POST /api/v1/progress/start|stop|log|done` (own data only) | 401 | ✔ | ✔ | ✔ | `write:progress` |
 | `GET /api/v1/me`, `/me/export` | 401 | ✔ | ✔ | ✔ | `read:progress` |
 | `PATCH /api/v1/me`, `PUT /me/password`, `GET|DELETE /me/sessions*`, `GET|POST|DELETE /me/tokens*`, `GET|DELETE /me/identities*`, `DELETE /me` | 401 | ✔ | ✔ | ✔ | not allowed (session only) |
-| `GET /api/v1/admin/users`, `/admin/users/{id}`, `/admin/audit` | 401 | 403 | 403 | ✔ | `admin` |
-| `PATCH /api/v1/admin/users/{id}`, `DELETE /admin/users/{id}/sessions` | 401 | 403 | 403 | ✔ | `admin` (+`write:progress` for the method check) |
+| `GET /api/v1/admin/overview`, `/admin/users` (search, filters), `/admin/users/{id}`, `/admin/users/{id}/overview`, `/admin/audit` (filters), `/admin/audit/export` (CSV) | 401 | 403 | 403 | ✔ | `admin` |
+| `PATCH /api/v1/admin/users/{id}`, `DELETE /admin/users/{id}/sessions`, `DELETE /admin/users/{id}/tokens`, `POST /admin/users/{id}/password-reset` | 401 | 403 | 403 | ✔ | `admin` (+`write:progress` for the method check) |
 
 Rules enforced on top of the table:
 
@@ -35,6 +35,12 @@ Rules enforced on top of the table:
 - An admin cannot remove their own admin access; the last active admin cannot be demoted, disabled or
   deleted (409). A demotion takes effect on the next request.
 - Only admins can mint tokens with the `admin` scope. Disabling a user ends their sessions and tokens.
+- Every admin read is audited as well as every write (`admin.overview.viewed`, `admin.users.viewed`,
+  `admin.user.viewed`, `admin.audit.viewed`, `admin.audit.exported`). A user search is recorded as
+  "searched", never with its text.
+- `POST /admin/users/{id}/password-reset` mails the link to the user; the response is empty and the
+  admin never sees it. 503 without mail configuration, 409 for an account that is not active.
+- `/admin/users/{id}/overview` lists tokens by name and prefix. No secret and no hash is returned.
 - Author-only content actions (reindex, publish) arrive with the content-reindex work (AC-API.6).
 
 Local mode (default) has no accounts: every request acts as user 1 and the `/auth` and account

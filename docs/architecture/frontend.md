@@ -43,10 +43,13 @@
 | `/signup` | 회원가입 | `POST /auth/signup` | 비로그인 전용 |
 | `/verify-email`, `/password/forgot`, `/password/reset` | 계정 | `POST /auth/verify-email`, `/auth/password/forgot`, `/auth/password/reset` | 토큰은 쿼리에서 |
 | `/profile` | 프로필 | `GET/PATCH /me`, `/me/password`, `/me/identities`, `/me/sessions`, `/me/tokens`, `/me/export` | 구현됨. 좌측 섹션 내비 + 앵커. `/me/export` 는 세션 쿠키가 이 오리진에 있어 브라우저가 API 를 직접 못 부르므로 라우트 핸들러 `/api/me/export` 가 중계한다 |
-| `/admin/users` | 사용자 관리 | `GET /admin/users`, `PATCH /admin/users/{id}`, `DELETE /admin/users/{id}/sessions`, `POST /admin/invitations` | admin 전용 |
-| `/admin/audit` | 감사 로그 | `GET /admin/audit` | 구현됨. 커서 페이지네이션 |
+| `/admin` | 운영 개요 | `GET /admin/overview`, `GET /admin/audit?action=user.` | admin 전용. 확인이 필요한 항목, 계정·로그인·학습 집계, 14일 가입 추이, 시스템 상태 (P3-1) |
+| `/admin/users` | 사용자 관리 | `GET /admin/users` | 검색(`q`)·역할·상태·인증 필터가 URL 에 있다. 전체 건수, 커서 페이지 |
+| `/admin/users/{id}` | 사용자 상세 | `GET /admin/users/{id}/overview`, `PATCH /admin/users/{id}`, `DELETE …/sessions`, `DELETE …/tokens`, `POST …/password-reset` | 세션·토큰·외부 로그인·학습·최근 기록과 조치. 조치는 확인을 묻고 결과를 그 자리에 표시 |
+| `/admin/audit` | 감사 로그 | `GET /admin/audit` | 동작 접두어·행위자·대상·기간 필터, 행위자 이메일, 커서 페이지 |
+| `/admin/audit/export` | CSV 내려받기 | `GET /admin/audit/export` | 라우트 핸들러가 세션 쿠키를 넘겨 API 응답을 그대로 스트리밍 |
 | `/admin/content` | 콘텐츠 | `GET /admin/content`, `POST /admin/content/reload` | 계약에 아직 없음 |
-| `/admin/system` | 시스템 | `GET /readyz`, `GET /version` | 미구현. 설정은 마스킹 값 |
+| `/admin/system` | 시스템 | — | `/admin` 개요의 "시스템" 카드로 대체(버전, 콘텐츠, 메일·공개·가입 설정, 감사 보존 기간) |
 
 ### 레슨 화면의 쓰기 동작
 
