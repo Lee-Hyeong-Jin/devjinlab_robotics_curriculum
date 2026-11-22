@@ -88,6 +88,11 @@ def serve(
         log_config=None,
         access_log=False,  # the request middleware logs every request as JSON
         server_header=False,
+        # The app decides whose X-Forwarded-For to believe (RC_API_TRUSTED_PROXIES,
+        # api/clientip.py). uvicorn's own handling would rewrite the peer address for loopback
+        # callers before the app sees it, so the app could no longer tell the web tier from the
+        # browser it speaks for. Behind a proxy the public address comes from RC_API_BASE_URL.
+        proxy_headers=False,
     )
 
 

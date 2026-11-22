@@ -53,7 +53,18 @@ describe('isDocumentRequest', () => {
     expect(isDocumentRequest('HEAD', new Headers({ accept: '*/*' }))).toBe(true)
     expect(isDocumentRequest('GET', new Headers({ rsc: '1', accept: '*/*' }))).toBe(false)
     expect(isDocumentRequest('GET', new Headers({ 'next-router-prefetch': '1' }))).toBe(false)
+    expect(isDocumentRequest('GET', new Headers({ 'next-router-segment-prefetch': '/x' }))).toBe(
+      false,
+    )
     expect(isDocumentRequest('POST', new Headers({ accept: 'text/html' }))).toBe(false)
+    // What the middleware actually sees for the router's requests: Next has removed the
+    // `rsc` headers, and only the browser's fetch metadata tells them from a page load.
+    expect(
+      isDocumentRequest('GET', new Headers({ accept: '*/*', 'sec-fetch-dest': 'empty' })),
+    ).toBe(false)
+    expect(
+      isDocumentRequest('GET', new Headers({ accept: 'text/html', 'sec-fetch-dest': 'document' })),
+    ).toBe(true)
     expect(isDocumentRequest('GET', new Headers({ accept: 'application/json' }))).toBe(false)
   })
 })

@@ -60,6 +60,9 @@ class Settings:
     cookie_secure: bool = True
     metrics: bool = True
     metrics_token: str | None = None
+    ops_metrics: bool = True
+    """Record request statistics, failed requests and visits for the admin monitoring page
+    (``RC_OPS_METRICS=0`` turns it off; server mode only, ADR 0017)."""
     trusted_proxies: tuple[Network, ...] = field(
         default_factory=lambda: parse_trusted_proxies(None)
     )
@@ -94,6 +97,7 @@ class Settings:
             metrics=env.get("RC_API_METRICS", "1") != "0",
             metrics_token=(env.get("RC_API_METRICS_TOKEN") or "").strip() or None,
             public_content=env.get("RC_PUBLIC_CONTENT", "0") == "1",
+            ops_metrics=env.get("RC_OPS_METRICS", "1") != "0",
             trusted_proxies=_parse_proxies(env.get("RC_API_TRUSTED_PROXIES")),
         )
         return base.with_overrides(

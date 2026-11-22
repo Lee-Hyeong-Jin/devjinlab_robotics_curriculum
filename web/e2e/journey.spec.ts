@@ -241,9 +241,32 @@ test('an operator works through the admin console (AC-ADM.5)', async ({ page }) 
   expect(exported.headers()['content-type']).toContain('text/csv')
   expect((await exported.text()).split('\r\n')[0]).toContain('actor_email')
 
+  // Monitoring: the five areas are there, with real numbers behind them (AC-MON.6).
+  await page.goto('/admin/monitoring')
+  await expect(page.getByRole('heading', { level: 1, name: /모니터링|Monitoring/ })).toBeVisible()
+  for (const name of [
+    /핵심 지표|Key figures/,
+    /시스템 자원|System resources/,
+    /API 트래픽|API traffic/,
+    /실패한 요청|Failed requests/,
+    /^(방문|Visits)$/,
+  ]) {
+    await expect(page.getByRole('heading', { level: 2, name })).toBeVisible()
+  }
+  // This very session made API requests, so the traffic section cannot be empty.
+  const traffic = page.locator('section[aria-labelledby="traffic"]')
+  await expect(traffic.getByText(/^(성공률|Success rate)$/i)).toBeVisible()
+  await expect(traffic.getByRole('table').first()).toContainText('/api/v1/')
+  expect(await seriousViolations(page), 'axe on /admin/monitoring').toEqual([])
+  await page
+    .getByRole('link', { name: /^(7일|7 days)$/ })
+    .first()
+    .click()
+  await page.waitForURL(/t=7d/)
+
   // None of it scrolls sideways on a phone.
   await page.setViewportSize({ width: 360, height: 740 })
-  for (const path of ['/admin', '/admin/users', '/admin/audit']) {
+  for (const path of ['/admin', '/admin/monitoring', '/admin/users', '/admin/audit']) {
     await page.goto(path)
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     const overflow = await page.evaluate(

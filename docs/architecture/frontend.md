@@ -44,6 +44,7 @@
 | `/verify-email`, `/password/forgot`, `/password/reset` | 계정 | `POST /auth/verify-email`, `/auth/password/forgot`, `/auth/password/reset` | 토큰은 쿼리에서 |
 | `/profile` | 프로필 | `GET/PATCH /me`, `/me/password`, `/me/identities`, `/me/sessions`, `/me/tokens`, `/me/export` | 구현됨. 좌측 섹션 내비 + 앵커. `/me/export` 는 세션 쿠키가 이 오리진에 있어 브라우저가 API 를 직접 못 부르므로 라우트 핸들러 `/api/me/export` 가 중계한다 |
 | `/admin` | 운영 개요 | `GET /admin/overview`, `GET /admin/audit?action=user.` | admin 전용. 확인이 필요한 항목, 계정·로그인·학습 집계, 14일 가입 추이, 시스템 상태 (P3-1) |
+| `/admin/monitoring` | 모니터링 | `GET /admin/monitoring/{kpi,system,traffic,errors,visits}` | admin 전용. 임계값 경고, 제품 KPI, 시스템 자원, API 트래픽·지연·오류 예산, 실패한 요청, 방문. 기간은 URL(`?t=`, `?v=`) (P3-2, ADR 0017) |
 | `/admin/users` | 사용자 관리 | `GET /admin/users` | 검색(`q`)·역할·상태·인증 필터가 URL 에 있다. 전체 건수, 커서 페이지 |
 | `/admin/users/{id}` | 사용자 상세 | `GET /admin/users/{id}/overview`, `PATCH /admin/users/{id}`, `DELETE …/sessions`, `DELETE …/tokens`, `POST …/password-reset` | 세션·토큰·외부 로그인·학습·최근 기록과 조치. 조치는 확인을 묻고 결과를 그 자리에 표시 |
 | `/admin/audit` | 감사 로그 | `GET /admin/audit` | 동작 접두어·행위자·대상·기간 필터, 행위자 이메일, 커서 페이지 |
@@ -299,6 +300,20 @@ API 가 커리큘럼 읽기를 익명에게 열고, 웹은 그 페이지를 색�
   자기 진도 과정이라 날짜는 적지 않는다.
 - `/roadmap` 은 익명일 때 `/courses/{id}`(구조만)로 만든다 — 로드맵 자체는 호출자의 진행도를 담아
   익명에 열리지 않는다(`toStageViewsFromCourse`).
+
+## 5.2.1 방문 집계 (ADR 0017)
+
+방문은 서버가 센다. 브라우저에 식별자를 만들지 않고 외부 스크립트도 없다.
+
+- **전체 페이지 로드**는 미들웨어가 API 에 알린다(`lib/pageview.ts`, `event.waitUntil` 로 응답을
+  기다리지 않는다). 리다이렉트·404 는 방문이 아니다.
+- **앱 안의 이동**은 브라우저가 알린다(`<PageViewBeacon>` → `POST /api/pv` → API). 라우터가 캐시에서
+  페이지를 바꾸면 서버에는 요청이 오지 않기 때문이다. 경로만 보내고, 첫 페이지는 서버가 이미
+  셌으므로 보내지 않는다.
+- **프리페치는 세지 않는다.** Next 는 미들웨어에 넘기기 전에 `rsc`·`next-router-prefetch` 헤더를
+  지우므로 그것으로는 구분할 수 없다 — 처음 구현은 링크마다 생기는 프리페치를 전부 방문으로 셌다.
+  브라우저의 `Sec-Fetch-Dest`(`document` 대 `empty`)로 가른다(`isDocumentRequest`).
+- 관리자 화면·API 라우트·정적 파일은 세지 않는다(`countsAsPage`). 유입 경로가 자기 사이트면 버린다.
 
 ## 5.3 보안 헤더
 

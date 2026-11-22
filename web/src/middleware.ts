@@ -1,7 +1,8 @@
-import { NextResponse, type NextRequest } from 'next/server'
+import { NextResponse, type NextFetchEvent, type NextRequest } from 'next/server'
 
 import { CURRENT_PATH_HEADER } from '@/lib/api/client'
 import { contentTarget, contentVerdict, isDocumentRequest } from '@/lib/content-status'
+import { pageViewRequest } from '@/lib/pageview'
 import { contentSecurityPolicy, HSTS, STATIC_SECURITY_HEADERS } from '@/lib/security-headers'
 
 /** Request header carrying the per-request CSP nonce to the root layout. */
@@ -15,7 +16,7 @@ export const NONCE_HEADER = 'x-nonce'
  * Route protection itself stays on the API: the frontend never decides access
  * (AC-WEB.4).
  */
-export async function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest, event: NextFetchEvent) {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
   const headers = new Headers(request.headers)
   const { pathname, search } = request.nextUrl
@@ -34,10 +35,38 @@ export async function middleware(request: NextRequest) {
   headers.set('content-security-policy', csp)
 
   const response = await respond(request, headers)
+  reportPageView(request, response, event)
   response.headers.set('Content-Security-Policy', csp)
   for (const { key, value } of STATIC_SECURITY_HEADERS) response.headers.set(key, value)
   if (https) response.headers.set('Strict-Transport-Security', HSTS)
   return response
+}
+
+/**
+ * Tell the API that a page was viewed (`lib/pageview.ts`, ADR 0017).
+ *
+ * Fire and forget: the response does not wait for it, and a failure is silent, because a visit
+ * that is not counted is better than a page that is not served. Redirects and not-found answers
+ * are not views.
+ */
+function reportPageView(request: NextRequest, response: NextResponse, event: NextFetchEvent): void {
+  // Full page loads only. Navigations inside the app are often served from the router's cache
+  // without a request, so the browser reports those itself (`<PageViewBeacon>`).
+  if (
+    response.status >= 300 ||
+    request.method !== 'GET' ||
+    !isDocumentRequest(request.method, request.headers)
+  ) {
+    return
+  }
+  const report = pageViewRequest(
+    request.nextUrl.pathname,
+    request.nextUrl.search,
+    request.headers,
+    request.cookies,
+  )
+  if (!report) return
+  event.waitUntil(fetch(report.url, report.init).catch(() => undefined))
 }
 
 /** Missing content answers 404 and the `/lessons/{id}` shortcut 308 (`lib/content-status.ts`). */

@@ -31,13 +31,26 @@ export function contentTarget(pathname: string): ContentTarget | null {
 }
 
 /**
- * Whether a request is a full page load, the only kind whose status line anybody reads.
- * Client-side navigations and prefetches carry the `rsc` header and are left alone, so a reader
- * clicking through the site does not pay for a second API call per page.
+ * Whether a request is a full page load, the only kind whose status line anybody reads and the
+ * only kind the server counts as a visit.
+ *
+ * The router's own requests (navigations, prefetches) must not match. Their marker headers
+ * (`rsc`, `next-router-prefetch`) are checked, but Next removes them before the middleware
+ * runs, so the deciding signal is the browser's `Sec-Fetch-Dest`: `document` for a page load,
+ * `empty` for anything fetched by script. Clients that do not send it (crawlers, curl) are
+ * judged by `Accept`.
  */
 export function isDocumentRequest(method: string, headers: Headers): boolean {
   if (method !== 'GET' && method !== 'HEAD') return false
-  if (headers.has('rsc') || headers.has('next-router-prefetch')) return false
+  if (
+    headers.has('rsc') ||
+    headers.has('next-router-prefetch') ||
+    headers.has('next-router-segment-prefetch')
+  ) {
+    return false
+  }
+  const destination = headers.get('sec-fetch-dest')
+  if (destination !== null) return destination === 'document'
   const accept = headers.get('accept') ?? ''
   return accept === '' || accept.includes('text/html') || accept.includes('*/*')
 }

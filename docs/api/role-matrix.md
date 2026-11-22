@@ -26,6 +26,8 @@ GET. 진행도·노트·퀴즈 기록·리포트·`/me`·`/admin`·모든 쓰기
 | `GET /api/v1/me`, `/me/export` | 401 | ✔ | ✔ | ✔ | `read:progress` |
 | `PATCH /api/v1/me`, `PUT /me/password`, `GET|DELETE /me/sessions*`, `GET|POST|DELETE /me/tokens*`, `GET|DELETE /me/identities*`, `DELETE /me` | 401 | ✔ | ✔ | ✔ | not allowed (session only) |
 | `GET /api/v1/admin/overview`, `/admin/users` (search, filters), `/admin/users/{id}`, `/admin/users/{id}/overview`, `/admin/audit` (filters), `/admin/audit/export` (CSV) | 401 | 403 | 403 | ✔ | `admin` |
+| `GET /api/v1/admin/monitoring/system`, `/traffic`, `/errors`, `/visits`, `/kpi` | 401 | 403 | 403 | ✔ | `admin` |
+| `POST /api/v1/telemetry/pageview` (the web tier reports a page view) | 403 unless the connection comes from a trusted proxy (`RC_API_TRUSTED_PROXIES`); no session involved | | | | not allowed |
 | `PATCH /api/v1/admin/users/{id}`, `DELETE /admin/users/{id}/sessions`, `DELETE /admin/users/{id}/tokens`, `POST /admin/users/{id}/password-reset` | 401 | 403 | 403 | ✔ | `admin` (+`write:progress` for the method check) |
 
 Rules enforced on top of the table:
@@ -40,6 +42,9 @@ Rules enforced on top of the table:
   "searched", never with its text.
 - `POST /admin/users/{id}/password-reset` mails the link to the user; the response is empty and the
   admin never sees it. 503 without mail configuration, 409 for an account that is not active.
+- The monitoring endpoints return aggregates and the failed-request log. They never return an IP
+  address, a user agent, a query string or a request body (ADR 0017). 404 when monitoring is off
+  (`RC_OPS_METRICS=0`) and in local mode.
 - `/admin/users/{id}/overview` lists tokens by name and prefix. No secret and no hash is returned.
 - Author-only content actions (reindex, publish) arrive with the content-reindex work (AC-API.6).
 

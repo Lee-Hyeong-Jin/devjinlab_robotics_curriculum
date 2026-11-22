@@ -160,3 +160,23 @@ def test_the_address_throttle_counts_each_browser_separately(
         headers={"X-Forwarded-For": "198.51.100.7"},
     )
     assert other.status_code == 200, other.text
+
+
+def test_the_server_leaves_forwarded_headers_to_the_app(monkeypatch: pytest.MonkeyPatch) -> None:
+    """uvicorn must not rewrite the peer address before the app applies its own trust rule.
+
+    With uvicorn's handling on, a loopback web tier's report arrived looking as if it came
+    from the browser, and the page-view endpoint (web tier only) refused its own web tier.
+    """
+    import uvicorn
+    from typer.testing import CliRunner
+
+    from robotics_curriculum.cli import app as cli_app
+
+    seen: list[dict[str, object]] = []
+    monkeypatch.setattr(uvicorn, "run", lambda app, **kw: seen.append(kw))
+    monkeypatch.setattr("robotics_curriculum.api.log.configure_logging", lambda level: None)
+    monkeypatch.setenv("RC_AUTH_MODE", "local")
+    result = CliRunner().invoke(cli_app, ["--curriculum", str(CURRICULUM), "api", "serve"])
+    assert result.exit_code == 0, result.output
+    assert seen and seen[0]["proxy_headers"] is False

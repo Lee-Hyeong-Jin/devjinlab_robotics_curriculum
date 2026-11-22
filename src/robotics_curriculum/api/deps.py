@@ -22,6 +22,8 @@ from robotics_curriculum.auth.models import Role, Scope, User
 from robotics_curriculum.auth.oidc import OidcClient
 from robotics_curriculum.auth.service import AuthService, Context, Principal
 from robotics_curriculum.content import Course, Lesson, Module
+from robotics_curriculum.ops.recorder import Recorder
+from robotics_curriculum.ops.system import CpuSampler
 from robotics_curriculum.progress import (
     DEFAULT_USER,
     ProgressError,
@@ -105,6 +107,12 @@ class AppState:
     auth: AuthService | None = None
     oidc: dict[str, OidcClient] = field(default_factory=dict)
     flow_key: bytes = b""
+    ops: Recorder | None = None
+    """Monitoring recorder (server mode only, ADR 0017)."""
+    cpu: CpuSampler = field(default_factory=CpuSampler)
+    visit_key: bytes = b""
+    """Secret the daily visitor-hash salt is derived from."""
+    started_at: datetime | None = None
 
 
 def get_state(request: Request) -> AppState:
@@ -203,7 +211,18 @@ def _deny(
 
 
 def optional_principal(request: Request, state: State) -> Principal | None:
-    """The caller from ``Authorization: Bearer <PAT>`` or the session cookie, if valid."""
+    """The caller from ``Authorization: Bearer <PAT>`` or the session cookie, if valid.
+
+    The user id is also left on the request state, where the monitoring middleware reads it
+    for the failed-request log (the middleware runs outside dependency injection).
+    """
+    principal = _authenticate(request, state)
+    if principal is not None and principal is not LOCAL_PRINCIPAL:
+        request.state.rc_user_id = principal.user.id
+    return principal
+
+
+def _authenticate(request: Request, state: State) -> Principal | None:
     if state.auth is None:
         return LOCAL_PRINCIPAL
     header = request.headers.get("authorization", "")

@@ -1129,10 +1129,184 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/admin/monitoring/system": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * System Status
+         * @description CPU, memory, disk, temperature, uptime and database readings, taken now.
+         *
+         *     Read from the machine the API runs on. In a container the load, memory and temperature
+         *     are the host's and the disk is the data volume. A reading the host does not expose is
+         *     null or absent rather than a guess.
+         */
+        get: operations["system_status_api_v1_admin_monitoring_system_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/monitoring/traffic": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Traffic
+         * @description API requests over a period: volume, success rate, latency, and the routes behind them.
+         *
+         *     The success rate is ``1 - 5xx / all``: a 4xx is the caller's mistake and is reported
+         *     beside it, not counted against the service. Latency quantiles are estimated from a
+         *     histogram, so they are accurate to its bucket edges.
+         */
+        get: operations["traffic_api_v1_admin_monitoring_traffic_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/monitoring/errors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Failed Requests
+         * @description Requests that failed on the server's side (5xx), newest first.
+         *
+         *     Each carries the request id: the full stack trace is in the server log under the same id.
+         */
+        get: operations["failed_requests_api_v1_admin_monitoring_errors_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/monitoring/visits": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Visits
+         * @description Page views and unique visitors per day, the most viewed pages and where visits came from.
+         *
+         *     Days are UTC. A visitor is counted once per day by a pseudonym that changes daily, so the
+         *     daily figures are exact and their sum is *visitor-days*, not unique people over the range.
+         *     Signed-in accounts active in the last 7 and 30 days come from the audit log instead.
+         */
+        get: operations["visits_api_v1_admin_monitoring_visits_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/monitoring/kpi": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Kpis
+         * @description Product KPIs: active users, growth, activation and retention, and learning volume.
+         *
+         *     - **Active users** come from session activity: an account counts when one of its sessions
+         *       was used in the period. Stickiness is DAU / MAU.
+         *     - **Activation** is the share of accounts created in the last 30 days that completed at
+         *       least one lesson. **Week-1 retention** is the share of accounts created 7 to 14 days ago
+         *       that were active again in the last 7 days.
+         *     - **Visit to sign-up** divides sign-ups by visitor-days; it shows the trend, not a funnel,
+         *       because a visitor is only recognisable within one day (ADR 0017).
+         */
+        get: operations["kpis_api_v1_admin_monitoring_kpi_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/telemetry/pageview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Page View
+         * @description Count one page view.
+         *
+         *     Stored: the day, the normalized path, the language, whether the client is automated,
+         *     whether the reader is signed in, and the referring host. The address and user agent are
+         *     used once, to derive a visitor pseudonym that changes every day, and are not stored.
+         *
+         *     403 unless the caller is the web tier; 404 when monitoring is off.
+         */
+        post: operations["page_view_api_v1_telemetry_pageview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * ActiveUsers
+         * @description Accounts that used the service, by how recently (from session activity).
+         */
+        ActiveUsers: {
+            /**
+             * Daily
+             * @description DAU: active in the last 24 hours.
+             */
+            daily: number;
+            /**
+             * Weekly
+             * @description WAU: active in the last 7 days.
+             */
+            weekly: number;
+            /**
+             * Monthly
+             * @description MAU: active in the last 30 days.
+             */
+            monthly: number;
+            /**
+             * Stickiness
+             * @description DAU / MAU; null with no monthly actives.
+             */
+            stickiness: number | null;
+        };
         /**
          * Activity
          * @description One unit of learner work inside a lesson.
@@ -1255,6 +1429,31 @@ export interface components {
             role?: components["schemas"]["Role"] | null;
             /** @description active or disabled */
             status?: components["schemas"]["UserStatus"] | null;
+        };
+        /**
+         * Alert
+         * @description One reading past its threshold.
+         */
+        Alert: {
+            /**
+             * Key
+             * @description Which reading: disk, memory, load, temperature, errors, latency.
+             */
+            key: string;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "ok" | "warning" | "critical";
+            /** Value */
+            value: number;
+            /** Threshold */
+            threshold: number;
+            /**
+             * Detail
+             * @description E.g. the sensor or the path.
+             */
+            detail?: string | null;
         };
         /** ApiToken */
         ApiToken: {
@@ -1488,6 +1687,33 @@ export interface components {
             /** Detail */
             detail?: string | null;
         };
+        /** Cohorts */
+        Cohorts: {
+            /**
+             * Activation Cohort
+             * @description Accounts created in the last 30 days.
+             */
+            activation_cohort: number;
+            /**
+             * Activated
+             * @description Of those, completed at least one lesson.
+             */
+            activated: number;
+            /** Activation Rate */
+            activation_rate: number | null;
+            /**
+             * Retention Cohort
+             * @description Accounts created 7 to 14 days ago.
+             */
+            retention_cohort: number;
+            /**
+             * Retained
+             * @description Of those, active again in the last 7 days.
+             */
+            retained: number;
+            /** Week1 Retention */
+            week1_retention: number | null;
+        };
         /** Course */
         Course: {
             /** Id */
@@ -1535,6 +1761,71 @@ export interface components {
              */
             lang: string;
         };
+        /** CpuReading */
+        CpuReading: {
+            /** Count */
+            count: number;
+            /** Load 1M */
+            load_1m: number | null;
+            /** Load 5M */
+            load_5m: number | null;
+            /** Load 15M */
+            load_15m: number | null;
+            /**
+             * Load Per Cpu
+             * @description 1-minute load divided by the CPU count.
+             */
+            load_per_cpu: number | null;
+            /**
+             * Usage Ratio
+             * @description Share of CPU time in use since the previous reading; null on the first.
+             */
+            usage_ratio: number | null;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "ok" | "warning" | "critical";
+        };
+        /** DatabaseReading */
+        DatabaseReading: {
+            /** Backend */
+            backend: string;
+            /** Reachable */
+            reachable: boolean;
+            /** Ping Ms */
+            ping_ms: number | null;
+            /** Size Bytes */
+            size_bytes: number | null;
+            /**
+             * Connections
+             * @description PostgreSQL connections in use; null on SQLite.
+             */
+            connections: number | null;
+            /** Connections Max */
+            connections_max: number | null;
+            /**
+             * Connections Level
+             * @enum {string}
+             */
+            connections_level: "ok" | "warning" | "critical";
+            /**
+             * Pool
+             * @description Connections per pool: checked_out, size.
+             */
+            pool: {
+                [key: string]: {
+                    [key: string]: number;
+                };
+            };
+            /**
+             * Monitoring Rows
+             * @description Rows in each monitoring table.
+             */
+            monitoring_rows: {
+                [key: string]: number;
+            };
+        };
         /** DayCount */
         DayCount: {
             /**
@@ -1550,6 +1841,24 @@ export interface components {
         DeleteAccount: {
             /** Password */
             password?: string | null;
+        };
+        /** DiskReading */
+        DiskReading: {
+            /** Path */
+            path: string;
+            /** Total Bytes */
+            total_bytes: number;
+            /** Used Bytes */
+            used_bytes: number;
+            /** Free Bytes */
+            free_bytes: number;
+            /** Used Ratio */
+            used_ratio: number;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "ok" | "warning" | "critical";
         };
         /** DoneRequest */
         DoneRequest: {
@@ -1572,10 +1881,96 @@ export interface components {
              */
             unlocked_lesson_ids: string[];
         };
+        /**
+         * ErrorBudget
+         * @description An availability objective and how much of its allowed failure the range has used.
+         */
+        ErrorBudget: {
+            /**
+             * Target
+             * @description E.g. 0.999.
+             */
+            target: number;
+            /** Availability */
+            availability: number | null;
+            /** Allowed Failures */
+            allowed_failures: number;
+            /** Failures */
+            failures: number;
+            /**
+             * Consumed Ratio
+             * @description Above 1 the objective is missed.
+             */
+            consumed_ratio: number | null;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "ok" | "warning" | "critical";
+        };
+        /** FailedRequest */
+        FailedRequest: {
+            /** Id */
+            id: number;
+            /**
+             * At
+             * Format: date-time
+             */
+            at: string;
+            /** Method */
+            method: string;
+            /** Route */
+            route: string;
+            /** Path */
+            path: string;
+            /** Status */
+            status: number;
+            /** Duration Ms */
+            duration_ms: number;
+            /**
+             * Request Id
+             * @description Find the full stack trace in the server log by this.
+             */
+            request_id: string | null;
+            /** User Id */
+            user_id: number | null;
+            /** Error Type */
+            error_type: string | null;
+            /** Error Message */
+            error_message: string | null;
+        };
+        /** FailedRequestPage */
+        FailedRequestPage: {
+            /** Items */
+            items: components["schemas"]["FailedRequest"][];
+            /** Next Cursor */
+            next_cursor: string | null;
+            /** Total 24H */
+            total_24h: number;
+        };
         /** ForgotRequest */
         ForgotRequest: {
             /** Email */
             email: string;
+        };
+        /** Growth */
+        Growth: {
+            /** Users Total */
+            users_total: number;
+            /** Signups 7D */
+            signups_7d: number;
+            /** Signups 30D */
+            signups_30d: number;
+            /**
+             * Visitor Days 30D
+             * @description Sum of daily unique visitors over 30 days.
+             */
+            visitor_days_30d: number;
+            /**
+             * Visit To Signup
+             * @description Sign-ups per visitor-day over 30 days: a conversion proxy, not a funnel.
+             */
+            visit_to_signup: number | null;
         };
         /** Health */
         Health: {
@@ -1603,6 +1998,23 @@ export interface components {
              */
             linked_at: string;
         };
+        /**
+         * Kpis
+         * @description Product KPIs: who uses the service, whether new accounts start learning, and how much
+         *     learning happens.
+         */
+        Kpis: {
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            active_users: components["schemas"]["ActiveUsers"];
+            growth: components["schemas"]["Growth"];
+            cohorts: components["schemas"]["Cohorts"];
+            learning_7d: components["schemas"]["LearningWindow"];
+            learning_30d: components["schemas"]["LearningWindow"];
+        };
         /** LearnerSummary */
         LearnerSummary: {
             /** Lessons Done */
@@ -1613,6 +2025,26 @@ export interface components {
             study_minutes: number;
             /** Last Activity At */
             last_activity_at: string | null;
+        };
+        /** LearningWindow */
+        LearningWindow: {
+            /** Window Days */
+            window_days: number;
+            /** Active Learners */
+            active_learners: number;
+            /** Lessons Completed */
+            lessons_completed: number;
+            /** Study Minutes */
+            study_minutes: number;
+            /** Quiz Runs */
+            quiz_runs: number;
+            /**
+             * Quiz Mean Score
+             * @description Mean share correct, 0-1.
+             */
+            quiz_mean_score: number | null;
+            /** Reviews */
+            reviews: number;
         };
         /** Lesson */
         Lesson: {
@@ -1886,6 +2318,37 @@ export interface components {
              */
             csrf_token: string;
         };
+        /** MemoryReading */
+        MemoryReading: {
+            /** Total Bytes */
+            total_bytes: number;
+            /** Available Bytes */
+            available_bytes: number;
+            /** Used Ratio */
+            used_ratio: number;
+            /** Swap Total Bytes */
+            swap_total_bytes: number;
+            /**
+             * Swap Used Ratio
+             * @description null on a machine without swap.
+             */
+            swap_used_ratio: number | null;
+            /**
+             * Swap Level
+             * @enum {string}
+             */
+            swap_level: "ok" | "warning" | "critical";
+            /**
+             * Process Rss Bytes
+             * @description Resident memory of the API process.
+             */
+            process_rss_bytes: number | null;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "ok" | "warning" | "critical";
+        };
         /** Module */
         Module: {
             /** Id */
@@ -2059,6 +2522,33 @@ export interface components {
              */
             signups_daily: components["schemas"]["DayCount"][];
         };
+        /** PageCount */
+        PageCount: {
+            /** Path */
+            path: string;
+            /** Views */
+            views: number;
+        };
+        /**
+         * PageViewIn
+         * @description One page view, reported by the web tier.
+         */
+        PageViewIn: {
+            /** Path */
+            path: string;
+            /**
+             * Locale
+             * @default ko
+             */
+            locale: string;
+            /** Referrer */
+            referrer?: string | null;
+            /**
+             * Signed In
+             * @default false
+             */
+            signed_in: boolean;
+        };
         /**
          * Paper
          * @description A paper this lesson assigns: the course registry's bibliography merged with the
@@ -2109,6 +2599,28 @@ export interface components {
             current_password: string;
             /** New Password */
             new_password: string;
+        };
+        /**
+         * ProcessReading
+         * @description Saturation of the API process itself.
+         */
+        ProcessReading: {
+            /** Open Files */
+            open_files: number | null;
+            /** Open Files Limit */
+            open_files_limit: number | null;
+            /** Open Files Ratio */
+            open_files_ratio: number | null;
+            /**
+             * Open Files Level
+             * @enum {string}
+             */
+            open_files_level: "ok" | "warning" | "critical";
+            /**
+             * Requests In Progress
+             * @description Requests being served right now.
+             */
+            requests_in_progress: number | null;
         };
         /**
          * ProgressExport
@@ -2276,6 +2788,13 @@ export interface components {
             checks: {
                 [key: string]: components["schemas"]["Check"];
             };
+        };
+        /** ReferrerCount */
+        ReferrerCount: {
+            /** Host */
+            host: string;
+            /** Visits */
+            visits: number;
         };
         /** Report */
         Report: {
@@ -2533,6 +3052,25 @@ export interface components {
          * @enum {string}
          */
         Role: "learner" | "author" | "admin";
+        /** RouteStats */
+        RouteStats: {
+            /** Method */
+            method: string;
+            /** Route */
+            route: string;
+            /** Requests */
+            requests: number;
+            /** Client Errors */
+            client_errors: number;
+            /** Server Errors */
+            server_errors: number;
+            /** Mean Ms */
+            mean_ms: number | null;
+            /** P95 Ms */
+            p95_ms: number | null;
+            /** Max Ms */
+            max_ms: number | null;
+        };
         /**
          * Scope
          * @description PAT scopes (ADR 0009).
@@ -2717,10 +3255,155 @@ export interface components {
              */
             seconds: number;
         };
+        /** SystemStatus */
+        SystemStatus: {
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /** Version */
+            version: string;
+            /** Host Uptime Seconds */
+            host_uptime_seconds: number | null;
+            /** Process Uptime Seconds */
+            process_uptime_seconds: number;
+            cpu: components["schemas"]["CpuReading"] | null;
+            memory: components["schemas"]["MemoryReading"] | null;
+            process: components["schemas"]["ProcessReading"];
+            /** Disks */
+            disks: components["schemas"]["DiskReading"][];
+            /** Temperatures */
+            temperatures: components["schemas"]["TemperatureReading"][];
+            database: components["schemas"]["DatabaseReading"];
+            /** Alerts */
+            alerts: components["schemas"]["Alert"][];
+        };
+        /** TemperatureReading */
+        TemperatureReading: {
+            /** Sensor */
+            sensor: string;
+            /** Celsius */
+            celsius: number;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "ok" | "warning" | "critical";
+        };
         /** TokenRequest */
         TokenRequest: {
             /** Token */
             token: string;
+        };
+        /** Traffic */
+        Traffic: {
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /**
+             * Range
+             * @enum {string}
+             */
+            range: "24h" | "7d" | "30d";
+            /**
+             * Since
+             * Format: date-time
+             */
+            since: string;
+            /** Bucket Seconds */
+            bucket_seconds: number;
+            totals: components["schemas"]["TrafficTotals"];
+            error_budget: components["schemas"]["ErrorBudget"];
+            /** Series */
+            series: components["schemas"]["TrafficBucket"][];
+            /**
+             * Busiest
+             * @description Routes by request count.
+             */
+            busiest: components["schemas"]["RouteStats"][];
+            /**
+             * Slowest
+             * @description Routes by p95, among those with enough requests.
+             */
+            slowest: components["schemas"]["RouteStats"][];
+            /**
+             * Failing
+             * @description Routes with server errors, by error count.
+             */
+            failing: components["schemas"]["RouteStats"][];
+            /** Alerts */
+            alerts: components["schemas"]["Alert"][];
+        };
+        /** TrafficBucket */
+        TrafficBucket: {
+            /**
+             * Start
+             * Format: date-time
+             */
+            start: string;
+            /** Requests */
+            requests: number;
+            /** Client Errors */
+            client_errors: number;
+            /** Server Errors */
+            server_errors: number;
+            /** P50 Ms */
+            p50_ms: number | null;
+            /** P95 Ms */
+            p95_ms: number | null;
+        };
+        /** TrafficTotals */
+        TrafficTotals: {
+            /** Requests */
+            requests: number;
+            /**
+             * Succeeded
+             * @description 2xx and 3xx.
+             */
+            succeeded: number;
+            /**
+             * Client Errors
+             * @description 4xx.
+             */
+            client_errors: number;
+            /**
+             * Server Errors
+             * @description 5xx.
+             */
+            server_errors: number;
+            /**
+             * Success Rate
+             * @description 1 - 5xx/all; null with no requests.
+             */
+            success_rate: number | null;
+            /** Mean Ms */
+            mean_ms: number | null;
+            /** P50 Ms */
+            p50_ms: number | null;
+            /** P95 Ms */
+            p95_ms: number | null;
+            /** P99 Ms */
+            p99_ms: number | null;
+            /** Max Ms */
+            max_ms: number | null;
+            /**
+             * Apdex
+             * @description Apdex score 0-1 (satisfied <= 500 ms, tolerating <= 2.5 s).
+             */
+            apdex: number | null;
+            /**
+             * Requests Per Minute
+             * @description Average over the range.
+             */
+            requests_per_minute: number;
+            /**
+             * Peak Bucket Requests
+             * @description Requests in the busiest bucket of the series.
+             */
+            peak_bucket_requests: number;
         };
         /** User */
         User: {
@@ -2783,6 +3466,88 @@ export interface components {
         Version: {
             /** Version */
             version: string;
+        };
+        /** VisitDay */
+        VisitDay: {
+            /**
+             * Day
+             * Format: date
+             */
+            day: string;
+            /**
+             * Views
+             * @description Page views by people.
+             */
+            views: number;
+            /**
+             * Visitors
+             * @description Unique visitors that day (daily-salted hash).
+             */
+            visitors: number;
+            /** Signed In Visitors */
+            signed_in_visitors: number;
+            /** Bot Views */
+            bot_views: number;
+        };
+        /** VisitTotals */
+        VisitTotals: {
+            /** Views */
+            views: number;
+            /**
+             * Visitor Days
+             * @description Sum of daily unique visitors. Not unique people over the range: the identifier changes every day by design.
+             */
+            visitor_days: number;
+            /** Bot Views */
+            bot_views: number;
+            /**
+             * Signed In Share
+             * @description Share of views by signed-in readers.
+             */
+            signed_in_share: number | null;
+            /** Views Today */
+            views_today: number;
+            /** Visitors Today */
+            visitors_today: number;
+        };
+        /** Visits */
+        Visits: {
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /**
+             * Range
+             * @enum {string}
+             */
+            range: "7d" | "30d" | "90d";
+            /**
+             * Since
+             * Format: date
+             */
+            since: string;
+            totals: components["schemas"]["VisitTotals"];
+            /**
+             * Series
+             * @description One entry per UTC day, zero days included.
+             */
+            series: components["schemas"]["VisitDay"][];
+            /** Top Pages */
+            top_pages: components["schemas"]["PageCount"][];
+            /** Referrers */
+            referrers: components["schemas"]["ReferrerCount"][];
+            /** By Locale */
+            by_locale: {
+                [key: string]: number;
+            };
+            /**
+             * Active Users 7D
+             * @description Accounts that signed in during the last 7 days.
+             */
+            active_users_7d: number;
+            /** Active Users 30D */
+            active_users_30d: number;
         };
         /**
          * WeekStat
@@ -6417,6 +7182,344 @@ export interface operations {
             };
             /** @description Conflict */
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    system_status_api_v1_admin_monitoring_system_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SystemStatus"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    traffic_api_v1_admin_monitoring_traffic_get: {
+        parameters: {
+            query?: {
+                range?: "24h" | "7d" | "30d";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Traffic"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    failed_requests_api_v1_admin_monitoring_errors_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                cursor?: string | null;
+                status?: number | null;
+                route?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FailedRequestPage"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    visits_api_v1_admin_monitoring_visits_get: {
+        parameters: {
+            query?: {
+                range?: "7d" | "30d" | "90d";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Visits"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    kpis_api_v1_admin_monitoring_kpi_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Kpis"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    page_view_api_v1_telemetry_pageview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PageViewIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
