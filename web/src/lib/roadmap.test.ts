@@ -52,9 +52,13 @@ describe('toStageViews', () => {
     expect(basic?.modules[0]?.lessons.map((lesson) => lesson.state)).toEqual(['done', 'available'])
   })
 
-  it('passes module and stage progress through unchanged (already 0-1)', () => {
+  it('passes module progress through and counts stage progress in lessons (QA B-17)', () => {
     const [basic] = toStageViews(ROADMAP)
-    expect(basic?.progress).toBe(0.25)
+    // One lesson of three is done: the bar says 33%, the same as the "1/3" beside it, and not
+    // the API's mean of module figures (0.25).
+    expect(basic?.lessonsDone).toBe(1)
+    expect(basic?.lessonsTotal).toBe(3)
+    expect(basic?.progress).toBeCloseTo(1 / 3)
     expect(basic?.modules[0]?.progress).toBe(0.5)
   })
 

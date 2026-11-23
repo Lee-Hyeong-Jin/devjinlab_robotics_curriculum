@@ -36,11 +36,7 @@ export function StageProgress({
               </span>
             </div>
             <ProgressBar
-              // The share of lessons done, the same count as the "2/14" beside it. The API's
-              // stage figure is the mean of its modules, which read 17% next to 2/14 (QA B-17).
-              value={
-                stage.lessonsTotal > 0 ? stage.lessonsDone / stage.lessonsTotal : stage.progress
-              }
+              value={stage.progress}
               label={`${stage.levelLabel} ${progressLabel}`}
               showValue
             />

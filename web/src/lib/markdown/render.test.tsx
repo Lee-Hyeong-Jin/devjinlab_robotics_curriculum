@@ -25,8 +25,15 @@ describe('renderMarkdown', () => {
     )
     const math = container.querySelectorAll('math')
     expect(math.length).toBe(2)
-    // Display math is marked as a block so it can scroll independently.
+    // Display math is marked as a block and sits in a wrapper that scrolls and takes keyboard
+    // focus: a `<math>` element does not scroll its own overflow, so a wide matrix was cut off
+    // on a phone.
     expect(container.querySelector('math[display="block"]')).not.toBeNull()
+    const scroller = container.querySelector('div.math-scroll')
+    expect(scroller?.getAttribute('tabindex')).toBe('0')
+    expect(scroller?.querySelector('math[display="block"]')).not.toBeNull()
+    // Inline math stays in its sentence, unwrapped.
+    expect(container.querySelectorAll('div.math-scroll').length).toBe(1)
     // The TeX source survives in the MathML annotation, so the formula is
     // selectable and reaches assistive tech.
     expect(container.textContent).toContain('SO')

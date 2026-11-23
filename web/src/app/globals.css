@@ -320,14 +320,22 @@ math {
     'Cambria Math', 'STIX Two Math', 'Latin Modern Math', 'DejaVu Math TeX Gyre',
     'TeX Gyre Termes Math', 'Libertinus Math', math;
 }
-.markdown-body math[display='block'] {
-  /* `block math`, not `block`: the single keyword means "block flow" and takes the formula
-   * out of math layout. */
-  display: block math;
+/* A display formula sits in a wrapper that scrolls (`lib/markdown/scroll.ts`). A `<math>`
+ * element does not scroll its own overflow, and as a block its box is only as wide as the
+ * column, so a matrix wider than a phone screen was cut off at the card's edge with nothing to
+ * scroll. Inside the wrapper the formula is laid out inline: its box is then as wide as the
+ * formula, the wrapper centres it while it fits and scrolls when it does not. The
+ * `display="block"` attribute still gives it display style (large operators, limits above and
+ * below). */
+.markdown-body .math-scroll {
   overflow-x: auto;
   overflow-y: hidden;
   padding: 0.5rem 0;
   text-align: center;
+  white-space: nowrap;
+}
+.markdown-body .math-scroll > math[display='block'] {
+  display: inline math;
 }
 /* Matrix cells. The CSS reset zeroes every element's padding, and in MathML that padding is
  * the only gap between the columns of a matrix: without it a rotation matrix read
