@@ -38,7 +38,15 @@ function placeholders(value: Catalogue, prefix = ''): Map<string, string[]> {
  * Namespaces indexed by a runtime value rather than a literal key. Every other
  * namespace must have a literal `t('…')` call for each of its keys.
  */
-const DYNAMIC_NAMESPACES = new Set(['state', 'kind', 'activityKind', 'role', 'userStatus'])
+const DYNAMIC_NAMESPACES = new Set([
+  'state',
+  'kind',
+  'activityKind',
+  'role',
+  'userStatus',
+  // `t(fieldMessageKey(entry.type))` in `lib/actions/problem.ts`: the API's error type picks it.
+  'form',
+])
 /** Keys inside these namespaces that a runtime value selects. */
 const DYNAMIC_KEYS = new Set([
   'search.lesson',

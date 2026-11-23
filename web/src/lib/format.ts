@@ -3,7 +3,7 @@
  * (`lib/timezone.ts`: KST by default) unless the caller passes another.
  */
 
-import { serviceTimeZone } from './timezone'
+import { readerTimeZone, serviceTimeZone } from './timezone'
 
 export const DEFAULT_LOCALE = 'ko'
 
@@ -30,9 +30,15 @@ export function formatMinutes(minutes: number | null | undefined, locale = DEFAU
   return ko ? `${hours}시간 ${rest}분` : `${hours}h ${rest}m`
 }
 
-/** Seconds from the API rendered as study time. */
+/**
+ * Seconds from the API rendered as study time.
+ *
+ * Whole minutes completed, like the API's own minute figures and the CLI (`seconds // 60`).
+ * Rounding here showed 27 minutes on the report beside 26 on the dashboard for the same week
+ * (QA B-18).
+ */
 export function formatSeconds(seconds: number | null | undefined, locale = DEFAULT_LOCALE): string {
-  return formatMinutes(Math.round((seconds ?? 0) / 60), locale)
+  return formatMinutes(Math.floor(Math.max(0, seconds ?? 0) / 60), locale)
 }
 
 /**
@@ -43,7 +49,7 @@ export function formatSeconds(seconds: number | null | undefined, locale = DEFAU
 export function formatDateTime(
   iso: string | null | undefined,
   locale = DEFAULT_LOCALE,
-  timeZone: string = serviceTimeZone(),
+  timeZone: string | null | undefined = serviceTimeZone(),
 ): string {
   if (!iso) return ''
   const date = new Date(iso)
@@ -51,7 +57,7 @@ export function formatDateTime(
   return new Intl.DateTimeFormat(locale, {
     dateStyle: 'medium',
     timeStyle: 'short',
-    timeZone,
+    timeZone: readerTimeZone(timeZone),
   }).format(date)
 }
 
@@ -59,12 +65,15 @@ export function formatDateTime(
 export function formatDate(
   iso: string | null | undefined,
   locale = DEFAULT_LOCALE,
-  timeZone: string = serviceTimeZone(),
+  timeZone: string | null | undefined = serviceTimeZone(),
 ): string {
   if (!iso) return ''
   const date = new Date(iso)
   if (Number.isNaN(date.getTime())) return ''
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeZone }).format(date)
+  return new Intl.DateTimeFormat(locale, {
+    dateStyle: 'medium',
+    timeZone: readerTimeZone(timeZone),
+  }).format(date)
 }
 
 /** A hostname for display next to an external resource link. */

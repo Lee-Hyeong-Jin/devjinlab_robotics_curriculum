@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server'
 
 import { apiBaseUrl, apiTimeoutMs } from '@/lib/api/config'
 import { browserIdentity } from '@/lib/api/forward'
+import { loginUrl, sessionExpiredUrl } from '@/lib/next-path'
+import { redirectToPath } from '@/lib/redirect-response'
 
 /** The filters `GET /api/v1/admin/audit/export` accepts; anything else is dropped. */
 const FILTERS = ['action', 'actor_user_id', 'target_type', 'target_id', 'since', 'until'] as const
@@ -45,7 +47,11 @@ export async function GET(request: Request): Promise<Response> {
   }
 
   if (upstream.status === 401) {
-    return NextResponse.redirect(new URL('/login?next=/admin/audit', request.url), 302)
+    return redirectToPath(
+      all.some((c) => c.name === 'sid')
+        ? sessionExpiredUrl('/admin/audit')
+        : loginUrl('/admin/audit'),
+    )
   }
   if (!upstream.ok) {
     return new NextResponse(upstream.body, {

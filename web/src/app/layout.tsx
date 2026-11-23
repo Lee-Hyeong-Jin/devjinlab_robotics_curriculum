@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages, getTranslations } from 'next-intl/server'
 import { Suspense } from 'react'
 
+import { Flash } from '@/components/Flash'
 import { PageViewBeacon } from '@/components/PageViewBeacon'
 import { SiteFooter } from '@/components/SiteFooter'
 import { SkipLink } from '@/components/SkipLink'
@@ -72,6 +73,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {/* `useSearchParams` needs a boundary, or it would make every page wait for it. */}
           <Suspense fallback={null}>
             <PageViewBeacon />
+            <Flash />
           </Suspense>
         </NextIntlClientProvider>
       </body>

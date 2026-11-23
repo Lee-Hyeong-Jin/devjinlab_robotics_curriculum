@@ -207,30 +207,35 @@ export default async function AdminUserPage({ params }: Params) {
             <h2 id="access-heading" className="text-primary mb-3 font-semibold">
               {t('secAccess')}
             </h2>
-            <SelectAction
-              action={updateUser}
-              hidden={hidden}
-              label={t('save')}
-              pendingLabel={t('saving')}
-              selects={[
-                {
-                  name: 'role',
-                  label: t('colRole'),
-                  value: user.role,
-                  options: ROLES.map((role) => ({ value: role, label: tRole(role) })),
-                },
-                {
-                  name: 'status',
-                  label: t('colStatus'),
-                  value: ASSIGNABLE_STATUS.includes(user.status) ? user.status : 'active',
-                  options: ASSIGNABLE_STATUS.map((status) => ({
-                    value: status,
-                    label: tStatus(status),
-                  })),
-                },
-              ]}
-            />
-            {isSelf ? <p className="text-muted mt-2 text-xs">{t('actionsSelfNote')}</p> : null}
+            {/* An admin cannot demote or disable themselves; the API refuses it. Offering
+                the controls and refusing afterwards only invites the attempt (QA B-32). */}
+            {isSelf ? (
+              <p className="text-muted text-xs">{t('actionsSelfNote')}</p>
+            ) : (
+              <SelectAction
+                action={updateUser}
+                hidden={hidden}
+                label={t('save')}
+                pendingLabel={t('saving')}
+                selects={[
+                  {
+                    name: 'role',
+                    label: t('colRole'),
+                    value: user.role,
+                    options: ROLES.map((role) => ({ value: role, label: tRole(role) })),
+                  },
+                  {
+                    name: 'status',
+                    label: t('colStatus'),
+                    value: ASSIGNABLE_STATUS.includes(user.status) ? user.status : 'active',
+                    options: ASSIGNABLE_STATUS.map((status) => ({
+                      value: status,
+                      label: tStatus(status),
+                    })),
+                  },
+                ]}
+              />
+            )}
           </Card>
 
           <Card as="section" aria-labelledby="actions-heading">

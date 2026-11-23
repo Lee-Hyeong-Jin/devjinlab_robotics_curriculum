@@ -17,7 +17,12 @@ _HASHER = PasswordHasher(time_cost=3, memory_cost=64 * 1024, parallelism=4)
 
 
 class PasswordPolicyError(ValueError):
-    """The password does not meet the policy."""
+    """A password the policy refuses. ``code`` and ``params`` let a caller localize the reason."""
+
+    def __init__(self, message: str, code: str, **params: object) -> None:
+        super().__init__(message)
+        self.code = code
+        self.params: dict[str, object] = params
 
 
 class Passwords:
@@ -48,15 +53,25 @@ class Passwords:
 def check_policy(password: str, *, email: str, display_name: str | None = None) -> None:
     """12-128 characters, not containing the email's local part or the display name."""
     if len(password) < MIN_PASSWORD:
-        raise PasswordPolicyError(f"password must be at least {MIN_PASSWORD} characters")
+        raise PasswordPolicyError(
+            f"password must be at least {MIN_PASSWORD} characters",
+            "password_too_short",
+            min=MIN_PASSWORD,
+        )
     if len(password) > MAX_PASSWORD:
-        raise PasswordPolicyError(f"password must be at most {MAX_PASSWORD} characters")
+        raise PasswordPolicyError(
+            f"password must be at most {MAX_PASSWORD} characters",
+            "password_too_long",
+            max=MAX_PASSWORD,
+        )
     lowered = password.lower()
     local = email.split("@", 1)[0].lower()
     if len(local) >= 3 and local in lowered:
-        raise PasswordPolicyError("password must not contain your email address")
+        raise PasswordPolicyError(
+            "password must not contain your email address", "password_contains_email"
+        )
     if display_name and len(display_name) >= 3 and display_name.lower() in lowered:
-        raise PasswordPolicyError("password must not contain your name")
+        raise PasswordPolicyError("password must not contain your name", "password_contains_name")
 
 
 def new_token(prefix: str = "") -> str:

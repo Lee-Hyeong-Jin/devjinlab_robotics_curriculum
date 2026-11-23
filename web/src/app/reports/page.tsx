@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { signInIfRequired } from '@/lib/auth'
 import { getLocale, getTranslations } from 'next-intl/server'
 
 import { Card } from '@/components/Card'
@@ -10,7 +11,14 @@ import { StatTile } from '@/components/StatTile'
 import { getCourse, getWeeklyReport } from '@/lib/api/queries'
 import { isWeeklySummary } from '@/lib/api/types'
 import { formatDate, formatSeconds } from '@/lib/format'
+import { currentIsoWeek, isIsoWeek, shiftIsoWeek } from '@/lib/iso-week'
+import { serviceTimeZone } from '@/lib/timezone'
+import { webCliHints } from '@/lib/markdown/cli-hints-server'
 import { renderMarkdown } from '@/lib/markdown/render'
+
+interface Props {
+  searchParams: Promise<{ week?: string }>
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('reports')
@@ -23,12 +31,24 @@ export async function generateMetadata(): Promise<Metadata> {
  * The API returns the same Markdown as `rc report weekly`, so the body goes
  * through the lesson pipeline and the summary drives the stat tiles above it.
  */
-export default async function ReportsPage() {
-  const [t, locale] = await Promise.all([getTranslations('reports'), getLocale()])
-  const [report, course] = await Promise.all([getWeeklyReport(), getCourse()])
+export default async function ReportsPage({ searchParams }: Props) {
+  const [t, locale, params] = await Promise.all([
+    getTranslations('reports'),
+    getLocale(),
+    searchParams,
+  ])
+  // `?week=2026-W47` shows an earlier week. Anything that is not a real week, or a week that
+  // has not begun, falls back to the current one.
+  const thisWeek = currentIsoWeek(serviceTimeZone())
+  const asked = isIsoWeek(params.week) && params.week < thisWeek ? params.week : undefined
+  const week = asked ?? thisWeek
+  const previous = shiftIsoWeek(week, -1)
+  const next = asked ? shiftIsoWeek(week, 1) : null
+  const [report, course] = await Promise.all([getWeeklyReport(asked), getCourse()])
   const modules = (course?.stages ?? []).flatMap((stage) => stage.modules ?? [])
 
   if (!report) {
+    await signInIfRequired('/reports')
     return (
       <>
         <PageHeader title={t('title')} subtitle={t('subtitle')} />
@@ -37,7 +57,8 @@ export default async function ReportsPage() {
     )
   }
 
-  const body = renderMarkdown(report.markdown)
+  // The report is the CLI's own text; its `rc start …` hints become links here.
+  const body = renderMarkdown(await webCliHints(report.markdown))
   const summary = report.summary
 
   return (
@@ -51,6 +72,28 @@ export default async function ReportsPage() {
           </span>
         }
       />
+
+      <nav aria-label={t('weekNav')} className="mb-4 flex flex-wrap items-center gap-3 text-sm">
+        {previous ? (
+          <Link
+            href={`/reports?week=${previous}`}
+            className="text-accent underline underline-offset-2"
+          >
+            ← {t('previousWeek')}
+          </Link>
+        ) : null}
+        <span className="text-primary font-medium tabular-nums">{week}</span>
+        {next ? (
+          <Link
+            href={next >= thisWeek ? '/reports' : `/reports?week=${next}`}
+            className="text-accent underline underline-offset-2"
+          >
+            {t('nextWeek')} →
+          </Link>
+        ) : (
+          <span className="text-muted">{t('thisWeek')}</span>
+        )}
+      </nav>
 
       {isWeeklySummary(summary) ? (
         <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

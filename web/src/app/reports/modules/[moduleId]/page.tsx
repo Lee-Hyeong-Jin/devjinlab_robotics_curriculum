@@ -9,11 +9,12 @@ import { PageHeader } from '@/components/PageHeader'
 import { ProgressBar } from '@/components/ProgressBar'
 import { StatTile } from '@/components/StatTile'
 import { isNotFound } from '@/lib/api/errors'
-import { getModuleReport } from '@/lib/api/queries'
+import { getModuleReport, getModuleOrNull } from '@/lib/api/queries'
 import type { Report } from '@/lib/api/types'
 import { isWeeklySummary } from '@/lib/api/types'
 import { formatDate, formatPercent, formatSeconds } from '@/lib/format'
 import { ratio } from '@/lib/progress'
+import { webCliHints } from '@/lib/markdown/cli-hints-server'
 import { renderMarkdown } from '@/lib/markdown/render'
 
 interface Params {
@@ -32,7 +33,8 @@ async function loadReport(moduleId: string): Promise<Report> {
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { moduleId } = await params
   const t = await getTranslations('reports')
-  return { title: t('moduleTitle', { module: moduleId }) }
+  const found = await getModuleOrNull(moduleId)
+  return { title: t('moduleTitle', { module: found?.title ?? moduleId }) }
 }
 
 /**
@@ -51,7 +53,8 @@ export default async function ModuleReportPage({ params }: Params) {
   ])
 
   const summary = isWeeklySummary(report.summary) ? null : report.summary
-  const body = renderMarkdown(report.markdown)
+  // The report is the CLI's own text; its `rc start …` hints become links here.
+  const body = renderMarkdown(await webCliHints(report.markdown))
   const done = ratio(summary?.done_count ?? 0, summary?.lesson_count ?? 0)
 
   return (

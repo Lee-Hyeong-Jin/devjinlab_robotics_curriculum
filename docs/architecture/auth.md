@@ -143,3 +143,17 @@ sequenceDiagram
 - 의존성: `pip-audit`·`trivy`를 CI에서 실행, Dependabot.
 - 테스트: 인증 우회·권한 상승 시나리오는 `docs/platform-design.md` §7 참조.
 - 취약점 신고: `SECURITY.md`에 비공개 신고 경로와 90일 공개 정책.
+
+## 오류 응답의 `code` 와 현지화 (2026-11-23)
+
+- `AuthError` 는 영어 `detail`(로그·CLI 용)과 함께 안정적인 `code`(`invalid_credentials`,
+  `wrong_current_password`, `email_taken`, `invalid_token`, `login_throttled`, `invalid_timezone`,
+  `password_too_short` …)를 가진다. API 는 problem 본문에 `code` 를 넣고, `detail` 은 요청 언어
+  (`?lang=`, `Accept-Language`)의 문장으로 바꿔 준다(`i18n/locales/*.yaml` 의 `api.auth.*`).
+  클라이언트는 `detail` 문자열로 분기하지 않는다.
+- 새 `code` 를 추가하면 두 카탈로그에 문장을 함께 넣는다(`tests/test_qa_fixes.py` 가 강제).
+- 메일의 링크 경로는 웹의 실제 화면과 같아야 한다: 인증 `/verify-email`, 재설정
+  `/password/reset`. 같은 테스트가 웹에 그 화면이 있는지 확인한다.
+- 프로필의 `timezone` 은 IANA 이름만 받는다(`timezone.is_timezone`).
+- `POST /auth/login` 의 `remember`: 참이면 쿠키에 `Max-Age`(유휴 만료와 같음)를 주고, 거짓이면
+  브라우저를 닫을 때 끝나는 세션 쿠키를 준다. 서버 쪽 세션 만료 규칙은 같다.

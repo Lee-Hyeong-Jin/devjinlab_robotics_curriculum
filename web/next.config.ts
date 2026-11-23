@@ -32,6 +32,12 @@ const nextConfig: NextConfig = {
   ...(process.env.NEXT_OUTPUT === 'standalone' ? { output: 'standalone' as const } : {}),
   // The CSP and HSTS are per-request and live in `src/middleware.ts`; these are constant and
   // set here so they also cover `_next/static`, which the middleware matcher skips.
+  async redirects() {
+    // Reset mails sent before the link was corrected point at `/reset-password`, which never
+    // existed (QA B-02). A link is valid for an hour, so this only has to outlive those; it is
+    // kept because a wrong address in somebody's inbox costs nothing to honour.
+    return [{ source: '/reset-password', destination: '/password/reset', permanent: false }]
+  },
   async headers() {
     return [{ source: '/:path*', headers: [...STATIC_SECURITY_HEADERS] }]
   },

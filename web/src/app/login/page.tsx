@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 interface Props {
-  searchParams: Promise<{ next?: string; registered?: string; reset?: string }>
+  searchParams: Promise<{ next?: string; registered?: string; reset?: string; expired?: string }>
 }
 
 /** Login — `POST /auth/login` (Figma `23-3`). Signed-in readers go straight on. */
@@ -38,7 +38,9 @@ export default async function LoginPage({ searchParams }: Props) {
         ? t('registeredReady')
         : params.reset
           ? t('resetDone')
-          : undefined
+          : params.expired
+            ? t('expired')
+            : undefined
 
   return (
     <div className="mx-auto max-w-md">

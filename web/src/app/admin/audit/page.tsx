@@ -68,6 +68,13 @@ export default async function AdminAuditPage({ searchParams }: Props) {
     until,
   }
   const filtered = Object.values(shown).some((value) => value !== undefined)
+  // A value that cannot be a filter is dropped, and the reader is told: silently showing the
+  // whole log for "actor = abc" looks like a result for that filter (QA B-33).
+  const ignored = [
+    param(params.actor_user_id) && actor === undefined ? t('filterActor') : null,
+    from && !since ? t('filterSince') : null,
+    to && !until ? t('filterUntil') : null,
+  ].filter((label): label is string => label !== null)
 
   const page = await apiGetOrNull('/api/v1/admin/audit', {
     query: { ...apiFilters, actor_user_id: actor, cursor: param(params.cursor), limit: 100 },
@@ -138,6 +145,11 @@ export default async function AdminAuditPage({ searchParams }: Props) {
   return (
     <>
       <PageHeader title={t('auditTitle')} subtitle={t('auditSubtitle')} />
+      {ignored.length > 0 ? (
+        <p role="alert" className="text-warning mb-3 text-sm">
+          {t('filterIgnored', { fields: ignored.join(', ') })}
+        </p>
+      ) : null}
 
       <form
         method="get"

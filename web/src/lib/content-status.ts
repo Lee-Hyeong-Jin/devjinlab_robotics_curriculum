@@ -16,12 +16,16 @@ export type ContentTarget =
   | { kind: 'shortcut'; lessonId: string }
 
 const MODULE_PATH = /^\/modules\/([^/]+)(?:\/([^/]+))?(?:\/quiz)?\/?$/
+// A module's report exists exactly when the module does.
+const REPORT_PATH = /^\/reports\/modules\/([^/]+)\/?$/
 const SHORTCUT_PATH = /^\/lessons\/([^/]+)\/?$/
 
 /** Which content a path names, or `null` for every other page. */
 export function contentTarget(pathname: string): ContentTarget | null {
   const shortcut = SHORTCUT_PATH.exec(pathname)
   if (shortcut?.[1]) return { kind: 'shortcut', lessonId: decodeURIComponent(shortcut[1]) }
+  const report = REPORT_PATH.exec(pathname)
+  if (report?.[1]) return { kind: 'module', moduleId: decodeURIComponent(report[1]) }
   const match = MODULE_PATH.exec(pathname)
   if (!match?.[1]) return null
   const moduleId = decodeURIComponent(match[1])
@@ -109,4 +113,22 @@ export async function contentVerdict(
   return found.lessons.some((lesson) => lesson.id === target.lessonId)
     ? { status: 'ok' }
     : { status: 'missing' }
+}
+
+/**
+ * Whether the admin console must answer `403` for this request.
+ *
+ * The console's layout shows a "no permission" screen to a signed-in reader who is not an
+ * admin, but a streamed page has already said `200` by then (QA B-28). The API is the one that
+ * decides; this only asks it who is calling so the status line can say the same thing. `true`
+ * only on a definite answer — a signed-in account whose role is not admin. No session, an
+ * unreachable API or anything unexpected is left to the page (which redirects to the login
+ * screen or shows its own error).
+ */
+export async function adminForbidden(pathname: string, cookie: string | null): Promise<boolean> {
+  if (!/^\/admin(?:\/|$)/.test(pathname) || !cookie) return false
+  const response = await getJson('/api/v1/me', cookie)
+  if (!response?.ok) return false
+  const me = (await response.json().catch(() => null)) as { role?: string } | null
+  return typeof me?.role === 'string' && me.role !== 'admin'
 }

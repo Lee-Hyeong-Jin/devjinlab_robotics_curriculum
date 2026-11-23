@@ -13,6 +13,9 @@ describe('countsAsPage', () => {
     }
     for (const path of [
       '/api/me/export',
+      // The container health check and the session plumbing are not visits (QA B-09).
+      '/healthz',
+      '/session/expired',
       '/admin',
       '/admin/users/3',
       '/_next/data/x',

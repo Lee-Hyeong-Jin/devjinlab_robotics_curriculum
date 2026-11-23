@@ -34,7 +34,6 @@
     "streakDays": "{days}일",
     "dueCards": "오늘 복습",
     "dueCardsValue": "{count}장",
-    "dueCardsCli": "복습은 CLI(`rc review`)에서 사용하세요.",
     "courseProgress": "코스 진행률",
     "stageProgress": "단계별 진행률",
     "openSession": "진행 중인 학습 세션",
@@ -44,7 +43,9 @@
     "pending": "백엔드가 이 값을 아직 제공하지 않습니다.",
     "moduleLessons": "레슨 {done}/{total}",
     "weeklySessions": "세션 {count}회",
-    "unavailable": "API 서버에서 진행 상황을 받아오지 못했습니다."
+    "unavailable": "API 서버에서 진행 상황을 받아오지 못했습니다.",
+    "dueCardsLink": "복습하러 가기",
+    "overallProgress": "전체 진행률"
   },
   "landing": {
     "free": "모든 레슨은 무료로 공개되어 있고, 가입하면 진행도·퀴즈·복습 카드가 저장됩니다.",
@@ -289,16 +290,17 @@
     "emailRequired": "이메일을 입력하세요.",
     "passwordRequired": "비밀번호를 입력하세요.",
     "failed": "이메일 또는 비밀번호가 올바르지 않습니다.",
-    "registered": "가입이 완료됐습니다. 이메일 인증 후 로그인하세요.",
+    "registered": "가입이 완료됐습니다. 인증 메일을 보냈으니 메일의 링크로 이메일을 인증하세요. 로그인은 지금 할 수 있습니다.",
     "resetDone": "비밀번호가 변경됐습니다. 새 비밀번호로 로그인하세요.",
     "forgot": "비밀번호를 잊으셨나요?",
     "noAccount": "계정이 없으신가요?",
     "signupLink": "회원가입",
-    "registeredReady": "가입이 완료됐습니다. 바로 로그인하세요."
+    "registeredReady": "가입이 완료됐습니다. 바로 로그인하세요.",
+    "expired": "세션이 종료됐습니다. 다시 로그인하세요."
   },
   "signup": {
     "title": "회원가입",
-    "subtitle": "이메일 인증 후 로그인할 수 있습니다.",
+    "subtitle": "가입하면 이메일 인증 메일을 보내 드립니다.",
     "email": "이메일",
     "displayName": "표시 이름",
     "displayNameHint": "선택 사항입니다.",
@@ -442,7 +444,11 @@
     "tokensTableCaption": "개인 액세스 토큰 목록",
     "identitiesTableCaption": "연결된 외부 로그인 목록",
     "onThisPage": "이 페이지 목차",
-    "connectHint": "다른 로그인 수단을 이 계정에 연결할 수 있습니다."
+    "connectHint": "다른 로그인 수단을 이 계정에 연결할 수 있습니다.",
+    "passwordSame": "새 비밀번호가 현재 비밀번호와 같습니다.",
+    "currentPasswordWrong": "현재 비밀번호가 올바르지 않습니다.",
+    "tokenExpiresInvalid": "1~{max} 사이의 정수를 입력하세요. 비우면 만료되지 않습니다.",
+    "timezoneInvalid": "알 수 없는 시간대입니다. Asia/Seoul 같은 IANA 이름을 입력하세요."
   },
   "role": {
     "learner": "학습자",
@@ -612,7 +618,8 @@
     "system": "시스템",
     "filtersLabel": "감사 로그 필터",
     "userFiltersLabel": "사용자 필터",
-    "attentionMonitoring": "모니터링 지표 {count}개가 임계값을 넘었습니다."
+    "attentionMonitoring": "모니터링 지표 {count}개가 임계값을 넘었습니다.",
+    "filterIgnored": "올바르지 않은 값이라 적용하지 않은 필터: {fields}"
   },
   "monitoring": {
     "nav": "모니터링",
@@ -798,9 +805,11 @@
     "markDone": "완료로 표시",
     "markingDone": "처리 중…",
     "done": "완료로 표시했습니다.",
-    "doneWithUnlocked": "완료로 표시했습니다. 레슨 {count}개가 해금됐습니다: {ids}",
     "doneFailed": "완료로 표시하지 못했습니다.",
-    "alreadyDone": "이미 완료한 레슨입니다."
+    "alreadyDone": "이미 완료한 레슨입니다.",
+    "doneWithNext": "완료로 표시했습니다. 다음으로 권하는 레슨: {titles}",
+    "markDoneAgain": "이해도 다시 기록",
+    "doneAgainHint": "이미 완료한 레슨입니다. 다시 저장하면 이해도와 메모가 새 값으로 바뀝니다."
   },
   "search": {
     "title": "검색",
@@ -813,7 +822,8 @@
     "tooShort": "두 글자 이상 입력하세요.",
     "unavailable": "검색을 사용할 수 없습니다.",
     "lesson": "레슨",
-    "resource": "자료"
+    "resource": "자료",
+    "queryTooLong": "검색어가 너무 깁니다. {max}자 이하로 입력하세요."
   },
   "quiz": {
     "title": "퀴즈",
@@ -832,15 +842,17 @@
     "explanation": "해설",
     "retry": "다시 풀기",
     "backToLesson": "레슨으로",
-    "true": "O (맞다)",
-    "false": "X (아니다)",
+    "true": "O (참)",
+    "false": "X (거짓)",
     "shortAnswerLabel": "답",
     "empty": "이 레슨에는 퀴즈가 없습니다.",
     "unavailable": "퀴즈를 불러올 수 없습니다.",
     "multipleHint": "해당하는 것을 모두 고르세요.",
     "cardsCreated": "틀린 문제는 복습 카드로 만들어집니다.",
     "open": "퀴즈 풀기",
-    "resultHeading": "채점 결과"
+    "resultHeading": "채점 결과",
+    "unanswered": "아직 답하지 않은 문항이 {count}개 있습니다. 모든 문항에 답한 뒤 제출하세요.",
+    "unansweredOne": "이 문항에 답하세요."
   },
   "review": {
     "title": "오늘 복습",
@@ -883,6 +895,25 @@
     "backToModule": "모듈로 돌아가기",
     "moduleReports": "모듈 리포트",
     "moduleReportsHint": "모듈을 고르면 레슨별 진행도와 이해도를 봅니다.",
-    "noModules": "모듈을 불러올 수 없습니다."
+    "noModules": "모듈을 불러올 수 없습니다.",
+    "weekNav": "주 이동",
+    "previousWeek": "이전 주",
+    "nextWeek": "다음 주",
+    "thisWeek": "이번 주"
+  },
+  "form": {
+    "invalid": "값이 올바르지 않습니다.",
+    "required": "필수 항목입니다.",
+    "tooLong": "너무 깁니다.",
+    "tooShort": "너무 짧습니다.",
+    "format": "형식이 올바르지 않습니다.",
+    "range": "허용 범위를 벗어났습니다.",
+    "type": "형식이 올바르지 않습니다."
+  },
+  "cliHint": {
+    "quiz": "이 레슨의 퀴즈",
+    "start": "레슨 열기",
+    "review": "복습 화면",
+    "cli": "CLI:"
   }
 }

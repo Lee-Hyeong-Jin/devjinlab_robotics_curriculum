@@ -309,12 +309,37 @@ p.markdown-body {
 .markdown-body math {
   font-size: 1.05em;
 }
+/* A formula needs a font with an OpenType MATH table: that table is what lets a bracket grow to
+ * the height of a matrix and places sub- and superscripts. The browser's generic `math` family
+ * does not always resolve to one (on Linux it often picks a text font, and the brackets stay
+ * one line tall beside a three-row matrix), so the fonts that ship with each platform are named
+ * first: Cambria Math on Windows, STIX Two Math on macOS and iOS, the TeX Gyre and Latin Modern
+ * families on Linux. No font is downloaded; a device with none of them falls back to `math`. */
+math {
+  font-family:
+    'Cambria Math', 'STIX Two Math', 'Latin Modern Math', 'DejaVu Math TeX Gyre',
+    'TeX Gyre Termes Math', 'Libertinus Math', math;
+}
 .markdown-body math[display='block'] {
-  display: block;
+  /* `block math`, not `block`: the single keyword means "block flow" and takes the formula
+   * out of math layout. */
+  display: block math;
   overflow-x: auto;
   overflow-y: hidden;
   padding: 0.5rem 0;
   text-align: center;
+}
+/* Matrix cells. The CSS reset zeroes every element's padding, and in MathML that padding is
+ * the only gap between the columns of a matrix: without it a rotation matrix read
+ * "cosθ−sinθ" as one run (QA B-13). These are the values of the browsers' own MathML
+ * stylesheet, widened a little because KaTeX asks for `columnspacing="1em"`, an attribute
+ * MathML Core dropped. */
+math mtd {
+  padding: 0.5ex 0.5em;
+}
+math mtable {
+  /* The brackets around a matrix stretch to the table; keep it on the formula's axis. */
+  vertical-align: middle;
 }
 
 /* Code highlighting — highlight.js class names mapped onto the tokens so the

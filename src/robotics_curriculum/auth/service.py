@@ -37,7 +37,7 @@ from robotics_curriculum.auth.models import (
 from robotics_curriculum.auth.oidc import Claims
 from robotics_curriculum.auth.store import AuthStore
 from robotics_curriculum.i18n import DEFAULT_LANG, normalize_lang, translator
-from robotics_curriculum.timezone import default_timezone
+from robotics_curriculum.timezone import default_timezone, is_timezone
 
 logger = logging.getLogger("robotics_curriculum.api")
 
@@ -49,12 +49,29 @@ RESET_KEY_PREFIX = "reset:"
 
 
 class AuthError(Exception):
+    """A refusal the caller can act on.
+
+    ``detail`` is the English sentence (logs, the CLI). ``code`` is a stable name for the same
+    refusal: the API puts it in the problem body and uses it to find the sentence in the
+    reader's language, so a Korean screen does not show ``invalid email or password``.
+    ``params`` fill that sentence's placeholders.
+    """
+
     status = 400
 
-    def __init__(self, detail: str, *, headers: dict[str, str] | None = None) -> None:
+    def __init__(
+        self,
+        detail: str,
+        *,
+        headers: dict[str, str] | None = None,
+        code: str | None = None,
+        params: dict[str, object] | None = None,
+    ) -> None:
         super().__init__(detail)
         self.detail = detail
         self.headers = headers
+        self.code = code
+        self.params = params or {}
 
 
 class InvalidCredentials(AuthError):
@@ -258,14 +275,14 @@ class AuthService:
         self, email: str, password: str, ctx: Context, *, display_name: str | None = None
     ) -> User:
         if not self.config.allow_signup:
-            raise Forbidden("sign-up is disabled on this server")
+            raise Forbidden("sign-up is disabled on this server", code="signup_disabled")
         email = email.strip().lower()
         try:
             check_policy(password, email=email, display_name=display_name)
         except PasswordPolicyError as exc:
-            raise Invalid(str(exc)) from None
+            raise Invalid(str(exc), code=exc.code, params=exc.params) from None
         if self.store.get_user_by_email(email) is not None:
-            raise Conflict("an account with this email already exists")
+            raise Conflict("an account with this email already exists", code="email_taken")
         # Everyone signs up as learner. The bootstrap admin is promoted only once the email is
         # proven (verify_email) and only while no admin exists (SRV-02).
         role = Role.LEARNER
@@ -342,7 +359,7 @@ class AuthService:
         self.store.create_one_time(user.id, kind, token_hash(token), now, now + ttl)
         path, subject_key = {
             TokenKind.VERIFY_EMAIL: ("verify-email", "verify_email"),
-            TokenKind.RESET_PASSWORD: ("reset-password", "reset_password"),
+            TokenKind.RESET_PASSWORD: ("password/reset", "reset_password"),
             TokenKind.INVITE: ("accept-invite", "invite"),
         }[kind]
         t = translator(normalize_lang(ctx.lang) or DEFAULT_LANG)
@@ -374,7 +391,7 @@ class AuthService:
             token_hash(token), TokenKind.VERIFY_EMAIL, self.clock()
         )
         if user_id is None:
-            raise Invalid("invalid or expired token")
+            raise Invalid("invalid or expired token", code="invalid_token")
         user = self.store.update_user(user_id, self.clock(), email_verified_at=self.clock())
         self._audit(ctx, "user.email_verified", user_id, target_type="user", target_id=str(user_id))
         return self._maybe_bootstrap_admin(user, ctx)
@@ -382,6 +399,14 @@ class AuthService:
     def update_profile(self, user: User, ctx: Context, **fields: str | None) -> User:
         allowed = {"display_name", "locale", "timezone"}
         changes = {k: v for k, v in fields.items() if k in allowed}
+        zone = changes.get("timezone")
+        if zone is not None and not is_timezone(zone):
+            # Stored as given and used by every client to format times: a name no system
+            # knows broke the profile screen for good, with no way for the owner to undo it.
+            raise Invalid(
+                f"unknown time zone '{zone}' (use an IANA name such as Asia/Seoul)",
+                code="invalid_timezone",
+            )
         if not changes:
             return user
         updated = self.store.update_user(user.id, self.clock(), **changes)
@@ -411,7 +436,9 @@ class AuthService:
             )
             retry = str(int(self.config.login_window.total_seconds()))
             raise Throttled(
-                "too many failed logins; try again later", headers={"Retry-After": retry}
+                "too many failed logins; try again later",
+                headers={"Retry-After": retry},
+                code="login_throttled",
             )
         user = self.store.get_user_by_email(email)
         stored = self.store.password_hash(user.id) if user else None
@@ -427,7 +454,7 @@ class AuthService:
                 target_id=str(user.id) if user else None,
                 detail={"reason": reason},
             )
-            raise InvalidCredentials("invalid email or password")
+            raise InvalidCredentials("invalid email or password", code="invalid_credentials")
         self.store.record_login(email, ctx.ip, True, now)
         if stored is not None and self.passwords.needs_rehash(stored):
             self.store.update_user(user.id, now, password_hash=self.passwords.hash(password))
@@ -518,9 +545,11 @@ class AuthService:
     ) -> tuple[str, ApiToken]:
         """Returns the plaintext token (shown once) and its record."""
         if Scope.ADMIN in scopes and user.role is not Role.ADMIN:
-            raise Forbidden("only admins can create tokens with the admin scope")
+            raise Forbidden(
+                "only admins can create tokens with the admin scope", code="admin_scope_forbidden"
+            )
         if not scopes:
-            raise Invalid("a token needs at least one scope")
+            raise Invalid("a token needs at least one scope", code="token_scope_required")
         plaintext = new_token(PAT_PREFIX)
         now = self.clock()
         record = self.store.create_token(
@@ -576,7 +605,7 @@ class AuthService:
         user = principal.user
         if not self.passwords.verify(self.store.password_hash(user.id), current):
             self._audit(ctx, "auth.password.change_failed", user.id)
-            raise InvalidCredentials("current password is wrong")
+            raise InvalidCredentials("current password is wrong", code="wrong_current_password")
         self._set_password(user, new, ctx)
         keep = principal.session.id if principal.session else None
         self.store.revoke_user_sessions(user.id, self.clock(), keep=keep)
@@ -588,7 +617,7 @@ class AuthService:
         try:
             check_policy(password, email=user.email, display_name=user.display_name)
         except PasswordPolicyError as exc:
-            raise Invalid(str(exc)) from None
+            raise Invalid(str(exc), code=exc.code, params=exc.params) from None
         self.store.update_user(user.id, self.clock(), password_hash=self.passwords.hash(password))
 
     @property
@@ -616,7 +645,10 @@ class AuthService:
     def forgot_password(self, email: str, ctx: Context) -> None:
         """Mails a reset link if the account exists. Same answer either way (no enumeration)."""
         if self.mailer is None:
-            raise Unavailable("password reset is disabled: mail is not configured on this server")
+            raise Unavailable(
+                "password reset is disabled: mail is not configured on this server",
+                code="mail_unavailable",
+            )
         email = email.strip().lower()
         now = self.clock()
         # Throttle per requested address and per IP whether or not the account exists, so a
@@ -636,7 +668,9 @@ class AuthService:
             )
             retry = str(int(self.config.reset_window.total_seconds()))
             raise Throttled(
-                "too many reset requests; try again later", headers={"Retry-After": retry}
+                "too many reset requests; try again later",
+                headers={"Retry-After": retry},
+                code="reset_throttled",
             )
         self.store.record_login(key, ctx.ip, True, now)
         user = self.store.get_user_by_email(email)
@@ -660,7 +694,7 @@ class AuthService:
         user = self.store.get_user(user_id) if user_id is not None else None
         if user is None or not user.is_active:
             self._audit(ctx, "auth.password.reset_invalid", None)  # SRV-07
-            raise Invalid("invalid or expired token")
+            raise Invalid("invalid or expired token", code="invalid_token")
         self._set_password(user, new, ctx)
         self.store.expire_one_time(user.id, TokenKind.RESET_PASSWORD, self.clock())
         self.store.revoke_user_sessions(user.id, self.clock())
@@ -672,9 +706,11 @@ class AuthService:
         user = principal.user
         stored = self.store.password_hash(user.id)
         if stored is not None and not self.passwords.verify(stored, password or ""):
-            raise InvalidCredentials("password is required to delete the account")
+            raise InvalidCredentials(
+                "password is required to delete the account", code="password_required"
+            )
         if user.role is Role.ADMIN and self._is_last_admin(user.id):
-            raise Conflict("the last admin cannot delete their account")
+            raise Conflict("the last admin cannot delete their account", code="last_admin")
         if self.erase_learning_data is not None:
             self.erase_learning_data(user.id)
         self.store.erase_user(user.id, self.clock())
@@ -808,14 +844,14 @@ class AuthService:
     ) -> User:
         target = self.get_user(user_id)
         if status is not None and status not in (UserStatus.ACTIVE, UserStatus.DISABLED):
-            raise Invalid("status can only be set to active or disabled")
+            raise Invalid("status can only be set to active or disabled", code="invalid_status")
         losing_admin = target.role is Role.ADMIN and (
             (role is not None and role is not Role.ADMIN) or (status is UserStatus.DISABLED)
         )
         if losing_admin and target.id == actor.id:
-            raise Conflict("admins cannot remove their own admin access")
+            raise Conflict("admins cannot remove their own admin access", code="self_demote")
         if losing_admin and self._is_last_admin(target.id):
-            raise Conflict("the last admin cannot be demoted or disabled")
+            raise Conflict("the last admin cannot be demoted or disabled", code="last_admin")
         changes: dict[str, Any] = {}
         if role is not None and role is not target.role:
             changes["role"] = role
@@ -885,10 +921,15 @@ class AuthService:
             NotFound: No such user.
         """
         if self.mailer is None:
-            raise Unavailable("password reset is disabled: mail is not configured on this server")
+            raise Unavailable(
+                "password reset is disabled: mail is not configured on this server",
+                code="mail_unavailable",
+            )
         target = self.get_user(user_id)
         if not target.is_active:
-            raise Conflict("a password reset can only be sent to an active account")
+            raise Conflict(
+                "a password reset can only be sent to an active account", code="reset_inactive"
+            )
         # Only the newest reset link is valid (SRV-04).
         self.store.expire_one_time(target.id, TokenKind.RESET_PASSWORD, self.clock())
         self._send_token(target, TokenKind.RESET_PASSWORD, self.config.reset_ttl, ctx)
@@ -957,7 +998,7 @@ class AuthService:
                     known.user_id,
                     detail={"reason": "status", "method": f"oidc:{provider}"},
                 )
-                raise InvalidCredentials("this account is disabled")
+                raise InvalidCredentials("this account is disabled", code="account_disabled")
         elif current is not None and current.session is not None:
             user = current.user
             self.store.link_identity(
@@ -972,14 +1013,18 @@ class AuthService:
             )
         else:
             if not claims.email or not claims.email_verified:
-                raise Forbidden("the provider did not return a verified email address")
+                raise Forbidden(
+                    "the provider did not return a verified email address",
+                    code="oidc_unverified_email",
+                )
             if self.store.get_user_by_email(claims.email) is not None:
                 raise Conflict(
                     "an account with this email already exists: log in with your password, "
-                    "then start this login again to link it"
+                    "then start this login again to link it",
+                    code="oidc_email_taken",
                 )
             if not self.config.allow_signup:
-                raise Forbidden("sign-up is disabled on this server")
+                raise Forbidden("sign-up is disabled on this server", code="signup_disabled")
             role = Role.LEARNER
             user = self.store.create_user(
                 claims.email, None, role, now, display_name=claims.name, email_verified_at=now
@@ -1027,7 +1072,9 @@ class AuthService:
         if all(i.id != identity_id for i in owned):
             raise NotFound(f"no linked identity {identity_id}")
         if not user.has_password and len(owned) == 1:
-            raise Conflict("this is the only way to sign in; set a password first")
+            raise Conflict(
+                "this is the only way to sign in; set a password first", code="only_login_method"
+            )
         self.store.unlink_identity(identity_id, user.id)
         self._audit(
             ctx,

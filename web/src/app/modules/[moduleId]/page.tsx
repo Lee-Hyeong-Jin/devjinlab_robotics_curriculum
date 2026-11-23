@@ -14,6 +14,7 @@ import { getLessonProgressList, getModule, getResources } from '@/lib/api/querie
 import { isNotFound } from '@/lib/api/errors'
 import type { LessonProgress, Module } from '@/lib/api/types'
 import { formatMinutes, formatPercent } from '@/lib/format'
+import { renderInlineMarkdown } from '@/lib/markdown/render'
 import { composeTitle, metaDescription, plainText } from '@/lib/seo'
 import { localizedPageSeo } from '@/lib/seo-server'
 import { breadcrumbs, moduleSchema } from '@/lib/structured-data'
@@ -97,7 +98,7 @@ export default async function ModulePage({ params }: Params) {
       />
       <PageHeader
         title={mod.title ?? moduleId}
-        subtitle={mod.summary}
+        subtitle={renderInlineMarkdown(mod.summary) ?? mod.summary}
         eyebrow={
           <Link href="/roadmap" className="text-accent underline underline-offset-2">
             ← {t('backToRoadmap')}

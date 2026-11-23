@@ -83,6 +83,9 @@ def _cursor(value: str | None) -> int | None:
     return int(value)
 
 
+CSV_BOM = "\ufeff"
+
+
 def _aware(name: str, value: datetime | None) -> datetime | None:
     """A filter time as a UTC instant.
 
@@ -416,7 +419,9 @@ def export_audit(
         detail={"rows": len(rows), "truncated": truncated},
     )
     return Response(
-        content=buffer.getvalue(),
+        # The byte-order mark is what makes Excel read the file as UTF-8; without it Korean
+        # names and details open as mojibake.
+        content=CSV_BOM + buffer.getvalue(),
         media_type="text/csv; charset=utf-8",
         headers={
             "Content-Disposition": 'attachment; filename="audit-log.csv"',

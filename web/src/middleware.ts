@@ -1,7 +1,12 @@
 import { NextResponse, type NextFetchEvent, type NextRequest } from 'next/server'
 
 import { CURRENT_PATH_HEADER } from '@/lib/api/client'
-import { contentTarget, contentVerdict, isDocumentRequest } from '@/lib/content-status'
+import {
+  adminForbidden,
+  contentTarget,
+  contentVerdict,
+  isDocumentRequest,
+} from '@/lib/content-status'
 import { pageViewRequest } from '@/lib/pageview'
 import { contentSecurityPolicy, HSTS, STATIC_SECURITY_HEADERS } from '@/lib/security-headers'
 
@@ -85,6 +90,13 @@ async function respond(request: NextRequest, headers: Headers): Promise<NextResp
       url.pathname = '/_missing'
       return NextResponse.rewrite(url, { request: { headers }, status: 404 })
     }
+  }
+  if (
+    isDocumentRequest(request.method, request.headers) &&
+    (await adminForbidden(request.nextUrl.pathname, request.headers.get('cookie')))
+  ) {
+    // The same page, which renders the "no permission" screen, under the status that says so.
+    return NextResponse.rewrite(request.nextUrl, { request: { headers }, status: 403 })
   }
   return NextResponse.next({ request: { headers } })
 }

@@ -10,6 +10,8 @@ export interface SubmitButtonProps {
   pendingLabel: string
   kind?: ButtonKind
   className?: string
+  /** Set by a form that dispatches its action itself, where `useFormStatus` sees nothing. */
+  pending?: boolean
 }
 
 /** Submit button that disables itself while its form's action is in flight. */
@@ -18,8 +20,10 @@ export function SubmitButton({
   pendingLabel,
   kind = 'primary',
   className,
+  pending: pendingProp,
 }: SubmitButtonProps) {
-  const { pending } = useFormStatus()
+  const status = useFormStatus()
+  const pending = pendingProp ?? status.pending
   return (
     <Button
       type="submit"

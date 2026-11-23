@@ -42,7 +42,16 @@ export function DataTable<Row>({
 }: DataTableProps<Row>) {
   if (rows.length === 0 && empty) return <>{empty}</>
   return (
-    <div className="border-border-default bg-surface overflow-x-auto rounded-[var(--radius-card)] border">
+    // A region that can scroll sideways has to be reachable by keyboard, or its hidden columns
+    // are out of reach without a pointer (axe `scrollable-region-focusable`).
+    <div
+      role="region"
+      aria-label={caption}
+      // The one case where a non-interactive element takes focus: it scrolls.
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+      tabIndex={0}
+      className="border-border-default bg-surface focus-visible:outline-accent overflow-x-auto rounded-[var(--radius-card)] border focus-visible:outline-2"
+    >
       <table role="table" className="block w-full border-collapse text-sm md:table">
         <caption
           className={cx(

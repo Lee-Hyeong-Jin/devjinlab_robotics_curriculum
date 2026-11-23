@@ -170,6 +170,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   problems.
 
 ### Security
+- Tightened validation of the page a reader returns to after signing in.
 - Sessions, audit entries and the per-address sign-in limit now use the browser's address and
   user agent instead of the web server's. The web forwards them and the API accepts
   `X-Forwarded-For` only from a trusted proxy (RUNBOOK §8, "클라이언트 주소").
@@ -182,6 +183,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `npm audit` reports nothing for the web lockfile and the allowlist is empty.
 
 ### Fixed
+- A browser whose session had been ended elsewhere (another device, an operator, a disabled
+  account) got HTTP 500 on every page, the login screen included, until its cookies were
+  cleared by hand. It is now treated as signed out and sent to sign in again.
+- The link in the password-reset mail opened a page that does not exist. It now opens the reset
+  screen; links from mails already sent are redirected.
+- A profile time zone that is not a real zone was saved and then broke the profile screen for
+  that account. The API accepts IANA zone names only and the screen no longer fails on a stored
+  bad value.
+- Changing the password with a wrong current password showed no message.
+- A personal access token asked to expire in 0 or a negative number of days was issued with no
+  expiry.
+- "Send password reset email" in the admin console reported a failure after sending the mail.
+- The web container's health check was counted as about 8,600 page views a day. It now uses
+  `/healthz`, which is not counted.
+- Export links opened without a session redirected to the container's internal address.
+- A refused form lost everything that had been typed and did not mark the field at fault.
+- Matrices in lessons rendered with their columns run together and brackets one line tall.
 - An audit log filter time written with an offset other than UTC (`since=…+09:00`) matched the
   wrong rows on SQLite, which compares stored times as text. Filter times are converted to UTC
   before the query.
@@ -210,6 +228,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   regress.
 
 ### Changed
+- Error messages from the API follow the reader's language. Refusals such as a wrong password,
+  an address that is already registered or an expired link used to appear in English on a
+  Korean screen; each now carries a stable `code` in the problem body and a localized `detail`.
+- "Keep me signed in" now does something: without it the session cookies end when the browser
+  is closed. The server-side session expires by the same rules either way.
+- A quiz is graded only when every question is answered. Answering one question out of three
+  used to be scored as 100%. The result shows the chosen answers in words and renders formulas
+  in the correct answer.
+- The weekly report can show earlier weeks (`/reports?week=2026-W47`, with previous/next links).
+- Lesson titles replace internal ids in the review deck, the running timer, the resource list
+  and the "recommended next" message; CLI commands in lesson text and reports link to the
+  matching screen.
+- Progress and study-time figures agree between screens (stage progress, overall progress,
+  minutes on the dashboard and in reports).
+- Review, reports and quizzes send an anonymous reader to the login screen instead of saying
+  the page could not be loaded. The admin console answers 403 and a report for an unknown
+  module answers 404.
+- The audit CSV starts with a byte-order mark so that Excel opens Korean text correctly.
 - The service runs in Korea Standard Time (`RC_TIMEZONE`, default `Asia/Seoul`; RUNBOOK §8
   "시간대"). Every container sets `TZ`, PostgreSQL logs and displays in that zone, API log lines
   carry `+09:00`, and every date and time on screen is shown in it. A day now begins at local

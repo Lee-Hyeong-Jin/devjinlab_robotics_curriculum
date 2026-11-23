@@ -9,16 +9,30 @@
 
 export const DEFAULT_TIME_ZONE = 'Asia/Seoul'
 
+/** True for a zone name this runtime can format with (`Asia/Seoul`, `UTC`). */
+export function isTimeZone(name: string | null | undefined): name is string {
+  if (!name) return false
+  try {
+    new Intl.DateTimeFormat('en-US', { timeZone: name })
+    return true
+  } catch {
+    return false
+  }
+}
+
 /** The configured IANA zone name, or the default when it is unset or not a real zone. */
 export function serviceTimeZone(): string {
   const raw = process.env.RC_TIMEZONE?.trim()
-  if (!raw) return DEFAULT_TIME_ZONE
-  try {
-    new Intl.DateTimeFormat('en-US', { timeZone: raw })
-    return raw
-  } catch {
-    return DEFAULT_TIME_ZONE
-  }
+  return isTimeZone(raw) ? raw : DEFAULT_TIME_ZONE
+}
+
+/**
+ * The zone to show one reader's times in: their own when their profile names a real one,
+ * otherwise the service's. A stored value is never trusted — one bad name made every
+ * formatter on the profile page throw (QA B-03).
+ */
+export function readerTimeZone(preferred: string | null | undefined): string {
+  return isTimeZone(preferred) ? preferred : serviceTimeZone()
 }
 
 /** Minutes the zone is ahead of UTC at `instant` (540 for Korea). */

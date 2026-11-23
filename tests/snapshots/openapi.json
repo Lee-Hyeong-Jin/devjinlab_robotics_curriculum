@@ -1896,7 +1896,7 @@
           "auth"
         ],
         "summary": "Login",
-        "description": "Start a browser session. Five failures in 15 minutes lock the account temporarily.",
+        "description": "Start a browser session. Five failures in 15 minutes lock the account temporarily.\n\nWith ``remember`` the cookies last as long as the session may stay idle; without it they\nend when the browser is closed.",
         "operationId": "login_api_v1_auth_login_post",
         "requestBody": {
           "content": {
@@ -6755,7 +6755,7 @@
               }
             ],
             "title": "Visit To Signup",
-            "description": "Sign-ups per visitor-day over 30 days: a conversion proxy, not a funnel."
+            "description": "Sign-ups per visitor-day over 30 days: a conversion proxy, not a funnel. Null when there are no counted visitors or fewer than sign-ups."
           }
         },
         "additionalProperties": false,
@@ -7538,7 +7538,7 @@
           "remember": {
             "type": "boolean",
             "title": "Remember",
-            "description": "Accepted for the frontend contract; sessions always last 14 days.",
+            "description": "Keep the browser signed in after it is closed. False sets cookies that end with the browser session; the server-side session expires by the same rules either way.",
             "default": false
           }
         },
@@ -10364,7 +10364,8 @@
                 "type": "null"
               }
             ],
-            "title": "Timezone"
+            "title": "Timezone",
+            "description": "An IANA zone name such as `Asia/Seoul`; anything else is refused (422)."
           }
         },
         "additionalProperties": false,
@@ -10846,7 +10847,21 @@
               }
             ],
             "default": null,
+            "description": "What went wrong, in the request's language where known.",
             "title": "Detail"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "A stable name for the refusal (`invalid_credentials`, `wrong_current_password`, `email_taken`, ...). Branch on this, not on `detail`, which is localized.",
+            "title": "Code"
           },
           "instance": {
             "anyOf": [

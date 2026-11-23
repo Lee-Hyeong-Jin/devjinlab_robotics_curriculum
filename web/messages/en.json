@@ -31,10 +31,9 @@
     "openLesson": "Open lesson",
     "weeklyMinutes": "Study time this week",
     "streak": "Streak",
-    "streakDays": "{days} days",
+    "streakDays": "{days, plural, one {# day} other {# days}}",
     "dueCards": "Due today",
     "dueCardsValue": "{count} cards",
-    "dueCardsCli": "Review runs in the CLI (`rc review`) for now.",
     "courseProgress": "Course progress",
     "stageProgress": "Progress by stage",
     "openSession": "Study session in progress",
@@ -44,7 +43,9 @@
     "pending": "The backend does not expose this value yet.",
     "moduleLessons": "{done}/{total} lessons",
     "weeklySessions": "{count} sessions",
-    "unavailable": "Progress could not be loaded from the API."
+    "unavailable": "Progress could not be loaded from the API.",
+    "dueCardsLink": "Go to review",
+    "overallProgress": "Overall progress"
   },
   "landing": {
     "free": "Every lesson is free to read. Sign up to keep your progress, quiz results and review cards.",
@@ -289,16 +290,17 @@
     "emailRequired": "Enter your email.",
     "passwordRequired": "Enter your password.",
     "failed": "That email and password do not match.",
-    "registered": "Your account is created. Verify your email, then sign in.",
+    "registered": "Your account is created. We sent a verification email: follow its link to verify your address. You can sign in now.",
     "resetDone": "Your password has changed. Sign in with the new one.",
     "forgot": "Forgot your password?",
     "noAccount": "No account yet?",
     "signupLink": "Sign up",
-    "registeredReady": "Your account is ready. Sign in below."
+    "registeredReady": "Your account is ready. Sign in below.",
+    "expired": "Your session has ended. Sign in again."
   },
   "signup": {
     "title": "Sign up",
-    "subtitle": "Verify your email, then you can sign in.",
+    "subtitle": "We will send a verification email when you sign up.",
     "email": "Email",
     "displayName": "Display name",
     "displayNameHint": "Optional.",
@@ -442,7 +444,11 @@
     "tokensTableCaption": "Personal access tokens",
     "identitiesTableCaption": "Linked external logins",
     "onThisPage": "On this page",
-    "connectHint": "Link another sign-in method to this account."
+    "connectHint": "Link another sign-in method to this account.",
+    "passwordSame": "The new password is the same as the current one.",
+    "currentPasswordWrong": "The current password is wrong.",
+    "tokenExpiresInvalid": "Enter a whole number from 1 to {max}, or leave it blank for no expiry.",
+    "timezoneInvalid": "Unknown time zone. Use an IANA name such as Asia/Seoul."
   },
   "role": {
     "learner": "Learner",
@@ -612,7 +618,8 @@
     "system": "system",
     "filtersLabel": "Audit log filters",
     "userFiltersLabel": "User filters",
-    "attentionMonitoring": "{count, plural, one {# monitoring reading is} other {# monitoring readings are}} past a threshold."
+    "attentionMonitoring": "{count, plural, one {# monitoring reading is} other {# monitoring readings are}} past a threshold.",
+    "filterIgnored": "Not applied because the value is not valid: {fields}"
   },
   "monitoring": {
     "nav": "Monitoring",
@@ -798,9 +805,11 @@
     "markDone": "Mark complete",
     "markingDone": "Working…",
     "done": "Marked complete.",
-    "doneWithUnlocked": "Marked complete. {count} lessons unlocked: {ids}",
     "doneFailed": "Could not mark it complete.",
-    "alreadyDone": "You have already completed this lesson."
+    "alreadyDone": "You have already completed this lesson.",
+    "doneWithNext": "Marked complete. Recommended next: {titles}",
+    "markDoneAgain": "Record understanding again",
+    "doneAgainHint": "This lesson is already complete. Saving again replaces the understanding and the note."
   },
   "search": {
     "title": "Search",
@@ -813,7 +822,8 @@
     "tooShort": "Type at least two characters.",
     "unavailable": "Search is unavailable.",
     "lesson": "Lesson",
-    "resource": "Resource"
+    "resource": "Resource",
+    "queryTooLong": "The search text is too long. Use {max} characters or fewer."
   },
   "quiz": {
     "title": "Quiz",
@@ -832,15 +842,17 @@
     "explanation": "Explanation",
     "retry": "Try again",
     "backToLesson": "Back to the lesson",
-    "true": "True",
-    "false": "False",
+    "true": "O (true)",
+    "false": "X (false)",
     "shortAnswerLabel": "Answer",
     "empty": "This lesson has no quiz.",
     "unavailable": "The quiz could not be loaded.",
     "multipleHint": "Pick every option that applies.",
     "cardsCreated": "Wrong answers become review cards.",
     "open": "Take the quiz",
-    "resultHeading": "Result"
+    "resultHeading": "Result",
+    "unanswered": "{count, plural, one {# question is} other {# questions are}} still unanswered. Answer every question before submitting.",
+    "unansweredOne": "Answer this question."
   },
   "review": {
     "title": "Review",
@@ -883,6 +895,25 @@
     "backToModule": "Back to the module",
     "moduleReports": "Module reports",
     "moduleReportsHint": "Pick a module to see its per-lesson progress and understanding.",
-    "noModules": "Modules could not be loaded."
+    "noModules": "Modules could not be loaded.",
+    "weekNav": "Change week",
+    "previousWeek": "Previous week",
+    "nextWeek": "Next week",
+    "thisWeek": "This week"
+  },
+  "form": {
+    "invalid": "This value is not valid.",
+    "required": "This field is required.",
+    "tooLong": "This is too long.",
+    "tooShort": "This is too short.",
+    "format": "This is not in the right format.",
+    "range": "This is outside the allowed range.",
+    "type": "This is not in the right format."
+  },
+  "cliHint": {
+    "quiz": "this lesson's quiz",
+    "start": "open the lesson",
+    "review": "the review screen",
+    "cli": "CLI:"
   }
 }

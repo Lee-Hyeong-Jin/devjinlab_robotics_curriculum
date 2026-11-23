@@ -2,11 +2,11 @@
 
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
-import { useActionState } from 'react'
+import { useActionState, useEffect, useRef, useTransition, type FormEvent } from 'react'
 
 import { submitQuiz, type QuizState } from '@/lib/actions/quiz'
 import type { QuizQuestionPublic } from '@/lib/api/types'
-import { choiceValue } from '@/lib/quiz'
+import { choiceValue, pickedChoices } from '@/lib/quiz'
 import type { ReactNode } from 'react'
 
 import { Card } from './Card'
@@ -38,12 +38,55 @@ const EMPTY: QuizState = {}
  */
 export function QuizForm({ moduleId, lessonId, questions }: QuizFormProps) {
   const t = useTranslations('quiz')
-  const [state, formAction] = useActionState(submitQuiz, EMPTY)
+  const [state, formAction, actionPending] = useActionState(submitQuiz, EMPTY)
+  const [transitionPending, startTransition] = useTransition()
+  const formRef = useRef<HTMLFormElement>(null)
   const run = state.run
   const resultFor = (id: string) => run?.answers.find((answer) => answer.question_id === id)
 
+  // Dispatched by hand so the reader's choices stay on screen: React clears a form after its
+  // action, which wiped the answers both after "answer every question" and beside the result.
+  function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
+    startTransition(() => formAction(data))
+  }
+
+  useEffect(() => {
+    if (state === EMPTY) return
+    const form = formRef.current
+    // To the result when there is one, otherwise to the first question still unanswered.
+    const target =
+      form?.querySelector<HTMLElement>('[data-unanswered="true"] input') ??
+      form?.querySelector<HTMLElement>('#quiz-result')
+    target?.focus()
+    // Not every environment implements it (jsdom does not).
+    if (typeof target?.scrollIntoView === 'function') target.scrollIntoView({ block: 'center' })
+  }, [state])
+
+  /** "2" → "2. <the choice>"; a true/false answer → its label; a short answer as typed. */
+  function givenAnswer(question: RenderedQuestion, given: string | null | undefined): ReactNode {
+    if (!given) return '—'
+    if (question.type === 'truefalse') {
+      const value = given.trim().toLowerCase()
+      return value === 'o' ? t('true') : value === 'x' ? t('false') : given
+    }
+    const picked = pickedChoices(given).filter((n) => question.choices[n - 1] !== undefined)
+    if (picked.length === 0) return given
+    return (
+      <span className="flex flex-col gap-1">
+        {picked.map((n) => (
+          <span key={n} className="flex gap-2">
+            <span className="text-muted shrink-0 font-mono text-xs">{n}.</span>
+            <span className="markdown-body min-w-0">{question.choices[n - 1]}</span>
+          </span>
+        ))}
+      </span>
+    )
+  }
+
   return (
-    <form action={formAction} className="flex flex-col gap-6">
+    <form ref={formRef} action={formAction} onSubmit={submit} className="flex flex-col gap-6">
       <input type="hidden" name="moduleId" value={moduleId} />
       <input type="hidden" name="lessonId" value={lessonId} />
       <input
@@ -56,7 +99,7 @@ export function QuizForm({ moduleId, lessonId, questions }: QuizFormProps) {
 
       {run ? (
         <Card aria-labelledby="quiz-result" className="bg-accent-light border-border-accent">
-          <h2 id="quiz-result" className="text-accent font-bold">
+          <h2 id="quiz-result" tabIndex={-1} className="text-accent font-bold">
             {t('resultHeading')}
           </h2>
           <p className="text-primary mt-1 text-2xl font-semibold tabular-nums">
@@ -74,14 +117,21 @@ export function QuizForm({ moduleId, lessonId, questions }: QuizFormProps) {
           const result = resultFor(question.id)
           const explanation = state.explanations?.[question.id]
           const name = `q:${question.id}`
+          const missing = state.fields?.[name]
           return (
-            <li key={question.id}>
+            <li key={question.id} data-unanswered={missing ? 'true' : undefined}>
               <Card
                 className={
-                  result ? (result.correct ? 'border-border-accent' : 'border-danger') : undefined
+                  missing
+                    ? 'border-danger'
+                    : result
+                      ? result.correct
+                        ? 'border-border-accent'
+                        : 'border-danger'
+                      : undefined
                 }
               >
-                <fieldset>
+                <fieldset aria-describedby={missing ? `${name}-missing` : undefined}>
                   <legend className="mb-2 flex max-w-full flex-wrap items-center gap-2">
                     <span className="text-muted text-xs font-semibold">
                       {t('of', { n: index + 1, total: questions.length })}
@@ -152,15 +202,25 @@ export function QuizForm({ moduleId, lessonId, questions }: QuizFormProps) {
                     </div>
                   )}
 
+                  {missing ? (
+                    <p id={`${name}-missing`} role="alert" className="text-danger mt-2 text-xs">
+                      {missing}
+                    </p>
+                  ) : null}
+
                   {result ? (
                     <dl className="border-border-default mt-3 flex flex-col gap-1 border-t pt-3 text-sm">
                       <div className="flex gap-2">
                         <dt className="text-muted">{t('yourAnswer')}</dt>
-                        <dd className="text-primary font-mono">{result.given || '—'}</dd>
+                        <dd className="text-primary min-w-0">
+                          {givenAnswer(question, result.given)}
+                        </dd>
                       </div>
                       <div className="flex gap-2">
                         <dt className="text-muted">{t('correctAnswer')}</dt>
-                        <dd className="text-primary font-mono">{result.correct_answer}</dd>
+                        <dd className="text-primary markdown-body min-w-0">
+                          {state.correctAnswers?.[question.id] ?? result.correct_answer}
+                        </dd>
                       </div>
                       {explanation || result.explanation ? (
                         <div className="mt-1">
@@ -184,7 +244,9 @@ export function QuizForm({ moduleId, lessonId, questions }: QuizFormProps) {
       </ol>
 
       <div className="flex flex-wrap items-center gap-3">
-        <SubmitButton pendingLabel={t('submitting')}>{run ? t('retry') : t('submit')}</SubmitButton>
+        <SubmitButton pendingLabel={t('submitting')} pending={actionPending || transitionPending}>
+          {run ? t('retry') : t('submit')}
+        </SubmitButton>
         <Link
           href={`/modules/${moduleId}/${lessonId}`}
           className="text-accent text-sm underline underline-offset-2"

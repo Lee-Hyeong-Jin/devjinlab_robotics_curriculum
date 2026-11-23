@@ -1,9 +1,10 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useEffect } from 'react'
 
 import { EMPTY_ACTION_STATE, type ActionState } from '@/lib/actions/result'
 
+import { flash } from '../Flash'
 import { SubmitButton } from './SubmitButton'
 
 export interface RowActionProps {
@@ -21,6 +22,11 @@ export interface RowActionProps {
  */
 export function RowAction({ action, hidden, label, pendingLabel, confirm }: RowActionProps) {
   const [state, formAction] = useActionState(action, EMPTY_ACTION_STATE)
+  // Said in the page-level region as well: a successful action often removes this very form
+  // (the row is gone, "stop" became "start"), and its own message with it.
+  useEffect(() => {
+    if (state.message && !state.error) flash(state.message)
+  }, [state])
   return (
     <form
       action={formAction}
