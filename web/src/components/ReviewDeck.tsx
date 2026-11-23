@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
-import { useActionState, useState, type ReactNode } from 'react'
+import { useActionState, useEffect, useRef, useState, type ReactNode } from 'react'
 
 import { rateCard, type ReviewState } from '@/lib/actions/quiz'
 import type { Rating, ReviewCard } from '@/lib/api/types'
@@ -21,6 +21,8 @@ import { MarkdownBody } from './MarkdownBody'
 export interface DeckCard extends ReviewCard {
   frontBody: ReactNode
   backBody: ReactNode
+  /** The lesson's title; the id is shown only when the title could not be looked up. */
+  lessonTitle?: string
 }
 
 const EMPTY: ReviewState = {}
@@ -56,6 +58,20 @@ export function ReviewDeck({ cards }: { cards: DeckCard[] }) {
   const card = remaining[0]
   const revealed = !!card && revealedId === card.card_id
 
+  // Keyboard focus follows the card. Flipping removes the button that was pressed, and the
+  // browser then drops focus to the top of the document: every card started with a walk back
+  // through the whole page (QA B-27). Flipping moves focus to the first rating, and rating
+  // moves it to the next card's flip button.
+  const revealRef = useRef<HTMLButtonElement>(null)
+  const firstRatingRef = useRef<HTMLButtonElement>(null)
+  const interacted = useRef(false)
+  const cardId = card?.card_id
+  useEffect(() => {
+    if (!interacted.current) return // never steal focus on the first render
+    if (revealed) firstRatingRef.current?.focus()
+    else revealRef.current?.focus()
+  }, [revealed, cardId])
+
   if (!card) {
     return (
       <EmptyState
@@ -89,9 +105,9 @@ export function ReviewDeck({ cards }: { cards: DeckCard[] }) {
           </Chip>
           <Link
             href={`/lessons/${encodeURIComponent(card.lesson_id)}`}
-            className="text-accent font-mono text-xs underline underline-offset-2"
+            className={`text-accent text-xs underline underline-offset-2 ${card.lessonTitle ? '' : 'font-mono'}`}
           >
-            {card.lesson_id}
+            {card.lessonTitle ?? card.lesson_id}
           </Link>
         </div>
 
@@ -114,9 +130,10 @@ export function ReviewDeck({ cards }: { cards: DeckCard[] }) {
               <fieldset>
                 <legend className="text-muted mb-2 text-xs font-semibold">{t('rate')}</legend>
                 <div className="flex flex-wrap gap-2">
-                  {RATINGS.map((rating) => (
+                  {RATINGS.map((rating, index) => (
                     <button
                       key={rating}
+                      ref={index === 0 ? firstRatingRef : undefined}
                       type="submit"
                       name="rating"
                       value={rating}
@@ -132,7 +149,11 @@ export function ReviewDeck({ cards }: { cards: DeckCard[] }) {
           ) : (
             <button
               type="button"
-              onClick={() => setRevealedId(card.card_id)}
+              ref={revealRef}
+              onClick={() => {
+                interacted.current = true
+                setRevealedId(card.card_id)
+              }}
               className="bg-accent-solid text-on-accent min-h-11 rounded-lg border border-transparent px-4 py-2 text-sm font-medium"
             >
               {t('reveal')}

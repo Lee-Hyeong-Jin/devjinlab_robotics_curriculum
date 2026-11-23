@@ -5,6 +5,7 @@ import { getTranslations } from 'next-intl/server'
 
 import { apiPost } from '../api/client'
 import type { DoneResult } from '../api/types'
+import { getLessonNames } from '../api/queries'
 import { toActionState } from './problem'
 import type { ActionState } from './result'
 
@@ -105,11 +106,15 @@ export async function markDone(_previous: ActionState, form: FormData): Promise<
   }
   revalidateLesson(moduleId, lessonId)
 
+  // No lesson is ever locked (ADR 0015): what a completion changes is which lessons are
+  // recommended next, so that is what the message says, with their titles rather than ids.
   const unlocked = result.unlocked_lesson_ids
+  if (unlocked.length === 0) return { message: t('done') }
+  const names = await getLessonNames()
   return {
-    message:
-      unlocked.length > 0
-        ? t('doneWithUnlocked', { count: unlocked.length, ids: unlocked.join(', ') })
-        : t('done'),
+    message: t('doneWithNext', {
+      count: unlocked.length,
+      titles: unlocked.map((id) => names[id]?.title ?? id).join(', '),
+    }),
   }
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useId } from 'react'
+import { useActionState, useEffect, useId, useRef, useTransition, type FormEvent } from 'react'
 
 import { EMPTY_ACTION_STATE, type ActionState } from '@/lib/actions/result'
 import { cx } from '@/lib/cx'
@@ -35,11 +35,47 @@ export function ActionForm({
   notice,
   className,
 }: ActionFormProps) {
-  const [state, formAction] = useActionState(action, EMPTY_ACTION_STATE)
+  const [state, formAction, actionPending] = useActionState(action, EMPTY_ACTION_STATE)
+  const [transitionPending, startTransition] = useTransition()
+  const pending = actionPending || transitionPending
   const prefix = useId()
+  const formRef = useRef<HTMLFormElement>(null)
+
+  // React clears an uncontrolled form once its action has run, whatever the outcome. After a
+  // refusal that throws away everything the reader typed (QA B-11), so the action is
+  // dispatched by hand, which leaves the fields alone, and the form is cleared here only when
+  // the action succeeded. Without JavaScript the form still posts through `action`.
+  function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const submitter = (event.nativeEvent as SubmitEvent).submitter
+    const data = new FormData(event.currentTarget, submitter)
+    startTransition(() => formAction(data))
+  }
+
+  useEffect(() => {
+    const form = formRef.current
+    if (!form || state === EMPTY_ACTION_STATE) return
+    const failed = Boolean(state.error) || Object.keys(state.fields ?? {}).length > 0
+    if (!failed) {
+      form.reset()
+      return
+    }
+    // A password is typed again after a refusal; everything else stays.
+    for (const input of form.querySelectorAll<HTMLInputElement>('input[type="password"]')) {
+      input.value = ''
+    }
+    // Move to the first field that was refused, so a keyboard or screen-reader user lands on it.
+    form.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus()
+  }, [state])
 
   return (
-    <form action={formAction} className={cx('flex flex-col gap-4', className)} noValidate>
+    <form
+      ref={formRef}
+      action={formAction}
+      onSubmit={submit}
+      className={cx('flex flex-col gap-4', className)}
+      noValidate
+    >
       {Object.entries(hidden ?? {}).map(([name, value]) => (
         <input key={name} type="hidden" name={name} value={value} />
       ))}
@@ -112,6 +148,7 @@ export function ActionForm({
                   <input
                     type="checkbox"
                     name={`${field.name}:${option.value}`}
+                    aria-invalid={error ? true : undefined}
                     className="border-border-default size-5 shrink-0 rounded"
                   />
                   {option.mono ? (
@@ -150,7 +187,9 @@ export function ActionForm({
         )
       })}
 
-      <SubmitButton pendingLabel={pendingLabel}>{submitLabel}</SubmitButton>
+      <SubmitButton pendingLabel={pendingLabel} pending={pending}>
+        {submitLabel}
+      </SubmitButton>
     </form>
   )
 }

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { contentTarget, contentVerdict, isDocumentRequest } from './content-status'
+import { adminForbidden, contentTarget, contentVerdict, isDocumentRequest } from './content-status'
 
 afterEach(() => {
   vi.unstubAllGlobals()
@@ -145,5 +145,39 @@ describe('contentVerdict', () => {
     await contentVerdict({ kind: 'module', moduleId: 'm1' }, 'sid=abc')
     await contentVerdict({ kind: 'module', moduleId: 'm1' }, null)
     expect(seen).toEqual(['sid=abc', null])
+  })
+})
+
+describe('module reports and the admin console (QA B-28)', () => {
+  it('treats a module report like its module', () => {
+    expect(contentTarget('/reports/modules/m1')).toEqual({ kind: 'module', moduleId: 'm1' })
+    expect(contentTarget('/reports')).toBeNull()
+    expect(contentTarget('/reports/modules')).toBeNull()
+  })
+
+  it('answers 403 only for a signed-in account that is not an admin', async () => {
+    api({ '/api/v1/me': { status: 200, body: { id: 2, role: 'learner' } } })
+    expect(await adminForbidden('/admin', 'sid=a')).toBe(true)
+    expect(await adminForbidden('/admin/users/3', 'sid=a')).toBe(true)
+    // Not the console, or nobody signed in: the page decides.
+    expect(await adminForbidden('/administer', 'sid=a')).toBe(false)
+    expect(await adminForbidden('/profile', 'sid=a')).toBe(false)
+    expect(await adminForbidden('/admin', null)).toBe(false)
+  })
+
+  it('lets admins through and leaves every unclear answer to the page', async () => {
+    api({ '/api/v1/me': { status: 200, body: { id: 1, role: 'admin' } } })
+    expect(await adminForbidden('/admin', 'sid=a')).toBe(false)
+    api({ '/api/v1/me': { status: 401 } })
+    expect(await adminForbidden('/admin', 'sid=stale')).toBe(false)
+    api({ '/api/v1/me': { status: 200, body: {} } })
+    expect(await adminForbidden('/admin', 'sid=a')).toBe(false)
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        throw new Error('down')
+      }),
+    )
+    expect(await adminForbidden('/admin', 'sid=a')).toBe(false)
   })
 })

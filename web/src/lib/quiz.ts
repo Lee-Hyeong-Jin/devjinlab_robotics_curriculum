@@ -16,8 +16,9 @@ export type AnswerableQuestion = Pick<QuizQuestionPublic, 'id' | 'type'>
  * `QuizSubmission.answers` takes: `2` for single choice, `1,3` for multiple,
  * `o`/`x` for true-false, free text for short answers.
  *
- * Unanswered questions are left out; the submission is sent with
- * `partial: true` so the API grades what is there instead of refusing.
+ * Unanswered questions are left out of the result; the caller refuses a submission that
+ * leaves any out (`unanswered`), because grading only what was answered turned one right
+ * answer out of three questions into "100%" (QA B-06).
  */
 export function readAnswers(
   form: Pick<FormData, 'get' | 'getAll'>,
@@ -43,4 +44,23 @@ export function readAnswers(
 /** Choice labels are 1-based in the CLI notation. */
 export function choiceValue(index: number): string {
   return String(index + 1)
+}
+
+/** The questions a submission leaves unanswered, in order. */
+export function unanswered(
+  questions: readonly AnswerableQuestion[],
+  answers: Record<string, string>,
+): string[] {
+  return questions.filter((question) => !(question.id in answers)).map((question) => question.id)
+}
+
+/**
+ * The 1-based choice numbers in an answer written in the CLI notation (`2`, `1,3`), or an empty
+ * list when it is not a list of numbers (a short answer, `o`/`x`).
+ */
+export function pickedChoices(given: string | null | undefined): number[] {
+  if (!given) return []
+  const parts = given.split(',').map((part) => part.trim())
+  if (parts.some((part) => !/^\d+$/.test(part))) return []
+  return parts.map(Number)
 }

@@ -59,10 +59,22 @@ OIDC_COOKIE_PATH = "/api/v1/auth/oidc"
 
 
 def _set_session_cookies(
-    response: Response, result: SessionResult, state: AppState, auth: AuthService
+    response: Response,
+    result: SessionResult,
+    state: AppState,
+    auth: AuthService,
+    *,
+    persistent: bool = True,
 ) -> None:
+    """Hand the browser its session and CSRF cookies.
+
+    ``persistent`` is "keep me signed in": the cookies outlive the browser for as long as the
+    session's idle window. Without it they carry no ``Max-Age``, so they end when the browser
+    is closed, which is what an unticked box on a shared computer is for. The session on the
+    server expires by the same rules either way.
+    """
     secure = state.settings.cookie_secure
-    max_age = int(auth.config.session_idle.total_seconds())
+    max_age = int(auth.config.session_idle.total_seconds()) if persistent else None
     response.set_cookie(
         SESSION_COOKIE,
         result.session_token,
@@ -99,9 +111,13 @@ def signup(body: SignupRequest, auth: Auth, ctx: Ctx) -> User:
 def login(
     body: LoginRequest, response: Response, auth: Auth, ctx: Ctx, state: State
 ) -> LoginResult:
-    """Start a browser session. Five failures in 15 minutes lock the account temporarily."""
+    """Start a browser session. Five failures in 15 minutes lock the account temporarily.
+
+    With ``remember`` the cookies last as long as the session may stay idle; without it they
+    end when the browser is closed.
+    """
     result = auth.login(body.email, body.password, ctx)
-    _set_session_cookies(response, result, state, auth)
+    _set_session_cookies(response, result, state, auth, persistent=body.remember)
     return LoginResult(
         user=User.of(result.user, auth.verification_state(result.user)),
         csrf_token=result.csrf_token,

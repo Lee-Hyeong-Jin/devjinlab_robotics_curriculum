@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 
@@ -19,7 +20,13 @@ const ALL = 'all'
  * Resource table with a client-side kind filter and search (frontend.md §2,
  * AC-WEB.5). The list is fetched on the server; only the filtering is interactive.
  */
-export function ResourceExplorer({ resources }: { resources: ResourceRef[] }) {
+export interface ResourceExplorerProps {
+  resources: ResourceRef[]
+  /** Lesson id -> title, for the "linked lessons" column; an id without one is shown as is. */
+  lessonTitles?: Record<string, string>
+}
+
+export function ResourceExplorer({ resources, lessonTitles = {} }: ResourceExplorerProps) {
   const t = useTranslations('resources')
   const tKind = useTranslations('kind')
   const [kind, setKind] = useState<string>(ALL)
@@ -86,7 +93,17 @@ export function ResourceExplorer({ resources }: { resources: ResourceRef[] }) {
       key: 'lessons',
       header: t('colLessons'),
       cell: (row) => (
-        <span className="text-muted font-mono text-xs">{(row.lesson_ids ?? []).join(', ')}</span>
+        <span className="text-muted flex flex-col gap-0.5 text-xs">
+          {(row.lesson_ids ?? []).map((id) => (
+            <Link
+              key={id}
+              href={`/lessons/${encodeURIComponent(id)}`}
+              className={`hover:text-accent underline underline-offset-2 ${lessonTitles[id] ? '' : 'font-mono'}`}
+            >
+              {lessonTitles[id] ?? id}
+            </Link>
+          ))}
+        </span>
       ),
       hideOnMobile: true,
     },

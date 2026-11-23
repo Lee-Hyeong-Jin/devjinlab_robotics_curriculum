@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { getLocale, getTranslations } from 'next-intl/server'
 
 import { logMinutes, markDone, startTimer, stopTimer } from '@/lib/actions/progress'
@@ -6,6 +7,7 @@ import { formatDateTime, formatSeconds } from '@/lib/format'
 
 import { Card } from './Card'
 import { Chip } from './Chip'
+import { getLessonNames } from '@/lib/api/queries'
 import { ActionForm } from './form/ActionForm'
 import { RowAction } from './form/RowAction'
 
@@ -27,6 +29,9 @@ export async function StudyPanel({ moduleId, lessonId, progress, openSession }: 
   const [t, locale] = await Promise.all([getTranslations('study'), getLocale()])
   const ids = { lessonId, moduleId }
   const runningHere = openSession?.lesson_id === lessonId
+  // The timer may be running on another lesson: name it by its title, not its id.
+  const otherTitle =
+    openSession && !runningHere ? (await getLessonNames())[openSession.lesson_id]?.title : undefined
   const done = progress?.status === 'done'
 
   return (
@@ -47,7 +52,18 @@ export async function StudyPanel({ moduleId, lessonId, progress, openSession }: 
               <p className="text-muted text-xs">
                 {runningHere
                   ? t('runningSince', { at: formatDateTime(openSession.started_at, locale) })
-                  : `${openSession.lesson_id} — ${t('running')}`}
+                  : null}
+                {runningHere ? null : (
+                  <>
+                    <Link
+                      href={`/lessons/${encodeURIComponent(openSession.lesson_id)}`}
+                      className="text-accent underline underline-offset-2"
+                    >
+                      {otherTitle ?? openSession.lesson_id}
+                    </Link>
+                    {` — ${t('running')}`}
+                  </>
+                )}
               </p>
               <RowAction
                 action={stopTimer}
@@ -86,10 +102,11 @@ export async function StudyPanel({ moduleId, lessonId, progress, openSession }: 
           <h3 className="text-muted mb-2 text-xs font-semibold tracking-wide uppercase">
             {t('doneTitle')}
           </h3>
+          {done ? <p className="text-muted mb-2 text-xs">{t('doneAgainHint')}</p> : null}
           <ActionForm
             action={markDone}
             hidden={{ ...ids }}
-            submitLabel={t('markDone')}
+            submitLabel={done ? t('markDoneAgain') : t('markDone')}
             pendingLabel={t('markingDone')}
             fields={[
               {

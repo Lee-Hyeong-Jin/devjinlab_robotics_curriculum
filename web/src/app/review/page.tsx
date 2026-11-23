@@ -4,7 +4,8 @@ import { getTranslations } from 'next-intl/server'
 import { EmptyState } from '@/components/EmptyState'
 import { PageHeader } from '@/components/PageHeader'
 import { ReviewDeck, type DeckCard } from '@/components/ReviewDeck'
-import { getDueCards } from '@/lib/api/queries'
+import { getDueCards, getLessonNames } from '@/lib/api/queries'
+import { signInIfRequired } from '@/lib/auth'
 import { renderInlineMarkdown } from '@/lib/markdown/render'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -18,6 +19,8 @@ export default async function ReviewPage() {
   const cards = await getDueCards()
 
   if (!cards) {
+    // Nothing to show an anonymous reader but the way in (QA B-25).
+    await signInIfRequired('/review')
     return (
       <>
         <PageHeader title={t('title')} subtitle={t('subtitle')} />
@@ -26,8 +29,10 @@ export default async function ReviewPage() {
     )
   }
 
+  const names = cards.length > 0 ? await getLessonNames() : {}
   const deck: DeckCard[] = cards.map((card) => ({
     ...card,
+    lessonTitle: names[card.lesson_id]?.title,
     frontBody: renderInlineMarkdown(card.front),
     backBody: renderInlineMarkdown(card.back),
   }))

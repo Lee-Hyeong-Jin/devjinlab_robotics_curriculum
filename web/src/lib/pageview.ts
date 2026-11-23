@@ -12,7 +12,8 @@ import { apiBaseUrl } from './api/config'
  * derive its daily visitor pseudonym, and are not stored.
  */
 
-const NOT_PAGES = /^\/(?:api|admin|_next)(?:\/|$)|\.[a-z0-9]{2,12}$/i
+// `/healthz` and `/session/*` are plumbing, not pages anybody reads.
+const NOT_PAGES = /^\/(?:api|admin|_next|healthz|session)(?:\/|$)|\.[a-z0-9]{2,12}$/i
 
 /** Whether a path is a page worth counting (not an asset, an API route or the admin console). */
 export function countsAsPage(pathname: string): boolean {

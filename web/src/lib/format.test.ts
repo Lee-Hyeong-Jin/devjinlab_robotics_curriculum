@@ -33,9 +33,13 @@ describe('formatMinutes', () => {
 })
 
 describe('formatSeconds', () => {
-  it('rounds seconds to minutes', () => {
+  it('counts whole minutes, like the API and the CLI do (QA B-18)', () => {
     expect(formatSeconds(3660, 'en')).toBe('1h 1m')
     expect(formatSeconds(undefined, 'en')).toBe('0m')
+    // 26 minutes 45 seconds is 26 minutes on every screen, not 27 on some.
+    expect(formatSeconds(26 * 60 + 45, 'en')).toBe('26m')
+    expect(formatSeconds(59, 'en')).toBe('0m')
+    expect(formatSeconds(-5, 'en')).toBe('0m')
   })
 })
 

@@ -580,7 +580,14 @@ def kpis(principal: AdminPrincipal, auth: Auth, ctx: Ctx, state: State, ops: Ops
             signups_7d=accounts.new_7d,
             signups_30d=accounts.new_30d,
             visitor_days_30d=visitor_days,
-            visit_to_signup=accounts.new_30d / visitor_days if visitor_days else None,
+            # More sign-ups than counted visitors means the visits were not counted (page-view
+            # intake off or refused, sign-ups through the API): a ratio above 100% is not a
+            # conversion rate, so none is reported.
+            visit_to_signup=(
+                accounts.new_30d / visitor_days
+                if visitor_days and accounts.new_30d <= visitor_days
+                else None
+            ),
         ),
         cohorts=Cohorts(
             activation_cohort=len(new_accounts),

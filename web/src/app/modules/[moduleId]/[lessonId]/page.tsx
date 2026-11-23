@@ -24,6 +24,7 @@ import {
 } from '@/lib/api/queries'
 import type { Lesson, Module } from '@/lib/api/types'
 import { formatMinutes } from '@/lib/format'
+import { webCliHints } from '@/lib/markdown/cli-hints-server'
 import { renderInlineMarkdown, renderMarkdown } from '@/lib/markdown/render'
 import { stripLessonSections } from '@/lib/markdown/sections'
 import { composeTitle, metaDescription, plainText } from '@/lib/seo'
@@ -107,8 +108,12 @@ export default async function LessonPage({ params }: Params) {
   // The body carries the whole lesson, including the sections this screen shows as
   // their own UI (the study-method card, the quiz screen); rendering them again
   // repeated the study method and printed the quiz's YAML source.
+  const quizPath = `/modules/${encodeURIComponent(moduleId)}/${encodeURIComponent(lessonId)}/quiz`
   const body = renderMarkdown(
-    stripLessonSections(lesson.body, { studyMethod: lesson.study_method }),
+    // "`rc quiz <id>`" in the text becomes a link to the quiz screen beside it.
+    await webCliHints(stripLessonSections(lesson.body, { studyMethod: lesson.study_method }), {
+      [lessonId]: quizPath,
+    }),
   )
   const studyMethod = renderMarkdown(lesson.study_method ?? undefined)
   const siblings = mod?.lessons ?? []

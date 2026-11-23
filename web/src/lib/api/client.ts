@@ -18,6 +18,7 @@ import { DEFAULT_LOCALE } from '@/i18n/locales'
 import { apiBaseUrl, apiTimeoutMs } from './config'
 import { ApiError, ApiUnreachableError } from './errors'
 import { browserIdentity } from './forward'
+import { loginUrl, sessionExpiredUrl } from '../next-path'
 import type { GetPath, GetResponse, Problem } from './types'
 
 /** Header set by `src/middleware.ts` so a 401 can redirect back to the current page. */
@@ -120,6 +121,19 @@ async function parseProblem(response: Response): Promise<Problem | undefined> {
   }
 }
 
+/**
+ * The JSON body of a successful response, or `undefined` when there is none.
+ *
+ * Not only 204 is empty: an accepted request (202) and some deletes answer with no body, and
+ * parsing nothing as JSON throws — which turned a success into "the request failed" on screen.
+ */
+async function readBody<T>(response: Response): Promise<T> {
+  if (response.status === 204 || response.status === 205) return undefined as T
+  const text = await response.text()
+  if (text.trim() === '') return undefined as T
+  return JSON.parse(text) as T
+}
+
 interface RawRequest extends RequestOptions {
   method: string
   path: string
@@ -167,7 +181,12 @@ async function send<T>({
   const requestId = response.headers.get('x-request-id') ?? undefined
 
   if (response.status === 401 && redirectOnUnauthorized) {
-    redirect(`/login?next=${encodeURIComponent(await currentPath())}`)
+    const path = await currentPath()
+    // A cookie the API no longer honours (signed out elsewhere, disabled, expired) has to be
+    // dropped, or every later request repeats this 401. Only a route handler may delete a
+    // cookie during a page render, so the reader goes through one on the way to the login
+    // screen. Without a cookie there is nothing to drop.
+    redirect((await hasSessionCookie()) ? sessionExpiredUrl(path) : loginUrl(path))
   }
 
   if (!response.ok) {
@@ -182,8 +201,7 @@ async function send<T>({
 
   const setCookie =
     typeof response.headers.getSetCookie === 'function' ? response.headers.getSetCookie() : []
-  const data = response.status === 204 ? (undefined as T) : ((await response.json()) as T)
-  return { data, setCookie, status: response.status }
+  return { data: await readBody<T>(response), setCookie, status: response.status }
 }
 
 async function request<T>(options: RawRequest): Promise<T> {

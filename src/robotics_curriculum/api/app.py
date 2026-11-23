@@ -22,7 +22,7 @@ from fastapi import FastAPI, Request
 
 from robotics_curriculum import __version__
 from robotics_curriculum.api.deps import AppState, ContentIndex, open_progress_store
-from robotics_curriculum.api.log import LOGGER_NAME
+from robotics_curriculum.api.log import LOGGER_NAME, lang_var
 from robotics_curriculum.api.metrics import Metrics, MetricsMiddleware
 from robotics_curriculum.api.middleware import RequestContextMiddleware, SecurityHeadersMiddleware
 from robotics_curriculum.api.problems import (
@@ -51,6 +51,7 @@ from robotics_curriculum.auth.mailer import Mailer, SmtpConfig, SmtpMailer
 from robotics_curriculum.auth.oidc import OidcClient, OidcProvider, parse_providers
 from robotics_curriculum.auth.service import AuthConfig, AuthError, AuthService
 from robotics_curriculum.auth.store import SqlAuthStore
+from robotics_curriculum.i18n import get_translator
 from robotics_curriculum.ops.recorder import Recorder
 from robotics_curriculum.ops.store import OpsStore
 from robotics_curriculum.progress import ProgressError, ProgressService
@@ -145,7 +146,16 @@ def build_auth(
 
 async def _auth_error(request: Request, exc: Exception) -> ProblemResponse:
     assert isinstance(exc, AuthError)
-    return problem_response(exc.status, exc.detail, instance=request.url.path, headers=exc.headers)
+    detail = exc.detail
+    if exc.code is not None:
+        # The sentence in the request's language; the English one stays in logs and the CLI.
+        key = f"api.auth.{exc.code}"
+        localized = get_translator(lang_var.get())(key, **exc.params)
+        if localized != key:
+            detail = localized
+    return problem_response(
+        exc.status, detail, instance=request.url.path, headers=exc.headers, code=exc.code
+    )
 
 
 def _pools(state: AppState) -> dict[str, object]:

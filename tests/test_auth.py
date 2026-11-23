@@ -192,12 +192,18 @@ def test_password_hash_is_argon2id_and_never_logged(
 
 
 def test_password_policy(anon: TestClient) -> None:
-    r = anon.post("/api/v1/auth/signup", json={"email": "a@example.org", "password": "short"})
-    assert "at least 12" in assert_problem(r, 422)["detail"]
+    # The refusal names itself with a stable code and explains itself in the request's
+    # language: Korean by default, English when asked.
+    short = {"email": "a@example.org", "password": "short"}
+    body = assert_problem(anon.post("/api/v1/auth/signup", json=short), 422)
+    assert body["code"] == "password_too_short"
+    assert "12자 이상" in body["detail"]
+    english = anon.post("/api/v1/auth/signup?lang=en", json=short)
+    assert "at least 12" in assert_problem(english, 422)["detail"]
     r = anon.post(
         "/api/v1/auth/signup", json={"email": "jinsoo@example.org", "password": "my-jinsoo-pass-1"}
     )
-    assert "email" in assert_problem(r, 422)["detail"]
+    assert assert_problem(r, 422)["code"] == "password_contains_email"
     with pytest.raises(PasswordPolicyError, match="at most"):
         check_policy("x" * 129, email="a@b.co")
     with pytest.raises(PasswordPolicyError, match="name"):
@@ -692,8 +698,10 @@ def test_password_reset_flow(app: FastAPI, mailer: FakeMailer, clock: Clock) -> 
 
 def test_password_reset_disabled_without_mail(settings: Settings) -> None:
     app = create_app(settings, mailer=None)
-    r = client_for(app).post("/api/v1/auth/password/forgot", json={"email": "a@b.co"})
-    assert "mail is not configured" in assert_problem(r, 503)["detail"]
+    r = client_for(app).post("/api/v1/auth/password/forgot?lang=en", json={"email": "a@b.co"})
+    body = assert_problem(r, 503)
+    assert body["code"] == "mail_unavailable"
+    assert "mail is not configured" in body["detail"]
 
 
 # -- account deletion / audit retention (AC-AUTH.6) ---

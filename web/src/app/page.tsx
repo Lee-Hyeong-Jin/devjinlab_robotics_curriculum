@@ -88,6 +88,7 @@ export default async function DashboardPage() {
           return { course, progress: courseProgress(own), lessonsTotal: own.length }
         })
       : []
+  const overallLabel = perCourse.length > 0 ? t('overallProgress') : t('courseProgress')
   const week = status?.week
   const openSession = status?.open_session
   const recommended = next?.[0]
@@ -104,13 +105,15 @@ export default async function DashboardPage() {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatTile
-          label={t('courseProgress')}
+          // With several courses this figure covers all of them, and says so: "course
+          // progress 1%" above "expert course 4%" read as a contradiction (QA B-17).
+          label={overallLabel}
           value={formatPercent(progress, locale)}
           hint={
             <ProgressBar
               className="mt-2"
               value={progress}
-              label={`${t('courseProgress')} ${formatPercent(progress, locale)}`}
+              label={`${overallLabel} ${formatPercent(progress, locale)}`}
             />
           }
         />
@@ -125,7 +128,11 @@ export default async function DashboardPage() {
         <StatTile
           label={t('dueCards')}
           value={t('dueCardsValue', { count: status?.due_cards ?? 0 })}
-          hint={t('dueCardsCli')}
+          hint={
+            <Link href="/review" className="text-accent underline underline-offset-2">
+              {t('dueCardsLink')}
+            </Link>
+          }
         />
       </div>
 
@@ -215,7 +222,15 @@ export default async function DashboardPage() {
               <h2 id="open-session-heading" className="text-primary mb-2 font-semibold">
                 {t('openSession')}
               </h2>
-              <p className="text-primary font-mono text-sm">{openSession.lesson_id}</p>
+              <p className="text-primary text-sm">
+                <Link
+                  href={`/lessons/${encodeURIComponent(openSession.lesson_id)}`}
+                  className="text-accent underline underline-offset-2"
+                >
+                  {lessons.find((row) => row.lesson.id === openSession.lesson_id)?.lesson.title ??
+                    openSession.lesson_id}
+                </Link>
+              </p>
               <p className="text-muted mt-1 text-xs">
                 {t('openSessionSince', { at: formatDateTime(openSession.started_at, locale) })}
               </p>

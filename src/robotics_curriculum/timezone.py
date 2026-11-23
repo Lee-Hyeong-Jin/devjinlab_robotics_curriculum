@@ -9,7 +9,7 @@ is written for a person (log lines, exports, screens). It is Korea Standard Time
 from __future__ import annotations
 
 from datetime import date, datetime, tzinfo
-from zoneinfo import ZoneInfo
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 DEFAULT_TIMEZONE = "Asia/Seoul"
 """IANA name of the default zone: Korea Standard Time (UTC+9, no daylight saving)."""
@@ -27,3 +27,18 @@ def local_day(moment: datetime, tz: tzinfo) -> date:
 def day_start(day: date, tz: tzinfo) -> datetime:
     """Midnight at the start of ``day`` in ``tz``, as an aware datetime."""
     return datetime(day.year, day.month, day.day, tzinfo=tz)
+
+
+def is_timezone(name: str) -> bool:
+    """True for an IANA zone name this system knows (``Asia/Seoul``, ``UTC``).
+
+    Abbreviations (``KST``), offsets (``+09:00``) and anything path-like are refused: a stored
+    zone is handed to every client's date formatter, which rejects them.
+    """
+    if not name or name != name.strip() or name.startswith(("/", ".")) or ".." in name:
+        return False
+    try:
+        ZoneInfo(name)
+    except (ZoneInfoNotFoundError, ValueError, OSError):
+        return False
+    return True

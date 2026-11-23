@@ -5,7 +5,7 @@ import { EmptyState } from '@/components/EmptyState'
 import { JsonLd } from '@/components/JsonLd'
 import { PageHeader } from '@/components/PageHeader'
 import { ResourceExplorer } from '@/components/ResourceExplorer'
-import { getResources } from '@/lib/api/queries'
+import { getLessonNames, getResources } from '@/lib/api/queries'
 import { localizedPageSeo } from '@/lib/seo-server'
 import { breadcrumbs, collectionPageSchema } from '@/lib/structured-data'
 
@@ -38,6 +38,11 @@ export default async function ResourcesPage() {
     )
   }
 
+  const names = await getLessonNames()
+  const lessonTitles = Object.fromEntries(
+    Object.entries(names).map(([id, name]) => [id, name.title]),
+  )
+
   return (
     <>
       <JsonLd
@@ -50,7 +55,7 @@ export default async function ResourcesPage() {
         ]}
       />
       <PageHeader title={t('title')} subtitle={t('subtitle')} />
-      <ResourceExplorer resources={resources} />
+      <ResourceExplorer resources={resources} lessonTitles={lessonTitles} />
     </>
   )
 }

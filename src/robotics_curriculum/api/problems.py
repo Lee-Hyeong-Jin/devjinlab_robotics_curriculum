@@ -45,7 +45,16 @@ class Problem(BaseModel):
     type: str = "about:blank"
     title: str
     status: int
-    detail: str | None = None
+    detail: str | None = Field(
+        default=None, description="What went wrong, in the request's language where known."
+    )
+    code: str | None = Field(
+        default=None,
+        description=(
+            "A stable name for the refusal (`invalid_credentials`, `wrong_current_password`, "
+            "`email_taken`, ...). Branch on this, not on `detail`, which is localized."
+        ),
+    )
     instance: str | None = Field(default=None, description="The request path.")
     request_id: str | None = Field(default=None, description="Same as the X-Request-ID header.")
     errors: list[FieldError] | None = Field(default=None, description="Only on 422.")

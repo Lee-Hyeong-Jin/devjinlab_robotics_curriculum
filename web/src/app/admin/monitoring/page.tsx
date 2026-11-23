@@ -501,7 +501,7 @@ export default async function MonitoringPage({ searchParams }: Props) {
           {memory ? (
             <Meter
               label={t('memory')}
-              value={formatRatio(memory.used_ratio, locale, 0)}
+              value={formatRatio(memory.used_ratio, locale)}
               ratio={memory.used_ratio}
               level={memory.level}
               levelLabel={levelLabel(memory.level)}
@@ -515,7 +515,7 @@ export default async function MonitoringPage({ searchParams }: Props) {
           {disk ? (
             <Meter
               label={t('disk')}
-              value={formatRatio(disk.used_ratio, locale, 0)}
+              value={formatRatio(disk.used_ratio, locale)}
               ratio={disk.used_ratio}
               level={disk.level}
               levelLabel={levelLabel(disk.level)}
@@ -550,7 +550,7 @@ export default async function MonitoringPage({ searchParams }: Props) {
               value={
                 memory.swap_used_ratio === null
                   ? t('swapNone')
-                  : formatRatio(memory.swap_used_ratio, locale, 0)
+                  : formatRatio(memory.swap_used_ratio, locale)
               }
               ratio={memory.swap_used_ratio}
               level={memory.swap_level}

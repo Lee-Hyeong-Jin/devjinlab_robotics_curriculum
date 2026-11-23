@@ -4,6 +4,8 @@
  */
 import 'server-only'
 
+import { cache } from 'react'
+
 import { toStageViews, toStageViewsFromCourse, type RoadmapStageView } from '../roadmap'
 import { apiGet, apiGetOrNull } from './client'
 import { defaultCourseId } from './config'
@@ -142,8 +144,8 @@ export function getDueCards(): Promise<ReviewCard[] | null> {
 }
 
 /** `GET /api/v1/reports/weekly` — the weekly report, as Markdown plus a summary. */
-export function getWeeklyReport(): Promise<Report | null> {
-  return apiGetOrNull('/api/v1/reports/weekly')
+export function getWeeklyReport(week?: string): Promise<Report | null> {
+  return apiGetOrNull('/api/v1/reports/weekly', week ? { query: { week } } : {})
 }
 
 /** `GET /api/v1/reports/modules/{module_id}` — one module's report (`rc report module`). */
@@ -152,3 +154,40 @@ export function getModuleReport(moduleId: string): Promise<Report> {
     `/api/v1/reports/modules/${encodeURIComponent(moduleId)}` as '/api/v1/reports/modules/{module_id}',
   )
 }
+
+/** What a screen needs to name a lesson and link to it. */
+export interface LessonName {
+  title: string
+  moduleId: string
+}
+
+/**
+ * Every lesson's title and module, by id.
+ *
+ * Several answers carry lesson ids only (a review card, the running timer, the lessons a
+ * completion opened up, a resource's lessons). Showing `m1-rotation-representations` to a
+ * reader is showing them a file name (QA B-22), so those screens look the title up here.
+ * Built from the cached course and module answers, once per request; empty when the content
+ * cannot be read (an anonymous reader on a deployment that publishes nothing), in which case
+ * the callers fall back to the id.
+ */
+export const getLessonNames = cache(async (): Promise<Record<string, LessonName>> => {
+  const names: Record<string, LessonName> = {}
+  try {
+    const summaries = await getCourses()
+    const courses = await Promise.all(summaries.map((summary) => getCourse(summary.id)))
+    const moduleIds = courses
+      .flatMap((course) => course?.stages ?? [])
+      .flatMap((stage) => stage.modules ?? [])
+      .map((entry) => entry.id)
+    const modules = await Promise.all(moduleIds.map((id) => getModuleOrNull(id)))
+    for (const found of modules) {
+      for (const lesson of found?.lessons ?? []) {
+        names[lesson.id] = { title: lesson.title, moduleId: found?.id ?? lesson.module_id }
+      }
+    }
+  } catch {
+    // A lookup for display only: any failure means "show the id".
+  }
+  return names
+})

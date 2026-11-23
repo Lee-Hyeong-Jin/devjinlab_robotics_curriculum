@@ -562,6 +562,9 @@ export interface paths {
         /**
          * Login
          * @description Start a browser session. Five failures in 15 minutes lock the account temporarily.
+         *
+         *     With ``remember`` the cookies last as long as the session may stay idle; without it they
+         *     end when the browser is closed.
          */
         post: operations["login_api_v1_auth_login_post"];
         delete?: never;
@@ -1970,7 +1973,7 @@ export interface components {
             visitor_days_30d: number;
             /**
              * Visit To Signup
-             * @description Sign-ups per visitor-day over 30 days: a conversion proxy, not a funnel.
+             * @description Sign-ups per visitor-day over 30 days: a conversion proxy, not a funnel. Null when there are no counted visitors or fewer than sign-ups.
              */
             visit_to_signup: number | null;
         };
@@ -2306,7 +2309,7 @@ export interface components {
             password: string;
             /**
              * Remember
-             * @description Accepted for the frontend contract; sessions always last 14 days.
+             * @description Keep the browser signed in after it is closed. False sets cookies that end with the browser session; the server-side session expires by the same rules either way.
              * @default false
              */
             remember: boolean;
@@ -3461,7 +3464,10 @@ export interface components {
             display_name?: string | null;
             /** Locale */
             locale?: ("ko" | "en") | null;
-            /** Timezone */
+            /**
+             * Timezone
+             * @description An IANA zone name such as `Asia/Seoul`; anything else is refused (422).
+             */
             timezone?: string | null;
         };
         /** Version */
@@ -3684,9 +3690,16 @@ export interface components {
             status: number;
             /**
              * Detail
+             * @description What went wrong, in the request's language where known.
              * @default null
              */
             detail: string | null;
+            /**
+             * Code
+             * @description A stable name for the refusal (`invalid_credentials`, `wrong_current_password`, `email_taken`, ...). Branch on this, not on `detail`, which is localized.
+             * @default null
+             */
+            code: string | null;
             /**
              * Instance
              * @description The request path.

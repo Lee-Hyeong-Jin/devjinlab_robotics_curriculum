@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server'
 
 import { apiBaseUrl, apiTimeoutMs } from '@/lib/api/config'
 import { browserIdentity } from '@/lib/api/forward'
+import { loginUrl, sessionExpiredUrl } from '@/lib/next-path'
+import { redirectToPath } from '@/lib/redirect-response'
 
 /**
  * Streams `GET /api/v1/me/export` back to the browser as a download.
@@ -11,7 +13,7 @@ import { browserIdentity } from '@/lib/api/forward'
  * origin holds — the browser cannot call the API directly across origins. This
  * route forwards the cookie and nothing else, and never caches the result.
  */
-export async function GET(request: Request): Promise<Response> {
+export async function GET(): Promise<Response> {
   const jar = await cookies()
   const all = jar.getAll()
   const headers = new Headers({ Accept: 'application/json', ...(await browserIdentity()) })
@@ -34,7 +36,9 @@ export async function GET(request: Request): Promise<Response> {
   }
 
   if (upstream.status === 401) {
-    return NextResponse.redirect(new URL('/login?next=/profile', request.url), 302)
+    return redirectToPath(
+      all.some((c) => c.name === 'sid') ? sessionExpiredUrl('/profile') : loginUrl('/profile'),
+    )
   }
   if (!upstream.ok) {
     return new NextResponse(upstream.body, {

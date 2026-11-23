@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { signInIfRequired } from '@/lib/auth'
 import { getTranslations } from 'next-intl/server'
 
 import { EmptyState } from '@/components/EmptyState'
@@ -33,6 +34,7 @@ export default async function QuizPage({ params }: Params) {
   )
 
   if (!quiz) {
+    await signInIfRequired(`/modules/${moduleId}/${lessonId}/quiz`)
     return (
       <>
         <PageHeader title={t('title')} eyebrow={back} />

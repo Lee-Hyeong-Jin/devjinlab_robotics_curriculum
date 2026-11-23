@@ -133,6 +133,6 @@ USER node
 # No curl or wget in the image; node's own fetch is the probe. The api it talks to is set by
 # RC_API_BASE_URL (compose points it at http://api:8000).
 HEALTHCHECK --interval=10s --timeout=5s --retries=5 --start-period=15s \
-    CMD node -e "fetch('http://127.0.0.1:'+(process.env.PORT||3000)+'/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+    CMD node -e "fetch('http://127.0.0.1:'+(process.env.PORT||3000)+'/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 
 CMD ["node", "server.js"]

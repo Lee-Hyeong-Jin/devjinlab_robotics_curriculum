@@ -10,13 +10,18 @@ import { EmptyState } from './EmptyState'
 export interface SearchResultsProps {
   query: string
   hits: SearchHit[] | null
+  /** The longest query the API accepts; a longer one gets a message instead of a search. */
+  maxLength?: number
 }
 
 /** Result list for `/search` — lessons and resources, each linking to its lesson. */
-export async function SearchResults({ query, hits }: SearchResultsProps) {
+export async function SearchResults({ query, hits, maxLength }: SearchResultsProps) {
   const t = await getTranslations('search')
 
   if (query.trim().length < 2) return <EmptyState title={t('tooShort')} />
+  if (maxLength !== undefined && query.trim().length > maxLength) {
+    return <EmptyState title={t('queryTooLong', { max: maxLength })} />
+  }
   if (!hits) return <EmptyState title={t('unavailable')} />
   if (hits.length === 0) return <EmptyState title={t('noResults', { query })} />
 

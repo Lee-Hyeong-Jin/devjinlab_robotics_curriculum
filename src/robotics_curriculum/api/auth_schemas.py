@@ -29,7 +29,10 @@ class LoginRequest(Schema):
     password: str = Field(max_length=1024)
     remember: bool = Field(
         default=False,
-        description="Accepted for the frontend contract; sessions always last 14 days.",
+        description=(
+            "Keep the browser signed in after it is closed. False sets cookies that end with "
+            "the browser session; the server-side session expires by the same rules either way."
+        ),
     )
 
 
@@ -111,7 +114,11 @@ class UserPage(Schema):
 class UserUpdate(Schema):
     display_name: str | None = Field(default=None, max_length=100)
     locale: Literal["ko", "en"] | None = None
-    timezone: str | None = Field(default=None, max_length=64)
+    timezone: str | None = Field(
+        default=None,
+        max_length=64,
+        description="An IANA zone name such as `Asia/Seoul`; anything else is refused (422).",
+    )
 
 
 class AdminUserUpdate(Schema):

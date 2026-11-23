@@ -259,7 +259,10 @@ class Growth(Schema):
     signups_30d: int
     visitor_days_30d: int = Field(description="Sum of daily unique visitors over 30 days.")
     visit_to_signup: float | None = Field(
-        description="Sign-ups per visitor-day over 30 days: a conversion proxy, not a funnel."
+        description=(
+            "Sign-ups per visitor-day over 30 days: a conversion proxy, not a funnel. Null "
+            "when there are no counted visitors or fewer than sign-ups."
+        )
     )
 
 

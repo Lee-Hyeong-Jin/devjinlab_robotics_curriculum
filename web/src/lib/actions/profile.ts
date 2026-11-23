@@ -6,7 +6,13 @@ import { getTranslations } from 'next-intl/server'
 import { apiDelete, apiPatch, apiPost, apiPut } from '../api/client'
 import type { ApiTokenCreated, Scope } from '../api/types'
 import { LOCALE_COOKIE, isLocale } from '@/i18n/locales'
-import { toActionState } from './problem'
+import { isTimeZone } from '../timezone'
+import { redirect } from 'next/navigation'
+
+import { isUnauthorized } from '../api/errors'
+import { getMe } from '../auth'
+import { sessionExpiredUrl } from '../next-path'
+import { problemCode, toActionState } from './problem'
 import type { ActionState } from './result'
 
 const PROFILE_PATH = '/profile'
@@ -23,6 +29,7 @@ export async function updateProfile(_previous: ActionState, form: FormData): Pro
   const timezone = text(form, 'timezone')
 
   if (locale && !isLocale(locale)) return { fields: { locale: t('localeInvalid') } }
+  if (timezone && !isTimeZone(timezone)) return { fields: { timezone: t('timezoneInvalid') } }
 
   try {
     await apiPatch('/api/v1/me', {
@@ -57,9 +64,24 @@ export async function changePassword(_previous: ActionState, form: FormData): Pr
   if (next !== confirm) fields.newPasswordConfirm = t('passwordMismatch')
   if (Object.keys(fields).length > 0) return { fields }
 
+  if (next === current) return { fields: { newPassword: t('passwordSame') } }
+
   try {
-    await apiPut('/api/v1/me/password', { current_password: current, new_password: next })
+    // A wrong current password is answered 401 like an ended session. Following the usual
+    // "401 means sign in again" redirect here bounced a signed-in reader straight back to
+    // an emptied form with no message (QA B-05), so this call reads the answer itself.
+    await apiPut(
+      '/api/v1/me/password',
+      { current_password: current, new_password: next },
+      { redirectOnUnauthorized: false },
+    )
   } catch (error) {
+    if (isUnauthorized(error)) {
+      if (problemCode(error) !== 'wrong_current_password' && !(await getMe())) {
+        redirect(sessionExpiredUrl(PROFILE_PATH))
+      }
+      return { fields: { currentPassword: t('currentPasswordWrong') } }
+    }
     return toActionState(error, t('passwordFailed'))
   }
   return { message: t('passwordChanged') }
@@ -92,6 +114,8 @@ export async function unlinkIdentity(_previous: ActionState, form: FormData): Pr
 }
 
 const SCOPES: Scope[] = ['read:progress', 'write:progress', 'admin']
+/** The API's own upper bound (`TokenCreate.expires_in_days`). */
+const MAX_TOKEN_DAYS = 365
 
 /**
  * `POST /me/tokens` — issue a personal access token.
@@ -103,9 +127,16 @@ export async function createToken(_previous: ActionState, form: FormData): Promi
   const t = await getTranslations('profile')
   const name = text(form, 'name')
   const scopes = SCOPES.filter((scope) => form.get(`scope:${scope}`) === 'on')
-  const days = Number(text(form, 'expiresInDays'))
+  // Blank means "no expiry", as the hint says. Anything typed has to be a whole number of days
+  // in range: zero or a negative number used to be sent as "no expiry" too, so a token meant
+  // to be short-lived was issued without an end date (QA B-07).
+  const rawDays = text(form, 'expiresInDays')
+  const days = Number(rawDays)
 
   const fields: Record<string, string> = {}
+  if (rawDays !== '' && !(Number.isInteger(days) && days >= 1 && days <= MAX_TOKEN_DAYS)) {
+    fields.expiresInDays = t('tokenExpiresInvalid', { max: MAX_TOKEN_DAYS })
+  }
   if (!name) fields.name = t('tokenNameRequired')
   if (scopes.length === 0) fields.scope = t('tokenScopeRequired')
   if (Object.keys(fields).length > 0) return { fields }
@@ -114,7 +145,7 @@ export async function createToken(_previous: ActionState, form: FormData): Promi
     const created = await apiPost<ApiTokenCreated & { token?: string }>('/api/v1/me/tokens', {
       name,
       scopes,
-      expires_in_days: Number.isFinite(days) && days > 0 ? days : null,
+      expires_in_days: rawDays === '' ? null : days,
     })
     revalidatePath(PROFILE_PATH)
     return {

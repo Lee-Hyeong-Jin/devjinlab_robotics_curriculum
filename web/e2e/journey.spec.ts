@@ -97,13 +97,29 @@ test('a learner signs up, studies a lesson, takes its quiz and reviews', async (
   await page.goto('/')
   await expect(page.getByRole('progressbar').first()).toBeVisible()
 
-  // Quiz: answer the first question and submit.
+  // Quiz: one answer is not a submission (QA B-06) — the form says which questions are
+  // left and keeps what was chosen; with every question answered it is graded.
   await page.goto(`${lessonUrl}/quiz`)
-  const firstChoice = page.locator('input[type="radio"]').first()
+  // Direct children only: a rendered answer can contain a list of its own.
+  const questions = page.locator('form > ol > li')
+  const firstChoice = page.locator('input[type="radio"], input[type="checkbox"]').first()
   if (await firstChoice.count()) {
     await firstChoice.check()
+    if ((await questions.count()) > 1) {
+      await page.getByRole('button', { name: /^제출$|^Submit$/ }).click()
+      await expect(page.getByText(/아직 답하지 않은 문항|still unanswered/)).toBeVisible()
+      await expect(page.getByRole('heading', { name: /채점 결과|Result/ })).toHaveCount(0)
+      await expect(firstChoice).toBeChecked()
+    }
+    for (const question of await questions.all()) {
+      const choice = question.locator('input[type="radio"], input[type="checkbox"]').first()
+      if (await choice.count()) await choice.check()
+      else await question.locator('input[type="text"]').fill('answer')
+    }
     await page.getByRole('button', { name: /^제출$|^Submit$/ }).click()
     await expect(page.getByRole('heading', { name: /채점 결과|Result/ })).toBeVisible()
+    // Every question was graded, not only the first.
+    await expect(page.getByText(/내 답|Your answer/)).toHaveCount(await questions.count())
 
     // The explanation arrives as a React tree the Server Action rendered with the
     // lesson Markdown pipeline, so it lands inside `.markdown-body`. The plain-text
@@ -153,9 +169,85 @@ test('a learner signs up, studies a lesson, takes its quiz and reviews', async (
   await page.waitForURL(/\/login/)
 })
 
+test('a browser whose session has ended can still use the site (QA B-01)', async ({ page }) => {
+  await signUpAndIn(page, freshAccount())
+  // What a browser holds after the session was ended somewhere else: a cookie the API no
+  // longer honours.
+  const cookies = await page.context().cookies()
+  const session = cookies.find((cookie) => cookie.name === 'sid')
+  expect(session).toBeDefined()
+  await page.context().addCookies([{ ...session!, value: 'ended-session-id' }])
+
+  // The login screen has to load: it used to answer 500 with every other page.
+  const login = await page.goto('/login')
+  expect(login?.status()).toBe(200)
+  await expect(page.locator('input[name="email"]')).toBeVisible()
+
+  // A page that needs the session sends the reader to sign in again, says why, and drops
+  // the dead cookie on the way.
+  await page.goto('/profile')
+  await page.waitForURL(/\/login\?/)
+  expect(new URL(page.url()).searchParams.get('next')).toBe('/profile')
+  await expect(page.getByText(/세션이 종료됐습니다|session has ended/)).toBeVisible()
+  const after = await page.context().cookies()
+  expect(after.find((cookie) => cookie.name === 'sid')).toBeUndefined()
+
+  // And a published page reads like it does for any visitor.
+  const home = await page.goto('/roadmap')
+  expect(home?.status()).toBe(200)
+})
+
+test('the page to return to after login cannot be another site (QA B-04)', async ({ page }) => {
+  const account = freshAccount()
+  await signUpAndIn(page, account)
+  await page.getByRole('button', { name: /로그아웃|Sign out/ }).click()
+  await page.waitForURL(/\/login/)
+
+  // A backslash, and a tab between two slashes: a browser reads both as `//evil.example`.
+  for (const next of ['%2F%5Cevil.example', '%2F%09%2Fevil.example']) {
+    await page.context().clearCookies()
+    await page.goto(`/login?next=${next}`)
+    await page.locator('input[name="email"]').fill(account.email)
+    await page.locator('input[name="password"]').fill(account.password)
+    await page.locator('form button[type="submit"]').click()
+    await page.waitForURL((url) => !url.pathname.startsWith('/login'), { timeout: 15_000 })
+    expect(new URL(page.url()).host, next).toBe(new URL(page.url()).host)
+    expect(new URL(page.url()).hostname, next).not.toContain('evil')
+    expect(new URL(page.url()).pathname, next).toBe('/')
+  }
+})
+
+test('a refused form keeps what was typed and says which field is wrong (QA B-11)', async ({
+  page,
+}) => {
+  await page.goto('/signup')
+  await page.locator('input[name="email"]').fill('not-an-email')
+  await page.locator('input[name="displayName"]').fill('Journey Reader')
+  await page.locator('input[name="password"]').fill('Correct-Horse-Battery-7')
+  await page.locator('input[name="passwordConfirm"]').fill('Correct-Horse-Battery-7')
+  await page.locator('form button[type="submit"]').click()
+
+  const email = page.locator('input[name="email"]')
+  await expect(email).toHaveAttribute('aria-invalid', 'true')
+  await expect(email).toHaveValue('not-an-email')
+  await expect(page.locator('input[name="displayName"]')).toHaveValue('Journey Reader')
+  // A password is typed again; nothing else is.
+  await expect(page.locator('input[name="password"]')).toHaveValue('')
+})
+
+test('personal screens send an anonymous reader to sign in (QA B-25)', async ({ page }) => {
+  for (const path of ['/review', '/reports']) {
+    await page.goto(path)
+    await page.waitForURL(/\/login\?/)
+    expect(new URL(page.url()).searchParams.get('next')).toBe(path)
+  }
+})
+
 test('an admin screen refuses a learner (AC-WEB.4)', async ({ page }) => {
   await signUpAndIn(page, freshAccount())
-  await page.goto('/admin/users')
+  // The status line says it too, not only the screen (QA B-28).
+  const response = await page.goto('/admin/users')
+  expect(response?.status()).toBe(403)
   // A fresh account is a learner: the API refuses and the screen says so.
   await expect(page.getByText(/권한이 없습니다|do not have permission/)).toBeVisible()
   await expect(page.getByRole('table')).toHaveCount(0)

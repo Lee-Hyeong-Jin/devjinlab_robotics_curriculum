@@ -226,7 +226,7 @@ def test_existing_email_is_not_linked_automatically(app: FastAPI, idp: FakeIdP) 
     )
     _, r = oidc_login(app, idp)
     assert r.status_code == 409
-    assert "log in with your password" in r.json()["detail"]
+    assert r.json()["code"] == "oidc_email_taken"
 
     session = client_for(app)
     login = session.post(

@@ -70,13 +70,13 @@ export default async function ProfilePage() {
     {
       key: 'lastSeen',
       header: t('colLastSeen'),
-      cell: (row) => formatDateTime(row.last_seen_at, locale, user.timezone ?? undefined),
+      cell: (row) => formatDateTime(row.last_seen_at, locale, user.timezone),
       hideOnMobile: true,
     },
     {
       key: 'expires',
       header: t('colExpires'),
-      cell: (row) => formatDate(row.expires_at, locale, user.timezone ?? undefined),
+      cell: (row) => formatDate(row.expires_at, locale, user.timezone),
       hideOnMobile: true,
     },
     {
@@ -116,17 +116,14 @@ export default async function ProfilePage() {
     {
       key: 'expires',
       header: t('colExpiresAt'),
-      cell: (row) =>
-        row.expires_at ? formatDate(row.expires_at, locale, user.timezone ?? undefined) : '—',
+      cell: (row) => (row.expires_at ? formatDate(row.expires_at, locale, user.timezone) : '—'),
       hideOnMobile: true,
     },
     {
       key: 'lastUsed',
       header: t('colLastUsed'),
       cell: (row) =>
-        row.last_used_at
-          ? formatDateTime(row.last_used_at, locale, user.timezone ?? undefined)
-          : t('never'),
+        row.last_used_at ? formatDateTime(row.last_used_at, locale, user.timezone) : t('never'),
       hideOnMobile: true,
     },
     {
@@ -149,7 +146,7 @@ export default async function ProfilePage() {
     {
       key: 'linkedAt',
       header: t('colLinkedAt'),
-      cell: (row) => formatDate(row.linked_at, locale, user.timezone ?? undefined),
+      cell: (row) => formatDate(row.linked_at, locale, user.timezone),
       hideOnMobile: true,
     },
     {
@@ -218,7 +215,7 @@ export default async function ProfilePage() {
               <div>
                 <dt className="text-muted text-xs">{t('createdAt')}</dt>
                 <dd className="text-primary text-sm">
-                  {formatDate(user.created_at, locale, user.timezone ?? undefined)}
+                  {formatDate(user.created_at, locale, user.timezone)}
                 </dd>
               </div>
             </dl>
