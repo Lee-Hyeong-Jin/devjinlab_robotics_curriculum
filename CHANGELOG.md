@@ -183,6 +183,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `npm audit` reports nothing for the web lockfile and the allowlist is empty.
 
 ### Fixed
+- Ending the study timer or signing a device out gave no confirmation, because the button that
+  would have shown it was gone. Such confirmations now appear in a status region at the bottom
+  of the page.
+- A matrix wider than a phone screen was cut off; display formulas now scroll sideways.
 - A browser whose session had been ended elsewhere (another device, an operator, a disabled
   account) got HTTP 500 on every page, the login screen included, until its cookies were
   cleared by hand. It is now treated as signed out and sent to sign in again.

@@ -7,7 +7,9 @@ import { cx } from '@/lib/cx'
 export type ButtonKind = 'primary' | 'secondary' | 'mono'
 
 const KIND_CLASS: Record<ButtonKind, string> = {
-  primary: 'bg-accent-solid text-on-accent border-transparent hover:opacity-90',
+  // Darker on hover, not more transparent: opacity let the page show through and took the
+  // white label below 4.5:1.
+  primary: 'bg-accent-solid text-on-accent border-transparent hover:brightness-90',
   secondary: 'bg-surface text-primary border-border-default hover:bg-subtle',
   mono: 'bg-subtle text-primary border-border-default font-mono text-sm hover:bg-surface',
 }

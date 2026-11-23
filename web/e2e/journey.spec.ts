@@ -83,6 +83,9 @@ test('a learner signs up, studies a lesson, takes its quiz and reviews', async (
   await expect(page.getByRole('button', { name: /학습 종료|Stop studying/ })).toBeVisible()
   await page.getByRole('button', { name: /학습 종료|Stop studying/ }).click()
   await expect(page.getByRole('button', { name: /학습 시작|Start studying/ })).toBeVisible()
+  // The stop button is gone with the action that it ran, so the confirmation is said in the
+  // page-level status region (QA B-24).
+  await expect(page.locator('[data-flash]')).toContainText(/학습 시간을 기록했습니다|recorded/i)
 
   // Mark the lesson complete — the AC's "완료 표시".
   await page.getByRole('button', { name: /완료로 표시|Mark complete/ }).click()

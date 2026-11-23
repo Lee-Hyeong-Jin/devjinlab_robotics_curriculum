@@ -62,11 +62,14 @@ export function toStageViews(roadmap: Roadmap | null): RoadmapStageView[] {
       lessonsTotal: module.lessons.length,
     }))
     const lessons = modules.flatMap((module) => module.lessons)
+    const lessonsDone = doneCount(lessons.map((lesson) => lesson.state))
     return {
       level: stage.level ?? '',
       levelLabel: stage.level_label ?? stage.level ?? '',
-      progress: stage.progress,
-      lessonsDone: doneCount(lessons.map((lesson) => lesson.state)),
+      // The share of lessons done: the same count as the "1/14" shown beside the bar. The
+      // API's stage figure is the mean of its modules, which read 8% next to 1/14 (QA B-17).
+      progress: lessons.length > 0 ? lessonsDone / lessons.length : stage.progress,
+      lessonsDone,
       lessonsTotal: lessons.length,
       modules,
     }

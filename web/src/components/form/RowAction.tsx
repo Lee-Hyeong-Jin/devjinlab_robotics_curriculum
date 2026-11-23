@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useEffect } from 'react'
+import { useActionState, useCallback } from 'react'
 
 import { EMPTY_ACTION_STATE, type ActionState } from '@/lib/actions/result'
 
@@ -21,12 +21,18 @@ export interface RowActionProps {
  * The error is rendered next to the row rather than at the top of the page.
  */
 export function RowAction({ action, hidden, label, pendingLabel, confirm }: RowActionProps) {
-  const [state, formAction] = useActionState(action, EMPTY_ACTION_STATE)
-  // Said in the page-level region as well: a successful action often removes this very form
-  // (the row is gone, "stop" became "start"), and its own message with it.
-  useEffect(() => {
-    if (state.message && !state.error) flash(state.message)
-  }, [state])
+  // Said in the page-level region as well, and from the action's own result rather than from
+  // an effect: a successful action often removes this very form in the same render (the row is
+  // gone, "stop" became "start"), so nothing mounted here ever sees the new state.
+  const announced = useCallback(
+    async (previous: ActionState, form: FormData) => {
+      const result = await action(previous, form)
+      if (result.message && !result.error) flash(result.message)
+      return result
+    },
+    [action],
+  )
+  const [state, formAction] = useActionState(announced, EMPTY_ACTION_STATE)
   return (
     <form
       action={formAction}
@@ -46,13 +52,8 @@ export function RowAction({ action, hidden, label, pendingLabel, confirm }: RowA
           {state.error}
         </p>
       ) : null}
-      {/* An action whose effect is not visible in the row (a mail was sent, tokens were
-          revoked) has to say that it happened. */}
-      {state.message && !state.error ? (
-        <p role="status" className="text-success text-xs">
-          {state.message}
-        </p>
-      ) : null}
+      {/* Success is said once, in the page-level region (`<Flash>`): this form may not
+          survive the action that it ran. */}
     </form>
   )
 }
