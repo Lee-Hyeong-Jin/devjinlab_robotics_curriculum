@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server'
 
 import { getMe } from '@/lib/auth'
 
+import { BrandMark } from './BrandMark'
 import { AccountMenu } from './AccountMenu'
 import { LocaleSwitcher } from './LocaleSwitcher'
 import { NavMenu } from './NavMenu'
@@ -22,7 +23,7 @@ export async function TopNav() {
           href="/"
           className="text-primary flex min-h-11 shrink-0 items-center gap-2 font-bold whitespace-nowrap"
         >
-          <span aria-hidden="true" className="bg-accent-solid size-2.5 rounded-full" />
+          <BrandMark />
           <span className="hidden xl:inline">{t('app.title')}</span>
           <span className="xl:hidden">{t('app.shortTitle')}</span>
         </Link>
