@@ -280,9 +280,14 @@ API 가 커리큘럼 읽기를 익명에게 열고, 웹은 그 페이지를 색�
 - **공유 이미지는 모든 페이지에 명시한다**(`public/og-image.png`, 1200×630, `summary_large_image`).
   `opengraph-image` 파일 규약에 맡기면 안 된다 — 자기 `openGraph` 를 정하는 페이지는 상속받은
   객체를 통째로 바꾸므로 루트 아래 모든 경로에서 이미지가 조용히 사라진다.
-- **아이콘·매니페스트**: `app/icon.svg`, `app/favicon.ico`, `app/apple-icon.png`,
-  `app/manifest.ts`(+ `public/icon-192.png`, `icon-512.png`). 컨테이너 이미지는 `public/` 을 따로
-  복사해야 한다(standalone 번들에 들어가지 않는다 — `Dockerfile`).
+- **아이콘·매니페스트**: 사이트의 마크는 `app/icon.svg` 하나가 원본이고, 래스터 아이콘은 여기서
+  만든다 — `app/favicon.ico`(16·32·48px), `app/icon1.png`(96), `app/icon2.png`(192),
+  `app/apple-icon.png`(180), `public/icon-192.png`·`icon-512.png`(매니페스트와 Organization 의
+  `logo`). 다시 만들 때는 `web/` 에서 `node scripts/make-icons.mjs && python3 scripts/make-favicon.py`.
+  헤더의 `<BrandMark>` 도 같은 그림이다. 검색 결과에서 사이트 이름 옆에 나오는 것은 파비콘이고,
+  구글은 한 변이 48px 의 배수인 정사각형만 쓴다(`app/icons.test.ts` 가 고정한다). `app/manifest.ts`
+  는 홈 화면 이름·색을 준다. 컨테이너 이미지는 `public/` 을 따로 복사해야 한다(standalone 번들에
+  들어가지 않는다 — `Dockerfile`).
 - **크롤러에게는 메타데이터를 반드시 `<head>` 에 넣는다**(`next.config.ts` 의 `htmlLimitedBots`).
   Next 는 동적 페이지의 메타데이터를 본문으로 스트리밍하고, 내장 목록에 든 봇에게만 `<head>` 를
   보장한다. 그 목록에 Googlebot 과 카카오톡 스크래퍼가 없어서, 콜드 요청의 레슨 페이지에는

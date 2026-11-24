@@ -232,6 +232,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   regress.
 
 ### Changed
+- The site's mark (a robot arm on teal) now appears in the header, and the icons a search
+  result, a browser tab and a phone use are regenerated from it: a favicon with 16, 32 and 48px
+  images and PNG icons at 96 and 192px, the sizes search engines accept.
 - Error messages from the API follow the reader's language. Refusals such as a wrong password,
   an address that is already registered or an expired link used to appear in English on a
   Korean screen; each now carries a stable `code` in the problem body and a localized `detail`.
