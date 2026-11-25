@@ -234,10 +234,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - **English is the service's default language** (ADR 0018). A visitor or a crawler that states
   no language gets the English pages, and the canonical address of every page is the English
-  one; the Korean page lives at `?lang=ko`. A browser set to Korean, a stored choice and
-  `?lang=ko` still give Korean. The API answers in English when a request has neither `?lang=`
-  nor `Accept-Language` (`RC_DEFAULT_LANG=ko` restores Korean). The curriculum's source
-  language, the CLI and the static site stay Korean.
+  one; the Korean page lives at `?lang=ko`. The site opens in English whatever language the
+  browser asks for: Korean is chosen with the language switcher, the profile or a `?lang=ko`
+  address, and is remembered once chosen. The API answers in English when a request has
+  neither `?lang=` nor `Accept-Language` (`RC_DEFAULT_LANG=ko` restores Korean). The
+  curriculum's source language, the CLI and the static site stay Korean.
 - The language switcher now works on an address that pins a language (`?lang=ko`).
 - The site's mark (a robot arm on teal) now appears in the header, and the icons a search
   result, a browser tab and a phone use are regenerated from it: a favicon with 16, 32 and 48px

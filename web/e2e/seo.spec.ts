@@ -97,8 +97,8 @@ test('a lesson page carries the metadata a crawler needs', async ({ page }) => {
   expect(await property(page, 'og:type')).toBe('article')
   expect(await property(page, 'og:url')).toBe(canonical)
   expect(await meta(page, 'twitter:card')).toBe('summary_large_image')
-  // `og:locale` carries a territory and follows the language the page is rendered in (which
-  // depends on the browser's `Accept-Language` here, so it is compared with `<html lang>`).
+  // `og:locale` carries a territory and follows the language the page is rendered in, so it is
+  // compared with `<html lang>`.
   const lang = await page.locator('html').getAttribute('lang')
   expect(await property(page, 'og:locale')).toBe(lang === 'en' ? 'en_US' : 'ko_KR')
 
@@ -250,14 +250,30 @@ test('a visitor who states no usable language reads english (ADR 0018)', async (
   await context.close()
 })
 
-test('a browser set to korean still gets korean', async ({ browser }) => {
+test('a browser set to korean opens in english too (ADR 0018)', async ({ browser }) => {
   const context = await browser.newContext({ locale: 'ko-KR' })
   const page = await context.newPage()
+  // The browser asks for Korean; the site opens in English for everybody.
   await page.goto(MODULE)
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+  expect(await property(page, 'og:locale')).toBe('en_US')
+  await context.close()
+})
+
+test('korean is remembered once the reader arrives at a korean address', async ({ browser }) => {
+  const context = await browser.newContext({ locale: 'en-US' })
+  const page = await context.newPage()
+  // The address a search result for the Korean page links to.
+  await page.goto(`${MODULE}?lang=ko`)
   await expect(page.locator('html')).toHaveAttribute('lang', 'ko')
-  // And an address that pins English overrides the browser's language.
+  // The next page has no `?lang=`: it stays Korean, because arriving there was a choice.
+  await page.goto('/roadmap')
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ko')
+  // An address that pins English still wins, and does not overwrite what was stored.
   await page.goto(`${MODULE}?lang=en`)
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+  await page.goto('/roadmap')
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ko')
   await context.close()
 })
 

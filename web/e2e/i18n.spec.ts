@@ -82,7 +82,7 @@ test('english is what a first visit gets, and the switcher works on a pinned add
   context,
   page,
 }) => {
-  // No stored choice: the test browser's own language (English) and the default agree.
+  // No stored choice: English, whatever the browser's own language is.
   await context.clearCookies()
   await page.goto('/roadmap')
   await expect(page.locator('html')).toHaveAttribute('lang', 'en')

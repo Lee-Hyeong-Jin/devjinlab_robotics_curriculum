@@ -1,5 +1,6 @@
 import { NextResponse, type NextFetchEvent, type NextRequest } from 'next/server'
 
+import { LOCALE_COOKIE, LOCALE_PARAM, isLocale } from '@/i18n/locales'
 import { CURRENT_PATH_HEADER } from '@/lib/api/client'
 import {
   adminForbidden,
@@ -40,11 +41,27 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
   headers.set('content-security-policy', csp)
 
   const response = await respond(request, headers)
+  rememberPinnedLanguage(request, response)
   reportPageView(request, response, event)
   response.headers.set('Content-Security-Policy', csp)
   for (const { key, value } of STATIC_SECURITY_HEADERS) response.headers.set(key, value)
   if (https) response.headers.set('Strict-Transport-Security', HSTS)
   return response
+}
+
+/**
+ * A reader who arrives at an address that pins a language (`/roadmap?lang=ko`, the form a search
+ * result for the Korean page links to) has in effect chosen that language. Without this the
+ * next link they follow has no `?lang=` and, with no stored choice, opens in English.
+ *
+ * Only when nothing is stored yet: an address never overrides a choice the reader made with the
+ * switcher. The cookie is the switcher's own and carries nothing but the language code.
+ */
+function rememberPinnedLanguage(request: NextRequest, response: NextResponse): void {
+  const pinned = request.nextUrl.searchParams.get(LOCALE_PARAM)
+  if (!isLocale(pinned) || request.cookies.has(LOCALE_COOKIE)) return
+  if (response.status >= 300 || !isDocumentRequest(request.method, request.headers)) return
+  response.cookies.set(LOCALE_COOKIE, pinned, { path: '/', maxAge: 31_536_000, sameSite: 'lax' })
 }
 
 /**
