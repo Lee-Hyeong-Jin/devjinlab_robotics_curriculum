@@ -87,8 +87,9 @@ test('a lesson page carries the metadata a crawler needs', async ({ page }) => {
       links.map((link) => `${link.getAttribute('hreflang')}|${link.getAttribute('href')}`),
     )
   expect(alternates.some((entry) => entry.startsWith('x-default|'))).toBe(true)
-  expect(alternates.some((entry) => entry.startsWith('ko|'))).toBe(true)
-  expect(alternates.some((entry) => entry.startsWith('en|') && entry.includes('lang=en'))).toBe(
+  // English is the default language (ADR 0018): it has the bare address, Korean is pinned.
+  expect(alternates.some((entry) => entry.startsWith('en|') && !entry.includes('lang='))).toBe(true)
+  expect(alternates.some((entry) => entry.startsWith('ko|') && entry.includes('lang=ko'))).toBe(
     true,
   )
 
@@ -218,23 +219,46 @@ test('a personal page is never indexable, however the site is configured', async
   }
 })
 
-test('the english alternate really renders in english', async ({ page }) => {
-  await page.goto(`${MODULE}?lang=en`)
-  await expect(page.locator('html')).toHaveAttribute('lang', 'en')
-  // Each language version is its own canonical. Pointing the English page at the Korean
-  // address would tell a search engine it is a copy, and only the Korean one would be indexed.
+test('the korean alternate really renders in korean', async ({ page }) => {
+  await page.goto(`${MODULE}?lang=ko`)
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ko')
+  // Each language version is its own canonical. Pointing the Korean page at the English
+  // address would tell a search engine it is a copy, and only the English one would be indexed.
   const canonical = await page.locator('link[rel="canonical"]').getAttribute('href')
-  expect(canonical).toContain(`${MODULE}?lang=en`)
+  expect(canonical).toContain(`${MODULE}?lang=ko`)
   expect(await property(page, 'og:url')).toBe(canonical)
   const alternates = await page
     .locator('link[rel="alternate"][hreflang]')
     .evaluateAll((links) =>
       links.map((link) => `${link.getAttribute('hreflang')}|${link.getAttribute('href')}`),
     )
-  expect(alternates.some((entry) => entry.startsWith('ko|') && !entry.includes('lang='))).toBe(true)
-  expect(alternates).toContain(`en|${canonical}`)
+  expect(alternates.some((entry) => entry.startsWith('en|') && !entry.includes('lang='))).toBe(true)
+  expect(alternates).toContain(`ko|${canonical}`)
+  expect(await property(page, 'og:locale')).toBe('ko_KR')
+  expect(await property(page, 'og:locale:alternate')).toBe('en_US')
+})
+
+test('a visitor who states no usable language reads english (ADR 0018)', async ({ browser }) => {
+  // What a crawler is, near enough: no cookie, and a language the site does not speak.
+  const context = await browser.newContext({ locale: 'fr-FR' })
+  const page = await context.newPage()
+  await page.goto(MODULE)
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en')
   expect(await property(page, 'og:locale')).toBe('en_US')
-  expect(await property(page, 'og:locale:alternate')).toBe('ko_KR')
+  const canonical = await page.locator('link[rel="canonical"]').getAttribute('href')
+  expect(canonical).not.toContain('lang=')
+  await context.close()
+})
+
+test('a browser set to korean still gets korean', async ({ browser }) => {
+  const context = await browser.newContext({ locale: 'ko-KR' })
+  const page = await context.newPage()
+  await page.goto(MODULE)
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ko')
+  // And an address that pins English overrides the browser's language.
+  await page.goto(`${MODULE}?lang=en`)
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+  await context.close()
 })
 
 test('the titles carry the words people search with', async ({ page }) => {

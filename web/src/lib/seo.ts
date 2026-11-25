@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { publicContentEnabled, siteUrl } from './api/config'
 import { DEFAULT_LOCALE, LOCALE_PARAM, LOCALES, type Locale } from '@/i18n/locales'
 
-/** `x-default` points at the address with no language pinned, which serves `ko`. */
+/** `x-default` points at the address with no language pinned, which serves the default (`en`). */
 const X_DEFAULT = 'x-default'
 
 /** An absolute URL on this site for `path` (which must start with `/`). */
@@ -43,7 +43,7 @@ export interface PageSeoOptions {
   publishable?: boolean
   /** `article` for a lesson, `website` otherwise. */
   type?: 'website' | 'article'
-  /** Language the page is rendered in; decides `og:locale`. Defaults to `ko`. */
+  /** Language the page is rendered in; decides `og:locale`. Defaults to the default locale. */
   locale?: Locale
   /** Site name in that language, for `og:site_name`. */
   siteName?: string

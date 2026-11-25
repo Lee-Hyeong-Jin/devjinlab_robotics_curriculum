@@ -197,9 +197,9 @@ def test_password_policy(anon: TestClient) -> None:
     short = {"email": "a@example.org", "password": "short"}
     body = assert_problem(anon.post("/api/v1/auth/signup", json=short), 422)
     assert body["code"] == "password_too_short"
-    assert "12자 이상" in body["detail"]
-    english = anon.post("/api/v1/auth/signup?lang=en", json=short)
-    assert "at least 12" in assert_problem(english, 422)["detail"]
+    assert "at least 12" in body["detail"]
+    korean = anon.post("/api/v1/auth/signup?lang=ko", json=short)
+    assert "12자 이상" in assert_problem(korean, 422)["detail"]
     r = anon.post(
         "/api/v1/auth/signup", json={"email": "jinsoo@example.org", "password": "my-jinsoo-pass-1"}
     )
@@ -661,7 +661,9 @@ def test_password_reset_flow(app: FastAPI, mailer: FakeMailer, clock: Clock) -> 
     )
     assert len(mailer.outbox) == sent  # same answer, no mail: no account enumeration
     assert (
-        anon.post("/api/v1/auth/password/forgot", json={"email": "learner@example.org"}).status_code
+        anon.post(
+            "/api/v1/auth/password/forgot?lang=ko", json={"email": "learner@example.org"}
+        ).status_code
         == 202
     )
     mail: Mail = mailer.outbox[-1]

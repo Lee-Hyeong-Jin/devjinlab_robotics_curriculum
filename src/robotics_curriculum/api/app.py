@@ -253,7 +253,7 @@ def create_app(
     app.add_middleware(
         SecurityHeadersMiddleware, hsts=settings.server_mode and settings.cookie_secure
     )
-    app.add_middleware(RequestContextMiddleware)
+    app.add_middleware(RequestContextMiddleware, default_lang=settings.default_lang)
     install_problem_handlers(app)
     app.add_exception_handler(AuthError, _auth_error)
     for module in (

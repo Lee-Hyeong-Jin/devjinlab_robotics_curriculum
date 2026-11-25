@@ -247,7 +247,7 @@ export default async function ProfilePage() {
                   name: 'locale',
                   label: t('locale'),
                   kind: 'select',
-                  defaultValue: user.locale ?? 'ko',
+                  defaultValue: user.locale ?? locale,
                   options: [
                     { value: 'ko', label: '한국어' },
                     { value: 'en', label: 'English' },

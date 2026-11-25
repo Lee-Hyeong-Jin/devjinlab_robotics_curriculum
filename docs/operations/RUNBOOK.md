@@ -188,6 +188,7 @@ curl -fsS localhost:8000/version                     # 4. 확인
 | `RC_API_LOG_LEVEL` | `info` | 로그 수준 |
 | `RC_API_METRICS` | `1` | `0` 이면 `/metrics` 404 |
 | `RC_API_METRICS_TOKEN` | 비어 있음 | 설정하면 `/metrics` 가 해당 베어러 토큰을 요구(미설정 시 무인증) |
+| `RC_DEFAULT_LANG` | `en` | 언어를 밝히지 않은 요청(`?lang=`·`Accept-Language` 없음)에 API 가 답하는 언어. `ko` 또는 `en` (ADR 0018). 웹 화면의 기본 언어는 영어로 고정이고 이 값과 무관하다 |
 | `RC_TIMEZONE` | `Asia/Seoul` | 서비스 시간대(IANA 이름). 아래 "시간대" 참고. compose 가 모든 컨테이너의 `TZ` 에도 같은 값을 넣는다 |
 | `RC_OPS_METRICS` | `1` | 요청 집계·실패 기록·방문 집계를 저장한다(`/admin/monitoring`, ADR 0017). `0` 이면 끄고 화면은 404 |
 | `RC_API_TRUSTED_PROXIES` | `127.0.0.1,::1` (compose: 사설 대역 포함) | `X-Forwarded-For` 로 브라우저 주소를 알려 줄 수 있는 프록시(웹 컨테이너, 리버스 프록시)의 주소·CIDR 목록. 아래 "클라이언트 주소" 참고 |

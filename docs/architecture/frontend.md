@@ -364,8 +364,12 @@ API 가 자기 응답에 붙이는 헤더(`api/middleware.py`)는 브라우저�
 화면의 시각이 9시간 밀리지 않아야 한다. 날짜 필터는 고른 날의 그 시간대 자정을 API 에 보낸다
 (`dayToInstant`). API 가 주는 시각은 오프셋이 붙은 절대 시각이라 변환은 표시할 때 한 번만 한다.
 
-- `next-intl`. 메시지 `messages/ko.json`, `messages/en.json`. 기본 `ko`.
-- 언어 결정: `users.locale` → `Accept-Language` → `ko`. 프로필에서 변경하면 `PATCH /me`.
+- `next-intl`. 메시지 `messages/ko.json`, `messages/en.json`. 기본은 영어(`DEFAULT_LOCALE = 'en'`,
+  ADR 0018) — 콘텐츠 원문은 한국어이고 영어는 번역이지만, 언어를 밝히지 않은 방문자와 크롤러는
+  영어 페이지를 받는다.
+- 언어 결정: `?lang=` → 저장된 선택(쿠키 `NEXT_LOCALE`, 프로필 `users.locale`) → `Accept-Language`
+  → `en`. 프로필에서 변경하면 `PATCH /me`. 대표 주소(canonical)는 영어 페이지이고 한국어 페이지의
+  대표 주소는 `?lang=ko` 다. 언어를 고정한 주소에서 전환기를 쓰면 고정을 풀고 다시 읽는다.
 - 레슨 콘텐츠는 번역 대상이 아니다(한국어 본문 + 영어 용어 병기).
 - 날짜·시간은 `users.timezone` 기준으로 서식화.
 - 접근성(WCAG 2.1 AA): 랜드마크(`header/nav/main/aside`), 헤딩 계층, 포커스 링 2px accent, 모달 포커스 트랩, 건너뛰기 링크, 표에 `th scope`, 진행률 바 `role="progressbar" aria-valuenow`, 아이콘 버튼 `aria-label`, `prefers-reduced-motion` 존중, 200% 확대에서 가로 스크롤 없음.

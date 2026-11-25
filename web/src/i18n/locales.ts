@@ -1,9 +1,16 @@
-/** UI locales. `ko` is the default; `en` is the placeholder catalogue (AC-I18N.1). */
+/** UI locales (AC-I18N.1). */
 export const LOCALES = ['ko', 'en'] as const
 
 export type Locale = (typeof LOCALES)[number]
 
-export const DEFAULT_LOCALE: Locale = 'ko'
+/**
+ * The language of a request that states none: English (ADR 0018).
+ *
+ * This is what a crawler and a first-time visitor without a matching browser language get, and
+ * so the language of every canonical URL. The curriculum is written in Korean and Korean stays
+ * one choice away — the switcher, `?lang=ko`, or a browser set to Korean.
+ */
+export const DEFAULT_LOCALE: Locale = 'en'
 
 /** Cookie the locale switcher writes; `PATCH /me` persists it once P2-2 lands. */
 export const LOCALE_COOKIE = 'NEXT_LOCALE'
@@ -24,7 +31,7 @@ export function isLocale(value: string | undefined | null): value is Locale {
 
 /**
  * Resolve the UI locale: `?lang=`, then the user's stored choice, then `Accept-Language`,
- * then `ko` (frontend.md §6).
+ * then the default, English (frontend.md §6).
  */
 export function resolveLocale(
   cookieValue?: string | null,

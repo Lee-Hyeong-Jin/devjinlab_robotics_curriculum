@@ -28,6 +28,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from robotics_curriculum.api.clientip import Network, TrustedProxyError, parse_trusted_proxies
+from robotics_curriculum.i18n import LANGS, SERVICE_DEFAULT_LANG, Lang, normalize_lang
 from robotics_curriculum.progress import default_curriculum_dir, default_data_dir
 from robotics_curriculum.timezone import DEFAULT_TIMEZONE
 
@@ -67,6 +68,11 @@ class Settings:
     visits, sign-up trends, streaks and weekly reports, and the zone log lines and exports are
     written in. Stored times stay absolute instants; this only decides how they are cut into
     days and shown."""
+    default_lang: Lang = SERVICE_DEFAULT_LANG
+    """Language of a request that names none: no ``?lang=``, no ``Accept-Language``
+    (``RC_DEFAULT_LANG``, default ``en``). The curriculum's source language is Korean either
+    way; this decides what an anonymous client, a crawler or a mail without a known reader
+    language gets."""
     ops_metrics: bool = True
     """Record request statistics, failed requests and visits for the admin monitoring page
     (``RC_OPS_METRICS=0`` turns it off; server mode only, ADR 0017)."""
@@ -106,6 +112,7 @@ class Settings:
             public_content=env.get("RC_PUBLIC_CONTENT", "0") == "1",
             ops_metrics=env.get("RC_OPS_METRICS", "1") != "0",
             timezone=parse_timezone(env.get("RC_TIMEZONE")),
+            default_lang=parse_default_lang(env.get("RC_DEFAULT_LANG")),
             trusted_proxies=_parse_proxies(env.get("RC_API_TRUSTED_PROXIES")),
         )
         return base.with_overrides(
@@ -140,6 +147,20 @@ class Settings:
             port=port or self.port,
             log_level=log_level or self.log_level,
         )
+
+
+def parse_default_lang(value: str | None) -> Lang:
+    """``RC_DEFAULT_LANG`` as a supported language; blank means English.
+
+    Raises:
+        SettingsError: The value is not one of the languages the service speaks.
+    """
+    if not (value or "").strip():
+        return SERVICE_DEFAULT_LANG
+    lang = normalize_lang(value)
+    if lang is None:
+        raise SettingsError(f"invalid RC_DEFAULT_LANG '{value}' (use one of: {', '.join(LANGS)})")
+    return lang
 
 
 def parse_timezone(value: str | None) -> ZoneInfo:

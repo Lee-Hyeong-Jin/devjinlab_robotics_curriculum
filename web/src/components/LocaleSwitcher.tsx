@@ -4,7 +4,7 @@ import { useLocale, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useId, useTransition } from 'react'
 
-import { LOCALES, LOCALE_COOKIE, type Locale } from '@/i18n/locales'
+import { LOCALES, LOCALE_COOKIE, LOCALE_PARAM, type Locale } from '@/i18n/locales'
 
 const LABEL: Record<Locale, string> = { ko: '한국어', en: 'English' }
 
@@ -23,6 +23,17 @@ export function LocaleSwitcher() {
   function choose(next: string) {
     // One year, site-wide; no personal data, so no consent gate.
     document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=31536000; samesite=lax`
+    // An address that pins its language (`?lang=ko`, the form a search result links to) wins
+    // over the stored choice, so on such a page the switcher did nothing. The pin is dropped
+    // and the choice just made decides. A full load, not a client navigation: the root layout
+    // (`<html lang>`, the message catalogue) is not rendered again when only the query changes.
+    const url = new URL(window.location.href)
+    if (url.searchParams.has(LOCALE_PARAM)) {
+      url.searchParams.delete(LOCALE_PARAM)
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- see above
+      window.location.assign(`${url.pathname}${url.search}${url.hash}`)
+      return
+    }
     startTransition(() => router.refresh())
   }
 

@@ -256,6 +256,7 @@ def test_the_shown_correct_answer_follows_the_requested_language(
     korean = translated_client.post(
         "/api/v1/quiz/runs",
         json={"lesson_id": ROTATION, "answers": {SHORT_Q: "nope"}, "partial": True},
+        headers={"Accept-Language": "ko"},
     ).json()["answers"][0]
 
     assert english["correct"] is False and korean["correct"] is False

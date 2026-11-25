@@ -81,6 +81,8 @@ services:
       # The service's time zone (Korea Standard Time by default): where a day begins for
       # visits, sign-up trends, streaks and weekly reports, and the zone of log lines. TZ
       # sets the container's own clock to match. Stored times remain absolute instants.
+      # Language of a request that names none (ADR 0018). The web always names one.
+      RC_DEFAULT_LANG: ${RC_DEFAULT_LANG:-en}
       RC_TIMEZONE: ${RC_TIMEZONE:-Asia/Seoul}
       TZ: ${RC_TIMEZONE:-Asia/Seoul}
       RC_AUTH_MODE: server

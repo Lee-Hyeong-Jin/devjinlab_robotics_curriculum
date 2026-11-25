@@ -9,7 +9,7 @@ import { LOCALE_COOKIE, LOCALE_PARAM, resolveLocale } from './locales'
 /**
  * Locale skeleton: no locale segment in the URL (every route is served in the
  * viewer's locale), but `?lang=` pins one so each language has an address of its own.
- * `ko` is the default; `en` is the second catalogue (AC-I18N.1).
+ * English is the default (`DEFAULT_LOCALE`); Korean is the other catalogue (AC-I18N.1).
  */
 function localeFromPath(pathWithQuery: string | null): string | null {
   const query = pathWithQuery?.split('?')[1]
