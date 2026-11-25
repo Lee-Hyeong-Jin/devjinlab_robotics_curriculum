@@ -22,7 +22,6 @@ export default getRequestConfig(async () => {
   // to searchParams, and the language has to be pinnable by URL for hreflang to mean anything.
   const locale = resolveLocale(
     jar.get(LOCALE_COOKIE)?.value,
-    headerList.get('accept-language'),
     localeFromPath(headerList.get(CURRENT_PATH_HEADER)),
   )
   return {

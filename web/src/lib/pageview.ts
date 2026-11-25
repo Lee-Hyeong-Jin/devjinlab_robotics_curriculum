@@ -52,7 +52,6 @@ export function pageViewRequest(
   if (!countsAsPage(pathname)) return null
   const locale = resolveLocale(
     cookies.get(LOCALE_COOKIE)?.value,
-    headers.get('accept-language'),
     new URLSearchParams(search).get(LOCALE_PARAM),
   )
   const forwarded: Record<string, string> = { 'Content-Type': 'application/json' }

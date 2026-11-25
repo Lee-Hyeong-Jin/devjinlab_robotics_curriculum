@@ -6,9 +6,9 @@ export type Locale = (typeof LOCALES)[number]
 /**
  * The language of a request that states none: English (ADR 0018).
  *
- * This is what a crawler and a first-time visitor without a matching browser language get, and
- * so the language of every canonical URL. The curriculum is written in Korean and Korean stays
- * one choice away — the switcher, `?lang=ko`, or a browser set to Korean.
+ * This is what every first-time visitor and every crawler gets, whatever language their
+ * browser asks for, and so the language of every canonical URL. The curriculum is written in
+ * Korean and Korean stays one choice away — the switcher, the profile, or `?lang=ko`.
  */
 export const DEFAULT_LOCALE: Locale = 'en'
 
@@ -30,20 +30,16 @@ export function isLocale(value: string | undefined | null): value is Locale {
 }
 
 /**
- * Resolve the UI locale: `?lang=`, then the user's stored choice, then `Accept-Language`,
- * then the default, English (frontend.md §6).
+ * Resolve the UI locale: `?lang=`, then the reader's stored choice, then English
+ * (frontend.md §6, ADR 0018).
+ *
+ * The browser's `Accept-Language` is deliberately not consulted. The site opens in English
+ * for everybody; Korean is something a reader chooses (the switcher, their profile, or an
+ * address that pins it), and once chosen it is remembered. One address therefore always shows
+ * one language to anybody without a stored choice — a visitor and a crawler see the same page.
  */
-export function resolveLocale(
-  cookieValue?: string | null,
-  acceptLanguage?: string | null,
-  queryValue?: string | null,
-): Locale {
+export function resolveLocale(cookieValue?: string | null, queryValue?: string | null): Locale {
   if (isLocale(queryValue)) return queryValue
   if (isLocale(cookieValue)) return cookieValue
-  for (const part of (acceptLanguage ?? '').split(',')) {
-    const tag = part.split(';')[0]?.trim().toLowerCase() ?? ''
-    const base = tag.split('-')[0]
-    if (isLocale(base)) return base
-  }
   return DEFAULT_LOCALE
 }
