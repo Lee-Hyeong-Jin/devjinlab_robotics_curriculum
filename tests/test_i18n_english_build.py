@@ -168,8 +168,9 @@ def test_a_lang_query_parameter_beats_accept_language(client: TestClient) -> Non
     assert not find_hangul(english.json()[0]["title"])
     assert english.json()[0]["lang"] == "en"
 
+    # A language the service does not speak falls back to its default, English.
     unknown = client.get("/api/v1/courses", params={"lang": "fr"})
-    assert unknown.json()[0]["lang"] == "ko"
+    assert unknown.json()[0]["lang"] == "en"
 
 
 def test_the_level_is_an_id_and_the_label_is_translated(client: TestClient, course: Course) -> None:

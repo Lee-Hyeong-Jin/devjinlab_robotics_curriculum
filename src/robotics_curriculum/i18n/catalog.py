@@ -23,6 +23,12 @@ import yaml
 Lang = Literal["ko", "en"]
 LANGS: tuple[Lang, ...] = get_args(Lang)
 DEFAULT_LANG: Lang = "ko"
+"""The language content is written in, and what the CLI and the local tools speak by default.
+Every catalogue key exists here; other languages fall back to it."""
+SERVICE_DEFAULT_LANG: Lang = "en"
+"""What the service (the API and the web app) answers in when a request names no language.
+A different thing from :data:`DEFAULT_LANG`: the curriculum is authored in Korean, but a visitor
+or a crawler that states no preference is served English, which more of them read."""
 LANG_ENV = "RC_LANG"
 LOCALES_DIR = Path(__file__).parent / "locales"
 
@@ -69,8 +75,11 @@ def normalize_lang(value: str | None) -> Lang | None:
     return None
 
 
-def parse_accept_language(header: str | None) -> Lang | None:
-    """Best supported language of an ``Accept-Language`` header, honouring ``q`` weights."""
+def parse_accept_language(header: str | None, default: Lang = DEFAULT_LANG) -> Lang | None:
+    """Best supported language of an ``Accept-Language`` header, honouring ``q`` weights.
+
+    ``*`` ("anything") counts as ``default``.
+    """
     if not header:
         return None
     ranked: list[tuple[float, int, Lang]] = []
@@ -85,7 +94,7 @@ def parse_accept_language(header: str | None) -> Lang | None:
         if quality <= 0:
             continue
         if match["tag"] == "*":
-            ranked.append((quality, position, DEFAULT_LANG))
+            ranked.append((quality, position, default))
             continue
         lang = normalize_lang(match["tag"])
         if lang is not None:
@@ -102,14 +111,19 @@ def resolve_lang(
     *,
     accept_language: str | None = None,
     env: dict[str, str] | None = None,
+    default: Lang = DEFAULT_LANG,
 ) -> Lang:
-    """Pick a language: ``explicit`` (``--lang``) > ``RC_LANG`` > ``Accept-Language`` > Korean."""
+    """Pick a language: ``explicit`` (``--lang``) > ``RC_LANG`` > ``Accept-Language`` > ``default``.
+
+    ``default`` is Korean for the CLI and the local tools; the API passes its own
+    (:data:`SERVICE_DEFAULT_LANG` unless ``RC_DEFAULT_LANG`` says otherwise).
+    """
     environ = os.environ if env is None else env
     for candidate in (explicit, environ.get(LANG_ENV)):
         chosen = normalize_lang(candidate)
         if chosen is not None:
             return chosen
-    return parse_accept_language(accept_language) or DEFAULT_LANG
+    return parse_accept_language(accept_language, default) or default
 
 
 class Translator:

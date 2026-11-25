@@ -77,3 +77,22 @@ test('switching the locale back to Korean still works', async ({ context, page, 
   // The heading names the course and ends with the word for "roadmap" (`roadmap.courseTitle`).
   await expect(page.getByRole('heading', { level: 1, name: /로드맵$/ })).toBeVisible()
 })
+
+test('english is what a first visit gets, and the switcher works on a pinned address', async ({
+  context,
+  page,
+}) => {
+  // No stored choice: the test browser's own language (English) and the default agree.
+  await context.clearCookies()
+  await page.goto('/roadmap')
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+
+  // A search result for the Korean page links to the address that pins Korean.
+  await page.goto('/roadmap?lang=ko')
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ko')
+  // Choosing English there has to take effect: the pin is dropped with the choice.
+  await page.locator(`${LANGUAGE_PICKER} select`).selectOption('en')
+  await page.waitForURL((url) => !url.searchParams.has('lang'))
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+  await expect(page.getByRole('heading', { level: 1, name: /roadmap/i })).toBeVisible()
+})

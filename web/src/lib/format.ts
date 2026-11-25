@@ -3,9 +3,12 @@
  * (`lib/timezone.ts`: KST by default) unless the caller passes another.
  */
 
+import { DEFAULT_LOCALE as SITE_DEFAULT_LOCALE } from '@/i18n/locales'
+
 import { readerTimeZone, serviceTimeZone } from './timezone'
 
-export const DEFAULT_LOCALE = 'ko'
+/** The formatters take any locale string; with none they use the site's default. */
+export const DEFAULT_LOCALE: string = SITE_DEFAULT_LOCALE
 
 /** `95` → `"95%"`. Takes a 0–1 ratio and rounds to whole percent. */
 export function formatPercent(ratio: number | null | undefined, locale = DEFAULT_LOCALE): string {

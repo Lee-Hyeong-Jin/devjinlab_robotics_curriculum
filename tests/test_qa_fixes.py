@@ -107,7 +107,7 @@ def test_b03_real_zones_are_kept_and_can_be_cleared(app: FastAPI) -> None:
 def test_b05_a_wrong_current_password_says_so(app: FastAPI) -> None:
     c = user(app, "reader@example.org")
     r = c.put(
-        "/api/v1/me/password",
+        "/api/v1/me/password?lang=ko",
         json={"current_password": "not-my-password-1", "new_password": "another-long-pass-2"},
     )
     body = assert_problem(r, 401)
@@ -121,28 +121,29 @@ def test_b12_login_refusals_follow_the_request_language(app: FastAPI) -> None:
     signup(app, "reader@example.org")
     wrong = {"email": "reader@example.org", "password": "wrong-password-123"}
     c = client_for(app)
-    korean = assert_problem(c.post("/api/v1/auth/login", json=wrong), 401)
+    korean = assert_problem(c.post("/api/v1/auth/login?lang=ko", json=wrong), 401)
     assert (korean["code"], korean["detail"]) == (
         "invalid_credentials",
         "이메일 또는 비밀번호가 올바르지 않습니다.",
     )
-    english = assert_problem(c.post("/api/v1/auth/login?lang=en", json=wrong), 401)
+    # English is what a request that names no language gets.
+    english = assert_problem(c.post("/api/v1/auth/login", json=wrong), 401)
     assert (english["code"], english["detail"]) == (
         "invalid_credentials",
         "Invalid email or password.",
     )
-    header = c.post("/api/v1/auth/login", json=wrong, headers={"Accept-Language": "en"})
-    assert assert_problem(header, 401)["detail"] == "Invalid email or password."
+    header = c.post("/api/v1/auth/login", json=wrong, headers={"Accept-Language": "ko"})
+    assert assert_problem(header, 401)["detail"] == "이메일 또는 비밀번호가 올바르지 않습니다."
 
 
 def test_b12_other_refusals_are_localized(app: FastAPI, mailer: FakeMailer) -> None:
     signup(app, "reader@example.org")
     c = client_for(app)
     taken = c.post(
-        "/api/v1/auth/signup", json={"email": "Reader@Example.org", "password": PASSWORD}
+        "/api/v1/auth/signup?lang=ko", json={"email": "Reader@Example.org", "password": PASSWORD}
     )
     assert assert_problem(taken, 409)["detail"] == "이미 가입된 이메일입니다."
-    token = c.post("/api/v1/auth/verify-email", json={"token": "nope"})
+    token = c.post("/api/v1/auth/verify-email?lang=ko", json={"token": "nope"})
     body = assert_problem(token, 422)
     assert (body["code"], body["detail"]) == (
         "invalid_token",
@@ -154,7 +155,9 @@ def test_b12_other_refusals_are_localized(app: FastAPI, mailer: FakeMailer) -> N
     assert assert_problem(locked, 429)["code"] == "login_throttled"
     admin = user(app, ADMIN)
     me = admin.get("/api/v1/me").json()["id"]
-    own = assert_problem(admin.patch(f"/api/v1/admin/users/{me}", json={"role": "learner"}), 409)
+    own = assert_problem(
+        admin.patch(f"/api/v1/admin/users/{me}?lang=ko", json={"role": "learner"}), 409
+    )
     assert own["detail"] == "자기 자신의 관리자 권한은 내릴 수 없습니다."
 
 

@@ -441,6 +441,9 @@ def test_the_api_serves_the_translated_note(tmp_path: Path) -> None:
     )
     app_ = create_app(Settings(curriculum_dir=course_dir.parent, data_dir=tmp_path / "data"))
     client = TestClient(app_)
-    assert client.get("/api/v1/lessons/l1").json()["papers"][0]["note"] == "§3 only"
+    korean = client.get("/api/v1/lessons/l1", headers={"Accept-Language": "ko"}).json()
+    assert korean["papers"][0]["note"] == "§3 only"
     english = client.get("/api/v1/lessons/l1", headers={"Accept-Language": "en"}).json()
     assert english["papers"][0]["note"] == "section 3 only"
+    # Without a stated language the service answers in English.
+    assert client.get("/api/v1/lessons/l1").json()["papers"][0]["note"] == "section 3 only"

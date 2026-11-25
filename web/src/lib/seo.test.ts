@@ -27,15 +27,19 @@ describe('languageAlternates', () => {
   it('gives the default language the bare path and pins the other with ?lang=', () => {
     process.env.RC_PUBLIC_URL = 'https://x.test'
     const alternates = languageAlternates('/modules/m1')
-    expect(alternates.ko).toBe('https://x.test/modules/m1')
-    expect(alternates.en).toBe('https://x.test/modules/m1?lang=en')
+    // English is the default (ADR 0018): it owns the short address, and so does `x-default`.
+    expect(alternates.en).toBe('https://x.test/modules/m1')
+    expect(alternates.ko).toBe('https://x.test/modules/m1?lang=ko')
     expect(alternates['x-default']).toBe('https://x.test/modules/m1')
   })
 
   it('appends to a path that already carries a query', () => {
     process.env.RC_PUBLIC_URL = 'https://x.test'
+    expect(languageAlternates('/roadmap?course=research').ko).toBe(
+      'https://x.test/roadmap?course=research&lang=ko',
+    )
     expect(languageAlternates('/roadmap?course=research').en).toBe(
-      'https://x.test/roadmap?course=research&lang=en',
+      'https://x.test/roadmap?course=research',
     )
   })
 })
@@ -70,7 +74,10 @@ describe('pageSeo', () => {
       type: 'article',
     })
     expect(meta.alternates?.canonical).toBe('https://x.test/lessons/a')
-    expect(meta.alternates?.languages).toMatchObject({ en: 'https://x.test/lessons/a?lang=en' })
+    expect(meta.alternates?.languages).toMatchObject({
+      en: 'https://x.test/lessons/a',
+      ko: 'https://x.test/lessons/a?lang=ko',
+    })
     expect(meta.openGraph).toMatchObject({ type: 'article', url: 'https://x.test/lessons/a' })
     expect(meta.twitter).toMatchObject({ card: 'summary_large_image', title: '좌표 변환' })
     // The card image is named on every page; a nested route does not inherit it.
@@ -85,35 +92,36 @@ describe('pageSeo', () => {
   })
 
   it('names the language the page is rendered in, not always the default', () => {
-    const ko = pageSeo({ path: '/roadmap', title: '로드맵' })
-    expect(ko.openGraph).toMatchObject({ locale: 'ko_KR', alternateLocale: ['en_US'] })
-    const en = pageSeo({ path: '/roadmap', title: 'Roadmap', locale: 'en', siteName: 'Site' })
-    expect(en.openGraph).toMatchObject({
-      locale: 'en_US',
-      alternateLocale: ['ko_KR'],
+    // With no language given, the page is the default one: English.
+    const en = pageSeo({ path: '/roadmap', title: 'Roadmap' })
+    expect(en.openGraph).toMatchObject({ locale: 'en_US', alternateLocale: ['ko_KR'] })
+    const ko = pageSeo({ path: '/roadmap', title: '로드맵', locale: 'ko', siteName: 'Site' })
+    expect(ko.openGraph).toMatchObject({
+      locale: 'ko_KR',
+      alternateLocale: ['en_US'],
       siteName: 'Site',
     })
   })
 
   it('makes a language-pinned URL its own canonical, with the same alternates', () => {
     process.env.RC_PUBLIC_URL = 'https://x.test'
-    const en = pageSeo({ path: '/modules/m1', title: 'M1', locale: 'en', pinnedLocale: 'en' })
-    expect(en.alternates?.canonical).toBe('https://x.test/modules/m1?lang=en')
-    expect(en.openGraph).toMatchObject({ url: 'https://x.test/modules/m1?lang=en' })
-    expect(en.alternates?.languages).toMatchObject({
-      ko: 'https://x.test/modules/m1',
-      en: 'https://x.test/modules/m1?lang=en',
+    const ko = pageSeo({ path: '/modules/m1', title: 'M1', locale: 'ko', pinnedLocale: 'ko' })
+    expect(ko.alternates?.canonical).toBe('https://x.test/modules/m1?lang=ko')
+    expect(ko.openGraph).toMatchObject({ url: 'https://x.test/modules/m1?lang=ko' })
+    expect(ko.alternates?.languages).toMatchObject({
+      en: 'https://x.test/modules/m1',
+      ko: 'https://x.test/modules/m1?lang=ko',
       'x-default': 'https://x.test/modules/m1',
     })
     // The default language pinned explicitly is the bare address, not a second URL for it.
-    const ko = pageSeo({ path: '/modules/m1', title: 'M1', pinnedLocale: 'ko' })
-    expect(ko.alternates?.canonical).toBe('https://x.test/modules/m1')
-    // English chosen by the browser at the bare address is still that address.
-    const negotiated = pageSeo({ path: '/modules/m1', title: 'M1', locale: 'en' })
+    const en = pageSeo({ path: '/modules/m1', title: 'M1', pinnedLocale: 'en' })
+    expect(en.alternates?.canonical).toBe('https://x.test/modules/m1')
+    // Korean chosen by the browser at the bare address is still that address.
+    const negotiated = pageSeo({ path: '/modules/m1', title: 'M1', locale: 'ko' })
     expect(negotiated.alternates?.canonical).toBe('https://x.test/modules/m1')
     // A path that already has a query keeps it.
-    const course = pageSeo({ path: '/roadmap?course=r', title: 'R', pinnedLocale: 'en' })
-    expect(course.alternates?.canonical).toBe('https://x.test/roadmap?course=r&lang=en')
+    const course = pageSeo({ path: '/roadmap?course=r', title: 'R', pinnedLocale: 'ko' })
+    expect(course.alternates?.canonical).toBe('https://x.test/roadmap?course=r&lang=ko')
   })
 
   it('can use the title as the whole <title>, for the home page', () => {

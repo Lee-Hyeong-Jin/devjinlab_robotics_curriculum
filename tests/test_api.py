@@ -232,11 +232,14 @@ def test_log_done_and_next(client: TestClient) -> None:
     assert logged.json()["source"] == "manual"
     assert logged.json()["seconds"] == 45 * 60
 
-    nxt = client.get("/api/v1/progress/next").json()
-    # `reason` follows Accept-Language; the default is the authoring language.
+    nxt = client.get("/api/v1/progress/next", headers={"Accept-Language": "ko"}).json()
+    # `reason` follows Accept-Language; a request that names no language gets the service
+    # default, English.
     # `next` ranks rather than filters (ADR 0015): VECTORS leads because it is in progress.
     assert [n["lesson"]["id"] for n in nxt] == [VECTORS, ROTATION, DH]
     assert nxt[0]["reason"] == translator("ko")("api.next_reason.in_progress")
+    unspecified = client.get("/api/v1/progress/next").json()
+    assert unspecified[0]["reason"] == translator("en")("api.next_reason.in_progress")
     english = client.get("/api/v1/progress/next", headers={"Accept-Language": "en"}).json()
     assert english[0]["reason"] == "in progress"
 
@@ -248,7 +251,7 @@ def test_log_done_and_next(client: TestClient) -> None:
     assert done.json()["progress"]["understanding"] == 4
     assert sorted(done.json()["unlocked_lesson_ids"]) == sorted([ROTATION, DH])
 
-    nxt = client.get("/api/v1/progress/next", params={"n": 1}).json()
+    nxt = client.get("/api/v1/progress/next", params={"n": 1, "lang": "ko"}).json()
     assert [n["lesson"]["id"] for n in nxt] == [ROTATION]
     assert nxt[0]["reason"] == translator("ko")("api.next_reason.prerequisites_done")
 
@@ -314,7 +317,9 @@ def test_weekly_report_json_and_markdown(client: TestClient) -> None:
     assert summary["total_seconds"] == 90 * 60
     assert [c["lesson_id"] for c in summary["completed"]] == [VECTORS]
     assert [s["lesson_id"] for s in summary["stuck"]] == [VECTORS]
-    assert report["markdown"].startswith("# 주간 리포트 2026-W46")
+    assert report["markdown"].startswith("# Weekly report 2026-W46")
+    korean = client.get("/api/v1/reports/weekly?week=2026-W46&lang=ko").json()
+    assert korean["markdown"].startswith("# 주간 리포트 2026-W46")
 
     md = client.get(
         "/api/v1/reports/weekly", params={"week": "2026-W46"}, headers={"Accept": "text/markdown"}
@@ -338,7 +343,9 @@ def test_module_report(client: TestClient) -> None:
     assert report["kind"] == "module"
     assert report["summary"]["done_count"] == 1
     assert report["summary"]["lesson_count"] == 2
-    assert report["markdown"].startswith("# 모듈 리포트")
+    assert report["markdown"].startswith("# Module report")
+    korean = client.get("/api/v1/reports/modules/m1-math-physics?lang=ko").json()
+    assert korean["markdown"].startswith("# 모듈 리포트")
     assert_problem(client.get("/api/v1/reports/modules/nope"), 404)
 
 
@@ -353,8 +360,10 @@ def test_cli_and_api_agree(client: TestClient, settings: Settings) -> None:
 
     cli_md = runner.invoke(cli_app, [*base, "report", "module", "m1-math-physics"])
     assert cli_md.exit_code == 0, cli_md.output
+    # The CLI speaks Korean unless told otherwise and the API English: the same language has
+    # to be asked of both for the texts to be compared.
     api_md = client.get(
-        "/api/v1/reports/modules/m1-math-physics", headers={"Accept": "text/markdown"}
+        "/api/v1/reports/modules/m1-math-physics?lang=ko", headers={"Accept": "text/markdown"}
     )
     assert api_md.text == cli_md.output
 

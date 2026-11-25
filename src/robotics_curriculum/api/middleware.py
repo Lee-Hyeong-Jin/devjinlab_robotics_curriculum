@@ -13,7 +13,7 @@ from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 from robotics_curriculum.api.log import LOGGER_NAME, lang_var, request_id_var
 from robotics_curriculum.api.problems import problem_response
-from robotics_curriculum.i18n import resolve_lang
+from robotics_curriculum.i18n import SERVICE_DEFAULT_LANG, Lang, resolve_lang
 
 REQUEST_ID_HEADER = "X-Request-ID"
 _VALID_ID = re.compile(r"^[A-Za-z0-9._-]{1,128}$")
@@ -50,8 +50,10 @@ class RequestContextMiddleware:
     (when the response has not started yet), so even crashes carry the request id.
     """
 
-    def __init__(self, app: ASGIApp) -> None:
+    def __init__(self, app: ASGIApp, default_lang: Lang = SERVICE_DEFAULT_LANG) -> None:
         self.app = app
+        self.default_lang: Lang = default_lang
+        """Language of a request that names none (``Settings.default_lang``)."""
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         if scope["type"] != "http":
@@ -60,7 +62,11 @@ class RequestContextMiddleware:
         request_id = _request_id(scope)
         token = request_id_var.set(request_id)
         accept_language = Headers(scope=scope).get("accept-language")
-        lang_token = lang_var.set(resolve_lang(_lang_query(scope), accept_language=accept_language))
+        lang_token = lang_var.set(
+            resolve_lang(
+                _lang_query(scope), accept_language=accept_language, default=self.default_lang
+            )
+        )
         status = 500
         started = False
         begin = time.perf_counter()

@@ -139,9 +139,12 @@ def client(tmp_path: Path) -> TestClient:
 
 
 def test_problem_titles_follow_accept_language(client: TestClient) -> None:
-    korean = client.get("/api/v1/lessons/nope")
+    korean = client.get("/api/v1/lessons/nope", headers={"Accept-Language": "ko-KR,ko;q=0.9"})
     assert korean.status_code == 404
     assert korean.json()["title"] == KO("api.problem.404")
+
+    # No language named: the service default, English.
+    assert client.get("/api/v1/lessons/nope").json()["title"] == "Not Found"
 
     english = client.get("/api/v1/lessons/nope", headers={"Accept-Language": "en-GB,en;q=0.9"})
     assert english.json()["title"] == "Not Found"
@@ -150,12 +153,12 @@ def test_problem_titles_follow_accept_language(client: TestClient) -> None:
     assert weighted.json()["title"] == "Not Found"
 
     unsupported = client.get("/api/v1/lessons/nope", headers={"Accept-Language": "fr"})
-    assert unsupported.json()["title"] == KO("api.problem.404")
+    assert unsupported.json()["title"] == "Not Found"
 
 
 def test_validation_problem_detail_follows_accept_language(client: TestClient) -> None:
     body = {"lesson_id": VECTORS, "minutes": -1}
-    korean = client.post("/api/v1/progress/log", json=body)
+    korean = client.post("/api/v1/progress/log", json=body, headers={"Accept-Language": "ko"})
     assert korean.status_code == 422
     assert korean.json()["detail"] == KO("api.validation", count=1)
 

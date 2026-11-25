@@ -201,7 +201,7 @@ def client(tmp_path: Path) -> TestClient:
 
 
 def test_lesson_endpoint_follows_accept_language(client: TestClient) -> None:
-    korean = client.get(f"/api/v1/lessons/{VECTORS}").json()
+    korean = client.get(f"/api/v1/lessons/{VECTORS}", headers={"Accept-Language": "ko"}).json()
     assert korean["title"] == "벡터와 행렬"
     assert korean["lang"] == "ko"
     assert korean["available_languages"] == ["ko", "en"]
