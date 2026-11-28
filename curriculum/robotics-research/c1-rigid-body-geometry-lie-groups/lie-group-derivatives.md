@@ -293,7 +293,7 @@ $J_r = J_l^\top$. 허용오차 $10^{-3}$. 검산: $J_l = \mathrm{Exp}(\phi)J_r$ 
 
 ## 논문 읽기
 
-**필독 2편.** 고정 질문 10개(`research_notes/연구 트랙 설계/lesson-standard.md` §5)로
+**필독 2편.** 고정 질문 10개(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절)로
 논문당 1페이지 노트를 쓴다.
 
 1. **Solà, Deray & Atchuthan, "A micro Lie theory for state estimation in robotics" (2018)** —

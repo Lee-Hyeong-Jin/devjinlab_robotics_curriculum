@@ -102,7 +102,7 @@ $\Lambda^{-1} = JM^{-1}J^\top$, 그리고 **제약력은 제약에 수직**이�
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 — `lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 — `f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (세 수준의 상보성 조건) [D2]** — 접촉은 위치 수준에서
   $$
@@ -480,7 +480,7 @@ C3 6단계와 어떻게 맞는지 한 문단으로 쓰라.
 **필독 3편** (권장 2편). 1996·1997·2014 — 같은 문제를 **적분기**, **가해성**, **볼록성**
 세 방향에서 공격한 논문들이다. 세 편을 읽고 "강체 접촉의 어느 가정을 각자 포기했는가"를
 한 단락으로 정리하는 것이 이 레슨의 읽기 목표다(답은 R3 의 ⓐⓑⓒ 와 R5 에 있다).
-각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다(`lesson-standard.md` §5).
+각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절).
 3-pass 로 읽고 3번째 패스에서 질문 4·7·8 을 집중 공략한다.
 
 1. **Stewart & Trinkle, "An implicit time-stepping scheme for rigid body dynamics with
@@ -680,7 +680,7 @@ def painleve_coeff(theta, mu, m=1.0, ell=0.5):
 ## 개념 점검
 
 `rc quiz c2-contact-dynamics` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c2-contact-dynamics-quiz

@@ -74,7 +74,7 @@ and the closed loop is $x^+ = f\big(x, \mu_N(x)\big)$ with $\mu_N(x) = u_0^*(x)$
 ## Key results
 
 The bracket gives the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (recursive feasibility) [D3]** — if $\mathbb{X}_f$ is **control invariant** under $\kappa_f$
   ($x \in \mathbb{X}_f \Rightarrow \kappa_f(x) \in \mathbb{U}$ and
@@ -510,7 +510,7 @@ gives no guarantee that the terminal set is met.
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read with three passes, attacking questions 4, 5, 6 and 7 on the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with three passes, attacking questions 4, 5, 6 and 7 on the third.
 
 1. **Mayne, Rawlings, Rao & Scokaert, "Constrained model predictive control: stability and
    optimality" (2000, Automatica)** — role: `seminal`. What to read: §3 (stability), §4 (terminal
@@ -646,7 +646,7 @@ agree with the independent computation of condition 3.
 ## Concept check
 
 Run `rc quiz c4-mpc`. The quiz is for **concept checking only**; the real work is the problem set
-and the reproduction task above (`lesson-standard.md` §4).
+and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The seven items cover: where control invariance of the terminal set is used in the
 recursive-feasibility proof; where the terminal cost's CLF condition is used; whether

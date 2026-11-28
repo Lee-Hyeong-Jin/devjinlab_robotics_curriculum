@@ -83,7 +83,7 @@ immediately.
 ## Key results
 
 The bracket is the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (Lyapunov stability theorem) [D3]** — if $V \in C^1(D)$ with $V(0)=0$, $V(x)>0$ on
   $D\setminus\{0\}$ and $\dot{V}(x) \le 0$, the origin is stable. If $\dot{V}$ is negative on
@@ -446,7 +446,7 @@ degrees or normalisation earns extra credit.
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read in three passes and attack questions 4, 5, 6, 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes and attack questions 4, 5, 6, 7 in the third.
 
 1. **Sontag, "Smooth stabilization implies coprime factorization" (1989, IEEE T-AC)**
    — role: `seminal`. <https://doi.org/10.1109/9.28018>
@@ -547,7 +547,7 @@ two; exceeding the upper one means criterion 2 or 3 is false.
 ## Concept check
 
 Take it with `rc quiz c3-lyapunov-stability`. The quiz is **for concept checking only**; the real
-work is the problem set and the reproduction task above (`lesson-standard.md` §4). Four questions
+work is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`). Four questions
 ask: why radial unboundedness is needed for a global conclusion; what fraction of $\alpha_3$ is
 left as the decay rate once the input term is absorbed; what an infeasible SOS program does and
 does not tell you; and why $\dot x = -x + x^2u$ is not ISS although it is 0-GAS.

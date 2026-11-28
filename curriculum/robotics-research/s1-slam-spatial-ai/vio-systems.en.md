@@ -91,7 +91,7 @@ or more stop you**, going back to the lesson named in parentheses is faster.
 
 ## Key results
 
-The bracket is the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket is the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (two architectures and what each pays) [D2]** — VIO approximates the same posterior in two
   ways. The **filter form** (MSCKF) **marginalises away** states and features outside a sliding
@@ -462,7 +462,7 @@ preserved" is excellent.
 ## Paper reading
 
 **Two must-reads.** Write a one-page note on each, using the ten fixed questions
-(`lesson-standard.md` §5). Read in three passes, and attack questions 4, 5, 6 and 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes, and attack questions 4, 5, 6 and 7 in the third.
 For the full bibliography, including the recommended papers, run `rc papers s1-vio-systems`.
 
 1. **Mourikis & Roumeliotis, "A multi-state constraint Kalman filter for vision-aided inertial
@@ -499,7 +499,7 @@ needed.
 > on one EuRoC sequence, match the reported ATE to within 30%, and measure the effect of a
 > configuration change". The public VIO systems (OpenVINS, VINS-Mono) need a ROS build and several
 > gigabytes of data, and setting up the environment would be most of the exercise. Following the
-> compute-budget principle of §6 of the lesson standard, the mandatory conditions here are **four
+> compute-budget principle of the "Reproduction tasks" section of lesson `f0-how-to-read-this-track`, the mandatory conditions here are **four
 > checks decidable on a CPU** and the EuRoC run is separated out as the **optional extension (R4)**
 > below. The mandatory conditions target this lesson's three results (R2, R3, R5) head on.
 
@@ -593,7 +593,7 @@ a public VIO.
 ## Concept check
 
 Run `rc quiz s1-vio-systems`. The quiz is for **concept checking only**; the real work is the problem
-set and the reproduction task above (`lesson-standard.md` §4).
+set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: what MSCKF's null-space projection actually does to the feature; how many
 degrees of freedom are unobservable in monocular VIO with known gravity; whether observability means

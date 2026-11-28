@@ -55,7 +55,7 @@ multi-modal solutions) and what it charges for (temperature bias, optimistic dyn
 
 ## Key results
 
-The bracket gives the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket gives the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the maximum-entropy optimal policy is a Boltzmann distribution) [D3]** — for a fixed $Q$,
   the solution of
@@ -432,7 +432,7 @@ selection (random shooting) and $\lambda\to\infty$ gives a zero update.
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions
-(`lesson-standard.md` §5). Read with three passes and attack questions 4, 5, 6 and 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with three passes and attack questions 4, 5, 6 and 7 in the third.
 
 1. **Levine, "Reinforcement learning and control as probabilistic inference: tutorial and review"
    (2018, arXiv)** — role: `survey`. <https://arxiv.org/abs/1805.00909> — §2-4.
@@ -565,7 +565,7 @@ testing whether the prescription of P5 works in code.
 ## Concept check
 
 Run `rc quiz c8-control-as-inference`. The quiz is for **concept checking only**; the real work is
-the problem set and the reproduction task above (`lesson-standard.md` §4).
+the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: why the optimal policy of the entropy-regularized objective is a Boltzmann
 distribution; the ground for the soft Bellman operator being a $\gamma$-contraction; whether the

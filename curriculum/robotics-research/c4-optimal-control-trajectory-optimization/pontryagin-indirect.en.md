@@ -102,7 +102,7 @@ here. **If two or more block you**, it is faster to go back to the lesson named 
 ## Key results
 
 The bracket gives the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (Pontryagin's minimum principle) [D3]** — if $(u^*, x^*, t_f^*)$ solves $(\mathrm{P})$,
   then there exist $\lambda_0 \ge 0$ and an absolutely continuous
@@ -668,7 +668,7 @@ becomes BV and a measure term $g_x^\top d\eta$ appears.
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read with three passes, attacking questions 4, 5, 6 and 7 on the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with three passes, attacking questions 4, 5, 6 and 7 on the third.
 
 1. **Sussmann & Willems, "300 years of optimal control: from the brachystochrone to the maximum
    principle" (1997, IEEE Control Systems Magazine)** — role: `standard`.
@@ -810,7 +810,7 @@ $a - (a+\sigma) = -\sigma$.
 ## Concept check
 
 Run `rc quiz c4-pontryagin-indirect`. The quiz is for **concept checking only**; the real work is
-the problem set and the reproduction task above (`lesson-standard.md` §4).
+the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: why (3) is written as a minimisation over $U$ rather than as
 $\partial H/\partial u = 0$; the value of $H$ for an autonomous problem with free terminal time;

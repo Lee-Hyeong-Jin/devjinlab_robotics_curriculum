@@ -102,7 +102,7 @@ resources:
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (BC 의 복합 오차) [D3]** — $\hat{\pi}$ 가 전문가 분포에서 지도 오차 $\epsilon$ 을 가질 때
   $$
@@ -419,7 +419,7 @@ $r_\theta = \theta^\top\phi$ 로 **함수 형태를 제한**하므로 성형 항
 
 ## 논문 읽기
 
-**필독 3편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`lesson-standard.md` §5).
+**필독 3편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절).
 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Ross & Bagnell, "Efficient reductions for imitation learning" (2010, AISTATS)** — 역할:
@@ -542,7 +542,7 @@ DAgger 모형은 "모든 상태에서 확률 $\epsilon$ 으로 틀리지만 이�
 ## 개념 점검
 
 `rc quiz c8-imitation-learning` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c8-imitation-learning-quiz

@@ -150,7 +150,7 @@ $\Pr(o \mid s_0) = 0.9$, $\Pr(o \mid s_1) = 0.3$ 일 때 $b(s_0) = 0.5$ 에서 $
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (Bellman 최적 연산자는 $\gamma$-수축이고 고정점은 유일하며 $V^\*$ 와 같다) [D3]** —
   A1·A2 아래 모든 $u, v$ 에 대해
@@ -465,7 +465,7 @@ $b$ 와 $1-b$ 의 로그 오즈가 관측마다 $\log(0.85/0.15)$ 만큼 선형�
 ## 논문 읽기
 
 **필독 3편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Blackwell, "Discounted dynamic programming" (1965, Ann. Math. Statist.)** — 역할:
    `원전(seminal)`. <https://doi.org/10.1214/aoms/1177700285>
@@ -581,7 +581,7 @@ $\epsilon=10^{-6}$ 까지 1848 백업, 두 경우 모두 정책 손실 $0$. **�
 ## 개념 점검
 
 `rc quiz c8-mdp-pomdp-bellman` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c8-mdp-pomdp-bellman-quiz

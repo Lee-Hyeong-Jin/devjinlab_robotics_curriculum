@@ -75,7 +75,7 @@ back to the prerequisite lesson named in parentheses is faster.
 ## Key results
 
 The bracketed tag is the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
-see the lesson standard in the research-track design notes, §2).
+see the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (Rodrigues' formula) [D3]** — for $\lVert \omega \rVert = 1$,
   $$\exp(\hat{\omega}\theta) = I + \sin\theta\,\hat{\omega} + (1 - \cos\theta)\,\hat{\omega}^2. \tag{2}$$
@@ -266,7 +266,7 @@ and that $SO(3)$ is not a vector space so addition does not agree with the group
 ## Paper reading
 
 **Two must-read papers.** Write a one-page note per paper against the ten fixed questions below
-(`lesson-standard.md` §5). Read in three passes, attacking questions 4, 5, 6 and 7 in the third pass.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes, attacking questions 4, 5, 6 and 7 in the third pass.
 
 1. **Solà, Deray & Atchuthan, "A micro Lie theory for state estimation in robotics" (2018, arXiv)**
    — role: `standard`. <https://arxiv.org/abs/1812.01537>
@@ -340,7 +340,7 @@ your rotation matrices to $10^{-12}$ on the same inputs (watch the component-ord
 
 Run `rc quiz c1-so3-se3-exponential` (add `--lang en` for the English text). The quiz is for
 **concept checking only**; the real work is the problem set and the reproduction task above
-(`lesson-standard.md` §4).
+(the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The four items cover: the identity $\hat{\omega}^3 = -\hat{\omega}$; why the logarithm breaks at
 $\theta \to \pi$; why no global three-parameter chart exists; and the rotation angle of a matrix

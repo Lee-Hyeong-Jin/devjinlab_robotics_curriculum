@@ -6,7 +6,7 @@ summary: >-
   위치와 지도를 동시에 추정할 때 무엇이 보장되고 무엇이 보장되지 않는지를 다룬다. 설계상의
   권장 선수는 C1(리 군), C5(상태 추정), C7(지각과 3D 표현)이고, 근거가 되는 대학원 과목은
   CMU 16-833, MIT 16.485, ETH Vision Algorithms, TUM Visual Navigation 이다.
-  설계상 레슨은 6개다(research_notes/연구 트랙 설계/blueprint.md 의 S1 절).
+  레슨은 6개다.
 level: 연구
 lessons:
   - vio-systems

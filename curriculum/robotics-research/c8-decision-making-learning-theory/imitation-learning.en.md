@@ -51,7 +51,7 @@ bound saturates trivially at $T$**, so the meaningful regime is $\epsilon T \ll 
 
 ## Key results
 
-The bracket gives the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket gives the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (BC's compound error) [D3]** — when $\hat{\pi}$ has supervised error $\epsilon$ on the
   expert's distribution,
@@ -403,7 +403,7 @@ changes.
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions
-(`lesson-standard.md` §5). Read with three passes and attack questions 4, 5, 6 and 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with three passes and attack questions 4, 5, 6 and 7 in the third.
 
 1. **Ross & Bagnell, "Efficient reductions for imitation learning" (2010, AISTATS)** — role:
    `seminal`. <https://proceedings.mlr.press/v9/ross10a.html> — read §2–3 only.
@@ -533,7 +533,7 @@ of criterion 3.
 ## Concept check
 
 Run `rc quiz c8-imitation-learning`. The quiz is for **concept checking only**; the real work is the
-problem set and the reproduction task above (`lesson-standard.md` §4).
+problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: which two factors multiply to give the $T^2$ of BC's bound; whether that order
 is an artifact of the proof; the one-line reason DAgger beats BC; whether observing the optimal

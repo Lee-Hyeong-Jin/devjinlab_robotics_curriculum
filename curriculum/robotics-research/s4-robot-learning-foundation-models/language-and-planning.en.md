@@ -54,7 +54,7 @@ quantifies the part that symbolic verification **cannot reduce in principle**.
 
 ## Core results
 
-The bracketed tags are derivation depths (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracketed tags are derivation depths (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (Downward refinability and its failure) [D2]** — a symbolic plan
   $\bar{a}_1,\dots,\bar{a}_T$ is symbolically valid at $\alpha(s_0)$ when
@@ -356,7 +356,7 @@ gap", so the optimal granularity is the **coarsest** one (keep the plan short).
 ## Paper reading
 
 **Two required papers.** Write a one-page note on each using the ten fixed questions
-(`lesson-standard.md` §5).
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`).
 
 1. **Ahn et al., "Do as I can, not as I say: grounding language in robotic affordances" (2022,
    CoRL)** — role: `seminal`. <https://arxiv.org/abs/2204.01691> — §3–4.
@@ -470,7 +470,7 @@ meaningless behind a verifier) shows up **qualitatively** with a real LLM.
 ## Concept check
 
 Take it with `rc quiz s4-language-and-planning`. This quiz is **for concept checking only**; the
-real work is the problem set and the reproduction task above (`lesson-standard.md` §4).
+real work is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 ## How to study this stage
 

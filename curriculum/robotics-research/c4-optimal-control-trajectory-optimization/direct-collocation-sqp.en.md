@@ -72,7 +72,7 @@ $$
 ## Key results
 
 The bracket gives the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the sparsity of the transcription, and its identity with Riccati) [D2]** — the defect
   $\zeta_k$ depends **only** on $(x_k, x_{k+1}, u_k, u_{k+1})$, so the constraint Jacobian has
@@ -532,7 +532,7 @@ points only, or inside intervals too), how the Hessian is supplied to the solver
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read with three passes, attacking questions 4, 5, 6 and 7 on the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with three passes, attacking questions 4, 5, 6 and 7 on the third.
 
 1. **Hargraves & Paris, "Direct trajectory optimization using nonlinear programming and
    collocation" (1987, AIAA JGCD)** — role: `seminal`. What to read: §II–§III. This is the
@@ -697,7 +697,7 @@ $10^{-6}$ (check at small $N$ only).
 ## Concept check
 
 Run `rc quiz c4-direct-collocation-sqp`. The quiz is for **concept checking only**; the real work
-is the problem set and the reproduction task above (`lesson-standard.md` §4).
+is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The seven items cover: the fundamental reason the transcribed Jacobian is sparse; where the $h/8$
 term of the midpoint state comes from; the global order of Hermite-Simpson; whether a

@@ -137,7 +137,7 @@ $$
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (MAP = 비선형 최소제곱) [D3]** — 잡음이 가법 가우시안이고 $\Sigma_k$ 가 **상태에
   의존하지 않으면**
@@ -496,7 +496,7 @@ MAP 이 옮겨가는 구체적 예를 하나 만들고, ⓑ 2차원 거리-방�
 ## 논문 읽기
 
 **필독 2편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Dellaert & Kaess, "Factor Graphs for Robot Perception" (2017, Foundations and Trends in
    Robotics)** — 역할: `서베이(survey)`. <https://doi.org/10.1561/2300000043> (2-4절)
@@ -648,7 +648,7 @@ Cholesky 인자의 비영 원소 수(참조 3396). 마지막 두 수의 비가 *
 ## 개념 점검
 
 `rc quiz c5-factor-graphs-map` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c5-factor-graphs-map-quiz

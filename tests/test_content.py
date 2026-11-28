@@ -95,22 +95,43 @@ def test_live_curriculum_validates() -> None:
         assert validate_course(course) == []
 
 
-def test_expert_course_does_not_cite_unpublished_notes() -> None:
-    """`research_notes/` is not part of the published site, so a lesson must not send readers there.
+def test_no_course_cites_unpublished_documents() -> None:
+    """`research_notes/` and the design documents are not on the site (#50).
 
-    The research track still does (tracked as a content issue); this guards the course that
-    first-time learners read.
+    A lesson that says "see the research report" or "lesson-standard.md §5" sends a reader to
+    something they cannot open. Comments in YAML are for authors and are not published.
     """
-    offenders = [
-        path.relative_to(REPO_ROOT).as_posix()
-        for path in sorted((REPO_ROOT / "curriculum" / "robotics-expert").rglob("*"))
-        if path.suffix in {".md", ".yaml"}
-        and any(
-            marker in path.read_text(encoding="utf-8")
-            for marker in ("research_notes", "조사 보고서", "research report")
-        )
-    ]
+    markers = (
+        "research_notes",
+        "lesson-standard",
+        "blueprint.md",
+        "조사 보고서",
+        "설계 노트",
+        "research report",
+        "design notes",
+    )
+    offenders = []
+    for path in sorted((REPO_ROOT / "curriculum").rglob("*")):
+        if path.suffix not in {".md", ".yaml"} or path.name == "README.md":
+            continue
+        published = "\n".join(
+            line
+            for line in path.read_text(encoding="utf-8").splitlines()
+            if not (path.suffix == ".yaml" and line.lstrip().startswith("#"))
+        ).lower()
+        if any(marker in published for marker in markers):
+            offenders.append(path.relative_to(REPO_ROOT).as_posix())
     assert offenders == []
+
+
+def test_validate_reports_a_pointer_to_an_unpublished_document(tmp_path: Path) -> None:
+    body = "자세한 비교는 `research_notes/시뮬레이터.md` 를 참고한다.\n"
+    course = write_course(tmp_path, {"a": lesson_md("a") + body})
+    messages = [error.message for error in validate_course(load_course(course))]
+    assert any(
+        "refers to a document that is not published" in m and "research_notes" in m
+        for m in messages
+    )
 
 
 def test_missing_required_field_is_reported_with_path(tmp_path: Path) -> None:

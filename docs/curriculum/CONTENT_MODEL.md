@@ -356,6 +356,7 @@ problems:
 | 15 | 본문 ` ```expected ` 블록(연습 과제의 기대 결과)에 내용이 있고, `kind: exercise` 활동이 있는 레슨에만 있으며, 번역마다 블록 수가 원문과 같다 | validate |
 | 16 | 이미지에 대체 텍스트가 있다. 로컬 이미지는 레슨 옆 `figures/<name>.svg\|png` 이고 파일이 존재하며(SVG 는 스크립트·외부 참조 없음, 크기 제한), 번역이 원문과 같은 그림을 보여 준다 | validate |
 | 18 | 본문 ` ```hint ` 블록("막혔을 때")의 첫 줄에 증상이, 그 아래에 할 일이 있고, 번역마다 블록 수가 원문과 같다 | validate |
+| 19 | 레슨(본문·요약·번역)과 모듈·코스 요약이 사이트에 공개되지 않는 문서(`research_notes`, `lesson-standard.md`, `blueprint.md`, "조사 보고서", "설계 노트", "research report", "design notes")를 가리키지 않는다. 내용을 직접 쓰거나 레슨 id 로 가리킨다 | validate |
 | 17w | **경고**: `## 어디에 쓰는가`(영어 `## Where you will use this`) 절을 쓰기 시작한 모듈에서 그 절이 없는 레슨·번역이 있다 | validate |
 
 규칙 15~18 의 네 가지 본문 요소(쓰임새 절, 기대 결과 블록, 그림, 막혔을 때 힌트)는 `content/lesson_blocks.py` 가

@@ -8,5 +8,4 @@ summary: >-
   mutual-information objectives and the greedy guarantee, the overconfidence that communication
   constraints and ignored correlations create and covariance intersection as a response, and
   the reliability engineering of field deployment. The prerequisite modules are C5 (state
-  estimation), C6 (motion planning) and C8 (decision making); the module is designed as six
-  lessons (the S5 section of blueprint.md).
+  estimation), C6 (motion planning) and C8 (decision making); the module has six lessons.

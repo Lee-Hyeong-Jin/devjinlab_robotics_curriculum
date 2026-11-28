@@ -52,7 +52,7 @@ prerequisites are `s5-comms-constrained-estimation` and `r1-experiment-design`.
 ## Key results
 
 The bracket gives the derivation depth (D0 cited / D1 skeleton / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the confidence interval of the MTBF) [D3]** — if failures form a Poisson process of
   constant rate $\lambda$ and $r$ failures are observed in a cumulative operating time $T$, then
@@ -500,7 +500,7 @@ common software.
 ## Paper reading
 
 **Two must-read papers.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read in three passes, and in the third pass concentrate on questions 5,
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes, and in the third pass concentrate on questions 5,
 6 and 8. These two are long and descriptive, so find and read **the parts that describe
 failures** first.
 
@@ -683,7 +683,7 @@ write a paragraph on how the mode categories of your table correspond to those o
 ## Concept check
 
 Take it with `rc quiz s5-field-deployment`. This quiz is a **concept check only**; the real work
-is the problem set and the reproduction task above (`lesson-standard.md` §4).
+is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 ## How to study this stage
 

@@ -52,7 +52,7 @@ policy (the background of problem P5).
 
 ## Key results
 
-The bracket gives the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket gives the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the policy gradient theorem) [D3]** — under A1–A3,
   $$
@@ -404,7 +404,7 @@ survives.
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions
-(`lesson-standard.md` §5). Read with three passes and attack questions 4, 5, 6 and 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with three passes and attack questions 4, 5, 6 and 7 in the third.
 
 1. **Sutton, McAllester, Singh & Mansour, "Policy gradient methods for reinforcement learning with
    function approximation" (2000, NIPS 12)** — role: `seminal`.
@@ -541,7 +541,7 @@ the four criteria only**.
 ## Concept check
 
 Run `rc quiz c8-policy-gradient`. The quiz is for **concept checking only**; the real work is the
-problem set and the reproduction task above (`lesson-standard.md` §4).
+problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: what is surprising about the policy gradient theorem; whether the
 variance-minimizing baseline is always $V^\pi$; whose occupancy distribution averages the advantage

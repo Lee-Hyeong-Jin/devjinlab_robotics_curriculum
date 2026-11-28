@@ -182,7 +182,7 @@ slackness is checked term by term, printing the active/inactive classification.
 
 ## Paper reading
 
-**The textbook exception applies** (lesson standard §5). Read Boyd and Vandenberghe as the primary
+**The textbook exception applies** (the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read Boyd and Vandenberghe as the primary
 source and write two one-page notes (fixed questions 1, 3, 4 and 8).
 
 1. **Boyd & Vandenberghe, ch.2-3 (convex sets and functions)** — questions: (a) summarise what the

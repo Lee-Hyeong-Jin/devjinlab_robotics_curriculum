@@ -112,7 +112,7 @@ $$
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (DDP 의 2차 역방향 패스) [D2]** — 기준 궤적 주변에서 값 함수를 2차까지 전개하면,
   $V' := V_{k+1}$ 의 계수 $(V'_x, V'_{xx})$ 로부터
@@ -563,7 +563,7 @@ $\alpha < 1$ 이 유지되는 동안 두 방법의 $\lVert k\rVert$ 비가 같�
 ## 논문 읽기
 
 **필독 4편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Mayne, "A second-order gradient method for determining optimal trajectories of non-linear
    discrete-time systems" (1966, Int. J. Control)** — 역할: `원전(seminal)`.
@@ -718,7 +718,7 @@ $Q_{u,k}$ 와 $10^{-6}$ 이내로 일치하는지 확인한다(증명 스케치 
 ## 개념 점검
 
 `rc quiz c4-ilqr-ddp` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c4-ilqr-ddp-quiz

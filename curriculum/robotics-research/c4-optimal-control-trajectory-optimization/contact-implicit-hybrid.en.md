@@ -68,7 +68,7 @@ Notation:
 ## Key results
 
 The bracket gives the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (complementarity is non-convex and LICQ fails at every feasible point) [D3]** —
   $\mathcal{C} := \{(a,b) \in \mathbb{R}^2 : a \ge 0,\, b \ge 0,\, ab = 0\}$ is **non-convex**, and
@@ -439,7 +439,7 @@ the scaling, the polygonal approximation order of the friction cone".
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read with three passes, attacking questions 4, 5, 6 and 7 on the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with three passes, attacking questions 4, 5, 6 and 7 on the third.
 
 1. **Posa, Cantu & Tedrake, "A direct method for trajectory optimization of rigid bodies through
    contact" (2014, IJRR)** — role: `seminal`. What to read: §3 (the transcription), §4
@@ -486,7 +486,7 @@ under 500 MB of memory. numpy and scipy only. No simulator.
 > outside what this lesson has **verified**. So the task below is **R2**, and reproducing Posa's
 > figure is offered as the **optional** part of condition 4 with a rubric. This follows the
 > principle of not using numbers one has not verified oneself as acceptance criteria
-> (`lesson-standard.md` §6).
+> (the "Reproduction tasks" section of lesson `f0-how-to-read-this-track`).
 
 **Input data**: none; everything is given as constants.
 
@@ -606,7 +606,7 @@ and reporting how much the contact raises the cost.
 ## Concept check
 
 Run `rc quiz c4-contact-implicit-hybrid`. The quiz is for **concept checking only**; the real work
-is the problem set and the reproduction task above (`lesson-standard.md` §4).
+is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The seven items cover: at which points complementarity breaks LICQ; whether the complementarity set
 is convex; how through-contact dispenses with a mode schedule; the origin of the saltation

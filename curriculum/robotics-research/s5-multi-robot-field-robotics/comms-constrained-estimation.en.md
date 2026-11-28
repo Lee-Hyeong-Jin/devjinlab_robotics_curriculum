@@ -52,7 +52,7 @@ recommended prerequisites are those two lessons.
 ## Key results
 
 The bracket gives the derivation depth (D0 cited / D1 skeleton / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (fusion that ignores common information is overconfident) [D3]** — if two nodes start from
   the same prior information $\Lambda_0$ and update with mutually independent measurements, the
@@ -586,7 +586,7 @@ invertible" passes, and adding that the general case was left open is excellent.
 ## Paper reading
 
 **Two must-read papers.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read in three passes, and in the third pass concentrate on questions 3,
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes, and in the third pass concentrate on questions 3,
 4 and 8.
 
 1. **Julier & Uhlmann, "A non-divergent estimation algorithm in the presence of unknown
@@ -757,7 +757,7 @@ optimum). (b) For the scalar table of Part C the analytic values of (13) are the
 ## Concept check
 
 Take it with `rc quiz s5-comms-constrained-estimation`. This quiz is a **concept check only**; the
-real work is the problem set and the reproduction task above (`lesson-standard.md` §4).
+real work is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 ## How to study this stage
 

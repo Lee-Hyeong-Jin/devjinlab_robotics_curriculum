@@ -1,0 +1,55 @@
+id: f0-how-to-read-this-track
+lang: en
+activities:
+  f0-how-to-read-this-track-reading: Read the notation and the conventions
+  f0-how-to-read-this-track-quiz: Check that you can read the notation
+resources:
+  "How to Read a Paper (S. Keshav, 2007)":
+    note: The source of the three-pass method. Two pages long.
+quiz:
+  - id: q1
+    prompt: >-
+      A key result is tagged [D2]. What is the reader expected to do?
+    choices:
+      - Remember the result and check the source
+      - Close the text and derive it again from the start on paper
+      - Separate the hypotheses from the conclusion of the proof and choose a strategy
+      - Skip it
+    explanation: >-
+      D2 is a full derivation. The text develops it with no line missing, so the reader should
+      be able to derive it again unaided. Being able to use the result is enough for D0
+      (cited); separating hypotheses and conclusion and weighing each step belongs to D3
+      (proof).
+    concept:
+      front: Derivation depth D0-D3
+      back: >-
+        D0 cited / D1 sketched / D2 full derivation (derive it again yourself) / D3 proof
+        (down to why each hypothesis is needed)
+  - id: q2
+    prompt: >-
+      For which type of problem in a problem set are the numerical answer and a tolerance
+      published?
+    choices:
+      - P-D (derivation)
+      - P-P (proof)
+      - P-N (numerical)
+      - P-R (paper)
+    explanation: >-
+      A numerical problem (P-N) has to be self-markable, so its answer and tolerance are
+      published at once. Derivations and proofs publish a sketch only, and paper problems a
+      marking rubric, because the aim is to work it out yourself.
+    concept:
+      front: What is published for each type of problem
+      back: >-
+        P-N: answer and tolerance; P-D/P-P: a sketch only; P-I: acceptance criteria; P-C: a
+        checklist; P-R: a rubric
+  - id: q3
+    prompt: >-
+      A reproduction task that cannot be finished without a GPU may appear as a mandatory
+      condition.
+    explanation: >-
+      A task that may need a GPU is always tier R4, that is, optional. The mandatory
+      conditions are set so that a laptop CPU can finish them.
+    concept:
+      front: Reproduction tiers and compute
+      back: 'R1-R3 run on a CPU; R4, which may need a GPU, is always optional'

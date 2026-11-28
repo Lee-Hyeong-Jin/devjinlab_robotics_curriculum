@@ -61,7 +61,7 @@ lesson treats (a) and (b), and goes as far as the doorway to (c).
 ## Key results
 
 The bracketed grade is the derivation depth (D0 cited / D1 sketched / D2 full derivation /
-D3 proof — see `lesson-standard.md` §2 in the track design notes).
+D3 proof — see the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (KKT form, and existence and uniqueness) [D3]** — writing (1) as one linear system,
   $$
@@ -457,7 +457,7 @@ gains alone cannot decide it" passes. Writing only "the paper is old" does not.
 directions, **constraint stabilisation**, **control decomposition** and **a variational
 principle**. Reading all three with the same questionnaire and summarising in one paragraph
 "which part of (2) each took as their own problem" is the reading goal of this lesson. Write a
-one-page note on each with the ten fixed questions below (`lesson-standard.md` §5). Read in three
+one-page note on each with the ten fixed questions below (the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three
 passes and concentrate on questions 4, 7 and 8 in the third pass.
 
 1. **Khatib, "A unified approach for motion and force control of robot manipulators: the
@@ -693,7 +693,7 @@ level of $\ddot q$ (the table in R4).
 ## Concept check
 
 Run `rc quiz c2-constrained-dynamics`. The quiz is for **concept checking only**; the real work is
-the problem set and the reproduction task above (`lesson-standard.md` §4).
+the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: which assumptions make the KKT matrix non-singular; what Gauss's principle
 of least constraint says is minimised; why the dynamically consistent pseudo-inverse is used;

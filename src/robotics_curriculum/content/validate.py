@@ -96,7 +96,18 @@ def validate_course(course: Course) -> list[ContentError]:
             errors.extend(_check_translations(lesson))
             errors.extend(_check_meta_translations(lesson, lesson_path))
             errors.extend(_check_blocks(lesson, lesson_path))
+            errors.extend(_check_unpublished(_lesson_texts(lesson), lesson_path))
         errors.extend(_check_use_cases(module, module_meta))
+        module_texts = [(f"module '{module.id}'", module.summary)] + [
+            (f"module '{module.id}' ({lang})", translation.summary)
+            for lang, translation in sorted(module.translations.items())
+        ]
+        errors.extend(_check_unpublished(module_texts, module_meta))
+    course_texts = [(f"course '{course.id}'", course.summary)] + [
+        (f"course '{course.id}' ({lang})", translation.summary)
+        for lang, translation in sorted(course.translations.items())
+    ]
+    errors.extend(_check_unpublished(course_texts, course_meta))
 
     # Rule 2: dangling / self prerequisites.
     for lesson in lessons.values():
@@ -115,6 +126,51 @@ def validate_course(course: Course) -> list[ContentError]:
     errors.extend(_check_papers(course, lessons, course_dir))
     # Rule 11: goals name lessons of this course, once each.
     errors.extend(_check_goals(course, lessons, course_meta))
+    return errors
+
+
+UNPUBLISHED_MARKERS: tuple[str, ...] = (
+    "research_notes",
+    "lesson-standard.md",
+    "blueprint.md",
+    "조사 보고서",
+    "설계 노트",
+    "research report",
+    "design notes",
+)
+"""Names of working documents that live in the repository but are not part of the course."""
+
+
+def _lesson_texts(lesson: Lesson) -> list[tuple[str, str]]:
+    """``(where, text)`` of everything a reader of the lesson sees, in every language."""
+    texts = [(f"lesson '{lesson.id}'", f"{lesson.summary}\n{lesson.body}")]
+    for lang, translation in sorted(lesson.translations.items()):
+        texts.append(
+            (f"lesson '{lesson.id}' ({lang})", f"{translation.summary or ''}\n{translation.body}")
+        )
+    return texts
+
+
+def _check_unpublished(texts: list[tuple[str, str]], path: Path) -> list[ContentError]:
+    """Rule 19: published text does not send the reader to a document they cannot open.
+
+    The repository keeps research notes and design documents beside the course. The site shows
+    only the course, so a sentence such as "see the research report" leaves a reader with
+    nothing to follow. Say the thing itself, or point at a lesson by its id.
+    """
+    errors: list[ContentError] = []
+    for where, text in texts:
+        lowered = text.lower()
+        found = [marker for marker in UNPUBLISHED_MARKERS if marker in lowered]
+        if found:
+            errors.append(
+                ContentError(
+                    path,
+                    f"{where} refers to a document that is not published with the course "
+                    f"({', '.join(repr(marker) for marker in found)}); state the content or "
+                    f"point at a lesson id instead",
+                )
+            )
     return errors
 
 

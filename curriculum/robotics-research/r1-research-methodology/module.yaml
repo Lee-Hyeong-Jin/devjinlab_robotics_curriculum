@@ -5,8 +5,7 @@ summary: >-
   로보틱스 평가와 통계, 재현성과 아티팩트, 논문 작성과 리뷰 6레슨. 각 레슨의 산출물은 읽을 거리가
   아니라 **만든 것**이다(분류표, 2페이지 제안, 실험 계획서, 평가 프로토콜, 재현 가능한 저장소,
   8페이지 초안). 근거는 CMU RI 의 Research Qualifier 4요소, Georgia Tech 구술시험 형식,
-  CMU 16-745·Berkeley CS287 의 학회 포맷 보고서, Stanford CS326 의 연구 제안서와 동료 리뷰다
-  (연구 트랙 설계 노트의 benchmark §7·§9-3).
+  CMU 16-745·Berkeley CS287 의 학회 포맷 보고서, Stanford CS326 의 연구 제안서와 동료 리뷰다.
 level: 연구
 lessons:
   - literature-survey

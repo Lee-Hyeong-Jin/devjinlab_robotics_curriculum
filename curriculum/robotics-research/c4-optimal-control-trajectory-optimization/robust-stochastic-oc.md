@@ -116,7 +116,7 @@ papers:
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (HJI 와 도달가능 집합) [D3]** — 후방 도달가능 관은 HJI **변분부등식**
   $$
@@ -526,7 +526,7 @@ Mayne et al. 2005 §2–§4 를 읽고 ⓐ Mitchell 등이 쓰는 교란의 정�
 ## 논문 읽기
 
 **필독 3편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Mitchell, Bayen & Tomlin, "A time-dependent Hamilton-Jacobi formulation of reachable sets
    for continuous dynamic games" (2005, IEEE T-AC)** — 역할: `원전(seminal)`.
@@ -654,7 +654,7 @@ $\xi\sim\mathcal{N}(0,1)$. 몬테카를로는 표본 $4\times10^5$, 60스텝, �
 ## 개념 점검
 
 `rc quiz c4-robust-stochastic-oc` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c4-robust-stochastic-oc-quiz

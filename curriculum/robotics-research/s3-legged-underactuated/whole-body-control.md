@@ -95,7 +95,7 @@ $\dot x_2 = 2(q_{\mathrm{ref}} - q)$, $q_{\mathrm{ref}} = (0.3,-0.4,0.2)$ 다. �
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (계층적 널공간 투영과 우선순위 보존) [D3]** — 두 레벨이면
   $$
@@ -321,7 +321,7 @@ problems:
 
 ## 논문 읽기
 
-**필독 3편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`lesson-standard.md` §5).
+**필독 3편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절).
 
 1. **Sentis & Khatib, "Synthesis of whole-body behaviors through hierarchical control of behavioral
    primitives" (2005, Int. J. Humanoid Robotics)** — 역할: `원전(seminal)`.
@@ -404,7 +404,7 @@ $\max\lvert\dot q\rvert \approx 6\cdot10^{14}$ 로 폭발해야 한다(수치 �
 ## 개념 점검
 
 `rc quiz s3-whole-body-control` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위 문제
-세트와 재현 과제다(`lesson-standard.md` §4).
+세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: s3-whole-body-control-quiz

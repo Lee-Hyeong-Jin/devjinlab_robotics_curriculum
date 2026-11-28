@@ -20,4 +20,5 @@ paths:
 - 레슨은 도입부 다음에 `## 어디에 쓰는가`(영어 `## Where you will use this`) 절로 실제 로봇에서의 쓰임을 2~4문장 적는다.
 - 연습 과제 바로 뒤에 ` ```expected ` 블록으로 기대 결과를 적는다. 값은 추정하지 말고 실제로 계산한다.
 - 그림은 `scripts/figures/make_figures.py` 로 생성한 `figures/*.svg` 만 쓴다(ADR 0020). 대체 텍스트는 언어별로 필수다.
+- 레슨에서 `research_notes/` 나 설계 문서처럼 사이트에 없는 문서를 "참고하라"고 쓰지 않는다. 내용을 직접 쓰거나 레슨 id 를 백틱으로 가리킨다(`rc validate` 규칙 19).
 - 콘텐츠를 바꾼 뒤 `rc validate` 가 있으면 실행한다.

@@ -58,7 +58,7 @@ $\sqrt{\sum\lVert r_{ij}\rVert^2 / \lvert\mathcal{O}\rvert}$ in pixels.
 
 ## Key results
 
-The bracket is the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket is the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (sparse structure of the normal equations) [D2]** — because $r_{ij}$ depends on exactly
   **one** $\theta_i$ and **one** $X_j$, $B$ is block diagonal with one $d_c \times d_c$ block per
@@ -424,7 +424,7 @@ specific: hardware, BLAS, the convergence criterion, or how the initial values w
 ## Paper reading
 
 **Two must-reads.** Write a one-page note on each, using the ten fixed questions
-(`lesson-standard.md` §5). Read in three passes, and attack questions 4, 5, 6 and 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes, and attack questions 4, 5, 6 and 7 in the third.
 For the full bibliography, including the recommended papers, run
 `rc papers c7-bundle-adjustment` (the course registry
 `curriculum/robotics-research/papers.yaml`, ADR 0014).
@@ -543,7 +543,7 @@ dense solution on the small synthetic problem (condition 3).
 ## Concept check
 
 Run `rc quiz c7-bundle-adjustment`. The quiz is for **concept checking only**; the real work is the
-problem set and the reproduction task above (`lesson-standard.md` §4).
+problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: why the camera block $B$ is block diagonal; whether the Schur complement is
 an approximation (it is not); the dimension of the gauge null space (7); what the sparsity pattern

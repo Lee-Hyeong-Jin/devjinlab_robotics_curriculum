@@ -105,7 +105,7 @@ $\Sigma_e = \operatorname{diag}(0.3^2, 0.4^2, 0.2^2)$ (따라서 $\sigma_d^2 = c
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (학생의 최선은 "교사 + 사후 평균"이고 간극은 사후 분산에 비례한다) [D2]** — 교사의 최적
   정책은 $u = -Kx - K_dd$ 이고($K = 1.362$, $K_d = 1.938$), 이력만 보는 학생의 최적 정책은
@@ -470,7 +470,7 @@ $\delta = 0$ (어긋남이 없음)이거나 $\lambda_{\text{참}} = 0$ (참 목�
 ## 논문 읽기
 
 **필독 3편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 1·5·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 1·5·7 을 집중 공략한다.
 세 편은 **한 계보**다 — 순서대로 읽는다.
 
 1. **Lee, Hwangbo, Wellhausen, Koltun & Hutter, "Learning quadrupedal locomotion over challenging
@@ -636,7 +636,7 @@ R1–R4 의 어느 예측이 **성립하지 않았는지**를 특히 적는다.
 ## 개념 점검
 
 `rc quiz s3-locomotion-rl` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: s3-locomotion-rl-quiz

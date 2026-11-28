@@ -101,7 +101,7 @@ papers:
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (병진의 소거와 데이터 행렬) [D2]** — 포즈 그래프의 최대가능도 문제
   $$
@@ -466,7 +466,7 @@ $r\times dn$)를 짚으면 통과.
 ## 논문 읽기
 
 **필독 2편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 1·4·8 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 1·4·8 을 집중 공략한다.
 
 1. **Rosen, Carlone, Bandeira & Leonard, "SE-Sync: a certifiably correct algorithm for
    synchronization over the special Euclidean group" (2019, IJRR)** — 역할: `표준(standard)`.
@@ -679,7 +679,7 @@ SE-Sync 참조 구현(쓸 수 있으면)과 서로 다른 두 초기값이 베�
 ## 개념 점검
 
 `rc quiz s1-certifiable-slam` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: s1-certifiable-slam-quiz

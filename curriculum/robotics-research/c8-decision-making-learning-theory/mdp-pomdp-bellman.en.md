@@ -100,7 +100,7 @@ $b'(s_0)$ after one observation of $o$?
 ## Key results
 
 The bracket gives the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the Bellman optimality operator is a $\gamma$-contraction with a unique fixed point equal
   to $V^\*$) [D3]** — under A1 and A2, for all $u, v$,
@@ -444,7 +444,7 @@ the log-odds of $b$ against $1-b$ grow linearly by $\log(0.85/0.15)$ per observa
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read with Keshav's three passes, and attack questions 4, 5, 6 and 7 in
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with Keshav's three passes, and attack questions 4, 5, 6 and 7 in
 the third pass.
 
 1. **Blackwell, "Discounted dynamic programming" (1965, Ann. Math. Statist.)** — role:
@@ -575,7 +575,7 @@ the four criteria rather than by the numbers.
 ## Concept check
 
 Run `rc quiz c8-mdp-pomdp-bellman`. The quiz is for **concept checking only**; the real work is the
-problem set and the reproduction task above (`lesson-standard.md` §4).
+problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: which property of the transition kernel the contraction argument actually
 uses; the stopping threshold of value iteration in terms of $\epsilon$ and $\gamma$; whether the

@@ -52,7 +52,7 @@ R5 and Part C of the reproduction task show these three genuinely coming apart, 
 ## Key results
 
 The bracket is the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (Hermann-Krener: the rank condition for local weak observability) [D3]** — for an analytic
   system $\dot x = f(x,u)$, $z = h(x)$,
@@ -458,7 +458,7 @@ direction** each would move the result.
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read with 3-pass and attack questions 4, 5, 6 and 7 on the third pass.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with 3-pass and attack questions 4, 5, 6 and 7 on the third pass.
 
 1. **Huang, Mourikis & Roumeliotis, "Observability-based rules for designing consistent EKF SLAM
    estimators" (2010, IJRR)** — role: `seminal`.
@@ -736,7 +736,7 @@ noise floor for varying acceleration, $O(1)$ for constant — the starting point
 ## Concept check
 
 Run `rc quiz c5-observability-consistency`. The quiz is for **concept checking only**; the real
-work is the problem set and the reproduction task above (`lesson-standard.md` §4).
+work is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: why yaw is unobservable while roll and pitch are observable in monocular
 visual-inertial estimation; what happens to the unobservable subspace when a range measurement is

@@ -95,7 +95,7 @@ resources:
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (하향 정제 가능성과 그 실패) [D2]** — 기호 계획
   $\bar{a}_1,\dots,\bar{a}_T$ 가 $\alpha(s_0)$ 에서 기호적으로 타당하다는 것은
@@ -371,7 +371,7 @@ $g$ 에 무관해져 2차항이 최적을 결정한다 — 그것이 (4)다. $\b
 
 ## 논문 읽기
 
-**필독 2편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`lesson-standard.md` §5).
+**필독 2편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절).
 
 1. **Ahn et al., "Do as I can, not as I say: grounding language in robotic affordances" (2022,
    CoRL)** — 역할: `원전(seminal)`. <https://arxiv.org/abs/2204.01691> — §3–4.
@@ -475,7 +475,7 @@ $1-p$ 에서 $1-p^2$ 로 바뀌는지 측정(문제 P1).
 ## 개념 점검
 
 `rc quiz s4-language-and-planning` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: s4-language-and-planning-quiz

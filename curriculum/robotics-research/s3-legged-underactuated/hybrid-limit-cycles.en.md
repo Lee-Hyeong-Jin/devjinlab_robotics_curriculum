@@ -81,7 +81,7 @@ tolerances are given immediately.
 
 ## Key results
 
-The bracket is the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket is the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the Poincare map and orbital stability) [D3]** — if a periodic orbit of period $T^\star$
   crosses the guard **transversally** ($\nabla h^\top f \ne 0$), the Poincare map $P$ on the
@@ -417,7 +417,7 @@ separate erratum was published the same year earns extra credit.
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read in three passes and attack questions 4, 5, 6, 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes and attack questions 4, 5, 6, 7 in the third.
 
 1. **Grizzle, Abba & Plestan, "Asymptotically stable walking for biped robots: analysis via
    systems with impulse effects" (2001, IEEE T-AC)** — role: `seminal`.
@@ -515,7 +515,7 @@ stability); ⓑ the version with $\Xi$ replaced by $DR$, which must **fail** cri
 ## Concept check
 
 Take it with `rc quiz s3-hybrid-limit-cycles`. The quiz is **for concept checking only**; the real
-work is the problem set and the reproduction task above (`lesson-standard.md` §4). Four questions
+work is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`). Four questions
 ask: why the saltation matrix differs from $DR$; whether $DP$ always has an eigenvalue 1; which
 quantity must equal the impact loss on a limit cycle; and which two conservation laws give the
 impact map.

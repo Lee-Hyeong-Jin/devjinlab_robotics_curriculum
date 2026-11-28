@@ -267,7 +267,7 @@ $\lVert\delta\rVert$ 와 비용 감소 **둘 다**를 본다 ⓒ $J$ 를 매 반
 
 ## 논문 읽기
 
-**필독 2편.** 고정 질문 10개(레슨 표준 §5)로 논문당 1페이지 노트를 쓴다.
+**필독 2편.** 고정 질문 10개(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절)로 논문당 1페이지 노트를 쓴다.
 
 1. **Absil, Mahony & Sepulchre, *Optimization Algorithms on Matrix Manifolds* (2008)** —
    역할: `표준(standard)`. <https://doi.org/10.1515/9781400830244> (ch.4 와 ch.7)

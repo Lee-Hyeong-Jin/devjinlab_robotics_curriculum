@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- The research track opens with "How to read this track": the derivation-depth grades, the
+  format of proof sketches, the problem types and what is published as their solution, the ten
+  fixed questions for reading a paper, and the reproduction tiers. Lessons used to cite these
+  from a design document that is in the repository but not on the site; all 432 such citations
+  now point at this lesson (#50).
+- "Choosing a simulator" in M8: Gazebo, Webots, MuJoCo and Isaac Sim by what each is good at,
+  the hardware it needs, its licence and its official documentation (#50).
+- `rc validate` refuses course text that sends the reader to a document that is not published
+  with the course, such as `research_notes/` (#50).
 - A new foundation module, **M11 Actuators and embedded basics** (six lessons, Korean and
   English): kinds of motor and choosing a gear ratio, drivers and PWM, encoders and the motor
   speed loop under the M3 heading loop, batteries and a power budget, microcontroller versus

@@ -94,7 +94,7 @@ $d_i = 3$($SE(2)$)이므로 "간선 1개"는 $3\times3$ 블록 1개를 뜻한다
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (fill-path 정리) [D3]** — $u \ne v$ 에 대해
   $$
@@ -417,7 +417,7 @@ $\mathrm{nnz}(\mathsf{R})$ 변화를 함께 보고.
 ## 논문 읽기
 
 **필독 3편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Kaess, Johannsson, Roberts et al., "iSAM2: incremental smoothing and mapping using the
    Bayes tree" (2012, IJRR)** — 역할: `원전(seminal)`.
@@ -544,7 +544,7 @@ $\Lambda_{\mathrm{naive}}$ 와 비교한다.
 ## 개념 점검
 
 `rc quiz c5-sparsity-isam` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c5-sparsity-isam-quiz

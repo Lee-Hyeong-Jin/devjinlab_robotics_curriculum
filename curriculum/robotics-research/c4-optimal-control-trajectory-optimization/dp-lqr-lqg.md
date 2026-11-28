@@ -116,7 +116,7 @@ $\min \int_t^{t_f}\ell(x,u,s)\,ds + \varphi(x(t_f))$ s.t. $\dot x = f(x,u,s)$, $
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (Bellman 방정식과 검증 정리) [D3]** — 최적성의 원리에서 값 함수는
   $$V_k(x) = \min_{u}\big\{\tfrac12(x^\top Qx + u^\top Ru) + V_{k+1}(Ax + Bu)\big\}, \quad V_N(x) = \tfrac12 x^\top Q_f x \tag{2}$$
@@ -631,7 +631,7 @@ $\rho(A - BK_k)$ 를 각 $k$ 에서 보면 1 을 넘는 $k$ 가 있을 수 있�
 ## 논문 읽기
 
 **필독 3편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Bellman, "The theory of dynamic programming" (1954, Bull. Amer. Math. Soc.)** —
    역할: `원전(seminal)`. <https://doi.org/10.1090/S0002-9904-1954-09848-8>
@@ -765,7 +765,7 @@ $P \in \{0,3\}$ 은 손으로 푼 2차방정식 (17)이 베이스라인이다.
 ## 개념 점검
 
 `rc quiz c4-dp-lqr-lqg` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c4-dp-lqr-lqg-quiz

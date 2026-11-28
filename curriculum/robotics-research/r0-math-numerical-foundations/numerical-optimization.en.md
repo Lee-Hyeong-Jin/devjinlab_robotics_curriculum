@@ -201,7 +201,7 @@ $J^\top J$, so raising $\lambda$ leaves the solution in that direction arbitrary
 
 ## Paper reading
 
-**The textbook exception applies** (lesson standard §5). Read the following and write two one-page
+**The textbook exception applies** (the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read the following and write two one-page
 notes (fixed questions 1, 3, 4 and 8).
 
 1. **Nocedal & Wright, ch.3 and ch.6** — line search and quasi-Newton. Questions: (a) write what

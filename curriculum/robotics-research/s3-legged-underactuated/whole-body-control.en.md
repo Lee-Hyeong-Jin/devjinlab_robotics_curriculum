@@ -50,7 +50,7 @@ freedom and level 1 using two, level 2 has **only one left** — the conflict is
 
 ## Key results
 
-The bracket is the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket is the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (hierarchical null-space projection and priority preservation) [D3]** — for two levels,
   $$
@@ -262,7 +262,7 @@ by SVD (using the fact that it is a projector) and truncate at that rank.
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each with the ten fixed questions
-(`lesson-standard.md` §5).
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`).
 
 1. **Sentis & Khatib, "Synthesis of whole-body behaviors through hierarchical control of behavioral
    primitives" (2005, Int. J. Humanoid Robotics)** — role: `seminal`.
@@ -357,7 +357,7 @@ $\max\lvert\dot q\rvert \approx 6\cdot10^{14}$ (reproducing the numerical trap).
 ## Concept check
 
 Take it with `rc quiz s3-whole-body-control`. The quiz is **for concept checking only**; the real
-work is the problem set and the reproduction task above (`lesson-standard.md` §4). Four questions
+work is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`). Four questions
 ask: why a higher-priority task is unaffected by lower ones; whether small enough weights reproduce
 a strict priority; what breaks when a projection solution is clipped; and what a lexicographic QP
 guarantees when the higher level is infeasible.

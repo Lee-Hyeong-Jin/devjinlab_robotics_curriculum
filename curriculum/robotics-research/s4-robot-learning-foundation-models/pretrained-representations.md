@@ -99,7 +99,7 @@ resources:
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (선형 프로브는 투영 잔차를 측정한다) [D2]** — 목표가 $y = h(x) + \varepsilon$,
   $\mathbb{E}[\varepsilon]=0$, $\mathrm{Var}(\varepsilon)=\sigma^2$ 이면
@@ -371,7 +371,7 @@ $\Sigma_{xy} \approx A\mathrm{diag}(\rho_i\mathrm{Var})A^\top$ 이므로 일반�
 
 ## 논문 읽기
 
-**필독 2편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`lesson-standard.md` §5).
+**필독 2편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절).
 
 1. **Nair, Rajeswaran, Kumar, Finn & Gupta, "R3M: a universal visual representation for robot
    manipulation" (2022, CoRL)** — 역할: `원전(seminal)`. <https://arxiv.org/abs/2203.12601> — §3–4.
@@ -491,7 +491,7 @@ def g_inv(v, iters=60):
 ## 개념 점검
 
 `rc quiz s4-pretrained-representations` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는
-위 문제 세트와 재현 과제다(`lesson-standard.md` §4).
+위 문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: s4-pretrained-representations-quiz

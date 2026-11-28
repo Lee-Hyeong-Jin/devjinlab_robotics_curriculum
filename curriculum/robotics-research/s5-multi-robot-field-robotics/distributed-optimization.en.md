@@ -51,7 +51,7 @@ yet arrives at the same answer.
 ## Key results
 
 The bracket is the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the two-block ADMM iteration and its convergence) [D3]** — for
   $\min_{u,v} f_1(u) + f_2(v)$ subject to $u = v$, the augmented Lagrangian yields
@@ -454,7 +454,7 @@ eigenvalue).
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read with 3-pass and attack questions 4, 5, 6 and 7 on the third pass.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with 3-pass and attack questions 4, 5, 6 and 7 on the third pass.
 
 1. **Boyd, Parikh, Chu, Peleato & Eckstein, "Distributed optimization and statistical learning
    via the alternating direction method of multipliers" (2011, Foundations and Trends in ML)** —
@@ -649,7 +649,7 @@ $330 \times 30 = 9900$).
 ## Concept check
 
 Run `rc quiz s5-distributed-optimization`. The quiz is for **concept checking only**; the real work
-is the problem set and the reproduction task above (`lesson-standard.md` §4).
+is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: which assumption the ADMM convergence theorem does not use; the error
 iteration matrix of block Gauss-Seidel; why it always converges when $\Lambda \succ 0$; whether

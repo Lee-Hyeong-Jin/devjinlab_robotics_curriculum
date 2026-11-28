@@ -144,7 +144,7 @@ $$
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (Pontryagin 최소 원리) [D3]** — $(u^*, x^*, t_f^*)$ 가 $(\mathrm{P})$ 의 최적해면,
   $\lambda_0 \ge 0$ 과 절대연속 $\lambda : [0, t_f^*] \to \mathbb{R}^n$ 이 존재해
@@ -659,7 +659,7 @@ $g_x^\top d\eta$ 가 붙는다는 점을 짚으면 통과.
 ## 논문 읽기
 
 **필독 3편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Sussmann & Willems, "300 years of optimal control: from the brachystochrone to the
    maximum principle" (1997, IEEE Control Systems Magazine)** — 역할: `표준(standard)`.
@@ -785,7 +785,7 @@ $p^* \to (a + \sigma)x_0 = 2.4142135624$, 폐루프 극점은 $a - (a+\sigma) = 
 ## 개념 점검
 
 `rc quiz c4-pontryagin-indirect` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c4-pontryagin-indirect-quiz

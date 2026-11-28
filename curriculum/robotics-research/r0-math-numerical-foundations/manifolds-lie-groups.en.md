@@ -194,7 +194,7 @@ $p\exp(v)$ is safe in (b).
 
 ## Paper reading
 
-**The textbook exception applies** (lesson standard §5). Read one textbook chapter and one paper,
+**The textbook exception applies** (the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read one textbook chapter and one paper,
 and write a one-page note for each (fixed questions 1, 3, 4 and 8).
 
 1. **Barfoot, ch.7** — questions: (a) write how the author connects the view of a rotation as a

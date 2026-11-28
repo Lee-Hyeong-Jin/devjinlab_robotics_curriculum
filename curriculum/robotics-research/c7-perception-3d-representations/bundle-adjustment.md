@@ -105,7 +105,7 @@ $\frac{1}{2}$ 를 붙이는 것은 Ceres 와 같은 규약이고, 이 레슨이 
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (정규방정식의 희소 구조) [D2]** — $r_{ij}$ 가 $\theta_i$ 와 $X_j$ **하나씩만** 의존하므로
   $B$ 는 카메라마다 $d_c \times d_c$ 블록의 블록 대각, $C$ 는 점마다 $3\times3$ 블록의 블록
@@ -431,7 +431,7 @@ $n_c$ 가 $10^5$ 급이 되면 이 레슨의 (7)이 왜 더 이상 쓸 수 없�
 ## 논문 읽기
 
 **필독 2편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 서지와 권장 논문 전체 목록은 `rc papers c7-bundle-adjustment` 로 본다(코스 레지스트리
 `curriculum/robotics-research/papers.yaml`, ADR 0014).
 
@@ -534,7 +534,7 @@ $\text{pred} = f(1 + k_1r^2 + k_2r^4)p$ 를 틀리면 1번 조건에서 바로 �
 ## 개념 점검
 
 `rc quiz c7-bundle-adjustment` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c7-bundle-adjustment-quiz

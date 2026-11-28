@@ -57,7 +57,7 @@ prerequisites are those two lessons.
 ## Key results
 
 The bracket gives the derivation depth (D0 cited / D1 skeleton / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (eliminating the translations, and the data matrix) [D2]** — in the maximum-likelihood
   problem of a pose graph
@@ -483,7 +483,7 @@ is excellent. (d) passes by naming the number of variables ($dn\times dn$ agains
 ## Paper reading
 
 **Two must-read papers.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read in three passes, and in the third pass concentrate on questions 1,
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes, and in the third pass concentrate on questions 1,
 4 and 8.
 
 1. **Rosen, Carlone, Bandeira & Leonard, "SE-Sync: a certifiably correct algorithm for
@@ -735,7 +735,7 @@ the case without outliers. (d) The baselines of Part G are the SE-Sync reference
 ## Concept check
 
 Take it with `rc quiz s1-certifiable-slam`. This quiz is a **concept check only**; the real work
-is the problem set and the reproduction task above (`lesson-standard.md` §4).
+is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 ## How to study this stage
 

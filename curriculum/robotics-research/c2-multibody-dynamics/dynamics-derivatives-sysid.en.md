@@ -53,7 +53,7 @@ squares, and the whole of this lesson follows from it.
 ## Key results
 
 The bracketed grade is the derivation depth (D0 cited / D1 sketched / D2 full derivation /
-D3 proof — see `lesson-standard.md` §2 in the track design notes).
+D3 proof — see the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (linearity in the inertial parameters) [D2]** — the spatial inertia
   $$
@@ -444,7 +444,7 @@ against its own implementation, so it is biased" does not.
 (a convex constraint) and **derivatives** (computation). Reading all four and summarising in one
 paragraph "what has been solved and what remains, in the problem of obtaining a model, since 1986"
 is the reading goal of this lesson. Write a one-page note on each with the ten fixed questions
-below (`lesson-standard.md` §5). Read in three passes and concentrate on questions 4, 5 and 7 in
+below (the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes and concentrate on questions 4, 5 and 7 in
 the third pass.
 
 1. **Atkeson, An & Hollerbach, "Estimation of Inertial Parameters of Manipulator Loads and
@@ -684,7 +684,7 @@ every random draw uses `np.random.default_rng` with the seeds given in the text 
 ## Concept check
 
 Run `rc quiz c2-dynamics-derivatives-sysid`. The quiz is for **concept checking only**; the real
-work is the problem set and the reproduction task above (`lesson-standard.md` §4).
+work is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: which parameterisation makes the spatial inertia linear; which statements
 about the structurally unidentifiable subspace are true; the condition equivalent to realisability

@@ -89,7 +89,7 @@ S3 의 마지막 레슨이다. 앞 레슨들이 보행의 **정상 동작**(주�
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (접촉 일정의 폭발) [D2]** — 다리 $n$ 개, 스텝 $N$ 개의 접촉 일정은 $2^{nN}$ 가지다
   (사족·20스텝이면 $1.2\times10^{24}$). 모든 접촉·공중 구간이 적어도 $m$ 스텝이라는 제약을 두면
@@ -396,7 +396,7 @@ $[0.003, 0.445]$ 를 함께 적는다. ⓑ 는 500번 이상 모의해 편향의
 ## 논문 읽기
 
 **필독 2편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 5·6·7 을 집중 공략한다.
 
 1. **Bledt, Powell, Katz, Di Carlo, Wensing & Kim, "MIT Cheetah 3: design and control of a
    robust, dynamic quadruped robot" (2018, IROS)** — 역할: `표준(standard)`.
@@ -546,7 +546,7 @@ $\delta h$ 를 (7)과, 디딤을 직접 적분한 값으로 구해 비교한다.
 ## 개념 점검
 
 `rc quiz s3-dynamic-maneuvers` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: s3-dynamic-maneuvers-quiz

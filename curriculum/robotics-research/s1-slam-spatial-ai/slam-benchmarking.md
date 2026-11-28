@@ -103,7 +103,7 @@ S1 의 앞 레슨들은 SLAM 시스템을 **만드는** 법을 다뤘다. 이 �
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (상사변환 정렬의 닫힌 해) [D3]** — $\min_{s,R,t}\frac1n\sum_i\lVert y_i - (sRx_i + t)\rVert^2$
   의 해는 $C = UDV^\top$ (특이값 분해)에서
@@ -490,7 +490,7 @@ $10^{-6}$ m 이내로 일치함을 보인다.
 ## 논문 읽기
 
 **필독 3편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 5·6·7 을 집중 공략한다.
 
 1. **Sturm, Engelhard, Endres, Burgard & Cremers, "A benchmark for the evaluation of RGB-D SLAM
    systems" (2012, IROS)** — 역할: `원전(seminal)`.
@@ -681,7 +681,7 @@ $v_{\mathrm{rms}}\,\delta t$ 가 베이스라인이다. ⓑ Part G 는 공개 �
 ## 개념 점검
 
 `rc quiz s1-slam-benchmarking` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: s1-slam-benchmarking-quiz

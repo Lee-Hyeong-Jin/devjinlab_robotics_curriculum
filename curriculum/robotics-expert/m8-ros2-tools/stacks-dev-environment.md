@@ -204,17 +204,24 @@ rosbag2 로 기록해 브라우저의 Foxglove 로 여는 방법이 설정이 �
 실행하고 `colcon test-result --verbose` 가 결과를 모은다. 같은 명령을 `ros:jazzy` 컨테이너 안에서
 돌리면 그대로 CI 작업이 된다. 내 PC 에서만 되는 코드를 막는 가장 싼 방법이다.
 
-### 시뮬레이터 한 줄 소개
+### 시뮬레이터 고르기
 
-Gazebo(Jazzy 짝은 Harmonic, `ros_gz` 브리지), Webots, MuJoCo 가 대표적이다. 이 플랫폼은
-시뮬레이터 실습을 다루지 않는다. 고를 때는 아래 한 줄 기준에서 시작해 각 공식 문서를 확인한다.
+하드웨어에 돈을 쓰기 전에 시뮬레이터에서 먼저 해 보라는 것이 흔한 조언이다. 이 플랫폼은 시뮬레이터
+설치와 실습을 다루지 않는다. 아래 표에서 고르고, 설치는 각 공식 문서를 따른다.
 
-- **[Gazebo](https://gazebosim.org/docs):** ROS 2 와 가장 긴밀하게 묶인다. 센서(LiDAR, 카메라,
-  IMU)를 단 이동 로봇과 Nav2·`ros2_control` 연동을 시험할 때 기본 선택이다.
-- **[Webots](https://cyberbotics.com/doc/guide/index):** 설치 한 번으로 로봇 모델·예제 월드·편집기가
-  함께 온다. Windows·macOS·Linux 에서 모두 돌아가 처음 써 보기에 부담이 적다.
-- **[MuJoCo](https://mujoco.readthedocs.io/):** 접촉이 있는 동역학을 빠르게 계산한다. 제어와
-  강화학습 연구(M9)에서 많이 쓰며, ROS 없이 Python 만으로도 쓴다.
+| 시뮬레이터 | 잘하는 것 | 필요한 하드웨어 | 라이선스 | 공식 문서 |
+|---|---|---|---|---|
+| Gazebo (Jazzy 짝은 Harmonic) | ROS 2 와 가장 긴밀하다(`ros_gz` 브리지). 센서(LiDAR·카메라·IMU)를 단 이동 로봇, Nav2·`ros2_control` 연동 시험 | 일반 PC. GPU 는 카메라·LiDAR 렌더링에 도움 | Apache-2.0 | [gazebosim.org/docs](https://gazebosim.org/docs) |
+| Webots | 설치 한 번에 로봇 모델·예제 월드·편집기가 함께 온다. Windows·macOS·Linux 지원이라 처음 써 보기 쉽다 | 일반 PC | Apache-2.0 | [cyberbotics.com/doc](https://cyberbotics.com/doc/guide/index) |
+| MuJoCo | 접촉이 있는 동역학을 빠르고 정확하게 계산한다. 제어·강화학습 연구(M9)의 표준. ROS 없이 Python 만으로 쓴다 | 노트북 CPU 로 충분 | Apache-2.0 | [mujoco.readthedocs.io](https://mujoco.readthedocs.io/) |
+| Isaac Sim | 사실적인 렌더링과 GPU 병렬 시뮬레이션. 카메라 기반 인식과 대규모 강화학습(Isaac Lab)·합성 데이터 | **NVIDIA RTX GPU 필수**, 메모리·디스크 요구가 크다 | 소스 공개. 구성 요소별 약관은 저장소에서 확인 | [docs.isaacsim.omniverse.nvidia.com](https://docs.isaacsim.omniverse.nvidia.com/) |
+
+고르는 기준은 셋이다. ROS 2 스택(Nav2, `ros2_control`)을 시험하려면 Gazebo, 제어·강화학습 알고리즘을
+빠르게 돌리려면 MuJoCo, 처음이고 OS 를 가리고 싶지 않으면 Webots. Isaac Sim 은 RTX GPU 가 있고
+카메라 렌더링이나 수천 개 환경의 병렬 학습이 필요할 때 고른다.
+
+시뮬레이터에서 된 것이 실제 로봇에서 그대로 되지는 않는다. 마찰, 지연, 센서 잡음, 배터리가 다르다.
+그 차이를 줄이는 방법은 M9 의 sim-to-real 레슨에서, 차이를 직접 겪는 방법은 M11 의 선택 레슨에서 다룬다.
 
 ## 예제
 

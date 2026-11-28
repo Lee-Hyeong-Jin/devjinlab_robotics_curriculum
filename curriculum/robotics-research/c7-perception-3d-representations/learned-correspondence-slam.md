@@ -102,7 +102,7 @@ resources:
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (미분가능 BA 층의 기울기) [D2]** — 학습된 가중치 $w$ 에 대한 해의 기울기는 정류 조건
   $g(x,w) = J(x)^\top W r(x) = 0$ 의 암시적 미분으로
@@ -410,7 +410,7 @@ Hessian 으로 계산하고 ⓑ 단안 깊이·자세 설정에서 척도 영방
 ## 논문 읽기
 
 **필독 2편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 서지와 권장 논문 전체 목록은 `rc papers c7-learned-correspondence-slam` 로 본다.
 
 1. **Teed & Deng, "DROID-SLAM: deep visual SLAM for monocular, stereo, and RGB-D cameras"
@@ -440,7 +440,7 @@ Hessian 으로 계산하고 ⓑ 단안 깊이·자세 설정에서 척도 영방
 
 > **블루프린트와의 차이(명시)**: 설계안의 재현 과제는 "사전학습 DROID-SLAM 류를 TUM RGB-D
 > 1개 시퀀스에 실행해 보고된 ATE 와 20% 이내 일치"다. 그 작업은 CUDA GPU 가 사실상 필요하고,
-> 레슨 표준 §6 은 GPU 가 필요할 수 있는 과제를 **항상 선택 과제(R4)** 로 두라고 규정한다.
+> `f0-how-to-read-this-track` 레슨의 "재현 과제" 절 은 GPU 가 필요할 수 있는 과제를 **항상 선택 과제(R4)** 로 두라고 규정한다.
 > 그래서 이 레슨은 **필수 조건을 CPU 로 판정 가능한 네 가지**로 두고, 원래의 ATE 재현을
 > 아래 **선택 확장(R4)** 으로 분리했다. 둘 다 같은 핵심 결과(R1·R4)를 겨냥한다.
 
@@ -525,7 +525,7 @@ Gauss–Newton Hessian 으로 대체해도 된다". 그리고 조건 4 가 평�
 ## 개념 점검
 
 `rc quiz c7-learned-correspondence-slam` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는
-위 문제 세트와 재현 과제다(`lesson-standard.md` §4).
+위 문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c7-learned-correspondence-slam-quiz

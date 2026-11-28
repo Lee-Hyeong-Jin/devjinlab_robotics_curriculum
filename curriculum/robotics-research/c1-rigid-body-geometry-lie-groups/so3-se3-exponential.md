@@ -118,7 +118,7 @@ $$\hat{\omega}^2 = \omega\omega^\top - I, \qquad \hat{\omega}^3 = -\hat{\omega}.
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (Rodrigues 공식) [D3]** — $\lVert \omega \rVert = 1$ 이면
   $$\exp(\hat{\omega}\theta) = I + \sin\theta\,\hat{\omega} + (1 - \cos\theta)\,\hat{\omega}^2. \tag{2}$$
@@ -296,7 +296,7 @@ $J_r$ 을 어디에 쓰는지, 그리고 회전 오차를 유클리드 공간에
 ## 논문 읽기
 
 **필독 2편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Solà, Deray & Atchuthan, "A micro Lie theory for state estimation in robotics" (2018, arXiv)**
    — 역할: `표준(standard)`. <https://arxiv.org/abs/1812.01537>
@@ -361,7 +361,7 @@ P4 에서 쓴 `exp_so3`/`log_so3`/`exp_se3` 가 아래 **네 조건을 모두** 
 ## 개념 점검
 
 `rc quiz c1-so3-se3-exponential` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c1-so3-se3-exponential-quiz

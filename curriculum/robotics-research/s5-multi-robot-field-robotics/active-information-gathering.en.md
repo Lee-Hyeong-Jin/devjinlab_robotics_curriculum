@@ -47,7 +47,7 @@ does**.
 ## Key results
 
 The bracket gives the derivation depth (D0 cited / D1 skeleton / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (linear-Gaussian mutual information is a log-determinant) [D2]** —
   $$
@@ -476,7 +476,7 @@ linear-Gaussian assumption in (c) is excellent.
 ## Paper reading
 
 **Two must-read papers.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read in three passes, and in the third pass concentrate on questions 4,
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes, and in the third pass concentrate on questions 4,
 5, 7 and 8.
 
 1. **Krause, Singh & Guestrin, "Near-optimal sensor placements in Gaussian processes:
@@ -651,7 +651,7 @@ median) of the ratio over the 20 instances of Part A in which greedy differs fro
 ## Concept check
 
 Take it with `rc quiz s5-active-information-gathering`. This quiz is a **concept check only**; the
-real work is the problem set and the reproduction task above (`lesson-standard.md` §4).
+real work is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 ## How to study this stage
 

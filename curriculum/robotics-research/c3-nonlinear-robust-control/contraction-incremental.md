@@ -113,7 +113,7 @@ $$
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (수축 조건과 지수 수렴) [D3]** — 전진 불변이고 측지적으로 볼록한 영역
   $\mathcal{X}$ 에서 $\underline{m}I \preceq M \preceq \overline{m}I$ 이고
@@ -398,7 +398,7 @@ $x_2$ 의 범위를 유계로 제한해야 LMI 가 된다.
 ## 논문 읽기
 
 **필독 3편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Lohmiller & Slotine, "On contraction analysis for non-linear systems" (1998, Automatica)**
    — 역할: `원전(seminal)`. <https://doi.org/10.1016/S0005-1098(98)00019-3>
@@ -428,7 +428,7 @@ $x_2$ 의 범위를 유계로 제한해야 LMI 가 된다.
 **티어 R1 (수치 검증).** 계산 예산: 노트북 CPU 1분 이내(궤적 쌍을 배열로 묶어 한 번에 적분하면
 충분하다), numpy + scipy + SDP 솔버 하나. 대상은 (1)이고 입력 데이터는 없다.
 
-> 설계 노트: blueprint 의 원래 문구는 "수렴률 상한이 실제 수렴률을 상회하는지" 였다. 인증된
+> 참고: 이 트랙의 설계(blueprint)에 적힌 원래 문구는 "수렴률 상한이 실제 수렴률을 상회하는지" 였다. 인증된
 > $\lambda$ 는 **거리의 상한**을 주고 실제 수렴률의 **하한**이므로, 아래는 그 방향으로 정확히
 > 다시 쓴 것이다(측정값은 모두 실행해 확인했다).
 
@@ -489,7 +489,7 @@ $\sqrt{\overline m/\underline m} = 2.2572$.
 ## 개념 점검
 
 `rc quiz c3-contraction-incremental` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c3-contraction-incremental-quiz

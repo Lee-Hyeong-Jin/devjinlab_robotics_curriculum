@@ -47,7 +47,7 @@ scalars, the graph discussion is at **block** level and the measured counts (nnz
 ## Key results
 
 The bracket is the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the fill-path theorem) [D3]** — for $u \ne v$,
   $$
@@ -409,7 +409,7 @@ not) state that assumption.
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read with 3-pass and attack questions 4, 5, 6 and 7 on the third pass.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with 3-pass and attack questions 4, 5, 6 and 7 on the third pass.
 
 1. **Kaess, Johannsson, Roberts et al., "iSAM2: incremental smoothing and mapping using the
    Bayes tree" (2012, IJRR)** — role: `seminal`.
@@ -553,7 +553,7 @@ $\mathrm{nnz}(\mathsf{R})/\mathrm{nnz}(\Lambda)$ for the four orders of Part A.
 ## Concept check
 
 Run `rc quiz c5-sparsity-isam`. The quiz is for **concept checking only**; the real work is the
-problem set and the reproduction task above (`lesson-standard.md` §4).
+problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: the condition under which an edge gets filled (and that it does not depend on
 the numerical values); whether an odometry-only chain has zero fill-in in the natural order; which

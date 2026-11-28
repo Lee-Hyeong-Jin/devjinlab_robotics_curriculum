@@ -57,7 +57,7 @@ hip torque only).
 
 ## Key results
 
-The bracket is the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket is the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (centroidal dynamics) [D3]** — for any multibody robot,
   $$
@@ -353,7 +353,7 @@ $\lvert\xi_N\rvert = 39.3$ m, contrasted with "infeasible" once the terminal con
 ## Paper reading
 
 **Two must-reads plus two recommended.** Write a one-page note on each with the ten fixed questions
-(`lesson-standard.md` §5).
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`).
 
 1. **Kajita et al., "Biped walking pattern generation by using preview control of zero-moment
    point" (2003, ICRA)** — role: `seminal`. <https://doi.org/10.1109/ROBOT.2003.1241826>
@@ -448,7 +448,7 @@ instead of shrinking**; ⓒ the numbers in the text.
 ## Concept check
 
 Take it with `rc quiz s3-centroidal-mpc`. The quiz is **for concept checking only**; the real work
-is the problem set and the reproduction task above (`lesson-standard.md` §4). Four questions ask:
+is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`). Four questions ask:
 why joint torques do not appear in the centroidal dynamics; the definition of the DCM; whether
 putting the CoP at the capture point makes the DCM converge; and the typical symptom of a linear MPC
 without a terminal DCM constraint.

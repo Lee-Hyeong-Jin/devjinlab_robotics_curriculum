@@ -94,7 +94,7 @@ papers:
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (Clopper–Pearson 구간의 커버리지 보장) [D3]** — 이항 꼬리 확률을 뒤집어 만든 구간
   $$
@@ -462,7 +462,7 @@ $\sqrt{\mathrm{SE}_1^2 + \mathrm{SE}_2^2}$ 로 더 작기 때문이다. 역(겹�
 ## 논문 읽기
 
 **필독 2편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 5·6·7 을 집중 공략한다 — 이
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 5·6·7 을 집중 공략한다 — 이
 레슨의 주제가 바로 그 세 질문이다.
 
 1. **Li, Hsu, Gu et al., "Evaluating real-world robot manipulation policies in simulation"
@@ -625,7 +625,7 @@ B 보다 낫다"고 서술한 비교 가운데 (5)의 검정으로 유의한 것
 ## 개념 점검
 
 `rc quiz s4-evaluation-science` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: s4-evaluation-science-quiz

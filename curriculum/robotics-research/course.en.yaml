@@ -7,7 +7,8 @@ summary: >-
   venues (RSS, ICRA, IROS, CoRL, IJRR, T-RO, RA-L): every lesson derives its key results, reads the
   primary papers and reproduces them numerically. The path runs from the Stage -1 foundations
   through the common core and a specialization to research practice; all 17 designed modules
-  (105 lessons) are in place. The robotics prerequisite is the robotics-expert course.
+  (106 lessons) are in place. The robotics prerequisite is the robotics-expert course.
   Prerequisites are advisory rather than locked, and the self-diagnosis in each module's first
-  lesson lets them be skipped. The design and the lesson standard live in the research-track design
-  notes in this repository.
+  lesson lets them be skipped. The notation the lessons use (derivation depth, problem types, the
+  paper-reading questions, reproduction tiers) is set out in the first lesson,
+  f0-how-to-read-this-track.

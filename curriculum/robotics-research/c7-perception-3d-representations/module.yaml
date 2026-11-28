@@ -6,7 +6,7 @@ summary: >-
   언제 깨지는지를 다룬다. 근거가 되는 대학원 과목은 CMU 16-822, UZH/ETH 151-0632 Vision
   Algorithms, MIT 16.485 L11-15, Stanford CS231A, TUM IN2228 이고 교재는 Hartley-Zisserman
   Multiple View Geometry 와 Szeliski Computer Vision 2e 다.
-  설계상 레슨은 6개다(research_notes/연구 트랙 설계/blueprint.md 의 C7 절).
+  레슨은 6개다.
 level: 연구
 lessons:
   - two-view-geometry

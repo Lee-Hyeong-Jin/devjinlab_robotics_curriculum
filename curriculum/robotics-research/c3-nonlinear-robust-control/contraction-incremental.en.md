@@ -73,7 +73,7 @@ essential step.
 
 ## Key results
 
-The bracket is the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket is the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (contraction condition and exponential convergence) [D3]** — on a forward-invariant,
   geodesically convex region $\mathcal{X}$ where $\underline{m}I \preceq M \preceq \overline{m}I$
@@ -391,7 +391,7 @@ earns extra credit.
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read in three passes and attack questions 4, 5, 6, 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes and attack questions 4, 5, 6, 7 in the third.
 
 1. **Lohmiller & Slotine, "On contraction analysis for non-linear systems" (1998, Automatica)**
    — role: `seminal`. <https://doi.org/10.1016/S0005-1098(98)00019-3>
@@ -423,7 +423,7 @@ feasibility (10) what you would change to go beyond it in a year.
 into arrays and integrating them at once is enough), numpy plus scipy plus one SDP solver. The
 system is (1) and there is no input data.
 
-> Design note: the original wording in the blueprint was "whether the upper bound on the
+> Note: the original wording in this track's design (the blueprint) was "whether the upper bound on the
 > convergence rate given by the contraction metric exceeds the actual rate". A certified $\lambda$
 > bounds the **distance** from above and the actual rate from **below**, so what follows is that
 > statement rewritten in the correct direction (every number below was produced by running it).
@@ -489,7 +489,7 @@ $\lambda^\star \approx 0.4913$, the $M$ of (6), and $\sqrt{\overline m/\underlin
 ## Concept check
 
 Take it with `rc quiz c3-contraction-incremental`. The quiz is **for concept checking only**; the
-real work is the problem set and the reproduction task above (`lesson-standard.md` §4). Four
+real work is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`). Four
 questions ask: what it means that the symmetric part of the Jacobian is not negative definite even
 though the eigenvalues have real part $-1$; the asymptotic tube radius in terms of $\lambda$ and the
 disturbance bound; whether a contracting time-invariant system can have several equilibria; and why

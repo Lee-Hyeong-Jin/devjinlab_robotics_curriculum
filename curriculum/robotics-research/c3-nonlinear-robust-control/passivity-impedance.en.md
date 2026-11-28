@@ -50,7 +50,7 @@ implemented on a 1-DOF haptic device (R5).
 
 ## Key results
 
-The bracket is the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket is the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (passivity theorem and stability of the interconnection) [D3]** — interconnecting two
   passive systems by negative feedback ($u_1 = -y_2$, $u_2 = y_1$) gives a passive system whose
@@ -374,7 +374,7 @@ among the missing items earns extra credit.
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read in three passes and attack questions 4, 5, 6, 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes and attack questions 4, 5, 6, 7 in the third.
 
 1. **Hogan, "Impedance control: an approach to manipulation" (1985, ASME JDSMC)**
    — role: `seminal`. <https://doi.org/10.1115/1.3140713>
@@ -474,7 +474,7 @@ numbers of criteria 1, 2 and 3.
 ## Concept check
 
 Take it with `rc quiz c3-passivity-impedance`. The quiz is **for concept checking only**; the real
-work is the problem set and the reproduction task above (`lesson-standard.md` §4). Four questions
+work is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`). Four questions
 ask: which structure is decisive in proving a manipulator passive; the size of the equivalent
 negative damping created by a ZOH virtual spring; whether stability against one environment implies
 stability against all passive ones; and what $\dot V_d$ is under energy shaping with damping

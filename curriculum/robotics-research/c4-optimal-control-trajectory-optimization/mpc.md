@@ -121,7 +121,7 @@ $$
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (재귀적 실현가능성) [D3]** — $\mathbb{X}_f$ 가 $\kappa_f$ 아래 **제어 불변**이고
   ($x \in \mathbb{X}_f \Rightarrow \kappa_f(x) \in \mathbb{U}$ 이고
@@ -528,7 +528,7 @@ $\gamma$ 와 비교하고 ⓒ Diehl 등의 RTI 가 R1·R2 의 보장을 **잃는
 ## 논문 읽기
 
 **필독 3편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Mayne, Rawlings, Rao & Scokaert, "Constrained model predictive control: stability and
    optimality" (2000, Automatica)** — 역할: `원전(seminal)`. 읽을 곳: §3(안정성), §4(종단 조건).
@@ -653,7 +653,7 @@ $\tfrac12\sum(x_k^\top Qx_k + Ru_k^2) + V_f(x_N)$.
 ## 개념 점검
 
 `rc quiz c4-mpc` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c4-mpc-quiz

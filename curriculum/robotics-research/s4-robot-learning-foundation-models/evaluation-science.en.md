@@ -53,7 +53,7 @@ real-world trials per policy. The recommended prerequisites are that lesson and
 ## Key results
 
 The bracket gives the derivation depth (D0 cited / D1 skeleton / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the coverage guarantee of the Clopper–Pearson interval) [D3]** — the interval obtained by
   inverting the binomial tail probabilities,
@@ -476,7 +476,7 @@ interpretation is excellent. (c) and (d) pass by quoting the paper.
 ## Paper reading
 
 **Two must-read papers.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read in three passes, and in the third pass concentrate on questions 5,
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes, and in the third pass concentrate on questions 5,
 6 and 7 — those three questions are the very subject of this lesson.
 
 1. **Li, Hsu, Gu et al., "Evaluating real-world robot manipulation policies in simulation"
@@ -664,7 +664,7 @@ directly from the paper** — do not use a summary from a secondary source.
 ## Concept check
 
 Take it with `rc quiz s4-evaluation-science`. This quiz is a **concept check only**; the real work
-is the problem set and the reproduction task above (`lesson-standard.md` §4).
+is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 ## How to study this stage
 

@@ -55,7 +55,7 @@ the exact scope of the guarantees those devices give. We use the notion of distr
 ## Key results
 
 The bracket gives the derivation depth (D0 cited / D1 skeleton / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (marginal coverage of split conformal prediction) [D3]** — if the calibration scores
   $s_1,\dots,s_n$ and the test score $s_{n+1}$ are exchangeable then, **whatever the predictor and
@@ -459,7 +459,7 @@ the classification table and, if some challenge fits no row, says so explicitly.
 ## Paper reading
 
 **Two must-read papers.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read in three passes, and in the third pass concentrate on questions 1,
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes, and in the third pass concentrate on questions 1,
 4 and 8 — "a guarantee under which assumptions" is all there is to this lesson.
 
 1. **Angelopoulos & Bates, "A gentle introduction to conformal prediction and distribution-free
@@ -627,7 +627,7 @@ acting and always abstaining.
 ## Concept check
 
 Take it with `rc quiz s4-safety-ood`. This quiz is a **concept check only**; the real work is the
-problem set and the reproduction task above (`lesson-standard.md` §4).
+problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 ## How to study this stage
 

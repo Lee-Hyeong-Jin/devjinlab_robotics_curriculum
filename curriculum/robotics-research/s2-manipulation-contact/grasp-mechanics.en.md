@@ -108,7 +108,7 @@ If all five went through, go straight to `## Key results`. If 2 or 4 blocked you
 ## Key results
 
 The bracket is the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (convex-geometry test for force closure) [D3]** — under (A1) and (A2), with the friction cone
   discretized into $k$ edges to give the wrench generators $W$, the following are **equivalent**:
@@ -426,7 +426,7 @@ normalizations and the torque scaling. For (b), pass if you identify that the re
 ## Paper reading
 
 **Two must-reads.** Write a one-page note on each using the ten fixed questions
-(`lesson-standard.md` §5).
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`).
 
 1. **Ferrari & Canny, "Planning optimal grasps" (1992, ICRA)** — role: `seminal`.
    <https://doi.org/10.1109/ROBOT.1992.219918> (§2–3)
@@ -542,7 +542,7 @@ broken version of itself: the rank check removed — criterion 2.
 ## Concept check
 
 Run `rc quiz s2-grasp-mechanics`. The quiz is for **concept checking only**; the real work is the
-problem set and the reproduction task above (`lesson-standard.md` §4).
+problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The six items cover: why the LP's $\epsilon^\ast > 0$ is not enough without the rank condition; why a
 frictionless disc can never be grasped; the friction coefficient maximizing the Ferrari–Canny metric;

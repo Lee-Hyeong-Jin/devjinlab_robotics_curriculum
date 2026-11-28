@@ -69,7 +69,7 @@ the first thing to check** when comparing an implementation against a paper.
 ## Key results
 
 The bracket is the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the preintegration identity) [D3]** — defining the relative motion quantities as
   $$
@@ -510,7 +510,7 @@ the keyframe selection rule, and the initialization procedure.
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read with 3-pass and attack questions 4, 5, 6 and 7 on the third pass.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with 3-pass and attack questions 4, 5, 6 and 7 on the third pass.
 
 1. **Forster, Carlone, Dellaert & Scaramuzza, "On-manifold preintegration for real-time
    visual-inertial odometry" (2017, IEEE T-RO)** — role: `seminal`.
@@ -730,7 +730,7 @@ and the ratio of the $\delta\phi$ analytic value of Part D to $\sigma_g\Delta t\
 ## Concept check
 
 Run `rc quiz c5-imu-preintegration`. The quiz is for **concept checking only**; the real work is
-the problem set and the reproduction task above (`lesson-standard.md` §4).
+the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: why $-v_i\Delta t_{ij} - \tfrac12 g\Delta t_{ij}^2$ is subtracted in the
 definition of $\Delta p_{ij}$; whether the preintegration identity is a first-order approximation

@@ -56,7 +56,7 @@ the model exploitation of `c8-model-based-world-models`.
 
 ## Key results
 
-The bracket gives the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket gives the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (pessimism gives a lower bound) [D3]** — if $\Gamma$ is a valid uncertainty bound, the fixed
   point of $\tilde{T}$ satisfies
@@ -379,7 +379,7 @@ exponential term**. The only mitigation is the discount $\gamma^t$ suppressing t
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions
-(`lesson-standard.md` §5). Read with three passes and attack questions 4, 5, 6 and 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with three passes and attack questions 4, 5, 6 and 7 in the third.
 
 1. **Jin, Yang & Wang, "Is pessimism provably efficient for offline RL?" (2021, ICML)** — role:
    `seminal`. <https://arxiv.org/abs/2012.15085> — §3–4.
@@ -511,7 +511,7 @@ small $\beta$ it gets **stuck** near $J(\pi_b)$ — (6) of R4 made visible in co
 ## Concept check
 
 Run `rc quiz c8-offline-rl`. The quiz is for **concept checking only**; the real work is the
-problem set and the reproduction task above (`lesson-standard.md` §4).
+problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: why the fixed point of the pessimistic operator is a lower bound; under which
 distribution the uncertainty is averaged in the suboptimality bound; whether conservative offline

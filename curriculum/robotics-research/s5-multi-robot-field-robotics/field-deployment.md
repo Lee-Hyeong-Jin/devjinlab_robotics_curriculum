@@ -92,7 +92,7 @@ S5 의 앞 다섯 레슨은 다중 로봇 시스템의 **알고리즘**을 다�
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (MTBF 의 신뢰구간) [D3]** — 고장이 일정률 $\lambda$ 의 포아송 과정이면, 누적 가동 시간
   $T$ 에서 $r$ 건을 관측했을 때
@@ -470,7 +470,7 @@ $\hat\beta < 1$ 이 나오는 사례를 구성하라 — 임무의 절반은 쉬
 ## 논문 읽기
 
 **필독 2편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 5·6·8 을 집중 공략한다. 이
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 5·6·8 을 집중 공략한다. 이
 두 편은 길고 서술적이므로 **실패를 서술하는 부분**을 먼저 찾아 읽는다.
 
 1. **Ebadi, Bernreiter, Biggie et al., "Present and future of SLAM in extreme underground
@@ -622,7 +622,7 @@ $R(8\,\mathrm{h})$ 를 참값과 비교한다. ⓑ (4)로 본문 표의 무고�
 ## 개념 점검
 
 `rc quiz s5-field-deployment` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: s5-field-deployment-quiz

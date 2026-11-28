@@ -96,7 +96,7 @@ resources:
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (모델 오차 → 가치 오차: 정확한 등식과 시뮬레이션 보조정리) [D3]** — 임의의 정책 $\pi$ 에
   대해 **정확한 등식**
@@ -398,7 +398,7 @@ $q(z_t\mid o_{1:T},a_{1:T})$ 로 바꾸면 하한이 어떻게 변하는지, 그
 
 ## 논문 읽기
 
-**필독 3편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`lesson-standard.md` §5).
+**필독 3편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절).
 
 1. **Kearns & Singh, "Near-optimal reinforcement learning in polynomial time" (2002, Machine
    Learning)** — 역할: `원전(seminal)`. <https://doi.org/10.1023/A:1017984413808>
@@ -523,7 +523,7 @@ $k$ 가 커질수록 단조 개선되어야 한다(모델 오차 항이 사라�
 ## 개념 점검
 
 `rc quiz c8-model-based-world-models` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는
-위 문제 세트와 재현 과제다(`lesson-standard.md` §4).
+위 문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c8-model-based-world-models-quiz

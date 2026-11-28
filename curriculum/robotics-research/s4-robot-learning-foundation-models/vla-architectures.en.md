@@ -55,7 +55,7 @@ distribution and the budget**.
 
 ## Key results
 
-The bracket gives the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket gives the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the error of uniform quantization) [D2]** — if the density is nearly flat within a bin (the
   high-resolution assumption),
@@ -380,7 +380,7 @@ $N^\star\to\infty$: a lossless representation means the smaller one always wins.
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions
-(`lesson-standard.md` §5).
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`).
 
 1. **Brohan et al., "RT-2: vision-language-action models transfer web knowledge to robotic control"
    (2023, CoRL)** — role: `seminal`. <https://arxiv.org/abs/2307.15818> — §3–4.
@@ -499,7 +499,7 @@ VLA.
 ## Concept check
 
 Run `rc quiz s4-vla-architectures`. The quiz is for **concept checking only**; the real work is the
-problem set and the reproduction task above (`lesson-standard.md` §4).
+problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: what the MSE-minimizing bin density is proportional to; whether more action
 tokens always reduce the task cost on a multimodal distribution; why the regression head's cost is

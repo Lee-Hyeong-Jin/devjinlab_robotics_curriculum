@@ -106,7 +106,7 @@ $$
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (on-policy 수렴과 투영 Bellman 오차 한계) [D2]** — $d$ 가 $P^\pi$ 의 정상분포이면
   $\lVert P^\pi v \rVert_D \le \lVert v\rVert_D$ 이고, 따라서 $\Pi T^\pi$ 는 $\lVert\cdot\rVert_D$
@@ -431,7 +431,7 @@ $\Delta/\sigma \to 0$ 에서 편향 $\to -\Delta/2$, $\Delta/\sigma \to \infty$ 
 
 ## 논문 읽기
 
-**필독 4편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`lesson-standard.md` §5).
+**필독 4편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절).
 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Baird, "Residual algorithms: reinforcement learning with function approximation" (1995, ICML)**
@@ -543,7 +543,7 @@ $\lVert\theta_{2\times10^6}\rVert = 1.0\times10^{-11}$. **이 값들은 결정�
 ## 개념 점검
 
 `rc quiz c8-value-based-rl` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위 문제
-세트와 재현 과제다(`lesson-standard.md` §4).
+세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c8-value-based-rl-quiz
