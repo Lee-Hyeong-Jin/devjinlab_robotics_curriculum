@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- GitHub Discussions is on for the repository: README, the issue chooser and the footer link
+  of a compose deployment (`RC_COMMUNITY_URL` default) lead there (#54).
+
 ### Added
 - A place to ask: a "Question or study group" issue form, and the "Questions and study groups"
   link in the footer of every page now opens it by default (`RC_COMMUNITY_URL` still points it
