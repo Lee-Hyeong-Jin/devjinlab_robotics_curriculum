@@ -12,6 +12,7 @@ import { defaultCourseId } from '@/lib/api/config'
 import { getCourse, getCourses } from '@/lib/api/queries'
 import { courseTotals, roundHours } from '@/lib/landing'
 import { localizedPageSeo } from '@/lib/seo-server'
+import { guideFaq } from '@/lib/faq'
 import { articleSchema, breadcrumbs, faqSchema } from '@/lib/structured-data'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -50,20 +51,11 @@ export default async function GuidePage() {
   const advanced = courses.find((course) => course.id !== main?.id)
   const mainTotals = courseTotals(main)
 
-  const faq: Array<[string, string]> = [
-    [tLanding('faq1Q'), tLanding('faq1A')],
-    [tLanding('faq3Q'), tLanding('faq3A')],
-    [
-      tLanding('faq4Q'),
-      tLanding('faq4A', {
-        expertLessons: mainTotals.lessons,
-        expertHours: roundHours(mainTotals.minutes),
-        researchLessons: courseTotals(advanced).lessons,
-      }),
-    ],
-    [tLanding('faq5Q'), tLanding('faq5A')],
-    [tLanding('faq2Q'), tLanding('faq2A')],
-  ]
+  const faq = guideFaq(tLanding, {
+    expertLessons: mainTotals.lessons,
+    expertHours: roundHours(mainTotals.minutes),
+    researchLessons: courseTotals(advanced).lessons,
+  })
   const steps: Array<[string, string]> = [
     [t('step1Title'), t('step1Body')],
     [t('step2Title'), t('step2Body')],

@@ -4,6 +4,7 @@ import { getLocale, getTranslations } from 'next-intl/server'
 import { getCourse, getCourses } from '@/lib/api/queries'
 import { defaultCourseId } from '@/lib/api/config'
 import { formatMinutes } from '@/lib/format'
+import { landingFaq } from '@/lib/faq'
 import { courseTotals, roundHours } from '@/lib/landing'
 import { metaDescription, plainText } from '@/lib/seo'
 import {
@@ -53,21 +54,11 @@ export async function Landing() {
   const main = courses.find((course) => course.id === defaultCourseId()) ?? courses[0]
   const advanced = courses.find((course) => course.id !== main?.id)
   const mainTotals = courseTotals(main)
-  const faq: Array<[string, string]> = [
-    [t('faq1Q'), t('faq1A')],
-    [t('faq2Q'), t('faq2A')],
-    [t('faq3Q'), t('faq3A')],
-    [
-      t('faq4Q'),
-      t('faq4A', {
-        expertLessons: mainTotals.lessons,
-        expertHours: roundHours(mainTotals.minutes),
-        researchLessons: courseTotals(advanced).lessons,
-      }),
-    ],
-    [t('faq5Q'), t('faq5A')],
-    [t('faq6Q'), t('faq6A')],
-  ]
+  const faq = landingFaq(t, {
+    expertLessons: mainTotals.lessons,
+    expertHours: roundHours(mainTotals.minutes),
+    researchLessons: courseTotals(advanced).lessons,
+  })
   const how: Array<[string, string]> = [
     [t('how1Title'), t('how1Body')],
     [t('how2Title'), t('how2Body')],

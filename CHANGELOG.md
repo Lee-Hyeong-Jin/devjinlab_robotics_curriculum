@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- The landing page and the study guide answer four questions readers asked when the site was
+  first shared: who the course is for, what you can do when you finish, whether there are
+  lecture videos, and who writes the lessons — including that AI is used in writing them and how
+  to report a mistake. The answers are also in the pages' `FAQPage` structured data.
 - README opens with the live site (<https://learnrobotics.devjinlab.com>), the two courses and
   three entry points — learn, self-host, contribute — instead of the Phase 1 description.
 - `CONTRIBUTING.md` explains how to translate a lesson, and the issue chooser links the site and
