@@ -178,9 +178,10 @@ services:
       # Where "Report a problem" and "Suggest an edit" on a lesson lead. A fork sets its own
       # repository; `off` removes the links.
       RC_REPO_URL: ${RC_REPO_URL:-https://github.com/Lee-Hyeong-Jin/devjinlab_robotics_curriculum}
-      # Where readers ask questions and find study partners (for this project: the
-      # repository's Discussions, once switched on). Unset: the footer offers no such link.
-      RC_COMMUNITY_URL: ${RC_COMMUNITY_URL:-}
+      # Where the footer's "Questions and study groups" link leads: this project's GitHub
+      # Discussions. A fork sets its own forum; the web app itself falls back to the
+      # question form of RC_REPO_URL when the variable is empty.
+      RC_COMMUNITY_URL: ${RC_COMMUNITY_URL:-https://github.com/Lee-Hyeong-Jin/devjinlab_robotics_curriculum/discussions}
       RC_API_TIMEOUT_MS: ${RC_API_TIMEOUT_MS:-10000}
       # Same two values as the api: RC_PUBLIC_CONTENT gates indexing here, and RC_PUBLIC_URL
       # is the base of every canonical link, hreflang alternate and sitemap entry. Passing
