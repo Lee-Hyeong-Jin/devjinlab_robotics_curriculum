@@ -5,6 +5,8 @@ summary: >-
   모방학습(행동 복제·DAgger·ACT·Diffusion Policy), 시뮬레이션 기반 RL 과 sim-to-real(도메인 랜덤화),
   VLA·로봇 파운데이션 모델(RT-2·OpenVLA·π0·SmolVLA), LeRobot 데이터셋·벤치마크와 안전한 평가까지 다룬다.
   시뮬레이터 실습 대신 numpy 예제와 문서 읽기로 구성하며, M10 캡스톤의 학습 기반 트랙으로 이어진다.
+outcome: >-
+  강화학습과 모방학습의 기본 알고리즘을 구현하고, 로봇 러닝 논문이 무엇을 주장하고 어떻게 평가했는지 읽어 낼 수 있다.
 level: 고급
 lessons:
   - mdp-decision-making

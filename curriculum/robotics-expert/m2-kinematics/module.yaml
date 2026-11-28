@@ -1,6 +1,8 @@
 id: m2-kinematics
 title: M2 로봇 운동학
 summary: DH 파라미터로 매니퓰레이터를 모델링하고 정기구학·역기구학을 푼다.
+outcome: >-
+  관절 각도로 로봇 팔 끝의 위치를 계산하고(정기구학), 원하는 위치에 닿는 관절 각도를 구할 수 있다(역기구학).
 level: 기초
 lessons:
   - dh-parameters

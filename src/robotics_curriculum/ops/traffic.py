@@ -221,6 +221,7 @@ _STATIC_PAGES = frozenset(
         "/",
         "/roadmap",
         "/guide",
+        "/about",
         "/resources",
         "/search",
         "/review",

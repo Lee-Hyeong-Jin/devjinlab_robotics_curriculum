@@ -5,3 +5,6 @@ summary: >-
   How robot sensors work and how to model their noise and observations, basic filtering,
   camera models and image features, point-cloud processing (RANSAC and ICP), and the way
   in to deep-learning object detection.
+outcome: >-
+  treat sensor noise with a model, and extract the geometry a robot needs from camera images
+  and point clouds.

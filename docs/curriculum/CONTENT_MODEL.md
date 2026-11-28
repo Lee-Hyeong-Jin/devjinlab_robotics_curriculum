@@ -59,6 +59,7 @@ goals:
 | `id` | slug | O | 모듈 ID (`m1-math-physics`) |
 | `title` | str | O | 표시 이름 |
 | `summary` | str | O | 요약 |
+| `outcome` | str | - | 한 문장: 이 모듈을 마치면 할 수 있는 것("…할 수 있다"). 랜딩과 모듈 화면에 나온다. 번역은 `module.<lang>.yaml` 의 `outcome` (영어는 "After this module you can" 뒤에 이어지게 소문자로 시작) |
 | `level` | `기초` \| `중급` \| `고급` \| `연구` | - | 모듈 수준. 기본 없음 |
 | `lessons` | list[str] | - | 레슨 파일 이름(확장자 제외), 순서대로 |
 
@@ -78,6 +79,19 @@ goals:
 | `resources` | list[Resource] | - | 단계별 학습 자료(교재·강의·영상 등). 아래 참조. 기본 `[]` |
 
 front matter에 정의되지 않은 키가 있으면 에러다(오타 방지). `body`, `path`는 예약어.
+
+### 검토 표시 (`review`, 선택)
+
+레슨 본문은 고른 자료의 요약이고 AI 의 도움을 받아 쓴다(사이트의 `/about`). 그 분야를 아는 사람이
+레슨을 끝까지 읽고 확인했을 때만 front matter 에 적는다. 없는 레슨은 화면에 "아직 전문가 검토를 받지
+않았습니다"로 나온다. 번역 파일에는 쓰지 않는다(구조이므로 원문에만 둔다).
+
+```yaml
+review:
+  date: 2026-11-20          # 검토한 날 (필수)
+  reviewer: 홍길동           # 이름 또는 핸들 (필수)
+  note: 수식과 예제만 확인    # 전체가 아니라면 무엇을 봤는지 (선택)
+```
 
 ### Activity
 

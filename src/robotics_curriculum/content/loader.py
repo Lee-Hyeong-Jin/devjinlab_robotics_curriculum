@@ -414,6 +414,7 @@ def load_module(module_dir: Path, errors: _Collector, root: Path | None = None) 
         id=meta.id,
         title=meta.title,
         summary=meta.summary,
+        outcome=meta.outcome,
         level=meta.level,
         lessons=lessons,
         path=module_dir,

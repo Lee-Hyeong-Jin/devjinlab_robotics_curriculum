@@ -142,6 +142,12 @@ class LessonProblem(Schema):
     # document — the error shape won and this one vanished from the contract.
 
 
+class LessonReview(Schema):
+    date: date
+    reviewer: str
+    note: str | None = None
+
+
 class Lesson(LessonSummary):
     objectives: list[str]
     activities: list[Activity]
@@ -165,6 +171,12 @@ class Lesson(LessonSummary):
     )
     prev_lesson_id: str | None = Field(description="Previous lesson in course order.")
     next_lesson_id: str | None = Field(description="Next lesson in course order.")
+    review: LessonReview | None = Field(
+        default=None,
+        description=(
+            "Who checked the lesson and when; null when no domain expert has reviewed it yet."
+        ),
+    )
     source_path: str | None = Field(
         default=None,
         description=(
@@ -188,6 +200,10 @@ class ModuleSummary(Schema):
     lesson_count: int
     estimated_minutes: int = Field(description="Sum over the module's lessons.")
     lang: str = Field(default=DEFAULT_LANG, description="Language of `title` and `summary`.")
+    outcome: str | None = Field(
+        default=None,
+        description="What a learner can do after the module (one sentence), when it states one.",
+    )
 
     @classmethod
     def of(
@@ -204,6 +220,7 @@ class ModuleSummary(Schema):
             lesson_count=len(module.lessons),
             estimated_minutes=sum(lesson.estimated_minutes for lesson in module.lessons),
             lang=text.lang,
+            outcome=text.outcome,
         )
 
 

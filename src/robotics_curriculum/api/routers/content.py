@@ -23,6 +23,7 @@ from robotics_curriculum.api.schemas import (
     GoalPath,
     Lesson,
     LessonProblem,
+    LessonReview,
     LessonSummary,
     Module,
     ModuleSummary,
@@ -121,6 +122,11 @@ def get_lesson(lesson_id: str, index: Index, state: State) -> Lesson:
         study_method=extract_study_guide(text.body, text.lang),
         prev_lesson_id=order[pos - 1] if pos > 0 else None,
         next_lesson_id=order[pos + 1] if pos + 1 < len(order) else None,
+        review=(
+            LessonReview.model_validate(lesson.review.model_dump())
+            if lesson.review is not None
+            else None
+        ),
         source_path=_source_path(lesson, text.lang, state.settings.curriculum_dir),
     )
 

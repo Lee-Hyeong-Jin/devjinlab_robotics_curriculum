@@ -7,6 +7,7 @@ their front matter / YAML schema. See ``docs/curriculum/CONTENT_MODEL.md``.
 
 import dataclasses
 from dataclasses import dataclass
+from datetime import date as date_type
 from enum import StrEnum
 from pathlib import Path
 from typing import Annotated, Literal
@@ -290,6 +291,22 @@ class LocalizedLesson:
     """Resources with their title and note in ``lang`` (urls and kinds are not translated)."""
 
 
+class Review(ContentModel):
+    """Who checked a lesson, and when.
+
+    The lessons are summaries of chosen sources, drafted with AI assistance. A reader — a
+    beginner least of all — cannot tell from the page how far to trust it. A lesson a person
+    with knowledge of the subject has read through says so here; one without this field is
+    shown as not yet reviewed.
+    """
+
+    date: date_type = Field(description="When the review was done (YYYY-MM-DD).")
+    reviewer: str = Field(min_length=1, description="Name or handle of the reviewer.")
+    note: str | None = Field(
+        default=None, min_length=1, description="What was checked, if not the whole lesson."
+    )
+
+
 class Lesson(ContentModel):
     """A lesson: one ``*.md`` file with YAML front matter."""
 
@@ -306,6 +323,9 @@ class Lesson(ContentModel):
     papers: list[PaperRef] = Field(
         default_factory=list,
         description="Papers from the course's papers.yaml, by id (ADR 0014).",
+    )
+    review: Review | None = Field(
+        default=None, description="Set once somebody who knows the subject has checked it."
     )
 
     # Filled by the loader, not by front matter.
@@ -410,6 +430,14 @@ class ModuleMeta(ContentModel):
     id: Id
     title: str = Field(min_length=1)
     summary: str = Field(min_length=1)
+    outcome: str | None = Field(
+        default=None,
+        min_length=1,
+        description=(
+            "One sentence: what a learner can do after the module. Completes the phrase "
+            "'After this module you can ...'."
+        ),
+    )
     level: Level | None = None
     lessons: list[str] | None = Field(
         default=None,
@@ -428,6 +456,7 @@ class ModuleTranslation(ContentModel):
     lang: str | None = Field(default=None, description="Must match the file name suffix.")
     title: str = Field(min_length=1)
     summary: str = Field(min_length=1)
+    outcome: str | None = Field(default=None, min_length=1)
 
     path: Path | None = Field(default=None, exclude=True)
 
@@ -440,6 +469,8 @@ class LocalizedModule:
     lang: str
     title: str
     summary: str
+    outcome: str | None
+    """What a learner can do after the module, in ``lang`` where translated."""
     level: str | None
     """The stored level value; stable across languages."""
     level_label: str
@@ -451,6 +482,7 @@ class Module(ContentModel):
     id: Id
     title: str
     summary: str
+    outcome: str | None = None
     level: Level | None = None
     lessons: list[Lesson] = Field(default_factory=list)
     path: Path | None = Field(default=None, exclude=True)
@@ -464,6 +496,7 @@ class Module(ContentModel):
             lang=(lang or DEFAULT_LANG) if translation is not None else DEFAULT_LANG,
             title=translation.title if translation is not None else self.title,
             summary=translation.summary if translation is not None else self.summary,
+            outcome=(translation.outcome if translation is not None else None) or self.outcome,
             level=self.level,
             level_label=level_label(self.level, lang) if self.level else "",
             translated=translation is not None,

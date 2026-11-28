@@ -9,3 +9,6 @@ summary: >-
   plugins and behaviour trees.
   It builds on the mapping and localisation of M5 and on tf2 from M8, and the motion
   planning of M7 picks up its sampling-based planning.
+outcome: >-
+  find a path on a map with A* and RRT, implement a local planner that avoids obstacles, and
+  explain how Nav2 assembles these parts.

@@ -87,13 +87,31 @@
     "faq6Q": "Is it available in Korean as well?",
     "faq6A": "Yes. Every lesson is available in English and Korean. Switch with the language selector at the top of the page.",
     "faq7Q": "Who is this course for?",
-    "faq7A": "Anyone who wants to study robotics seriously, whatever their background: a software developer moving into robotics, a student preparing for research, or a hobbyist who wants the theory behind what they build. It teaches the theory and the algorithms, with problems you solve on a laptop. It does not teach electronics, mechanical design or how to assemble a robot.",
+    "faq7A": "Anyone who wants to study robotics seriously, whatever their background: a software developer moving into robotics, a student preparing for research, or a hobbyist who wants the theory behind what they build. It teaches the theory and the algorithms, with problems you solve on a laptop. It does not teach circuit design, mechanical design or how to assemble a particular robot.",
     "faq8Q": "What will I be able to do when I finish?",
     "faq8A": "After the Robotics Expert Course you can describe a robot's motion with coordinate frames and kinematics, design and tune a feedback controller, estimate where a robot is from noisy sensors, plan a path through a map, and read the code of a ROS 2 system. The researcher track goes on to reading research papers and reproducing their results.",
     "faq9Q": "Are there lecture videos?",
     "faq9A": "There are no videos made for this site. Each lesson links the free lecture videos, textbooks and papers it is based on, and its study plan says which to watch or read first.",
     "faq10Q": "Who writes the lessons? Is AI involved?",
-    "faq10A": "The course is maintained by a software developer who is studying robotics, not by a robotics professor. The sources for each lesson are chosen first; the lesson text is a summary of those sources, and AI is used in writing and rewriting it. Mistakes are possible, so check a result against the linked sources when it matters, and please report an error as a content issue in the project's GitHub repository."
+    "faq10A": "The course is maintained by a software developer who is studying robotics, not by a robotics professor. The sources for each lesson are chosen first; the lesson text is a summary of those sources, and AI is used in writing and rewriting it. Mistakes are possible, so check a result against the linked sources when it matters, and please report an error as a content issue in the project's GitHub repository.",
+    "whoTitle": "This is for you if…",
+    "whoDeveloperTitle": "You write software and are moving into robotics",
+    "whoDeveloperBody": "You can code, but coordinate transforms, control and state estimation are new. The course goes in order from the maths to reading a ROS 2 system.",
+    "whoDeveloperLink": "See the expert course roadmap",
+    "whoStudentTitle": "You are a student preparing for research",
+    "whoStudentBody": "You need graduate-level theory, paper reading and reproduction. The researcher track comes with reading lists and reproduction tasks.",
+    "whoStudentLink": "See the researcher track",
+    "whoHobbyistTitle": "You build robots and want the theory behind them",
+    "whoHobbyistBody": "You do not have to learn all of it. Pick a goal and see only the lessons it needs — the shortest path is a little over eight hours.",
+    "whoHobbyistLink": "See the \"Make a robot move\" path",
+    "whoNot": "What this course does not teach: mechanical design (CAD, tolerances, strength), circuit and PCB design, and how to assemble a particular product. It covers how motors, drivers, power and microcontrollers work; soldering and wiring practice is left to the linked resources.",
+    "moduleOutcome": "After it you can {outcome}",
+    "faq11Q": "How is this different from other robotics courses?",
+    "faq11A": "Instead of making new videos, each lesson picks the best free lectures, textbooks and papers and says which to study first. The prerequisites between lessons form a graph, so you can take only the lessons a goal needs, and quizzes with spaced-repetition review keep what you learned. The content and the platform are both open source, so anybody can fix a mistake.",
+    "faq12Q": "Do I have to start with the maths?",
+    "faq12A": "The default order starts with maths (M1), because every later module uses coordinate transforms. But no lesson is locked. Pick a goal on the roadmap and you see only the lessons that goal needs, in order, and each lesson opens with where it is used on a real robot. You can also build something first and come back to read when you get stuck.",
+    "faq13Q": "What does this course not cover?",
+    "faq13A": "Mechanical design (CAD, tolerances, strength), circuit and PCB design, and the assembly of a particular kit are not covered. Motors, drivers, power and microcontrollers are taught as far as the principles and the calculations; for actual wiring and soldering, follow the linked resources. Installing a simulator is likewise left to the official documentation. Every problem can be done on a laptop."
   },
   "guide": {
     "title": "How to learn robotics",
@@ -151,7 +169,8 @@
     "tagline": "Free robotics tutorials, from the basics to research level.",
     "license": "Code Apache-2.0 · Content CC BY 4.0",
     "source": "Source on GitHub",
-    "community": "Questions and study groups"
+    "community": "Questions and study groups",
+    "about": "How this course is written"
   },
   "course": {
     "switcher": "Course",
@@ -185,7 +204,8 @@
     "difficulty": "Difficulty {level}/5",
     "empty": "This module has no lessons yet.",
     "backToRoadmap": "Back to roadmap",
-    "report": "Module report"
+    "report": "Module report",
+    "outcomeLabel": "After this module you can"
   },
   "lesson": {
     "studyMethod": "How to study this stage",
@@ -207,7 +227,10 @@
     "prereqPendingBody": "These lessons make this one easier. They are not required — you can carry on here.",
     "feedbackPrompt": "Found a mistake in this lesson?",
     "reportProblem": "Report a problem",
-    "suggestEdit": "Suggest an edit (GitHub)"
+    "suggestEdit": "Suggest an edit (GitHub)",
+    "reviewed": "Reviewed by {reviewer} on {date}.",
+    "notReviewed": "This lesson has not yet been reviewed by a domain expert.",
+    "howWritten": "How this course is written"
   },
   "resources": {
     "title": "Resources",
@@ -968,5 +991,34 @@
     "copy": "Copy",
     "copied": "Copied",
     "download": "Download .py"
+  },
+  "about": {
+    "title": "How this course is written",
+    "description": "How the lessons are produced, where AI is used, what is checked automatically, what no expert has reviewed yet, and how to report a mistake.",
+    "lead": "Readers asked how much of this was written by AI. There is no reason to hide it, so here it is: how a lesson is made, what has been checked, and what has not.",
+    "sourcesTitle": "The sources are chosen first",
+    "sourcesBody": "For each lesson, the free lectures, textbooks and papers that explain the topic best are chosen first. The lesson text is a summary of those sources, and its resource list and \"How to study this stage\" section say what to study first and how far to read. The course is meant to send you to the sources, not to replace them.",
+    "writingTitle": "The text is written with the help of AI",
+    "writingBody1": "The person who maintains this course is a software developer who is studying robotics, not a robotics professor or a working researcher. From the chosen sources, AI is used to draft the text, revise it, and put it into Korean and English.",
+    "writingBody2": "So a lesson can contain a wrong formula, an inaccurate explanation or outdated information. When a result matters, check it against the sources the lesson links.",
+    "checkedTitle": "What is checked automatically on every change",
+    "checkedLead": "None of this replaces a person reading the lesson, but a machine verifies the following every time.",
+    "checked1": "Every Python example of every lesson is actually run, in the Korean and the English version (except the ones that need ROS 2). A change with an example that does not run is not accepted.",
+    "checked2": "The prerequisite graph has no cycle and no missing lesson, and each lesson has its required fields.",
+    "checked3": "Each quiz is well-formed, its answer is among its choices, and every question has an explanation.",
+    "checked4": "Resource links are well-formed addresses, and no lesson points at a document the site does not have.",
+    "checked5": "The example code of the Korean and the English version is the same.",
+    "uncheckedTitle": "What cannot be checked that way",
+    "unchecked1": "Whether a formula or an explanation is right. Form is checked; truth is not something a machine can judge.",
+    "unchecked2": "Whether a quiz's stated answer is actually correct.",
+    "unchecked3": "Whether a linked external resource still opens, or still says what it said.",
+    "reviewTitle": "Each lesson shows whether it has been reviewed",
+    "reviewBody1": "When somebody who knows the subject has read a lesson through and checked it, the lesson page names them and the date. A lesson without that says \"not yet reviewed by a domain expert\" — today that is most of them.",
+    "reviewBody2": "If you know control, SLAM, manipulation, robot learning or another area the course covers, reading the lessons of that module and reporting what is wrong is the most useful thing you can do. The contributor guide says how.",
+    "reportTitle": "If you find a mistake",
+    "reportBody": "Every lesson page ends with \"Report a problem\" and \"Suggest an edit\" links. You do not need to be sure: \"this looks wrong to me\" is a useful report.",
+    "reportLink": "Open a content issue",
+    "contributeLink": "Read the contributor guide",
+    "roadmapLink": "To the roadmap"
   }
 }

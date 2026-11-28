@@ -2217,6 +2217,8 @@ export interface components {
              * @description Next lesson in course order.
              */
             next_lesson_id: string | null;
+            /** @description Who checked the lesson and when; null when no domain expert has reviewed it yet. */
+            review?: components["schemas"]["LessonReview"] | null;
             /**
              * Source Path
              * @description The lesson's source file in the language served, relative to the repository root (`curriculum/<course>/<module>/<lesson>.md`). For 'suggest an edit' links.
@@ -2303,6 +2305,18 @@ export interface components {
              * @description FR-3.2, 1-5
              */
             understanding?: number | null;
+            /** Note */
+            note?: string | null;
+        };
+        /** LessonReview */
+        LessonReview: {
+            /**
+             * Date
+             * Format: date
+             */
+            date: string;
+            /** Reviewer */
+            reviewer: string;
             /** Note */
             note?: string | null;
         };
@@ -2481,6 +2495,11 @@ export interface components {
              * @default ko
              */
             lang: string;
+            /**
+             * Outcome
+             * @description What a learner can do after the module (one sentence), when it states one.
+             */
+            outcome?: string | null;
             /** Lessons */
             lessons: components["schemas"]["LessonSummary"][];
         };
@@ -2534,6 +2553,11 @@ export interface components {
              * @default ko
              */
             lang: string;
+            /**
+             * Outcome
+             * @description What a learner can do after the module (one sentence), when it states one.
+             */
+            outcome?: string | null;
         };
         /** NextLesson */
         NextLesson: {

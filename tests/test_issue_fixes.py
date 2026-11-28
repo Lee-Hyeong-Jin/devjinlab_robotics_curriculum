@@ -258,3 +258,69 @@ def test_issue_54_a_lesson_names_its_source_file_in_the_language_served(tmp_path
     # Both are files that exist in the repository.
     for lesson in (english, korean):
         assert (ROOT / lesson["source_path"]).is_file()
+
+
+# -- #61, #62: review status per lesson, an outcome per module --------------------------------
+
+
+def test_issue_61_a_lesson_says_whether_it_was_reviewed(tmp_path: Path) -> None:
+    import shutil
+
+    from fastapi.testclient import TestClient
+
+    from robotics_curriculum.api.app import create_app
+    from robotics_curriculum.api.settings import Settings
+    from robotics_curriculum.content import check
+
+    # A copy of one course in which one lesson carries a review.
+    root = tmp_path / "curriculum"
+    shutil.copytree(CURRICULUM / EXPERT, root / EXPERT)
+    lesson = root / EXPERT / "m1-math-physics" / "vectors-matrices.md"
+    text = lesson.read_text("utf-8")
+    lesson.write_text(
+        text.replace(
+            "\n---\n",
+            "\nreview:\n  date: 2026-11-20\n  reviewer: Dr. Example\n  note: formulas only\n---\n",
+            1,
+        ),
+        "utf-8",
+    )
+    _courses, problems = check(root)
+    assert [p for p in problems if "review" in p.message] == []
+
+    client = TestClient(
+        create_app(Settings(curriculum_dir=root, data_dir=tmp_path / "data"), clock=lambda: NOW)
+    )
+    reviewed = client.get("/api/v1/lessons/m1-vectors-matrices").json()
+    assert reviewed["review"] == {
+        "date": "2026-11-20",
+        "reviewer": "Dr. Example",
+        "note": "formulas only",
+    }
+    # Every other lesson says, by its absence, that nobody has reviewed it yet.
+    assert client.get("/api/v1/lessons/m1-rotation-representations").json()["review"] is None
+
+    # A review without a date is refused: "reviewed, some time" is not a statement.
+    lesson.write_text(text.replace("\n---\n", '\nreview:\n  reviewer: "X"\n---\n', 1), "utf-8")
+    _courses, problems = check(root)
+    assert any("review" in p.message or "date" in p.message for p in problems)
+
+
+def test_issue_62_every_expert_module_states_what_it_leads_to(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    from robotics_curriculum.api.app import create_app
+    from robotics_curriculum.api.settings import Settings
+
+    client = TestClient(
+        create_app(Settings(curriculum_dir=CURRICULUM, data_dir=tmp_path), clock=lambda: NOW)
+    )
+    for lang in ("en", "ko"):
+        course = client.get(f"/api/v1/courses/{EXPERT}", params={"lang": lang}).json()
+        modules = [module for stage in course["stages"] for module in stage["modules"]]
+        assert len(modules) >= 10
+        for module in modules:
+            assert module["outcome"], f"{module['id']} has no outcome in {lang}"
+    english = client.get("/api/v1/modules/m2-kinematics").json()["outcome"]
+    korean = client.get("/api/v1/modules/m2-kinematics?lang=ko").json()["outcome"]
+    assert "inverse kinematics" in english and "역기구학" in korean

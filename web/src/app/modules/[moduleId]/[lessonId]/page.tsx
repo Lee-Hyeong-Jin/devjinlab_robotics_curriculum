@@ -23,7 +23,7 @@ import {
   getStatus,
 } from '@/lib/api/queries'
 import type { Lesson, Module } from '@/lib/api/types'
-import { formatMinutes } from '@/lib/format'
+import { formatDate, formatMinutes } from '@/lib/format'
 import { webCliHints } from '@/lib/markdown/cli-hints-server'
 import { lessonEditUrl, lessonIssueUrl, repositoryUrl } from '@/lib/repository'
 import { renderInlineMarkdown, renderMarkdown } from '@/lib/markdown/render'
@@ -233,6 +233,18 @@ export default async function LessonPage({ params }: Params) {
               {body.content}
             </MarkdownBody>
           </Card>
+
+          <p className="text-muted text-sm">
+            {lesson.review
+              ? t('reviewed', {
+                  reviewer: lesson.review.reviewer,
+                  date: formatDate(lesson.review.date, locale),
+                })
+              : t('notReviewed')}{' '}
+            <Link href="/about" className="text-accent underline underline-offset-2">
+              {t('howWritten')}
+            </Link>
+          </p>
 
           {repository ? (
             <p className="text-muted flex flex-wrap gap-x-5 gap-y-1 text-sm">

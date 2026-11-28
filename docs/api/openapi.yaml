@@ -4863,6 +4863,11 @@ components:
           - type: 'null'
           title: Next Lesson Id
           description: Next lesson in course order.
+        review:
+          anyOf:
+          - $ref: '#/components/schemas/LessonReview'
+          - type: 'null'
+          description: Who checked the lesson and when; null when no domain expert has reviewed it yet.
         source_path:
           anyOf:
           - type: string
@@ -5016,6 +5021,26 @@ components:
       - lesson_id
       title: LessonProgress
       description: Per-lesson state for one user.
+    LessonReview:
+      properties:
+        date:
+          type: string
+          format: date
+          title: Date
+        reviewer:
+          type: string
+          title: Reviewer
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+      additionalProperties: false
+      type: object
+      required:
+      - date
+      - reviewer
+      title: LessonReview
     LessonState:
       properties:
         lesson:
@@ -5307,6 +5332,12 @@ components:
           title: Lang
           description: Language of `title` and `summary`.
           default: ko
+        outcome:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Outcome
+          description: What a learner can do after the module (one sentence), when it states one.
         lessons:
           items:
             $ref: '#/components/schemas/LessonSummary'
@@ -5403,6 +5434,12 @@ components:
           title: Lang
           description: Language of `title` and `summary`.
           default: ko
+        outcome:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Outcome
+          description: What a learner can do after the module (one sentence), when it states one.
       additionalProperties: false
       type: object
       required:

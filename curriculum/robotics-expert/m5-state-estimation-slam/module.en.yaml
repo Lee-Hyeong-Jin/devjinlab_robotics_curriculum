@@ -7,3 +7,6 @@ summary: >-
   localisation, sensor fusion of wheel odometry with an IMU, occupancy-grid maps and scan
   matching, and graph SLAM up to reading SLAM Toolbox -- mostly through numpy examples.
   The mapping and localisation in M6 (navigation) build on this module.
+outcome: >-
+  implement the filters (Kalman, particle) that estimate a robot's position from noisy
+  sensors, and explain how SLAM builds a map while localizing in it.

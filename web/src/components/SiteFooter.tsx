@@ -26,6 +26,7 @@ export async function SiteFooter() {
               [
                 ['/roadmap', t('roadmap')],
                 ['/guide', t('guide')],
+                ['/about', t('about')],
                 ['/resources', t('resources')],
               ] as const
             ).map(([href, label]) => (

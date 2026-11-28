@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- A page "How this course is written" (`/about`): sources first, text drafted with AI
+  assistance, what is verified automatically on every change, what no expert has checked, and
+  how to report a mistake. Each lesson shows whether it has been reviewed (`review` in the
+  lesson's front matter) and links to that page (#61).
+- The landing page says who the course is for, with a starting point for each reader, and what
+  it does not teach; every expert module states what you can do after it (`outcome` in
+  `module.yaml`); the FAQ answers how the course differs, whether it is maths-first, and what
+  it does not cover (#62).
 - Goal-based learning paths: pick a goal on the roadmap ("make a robot move", SLAM, autonomous
   navigation, robot arms, robot learning) and see only the lessons it needs, in prerequisite
   order, with the time left. Also `rc path [goal|lesson]`, `rc next --goal`, a `goals` list on

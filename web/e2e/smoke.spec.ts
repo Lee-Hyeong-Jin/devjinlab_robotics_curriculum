@@ -301,3 +301,29 @@ test('a goal narrows the roadmap to the lessons it needs (#52)', async ({ page }
   expect(response?.status()).toBe(200)
   await expect(goals.locator('[aria-current="page"]')).toHaveText(/전체 코스|Whole course/)
 })
+
+test('the site says how the course is written, and each lesson its review status (#61)', async ({
+  page,
+}) => {
+  const response = await page.goto('/about')
+  expect(response?.status()).toBe(200)
+  await expect(
+    page.getByRole('heading', {
+      level: 1,
+      name: /이 강의는 이렇게 만듭니다|How this course is written/,
+    }),
+  ).toBeVisible()
+  await expect(page.getByText(/AI/).first()).toBeVisible()
+  expect(await blockingViolations(page)).toEqual([])
+
+  // A lesson says it has not been reviewed, and links here.
+  await page.goto('/modules/m1-math-physics/m1-vectors-matrices')
+  await expect(
+    page.getByText(/아직 전문가 검토를 받지 않았습니다|not yet been reviewed/),
+  ).toBeVisible()
+  await page
+    .getByRole('link', { name: /강의를 만드는 방법|How this course is written/ })
+    .first()
+    .click()
+  await page.waitForURL(/\/about$/)
+})

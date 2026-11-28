@@ -1,6 +1,8 @@
 id: m1-math-physics
 title: M1 수학·물리 기초
 summary: 벡터·행렬, 회전 표현, 좌표 변환 등 로봇을 기술하는 데 필요한 수학 도구.
+outcome: >-
+  벡터·행렬로 위치와 방향을 계산하고, 한 좌표계에서 본 점을 다른 좌표계로 옮길 수 있다 — 예를 들어 카메라가 본 물체의 위치를 로봇 베이스 기준으로.
 level: 기초
 lessons:
   - vectors-matrices
