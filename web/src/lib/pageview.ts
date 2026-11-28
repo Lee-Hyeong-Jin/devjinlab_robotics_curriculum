@@ -13,7 +13,7 @@ import { apiBaseUrl } from './api/config'
  */
 
 // `/healthz` and `/session/*` are plumbing, not pages anybody reads.
-const NOT_PAGES = /^\/(?:api|admin|_next|healthz|session)(?:\/|$)|\.[a-z0-9]{2,12}$/i
+const NOT_PAGES = /^\/(?:api|admin|_next|healthz|session|lesson-assets)(?:\/|$)|\.[a-z0-9]{2,12}$/i
 
 /** Whether a path is a page worth counting (not an asset, an API route or the admin console). */
 export function countsAsPage(pathname: string): boolean {

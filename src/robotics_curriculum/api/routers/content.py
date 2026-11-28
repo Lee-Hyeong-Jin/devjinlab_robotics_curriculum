@@ -6,7 +6,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
 
 from robotics_curriculum.api.deps import (
     Index,
@@ -37,6 +37,7 @@ from robotics_curriculum.api.schemas import (
 from robotics_curriculum.content import Course as CourseModel
 from robotics_curriculum.content import Lesson as LessonModel
 from robotics_curriculum.content import ResourceKind, level_label
+from robotics_curriculum.content.lesson_blocks import FIGURES_DIRNAME, image_refs
 from robotics_curriculum.content.papers import paper_index, resolve_lesson_papers
 from robotics_curriculum.content.problem_set import ProblemSetParseError, parse_problem_sets
 from robotics_curriculum.content.problem_set import resolve_activity as resolve_problem_activity
@@ -128,6 +129,42 @@ def get_lesson(lesson_id: str, index: Index, state: State) -> Lesson:
             else None
         ),
         source_path=_source_path(lesson, text.lang, state.settings.curriculum_dir),
+    )
+
+
+FIGURE_TYPES = {".svg": "image/svg+xml", ".png": "image/png"}
+
+
+@router.get(
+    "/lessons/{lesson_id}/figures/{name}",
+    responses={**problem_responses(404), 200: {"content": {"image/svg+xml": {}, "image/png": {}}}},
+    response_class=Response,
+)
+def get_lesson_figure(lesson_id: str, name: str, index: Index) -> Response:
+    """A figure of a lesson: the file ``figures/<name>`` next to the lesson's Markdown.
+
+    Only a file a lesson body actually shows is served — the name has to be one of the
+    lesson's own image references (in any language), which also keeps every other file of the
+    repository out of reach. Sent as an image with a policy that forbids it to run anything.
+    """
+    lesson = index.lesson(lesson_id).lesson
+    bodies = [lesson.body, *(translation.body for translation in lesson.translations.values())]
+    shown = {image.figure_name for body in bodies for image in image_refs(body)}
+    if name not in shown or lesson.path is None:
+        raise HTTPException(404, f"lesson '{lesson_id}' has no figure '{name}'")
+    file = lesson.path.parent / FIGURES_DIRNAME / name
+    media_type = FIGURE_TYPES.get(file.suffix)
+    if media_type is None or not file.is_file():
+        raise HTTPException(404, f"lesson '{lesson_id}' has no figure '{name}'")
+    return Response(
+        content=file.read_bytes(),
+        media_type=media_type,
+        headers={
+            # An SVG opened on its own is a document: it must not be able to script or fetch.
+            "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+            "X-Content-Type-Options": "nosniff",
+            "Cache-Control": "private, max-age=3600",
+        },
     )
 
 

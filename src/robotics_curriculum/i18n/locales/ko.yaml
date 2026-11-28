@@ -150,6 +150,8 @@ lesson:
   prerequisites: "선수 레슨:"
   prerequisites_none: " 없음"
   study_guide: "이 단계 공부법"
+  use_case: "어디에 쓰는가"
+  expected: "기대 결과"
 
 roadmap:
   no_level: "(레벨 미지정)"

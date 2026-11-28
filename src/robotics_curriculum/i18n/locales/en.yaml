@@ -149,6 +149,8 @@ lesson:
   prerequisites: "Prerequisites:"
   prerequisites_none: " none"
   study_guide: "How to study this stage"
+  use_case: "Where you will use this"
+  expected: "Expected result"
 
 roadmap:
   no_level: "(no level)"

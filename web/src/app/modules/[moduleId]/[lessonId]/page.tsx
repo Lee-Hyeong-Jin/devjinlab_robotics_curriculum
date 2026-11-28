@@ -25,6 +25,7 @@ import {
 import type { Lesson, Module } from '@/lib/api/types'
 import { formatDate, formatMinutes } from '@/lib/format'
 import { webCliHints } from '@/lib/markdown/cli-hints-server'
+import { figureBase } from '@/lib/markdown/lesson-blocks'
 import { lessonEditUrl, lessonIssueUrl, repositoryUrl } from '@/lib/repository'
 import { renderInlineMarkdown, renderMarkdown } from '@/lib/markdown/render'
 import { stripLessonSections } from '@/lib/markdown/sections'
@@ -115,6 +116,7 @@ export default async function LessonPage({ params }: Params) {
     await webCliHints(stripLessonSections(lesson.body, { studyMethod: lesson.study_method }), {
       [lessonId]: quizPath,
     }),
+    { expectedLabel: t('expectedResult'), figureBase: figureBase(lessonId) },
   )
   const studyMethod = renderMarkdown(lesson.study_method ?? undefined)
   // "Report a problem" and "suggest an edit" lead to the repository the lesson is written in.

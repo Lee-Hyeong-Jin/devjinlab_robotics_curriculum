@@ -682,8 +682,11 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
         out += [f"**{md_text(t('site.label.my_record'))}**: {md_text(record)}", ""]
     out += ["---", ""]
 
-    rendered = render_problem_set_blocks(
-        render_quiz_blocks(strip_leading_h1(text.body), lesson, t), lesson, t
+    rendered = render_expected_blocks(
+        render_problem_set_blocks(
+            render_quiz_blocks(strip_leading_h1(text.body), lesson, t), lesson, t
+        ),
+        t,
     )
     body, study = split_study_section(rendered)
     out += [body.strip("\n"), ""]
@@ -815,6 +818,24 @@ def _replace_fences(
     if current is not None:  # unterminated fence: keep it verbatim
         out += [f"{closing}{name}", *current]
     return "\n".join(out)
+
+
+EXPECTED_FENCE = re.compile(r"^(?P<fence>`{3,}|~{3,})\s*expected\s*$")
+
+
+def render_expected_blocks(body: str, t: Translator | None = None) -> str:
+    """Replace each ```` ```expected ```` fence with a folded "Expected result" box.
+
+    The block holds what a correct attempt at the exercise above it gives. It is Markdown, so
+    it is rendered, and it folds away (``???``) so that it is not read before trying.
+    """
+    t = t or translator(DEFAULT_LANG)
+    label = md_text(t("lesson.expected"))
+
+    def render(_index: int, raw: str) -> str:
+        return "\n".join([f'??? success "{label}"', "", indent(raw.strip()), ""])
+
+    return _replace_fences(body, render, fence=EXPECTED_FENCE, name="expected")
 
 
 def render_problem_set_blocks(body: str, lesson: Lesson, t: Translator | None = None) -> str:

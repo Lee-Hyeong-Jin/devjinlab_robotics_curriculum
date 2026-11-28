@@ -14,6 +14,7 @@ import { unified } from 'unified'
 
 import { CodeBlock } from '@/components/CodeBlock'
 
+import { rehypeFigures, remarkExpectedResults } from './lesson-blocks'
 import { normalizeDisplayMath } from './normalize'
 import { lessonSanitizeSchema } from './sanitize'
 import { rehypeFocusableScrollers } from './scroll'
@@ -67,11 +68,18 @@ export interface RenderOptions {
    * own `<h1>`. 1 by default: a body `#` becomes `<h2>`.
    */
   headingOffset?: number
+  /** Label of a folded ```` ```expected ```` block; the lesson page passes a translated one. */
+  expectedLabel?: string
+  /**
+   * Where `figures/<name>` images are served from (`figureBase(lessonId)`). Without it a
+   * figure cannot load and is left out.
+   */
+  figureBase?: string
 }
 
 export function renderMarkdown(
   markdown: string | undefined,
-  { headingOffset = 1 }: RenderOptions = {},
+  { headingOffset = 1, expectedLabel = 'Expected result', figureBase }: RenderOptions = {},
 ): RenderedMarkdown {
   if (!markdown || markdown.trim() === '') return { content: null, headings: [] }
 
@@ -80,11 +88,15 @@ export function renderMarkdown(
     .use(remarkParse)
     .use(remarkMath)
     .use(remarkGfm)
+    .use(remarkExpectedResults(expectedLabel))
     .use(remarkRehype)
     .use(rehypeKatex, { output: 'mathml', throwOnError: false, strict: false })
     .use(rehypeHighlight, { detect: false, ignoreMissing: true })
     .use(rehypeShiftHeadings(headingOffset))
     .use(rehypeSanitize, lessonSanitizeSchema)
+    // After the sanitizer, like the heading ids: the address and class are ours, not the
+    // content's.
+    .use(rehypeFigures(figureBase))
     // After the sanitizer: the ids are generated here from heading text, so they
     // must not pick up its `user-content-` clobber prefix (the "on this page"
     // links target them directly).

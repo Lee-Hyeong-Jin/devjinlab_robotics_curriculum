@@ -332,6 +332,75 @@
         }
       }
     },
+    "/api/v1/lessons/{lesson_id}/figures/{name}": {
+      "get": {
+        "tags": [
+          "content"
+        ],
+        "summary": "Get Lesson Figure",
+        "description": "A figure of a lesson: the file ``figures/<name>`` next to the lesson's Markdown.\n\nOnly a file a lesson body actually shows is served — the name has to be one of the\nlesson's own image references (in any language), which also keeps every other file of the\nrepository out of reach. Sent as an image with a policy that forbids it to run anything.",
+        "operationId": "get_lesson_figure_api_v1_lessons__lesson_id__figures__name__get",
+        "parameters": [
+          {
+            "name": "lesson_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Lesson Id"
+            }
+          },
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "image/svg+xml": {},
+              "image/png": {}
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Content",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/resources": {
       "get": {
         "tags": [

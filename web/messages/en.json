@@ -230,7 +230,8 @@
     "suggestEdit": "Suggest an edit (GitHub)",
     "reviewed": "Reviewed by {reviewer} on {date}.",
     "notReviewed": "This lesson has not yet been reviewed by a domain expert.",
-    "howWritten": "How this course is written"
+    "howWritten": "How this course is written",
+    "expectedResult": "Expected result (try it first, then open)"
   },
   "resources": {
     "title": "Resources",
