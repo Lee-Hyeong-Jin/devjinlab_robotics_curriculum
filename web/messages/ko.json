@@ -280,7 +280,8 @@
     "notFoundBody": "요청한 페이지나 콘텐츠가 없습니다.",
     "home": "대시보드로",
     "forbidden": "권한이 없습니다.",
-    "forbiddenBody": "이 화면은 해당 권한이 있는 계정만 볼 수 있습니다."
+    "forbiddenBody": "이 화면은 해당 권한이 있는 계정만 볼 수 있습니다.",
+    "reference": "오류 참조 번호: {id}"
   },
   "auth": {
     "providersHeading": "또는",

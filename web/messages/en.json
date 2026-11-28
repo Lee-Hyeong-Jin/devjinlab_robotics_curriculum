@@ -280,7 +280,8 @@
     "notFoundBody": "The page or content you asked for does not exist.",
     "home": "Go to dashboard",
     "forbidden": "You do not have permission.",
-    "forbiddenBody": "This screen needs a role your account does not have."
+    "forbiddenBody": "This screen needs a role your account does not have.",
+    "reference": "Error reference: {id}"
   },
   "auth": {
     "providersHeading": "or",

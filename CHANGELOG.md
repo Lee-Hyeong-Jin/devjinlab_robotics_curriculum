@@ -199,6 +199,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `npm audit` reports nothing for the web lockfile and the allowlist is empty.
 
 ### Fixed
+- The error screen shows a reference number that matches the web server's log, and recognises
+  an unreachable API in production builds. It used to print React's generic "error #441"
+  object to the browser console, which said nothing about the failure (#33).
 - "Next lessons" (the weekly report's suggestions, the dashboard, `rc next`) stay inside the
   courses the learner is taking. A learner on the expert course was being told to start the
   research track's calculus guide (#31).
