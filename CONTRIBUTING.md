@@ -88,5 +88,21 @@ or otherwise have the right to submit it under the project's licenses. Sign off 
 5. Open a PR with type `content`. Only link resources you are allowed to reference; do not
    paste copyrighted text from them. Your content is contributed under CC BY 4.0.
 
+### Translating a lesson
+
+Lessons are written in Korean; a translation is a sibling file with the language in its name
+(`vectors-matrices.md` → `vectors-matrices.en.md`, `module.yaml` → `module.en.yaml`). Adding or
+improving one is a good first contribution.
+
+1. A translation holds text only: `title`, `summary`, optionally `objectives` and `tags`, and
+   the translated body. Prerequisites, difficulty, activities and resource URLs stay in the
+   Korean file, so do not copy them. The full rules are in the "레슨 번역" section of
+   `docs/curriculum/CONTENT_MODEL.md`.
+2. Keep formulas, code blocks and quiz ids as they are; translate the prose, quiz questions and
+   choices. Title the study section in the target language (`## How to study this stage`).
+3. Check it: `uv run rc validate`, then read it with `uv run rc --lang en show <lesson-id>` or
+   `uv run rc site build --lang en --serve`.
+4. Which lessons have a translation is listed in `curriculum/README.md`.
+
 To report a mistake in an existing lesson without fixing it yourself, open a
 "Content issue" from the issue templates.
