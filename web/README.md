@@ -39,6 +39,7 @@ npm run dev            # http://localhost:3000
 | `e2e/smoke.spec.ts`            | **local** (기본)  | `E2E_BASE_URL=... npx playwright test smoke`              |
 | `e2e/smoke-responsive.spec.ts` | **local** (기본)  | 위 `smoke` 실행에 함께 포함 (320·390·768·1024px)          |
 | `e2e/journey.spec.ts`          | **server** (계정) | `E2E_AUTH=1 E2E_BASE_URL=... npx playwright test journey` |
+| `e2e/mail.spec.ts`             | **server** + 메일 sink | `E2E_MAIL_OUTBOX=... E2E_BASE_URL=... npx playwright test mail` (`scripts/dev/smtp_sink.py`, 파일 머리말 참고) |
 
 스모크는 비로그인 상태로 화면을 돌기 때문에 server 모드 API 를 쓰면 전부
 `/login` 으로 리다이렉트돼 실패한다. 반대로 journey(AC-WEB.1 전체 흐름: 가입 →
