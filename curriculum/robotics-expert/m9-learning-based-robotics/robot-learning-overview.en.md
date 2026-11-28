@@ -49,8 +49,8 @@ about lowering the cost of collecting data.
 
 ### Compute tiers
 
-The rough guidance collected in the research notes
-(`research_notes/.../ai_robot_learning.md`) is as follows.
+Rough guidance on the GPU memory you need is as follows. It varies with the model and its
+settings, so check each project's documentation.
 
 - **No GPU:** the numpy examples of this module, plus remote resources such as Colab and HF Jobs.
   LeRobot does not recommend CPU training.

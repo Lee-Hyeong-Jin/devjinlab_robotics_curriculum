@@ -113,7 +113,14 @@ deprecated 된 API 가 제거되어 옛 컨트롤러 예제가 실패할 수 있
 ### 시뮬레이터 한 줄 소개
 
 Gazebo(Jazzy 짝은 Harmonic, `ros_gz` 브리지), Webots, MuJoCo 가 대표적이다. 이 플랫폼은
-시뮬레이터 실습을 다루지 않으므로 비교는 조사 보고서의 시뮬레이터 절을 참고한다.
+시뮬레이터 실습을 다루지 않는다. 고를 때는 아래 한 줄 기준에서 시작해 각 공식 문서를 확인한다.
+
+- **[Gazebo](https://gazebosim.org/docs):** ROS 2 와 가장 긴밀하게 묶인다. 센서(LiDAR, 카메라,
+  IMU)를 단 이동 로봇과 Nav2·`ros2_control` 연동을 시험할 때 기본 선택이다.
+- **[Webots](https://cyberbotics.com/doc/guide/index):** 설치 한 번으로 로봇 모델·예제 월드·편집기가
+  함께 온다. Windows·macOS·Linux 에서 모두 돌아가 처음 써 보기에 부담이 적다.
+- **[MuJoCo](https://mujoco.readthedocs.io/):** 접촉이 있는 동역학을 빠르게 계산한다. 제어와
+  강화학습 연구(M9)에서 많이 쓰며, ROS 없이 Python 만으로도 쓴다.
 
 ## 예제
 

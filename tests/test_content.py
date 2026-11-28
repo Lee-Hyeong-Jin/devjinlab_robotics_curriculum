@@ -95,6 +95,24 @@ def test_live_curriculum_validates() -> None:
         assert validate_course(course) == []
 
 
+def test_expert_course_does_not_cite_unpublished_notes() -> None:
+    """`research_notes/` is not part of the published site, so a lesson must not send readers there.
+
+    The research track still does (tracked as a content issue); this guards the course that
+    first-time learners read.
+    """
+    offenders = [
+        path.relative_to(REPO_ROOT).as_posix()
+        for path in sorted((REPO_ROOT / "curriculum" / "robotics-expert").rglob("*"))
+        if path.suffix in {".md", ".yaml"}
+        and any(
+            marker in path.read_text(encoding="utf-8")
+            for marker in ("research_notes", "조사 보고서", "research report")
+        )
+    ]
+    assert offenders == []
+
+
 def test_missing_required_field_is_reported_with_path(tmp_path: Path) -> None:
     course = write_course(tmp_path, {"a": lesson_md("a", title=None)})
     with pytest.raises(LoadError) as excinfo:

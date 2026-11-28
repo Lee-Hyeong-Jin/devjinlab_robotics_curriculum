@@ -72,7 +72,8 @@ RLDS), 평가 프로토콜을 다룬다. Interconnects 글이 말하는 "현실�
 
 ### 계산 자원 등급
 
-조사 노트(`research_notes/.../ai_robot_learning.md`)가 정리한 대략의 기준은 다음과 같다.
+필요한 GPU 메모리의 대략적인 기준은 다음과 같다. 모델과 설정에 따라 달라지므로 각 프로젝트의
+문서에서 다시 확인한다.
 
 - **GPU 없음:** 이 모듈의 numpy 예제, Colab·HF Jobs 같은 원격 자원. LeRobot 은 CPU 학습을 권하지 않는다.
 - **12–16 GB:** ACT 같은 가벼운 행동 복제, 작은 배치의 Diffusion Policy.
