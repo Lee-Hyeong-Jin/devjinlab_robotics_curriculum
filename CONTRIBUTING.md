@@ -5,12 +5,52 @@
 > 커밋 메시지는 Conventional Commits(`type(scope): summary`) 형식이며 모든 커밋에
 > `git commit -s`로 DCO 서명(`Signed-off-by:`)을 답니다. 레슨은
 > `docs/curriculum/LESSON_TEMPLATE.md`를 복사해 작성합니다. 코드는 Apache-2.0,
-> `curriculum/` 콘텐츠는 CC BY 4.0으로 기여됩니다.
+> `curriculum/` 콘텐츠는 CC BY 4.0으로 기여됩니다. 처음이라면 사이트의 레슨 화면에 있는
+> "수정 제안" 링크로 오타·링크부터 고쳐 보세요. 이슈는 영어로 쓰되 한국어 요약 한 줄을
+> 붙이면 좋고, 댓글은 한국어로 써도 됩니다.
 
 Thank you for helping. This project has two kinds of contributions: **code** (the
 `robotics_curriculum` package and `rc` CLI, Apache-2.0) and **content** (lessons under
 `curriculum/`, CC BY 4.0). Everyone taking part follows the [Code of Conduct](CODE_OF_CONDUCT.md).
 Security problems go through [SECURITY.md](SECURITY.md), never a public issue.
+
+## Your first contribution
+
+You do not need to know the code, or to be a robotics expert, to help.
+
+- **Easiest:** fix a typo, a broken link or an unclear sentence in a lesson. On the site, every
+  lesson page has a "Suggest an edit" link that opens the file in GitHub's editor; GitHub
+  forks the repository and opens the pull request for you.
+- **Small code changes:** issues labelled
+  [`good first issue`](https://github.com/Lee-Hyeong-Jin/devjinlab_robotics_curriculum/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
+  are scoped to one file or one screen, with the place to change named in the issue.
+  [`help wanted`](https://github.com/Lee-Hyeong-Jin/devjinlab_robotics_curriculum/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
+  marks larger work that nobody is doing yet.
+- **Translating a lesson:** see [Translating a lesson](#translating-a-lesson) below.
+- **Reviewing a lesson you know well:** if you work in control, SLAM, manipulation or another
+  area the course covers, reading the lessons of one module and reporting what is wrong or
+  out of date is one of the most useful things anybody can do. Open a content issue per
+  finding, or one issue for the module.
+
+Issues are written in English (a Korean summary line is welcome), so that anybody can pick
+one up. Comments in Korean are fine.
+
+### What to expect
+
+- **Who reviews:** the maintainer ([@Lee-Hyeong-Jin](https://github.com/Lee-Hyeong-Jin)). This
+  is a small project; there is one reviewer.
+- **How long:** a first reply usually comes within a week. If two weeks pass with nothing,
+  comment on the pull request — it was missed, not ignored.
+- **What is checked:** CI must be green (lint, types, tests, `rc validate`), the change does
+  one thing, and user-visible changes have a line in `CHANGELOG.md`. For a lesson: the claim
+  is right, the source supports it, and the Korean and English versions say the same thing.
+- **Sign-off in one command:** every commit needs a `Signed-off-by:` line (the
+  [DCO](#developer-certificate-of-origin-dco)). Add it as you commit with `git commit -s`, or
+  to commits you already made with `git rebase --signoff main`. When you edit through
+  GitHub's web editor, add the line `Signed-off-by: Your Name <your@email>` at the end of
+  the commit message yourself.
+- **If your pull request is declined:** you will be told why, and it is not a judgement of
+  you. Asking before a large change (open an issue first) saves both sides the work.
 
 ## Development setup
 
