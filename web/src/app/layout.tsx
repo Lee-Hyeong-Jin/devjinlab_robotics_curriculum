@@ -14,6 +14,10 @@ import { siteVerification } from '@/lib/seo'
 import { THEME_INIT_SCRIPT } from '@/lib/theme'
 import { NONCE_HEADER } from '@/middleware'
 
+// The math font (see `math` in globals.css). Its @font-face is fetched only by a page that
+// actually renders a formula.
+import '@fontsource/stix-two-math/400.css'
+
 import './globals.css'
 
 export async function generateMetadata(): Promise<Metadata> {

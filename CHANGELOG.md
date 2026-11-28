@@ -202,6 +202,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `npm audit` reports nothing for the web lockfile and the allowlist is empty.
 
 ### Fixed
+- Matrix brackets stretch to the height of the matrix on devices that have no math font
+  (most phones). The app serves STIX Two Math (SIL OFL 1.1) for formulas; it is downloaded only
+  by a page that renders one, and only when the device has no math font of its own (#30).
 - The error screen shows a reference number that matches the web server's log, and recognises
   an unreachable API in production builds. It used to print React's generic "error #441"
   object to the browser console, which said nothing about the failure (#33).
