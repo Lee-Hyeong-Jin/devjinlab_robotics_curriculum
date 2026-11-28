@@ -85,7 +85,15 @@
     "faq5Q": "Do I need a robot or a simulator?",
     "faq5A": "No. The lessons, quizzes and the calculation and implementation problems can all be done on a laptop. This site does not integrate a simulator; public tools and datasets you can practise with are linked in the resource library.",
     "faq6Q": "Is it available in Korean as well?",
-    "faq6A": "Yes. Every lesson is available in English and Korean. Switch with the language selector at the top of the page."
+    "faq6A": "Yes. Every lesson is available in English and Korean. Switch with the language selector at the top of the page.",
+    "faq7Q": "Who is this course for?",
+    "faq7A": "Anyone who wants to study robotics seriously, whatever their background: a software developer moving into robotics, a student preparing for research, or a hobbyist who wants the theory behind what they build. It teaches the theory and the algorithms, with problems you solve on a laptop. It does not teach electronics, mechanical design or how to assemble a robot.",
+    "faq8Q": "What will I be able to do when I finish?",
+    "faq8A": "After the Robotics Expert Course you can describe a robot's motion with coordinate frames and kinematics, design and tune a feedback controller, estimate where a robot is from noisy sensors, plan a path through a map, and read the code of a ROS 2 system. The researcher track goes on to reading research papers and reproducing their results.",
+    "faq9Q": "Are there lecture videos?",
+    "faq9A": "There are no videos made for this site. Each lesson links the free lecture videos, textbooks and papers it is based on, and its study plan says which to watch or read first.",
+    "faq10Q": "Who writes the lessons? Is AI involved?",
+    "faq10A": "The course is maintained by a software developer who is studying robotics, not by a robotics professor. The sources for each lesson are chosen first; the lesson text is a summary of those sources, and AI is used in writing and rewriting it. Mistakes are possible, so check a result against the linked sources when it matters, and please report an error as a content issue in the project's GitHub repository."
   },
   "guide": {
     "title": "How to learn robotics",
