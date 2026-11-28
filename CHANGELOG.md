@@ -266,6 +266,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   regress.
 
 ### Changed
+- The resource library is filtered and paged on the server, 25 resources at a time, with the
+  filter in the address (`/resources?kind=paper&q=kalman&page=2`). The page shrank from 830 KB
+  to about 200 KB, a filtered view can be linked to, and it works without JavaScript. Public
+  pages now have a size budget in the smoke test (#57, ADR 0019).
 - Revoking a personal access token and signing a device out from the profile ask for
   confirmation first, like the same actions in the admin console (#34).
 - **English is the service's default language** (ADR 0018). A visitor or a crawler that states

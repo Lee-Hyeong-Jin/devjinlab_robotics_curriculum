@@ -216,7 +216,13 @@
     "colLessons": "Lessons",
     "empty": "No resource matches these filters.",
     "externalLink": "Open in a new tab",
-    "unavailable": "The resource list could not be loaded."
+    "unavailable": "The resource list could not be loaded.",
+    "searchSubmit": "Search",
+    "countRange": "{from}–{to} of {total} resources",
+    "pages": "Resource list pages",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "pageOf": "Page {page} of {pages}"
   },
   "kind": {
     "book": "Book",

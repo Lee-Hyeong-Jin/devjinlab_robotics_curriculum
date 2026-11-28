@@ -216,7 +216,13 @@
     "colLessons": "연결 레슨",
     "empty": "조건에 맞는 자료가 없습니다.",
     "externalLink": "새 탭에서 열기",
-    "unavailable": "자료 목록을 불러올 수 없습니다."
+    "unavailable": "자료 목록을 불러올 수 없습니다.",
+    "searchSubmit": "검색",
+    "countRange": "자료 {total}개 중 {from}–{to}",
+    "pages": "자료 목록 페이지",
+    "previousPage": "이전 페이지",
+    "nextPage": "다음 페이지",
+    "pageOf": "{page} / {pages} 페이지"
   },
   "kind": {
     "book": "도서",

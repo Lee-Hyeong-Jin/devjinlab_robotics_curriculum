@@ -223,3 +223,50 @@ test('dark mode keeps the page readable', async ({ page }) => {
   // The dark token is a near-black; light would be near-white.
   expect(background).not.toBe('rgb(247, 248, 250)')
 })
+
+/**
+ * How large a page's HTML may be, uncompressed (#57). The resource library once reached
+ * 830 KB because it carried the whole catalogue twice; nothing noticed, because nothing
+ * measured. The budgets sit well above today's sizes and far below that.
+ */
+const HTML_BUDGET_BYTES = 350_000
+
+test('public pages stay within their size budget', async ({ page }) => {
+  await page.goto('/roadmap')
+  const lesson = await page.locator('a[href^="/modules/"]').first().getAttribute('href')
+  for (const path of ['/', '/roadmap', '/resources', '/resources?page=2', lesson ?? '/roadmap']) {
+    const response = await page.request.get(path)
+    expect(response.ok(), path).toBe(true)
+    const bytes = (await response.body()).byteLength
+    expect(bytes, `${path} is ${Math.round(bytes / 1024)} KB`).toBeLessThan(HTML_BUDGET_BYTES)
+  }
+})
+
+test('the resource library filters and pages through the address', async ({ page }) => {
+  await page.goto('/resources')
+  const table = page.getByRole('table')
+  // One page of rows, not the whole catalogue.
+  const rows = table.getByRole('row')
+  expect(await rows.count()).toBeLessThanOrEqual(26) // the header plus 25
+  await expect(page.getByRole('status').first()).toContainText(/1–25/)
+
+  // Paging keeps to the address, so a page can be linked to.
+  await page.getByRole('link', { name: /다음 페이지|Next page/ }).click()
+  await page.waitForURL(/page=2/)
+  await expect(page.getByRole('status').first()).toContainText(/26–50/)
+
+  // A kind is a link, and it resets the page.
+  const kinds = page.getByRole('navigation', { name: /종류|Kind/ })
+  await kinds.getByRole('link').nth(1).click()
+  await page.waitForURL(/kind=/)
+  expect(new URL(page.url()).searchParams.has('page')).toBe(false)
+  await expect(kinds.locator('[aria-current="page"]')).toHaveCount(1)
+
+  // Searching keeps the kind and works without JavaScript (a plain GET form).
+  await page.locator('#resource-search').fill('zzzz-no-such-resource')
+  await page.locator('#resource-search').press('Enter')
+  await page.waitForURL(/q=zzzz/)
+  expect(new URL(page.url()).searchParams.has('kind')).toBe(true)
+  await expect(page.getByText(/조건에 맞는 자료가 없습니다|No resource matches/)).toBeVisible()
+  await expect(page.getByRole('table')).toHaveCount(0)
+})
