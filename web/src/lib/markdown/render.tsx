@@ -14,7 +14,7 @@ import { unified } from 'unified'
 
 import { CodeBlock } from '@/components/CodeBlock'
 
-import { rehypeFigures, remarkExpectedResults } from './lesson-blocks'
+import { rehypeFigures, remarkExpectedResults, remarkHints } from './lesson-blocks'
 import { normalizeDisplayMath } from './normalize'
 import { lessonSanitizeSchema } from './sanitize'
 import { rehypeFocusableScrollers } from './scroll'
@@ -70,6 +70,8 @@ export interface RenderOptions {
   headingOffset?: number
   /** Label of a folded ```` ```expected ```` block; the lesson page passes a translated one. */
   expectedLabel?: string
+  /** Label that opens the title of a folded ```` ```hint ```` block. */
+  hintLabel?: string
   /**
    * Where `figures/<name>` images are served from (`figureBase(lessonId)`). Without it a
    * figure cannot load and is left out.
@@ -79,7 +81,12 @@ export interface RenderOptions {
 
 export function renderMarkdown(
   markdown: string | undefined,
-  { headingOffset = 1, expectedLabel = 'Expected result', figureBase }: RenderOptions = {},
+  {
+    headingOffset = 1,
+    expectedLabel = 'Expected result',
+    hintLabel = 'If this failed',
+    figureBase,
+  }: RenderOptions = {},
 ): RenderedMarkdown {
   if (!markdown || markdown.trim() === '') return { content: null, headings: [] }
 
@@ -89,6 +96,7 @@ export function renderMarkdown(
     .use(remarkMath)
     .use(remarkGfm)
     .use(remarkExpectedResults(expectedLabel))
+    .use(remarkHints(hintLabel))
     .use(remarkRehype)
     .use(rehypeKatex, { output: 'mathml', throwOnError: false, strict: false })
     .use(rehypeHighlight, { detect: false, ignoreMissing: true })

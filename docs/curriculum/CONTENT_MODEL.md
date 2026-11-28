@@ -355,11 +355,12 @@ problems:
 | 14 | 목표(`goals`)의 `id` 가 코스 안에서 유일하고, `targets` 가 모두 그 코스의 레슨이며, 번역 파일의 `goals` 키가 실제 목표다 | validate |
 | 15 | 본문 ` ```expected ` 블록(연습 과제의 기대 결과)에 내용이 있고, `kind: exercise` 활동이 있는 레슨에만 있으며, 번역마다 블록 수가 원문과 같다 | validate |
 | 16 | 이미지에 대체 텍스트가 있다. 로컬 이미지는 레슨 옆 `figures/<name>.svg\|png` 이고 파일이 존재하며(SVG 는 스크립트·외부 참조 없음, 크기 제한), 번역이 원문과 같은 그림을 보여 준다 | validate |
+| 18 | 본문 ` ```hint ` 블록("막혔을 때")의 첫 줄에 증상이, 그 아래에 할 일이 있고, 번역마다 블록 수가 원문과 같다 | validate |
 | 17w | **경고**: `## 어디에 쓰는가`(영어 `## Where you will use this`) 절을 쓰기 시작한 모듈에서 그 절이 없는 레슨·번역이 있다 | validate |
 
-규칙 15~17 의 세 가지 본문 요소(쓰임새 절, 기대 결과 블록, 그림)는 `content/lesson_blocks.py` 가
+규칙 15~18 의 네 가지 본문 요소(쓰임새 절, 기대 결과 블록, 그림, 막혔을 때 힌트)는 `content/lesson_blocks.py` 가
 찾는다. 작성법은 `LESSON_TEMPLATE.md`, 그림을 만드는 방법은 ADR 0020 에 있다. 기초 단계(M1~M4)의
-모든 레슨은 쓰임새 절과 기대 결과를, M1~M3 의 모든 레슨은 그림을 하나 이상 가진다
+모든 레슨은 쓰임새 절과 기대 결과를, M1~M3 의 모든 레슨은 그림을 하나 이상 가진다. M11 도 같은 기준을 따른다
 (`tests/test_foundation_lessons.py` 가 지킨다).
 
 성공 시 `OK: N lessons in M modules`(경고가 있으면 `(N warning(s))` 가 붙는다).

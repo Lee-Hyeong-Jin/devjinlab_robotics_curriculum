@@ -185,6 +185,7 @@ export default async function GuidePage() {
             <li>{t('tip2')}</li>
             <li>{t('tip3')}</li>
             <li>{t('tipExamples')}</li>
+            <li>{t('tipRos')}</li>
           </ul>
         </section>
 

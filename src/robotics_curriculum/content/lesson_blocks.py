@@ -1,4 +1,4 @@
-"""Three conventions inside a lesson body, beyond plain Markdown.
+"""Four conventions inside a lesson body, beyond plain Markdown.
 
 * **Where you will use this** — a ``## `` section near the top that opens the lesson with one
   concrete robot situation: the robot, the task, and what goes wrong without this lesson.
@@ -6,6 +6,9 @@
 * **Expected result** — a fenced ```` ```expected ```` block after an exercise, holding the
   numbers or the qualitative outcome a correct attempt gives. A self-learner has nobody to ask
   whether their answer is right. Screens show it folded, so it is not a spoiler.
+* **If this failed** — a fenced ```` ```hint ```` block beside a step where newcomers get stuck.
+  Its first line names the symptom (it becomes the title), the rest says what to check.
+  Screens show it folded, under "If this failed: <symptom>".
 * **Figures** — ``![alt text](figures/<name>.svg)``: an image file kept in a ``figures``
   directory next to the lesson, always with alt text.
 
@@ -22,6 +25,7 @@ from robotics_curriculum.i18n import DEFAULT_LANG, translator
 
 USE_CASE_KEY = "lesson.use_case"
 EXPECTED_KEY = "lesson.expected"
+HINT_KEY = "lesson.hint"
 FIGURES_DIRNAME = "figures"
 FIGURE_SUFFIXES = (".svg", ".png")
 FIGURE_MAX_BYTES = 300_000
@@ -32,6 +36,7 @@ _IMAGE = re.compile(
 )
 _FIGURE_NAME = re.compile(r"^[a-z0-9][a-z0-9-]*\.(?:svg|png)$")
 EXPECTED_INFO = "expected"
+HINT_INFO = "hint"
 
 
 def use_case_headings(lang: str | None = None) -> list[str]:
@@ -73,6 +78,27 @@ def _blocks(body: str) -> Iterator[tuple[str, list[str]]]:
 def extract_expected(body: str) -> list[str]:
     """The Markdown of every ```` ```expected ```` block, in order (stripped; may be empty)."""
     return ["\n".join(lines).strip() for info, lines in _blocks(body) if info == EXPECTED_INFO]
+
+
+@dataclass(frozen=True, slots=True)
+class Hint:
+    """One ```` ```hint ```` block: the symptom it is for and what to do about it (Markdown)."""
+
+    title: str
+    body: str
+
+
+def split_hint(raw: str) -> Hint:
+    """Split a hint block's text into its first non-empty line (the symptom) and the rest."""
+    lines = raw.strip().splitlines()
+    if not lines:
+        return Hint("", "")
+    return Hint(lines[0].strip(), "\n".join(lines[1:]).strip())
+
+
+def extract_hints(body: str) -> list[Hint]:
+    """Every ```` ```hint ```` block of the body, in order."""
+    return [split_hint("\n".join(lines)) for info, lines in _blocks(body) if info == HINT_INFO]
 
 
 @dataclass(frozen=True, slots=True)

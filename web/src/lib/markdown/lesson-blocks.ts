@@ -19,6 +19,7 @@ import { normalizeDisplayMath } from './normalize'
  */
 
 const EXPECTED = 'expected'
+const HINT = 'hint'
 const FIGURE = /^figures\/([a-z0-9][a-z0-9-]*\.(?:svg|png))$/
 
 /** Where the app serves a lesson's figures from (`app/lesson-assets/…/route.ts`). */
@@ -59,6 +60,36 @@ export function remarkExpectedResults(label: string) {
             type: 'blockquote', // any container type: `hName` decides what it becomes
             data: { hName: 'details' },
             children: [summary, ...parseMarkdown((child as Code).value)],
+          } as RootContent
+        } else if ('children' in child) {
+          visit(child as Parent)
+        }
+      })
+    }
+    visit(tree)
+  }
+}
+
+/**
+ * Remark plugin: turn each ```` ```hint ```` block into `<details>`. The block's first line is
+ * the symptom and becomes the title ("If this failed: <symptom>"); the rest is Markdown.
+ */
+export function remarkHints(label: string) {
+  return () => (tree: MdastRoot) => {
+    const visit = (parent: Parent): void => {
+      parent.children.forEach((child, index) => {
+        if (child.type === 'code' && (child as Code).lang === HINT) {
+          const [first = '', ...rest] = (child as Code).value.trim().split('\n')
+          const title = first.trim()
+          const summary: Paragraph = {
+            type: 'paragraph',
+            data: { hName: 'summary' },
+            children: [{ type: 'text', value: title ? `${label}: ${title}` : label }],
+          }
+          parent.children[index] = {
+            type: 'blockquote',
+            data: { hName: 'details' },
+            children: [summary, ...parseMarkdown(rest.join('\n'))],
           } as RootContent
         } else if ('children' in child) {
           visit(child as Parent)

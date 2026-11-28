@@ -79,7 +79,7 @@
     "faq2Q": "Are the tutorials free?",
     "faq2A": "Yes. Every lesson and the resource library are free to read. An account is only needed to save your progress, quiz results and review cards.",
     "faq3Q": "What do I need to know before I start?",
-    "faq3A": "High-school mathematics is enough to begin. The maths you need — vectors, matrices, coordinate transforms — is covered in the first module. The example code is in Python, so being able to read Python helps.",
+    "faq3A": "High-school mathematics is enough to begin. The maths you need — vectors, matrices, coordinate transforms — is covered in the first module. The example code is in Python, so being able to read Python helps. The ROS 2 module additionally expects some software tooling: the Linux shell, Git, reading a C++ build (CMake) error, Python packaging and basic networking. You do not need these at the start; a short checklist lesson just before the ROS 2 practice says how far you need each and links to free material for what is missing.",
     "faq4Q": "How long does it take to finish?",
     "faq4A": "The Robotics Expert Course has {expertLessons} lessons and takes about {expertHours} hours of study. The researcher track has {researchLessons} lessons and takes far longer, because it includes paper reading and reproduction tasks.",
     "faq5Q": "Do I need a robot or a simulator?",
@@ -144,7 +144,8 @@
     "startBody": "Open the first lesson from the roadmap.",
     "startLink": "Open the robotics roadmap",
     "breadcrumb": "Study guide",
-    "tipExamples": "Run the Python examples in the lessons yourself. All they need is Python and `pip install numpy scipy`. Use the \"Copy\" and \"Download .py\" buttons on a code block, or, with the repository cloned, `rc example <lesson id> --run` to run a lesson's examples in one go. Every example is executed automatically on each change to the course (except the ones that need ROS 2)."
+    "tipExamples": "Run the Python examples in the lessons yourself. All they need is Python and `pip install numpy scipy`. Use the \"Copy\" and \"Download .py\" buttons on a code block, or, with the repository cloned, `rc example <lesson id> --run` to run a lesson's examples in one go. Every example is executed automatically on each change to the course (except the ones that need ROS 2).",
+    "tipRos": "You do not need ROS 2 installed for most of the course. Only the examples and exercises of the ROS 2 module (M8) and some capstone tasks (M10) need it; everything else runs on Python alone. M8 has a small Docker recipe for when you get there, and says when a hobby project is better off without ROS."
   },
   "seo": {
     "homeTitle": "Learn Robotics — Free Robotics Tutorials and Courses",
@@ -231,7 +232,8 @@
     "reviewed": "Reviewed by {reviewer} on {date}.",
     "notReviewed": "This lesson has not yet been reviewed by a domain expert.",
     "howWritten": "How this course is written",
-    "expectedResult": "Expected result (try it first, then open)"
+    "expectedResult": "Expected result (try it first, then open)",
+    "ifThisFailed": "If this failed"
   },
   "resources": {
     "title": "Resources",

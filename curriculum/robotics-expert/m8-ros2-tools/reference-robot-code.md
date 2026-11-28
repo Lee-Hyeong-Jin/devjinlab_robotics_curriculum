@@ -3,7 +3,7 @@ id: m8-reference-robot-code
 title: 레퍼런스 로봇 코드 읽기
 summary: 오픈소스 차동 구동 로봇 Andino 와 TurtleBot 의 저장소를 예로, ROS 2 로봇 프로젝트가 description·bringup·base·control·slam·navigation 패키지로 나뉘는 방식을 읽고, launch 파일에서 출발해 노드·파라미터·tf 로 따라 내려가는 코드 읽기 순서를 익힌다.
 objectives:
-  - 레퍼런스 로봇 저장소의 패키지들을 L8.4 스택 지도(하드웨어·제어·추정·계획) 위에 배치할 수 있다.
+  - 레퍼런스 로봇 저장소의 패키지들을 L8.5 스택 지도(하드웨어·제어·추정·계획) 위에 배치할 수 있다.
   - bringup launch 파일에서 출발해 실행되는 노드, 불러오는 YAML 파라미터, 발행되는 tf 를 추적할 수 있다.
   - 실행 중인 시스템을 ros2 CLI 로 조사해 코드에서 읽은 구조와 대조할 수 있다.
 prerequisites: [m8-stacks-dev-environment, m3-differential-drive]
@@ -50,6 +50,13 @@ resources:
 마이크로컨트롤러로 만든 완전 오픈소스 차동 구동 로봇이고, Humble·Jazzy 를 지원하며, 패키지가
 코스 모듈과 거의 1:1로 대응한다.
 
+## 어디에 쓰는가
+
+새 회사나 연구실에 들어가서, 또는 로봇을 사서 처음 하는 일은 코드를 짜는 것이 아니라 이미 있는 로봇
+저장소를 읽는 것이다. 어떤 패키지가 있고, launch 파일이 무엇을 띄우며, 내가 바꿔야 할 설정이 어디
+있는지 30분 안에 찾아내는 능력은 TurtleBot 이든 산업용 팔이든 똑같이 쓰인다. 잘 만든 공개 로봇의
+구조는 M10 캡스톤에서 내 로봇의 저장소를 짤 때 본보기가 된다.
+
 ## 개념
 
 ### 관례적인 패키지 분할
@@ -58,7 +65,7 @@ ROS 2 로봇 저장소는 대체로 같은 방식으로 나뉜다. Andino 를 �
 
 | 패키지 | 층 | 들어 있는 것 |
 |---|---|---|
-| `andino_description` | 모델 | URDF/xacro, 메시(L8.3) |
+| `andino_description` | 모델 | URDF/xacro, 메시(L8.4) |
 | `andino_firmware` | 하드웨어 | 마이크로컨트롤러 펌웨어(모터 PWM·엔코더 읽기) |
 | `andino_base` | 제어 | ros2_control 하드웨어 인터페이스(시리얼로 펌웨어와 통신) |
 | `andino_control` | 제어 | diff drive 컨트롤러 + joint state broadcaster 설정·launch |
@@ -174,7 +181,7 @@ questions:
 ## 이 단계 공부법
 
 1. **저장소 먼저:** Andino README 와 패키지 목록을 읽고, 본문 표를 직접 채워 본다.
-2. **추적:** 연습 과제 (2)의 launch 트리를 손으로 그린다. 막히면 L8.2 의 launch 절로 돌아간다.
+2. **추적:** 연습 과제 (2)의 launch 트리를 손으로 그린다. 막히면 L8.3 의 launch 절로 돌아간다.
 3. **비교:** TurtleBot 3 e-Manual 이나 TurtleBot 4 튜토리얼에서 같은 층(SLAM·Navigation)이
    어떻게 설정되는지 훑는다. TurtleBot 3 e-Manual 은 ROBOTIS Docs 로 이전 중이니 배포판 표기를 확인한다.
 4. **심화(선택, 유료):** *Mastering ROS 2* 의 ros2 controllers·Nav2 장을 읽으면 M6·M7 준비가 된다.

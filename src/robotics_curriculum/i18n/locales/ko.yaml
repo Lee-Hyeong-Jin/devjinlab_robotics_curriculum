@@ -152,6 +152,7 @@ lesson:
   study_guide: "이 단계 공부법"
   use_case: "어디에 쓰는가"
   expected: "기대 결과"
+  hint: "막혔을 때"
 
 roadmap:
   no_level: "(레벨 미지정)"

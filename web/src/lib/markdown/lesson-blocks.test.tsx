@@ -78,3 +78,19 @@ describe('lesson figures (#60)', () => {
     )
   })
 })
+
+describe('hint blocks (#64)', () => {
+  const BODY =
+    'Run the talker.\n\n```hint\n`ros2: command not found`\nSource the installation **in this terminal**.\n```\n'
+
+  it('folds the advice away under "If this failed: <symptom>"', () => {
+    const { container } = renderBody(BODY, { hintLabel: '막혔을 때' })
+    const details = container.querySelector('details')
+    expect(details?.hasAttribute('open')).toBe(false)
+    expect(details?.querySelector('summary')?.textContent).toBe(
+      '막혔을 때: `ros2: command not found`',
+    )
+    expect(details?.querySelector('strong')?.textContent).toBe('in this terminal')
+    expect(container.querySelector('pre')).toBeNull()
+  })
+})

@@ -193,3 +193,50 @@ def test_the_api_serves_only_the_figures_a_lesson_shows(tmp_path: Path) -> None:
     )
     assert client.get(f"{base}/m1-vectors-matrices/figures/..%2Fmodule.yaml").status_code == 404
     assert client.get(f"{base}/nope/figures/test-square.svg").status_code == 404
+
+
+# -- hint blocks (#64, #51) ----------------------------------------------------------------
+
+HINT_BODY = """Run the talker.
+
+```hint
+`ros2: command not found`
+You have not sourced the installation in this terminal:
+
+    source /opt/ros/jazzy/setup.bash
+```
+"""
+
+
+def test_hint_blocks_split_into_symptom_and_advice() -> None:
+    from robotics_curriculum.content.lesson_blocks import Hint, extract_hints
+
+    assert extract_hints(HINT_BODY) == [
+        Hint(
+            "`ros2: command not found`",
+            "You have not sourced the installation in this terminal:\n\n"
+            "    source /opt/ros/jazzy/setup.bash",
+        )
+    ]
+    assert extract_hints("```python\nx = 1\n```\n") == []
+
+
+def test_site_folds_a_hint_under_its_symptom() -> None:
+    from robotics_curriculum.i18n import translator
+    from robotics_curriculum.site.pages import render_hint_blocks
+
+    rendered = render_hint_blocks(HINT_BODY, translator("en"))
+    assert '??? tip "If this failed: `ros2: command not found`"' in rendered
+    assert "        source /opt/ros/jazzy/setup.bash" in rendered  # indented into the box
+    assert "```hint" not in rendered
+    assert '??? tip "막혔을 때: ' in render_hint_blocks(HINT_BODY)
+
+
+def test_validation_of_hint_blocks(tmp_path: Path) -> None:
+    # A symptom without advice, and a block the translation does not have.
+    root = _course_with(tmp_path / "a", "\n```hint\nonly a title\n```\n", files={})
+    messages = _messages(root)
+    assert any("hint block 1 needs the symptom on its first line" in m for m in messages)
+    assert any("1 hint block(s) in the original but 0 in 'en'" in m for m in messages)
+    fine = _course_with(tmp_path / "b", "\n" + HINT_BODY, files={}, translated=True)
+    assert [m for m in _messages(fine) if "hint" in m] == []

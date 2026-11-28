@@ -151,6 +151,7 @@ lesson:
   study_guide: "How to study this stage"
   use_case: "Where you will use this"
   expected: "Expected result"
+  hint: "If this failed"
 
 roadmap:
   no_level: "(no level)"

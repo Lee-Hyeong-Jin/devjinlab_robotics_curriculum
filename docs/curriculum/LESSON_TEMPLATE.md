@@ -68,6 +68,13 @@ papers: []                      # 선택. 코스 papers.yaml 의 논문 id 참�
 
 짧은 코드 블록(```python) 또는 계산 예시.
 
+학습자가 자주 막히는 단계 옆에는 접히는 힌트를 둔다. 첫 줄이 증상(제목), 나머지가 확인할 것이다.
+
+```hint
+`ros2: command not found`
+이 터미널에서 ROS 2 를 소싱하지 않았다. `source /opt/ros/jazzy/setup.bash` 를 실행한다.
+```
+
 ## 연습
 
 `activities`의 exercise에 대응하는 과제 설명.

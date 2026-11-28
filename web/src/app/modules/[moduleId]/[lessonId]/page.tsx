@@ -116,7 +116,11 @@ export default async function LessonPage({ params }: Params) {
     await webCliHints(stripLessonSections(lesson.body, { studyMethod: lesson.study_method }), {
       [lessonId]: quizPath,
     }),
-    { expectedLabel: t('expectedResult'), figureBase: figureBase(lessonId) },
+    {
+      expectedLabel: t('expectedResult'),
+      hintLabel: t('ifThisFailed'),
+      figureBase: figureBase(lessonId),
+    },
   )
   const studyMethod = renderMarkdown(lesson.study_method ?? undefined)
   // "Report a problem" and "suggest an edit" lead to the repository the lesson is written in.

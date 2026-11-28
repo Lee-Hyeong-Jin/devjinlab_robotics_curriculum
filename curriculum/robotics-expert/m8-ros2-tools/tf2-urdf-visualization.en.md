@@ -19,6 +19,15 @@ point from 0.3 seconds ago, in map coordinates now." This lesson covers tf2 and 
 with the tools that let you see and record the result. The sensor fusion and SLAM lessons of M5
 list this lesson as a prerequisite.
 
+## Where you will use this
+
+Putting an obstacle seen by the LiDAR on the map, or reaching for a cup where the camera saw it,
+needs the whole system to agree on "where on the robot, and facing which way, each sensor is
+mounted". tf2 manages the coordinate transforms of M1 for the whole robot over time, and URDF
+writes that structure down in one file. On a real robot most cases of "the map is rotated" or "the
+arm goes somewhere odd" are a wrong tf tree, which makes looking at tf in RViz the first step of
+debugging.
+
 ## Concepts
 
 ### The frame tree

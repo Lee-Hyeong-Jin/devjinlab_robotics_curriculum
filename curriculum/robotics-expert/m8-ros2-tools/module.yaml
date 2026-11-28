@@ -9,6 +9,7 @@ outcome: >-
 level: 중급
 lessons:
   - ros2-concepts-distros
+  - software-prerequisites
   - nodes-topics-launch
   - tf2-urdf-visualization
   - stacks-dev-environment

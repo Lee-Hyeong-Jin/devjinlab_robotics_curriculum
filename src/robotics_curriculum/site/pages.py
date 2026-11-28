@@ -23,6 +23,7 @@ from robotics_curriculum.content import (
     Resource,
     ResourceKind,
 )
+from robotics_curriculum.content.lesson_blocks import split_hint
 from robotics_curriculum.content.papers import citation, paper_index, resolve_lesson_papers
 from robotics_curriculum.content.problem_set import (
     PROBLEMSET_FENCE,
@@ -682,9 +683,12 @@ def render_lesson(model: SiteModel, summary: LessonSummary) -> str:
         out += [f"**{md_text(t('site.label.my_record'))}**: {md_text(record)}", ""]
     out += ["---", ""]
 
-    rendered = render_expected_blocks(
-        render_problem_set_blocks(
-            render_quiz_blocks(strip_leading_h1(text.body), lesson, t), lesson, t
+    rendered = render_hint_blocks(
+        render_expected_blocks(
+            render_problem_set_blocks(
+                render_quiz_blocks(strip_leading_h1(text.body), lesson, t), lesson, t
+            ),
+            t,
         ),
         t,
     )
@@ -836,6 +840,22 @@ def render_expected_blocks(body: str, t: Translator | None = None) -> str:
         return "\n".join([f'??? success "{label}"', "", indent(raw.strip()), ""])
 
     return _replace_fences(body, render, fence=EXPECTED_FENCE, name="expected")
+
+
+HINT_FENCE = re.compile(r"^(?P<fence>`{3,}|~{3,})\s*hint\s*$")
+
+
+def render_hint_blocks(body: str, t: Translator | None = None) -> str:
+    """Replace each ```` ```hint ```` fence with a folded "If this failed: <symptom>" box."""
+    t = t or translator(DEFAULT_LANG)
+    label = t("lesson.hint")
+
+    def render(_index: int, raw: str) -> str:
+        hint = split_hint(raw)
+        title = md_text(f"{label}: {hint.title}" if hint.title else label).replace('"', "'")
+        return "\n".join([f'??? tip "{title}"', "", indent(hint.body), ""])
+
+    return _replace_fences(body, render, fence=HINT_FENCE, name="hint")
 
 
 def render_problem_set_blocks(body: str, lesson: Lesson, t: Translator | None = None) -> str:

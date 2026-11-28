@@ -43,6 +43,7 @@ from robotics_curriculum.content.lesson_blocks import (
     FIGURE_MAX_BYTES,
     FIGURES_DIRNAME,
     extract_expected,
+    extract_hints,
     has_use_case,
     image_refs,
     svg_problem,
@@ -129,6 +130,8 @@ def _check_blocks(lesson: Lesson, path: Path) -> list[ContentError]:
 
     15. An ```` ```expected ```` block has text, belongs to a lesson with an exercise, and every
         language version has the same number of them.
+    18. A ```` ```hint ```` block names its symptom on the first line and says what to do below
+        it; every language version has the same number of them.
     16. An image has alt text. A local one is ``figures/<name>.svg|png`` next to the lesson, the
         file exists, is small, and an SVG carries no script or outside reference; every
         language version shows the same figures.
@@ -137,6 +140,7 @@ def _check_blocks(lesson: Lesson, path: Path) -> list[ContentError]:
     bodies = _lesson_bodies(lesson)
     has_exercise = any(activity.kind == ActivityKind.EXERCISE for activity in lesson.activities)
     expected_counts: dict[str, int] = {}
+    hint_counts: dict[str, int] = {}
     figures_used: dict[str, list[str]] = {}
 
     for lang, body in bodies:
@@ -154,6 +158,18 @@ def _check_blocks(lesson: Lesson, path: Path) -> list[ContentError]:
                     path, f"{where} has an expected-result block but no `kind: exercise` activity"
                 )
             )
+
+        hints = extract_hints(body)
+        hint_counts[lang] = len(hints)
+        for index, hint in enumerate(hints, 1):
+            if not hint.title or not hint.body:
+                errors.append(
+                    ContentError(
+                        path,
+                        f"{where}: hint block {index} needs the symptom on its first line and "
+                        f"what to do below it",
+                    )
+                )
 
         names: list[str] = []
         for image in image_refs(body):
@@ -189,6 +205,14 @@ def _check_blocks(lesson: Lesson, path: Path) -> list[ContentError]:
                     path,
                     f"lesson '{lesson.id}': {base_count} expected-result block(s) in the original "
                     f"but {expected_counts[lang]} in '{lang}'",
+                )
+            )
+        if hint_counts[lang] != hint_counts[DEFAULT_LANG]:
+            errors.append(
+                ContentError(
+                    path,
+                    f"lesson '{lesson.id}': {hint_counts[DEFAULT_LANG]} hint block(s) in the "
+                    f"original but {hint_counts[lang]} in '{lang}'",
                 )
             )
         if sorted(figures_used.get(lang, [])) != base_figures:
