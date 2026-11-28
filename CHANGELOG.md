@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- A completion made by mistake can be undone: "Undo completion" on the lesson screen,
+  `rc undone <lesson>` and `POST /api/v1/progress/undone`. The lesson goes back to in progress;
+  study time, the note, review cards and quiz history are kept (#39).
 - The landing page and the study guide answer four questions readers asked when the site was
   first shared: who the course is for, what you can do when you finish, whether there are
   lecture videos, and who writes the lessons — including that AI is used in writing them and how

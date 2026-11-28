@@ -819,7 +819,13 @@
     "alreadyDone": "You have already completed this lesson.",
     "doneWithNext": "Marked complete. Recommended next: {titles}",
     "markDoneAgain": "Record understanding again",
-    "doneAgainHint": "This lesson is already complete. Saving again replaces the understanding and the note."
+    "doneAgainHint": "This lesson is already complete. Saving again replaces the understanding and the note.",
+    "undoDone": "Undo completion",
+    "undoingDone": "Undoing…",
+    "undoDoneConfirm": "Undo this lesson's completion? Study time, your note and review cards stay; the understanding rating is cleared.",
+    "undoneHint": "Marked complete by mistake? You can undo it; the lesson goes back to in progress.",
+    "undone": "Completion undone. The lesson is in progress again.",
+    "undoneFailed": "Could not undo the completion."
   },
   "search": {
     "title": "Search",

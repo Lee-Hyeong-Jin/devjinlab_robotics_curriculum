@@ -31,6 +31,7 @@ cli:
   logged: "{lesson_id} 에 {time} 기록"
   done_line: "완료 {lesson_id} ({title}), 시간 {time}{extra}"
   done_understanding: ", 이해도 {value}"
+  undone_line: "완료 취소 {lesson_id} ({title}) — 진행 중으로 되돌렸습니다"
   now_recommended: "  이제 추천 순서에 들어왔습니다: {lesson_id} ({title})"
   next:
     empty: "할 일 없음: 지금 가능한 레슨을 모두 끝냈습니다"

@@ -142,3 +142,15 @@ def done(body: DoneRequest, index: Index, progress: Progress) -> DoneResult:
             body.lesson_id, understanding=body.understanding, note=body.note
         )
     return DoneResult(progress=saved, unlocked_lesson_ids=[les.id for les in now_recommended])
+
+
+@router.post("/undone", response_model=LessonProgress)
+def undone(body: StartRequest, index: Index, progress: Progress) -> LessonProgress:
+    """Take back a completion made by mistake: the lesson is in progress again.
+
+    The completion time and the understanding rating are cleared; study time, the note, review
+    cards and quiz history stay. 409 when the lesson is not marked done.
+    """
+    index.lesson(body.lesson_id)
+    with progress.open() as service:
+        return service.undo_done(body.lesson_id)

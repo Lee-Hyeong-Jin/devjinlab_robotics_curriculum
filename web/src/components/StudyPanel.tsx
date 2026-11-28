@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { getLocale, getTranslations } from 'next-intl/server'
 
-import { logMinutes, markDone, startTimer, stopTimer } from '@/lib/actions/progress'
+import { logMinutes, markDone, startTimer, stopTimer, undoDone } from '@/lib/actions/progress'
 import type { LessonProgress, StudySession } from '@/lib/api/types'
 import { formatDateTime, formatSeconds } from '@/lib/format'
 
@@ -125,6 +125,19 @@ export async function StudyPanel({ moduleId, lessonId, progress, openSession }: 
             ]}
           />
         </div>
+
+        {done ? (
+          <div className="border-border-default border-t pt-4">
+            <p className="text-muted mb-2 text-xs">{t('undoneHint')}</p>
+            <RowAction
+              action={undoDone}
+              hidden={{ ...ids }}
+              label={t('undoDone')}
+              pendingLabel={t('undoingDone')}
+              confirm={t('undoDoneConfirm')}
+            />
+          </div>
+        ) : null}
 
         {progress ? (
           <p className="text-muted border-border-default border-t pt-3 text-xs">

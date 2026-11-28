@@ -301,6 +301,31 @@ class ProgressService:
         ]
         return progress, now_recommended
 
+    def undo_done(self, lesson_id: str) -> LessonProgress:
+        """Take back a completion: the lesson is in progress again.
+
+        For a lesson marked done by mistake. The completion time and the self-rated
+        understanding (which was a rating of that completion) are cleared; study time, the
+        note, review cards and quiz history are kept — they record work that did happen.
+
+        Raises:
+            ProgressError: The lesson is unknown or is not marked done.
+        """
+        self._entry(lesson_id)
+        with self.store.transaction():
+            progress = self._progress(lesson_id)
+            if progress.status is not LessonStatus.DONE:
+                raise ProgressError(f"lesson '{lesson_id}' is not marked done")
+            progress = progress.model_copy(
+                update={
+                    "status": LessonStatus.IN_PROGRESS,
+                    "completed_at": None,
+                    "understanding": None,
+                }
+            )
+            self.store.save_lesson(progress)
+        return progress
+
     def status(self, course_id: str | None = None) -> list[LessonSummary]:
         """Every lesson (optionally of one course) in teaching order with its progress."""
         stored = {p.lesson_id: p for p in self.store.list_lessons(self.user_id)}

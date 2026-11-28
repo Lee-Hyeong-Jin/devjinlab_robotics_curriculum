@@ -30,6 +30,7 @@ cli:
   logged: "logged {time} on {lesson_id}"
   done_line: "done {lesson_id} ({title}), time {time}{extra}"
   done_understanding: ", understanding {value}"
+  undone_line: "undone {lesson_id} ({title}): back in progress"
   now_recommended: "  now next in the recommended order: {lesson_id} ({title})"
   next:
     empty: "nothing to do: every available lesson is done"

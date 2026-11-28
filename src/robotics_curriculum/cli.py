@@ -338,6 +338,19 @@ def log(
 
 
 @app.command()
+def undone(
+    ctx: typer.Context,
+    lesson_id: Annotated[str, typer.Argument(help="Lesson id.")],
+) -> None:
+    """Take back a completion made by mistake (the lesson is in progress again)."""
+    t = _t(ctx)
+    with _service(ctx) as service:
+        service.undo_done(lesson_id)
+        title = service.lesson(lesson_id).title
+    typer.echo(t("cli.undone_line", lesson_id=lesson_id, title=title))
+
+
+@app.command()
 def done(
     ctx: typer.Context,
     lesson_id: Annotated[str, typer.Argument(help="Lesson id.")],
