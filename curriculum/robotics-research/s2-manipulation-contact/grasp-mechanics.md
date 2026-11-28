@@ -151,7 +151,7 @@ $$
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (force closure 의 볼록 기하 판정) [D3]** — (A1)(A2) 아래, 마찰 원뿔을 $k$ 개의
   모선(edge)으로 이산화해 얻은 렌치 생성자 $W$ 에 대해 다음이 **동치**다.
@@ -447,7 +447,7 @@ closure 로 오판정되는 것을 보인다 ⓒ $Q$ 와 LP 의 $\epsilon^\ast$ 
 
 ## 논문 읽기
 
-**필독 2편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`lesson-standard.md` §5).
+**필독 2편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절).
 
 1. **Ferrari & Canny, "Planning optimal grasps" (1992, ICRA)** — 역할: `원전(seminal)`.
    <https://doi.org/10.1109/ROBOT.1992.219918> (§2–3)
@@ -551,7 +551,7 @@ LP 의 $\epsilon^\ast > 0$ 과 ConvexHull 의 $Q > 0$ 이 2000개 무작위 배�
 ## 개념 점검
 
 `rc quiz s2-grasp-mechanics` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: s2-grasp-mechanics-quiz

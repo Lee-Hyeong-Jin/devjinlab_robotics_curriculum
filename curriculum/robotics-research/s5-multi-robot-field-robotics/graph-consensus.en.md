@@ -95,7 +95,7 @@ back to the prerequisite lesson named in parentheses is faster.
 ## Key results
 
 The bracket is the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (continuous-time consensus: convergence, the consensus value and the rate) [D3]** — on a
   connected undirected graph the solution of (1) satisfies
@@ -522,7 +522,7 @@ counterexample was confirmed numerically.
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read with 3-pass and attack questions 4, 5, 6 and 7 on the third pass.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with 3-pass and attack questions 4, 5, 6 and 7 on the third pass.
 
 1. **Olfati-Saber, Fax & Murray, "Consensus and cooperation in networked multi-agent systems"
    (2007, Proceedings of the IEEE)** — role: `survey`.
@@ -731,7 +731,7 @@ graph $\kappa = 14.67$ and $r^\ast = 0.8724$).
 ## Concept check
 
 Run `rc quiz s5-graph-consensus`. The quiz is for **concept checking only**; the real work is the
-problem set and the reproduction task above (`lesson-standard.md` §4).
+problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: what the decay exponent of continuous-time consensus is; which quantity
 governs the rate of discrete-time consensus at the optimal step size; the condition for the

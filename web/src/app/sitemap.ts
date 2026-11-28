@@ -6,7 +6,7 @@ import { LOCALES } from '@/i18n/locales'
 import { languageAlternates } from '@/lib/seo'
 
 /** Static pages worth listing, most important first. */
-const ROOTS = ['/', '/roadmap', '/guide', '/resources'] as const
+const ROOTS = ['/', '/roadmap', '/guide', '/about', '/resources'] as const
 
 /**
  * Built per request, not at build time: `RC_PUBLIC_CONTENT` and `RC_PUBLIC_URL` are runtime

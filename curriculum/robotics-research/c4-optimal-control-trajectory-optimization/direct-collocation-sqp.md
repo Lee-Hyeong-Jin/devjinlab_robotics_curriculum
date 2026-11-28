@@ -125,7 +125,7 @@ $$
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (전사의 희소 구조와 Riccati 와의 동일성) [D2]** — 결함 $\zeta_k$ 는
   $(x_k, x_{k+1}, u_k, u_{k+1})$ **에만** 의존하므로 제약 야코비안의 비영원소 수는 정확히
@@ -538,7 +538,7 @@ $4 \pm 0.3$ 임을 보인다 ⓓ 실패한 시도와 그 원인을 한 줄씩 �
 ## 논문 읽기
 
 **필독 3편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Hargraves & Paris, "Direct trajectory optimization using nonlinear programming and
    collocation" (1987, AIAA JGCD)** — 역할: `원전(seminal)`. 읽을 곳: §II–§III.
@@ -682,7 +682,7 @@ bias 를 다시 계산해 해석식과 $10^{-8}$ 이내로 맞추는 것도 권�
 ## 개념 점검
 
 `rc quiz c4-direct-collocation-sqp` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c4-direct-collocation-sqp-quiz

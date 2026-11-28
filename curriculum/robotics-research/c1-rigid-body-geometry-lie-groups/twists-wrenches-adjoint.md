@@ -287,7 +287,7 @@ $(-\hat{s}\times q_\perp + h\hat{s})\dot{\theta} = (-(0,0,1)\times(-2,0,0) + (0,
 
 ## 논문 읽기
 
-**필독 3편.** 고정 질문 10개(`research_notes/연구 트랙 설계/lesson-standard.md` §5)로 논문당
+**필독 3편.** 고정 질문 10개(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절)로 논문당
 1페이지 노트를 쓴다.
 
 1. **Featherstone, "A beginner's guide to 6-D vectors", part 1 (2010, IEEE RAM)** —

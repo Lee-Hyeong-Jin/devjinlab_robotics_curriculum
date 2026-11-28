@@ -6,3 +6,7 @@ and is licensed under the Apache License, Version 2.0 (see LICENSE).
 
 Curriculum content under curriculum/ is licensed separately under the
 Creative Commons Attribution 4.0 International License (see curriculum/LICENSE).
+
+The web application serves the STIX Two Math typeface for formulas
+(https://github.com/stipub/stixfonts), distributed through the
+@fontsource/stix-two-math package under the SIL Open Font License 1.1.

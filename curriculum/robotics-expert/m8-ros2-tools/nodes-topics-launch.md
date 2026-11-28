@@ -6,7 +6,7 @@ objectives:
   - colcon 워크스페이스(src·build·install·log)와 소싱(underlay·overlay)의 관계를 설명하고 빌드·실행 순서를 쓸 수 있다.
   - rclpy 노드에서 구독·타이머·발행·파라미터가 어떻게 연결되는지 읽고, M3 의 P 제어기를 노드로 옮길 수 있다.
   - 서비스와 액션의 호출 흐름 차이를 설명하고, launch 파일로 노드·파라미터·리매핑을 묶을 수 있다.
-prerequisites: [m8-ros2-concepts-distros, m3-pid-control]
+prerequisites: [m8-ros2-concepts-distros, m8-software-prerequisites, m3-pid-control]
 difficulty: 3
 estimated_minutes: 120
 tags: [ros2, rclpy, colcon, workspace, launch, parameters, actions]
@@ -42,7 +42,14 @@ resources:
 
 앞 레슨에서 CLI 로 그래프를 관찰했다면, 이번에는 그래프의 한 조각을 직접 만든다. 목표는 rclpy
 API 를 외우는 것이 아니라, 남이 쓴 ROS 2 패키지를 열었을 때 "어디서 구독하고, 어디서 계산하고,
-어디서 발행하는지"를 바로 찾는 눈을 기르는 것이다. L8.5 의 레퍼런스 로봇 코드 읽기가 이 눈을 쓴다.
+어디서 발행하는지"를 바로 찾는 눈을 기르는 것이다. L8.6 의 레퍼런스 로봇 코드 읽기가 이 눈을 쓴다.
+
+## 어디에 쓰는가
+
+센서 드라이버가 낸 데이터를 받아 계산하고 모터 명령을 내보내는 것, 곧 로봇 소프트웨어의 거의 전부가
+"구독하고, 계산하고, 발행하는 노드"다. M3 의 PID 와 경로 추종기를 실제 로봇에 올리려면 이 레슨의 형태로
+감싸야 한다. launch 파일과 파라미터는 같은 코드를 시뮬레이터와 실제 로봇, 로봇 A 와 로봇 B 에서 설정만
+바꿔 돌리게 해 주며, 공개된 로봇 저장소를 열면 가장 먼저 읽게 되는 파일이다.
 
 ## 개념
 

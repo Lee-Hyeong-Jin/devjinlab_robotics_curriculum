@@ -199,7 +199,7 @@ the open problem of C2.
 
 ## Paper reading
 
-**The textbook exception applies** (lesson standard §5). Read the following and write two one-page
+**The textbook exception applies** (the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read the following and write two one-page
 notes (fixed questions 1, 3, 4 and 8).
 
 1. **Nocedal & Wright, ch.8 (calculating derivatives)** — questions: (a) separate the cases where

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 420" width="460" height="420" role="img">
+<title>Two inverse-kinematics solutions</title>
+<rect width="460" height="420" fill="#ffffff"/>
+<line x1="28" y1="392" x2="28" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="119.82" y1="392" x2="119.82" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="211.64" y1="392" x2="211.64" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="303.45" y1="392" x2="303.45" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="395.27" y1="392" x2="395.27" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="312.1" x2="432" y2="312.1" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="223.32" x2="432" y2="223.32" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="134.54" x2="432" y2="134.54" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="45.76" x2="432" y2="45.76" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="312.1" x2="425.7" y2="312.1" stroke="#6b7280" stroke-width="1.2"/>
+<polygon points="432,312.1 425.61,314.95 425.61,309.24" fill="#6b7280"/>
+<line x1="119.82" y1="392" x2="119.82" y2="34.3" stroke="#6b7280" stroke-width="1.2"/>
+<polygon points="119.82,28 122.67,34.39 116.96,34.39" fill="#6b7280"/>
+<text x="432" y="306.1" fill="#6b7280" font-size="12" text-anchor="end" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif" font-style="italic">x</text>
+<text x="125.82" y="38" fill="#6b7280" font-size="12" text-anchor="start" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif" font-style="italic">y</text>
+<polyline points="119.82,312.1 303.45,312.1 303.45,134.54" fill="none" stroke="#0b7a6b" stroke-width="5" stroke-linejoin="round"/>
+<circle cx="119.82" cy="312.1" r="5" fill="#ffffff"/>
+<circle cx="119.82" cy="312.1" r="5" fill="none" stroke="#0b7a6b" stroke-width="2"/>
+<circle cx="303.45" cy="312.1" r="5" fill="#ffffff"/>
+<circle cx="303.45" cy="312.1" r="5" fill="none" stroke="#0b7a6b" stroke-width="2"/>
+<circle cx="303.45" cy="134.54" r="4" fill="#0b7a6b"/>
+<polyline points="119.82,312.1 119.82,134.54 303.45,134.54" fill="none" stroke="#1d4ed8" stroke-width="5" stroke-linejoin="round"/>
+<circle cx="119.82" cy="312.1" r="5" fill="#ffffff"/>
+<circle cx="119.82" cy="312.1" r="5" fill="none" stroke="#1d4ed8" stroke-width="2"/>
+<circle cx="119.82" cy="134.54" r="5" fill="#ffffff"/>
+<circle cx="119.82" cy="134.54" r="5" fill="none" stroke="#1d4ed8" stroke-width="2"/>
+<circle cx="303.45" cy="134.54" r="4" fill="#1d4ed8"/>
+<circle cx="303.45" cy="134.54" r="6" fill="#b45309"/>
+<text x="313.45" y="126.54" fill="#b45309" font-size="13" text-anchor="start" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">target (1, 1)</text>
+<text x="311.45" y="332.1" fill="#0b7a6b" font-size="13" text-anchor="start" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">θ = (0°, 90°)</text>
+<text x="129.82" y="122.54" fill="#1d4ed8" font-size="13" text-anchor="start" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">θ = (90°, −90°)</text>
+<line x1="119.82" y1="312.1" x2="303.45" y2="134.54" stroke="#6b7280" stroke-width="1" stroke-dasharray="4 4"/>
+</svg>

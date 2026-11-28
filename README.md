@@ -11,7 +11,7 @@ resources, a quiz and a "how to study this stage" section.
 
 | Course | For | Size |
 |---|---|---|
-| **Robotics Expert Course** (`robotics-expert`) | Learning robotics for the first time: maths, kinematics, control, perception, ROS 2, SLAM, navigation, manipulation, robot learning, system integration | 10 modules |
+| **Robotics Expert Course** (`robotics-expert`) | Learning robotics for the first time: maths, kinematics, control, perception, ROS 2, SLAM, navigation, manipulation, robot learning, system integration, plus motors, power and embedded basics | 11 modules |
 | **Researcher track** (`robotics-research`) | Preparing for graduate-level research: theory modules, paper reading and reproduction tasks | 17 modules |
 
 Module and lesson lists, and the translation status, are in
@@ -30,6 +30,23 @@ Module and lesson lists, and the translation status, are in
   [CONTRIBUTING.md](CONTRIBUTING.md). To report a mistake in a lesson, open a
   [content issue](https://github.com/Lee-Hyeong-Jin/devjinlab_robotics_curriculum/issues/new?template=content_issue.yml).
 
+## Community
+
+- **Ask a question or find a study partner:** open a
+  [question](https://github.com/Lee-Hyeong-Jin/devjinlab_robotics_curriculum/issues/new?template=question.yml)
+  — stuck on a lesson, unsure where to start, or looking for people to study with. English or
+  Korean, and nobody expects you to have searched everything first. The footer of every page on
+  the site links to the same form. (If GitHub Discussions is switched on for this repository
+  later, questions move there.)
+- **Found a mistake in a lesson?** Every lesson page on the site has "Report a problem" and
+  "Suggest an edit" links; or open a
+  [content issue](https://github.com/Lee-Hyeong-Jin/devjinlab_robotics_curriculum/issues/new?template=content_issue.yml)
+  directly. You do not need to be sure — "this looks wrong to me" is a useful report.
+- **Bugs and ideas for the platform:**
+  [issues](https://github.com/Lee-Hyeong-Jin/devjinlab_robotics_curriculum/issues). Small ones
+  are labelled `good first issue`.
+- **Security problems** go through private reporting ([SECURITY.md](SECURITY.md)), not issues.
+
 ## What the platform does
 
 The `rc` command-line tool validates the content, tracks your progress and study time,
@@ -39,36 +56,6 @@ dashboard, roadmap and resource library (local mode).
 
 Server mode adds a FastAPI server, accounts (local passwords or OIDC), PostgreSQL, and a Next.js
 web frontend on top of the same core library. `harness/roadmap.yaml` records what has shipped.
-
-## Architecture at a glance
-
-```
-curriculum/**.md ──► content loader ──┐
-  (Markdown + YAML front matter)      │
-                                      ├──► core library (robotics_curriculum)
-.rc/progress.db  ──► progress store ──┘      content · progress · learn · report · site
-  (SQLite, or PostgreSQL in server mode)              │
-                                                      ├──► rc CLI ──► terminal, static site
-                                                      └──► api/v1 (FastAPI) ──► web/ (Next.js)
-```
-
-The core library knows nothing about HTTP or the terminal: `progress` references lessons by id
-only, `learn` is the one module that joins content and progress, and the CLI and the API are
-two thin callers of the same functions. See `.claude/rules/engineering.md` for the boundaries
-and `docs/platform-design.md` for the full design.
-
-## Documentation
-
-| Document | What it covers |
-|---|---|
-| [docs/PRD.md](docs/PRD.md) | Product requirements, release plan, data model |
-| [docs/platform-design.md](docs/platform-design.md) | Platform design: layers, storage, auth, operations |
-| [docs/curriculum/CONTENT_MODEL.md](docs/curriculum/CONTENT_MODEL.md) | Lesson schema: front matter, activities, quiz blocks |
-| [docs/api/openapi.yaml](docs/api/openapi.yaml) | Generated API schema (role matrix: `docs/api/role-matrix.md`) |
-| [docs/operations/RUNBOOK.md](docs/operations/RUNBOOK.md) | Running server mode: configuration, backup, restore |
-| [docs/operations/RELEASE.md](docs/operations/RELEASE.md) | How a release is cut and verified |
-| [docs/adr/](docs/adr/) | Architecture decisions, numbered and dated |
-| [docs/HARNESS.md](docs/HARNESS.md) | How this repository is developed (graph, hooks, workflows) |
 
 ## Setup
 
@@ -86,6 +73,10 @@ uv run rc --lang en status                    # messages in English (or RC_LANG=
 uv run rc version
 uv run rc validate            # defaults to ./curriculum
 uv run rc show m1-vectors-matrices        # lesson summary (objectives, prerequisites) + body
+uv run rc path                            # goals the courses define; `rc path navigation` lists that path
+uv run rc next --goal navigation          # next lesson, staying on the path to a goal
+uv run rc example m1-vectors-matrices --run   # run the lesson's Python examples (--out FILE saves a .py)
+uv run rc undone m1-vectors-matrices      # take back a completion made by mistake
 uv run rc resources m1-vectors-matrices   # materials by kind + "이 단계 공부법"; or --module ID / --all
 ```
 
@@ -190,6 +181,36 @@ uv run pytest tests/test_cli.py::test_version_prints_package_version  # single t
 ```
 
 See `docs/adr/` for architecture decisions.
+
+## Architecture at a glance
+
+```
+curriculum/**.md ──► content loader ──┐
+  (Markdown + YAML front matter)      │
+                                      ├──► core library (robotics_curriculum)
+.rc/progress.db  ──► progress store ──┘      content · progress · learn · report · site
+  (SQLite, or PostgreSQL in server mode)              │
+                                                      ├──► rc CLI ──► terminal, static site
+                                                      └──► api/v1 (FastAPI) ──► web/ (Next.js)
+```
+
+The core library knows nothing about HTTP or the terminal: `progress` references lessons by id
+only, `learn` is the one module that joins content and progress, and the CLI and the API are
+two thin callers of the same functions. See `.claude/rules/engineering.md` for the boundaries
+and `docs/platform-design.md` for the full design.
+
+## Documentation
+
+| Document | What it covers |
+|---|---|
+| [docs/PRD.md](docs/PRD.md) | Product requirements, release plan, data model |
+| [docs/platform-design.md](docs/platform-design.md) | Platform design: layers, storage, auth, operations |
+| [docs/curriculum/CONTENT_MODEL.md](docs/curriculum/CONTENT_MODEL.md) | Lesson schema: front matter, activities, quiz blocks |
+| [docs/api/openapi.yaml](docs/api/openapi.yaml) | Generated API schema (role matrix: `docs/api/role-matrix.md`) |
+| [docs/operations/RUNBOOK.md](docs/operations/RUNBOOK.md) | Running server mode: configuration, backup, restore |
+| [docs/operations/RELEASE.md](docs/operations/RELEASE.md) | How a release is cut and verified |
+| [docs/adr/](docs/adr/) | Architecture decisions, numbered and dated |
+| [docs/HARNESS.md](docs/HARNESS.md) | How this repository is developed (graph, hooks, workflows) |
 
 ## Contributing
 

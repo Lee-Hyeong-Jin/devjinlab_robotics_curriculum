@@ -224,8 +224,7 @@ algebra (Husty 2007).
 
 ## Paper reading
 
-**Two must-read papers.** Write a one-page note per paper against the ten fixed questions (the
-lesson standard, §5).
+**Two must-read papers.** Write a one-page note per paper against the ten fixed questions (the "Reading papers" section of lesson `f0-how-to-read-this-track`).
 
 1. **Brockett, "Robotic manipulators and the product of exponentials formula" (1984, LNCIS)** —
    role: `seminal`. <https://doi.org/10.1007/BFb0031048>

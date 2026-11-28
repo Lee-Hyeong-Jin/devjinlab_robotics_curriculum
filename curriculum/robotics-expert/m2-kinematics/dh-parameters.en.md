@@ -20,6 +20,14 @@ thereby cuts that down to **four**. Proposed in 1955, it remains the most widely
 used way to describe manipulators in textbooks, manufacturer datasheets, and
 simulators.
 
+## Where you will use this
+
+A robot arm's manual carries a table of DH parameters. Computing the hand position of an arm such
+as a UR or a Franka yourself, reading a calibration paper, or understanding why the joint origins in
+a URDF have the values they have all need you to read that table. The convention, four numbers per
+link for the whole structure of the robot, is the input to forward kinematics in the next lesson and
+to manipulator dynamics in M6.
+
 ## Concepts
 
 ### Frame placement rules (standard DH)
@@ -50,6 +58,8 @@ multiplied in a different order. Mixing the two conventions produces wrong
 results, so whenever you read a datasheet or someone's code, check which
 convention it uses first. Modern Robotics mainly uses the product of exponentials
 (PoE) formulation instead and covers DH in Appendix C.
+
+![A two-link planar arm with link lengths 0.5 m and 0.3 m. At joint angles 30° and 45° its hand is at (0.511, 0.540).](figures/dh-parameters-two-link.svg)
 
 ## Key formulas
 
@@ -108,6 +118,36 @@ third revolute joint of length $L_3$) and for a 2-link arm mounted on a rotating
 base (where the first joint has $\alpha_1 = 90^\circ$). Then use the `dh()`
 function to compute the end-effector position at a few joint angles and compare
 with your hand calculation.
+
+```expected
+**Three-link planar arm** (taking $L_3 = 0.2$ m)
+
+| $i$ | $\theta_i$ | $d_i$ | $a_i$ | $\alpha_i$ |
+| --- | --- | --- | --- | --- |
+| 1 | $\theta_1$ | 0 | 0.5 | 0 |
+| 2 | $\theta_2$ | 0 | 0.3 | 0 |
+| 3 | $\theta_3$ | 0 | 0.2 | 0 |
+
+- Joint angles (0°, 0°, 0°): end at (1.0, 0, 0), the fully stretched length 0.5 + 0.3 + 0.2.
+- Joint angles (30°, 45°, −30°): end at (0.6521, 0.6812, 0). By hand,
+  $x = 0.5\cos30^\circ + 0.3\cos75^\circ + 0.2\cos45^\circ$.
+
+**Base rotation joint + two links** (taking a shoulder height of $d_1 = 0.4$ m)
+
+| $i$ | $\theta_i$ | $d_i$ | $a_i$ | $\alpha_i$ |
+| --- | --- | --- | --- | --- |
+| 1 | $\theta_1$ | 0.4 | 0 | 90° |
+| 2 | $\theta_2$ | 0 | 0.5 | 0 |
+| 3 | $\theta_3$ | 0 | 0.3 | 0 |
+
+- (0°, 0°, 0°): (0.8, 0, 0.4). The arm lies level along x.
+- (90°, 0°, 0°): (0, 0.8, 0.4). The base joint swings the whole arm round to y.
+- (0°, 90°, 0°): (0, 0, 1.2). The arm stands upright (0.4 + 0.5 + 0.3).
+- (45°, 30°, 45°): (0.3611, 0.3611, 0.9398).
+
+$\alpha_1 = 90^\circ$ lays the second joint's axis horizontal, which is why $\theta_2$ and $\theta_3$
+change the height.
+```
 
 ## Self-check questions
 

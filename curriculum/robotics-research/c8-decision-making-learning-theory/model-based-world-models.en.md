@@ -52,7 +52,7 @@ Neumann series (item D1 of the self-diagnosis in `c8-mdp-pomdp-bellman`).
 
 ## Key results
 
-The bracket gives the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket gives the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (model error → value error: the exact identity and the simulation lemma) [D3]** — for any
   policy $\pi$ the **exact identity**
@@ -375,7 +375,7 @@ differ, the model is fitted to a state estimate that cannot be run.
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions
-(`lesson-standard.md` §5).
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`).
 
 1. **Kearns & Singh, "Near-optimal reinforcement learning in polynomial time" (2002, Machine
    Learning)** — role: `seminal`. <https://doi.org/10.1023/A:1017984413808>
@@ -508,7 +508,7 @@ the bias reduction against $\beta$.
 ## Concept check
 
 Run `rc quiz c8-model-based-world-models`. The quiz is for **concept checking only**; the real work
-is the problem set and the reproduction task above (`lesson-standard.md` §4).
+is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: where the $(1-\gamma)^{-2}$ of the simulation lemma comes from; whether Dyna's
 bias disappears with more real data; how the optimal rollout length responds to critic noise;

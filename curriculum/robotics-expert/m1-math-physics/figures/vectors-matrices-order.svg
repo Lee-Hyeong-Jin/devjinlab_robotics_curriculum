@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 380" width="520" height="380" role="img">
+<title>Order of two linear maps</title>
+<rect width="520" height="380" fill="#ffffff"/>
+<line x1="62.8" y1="352" x2="62.8" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="120.8" y1="352" x2="120.8" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="178.8" y1="352" x2="178.8" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="236.8" y1="352" x2="236.8" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="294.8" y1="352" x2="294.8" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="352.8" y1="352" x2="352.8" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="410.8" y1="352" x2="410.8" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="468.8" y1="352" x2="468.8" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="318.48" x2="492" y2="318.48" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="262.62" x2="492" y2="262.62" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="206.76" x2="492" y2="206.76" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="150.9" x2="492" y2="150.9" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="95.03" x2="492" y2="95.03" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="39.17" x2="492" y2="39.17" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="318.48" x2="485.7" y2="318.48" stroke="#6b7280" stroke-width="1.2"/>
+<polygon points="492,318.48 485.61,321.34 485.61,315.63" fill="#6b7280"/>
+<line x1="178.8" y1="352" x2="178.8" y2="34.3" stroke="#6b7280" stroke-width="1.2"/>
+<polygon points="178.8,28 181.65,34.39 175.95,34.39" fill="#6b7280"/>
+<text x="492" y="312.48" fill="#6b7280" font-size="12" text-anchor="end" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif" font-style="italic">x</text>
+<text x="184.8" y="38" fill="#6b7280" font-size="12" text-anchor="start" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif" font-style="italic">y</text>
+<line x1="294.8" y1="318.48" x2="294.8" y2="318.48" stroke="#6b7280" stroke-width="1.5"/>
+<text x="294.8" y="333.48" fill="#6b7280" font-size="11" text-anchor="middle" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">1</text>
+<line x1="410.8" y1="318.48" x2="410.8" y2="318.48" stroke="#6b7280" stroke-width="1.5"/>
+<text x="410.8" y="333.48" fill="#6b7280" font-size="11" text-anchor="middle" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">2</text>
+<text x="172.8" y="210.76" fill="#6b7280" font-size="11" text-anchor="end" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">1</text>
+<text x="172.8" y="99.03" fill="#6b7280" font-size="11" text-anchor="end" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">2</text>
+<polygon points="178.8,318.48 294.8,318.48 294.8,206.76 178.8,206.76" fill="none" stroke="#6b7280" stroke-width="1.6" stroke-linejoin="round" stroke-dasharray="5 4"/>
+<polygon points="178.8,318.48 379.72,262.62 263.72,165.86 62.8,221.73" fill="#0b7a6b" stroke="#0b7a6b" stroke-width="2.2" stroke-linejoin="round" fill-opacity="0.12"/>
+<polygon points="178.8,318.48 379.72,206.76 321.72,110 120.8,221.73" fill="#1d4ed8" stroke="#1d4ed8" stroke-width="2.2" stroke-linejoin="round" fill-opacity="0.1"/>
+<line x1="300" y1="22" x2="322" y2="22" stroke="#6b7280" stroke-width="2.5" stroke-dasharray="5 4"/>
+<text x="328" y="26" fill="#1f2933" font-size="12" text-anchor="start" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">square</text>
+<line x1="300" y1="42" x2="322" y2="42" stroke="#0b7a6b" stroke-width="2.5"/>
+<text x="328" y="46" fill="#1f2933" font-size="12" text-anchor="start" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">a = S R  (rotate, scale)</text>
+<line x1="300" y1="62" x2="322" y2="62" stroke="#1d4ed8" stroke-width="2.5"/>
+<text x="328" y="66" fill="#1f2933" font-size="12" text-anchor="start" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">b = R S  (scale, rotate)</text>
+<text x="492" y="346" fill="#6b7280" font-size="12" text-anchor="end" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">area(a) = area(b) = det S = 2</text>
+</svg>

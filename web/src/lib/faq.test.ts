@@ -22,10 +22,12 @@ describe.each([
 ])('FAQ in %s', (_lang, messages) => {
   const t = translator(messages)
 
-  it('answers the ten landing questions, each with text and no unfilled placeholder', () => {
+  it('answers the thirteen landing questions, each with text and no unfilled placeholder', () => {
     const faq = landingFaq(t, totals)
-    expect(faq).toHaveLength(10)
-    expect(new Set(faq.map(([question]) => question)).size).toBe(10)
+    // Ten original questions plus the three the community asked next: how the course
+    // differs, whether it is maths-first, and what it does not cover (#62).
+    expect(faq).toHaveLength(13)
+    expect(new Set(faq.map(([question]) => question)).size).toBe(13)
     for (const [question, answer] of faq) {
       expect(question.trim()).not.toBe('')
       expect(answer.trim()).not.toBe('')

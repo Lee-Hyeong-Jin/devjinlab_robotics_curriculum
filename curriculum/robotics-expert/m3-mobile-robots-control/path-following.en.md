@@ -17,6 +17,14 @@ with PID (how error is reduced) makes the robot **arrive at a goal and follow a
 given path**. Tasks such as line tracing and goal seeking can all be solved with
 one of the controllers in this lesson.
 
+## Where you will use this
+
+A warehouse robot keeping to the aisle between shelves, a self-driving car holding the middle of
+its lane, and a field robot running along a furrow are all path following. The Pure Pursuit of this
+lesson is what Nav2's Regulated Pure Pursuit controller and open-source driving stacks contain, and
+the feel for choosing, with one look-ahead distance, between "accurate but twitchy" and "smooth but
+cutting corners" is used directly when tuning navigation in M9.
+
 ## Concepts
 
 ### 1) Go-to-goal
@@ -111,12 +119,45 @@ final, traj = follow(wps)
 print("final arrival error [m]:", round(float(np.hypot(*final[:2])), 4))  # under 0.005
 ```
 
+![Two trajectories around a square of waypoints. A switching radius of 0.05 m turns close to each corner; 0.20 m cuts the corners widely.](figures/path-following-square.svg)
+
 **Exercise:** (1) plot the trajectory and compare corner behavior and elapsed time
 for $\varepsilon$ = 0.02, 0.05, and 0.2 m. (2) Replace the angular velocity
 control with the `PID` class from the PID lesson, add a constant disturbance, and
 see how the final arrival error changes. (3) Resample the same square path into
 dense points, implement Pure Pursuit, and tabulate the peak cross-track error for
 $L_d$ = 0.1, 0.3, and 0.6 m.
+
+```expected
+1. A larger switching radius $\varepsilon$ turns earlier and finishes sooner but passes further from
+   the waypoints.
+
+   | $\varepsilon$ | Time taken | Closest approach to a corner |
+   | --- | --- | --- |
+   | 0.02 m | 27.2 s | about 0.01 m |
+   | 0.05 m | 24.5 s | about 0.03 m |
+   | 0.20 m | 20.3 s | about 0.17 m |
+
+   All three arrive within 0.005 m of the last point (only the last point is judged with a radius of
+   0.005 m).
+2. With a disturbance of −0.3 rad/s on the angular velocity, the P controller ($K_\alpha = 4$) carries
+   a heading error of about 5° for as long as it drives and leaves the path by up to about 0.03 m on
+   the first side. Switching to `PID(4, 2, 0)` brings the heading error under 1° and halves the
+   deviation to about 0.015 m. The final error is the same in both cases, below 0.005 m: the stop
+   condition is the distance to the goal, and the heading keeps being corrected as the goal nears.
+   The disturbance spoils the way there, not the arrival.
+3. A Pure Pursuit over points 1 cm apart at $v = 0.2$ m/s gives the maximum cross-track errors below.
+   The values depend a little on the implementation, but the growth, nearly proportional to $L_d$,
+   should be the same.
+
+   | $L_d$ | Maximum cross-track error |
+   | --- | --- |
+   | 0.1 m | about 0.03 m |
+   | 0.3 m | about 0.08 m |
+   | 0.6 m | about 0.16 m |
+
+   All of the error arises at the corners. On the straight sides all three run on the path.
+```
 
 ## Self-check questions
 

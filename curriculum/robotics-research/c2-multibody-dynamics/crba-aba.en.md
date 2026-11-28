@@ -53,7 +53,7 @@ Assumptions: a kinematic tree, single-DOF joints, rigid bodies, and $I_i \succ 0
 ## Key results
 
 The bracketed grade is the derivation depth (D0 cited / D1 sketched / D2 full derivation /
-D3 proof — see `lesson-standard.md` §2 in the track design notes).
+D3 proof — see the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (closed form of the mass matrix and branch sparsity) [D2]** — define the
   composite-rigid-body inertia
@@ -495,7 +495,7 @@ and tree shape concretely passes. Writing only "the hardware was different" does
 **Two must-reads.** One from 1982 and one from 1983 — a year apart, claiming $O(n^2)$ and $O(n)$
 for the same problem. Explaining to yourself **why two answers coexist** is the reading goal of
 this lesson (the answer is in step 5 of R2 and the crossover of R5). Write a one-page note on each
-with the ten fixed questions below (`lesson-standard.md` §5). Read in three passes and concentrate
+with the ten fixed questions below (the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes and concentrate
 on questions 4, 5 and 9 in the third pass.
 
 1. **Walker & Orin, "Efficient Dynamic Computer Simulation of Robotic Mechanisms"
@@ -647,7 +647,7 @@ transforms with rotation mixed in.
 ## Concept check
 
 Run `rc quiz c2-crba-aba`. The quiz is for **concept checking only**; the real work is the problem
-set and the reproduction task above (`lesson-standard.md` §4).
+set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: when $M_{ij} = 0$ is structurally guaranteed; the cost order of CRBA on a
 serial chain; the value of $I^a_jS_j$; what $d_i$ equals in terms of $M$; and which facts the

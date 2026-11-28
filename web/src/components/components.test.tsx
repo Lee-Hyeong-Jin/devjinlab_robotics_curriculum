@@ -1,9 +1,7 @@
 import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 
-import type { AuthProvider, CourseSummary, Paper, ResourceRef } from '@/lib/api/types'
-import { resource } from '@/test/factories'
+import type { AuthProvider, CourseSummary, Paper } from '@/lib/api/types'
 import { renderWithIntl } from '@/test/render'
 
 import { Chip } from './Chip'
@@ -16,7 +14,6 @@ import { ProgressBar } from './ProgressBar'
 import { PaperList } from './PaperList'
 import { ProblemSet, type RenderedProblem } from './ProblemSet'
 import { ProviderButtons } from './ProviderButtons'
-import { ResourceExplorer } from './ResourceExplorer'
 import { ResourceRow } from './ResourceRow'
 import { StageProgress } from './StageProgress'
 import { StatTile } from './StatTile'
@@ -293,55 +290,6 @@ describe('StageProgress', () => {
     expect(screen.getByText('모듈 1')).toBeInTheDocument()
     expect(screen.getByText('모듈 2')).toBeInTheDocument()
     expect(screen.getAllByRole('progressbar').length).toBe(3)
-  })
-})
-
-describe('ResourceExplorer', () => {
-  const resources: ResourceRef[] = [
-    resource({
-      title: 'Modern Robotics',
-      url: 'https://example.com/mr',
-      kind: 'book',
-      note: '3장',
-    }),
-    resource({ title: 'ROS 2 Tutorials', url: 'https://example.com/ros', kind: 'course' }),
-    resource({
-      title: 'SLAM 강의',
-      url: 'https://example.com/slam',
-      kind: 'video',
-      lesson_ids: ['l1'],
-    }),
-  ]
-
-  it('lists every resource with an external link (AC-WEB.5)', () => {
-    renderWithIntl(<ResourceExplorer resources={resources} />)
-    expect(screen.getByText('자료 3개')).toBeInTheDocument()
-    const link = screen.getByRole('link', { name: /Modern Robotics/ })
-    expect(link).toHaveAttribute('target', '_blank')
-  })
-
-  it('filters by kind', async () => {
-    const user = userEvent.setup()
-    renderWithIntl(<ResourceExplorer resources={resources} />)
-    await user.click(screen.getByRole('radio', { name: /영상/ }))
-    expect(screen.getByText('자료 1개')).toBeInTheDocument()
-    expect(screen.queryByText('Modern Robotics')).toBeNull()
-    expect(screen.getByText('SLAM 강의')).toBeInTheDocument()
-  })
-
-  it('searches title and scope note', async () => {
-    const user = userEvent.setup()
-    renderWithIntl(<ResourceExplorer resources={resources} />)
-    await user.type(screen.getByLabelText('자료 검색'), 'ros')
-    expect(screen.getByText('자료 1개')).toBeInTheDocument()
-    expect(screen.getByText('ROS 2 Tutorials')).toBeInTheDocument()
-  })
-
-  it('shows an empty state when nothing matches', async () => {
-    const user = userEvent.setup()
-    renderWithIntl(<ResourceExplorer resources={resources} />)
-    await user.type(screen.getByLabelText('자료 검색'), 'zzzz')
-    expect(screen.getByText('조건에 맞는 자료가 없습니다.')).toBeInTheDocument()
   })
 })
 

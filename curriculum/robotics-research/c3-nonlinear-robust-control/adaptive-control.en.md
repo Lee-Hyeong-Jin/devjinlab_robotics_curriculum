@@ -54,7 +54,7 @@ $$
 
 ## Key results
 
-The bracket is the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket is the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (linear-in-parameter structure) [D2]** — manipulator dynamics are **linear in the
   parameters**:
@@ -312,7 +312,7 @@ error versus lack of excitation) in learning-based control earns extra credit.
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read in three passes and attack questions 4, 5, 6, 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes and attack questions 4, 5, 6, 7 in the third.
 
 1. **Slotine & Li, "On the adaptive control of robot manipulators" (1987, IJRR)**
    — role: `seminal`. <https://doi.org/10.1177/027836498700600303>
@@ -412,7 +412,7 @@ buys).
 ## Concept check
 
 Take it with `rc quiz c3-adaptive-control`. The quiz is **for concept checking only**; the real
-work is the problem set and the reproduction task above (`lesson-standard.md` §4). Four questions
+work is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`). Four questions
 ask: what it means that no parameter-error term appears in $\dot V = -s^\top K_D s$; the PE
 condition as an integral inequality; whether converged tracking licenses reuse of the estimated
 parameters; and why the Gram rank falls from 5 to 2 at a set-point.

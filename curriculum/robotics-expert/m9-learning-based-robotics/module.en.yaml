@@ -10,3 +10,6 @@ summary: >-
   and safe evaluation.
   It uses numpy examples and document reading rather than simulator exercises, and leads
   into the learning-based track of the M10 capstone.
+outcome: >-
+  implement the basic algorithms of reinforcement and imitation learning, and read what a
+  robot-learning paper claims and how it was evaluated.

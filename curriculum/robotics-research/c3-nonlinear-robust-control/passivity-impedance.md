@@ -89,7 +89,7 @@ papers:
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (수동성 정리와 피드백 결합 안정성) [D3]** — 두 수동 계를 음의 피드백으로 결합하면
   ($u_1 = -y_2$, $u_2 = y_1$) 결합계는 수동이고 그 저장 함수는 $V_1+V_2$ 다. 한쪽이
@@ -390,7 +390,7 @@ $\ddot q = \dot q = 0$ 을 (2)와 동역학에 넣으면 $K_p(q-q_d) = \hat g - 
 ## 논문 읽기
 
 **필독 3편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Hogan, "Impedance control: an approach to manipulation" (1985, ASME JDSMC)**
    — 역할: `원전(seminal)`. <https://doi.org/10.1115/1.3140713>
@@ -478,7 +478,7 @@ $\ddot q = \dot q = 0$ 을 (2)와 동역학에 넣으면 $K_p(q-q_d) = \hat g - 
 ## 개념 점검
 
 `rc quiz c3-passivity-impedance` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c3-passivity-impedance-quiz

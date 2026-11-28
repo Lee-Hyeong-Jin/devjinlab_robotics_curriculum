@@ -18,6 +18,14 @@ arm cannot grasp it until that point is moved into the arm's reference frame. Th
 lesson is the shared foundation for M2 kinematics (DH parameters, forward
 kinematics) and M3 mobile robot pose estimation.
 
+## Where you will use this
+
+A LiDAR only says "something is 0.5 m in front of the sensor". Putting that obstacle on a map means
+moving the coordinates sensor → robot → world, and driving towards a goal on the map means moving
+them world → robot. The homogeneous transform of this lesson does both, and ROS 2's `tf2` (M8) is a
+tool that manages a tree of exactly these matrices. Path following in M3, SLAM in M5 and arm
+kinematics in M6 are all chains of this transform.
+
 ## Concepts
 
 ### Pose = rotation + position
@@ -52,6 +60,8 @@ or (2) an **operator** that moves a point or a frame. Also, multiplying a transf
 **on the left moves things relative to the fixed (world) frame**, while multiplying
 **on the right moves them relative to the current (body) frame**. ROS 2's `tf2` is
 the library that manages such frame trees; you meet it again in M8.
+
+![The axes of the world, robot and sensor frames and an obstacle point in one plane. The point the sensor sees becomes a world coordinate through the transforms T_wr and T_rs.](figures/coordinate-transforms-frames.svg)
 
 ## Key formulas
 
@@ -111,6 +121,22 @@ print(np.allclose(inv_se2(T_wr) @ T_wr, np.eye(3)))  # True
 plot how the obstacle's world coordinates move as you vary the robot's heading.
 Then use `inv_se2` to convert a goal point given in world coordinates into the
 robot frame (you will reuse this directly in M3 path following).
+
+```expected
+Changing only the robot's angle (position fixed at (2, 1)) puts the obstacle at:
+
+| Robot angle | Obstacle in the world |
+| --- | --- |
+| 0° | (2.6, 1.0) |
+| 90° | (2.0, 1.6) |
+| 180° | (1.4, 1.0) |
+
+The obstacle is always 0.1 + 0.5 = 0.6 m in front of the robot's origin, so turning the robot moves
+it along a circle of radius 0.6 m around (2, 1).
+
+The world goal (3, 3) becomes **(2, −1)** in the robot frame with `inv_se2(T_wr) @ [3, 3, 1]`: the
+robot faces world +y, so the goal is 2 m ahead and 1 m to its right.
+```
 
 ## Self-check questions
 

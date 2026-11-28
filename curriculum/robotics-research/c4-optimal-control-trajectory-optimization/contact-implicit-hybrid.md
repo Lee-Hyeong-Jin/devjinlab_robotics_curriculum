@@ -122,7 +122,7 @@ papers:
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (상보성은 비볼록이고 LICQ 는 모든 실현가능점에서 깨진다) [D3]** —
   $\mathcal{C} := \{(a,b) \in \mathbb{R}^2 : a \ge 0,\, b \ge 0,\, ab = 0\}$ 은 **비볼록**이고,
@@ -467,7 +467,7 @@ $\lambda_k > 0$ 인 스텝을 찾아 **공중에 떠 있는데 땅이 밀고 있
 ## 논문 읽기
 
 **필독 3편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Posa, Cantu & Tedrake, "A direct method for trajectory optimization of rigid bodies through
    contact" (2014, IJRR)** — 역할: `원전(seminal)`. 읽을 곳: §3(전사), §4(실험).
@@ -506,7 +506,7 @@ $\lambda_k > 0$ 인 스텝을 찾아 **공중에 떠 있는데 땅이 밀고 있
 > Posa 2014 의 그림을 재현하려면 논문의 기구학·질량 매개변수와 완화 스케줄을 논문에서
 > 읽어 와야 하고, 그 값들은 이 레슨이 **검증한** 범위 밖이다. 그래서 아래는 **R2** 로 두고,
 > Posa 의 그림 재현은 조건 4 의 **선택 과제**로 루브릭과 함께 둔다. 자기 손으로 검증하지
-> 않은 수치를 수용 기준으로 쓰지 않는다는 원칙(`lesson-standard.md` §6)을 따른 결정이다.
+> 않은 수치를 수용 기준으로 쓰지 않는다는 원칙(`f0-how-to-read-this-track` 레슨의 "재현 과제" 절)을 따른 결정이다.
 
 **입력 데이터**: 없다. 전부 상수로 지정한다.
 
@@ -621,7 +621,7 @@ $mgy_N = 4.905$ J 가 필요하고, $\int u^2dt$ 는 그것과 직접 비교되�
 ## 개념 점검
 
 `rc quiz c4-contact-implicit-hybrid` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c4-contact-implicit-hybrid-quiz

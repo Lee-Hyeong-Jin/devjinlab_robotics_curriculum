@@ -49,7 +49,7 @@ collision constraint on a robot has that shape.
 
 ## Key results
 
-The bracket is the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket is the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (CBF and forward invariance) [D3]** — if $\nabla h \ne 0$ on the boundary of
   $\mathcal{C}$ and a locally Lipschitz control $u(x)$ satisfies, with an extended class-
@@ -307,7 +307,7 @@ disturbance" earns extra credit.
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read in three passes and attack questions 4, 5, 6, 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes and attack questions 4, 5, 6, 7 in the third.
 
 1. **Ames, Xu, Grizzle & Tabuada, "Control barrier function based quadratic programs for safety
    critical systems" (2017, IEEE T-AC; arXiv 2016)** — role: `seminal`.
@@ -404,7 +404,7 @@ $u = \min(u_{\text{nom}}, 0)$, which still crosses the wall when the velocity is
 ## Concept check
 
 Take it with `rc quiz c3-cbf-safety-filter`. The quiz is **for concept checking only**; the real
-work is the problem set and the reproduction task above (`lesson-standard.md` §4). Four questions
+work is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`). Four questions
 ask: the key step in the forward-invariance proof; why the QP returns the nominal control exactly
 when the constraint is inactive; the input bound that the exponential CBF gives for a double
 integrator; and whether a CBF-QP still guarantees safety under input limits.

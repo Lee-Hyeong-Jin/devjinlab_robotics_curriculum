@@ -494,6 +494,8 @@ def visits(
         generated_at=now,
         range=range,
         since=since,
+        intake_refused=ops.intake_refused,
+        intake_refused_at=ops.intake_refused_at,
         totals=VisitTotals(
             views=views,
             visitor_days=sum(day.visitors for day in series),

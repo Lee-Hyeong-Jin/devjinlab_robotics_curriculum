@@ -6,7 +6,7 @@ summary: >-
   다룬다. 연구 트랙의 중심 모듈이며 레슨마다 핵심 결과를 직접 유도하고 원 논문을 수치적으로
   재현한다. 근거가 되는 대학원 과목은 CMU 16-745 전체와 Stanford AA203 전체, Berkeley CS287
   이고 교재는 Tedrake Underactuated Robotics ch.7-10,13 과 Nocedal-Wright ch.18 이다.
-  설계상 레슨은 7개다(research_notes/연구 트랙 설계/blueprint.md §5 의 C4 표).
+  레슨은 7개다.
 level: 연구
 lessons:
   - pontryagin-indirect

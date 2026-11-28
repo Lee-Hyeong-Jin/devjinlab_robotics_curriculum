@@ -249,8 +249,7 @@ dimension per variable), whereas a gauge null vector is a global direction **spa
 
 ## Paper reading
 
-**Two must-read papers.** Write a one-page note per paper against the ten fixed questions (the
-lesson standard, §5).
+**Two must-read papers.** Write a one-page note per paper against the ten fixed questions (the "Reading papers" section of lesson `f0-how-to-read-this-track`).
 
 1. **Absil, Mahony & Sepulchre, *Optimization Algorithms on Matrix Manifolds* (2008)** —
    role: `standard`. <https://doi.org/10.1515/9781400830244> (ch.4 and ch.7)

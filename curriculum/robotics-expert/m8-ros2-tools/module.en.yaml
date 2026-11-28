@@ -8,3 +8,6 @@ summary: >-
   stacks and development environment (ros2_control, Nav2, MoveIt 2, micro-ROS), and reading
   the code of a reference robot.
   The ROS 2 lessons of M5, M6 and M7 take this module as a prerequisite.
+outcome: >-
+  read how a ROS 2 system is wired from nodes, topics and tf, write a small node yourself, and
+  follow the code of a published robot.

@@ -67,7 +67,7 @@ measures it**.
 ## Key results
 
 The bracket gives the derivation depth (D0 cited / D1 skeleton / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the student's best is "teacher + posterior mean", and the gap is proportional to the
   posterior variance) [D2]** — the teacher's optimal policy is $u = -Kx - K_dd$ ($K = 1.362$,
@@ -500,7 +500,7 @@ lesson is not clean in the actual papers, and writing why, is excellent.
 ## Paper reading
 
 **Three must-read papers.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read in three passes, and in the third pass concentrate on questions 1,
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes, and in the third pass concentrate on questions 1,
 5 and 7. The three form **one lineage** — read them in order.
 
 1. **Lee, Hwangbo, Wellhausen, Koltun & Hutter, "Learning quadrupedal locomotion over challenging
@@ -699,7 +699,7 @@ baselines. (c) For Part E (b) the policy optimized to the end is the baseline.
 ## Concept check
 
 Take it with `rc quiz s3-locomotion-rl`. This quiz is a **concept check only**; the real work is
-the problem set and the reproduction task above (`lesson-standard.md` §4).
+the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 ## How to study this stage
 

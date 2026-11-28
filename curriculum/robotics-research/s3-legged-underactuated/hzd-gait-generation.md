@@ -99,7 +99,7 @@ $h_{\mathrm d}'(\alpha) = -0.8$ 이다.
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (가상 제약과 영역 동역학 면) [D3]** — $y = \theta_{\mathrm n} - h_{\mathrm d}(\theta_{\mathrm s})$ 의
   상대 차수는 2 이고, 디커플링 항
@@ -418,7 +418,7 @@ problems:
 ## 논문 읽기
 
 **필독 2편 + 권장 1편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Westervelt, Grizzle & Koditschek, "Hybrid zero dynamics of planar biped walkers" (2003,
    IEEE T-AC)** — 역할: `원전(seminal)`. <https://doi.org/10.1109/TAC.2002.806653> (§III·§IV).
@@ -500,7 +500,7 @@ problems:
 ## 개념 점검
 
 `rc quiz s3-hzd-gait-generation` 으로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: s3-hzd-gait-generation-quiz

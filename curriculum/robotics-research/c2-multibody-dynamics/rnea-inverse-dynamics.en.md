@@ -59,7 +59,7 @@ component order).
 ## Key results
 
 The bracketed grade is the derivation depth (D0 cited / D1 sketched / D2 full derivation /
-D3 proof — see `lesson-standard.md` §2 in the track design notes).
+D3 proof — see the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (velocity recursion and the spatial Jacobian) [D2]** —
   $$
@@ -452,7 +452,7 @@ the timing methodology passes. Writing only "there is no code" does not.
 **Two must-reads**: one is the original (1980), the other a map of the terrain twenty years later
 (2000). Reading both **with the same questionnaire** and writing for yourself what changed over
 those twenty years is the reading goal of this lesson. Write a one-page note on each with the ten
-fixed questions below (`lesson-standard.md` §5). Read in three passes and concentrate on
+fixed questions below (the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes and concentrate on
 questions 4, 7 and 9 in the third pass.
 
 1. **Luh, Walker & Paul, "On-Line Computational Scheme for Mechanical Manipulators"
@@ -600,7 +600,7 @@ condition of `c2-dynamics-derivatives-sysid`.
 ## Concept check
 
 Run `rc quiz c2-rnea-inverse-dynamics`. The quiz is for **concept checking only**; the real work
-is the problem set and the reproduction task above (`lesson-standard.md` §4).
+is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: where the bias term $v_i \times v_{J_i}$ of (3) comes from; which transform
 lifts a child's force to its parent in the backward recursion; what RNEA returns at $\dot q = 0$

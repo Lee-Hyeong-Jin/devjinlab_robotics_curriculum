@@ -100,7 +100,7 @@ papers:
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (최적 MAPF 는 NP-난해다) [D1]** — 가능성(feasibility)만 묻는 MAPF 는 격자에서 다항
   시간에 풀린다(토큰 교환식 구성적 알고리즘). 그러나 **sum-of-costs 나 makespan 을
@@ -414,7 +414,7 @@ $\max_i\lvert\pi_i\rvert \le \max_i\lvert\sigma_i\rvert$ 가 **여전히 성립*
 ## 논문 읽기
 
 **필독 3편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Sharon, Stern, Felner & Sturtevant, "Conflict-based search for optimal multi-agent
    pathfinding" (2015, Artificial Intelligence)** — 역할: `원전(seminal)`.
@@ -578,7 +578,7 @@ CBS 실패를 "상한 도달"과 "트리 소진"으로 구별해 센다.
 ## 개념 점검
 
 `rc quiz s5-multi-agent-planning` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: s5-multi-agent-planning-quiz

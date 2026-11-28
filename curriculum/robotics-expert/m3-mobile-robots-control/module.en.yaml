@@ -4,3 +4,6 @@ title: "M3 Mobile robots and control"
 summary: >-
   The kinematic model of a differential-drive robot, PID feedback control, and controllers
   for reaching a goal point and following a path.
+outcome: >-
+  predict how a differential-drive robot moves from its wheel speeds, and tune a PID
+  controller so the robot reaches a goal and follows a path.

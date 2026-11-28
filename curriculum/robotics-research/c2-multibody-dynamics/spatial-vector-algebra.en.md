@@ -97,7 +97,7 @@ combination of these five things.
 ## Key results
 
 The bracketed grade is the derivation depth (D0 cited / D1 sketched / D2 full derivation /
-D3 proof — see `lesson-standard.md` §2 in the track design notes).
+D3 proof — see the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (duality of motion and force space) [D2]** — the power $p = f \cdot v$ is a scalar
   independent of the coordinate frame. In a dual basis it is computed as $p = f^\top v$, and that
@@ -469,7 +469,7 @@ $I\,(0; \omega \times v_O)$.
 
 **Two must-reads.** Both are tutorials and together run to under twenty pages, but the entire
 notation of this module comes from them. Write a one-page note on each using the ten fixed
-questions below (`lesson-standard.md` §5). Read in three passes and concentrate on questions
+questions below (the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes and concentrate on questions
 4, 7 and 9 in the third pass — in tutorial papers those are the items that blur fastest: what is
 *not* guaranteed, and what it costs.
 
@@ -602,7 +602,7 @@ consistency constraint of `c2-dynamics-derivatives-sysid` will reject them.
 ## Concept check
 
 Run `rc quiz c2-spatial-vector-algebra`. The quiz is for **concept checking only**; the real work
-is the problem set and the reproduction task above (`lesson-standard.md` §4).
+is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: the transformation rule for force vectors; why spatial inertia moves by a
 congruence rather than a similarity transform; that spatial acceleration is not the acceleration

@@ -220,7 +220,7 @@ and changes the minimum-norm solution.
 
 ## Paper reading
 
-**The textbook exception applies** (lesson standard §5): the primary sources of this lesson are
+**The textbook exception applies** (the "Reading papers" section of lesson `f0-how-to-read-this-track`): the primary sources of this lesson are
 standard textbooks rather than papers. Read the two chapters below and write a **one-page note**
 for each, applying fixed questions 1, 3, 4 and 8 (problem, idea, guarantees, which assumption to doubt).
 

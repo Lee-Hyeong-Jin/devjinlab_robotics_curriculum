@@ -95,7 +95,7 @@ R5 와 재현 과제 Part C 가 이 셋이 실제로 어긋나는 것을 수치�
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (Hermann-Krener: 국소 약관측가능성의 랭크 조건) [D3]** — 해석적 계
   $\dot x = f(x,u)$, $z = h(x)$ 에 대해 $x_0$ 에서
@@ -448,7 +448,7 @@ $10^{-15}$ / $10^{-1}$ / $10^{-15}$ 규모 ⓑ FEJ 의 $N$ 을 **첫 추정**에
 ## 논문 읽기
 
 **필독 3편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Huang, Mourikis & Roumeliotis, "Observability-based rules for designing consistent EKF SLAM
    estimators" (2010, IJRR)** — 역할: `원전(seminal)`.
@@ -708,7 +708,7 @@ Part B 의 표준 EKF 값이 어떻게 변하는지 본다(거짓 정보는 추�
 ## 개념 점검
 
 `rc quiz c5-observability-consistency` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c5-observability-consistency-quiz

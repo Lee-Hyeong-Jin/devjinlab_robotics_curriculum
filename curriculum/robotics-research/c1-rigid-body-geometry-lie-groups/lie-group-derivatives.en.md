@@ -271,7 +271,7 @@ length scale (e.g. a characteristic length of the robot), and that the choice ch
 ## Paper reading
 
 **Two must-read papers.** Write a one-page note per paper against the ten fixed questions
-(the lesson standard in the research-track design notes, §5).
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`).
 
 1. **Solà, Deray & Atchuthan, "A micro Lie theory for state estimation in robotics" (2018)** —
    role: `standard`. <https://arxiv.org/abs/1812.01537> (sections 2-4)

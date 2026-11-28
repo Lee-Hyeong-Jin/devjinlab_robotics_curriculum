@@ -126,7 +126,7 @@ $\lvert \mathbb{E}_p[J] - \mathbb{E}_q[J]\rvert$ 를 $D_{\mathrm{TV}}(p,q)$ 로 
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (스케일링 법칙의 형태) [D2]** — 동결 특징 위 최소제곱에서, 가우시안 설계와 잘 지정된
   모형($y = \phi^\top w_A + \varepsilon$)을 가정하면 목표 도메인의 기대 시험 손실이
@@ -407,7 +407,7 @@ $N_A\to\infty$ 에서 $\gamma^\star\to0$(목표 데이터만으로 충분하다)
 
 ## 논문 읽기
 
-**필독 2편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`lesson-standard.md` §5).
+**필독 2편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절).
 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Kaplan, McCandlish, Henighan et al., "Scaling laws for neural language models" (2020, arXiv)**
@@ -542,7 +542,7 @@ def sample(w, n, domain, rng):
 ## 개념 점검
 
 `rc quiz s4-robot-data-scaling` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: s4-robot-data-scaling-quiz

@@ -13,6 +13,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from robotics_curriculum import content
 from robotics_curriculum.content import Activity, ResourceKind, level_label
+from robotics_curriculum.content.paths import goal_path
 from robotics_curriculum.i18n import DEFAULT_LANG, get_translator
 from robotics_curriculum.learn import AnswerFeedback, CardView, QuestionView, SubmissionResult
 from robotics_curriculum.learn.stats import StageProgress, WeekStats, stage_label
@@ -141,6 +142,12 @@ class LessonProblem(Schema):
     # document — the error shape won and this one vanished from the contract.
 
 
+class LessonReview(Schema):
+    date: date
+    reviewer: str
+    note: str | None = None
+
+
 class Lesson(LessonSummary):
     objectives: list[str]
     activities: list[Activity]
@@ -164,6 +171,19 @@ class Lesson(LessonSummary):
     )
     prev_lesson_id: str | None = Field(description="Previous lesson in course order.")
     next_lesson_id: str | None = Field(description="Next lesson in course order.")
+    review: LessonReview | None = Field(
+        default=None,
+        description=(
+            "Who checked the lesson and when; null when no domain expert has reviewed it yet."
+        ),
+    )
+    source_path: str | None = Field(
+        default=None,
+        description=(
+            "The lesson's source file in the language served, relative to the repository "
+            "root (`curriculum/<course>/<module>/<lesson>.md`). For 'suggest an edit' links."
+        ),
+    )
 
 
 class ModuleSummary(Schema):
@@ -180,6 +200,10 @@ class ModuleSummary(Schema):
     lesson_count: int
     estimated_minutes: int = Field(description="Sum over the module's lessons.")
     lang: str = Field(default=DEFAULT_LANG, description="Language of `title` and `summary`.")
+    outcome: str | None = Field(
+        default=None,
+        description="What a learner can do after the module (one sentence), when it states one.",
+    )
 
     @classmethod
     def of(
@@ -196,6 +220,7 @@ class ModuleSummary(Schema):
             lesson_count=len(module.lessons),
             estimated_minutes=sum(lesson.estimated_minutes for lesson in module.lessons),
             lang=text.lang,
+            outcome=text.outcome,
         )
 
 
@@ -234,8 +259,60 @@ class Stage(Schema):
     modules: list[ModuleSummary]
 
 
+class PathLesson(Schema):
+    """One step of a learning path."""
+
+    id: str
+    title: str
+    module_id: str
+    estimated_minutes: int
+
+
+class GoalPath(Schema):
+    """A named learning path: the lessons one goal needs, in teaching order."""
+
+    id: str
+    title: str
+    summary: str
+    target_ids: list[str] = Field(description="The lessons that reach the goal.")
+    lesson_ids: list[str] = Field(
+        description="The targets and everything they depend on, in teaching order."
+    )
+    lessons: list[PathLesson] = Field(
+        description="The same lessons with what a screen needs to list them."
+    )
+    estimated_minutes: int = Field(description="Sum over `lesson_ids`.")
+
+    @classmethod
+    def of(cls, course: content.Course, goal: content.models.Goal, lang: str | None) -> GoalPath:
+        found = goal_path(course, goal)
+        title, summary = course.localized_goal(goal, lang)
+        module_of = {lesson.id: module.id for module in course.modules for lesson in module.lessons}
+        return cls(
+            id=goal.id,
+            title=title,
+            summary=summary,
+            target_ids=list(found.targets),
+            lesson_ids=list(found.lesson_ids),
+            lessons=[
+                PathLesson(
+                    id=lesson.id,
+                    title=lesson.localized(lang).title,
+                    module_id=module_of[lesson.id],
+                    estimated_minutes=lesson.estimated_minutes,
+                )
+                for lesson in found.lessons
+            ],
+            estimated_minutes=found.total_minutes,
+        )
+
+
 class Course(CourseSummary):
     stages: list[Stage] = Field(description="Modules grouped by level, in course order.")
+    goals: list[GoalPath] = Field(
+        default_factory=list,
+        description="Goal-based learning paths the course defines (empty when it has none).",
+    )
 
 
 class ResourceRef(Resource):

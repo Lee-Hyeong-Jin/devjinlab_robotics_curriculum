@@ -57,7 +57,7 @@ it does not. The recommended prerequisites are `s1-loop-closure-lifelong` and
 ## Key results
 
 The bracket gives the derivation depth (D0 cited / D1 skeleton / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the error probability of association with semantics) [D2]** — choosing by geometry alone
   between two objects with separation ratio $r$ has error probability $\Phi(-r/2)$. If the two
@@ -426,7 +426,7 @@ the metric from the tables of the paper.
 ## Paper reading
 
 **Two must-read papers.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read in three passes, and in the third pass concentrate on questions 1,
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes, and in the third pass concentrate on questions 1,
 5 and 8.
 
 1. **Salas-Moreno, Newcombe, Strasdat, Kelly & Davison, "SLAM++: simultaneous localisation and
@@ -627,7 +627,7 @@ is the baseline.
 ## Concept check
 
 Take it with `rc quiz s1-semantic-scene-graphs`. This quiz is a **concept check only**; the real
-work is the problem set and the reproduction task above (`lesson-standard.md` §4).
+work is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 ## How to study this stage
 

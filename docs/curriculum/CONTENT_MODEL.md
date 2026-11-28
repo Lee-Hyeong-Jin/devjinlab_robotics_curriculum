@@ -32,6 +32,25 @@ curriculum/
 | `summary` | str | O | 한두 문장 요약 |
 | `tags` | list[str] | - | 기본 `[]` |
 | `modules` | list[str] | - | 모듈 디렉터리 이름, 순서대로 |
+| `goals` | list[Goal] | - | 목표별 학습 경로. 기본 `[]` |
+
+### 목표 (`goals`)
+
+코스는 첫 레슨부터 마지막 레슨까지 한 줄이다. 목표("자율주행 로봇을 만들고 싶다")는 그중 일부만
+필요로 한다. 목표는 **도달 레슨**만 적는다. 경로(그 레슨들과, 직접·간접으로 의존하는 모든 레슨을
+교육 순서로 늘어놓은 것)는 선수지식 그래프에서 계산한다(`content/paths.py`).
+
+```yaml
+goals:
+  - id: navigation                # slug, 코스 안에서 유일
+    title: 자율주행 (내비게이션)
+    summary: 지도 위에서 경로를 계획하고 장애물을 피해 목적지까지 가는 로봇.
+    targets: [m6-nav2-architecture-behavior-trees]   # 이 코스의 레슨 id, 1개 이상
+```
+
+번역은 `course.<lang>.yaml` 에 `goals: {<id>: {title, summary}}` 로 둔다(구조인 `targets` 는
+옮기지 않는다). 쓰이는 곳: `rc path [목표|레슨]`, `rc next --goal`, API 의 코스 응답 `goals`
+와 `GET /progress/next?goal=`, 웹 로드맵의 목표 선택(`/roadmap?goal=navigation`).
 
 ## `module.yaml`
 
@@ -40,6 +59,7 @@ curriculum/
 | `id` | slug | O | 모듈 ID (`m1-math-physics`) |
 | `title` | str | O | 표시 이름 |
 | `summary` | str | O | 요약 |
+| `outcome` | str | - | 한 문장: 이 모듈을 마치면 할 수 있는 것("…할 수 있다"). 랜딩과 모듈 화면에 나온다. 번역은 `module.<lang>.yaml` 의 `outcome` (영어는 "After this module you can" 뒤에 이어지게 소문자로 시작) |
 | `level` | `기초` \| `중급` \| `고급` \| `연구` | - | 모듈 수준. 기본 없음 |
 | `lessons` | list[str] | - | 레슨 파일 이름(확장자 제외), 순서대로 |
 
@@ -59,6 +79,19 @@ curriculum/
 | `resources` | list[Resource] | - | 단계별 학습 자료(교재·강의·영상 등). 아래 참조. 기본 `[]` |
 
 front matter에 정의되지 않은 키가 있으면 에러다(오타 방지). `body`, `path`는 예약어.
+
+### 검토 표시 (`review`, 선택)
+
+레슨 본문은 고른 자료의 요약이고 AI 의 도움을 받아 쓴다(사이트의 `/about`). 그 분야를 아는 사람이
+레슨을 끝까지 읽고 확인했을 때만 front matter 에 적는다. 없는 레슨은 화면에 "아직 전문가 검토를 받지
+않았습니다"로 나온다. 번역 파일에는 쓰지 않는다(구조이므로 원문에만 둔다).
+
+```yaml
+review:
+  date: 2026-11-20          # 검토한 날 (필수)
+  reviewer: 홍길동           # 이름 또는 핸들 (필수)
+  note: 수식과 예제만 확인    # 전체가 아니라면 무엇을 봤는지 (선택)
+```
 
 ### Activity
 
@@ -319,6 +352,17 @@ problems:
 | 11w | **경고**: 아무 레슨도 참조하지 않는 레지스트리 논문 / 레지스트리 `lessons[]` 가 실제 참조와 다름 | validate |
 | 13 | 본문 ` ```problemset ` 블록이 파싱되고 레슨의 `kind: exercise` 활동을 참조함: 모르는 `type`·`solution_policy`, `numerical` 의 `solution`+`tolerance` 누락, 다른 type 의 `tolerance`, 문항 `id` 중복 | validate |
 | 13w | **경고**: 문항이 4개 미만·8개 초과이거나 유형이 3종 미만 | validate |
+| 14 | 목표(`goals`)의 `id` 가 코스 안에서 유일하고, `targets` 가 모두 그 코스의 레슨이며, 번역 파일의 `goals` 키가 실제 목표다 | validate |
+| 15 | 본문 ` ```expected ` 블록(연습 과제의 기대 결과)에 내용이 있고, `kind: exercise` 활동이 있는 레슨에만 있으며, 번역마다 블록 수가 원문과 같다 | validate |
+| 16 | 이미지에 대체 텍스트가 있다. 로컬 이미지는 레슨 옆 `figures/<name>.svg\|png` 이고 파일이 존재하며(SVG 는 스크립트·외부 참조 없음, 크기 제한), 번역이 원문과 같은 그림을 보여 준다 | validate |
+| 18 | 본문 ` ```hint ` 블록("막혔을 때")의 첫 줄에 증상이, 그 아래에 할 일이 있고, 번역마다 블록 수가 원문과 같다 | validate |
+| 19 | 레슨(본문·요약·번역)과 모듈·코스 요약이 사이트에 공개되지 않는 문서(`research_notes`, `lesson-standard.md`, `blueprint.md`, "조사 보고서", "설계 노트", "research report", "design notes")를 가리키지 않는다. 내용을 직접 쓰거나 레슨 id 로 가리킨다 | validate |
+| 17w | **경고**: `## 어디에 쓰는가`(영어 `## Where you will use this`) 절을 쓰기 시작한 모듈에서 그 절이 없는 레슨·번역이 있다 | validate |
+
+규칙 15~18 의 네 가지 본문 요소(쓰임새 절, 기대 결과 블록, 그림, 막혔을 때 힌트)는 `content/lesson_blocks.py` 가
+찾는다. 작성법은 `LESSON_TEMPLATE.md`, 그림을 만드는 방법은 ADR 0020 에 있다. 기초 단계(M1~M4)의
+모든 레슨은 쓰임새 절과 기대 결과를, M1~M3 의 모든 레슨은 그림을 하나 이상 가진다. M11 도 같은 기준을 따른다
+(`tests/test_foundation_lessons.py` 가 지킨다).
 
 성공 시 `OK: N lessons in M modules`(경고가 있으면 `(N warning(s))` 가 붙는다).
 

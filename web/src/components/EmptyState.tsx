@@ -4,7 +4,7 @@ import { Card } from './Card'
 
 export interface EmptyStateProps {
   title: string
-  body?: string
+  body?: ReactNode
   action?: ReactNode
 }
 

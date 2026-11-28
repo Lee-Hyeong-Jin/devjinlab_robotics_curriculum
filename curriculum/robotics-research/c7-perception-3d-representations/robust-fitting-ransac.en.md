@@ -53,7 +53,7 @@ formula speaks only about (1).
 
 ## Key results
 
-The bracket is the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket is the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (iteration count and failure probability) [D3]** — when $I$ of $n$ points are inliers, the
   probability that a size-$m$ sample drawn without replacement is all-inlier is
@@ -400,7 +400,7 @@ paper says how each baseline's $\epsilon$ was chosen is an excellent answer.
 ## Paper reading
 
 **Two must-reads.** Write a one-page note on each, using the ten fixed questions
-(`lesson-standard.md` §5). Read in three passes, and attack questions 4, 5, 6 and 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes, and attack questions 4, 5, 6 and 7 in the third.
 For the full bibliography, including the recommended papers, run
 `rc papers c7-robust-fitting-ransac`.
 
@@ -513,7 +513,7 @@ compare iteration counts and accuracy (if installed).
 ## Concept check
 
 Run `rc quiz c7-robust-fitting-ransac`. The quiz is for **concept checking only**; the real work is
-the problem set and the reproduction task above (`lesson-standard.md` §4).
+the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: what the iteration-count formula actually guarantees; in which direction the
 $w^m$ approximation errs; the $\alpha = 0.05$ inlier threshold for a 2D reprojection error; the

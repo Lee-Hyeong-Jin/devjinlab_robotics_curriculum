@@ -43,7 +43,7 @@ parentheses is faster.
    the vocabulary the authors used, whereas a citation graph follows the **actual connections of the
    topic** — which matters especially in a field whose terminology has changed.
 2. To see the latest work in a field exhaustively, whose proceedings should you read? Name four for
-   robotics. (the benchmark in the design notes)
+   robotics.
    **Answer**: RSS, ICRA, IROS, CoRL (plus the journals IJRR, T-RO, RA-L, and NeurIPS, ICML, ICLR
    on the learning side).
 3. On reading a paper claiming "method A beats B" without statistical significance, what do you
@@ -108,8 +108,8 @@ The deliverables are judged as follows (four levels: below / pass / strong / pre
   to solve**, which is where most misunderstandings of assumptions come from.
 - **Copying the classification axis from an existing survey.** Then the survey is a summary, not a
   contribution.
-- **Not verifying URLs.** The research-track design notes in this repository are the
-  counterexample: of 145 entries, one could not be verified and was **removed from the list**.
+- **Not verifying URLs.** Building this track's own paper list is the example: of 145
+  candidates, one could not be verified and was **removed from the list**.
   Presenting an unverified link as verified makes the work irreproducible.
 
 ## Case study

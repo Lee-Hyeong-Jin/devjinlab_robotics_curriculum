@@ -103,7 +103,7 @@ $$
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 — `lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 — `f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (KKT 꼴과 해의 존재·유일성) [D3]** — (1)을 하나의 선형계로 쓰면
   $$
@@ -453,7 +453,7 @@ $\dot J\dot q$ 도 해석식을 쓴다 — 유한차분을 쓰면 재현 과제 
 **필독 3편.** 1972·1987·1992 — 같은 식 (2)를 **제약 안정화**, **제어 분해**, **변분 원리**
 세 방향에서 읽은 논문들이다. 세 편을 같은 질문지로 읽고 "(2)의 어느 부분을 각자 자기 문제로
 보았는가"를 한 단락으로 정리하는 것이 이 레슨의 읽기 목표다. 각 논문에 아래 고정 질문 10개로
-1페이지 노트를 쓴다(`lesson-standard.md` §5). 3-pass 로 읽고 3번째 패스에서 질문 4·7·8 을
+1페이지 노트를 쓴다(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고 3번째 패스에서 질문 4·7·8 을
 집중 공략한다.
 
 1. **Khatib, "A unified approach for motion and force control of robot manipulators: the
@@ -500,6 +500,8 @@ $M$, $b$ 는 앞 레슨의 `crba`·`rnea` 를 쓰고, $J$ 와 $\dot J\dot q$ 는
 (유한차분을 쓰면 조건 1 의 $10^{-12}$ 벽을 넘지 못한다).
 
 ```python
+import numpy as np
+
 L = np.array([0.5, 0.4, 0.3])  # link lengths
 MASS = np.array([1.2, 0.9, 0.6])
 
@@ -667,7 +669,7 @@ $\mathrm{tip}(0.6,-0.9,0.5)$ 로 **계산해서** 쓰는 것이 좋다(반올림
 ## 개념 점검
 
 `rc quiz c2-constrained-dynamics` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c2-constrained-dynamics-quiz

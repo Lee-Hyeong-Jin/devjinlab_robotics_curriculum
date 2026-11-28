@@ -56,7 +56,7 @@ reported separately** (the measurements in R3 are an example of why).
 
 ## Key results
 
-The bracket is the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket is the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the event generation model) [D2]** — a pixel $\mathbf{x}$ fires when the log intensity has
   changed by the threshold since its last event:
@@ -393,7 +393,7 @@ illumination, gel thickness and markers is excellent.
 ## Paper reading
 
 **Two must-reads.** Write a one-page note on each, using the ten fixed questions
-(`lesson-standard.md` §5). Read in three passes, and attack questions 4, 5, 6 and 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes, and attack questions 4, 5, 6 and 7 in the third.
 For the full bibliography, including the recommended papers, run
 `rc papers c7-event-tactile-sensing`.
 
@@ -508,7 +508,7 @@ that the pure-rotation warp no longer fits.
 ## Concept check
 
 Run `rc quiz c7-event-tactile-sensing`. The quiz is for **concept checking only**; the real work is
-the problem set and the reproduction task above (`lesson-standard.md` §4).
+the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: why an event camera thresholds log intensity; in which direction the rate
 model errs as the window shortens; what maximising the IWE variance actually measures; what to check

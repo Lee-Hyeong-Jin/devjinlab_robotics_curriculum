@@ -246,6 +246,54 @@ test('personal screens send an anonymous reader to sign in (QA B-25)', async ({ 
   }
 })
 
+test('a learner undoes a completion and deletes their account (#39, #32)', async ({ page }) => {
+  const account = freshAccount()
+  await signUpAndIn(page, account)
+
+  // Complete a lesson, then take it back.
+  await page.goto('/roadmap')
+  await page.locator('a[href^="/modules/"]').first().click()
+  await page.waitForURL(/\/modules\/[^/]+$/)
+  const moduleId = new URL(page.url()).pathname.split('/')[2]
+  await page.locator(`a[href^="/modules/${moduleId}/"]`).first().click()
+  await page.waitForURL(/\/modules\/[^/]+\/[^/]+$/)
+  await page.getByRole('button', { name: /완료로 표시|Mark complete/ }).click()
+  const undo = page.getByRole('button', { name: /완료 취소|Undo completion/ })
+  await expect(undo).toBeVisible()
+  page.once('dialog', (dialog) => dialog.accept())
+  await undo.click()
+  await expect(page.locator('[data-flash]')).toContainText(/완료 표시를 취소|Completion undone/)
+  await expect(undo).toHaveCount(0)
+  await expect(page.getByRole('button', { name: /완료로 표시|Mark complete/ })).toBeVisible()
+
+  // Delete the account: the acknowledgement and the right password are both required.
+  await page.goto('/profile')
+  const section = page.locator('form:has(input[name="deletePassword"])')
+  await section.locator('input[name="deletePassword"]').fill(account.password)
+  await section.locator('button[type="submit"]').click()
+  await expect(section.locator('input[name="deleteAcknowledge"]')).toHaveAttribute(
+    'aria-invalid',
+    'true',
+  )
+  await section.locator('input[name="deletePassword"]').fill('not-the-password-123')
+  await section.locator('input[name="deleteAcknowledge"]').check()
+  await section.locator('button[type="submit"]').click()
+  await expect(section.locator('input[name="deletePassword"]')).toHaveAttribute(
+    'aria-invalid',
+    'true',
+  )
+  await section.locator('input[name="deletePassword"]').fill(account.password)
+  await section.locator('button[type="submit"]').click()
+  await page.waitForURL(/\/login\?deleted=1/)
+  await expect(page.getByText(/계정이 삭제됐습니다|account has been deleted/)).toBeVisible()
+
+  // The account is gone: the same credentials no longer sign in.
+  await page.locator('input[name="email"]').fill(account.email)
+  await page.locator('input[name="password"]').fill(account.password)
+  await page.locator('form button[type="submit"]').click()
+  await expect(page.getByRole('alert').filter({ hasText: /올바르지|Invalid/ })).toBeVisible()
+})
+
 test('an admin screen refuses a learner (AC-WEB.4)', async ({ page }) => {
   await signUpAndIn(page, freshAccount())
   // The status line says it too, not only the screen (QA B-28).

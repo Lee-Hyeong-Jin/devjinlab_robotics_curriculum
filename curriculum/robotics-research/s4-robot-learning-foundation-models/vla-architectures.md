@@ -102,7 +102,7 @@ resources:
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (균등 양자화의 오차) [D2]** — 밀도가 구간 안에서 거의 평평하면(고해상도 가정)
   $$
@@ -392,7 +392,7 @@ $p_{\mathrm{pre}}\to p_{\mathrm{task}}$ 에서 $N^\star \to \infty$ 가 아니�
 
 ## 논문 읽기
 
-**필독 3편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`lesson-standard.md` §5).
+**필독 3편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절).
 
 1. **Brohan et al., "RT-2: vision-language-action models transfer web knowledge to robotic
    control" (2023, CoRL)** — 역할: `원전(seminal)`. <https://arxiv.org/abs/2307.15818> — §3–4.
@@ -494,7 +494,7 @@ numpy 만. **GPU 가 필요 없다.** 실제 VLA 미세조정은 아래 **선택
 ## 개념 점검
 
 `rc quiz s4-vla-architectures` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위 문제
-세트와 재현 과제다(`lesson-standard.md` §4).
+세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: s4-vla-architectures-quiz

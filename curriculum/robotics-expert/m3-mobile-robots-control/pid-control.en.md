@@ -19,6 +19,15 @@ differ from their commands because of friction, motor lag, and wheel slip.
 scheme and the one behind most control loops in industry. The controller you build
 here is a core component of the next lesson, path following.
 
+## Where you will use this
+
+The speed loop of a motor driver, attitude stabilization of a drone, position control of an arm
+joint and the steering of a line follower are all PID. Commercial motor controllers and the
+configuration files of ROS 2's `ros2_control` list $K_p$, $K_i$, $K_d$ and an integral limit as
+they are, so these are the first numbers you touch when a robot shakes or stops short. Path
+following in the next lesson and tuning Nav2's controllers in M9 start from knowing what each of the
+three terms does.
+
 ## Concepts
 
 ### The feedback loop
@@ -107,10 +116,38 @@ print(f"PID     : {run(4, 2, 0.2):6.2f} deg left")  # under 1 deg (at t = 5 s)
 With P alone the robot settles where $K_p e = 0.3$, that is at
 $e = 0.075$ rad $\approx 4.3^\circ$. The integral term removes that leftover error.
 
+![Step responses of the heading loop. The P controller stops 4.3° short of the 90° target; PI and PID reach it.](figures/pid-control-step.svg)
+
 **Exercise:** (1) plot $\theta(t)$ for each case and compare rise time and
 overshoot. (2) Delete the anti-windup line and raise $K_i$ to reproduce the large
 overshoot windup causes. (3) Add noise with a standard deviation of $1^\circ$ to
 the measurement and watch how much the output $\omega$ shakes as you vary $K_d$.
+
+```expected
+1. The three cases of the example (target 90°, disturbance −0.3 rad/s):
+
+   | Controller | Rise time (10→90%) | Overshoot | Error at 5 s |
+   | --- | --- | --- | --- |
+   | P (4, 0, 0) | 0.77 s | 0% | 4.3° short |
+   | PI (4, 2, 0) | 0.66 s | about 1% | −0.2° |
+   | PID (4, 2, 0.2) | 0.70 s | about 2.4% | −0.4° |
+
+   For the first 0.3 s or so the three curves coincide: the output is saturated at 3 rad/s.
+2. Without anti-windup the integral built up during saturation keeps pushing the robot after it has
+   passed the target.
+
+   | $K_i$ | Overshoot (anti-windup on) | Overshoot (off) |
+   | --- | --- | --- |
+   | 2 | 1% | 9% |
+   | 10 | 10% | 43% |
+   | 20 | 15% | 66% |
+
+3. With noise of standard deviation 1°, the standard deviation of the output $\omega$ after settling
+   is about 0.07, 0.66, 1.7 and 2.4 rad/s for $K_d$ = 0, 0.2, 0.5 and 1.0. The derivative term sends
+   the noise out multiplied by $1/\Delta t = 100$, so the shaking grows almost in proportion to $K_d$,
+   and from 0.5 the output hits the ±3 rad/s limit. This is why a low-pass filter is put on the
+   derivative term.
+```
 
 ## Self-check questions
 

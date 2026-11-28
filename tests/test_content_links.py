@@ -77,9 +77,14 @@ def test_an_unexpected_scheme_is_rejected(tmp_path: Path) -> None:
 
 
 def test_relative_asset_paths_are_left_alone(tmp_path: Path) -> None:
-    """Images and data files are legitimate relative links; only `.md` is the mistake."""
-    body = "![diagram](images/frame.png)\n\n[data](data/run.csv)\n"
-    assert messages(tmp_path, body) == []
+    """A data file is a legitimate relative link; only `.md` is the mistake."""
+    assert messages(tmp_path, "[data](data/run.csv)\n") == []
+
+
+def test_an_image_outside_the_figures_directory_is_refused(tmp_path: Path) -> None:
+    """Rule 16 (ADR 0020): a local image lives in `figures/` next to the lesson."""
+    found = messages(tmp_path, "![diagram](images/frame.png)\n")
+    assert len(found) == 1 and "must be `figures/<name>.svg` or `.png`" in found[0]
 
 
 def test_a_link_inside_a_fenced_block_is_not_a_link(tmp_path: Path) -> None:
@@ -112,7 +117,7 @@ def test_site_build_strict_fails_on_a_broken_link(tmp_path: Path) -> None:
     data = tmp_path / "data"
     out = tmp_path / "site"
     # An asset path, which rule 12 allows on purpose — only mkdocs can tell it is missing.
-    broken = write_course(tmp_path / "content", "![diagram](images/nowhere-at-all.png)\n")
+    broken = write_course(tmp_path / "content", "[data](data/nowhere-at-all.csv)\n")
     args = ["--data-dir", str(data), "--curriculum", str(broken.parent), "site", "build", "--out"]
 
     lenient = runner.invoke(app, [*args, str(out)])

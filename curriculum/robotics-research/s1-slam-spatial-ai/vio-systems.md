@@ -125,7 +125,7 @@ resources:
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (두 구조와 각자의 비용) [D2]** — VIO 는 같은 사후분포를 두 방식으로 근사한다.
   **필터형**(MSCKF)은 슬라이딩 윈도 밖 상태와 특징점을 **주변화해 버리고** 선형화를 한 번만
@@ -456,7 +456,7 @@ $\operatorname{rank}H_f$, $N$ 의 차원, 그리고 그 결과 상태 추정이 
 ## 논문 읽기
 
 **필독 2편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 서지와 권장 논문 전체 목록은 `rc papers s1-vio-systems` 로 본다.
 
 1. **Mourikis & Roumeliotis, "A multi-state constraint Kalman filter for vision-aided inertial
@@ -488,7 +488,7 @@ Barfoot ch.4.
 
 > **블루프린트와의 차이(명시)**: 설계안의 재현 과제는 "EuRoC 1개 시퀀스에서 공개 VIO 를 돌려
 > 보고된 ATE 와 30% 이내 일치, 설정 변경의 영향 측정"이다. 공개 VIO(OpenVINS·VINS-Mono)는
-> ROS 빌드와 수 GB 데이터를 요구하고 환경 구축이 과제의 대부분을 차지한다. 레슨 표준 §6 의
+> ROS 빌드와 수 GB 데이터를 요구하고 환경 구축이 과제의 대부분을 차지한다. `f0-how-to-read-this-track` 레슨의 "재현 과제" 절 의
 > 계산 예산 원칙에 맞춰 **필수 조건을 CPU 로 판정 가능한 네 가지**로 두고, EuRoC 실행을 아래
 > **선택 확장(R4)** 으로 분리했다. 필수 조건은 이 레슨의 세 정리(R2·R3·R5)를 정면으로 겨냥한다.
 
@@ -568,7 +568,7 @@ R4 는 **선택 과제**이고 이 레슨의 통과 조건이 아니다.
 ## 개념 점검
 
 `rc quiz s1-vio-systems` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: s1-vio-systems-quiz

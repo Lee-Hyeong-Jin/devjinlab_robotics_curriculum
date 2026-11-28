@@ -4,7 +4,7 @@ lang: en
 title: Reading reference robot code
 summary: Using the repositories of the open-source differential-drive robots Andino and TurtleBot as examples, read how a ROS 2 robot project splits into description, bringup, base, control, slam, and navigation packages, and learn the code-reading order that starts from the launch file and follows it down through nodes, parameters, and tf.
 objectives:
-  - Place the packages of a reference robot repository onto the stack map of L8.4 (hardware, control, estimation, planning).
+  - Place the packages of a reference robot repository onto the stack map of L8.5 (hardware, control, estimation, planning).
   - Start from the bringup launch file and trace the nodes it runs, the YAML parameters it loads, and the tf it publishes.
   - Investigate a running system with the ros2 CLI and check it against the structure you read in the code.
 tags: [ros2, code-reading, andino, turtlebot, reference-robot, architecture]
@@ -19,6 +19,14 @@ text is Ekumen's **Andino**: a fully open-source differential-drive robot built 
 Pi and a microcontroller, supporting Humble and Jazzy, whose packages correspond almost one to
 one with this course's modules.
 
+## Where you will use this
+
+The first thing you do on joining a company or a lab, or on buying a robot, is not write code but
+read the robot repository that already exists. Finding within half an hour which packages there
+are, what the launch files start and where the settings you must change live is a skill used
+unchanged on a TurtleBot or an industrial arm. The layout of a well-made public robot is the model
+for your own robot's repository in the M10 capstone.
+
 ## Concepts
 
 ### The conventional package split
@@ -27,7 +35,7 @@ ROS 2 robot repositories are split much the same way. Taking Andino as the examp
 
 | Package | Layer | What is in it |
 |---|---|---|
-| `andino_description` | model | URDF/xacro, meshes (L8.3) |
+| `andino_description` | model | URDF/xacro, meshes (L8.4) |
 | `andino_firmware` | hardware | microcontroller firmware (motor PWM, reading encoders) |
 | `andino_base` | control | the ros2_control hardware interface (talks to the firmware over serial) |
 | `andino_control` | control | diff drive controller + joint state broadcaster configuration and launch |
@@ -115,7 +123,7 @@ same roles in the TurtleBot 3 or 4 repository and map the names across.
 1. **The repository first:** read the Andino README and package list, and fill in the table of
    this lesson yourself.
 2. **Tracing:** draw the launch tree of exercise (2) by hand. If you get stuck, go back to the
-   launch section of L8.2.
+   launch section of L8.3.
 3. **Problems:** take the quiz in the Korean original (`rc quiz m8-reference-robot-code`), then do
    exercises (1) through (4).
 4. **Comparison:** skim how the same layers (SLAM, Navigation) are configured in the TurtleBot 3

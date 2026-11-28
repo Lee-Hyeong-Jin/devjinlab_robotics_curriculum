@@ -91,18 +91,24 @@ export function ActionForm({
 
         if (field.kind === 'checkbox') {
           return (
-            <label
-              key={field.name}
-              className="text-primary flex min-h-11 cursor-pointer items-center gap-3 text-sm"
-            >
-              <input
-                type="checkbox"
-                name={field.name}
-                defaultChecked={field.defaultValue === 'on'}
-                className="border-border-default size-5 shrink-0 rounded"
-              />
-              {field.label}
-            </label>
+            <div key={field.name} className="flex flex-col gap-1">
+              <label className="text-primary flex min-h-11 cursor-pointer items-center gap-3 text-sm">
+                <input
+                  type="checkbox"
+                  name={field.name}
+                  defaultChecked={field.defaultValue === 'on'}
+                  aria-invalid={error ? true : undefined}
+                  aria-describedby={error ? `${id}-error` : undefined}
+                  className="border-border-default size-5 shrink-0 rounded"
+                />
+                {field.label}
+              </label>
+              {error ? (
+                <p id={`${id}-error`} role="alert" className="text-danger text-xs">
+                  {error}
+                </p>
+              ) : null}
+            </div>
           )
         }
 

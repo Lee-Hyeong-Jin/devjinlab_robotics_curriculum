@@ -84,7 +84,7 @@ $\binom{m}{k}$ 이므로 완전 탐색은 지수적이고, 실제로 이 문제�
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (선형 가우시안 상호정보는 로그 행렬식이다) [D2]** —
   $$
@@ -466,7 +466,7 @@ submodular 가 아니고 이산화 조건 아래 $\epsilon$ 만큼 열화된 보
 ## 논문 읽기
 
 **필독 2편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·7·8 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·7·8 을 집중 공략한다.
 
 1. **Krause, Singh & Guestrin, "Near-optimal sensor placements in Gaussian processes:
    theory, efficient algorithms and empirical studies" (2008, JMLR 9:235-284)** — 역할: `원전(seminal)`.
@@ -619,7 +619,7 @@ $\rho$ 를 $0 \to 0.999$ 로 쓸면서 시너지의 부호가 바뀌는 지점�
 ## 개념 점검
 
 `rc quiz s5-active-information-gathering` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제
-과제는 위 문제 세트와 재현 과제다(`lesson-standard.md` §4).
+과제는 위 문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: s5-active-information-gathering-quiz

@@ -72,7 +72,7 @@ $\min \int_t^{t_f}\ell(x,u,s)\,ds + \varphi(x(t_f))$ s.t. $\dot x = f(x,u,s)$, $
 ## Key results
 
 The bracket gives the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the Bellman equation and the verification theorem) [D3]** — by the principle of
   optimality the value function satisfies
@@ -631,7 +631,7 @@ constraints and replanning, and states what that approach guarantees.
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read with three passes, attacking questions 4, 5, 6 and 7 on the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with three passes, attacking questions 4, 5, 6 and 7 on the third.
 
 1. **Bellman, "The theory of dynamic programming" (1954, Bull. Amer. Math. Soc.)** — role:
    `seminal`. <https://doi.org/10.1090/S0002-9904-1954-09848-8>
@@ -780,7 +780,7 @@ $P \in \{0,3\}$.
 ## Concept check
 
 Run `rc quiz c4-dp-lqr-lqg`. The quiz is for **concept checking only**; the real work is the
-problem set and the reproduction task above (`lesson-standard.md` §4).
+problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The six items cover: what the verification theorem adds over the PMP; what the costate equals in
 terms of the value function; why the Joseph form of the Riccati recursion is preferred; whether

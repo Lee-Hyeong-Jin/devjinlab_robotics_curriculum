@@ -57,7 +57,7 @@ optional extension.
 
 ## Key results
 
-The bracket is the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket is the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the gradient of a differentiable BA layer) [D2]** — the gradient of the solution with
   respect to learned weights $w$ follows from implicit differentiation of the stationarity
@@ -404,7 +404,7 @@ R4) is an excellent answer.
 ## Paper reading
 
 **Two must-reads.** Write a one-page note on each, using the ten fixed questions
-(`lesson-standard.md` §5). Read in three passes, and attack questions 4, 5, 6 and 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes, and attack questions 4, 5, 6 and 7 in the third.
 For the full bibliography, including the recommended papers, run
 `rc papers c7-learned-correspondence-slam`.
 
@@ -439,7 +439,7 @@ scipy only. The input is a generator this lesson specifies; no external data and
 
 > **Stated difference from the blueprint**: the reproduction task in the design is "run a pretrained
 > DROID-SLAM-class model on one TUM RGB-D sequence and match the reported ATE to within 20%". That
-> task needs a CUDA GPU in practice, and §6 of the lesson standard requires any task that may need a
+> task needs a CUDA GPU in practice, and the "Reproduction tasks" section of lesson `f0-how-to-read-this-track` requires any task that may need a
 > GPU to be marked **optional (R4)**. So this lesson makes the mandatory conditions **four checks
 > decidable on a CPU** and separates the original ATE reproduction out as the **optional extension
 > (R4)** below. Both target the same key results (R1 and R4).
@@ -535,7 +535,7 @@ and the implication of condition 4 for evaluation procedures (failure mode (1) o
 ## Concept check
 
 Run `rc quiz c7-learned-correspondence-slam`. The quiz is for **concept checking only**; the real
-work is the problem set and the reproduction task above (`lesson-standard.md` §4).
+work is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: what happens when a DBA layer's gradient is backpropagated through the
 Gauss–Newton Hessian; whether the row argmax of a Sinkhorn plan is always a permutation; the rank

@@ -97,7 +97,7 @@ $M(q) \succ 0$ 은 이 전제에서 따라온다(문제 P1 ⓐ).
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 — `lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 — `f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (질량행렬의 닫힌 형태와 분기 희소성) [D2]** — 복합 강체 관성을
   $$
@@ -504,7 +504,7 @@ $\lVert M - M^\top\rVert_\infty = 0$ 을 내야 한다(상삼각을 계산하고
 **필독 2편.** 1982년과 1983년, 1년 사이에 나온 두 알고리즘이 각각 $O(n^2)$ 과 $O(n)$ 을
 주장한다. **같은 문제에 대해 왜 두 답이 공존하는가**를 스스로 설명하는 것이 이 레슨의 읽기
 목표다(답은 R2 의 5단계와 R5 의 교차점에 있다). 각 논문에 아래 고정 질문 10개로 1페이지
-노트를 쓴다(`lesson-standard.md` §5). 3-pass 로 읽고 3번째 패스에서 질문 4·5·9 를 집중 공략한다.
+노트를 쓴다(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고 3번째 패스에서 질문 4·5·9 를 집중 공략한다.
 
 1. **Walker & Orin, "Efficient Dynamic Computer Simulation of Robotic Mechanisms"
    (1982, ASME J. Dyn. Syst. Meas. Control)** — 역할: `원전(seminal)`.
@@ -631,7 +631,7 @@ P6 의 `crba`·`aba` 가 아래 **네 조건을 모두** 만족해야 통과다.
 ## 개념 점검
 
 `rc quiz c2-crba-aba` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위 문제 세트와
-재현 과제다(`lesson-standard.md` §4).
+재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c2-crba-aba-quiz

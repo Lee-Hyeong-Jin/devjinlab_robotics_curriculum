@@ -57,7 +57,7 @@ $\alpha = 0.25$ rad and $h_{\mathrm d}'(\alpha) = -0.8$.
 
 ## Key results
 
-The bracket is the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket is the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (virtual constraints and the zero dynamics surface) [D3]** — the output
   $y = \theta_{\mathrm n} - h_{\mathrm d}(\theta_{\mathrm s})$ has relative degree 2, and if the
@@ -378,7 +378,7 @@ extra actuation such as ankles or a torso.
 ## Paper reading
 
 **Two must-reads plus one recommended.** Write a one-page note on each using the ten fixed
-questions (`lesson-standard.md` §5). Read in three passes and attack questions 4, 5, 6, 7 in the
+questions (the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes and attack questions 4, 5, 6, 7 in the
 third.
 
 1. **Westervelt, Grizzle & Koditschek, "Hybrid zero dynamics of planar biped walkers" (2003,
@@ -472,7 +472,7 @@ radius $0.582$, period $0.7324$ s) — tabulate the trade that the designed gait
 ## Concept check
 
 Take it with `rc quiz s3-hzd-gait-generation`. The quiz is **for concept checking only**; the real
-work is the problem set and the reproduction task above (`lesson-standard.md` §4). Four questions
+work is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`). Four questions
 ask: why the hip torque cannot change the angular momentum about the stance foot; whether
 output-zeroing feedback alone makes $Z$ invariant for the hybrid system; the fixed point of the
 affine step map; and why the reduced prediction matched the full model to eight digits.

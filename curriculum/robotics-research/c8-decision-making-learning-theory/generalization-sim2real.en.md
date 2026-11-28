@@ -54,7 +54,7 @@ randomization optimizes (R1), how that objective connects to hardware performanc
 
 ## Key results
 
-The bracket gives the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket gives the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the implicit objective of domain randomization) [D2]** — if $\xi\sim p$ is drawn at the
   start of each episode and the policy **does not see** $\xi$, then what learning optimizes is
@@ -367,7 +367,7 @@ when ⓐ $\xi$ is **fully identified** from observations (the belief collapses t
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions
-(`lesson-standard.md` §5). Read with three passes and attack questions 4, 5, 6 and 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with three passes and attack questions 4, 5, 6 and 7 in the third.
 
 1. **Tobin, Fong, Ray, Schneider, Zaremba & Abbeel, "Domain randomization for transferring deep
    neural networks from simulation to the real world" (2017, IROS)** — role: `seminal`.
@@ -520,7 +520,7 @@ and $J$ stays at $6.0750$ (problem P5).
 ## Concept check
 
 Run `rc quiz c8-generalization-sim2real`. The quiz is for **concept checking only**; the real work
-is the problem set and the reproduction task above (`lesson-standard.md` §4).
+is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: which objective is optimized when $\xi\sim p$ is drawn per episode and the
 policy cannot see it; whether widening randomization monotonically improves performance at the

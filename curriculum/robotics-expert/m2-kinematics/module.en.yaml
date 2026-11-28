@@ -3,3 +3,6 @@ lang: en
 title: "M2 Robot kinematics"
 summary: >-
   Model a manipulator with DH parameters and solve forward and inverse kinematics.
+outcome: >-
+  compute where a robot arm's hand is from its joint angles (forward kinematics) and find the
+  joint angles that reach a target (inverse kinematics).

@@ -18,6 +18,14 @@ matrix, covers how to measure that matrix (calibration), and how to pick points
 that are easy to find again (features). The point clouds of the next lesson and
 the 3D localization of the last one both run on top of this model.
 
+## Where you will use this
+
+Picking something up with a camera needs an answer to "in which direction really is the thing I
+see at pixel (u, v)". The intrinsic matrix $K$ of this lesson is carried as it is in ROS 2's
+`sensor_msgs/CameraInfo` message, and checkerboard calibration is the first thing done with a newly
+mounted camera. Measuring the robot's position from an AprilTag, visual SLAM (M5) tracking feature
+points, and a depth camera producing a point cloud all run on this projection formula.
+
 ## Concepts
 
 ### The pinhole model
@@ -127,6 +135,21 @@ positive at the corner, negative at the edge, and zero in the flat region.
 from the camera, then check it. (2) Project and plot a grid of points with
 `k1=-0.2` to observe barrel distortion. (3) Plot the whole Harris response map as
 an image and keep only the four corners using a threshold and 3×3 local maxima.
+
+```expected
+1. Doubling the distance halves the size in pixels. The square whose side was
+   $600 \times 0.5 / 2 = 150$ px at 2 m is $600 \times 0.5 / 4 = 75$ px at 4 m, with corners
+   (282.5, 202.5), (357.5, 202.5), (357.5, 277.5) and (282.5, 277.5). Its area shrinks to a quarter.
+2. With `k1=-0.2` a point is pulled inwards more the further it is from the centre. The point
+   (1, 1, 2) in camera coordinates lands at (620, 540) without distortion but is multiplied by
+   $s = 1 - 0.2 \times 0.5 = 0.9$ and lands at (590, 510), about 42 px towards the centre. Points near
+   the centre hardly move, so the straight lines of the grid bulge outwards: barrel distortion.
+3. The response map peaks at about 2.57, is negative along the sides of the rectangle and 0 where the
+   image is flat. With the threshold anywhere from 10% to 50% of the maximum, the 3×3 local maxima
+   leave exactly four points: (11, 13), (11, 26), (28, 13) and (28, 26). Each is one pixel inside the
+   true corner (rows 10 and 29, columns 12 and 27), because collecting gradients over a 5×5 window
+   shifts the peak of the response towards the inside of the rectangle.
+```
 
 ## Self-check questions
 

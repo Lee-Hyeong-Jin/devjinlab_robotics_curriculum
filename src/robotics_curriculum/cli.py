@@ -15,6 +15,9 @@ from pydantic import ValidationError
 from robotics_curriculum import __version__
 from robotics_curriculum.api.cli import api_app
 from robotics_curriculum.content import QuizParseError, check, localized_quiz
+from robotics_curriculum.content.example_runner import run_example
+from robotics_curriculum.content.examples import as_script, extract_examples
+from robotics_curriculum.content.paths import PathError, goal_path, resolve_path
 from robotics_curriculum.i18n import LANG_ENV, Translator, get_translator
 from robotics_curriculum.learn.quiz import record_quiz_run, run_quiz, select_questions
 from robotics_curriculum.learn.review import (
@@ -338,6 +341,19 @@ def log(
 
 
 @app.command()
+def undone(
+    ctx: typer.Context,
+    lesson_id: Annotated[str, typer.Argument(help="Lesson id.")],
+) -> None:
+    """Take back a completion made by mistake (the lesson is in progress again)."""
+    t = _t(ctx)
+    with _service(ctx) as service:
+        service.undo_done(lesson_id)
+        title = service.lesson(lesson_id).title
+    typer.echo(t("cli.undone_line", lesson_id=lesson_id, title=title))
+
+
+@app.command()
 def done(
     ctx: typer.Context,
     lesson_id: Annotated[str, typer.Argument(help="Lesson id.")],
@@ -375,17 +391,156 @@ def done(
         )
 
 
+@app.command()
+def example(
+    ctx: typer.Context,
+    lesson_id: Annotated[str, typer.Argument(help="Lesson id.")],
+    run: Annotated[
+        bool,
+        typer.Option("--run", help="Run the examples with this Python (needs numpy; some scipy)."),
+    ] = False,
+    out: Annotated[
+        Path | None,
+        typer.Option("--out", "-o", help="Write the examples to this .py file instead."),
+    ] = None,
+) -> None:
+    """Print, save or run the Python examples of a lesson.
+
+    Examples that need more than Python, NumPy and SciPy (ROS 2 nodes, for instance) are
+    printed and saved but never run. Exits 1 when a run example fails.
+    """
+    t = _t(ctx)
+    with _service(ctx) as service:
+        lesson = service.lesson(lesson_id)
+        text = lesson.localized(_lang(ctx))
+    examples = extract_examples(text.body)
+    if not examples:
+        typer.echo(t("cli.example.none", lesson_id=lesson_id))
+        return
+    if out is not None:
+        out.write_text(as_script(lesson_id, examples, title=text.title), encoding="utf-8")
+        typer.echo(t("cli.example.saved", count=len(examples), path=str(out)))
+        return
+    if not run:
+        typer.echo(as_script(lesson_id, examples, title=text.title), nl=False)
+        return
+    failed = 0
+    for item in examples:
+        if not item.runnable:
+            reason = item.syntax_error or ", ".join(item.missing)
+            typer.echo(t("cli.example.skipped", index=item.index, reason=reason))
+            failed += item.syntax_error is not None
+            continue
+        typer.echo(t("cli.example.running", index=item.index, total=len(examples)))
+        outcome = run_example(item.code)
+        if outcome.stdout:
+            typer.echo(outcome.stdout, nl=False)
+        if outcome.returncode != 0:
+            failed += 1
+            typer.echo(outcome.stderr, nl=False, err=True)
+            typer.echo(t("cli.example.failed", index=item.index), err=True)
+    if failed:
+        raise typer.Exit(code=1)
+
+
+@app.command()
+def path(
+    ctx: typer.Context,
+    name: Annotated[
+        str | None,
+        typer.Argument(help="A goal id (see the list printed without one) or a lesson id."),
+    ] = None,
+) -> None:
+    """Show the lessons a goal needs, in order, instead of the whole course.
+
+    Without an argument, lists the goals each course defines. With a goal or a lesson id,
+    prints that lesson's prerequisites and itself in teaching order, with what is left to do.
+    """
+    t = _t(ctx)
+    lang = _lang(ctx)
+    with _service(ctx) as service:
+        if name is None:
+            rows = [
+                [
+                    goal.id,
+                    course.localized_goal(goal, lang)[0],
+                    str(len(goal_path(course, goal).lessons)),
+                    _fmt_seconds(goal_path(course, goal).total_minutes * 60),
+                ]
+                for course in service.courses
+                for goal in course.goals
+            ]
+            if not rows:
+                typer.echo(t("cli.path.no_goals"))
+                return
+            headers = [
+                t("cli.path.header_goal"),
+                t("cli.status.header_title"),
+                t("cli.path.header_lessons"),
+                t("cli.status.header_estimate"),
+            ]
+            typer.echo(_table(headers, rows))
+            typer.echo("\n" + t("cli.path.hint"))
+            return
+        try:
+            course, found = resolve_path(service.courses, name)
+        except PathError as exc:
+            raise _fail(str(exc), ctx) from None
+        by_id = {s.lesson.id: s for s in service.status(course.id)}
+    done = [lesson.id for lesson in found.lessons if by_id[lesson.id].status == "done"]
+    title = course.localized_goal(found.goal, lang)[0] if found.goal else name
+    typer.echo(
+        t(
+            "cli.path.summary",
+            title=title,
+            done=len(done),
+            total=len(found.lessons),
+            remaining=_fmt_seconds(found.remaining_minutes(done) * 60),
+            time=_fmt_seconds(found.total_minutes * 60),
+        )
+    )
+    rows = [
+        [
+            str(i),
+            lesson.id,
+            lesson.localized(lang).title,
+            t(f"cli.state.{by_id[lesson.id].status.value}"),
+            f"{lesson.estimated_minutes}m",
+        ]
+        for i, lesson in enumerate(found.lessons, 1)
+    ]
+    headers = [
+        t("cli.status.header_index"),
+        t("cli.status.header_lesson"),
+        t("cli.status.header_title"),
+        t("cli.status.header_state"),
+        t("cli.status.header_estimate"),
+    ]
+    typer.echo(_table(headers, rows))
+    typer.echo("\n" + t("cli.path.next_hint", name=name))
+
+
 @app.command("next")
 def next_(
     ctx: typer.Context,
     course: Annotated[str | None, typer.Option("--course", help="Only this course id.")] = None,
     count: Annotated[int, typer.Option("-n", min=1, help="How many to show.")] = 3,
+    goal: Annotated[
+        str | None,
+        typer.Option("--goal", help="Stay on the path to this goal or lesson (see `rc path`)."),
+    ] = None,
 ) -> None:
     """Recommend lessons whose prerequisites are done (in-progress first, then course order)."""
     t = _t(ctx)
     lang = _lang(ctx)
     with _service(ctx) as service:
-        lessons = service.next_lessons(course, limit=count)
+        within = None
+        if goal is not None:
+            try:
+                within = resolve_path(service.courses, goal)[1].lesson_ids
+            except PathError as exc:
+                raise _fail(str(exc), ctx) from None
+        lessons = service.next_lessons(course, limit=count, within=within)
     if not lessons:
         typer.echo(t("cli.next.empty"))
         return

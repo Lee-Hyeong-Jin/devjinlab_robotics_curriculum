@@ -58,7 +58,7 @@ approximation depends on that ratio, not on absolute size.
 
 ## Key results
 
-The bracket is the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket is the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the volume rendering integral) [D2]** — in the absorption-emission model the colour
   accumulated along a ray is
@@ -401,7 +401,7 @@ specifically passes. For (b), writing "the paper does not state it" where that i
 ## Paper reading
 
 **Two must-reads.** Write a one-page note on each, using the ten fixed questions
-(`lesson-standard.md` §5). Read in three passes, and attack questions 4, 5, 6 and 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes, and attack questions 4, 5, 6 and 7 in the third.
 For the full bibliography, including the recommended papers, run `rc papers c7-neural-fields-3dgs`.
 
 1. **Mildenhall, Srinivasan, Tancik et al., "NeRF: representing scenes as neural radiance fields
@@ -439,7 +439,7 @@ are needed.
 
 > **Stated difference from the blueprint**: the reproduction task in the design is "train NeRF and
 > 3DGS on a small scene and reproduce the reported PSNR trend (3DGS is faster)". Training either
-> method requires a GPU, and §6 of the lesson standard requires any GPU-dependent task to be marked
+> method requires a GPU, and the "Reproduction tasks" section of lesson `f0-how-to-read-this-track` requires any GPU-dependent task to be marked
 > **optional (R4)**. So this lesson makes the mandatory conditions **four checks decidable on a
 > CPU** and separates the PSNR trend out as the **optional extension (R4)** below. The mandatory
 > conditions target the **rendering mathematics** of both methods head on (R2, R3, R4, R5).
@@ -533,7 +533,7 @@ reference implementation — reading the code is enough.
 ## Concept check
 
 Run `rc quiz c7-neural-fields-3dgs`. The quiz is for **concept checking only**; the real work is the
-problem set and the reproduction task above (`lesson-standard.md` §4).
+problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: what NeRF's alpha-compositing formula is with respect to the volume rendering
 integral; whether changing the compositing order changes the colour and the accumulated alpha; the

@@ -20,6 +20,14 @@ plus the ecosystem of tools and libraries built on top of it. This module is a r
 survey of ROS 2 that builds the foundation the ROS 2 lessons of M5 (state estimation),
 M6 (planning and Nav2), and M7 (manipulation and MoveIt 2) expect.
 
+## Where you will use this
+
+The software of the TurtleBot, of most research arms, of warehouse AMRs and of self-driving research
+platforms is laid out as a ROS 2 graph. Job postings at robot companies and the code published with
+papers often assume ROS 2, so the first step in switching on someone else's robot or reading its
+code is `ros2 node list` and `ros2 topic echo`. Choosing between a topic, a service and an action,
+and the symptoms of mismatched QoS, come back every time you use the stacks of M5–M7.
+
 ## Concepts
 
 ### The computation graph
@@ -66,12 +74,24 @@ beginner's complaint, "I can see the topic but no data comes."
 ### Choosing a distribution
 
 ROS 2 releases a distribution every May, and even-year releases get five years of support
-(LTS). As of November 2026:
+(LTS). Each distribution is paired with one Ubuntu version, so choosing a distribution is also
+choosing an operating system.
 
-- **Jazzy Jalisco** - LTS, until May 2029, Ubuntu 24.04 Tier 1.
-- **Lyrical Luth** - LTS, released May 2026, until May 2031, Ubuntu 26.04 Tier 1.
-- **Humble Hawksbill** - LTS, ends May 2027, Ubuntu 22.04.
-- Kilted Kaiju (non-LTS) ends in November 2026, and ROS 1 (Noetic) reached end of life on 31 May 2025.
+| Distribution | Kind | Paired Ubuntu (Tier 1) | End of support |
+|---|---|---|---|
+| Humble Hawksbill | LTS | 22.04 | May 2027 |
+| **Jazzy Jalisco** | LTS | 24.04 | May 2029 |
+| Kilted Kaiju | non-LTS | 24.04 | November 2026 |
+| Lyrical Luth | LTS (released May 2026) | 26.04 | May 2031 |
+| Rolling Ridley | development | the latest LTS | none (keeps changing) |
+
+*Last reviewed: 2026-11-28. Dates can move; the Releases table in the references is the authority.*
+ROS 1 (Noetic) reached end of life on 31 May 2025.
+
+Three rules for choosing: (1) look first at which distributions the material you will follow, and
+the robot and packages you want to use, support; (2) among those, take an LTS with at least two
+years of support left; (3) when you cannot match the operating system (a single-board computer
+that no longer gets updates, say), do not fight the OS: match the distribution with Docker.
 
 This course targets **Jazzy + Ubuntu 24.04**. Most courses, books, and reference robots from
 2024-2026 aim at Jazzy, while learning material for Lyrical is still thin. Korean-language paid
@@ -118,7 +138,7 @@ actions. (2) Draw the same graph with `rqt_graph` and compare it against your ta
    nodes and topics.
 3. **Practice:** take the quiz in the Korean original (`rc quiz m8-ros2-concepts-distros`), then
    run the example commands and the exercise yourself. If you have no installation to work in,
-   look at the Docker approach of L8.4 first.
+   look at the Docker approach of L8.5 first.
 4. **Check:** find the EOL of the distribution you are using in the Releases table and note it down.
 
 ## References

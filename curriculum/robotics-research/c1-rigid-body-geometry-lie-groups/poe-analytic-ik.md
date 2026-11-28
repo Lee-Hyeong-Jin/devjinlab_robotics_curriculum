@@ -248,7 +248,7 @@ $\theta = \operatorname{atan2}(1,0) = \pi/2 \approx 1.5707963$. 허용오차 $10
 
 ## 논문 읽기
 
-**필독 2편.** 고정 질문 10개(레슨 표준 §5)로 논문당 1페이지 노트를 쓴다.
+**필독 2편.** 고정 질문 10개(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절)로 논문당 1페이지 노트를 쓴다.
 
 1. **Brockett, "Robotic manipulators and the product of exponentials formula" (1984, LNCIS)** —
    역할: `원전(seminal)`. <https://doi.org/10.1007/BFb0031048>

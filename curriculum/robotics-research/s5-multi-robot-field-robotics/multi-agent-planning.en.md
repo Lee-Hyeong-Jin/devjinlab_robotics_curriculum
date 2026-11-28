@@ -58,7 +58,7 @@ NP-hardness (`c6-cspace-complexity`).
 ## Key results
 
 The bracketed grade is the derivation depth (D0 citation / D1 skeleton / D2 full derivation /
-D3 proof — `research_notes/연구 트랙 설계/lesson-standard.md` §2).
+D3 proof — the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (optimal MAPF is NP-hard) [D1]** — MAPF **feasibility** alone is solvable in polynomial time
   on a grid (a constructive token-swapping algorithm). But **minimizing sum-of-costs or makespan is
@@ -405,7 +405,7 @@ excellent.
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read in three passes, attacking questions 4, 5, 6 and 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes, attacking questions 4, 5, 6 and 7 in the third.
 
 1. **Sharon, Stern, Felner & Sturtevant, "Conflict-based search for optimal multi-agent
    pathfinding" (2015, Artificial Intelligence)** — role: `seminal`.
@@ -576,7 +576,7 @@ cost exceeds the sum of the individual optima in Part B (the coordination cost).
 ## Concept check
 
 Solve it with `rc quiz s5-multi-agent-planning`. The quiz is **for concept checking only**; the real
-work is the problem set and the reproduction task above (`lesson-standard.md` §4).
+work is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 ## How to study this stage
 

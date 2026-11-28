@@ -102,7 +102,7 @@ failure table of the reproduction task respectively.
 ## Key results
 
 The bracket is the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (structure of the obstacle map) [D2]** — under (A1):
   (a) $\mathcal{C}_{obs}$ is closed and $\mathcal{C}_{free}$ is open.
@@ -280,7 +280,7 @@ answers differ, suspect a tangency.
 ### R3 — PSPACE-completeness
 
 R3 is a [D2] result, but its claims — "a reduction exists" and "a decision procedure exists" — are
-**existence claims**, so it is written in the format of `lesson-standard.md` §3 (hypotheses and
+**existence claims**, so it is written in the format of the "Proof sketches" section of lesson `f0-how-to-read-this-track` (hypotheses and
 conclusion separated → strategy → steps → gaps → why the hypotheses are needed).
 
 **Hypotheses** H1: the number of degrees of freedom $n$ (or of moving bodies) is **part of the
@@ -417,7 +417,7 @@ Noting additionally that the coordinate bit-precision enters the input size is e
 ## Paper reading
 
 **Two must-reads.** Write a one-page note on each, using the ten fixed questions below
-(`lesson-standard.md` §5). Read with Keshav's three passes and attack questions 4, 5, 6 and 7 on the
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with Keshav's three passes and attack questions 4, 5, 6 and 7 on the
 third pass.
 
 1. **Reif, "Complexity of the mover's problem and generalizations" (1979, FOCS)** — role:
@@ -525,7 +525,7 @@ confirm zero workspace collisions.
 ## Concept check
 
 Run `rc quiz c6-cspace-complexity`. The quiz is for **concept checking only**; the real work is the
-problem set and the reproduction task above (`lesson-standard.md` §4).
+problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: why openness of $\mathcal{C}_{free}$ matters; why an obstacle reachable by the
 first link forces a band wrapping the torus; counting $b_1$ from $b_0$ and $\chi$; what

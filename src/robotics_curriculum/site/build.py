@@ -20,6 +20,7 @@ from typing import Any
 
 import yaml
 
+from robotics_curriculum.content.lesson_blocks import FIGURES_DIRNAME, image_refs
 from robotics_curriculum.i18n import DEFAULT_LANG, resolve_lang
 from robotics_curriculum.learn.review import due_count
 from robotics_curriculum.progress import ProgressService
@@ -167,6 +168,28 @@ markdown_extensions:
 """
 
 
+def _copy_figures(model: SiteModel, docs: Path) -> None:
+    """Put each lesson's figures where its page's ``figures/<name>`` links resolve.
+
+    A lesson shows ``![alt](figures/x.svg)``, a file next to its Markdown. On the site the
+    lesson page sits in its module's directory, so the files the lessons actually reference
+    are copied into a ``figures`` directory there. Only referenced files are copied: nothing
+    else that happens to lie in the source directory is published.
+    """
+    for summary in model.summaries:
+        lesson = summary.lesson
+        if lesson.path is None:
+            continue
+        bodies = [lesson.body, *(translation.body for translation in lesson.translations.values())]
+        names = {image.figure_name for body in bodies for image in image_refs(body)} - {None}
+        target = (docs / model.lesson_page(lesson)).parent / FIGURES_DIRNAME
+        for name in sorted(n for n in names if n is not None):
+            source = lesson.path.parent / FIGURES_DIRNAME / name
+            if source.is_file():
+                target.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(source, target / name)
+
+
 def build_model(
     service: ProgressService, now: datetime | None = None, lang: str = DEFAULT_LANG
 ) -> SiteModel:
@@ -300,6 +323,7 @@ def generate_project(
         path = docs / rel
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(text, encoding="utf-8")
+    _copy_figures(model, docs)
     shutil.copytree(ASSETS_DIR, docs / "assets")
     overrides = project_dir / OVERRIDES_DIR
     overrides.mkdir(parents=True, exist_ok=True)

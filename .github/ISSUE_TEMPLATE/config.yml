@@ -3,6 +3,9 @@ contact_links:
   - name: Study the course online
     url: https://learnrobotics.devjinlab.com
     about: The published curriculum. Every lesson is free to read, in English and Korean.
+  - name: How to contribute
+    url: https://github.com/Lee-Hyeong-Jin/devjinlab_robotics_curriculum/blob/main/CONTRIBUTING.md
+    about: Your first contribution, translating a lesson, and what to expect from a review.
   - name: Report a security vulnerability
     url: https://github.com/Lee-Hyeong-Jin/devjinlab_robotics_curriculum/security/advisories/new
     about: Please report vulnerabilities privately, as described in SECURITY.md, not in a public issue.

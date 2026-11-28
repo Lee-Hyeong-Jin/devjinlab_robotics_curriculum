@@ -93,7 +93,7 @@ $\exp$·$\log$ 와 $SE(3)$ 규약을 가져온다. 지금까지 두 레슨은 �
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (매니폴드 위 Gauss-Newton 과 재추적 불변성) [D3]** — $\min_{X\in G} F(X)$,
   $F(X) = \tfrac12\sum_k\lVert r_k(X)\rVert^2_{\Sigma_k}$ 를 현재 추정 $\hat X$ 에서 접공간으로
@@ -457,7 +457,7 @@ $F$ 한쪽이 상태 의존이 된다. 재현 과제의 설정에서 $H$ 를 $\h
 ## 논문 읽기
 
 **필독 3편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Barrau & Bonnabel, "The invariant extended Kalman filter as a stable observer" (2017,
    IEEE T-AC)** — 역할: `원전(seminal)`. <https://arxiv.org/abs/1410.1465> (II-III 절)
@@ -664,7 +664,7 @@ $33.25 \to 9.47 \to 3.63 \to 1.76 \to 1.24 \to 1.08 \to \cdots \to 1.02$), 그�
 ## 개념 점검
 
 `rc quiz c5-manifold-estimation` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c5-manifold-estimation-quiz

@@ -255,6 +255,55 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
+  /api/v1/lessons/{lesson_id}/figures/{name}:
+    get:
+      tags:
+      - content
+      summary: Get Lesson Figure
+      description: |-
+        A figure of a lesson: the file ``figures/<name>`` next to the lesson's Markdown.
+
+        Only a file a lesson body actually shows is served — the name has to be one of the
+        lesson's own image references (in any language), which also keeps every other file of the
+        repository out of reach. Sent as an image with a policy that forbids it to run anything.
+      operationId: get_lesson_figure_api_v1_lessons__lesson_id__figures__name__get
+      parameters:
+      - name: lesson_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Lesson Id
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            image/svg+xml: {}
+            image/png: {}
+        '503':
+          description: Service Unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
   /api/v1/resources:
     get:
       tags:
@@ -487,7 +536,11 @@ paths:
       tags:
       - progress
       summary: Get Next
-      description: 'Lessons whose prerequisites are done: in-progress first, then teaching order.'
+      description: |-
+        Lessons whose prerequisites are done: in-progress first, then teaching order.
+
+        With ``goal``, the answer stays on that learning path (404 when it names neither a goal
+        nor a lesson).
       operationId: get_next_api_v1_progress_next_get
       parameters:
       - name: course
@@ -511,6 +564,17 @@ paths:
           default: 3
           title: N
         description: How many to return.
+      - name: goal
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          description: 'A goal id or a lesson id: only lessons on the path to it are returned.'
+          title: Goal
+        description: 'A goal id or a lesson id: only lessons on the path to it are returned.'
       responses:
         '200':
           description: Successful Response
@@ -825,6 +889,60 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DoneResult'
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '503':
+          description: Service Unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /api/v1/progress/undone:
+    post:
+      tags:
+      - progress
+      summary: Undone
+      description: |-
+        Take back a completion made by mistake: the lesson is in progress again.
+
+        The completion time and the understanding rating are cleared; study time, the note, review
+        cards and quiz history stay. 409 when the lesson is not marked done.
+      operationId: undone_api_v1_progress_undone_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LessonProgress'
         '403':
           description: Forbidden
           content:
@@ -3257,6 +3375,47 @@ paths:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/Problem'
+  /api/v1/telemetry/weberror:
+    post:
+      tags:
+      - telemetry
+      summary: Web Error
+      description: |-
+        Record a page the web tier failed to render, so it shows among the failed requests.
+
+        Stored: the time, the page's path without its query, the error's type and message as the
+        web server saw them, and its digest (the reference shown on the error screen and written
+        in the web server's log). Nothing about the reader.
+
+        403 unless the caller is the web tier; 404 when monitoring is off.
+      operationId: web_error_api_v1_telemetry_weberror_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebErrorIn'
+        required: true
+      responses:
+        '204':
+          description: Successful Response
+        '403':
+          description: Forbidden
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '404':
+          description: Not Found
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
 components:
   securitySchemes:
     sessionCookie:
@@ -4044,6 +4203,12 @@ components:
           type: array
           title: Stages
           description: Modules grouped by level, in course order.
+        goals:
+          items:
+            $ref: '#/components/schemas/GoalPath'
+          type: array
+          title: Goals
+          description: Goal-based learning paths the course defines (empty when it has none).
       additionalProperties: false
       type: object
       required:
@@ -4440,6 +4605,51 @@ components:
       required:
       - email
       title: ForgotRequest
+    GoalPath:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        summary:
+          type: string
+          title: Summary
+        target_ids:
+          items:
+            type: string
+          type: array
+          title: Target Ids
+          description: The lessons that reach the goal.
+        lesson_ids:
+          items:
+            type: string
+          type: array
+          title: Lesson Ids
+          description: The targets and everything they depend on, in teaching order.
+        lessons:
+          items:
+            $ref: '#/components/schemas/PathLesson'
+          type: array
+          title: Lessons
+          description: The same lessons with what a screen needs to list them.
+        estimated_minutes:
+          type: integer
+          title: Estimated Minutes
+          description: Sum over `lesson_ids`.
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - title
+      - summary
+      - target_ids
+      - lesson_ids
+      - lessons
+      - estimated_minutes
+      title: GoalPath
+      description: 'A named learning path: the lessons one goal needs, in teaching order.'
     Growth:
       properties:
         users_total:
@@ -4702,6 +4912,18 @@ components:
           - type: 'null'
           title: Next Lesson Id
           description: Next lesson in course order.
+        review:
+          anyOf:
+          - $ref: '#/components/schemas/LessonReview'
+          - type: 'null'
+          description: Who checked the lesson and when; null when no domain expert has reviewed it yet.
+        source_path:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Path
+          description: The lesson's source file in the language served, relative to the repository root
+            (`curriculum/<course>/<module>/<lesson>.md`). For 'suggest an edit' links.
       additionalProperties: false
       type: object
       required:
@@ -4848,6 +5070,26 @@ components:
       - lesson_id
       title: LessonProgress
       description: Per-lesson state for one user.
+    LessonReview:
+      properties:
+        date:
+          type: string
+          format: date
+          title: Date
+        reviewer:
+          type: string
+          title: Reviewer
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+      additionalProperties: false
+      type: object
+      required:
+      - date
+      - reviewer
+      title: LessonReview
     LessonState:
       properties:
         lesson:
@@ -5139,6 +5381,12 @@ components:
           title: Lang
           description: Language of `title` and `summary`.
           default: ko
+        outcome:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Outcome
+          description: What a learner can do after the module (one sentence), when it states one.
         lessons:
           items:
             $ref: '#/components/schemas/LessonSummary'
@@ -5235,6 +5483,12 @@ components:
           title: Lang
           description: Language of `title` and `summary`.
           default: ko
+        outcome:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Outcome
+          description: What a learner can do after the module (one sentence), when it states one.
       additionalProperties: false
       type: object
       required:
@@ -5538,6 +5792,29 @@ components:
       - current_password
       - new_password
       title: PasswordChange
+    PathLesson:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        module_id:
+          type: string
+          title: Module Id
+        estimated_minutes:
+          type: integer
+          title: Estimated Minutes
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - title
+      - module_id
+      - estimated_minutes
+      title: PathLesson
+      description: One step of a learning path.
     ProcessReading:
       properties:
         open_files:
@@ -7124,6 +7401,20 @@ components:
         active_users_30d:
           type: integer
           title: Active Users 30D
+        intake_refused:
+          type: integer
+          title: Intake Refused
+          description: Page-view reports refused since the API started because their sender is not a trusted
+            proxy. Steadily above zero means the web tier itself is refused (`RC_API_TRUSTED_PROXIES`)
+            and no visit is being counted.
+          default: 0
+        intake_refused_at:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          title: Intake Refused At
+          description: When the latest report was refused.
       additionalProperties: false
       type: object
       required:
@@ -7138,6 +7429,37 @@ components:
       - active_users_7d
       - active_users_30d
       title: Visits
+    WebErrorIn:
+      properties:
+        path:
+          type: string
+          maxLength: 500
+          title: Path
+        digest:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Digest
+          description: The reference shown on the error screen.
+        error_type:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Error Type
+        message:
+          anyOf:
+          - type: string
+            maxLength: 1000
+          - type: 'null'
+          title: Message
+      additionalProperties: false
+      type: object
+      required:
+      - path
+      title: WebErrorIn
+      description: One page the web tier failed to render.
     WeekStat:
       properties:
         start:

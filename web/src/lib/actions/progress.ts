@@ -118,3 +118,21 @@ export async function markDone(_previous: ActionState, form: FormData): Promise<
     }),
   }
 }
+
+/**
+ * `POST /progress/undone` — take back a completion made by mistake (#39).
+ *
+ * The lesson is in progress again; study time, the note, review cards and quiz history stay.
+ */
+export async function undoDone(_previous: ActionState, form: FormData): Promise<ActionState> {
+  const t = await getTranslations('study')
+  const lessonId = text(form, 'lessonId')
+  const moduleId = text(form, 'moduleId')
+  try {
+    await apiPost('/api/v1/progress/undone', { lesson_id: lessonId })
+  } catch (error) {
+    return toActionState(error, t('undoneFailed'))
+  }
+  revalidateLesson(moduleId, lessonId)
+  return { message: t('undone') }
+}

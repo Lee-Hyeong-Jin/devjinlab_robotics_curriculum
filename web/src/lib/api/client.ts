@@ -272,6 +272,10 @@ export function apiPatch<T>(
 }
 
 /** DELETE a contract path. */
-export function apiDelete<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  return request<T>({ method: 'DELETE', path, ...options })
+export function apiDelete<T>(
+  path: string,
+  options: RequestOptions = {},
+  body?: unknown,
+): Promise<T> {
+  return request<T>({ method: 'DELETE', path, body, ...options })
 }

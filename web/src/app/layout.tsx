@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages, getTranslations } from 'next-intl/server'
 import { Suspense } from 'react'
 
+import { CodeToolLabelsProvider } from '@/components/CodeBlock'
 import { Flash } from '@/components/Flash'
 import { PageViewBeacon } from '@/components/PageViewBeacon'
 import { SiteFooter } from '@/components/SiteFooter'
@@ -13,6 +14,10 @@ import { siteUrl } from '@/lib/api/config'
 import { siteVerification } from '@/lib/seo'
 import { THEME_INIT_SCRIPT } from '@/lib/theme'
 import { NONCE_HEADER } from '@/middleware'
+
+// The math font (see `math` in globals.css). Its @font-face is fetched only by a page that
+// actually renders a formula.
+import '@fontsource/stix-two-math/400.css'
 
 import './globals.css'
 
@@ -46,10 +51,11 @@ export const viewport: Viewport = {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [locale, messages, t, requestHeaders] = await Promise.all([
+  const [locale, messages, t, tCode, requestHeaders] = await Promise.all([
     getLocale(),
     getMessages(),
     getTranslations('app'),
+    getTranslations('code'),
     headers(),
   ])
   // Minted per request by `middleware.ts` and named in the CSP; without it this script is
@@ -67,7 +73,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <SkipLink label={t('skipToContent')} />
           <TopNav />
           <main id="main" className="mx-auto max-w-[var(--content-max)] px-4 py-6 sm:px-6 sm:py-8">
-            {children}
+            <CodeToolLabelsProvider
+              labels={{
+                copy: tCode('copy'),
+                copied: tCode('copied'),
+                download: tCode('download'),
+              }}
+            >
+              {children}
+            </CodeToolLabelsProvider>
           </main>
           <SiteFooter />
           {/* `useSearchParams` needs a boundary, or it would make every page wait for it. */}

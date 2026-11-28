@@ -52,7 +52,7 @@ something that is not Gaussian. Additional symbols:
 ## Key results
 
 The bracket is the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the stationarity condition of an M-estimator = the normal equations of IRLS) [D3]** — the
   stationary points of $F(x) = \sum_k \rho(\lVert r_k(x)\rVert)$ satisfy
@@ -414,7 +414,7 @@ right model was chosen**. Citing the R3' numbers of the reproduction task is bet
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read with 3-pass and attack questions 4, 5, 6 and 7 on the third pass.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with 3-pass and attack questions 4, 5, 6 and 7 on the third pass.
 
 1. **Rosen, Carlone, Bandeira & Leonard, "SE-Sync: a certifiably correct algorithm for
    synchronization over the special Euclidean group" (2019, IJRR)** — role: `seminal`.
@@ -663,7 +663,7 @@ inliers), and the upper bound on the optimality gap in the cases where Part B's 
 ## Concept check
 
 Run `rc quiz c5-robust-global-estimation`. The quiz is for **concept checking only**; the real work
-is the problem set and the reproduction task above (`lesson-standard.md` §4).
+is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: the IRLS weight in terms of $\rho$ and $\psi$; why Huber collapses as
 outliers accumulate; the step that makes the $S \succeq 0$ certificate work; whether an SE-Sync

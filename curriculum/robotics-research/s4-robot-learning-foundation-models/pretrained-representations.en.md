@@ -55,7 +55,7 @@ a procedure for telling which side is right.
 
 ## Key results
 
-The bracket gives the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket gives the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (a linear probe measures a projection residual) [D2]** — if the target is
   $y = h(x) + \varepsilon$ with $\mathbb{E}[\varepsilon]=0$ and $\mathrm{Var}(\varepsilon)=\sigma^2$,
@@ -365,7 +365,7 @@ $\rho_i^2$.
 ## Paper reading
 
 **Two must-reads.** Write a one-page note on each using the ten fixed questions
-(`lesson-standard.md` §5).
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`).
 
 1. **Nair, Rajeswaran, Kumar, Finn & Gupta, "R3M: a universal visual representation for robot
    manipulation" (2022, CoRL)** — role: `seminal`. <https://arxiv.org/abs/2203.12601> — §3–4.
@@ -500,7 +500,7 @@ whether the diagnostic of (6) is applicable to real representations.
 ## Concept check
 
 Run `rc quiz s4-pretrained-representations`. The quiz is for **concept checking only**; the real work
-is the problem set and the reproduction task above (`lesson-standard.md` §4).
+is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: what the linear probe loss (1) measures; whether a representation holding all
 the information always scores better on a linear probe; what it means when loss does not change with

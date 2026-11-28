@@ -7,6 +7,7 @@ their front matter / YAML schema. See ``docs/curriculum/CONTENT_MODEL.md``.
 
 import dataclasses
 from dataclasses import dataclass
+from datetime import date as date_type
 from enum import StrEnum
 from pathlib import Path
 from typing import Annotated, Literal
@@ -290,6 +291,22 @@ class LocalizedLesson:
     """Resources with their title and note in ``lang`` (urls and kinds are not translated)."""
 
 
+class Review(ContentModel):
+    """Who checked a lesson, and when.
+
+    The lessons are summaries of chosen sources, drafted with AI assistance. A reader — a
+    beginner least of all — cannot tell from the page how far to trust it. A lesson a person
+    with knowledge of the subject has read through says so here; one without this field is
+    shown as not yet reviewed.
+    """
+
+    date: date_type = Field(description="When the review was done (YYYY-MM-DD).")
+    reviewer: str = Field(min_length=1, description="Name or handle of the reviewer.")
+    note: str | None = Field(
+        default=None, min_length=1, description="What was checked, if not the whole lesson."
+    )
+
+
 class Lesson(ContentModel):
     """A lesson: one ``*.md`` file with YAML front matter."""
 
@@ -306,6 +323,9 @@ class Lesson(ContentModel):
     papers: list[PaperRef] = Field(
         default_factory=list,
         description="Papers from the course's papers.yaml, by id (ADR 0014).",
+    )
+    review: Review | None = Field(
+        default=None, description="Set once somebody who knows the subject has checked it."
     )
 
     # Filled by the loader, not by front matter.
@@ -391,6 +411,18 @@ class Lesson(ContentModel):
         """``[ko, en, ...]``: the base language first, then the translations, sorted."""
         return [DEFAULT_LANG, *sorted(self.translations)]
 
+    def source_file(self, lang: str | None = None) -> Path | None:
+        """The file a reader of this lesson in ``lang`` is reading: where a fix would go.
+
+        ``<lesson>.<lang>.md`` when that translation exists, otherwise the base file. ``None``
+        for a lesson that was not loaded from disk.
+        """
+        if self.path is None:
+            return None
+        if lang and lang in self.translations:
+            return self.path.with_name(f"{self.path.stem}.{lang}.md")
+        return self.path
+
 
 class ModuleMeta(ContentModel):
     """Schema of ``module.yaml``."""
@@ -398,6 +430,14 @@ class ModuleMeta(ContentModel):
     id: Id
     title: str = Field(min_length=1)
     summary: str = Field(min_length=1)
+    outcome: str | None = Field(
+        default=None,
+        min_length=1,
+        description=(
+            "One sentence: what a learner can do after the module. Completes the phrase "
+            "'After this module you can ...'."
+        ),
+    )
     level: Level | None = None
     lessons: list[str] | None = Field(
         default=None,
@@ -416,6 +456,7 @@ class ModuleTranslation(ContentModel):
     lang: str | None = Field(default=None, description="Must match the file name suffix.")
     title: str = Field(min_length=1)
     summary: str = Field(min_length=1)
+    outcome: str | None = Field(default=None, min_length=1)
 
     path: Path | None = Field(default=None, exclude=True)
 
@@ -428,6 +469,8 @@ class LocalizedModule:
     lang: str
     title: str
     summary: str
+    outcome: str | None
+    """What a learner can do after the module, in ``lang`` where translated."""
     level: str | None
     """The stored level value; stable across languages."""
     level_label: str
@@ -439,6 +482,7 @@ class Module(ContentModel):
     id: Id
     title: str
     summary: str
+    outcome: str | None = None
     level: Level | None = None
     lessons: list[Lesson] = Field(default_factory=list)
     path: Path | None = Field(default=None, exclude=True)
@@ -452,10 +496,32 @@ class Module(ContentModel):
             lang=(lang or DEFAULT_LANG) if translation is not None else DEFAULT_LANG,
             title=translation.title if translation is not None else self.title,
             summary=translation.summary if translation is not None else self.summary,
+            outcome=(translation.outcome if translation is not None else None) or self.outcome,
             level=self.level,
             level_label=level_label(self.level, lang) if self.level else "",
             translated=translation is not None,
         )
+
+
+class Goal(ContentModel):
+    """A named destination in a course: "I want to build a robot that navigates".
+
+    ``targets`` are the lessons that reach the goal. The path to it is those lessons and
+    everything they depend on, in teaching order (:mod:`content.paths`): a learner who picks a
+    goal sees only what it needs, instead of the whole course in one line.
+    """
+
+    id: Id
+    title: str = Field(min_length=1)
+    summary: str = Field(min_length=1)
+    targets: list[Id] = Field(min_length=1, description="Lesson ids that reach the goal.")
+
+
+class GoalText(ContentModel):
+    """A goal's text in another language (``goals: {<id>: {title, summary}}``)."""
+
+    title: str = Field(min_length=1)
+    summary: str = Field(min_length=1)
 
 
 class CourseMeta(ContentModel):
@@ -465,6 +531,9 @@ class CourseMeta(ContentModel):
     title: str = Field(min_length=1)
     summary: str = Field(min_length=1)
     tags: list[str] = Field(default_factory=list)
+    goals: list[Goal] = Field(
+        default_factory=list, description="Named learning paths through the course."
+    )
     modules: list[str] | None = Field(
         default=None,
         description="module directory names in order; omit to use sorted directory names",
@@ -479,6 +548,9 @@ class CourseTranslation(ContentModel):
     title: str = Field(min_length=1)
     summary: str = Field(min_length=1)
     tags: list[str] | None = None
+    goals: dict[str, GoalText] = Field(
+        default_factory=dict, description="Goal id -> translated title and summary."
+    )
 
     path: Path | None = Field(default=None, exclude=True)
 
@@ -504,8 +576,15 @@ class Course(ContentModel):
     papers: list[Paper] = Field(
         default_factory=list, description="The course's papers.yaml registry, if it has one."
     )
+    goals: list[Goal] = Field(default_factory=list)
     path: Path | None = Field(default=None, exclude=True)
     translations: dict[str, CourseTranslation] = Field(default_factory=dict, exclude=True)
+
+    def localized_goal(self, goal: Goal, lang: str | None = None) -> tuple[str, str]:
+        """``(title, summary)`` of a goal in ``lang``, falling back to the base text."""
+        translation = self.translations.get(lang or "") if lang else None
+        text = translation.goals.get(goal.id) if translation is not None else None
+        return (text.title, text.summary) if text is not None else (goal.title, goal.summary)
 
     def localized(self, lang: str | None = None) -> LocalizedCourse:
         """This course's text in ``lang``, falling back to the language it was written in."""

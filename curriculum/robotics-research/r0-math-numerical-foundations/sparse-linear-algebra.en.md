@@ -187,7 +187,7 @@ variable has many neighbours a large clique appears and it hurts.
 
 ## Paper reading
 
-**The textbook exception applies** (lesson standard §5). Read the two chapters below and write a
+**The textbook exception applies** (the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read the two chapters below and write a
 one-page note for each (fixed questions 1, 3, 4 and 8).
 
 1. **Barfoot, *State Estimation for Robotics*, ch.3** — the sparse structure of linear-Gaussian

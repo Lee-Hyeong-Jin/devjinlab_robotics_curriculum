@@ -109,7 +109,7 @@ R1 의 항등식은 **이 규약에서 정확**하다. 중간점(midpoint)이나
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (선적분 항등식) [D3]** — 상대 운동량을
   $$
@@ -502,7 +502,7 @@ $\lambda^\ast = 0.5$ 로 유효하다). ⓔ $g^\top c = 0$ 이면 $\lambda^\ast 
 ## 논문 읽기
 
 **필독 3편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Forster, Carlone, Dellaert & Scaramuzza, "On-manifold preintegration for real-time
    visual-inertial odometry" (2017, IEEE T-RO)** — 역할: `원전(seminal)`.
@@ -702,7 +702,7 @@ $\delta\phi$ 해석값과 $\sigma_g\Delta t\sqrt n$ 의 비.
 ## 개념 점검
 
 `rc quiz c5-imu-preintegration` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c5-imu-preintegration-quiz

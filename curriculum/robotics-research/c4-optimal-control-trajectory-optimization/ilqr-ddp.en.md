@@ -69,7 +69,7 @@ $$
 ## Key results
 
 The bracket gives the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the second-order backward pass of DDP) [D2]** — expanding the value function to second
   order around the nominal trajectory, the coefficients $(V'_x, V'_{xx})$ of $V' := V_{k+1}$ give
@@ -571,7 +571,7 @@ is public).
 ## Paper reading
 
 **Four must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read with three passes, attacking questions 4, 5, 6 and 7 on the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with three passes, attacking questions 4, 5, 6 and 7 on the third.
 
 1. **Mayne, "A second-order gradient method for determining optimal trajectories of non-linear
    discrete-time systems" (1966, Int. J. Control)** — role: `seminal`.
@@ -749,7 +749,7 @@ result of system B should be nearly the same as the $\bar{u} = \infty$ result
 ## Concept check
 
 Run `rc quiz c4-ilqr-ddp`. The quiz is for **concept checking only**; the real work is the problem
-set and the reproduction task above (`lesson-standard.md` §4).
+set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The seven items cover: which term of (2) separates iLQR from DDP; the grounds for DDP's quadratic
 convergence; why Tassa 2012 regularizes $V'_{xx}$ rather than $Q_{uu}$; whether the line-search

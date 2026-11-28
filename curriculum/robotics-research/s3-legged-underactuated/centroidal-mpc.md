@@ -99,7 +99,7 @@ $p_{\max} = 0.05$ m, MPC 는 $N = 40$, $\Delta t = 0.05$ s 로 계산했다. 중
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (중심 동역학) [D3]** — 임의의 다물체 로봇에서
   $$
@@ -404,7 +404,7 @@ problems:
 ## 논문 읽기
 
 **필독 2편 + 권장 2편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5).
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절).
 
 1. **Kajita et al., "Biped walking pattern generation by using preview control of zero-moment
    point" (2003, ICRA)** — 역할: `원전(seminal)`. <https://doi.org/10.1109/ROBOT.2003.1241826>
@@ -489,7 +489,7 @@ $N=40$, $\Delta t=0.05$ s)(조건 2–4)다. 입력 데이터는 없다.
 ## 개념 점검
 
 `rc quiz s3-centroidal-mpc` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위 문제
-세트와 재현 과제다(`lesson-standard.md` §4).
+세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: s3-centroidal-mpc-quiz

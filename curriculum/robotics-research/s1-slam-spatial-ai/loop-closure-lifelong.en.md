@@ -58,7 +58,7 @@ numbers.
 
 ## Key results
 
-The bracket is the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket is the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (precision depends on the database size) [D2]** — with one true match per query and
   $N-1 \approx N$ non-matches whose scores are independent, at threshold $\tau$
@@ -412,7 +412,7 @@ at a fixed $N$ is excellent — it is why R2's collapse is invisible in the pape
 ## Paper reading
 
 **Two must-reads.** Write a one-page note on each, using the ten fixed questions
-(`lesson-standard.md` §5). Read in three passes, and attack questions 4, 5, 6 and 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes, and attack questions 4, 5, 6 and 7 in the third.
 For the full bibliography, including the recommended papers, run
 `rc papers s1-loop-closure-lifelong`.
 
@@ -544,7 +544,7 @@ other (conditions 2 and 3); (3) the dense marginal information (condition 4); (4
 ## Concept check
 
 Run `rc quiz s1-loop-closure-lifelong`. The quiz is for **concept checking only**; the real work is
-the problem set and the reproduction task above (`lesson-standard.md` §4).
+the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: what happens at a fixed threshold as the place database grows; the factor by
 which a single false loop inflates the least-squares ATE; why Huber is eventually dragged at high

@@ -16,6 +16,14 @@ A robot only knows the world through its sensors, and every sensor lies a little
 This lesson organizes what each sensor measures and how it errs, then writes those
 measurements in the probabilistic form that the filters of M5 consume.
 
+## Where you will use this
+
+"Accuracy ±30 mm", "bias stability" and "angular resolution 0.5°" on the datasheet you read when
+choosing parts are the numbers this lesson deals with. They have to be rewritten as a noise model
+before you can fill in the $R$ matrix of a Kalman filter (M5), the measurement likelihood of a
+particle filter (M5), or the sensor settings of SLAM (M9). A common reason a robot that worked in
+simulation fails in reality is that sensor noise was left out of the model.
+
 ## Concepts
 
 ### Proprioceptive versus exteroceptive sensors
@@ -121,6 +129,23 @@ times, and check that the standard deviation matches $\sigma_n\sqrt{\Delta t\,t}
 (2) Plot a histogram of the lidar measurements and find the four components of the
 beam model by eye. (3) Pick a lidar from the awesome-2d-lidars list and transcribe
 its datasheet range accuracy and angular resolution into a $\sigma$.
+
+```expected
+1. Simulating 100 times without bias gives a standard deviation of about 2.3° in the heading after
+   60 s. Theory says $\sigma_n\sqrt{\Delta t\,t} = 0.05\sqrt{0.01 \times 60} = 0.0387$ rad $= 2.2^\circ$;
+   with 100 samples a difference of ±7% or so is normal. The mean is near 0. Compare the 34° that a
+   bias of 0.01 rad/s builds up in the same 60 s: over long times bias is a far larger problem than
+   white noise.
+2. The histogram shows three things: a tall narrow peak at 2.0 m (Gaussian, $\sigma$ = 0.02 m, about
+   92% of the readings), a low band from 0 to 2 m (an object in the way, about 5%), and one bar at
+   8 m (maximum range, about 3%). The fourth component, uniform noise over the whole range, was not
+   put into this example's data, so it does not show. The picture also shows why the mean is pulled
+   by the outliers far more than the median.
+3. The answer depends on the product chosen; the method does not. When the datasheet gives a range
+   such as "accuracy ±30 mm", it is usually read as $3\sigma$, so $\sigma \approx 10$ mm; when it says
+   "1$\sigma$" or "RMS", use the value as it is. An angular resolution of 0.5° is not noise but beam
+   spacing: at 5 m two neighbouring beams are $5 \times 0.5 \times \pi/180 \approx 0.044$ m apart.
+```
 
 ## Self-check questions
 

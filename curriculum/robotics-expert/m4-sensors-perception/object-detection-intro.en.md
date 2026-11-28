@@ -17,6 +17,15 @@ This lesson covers the part where a learned model answers "what is where," and,
 more importantly for a robot, how to turn that answer into something an arm or a
 base can act on.
 
+## Where you will use this
+
+Commands such as "fetch the cup" or "keep clear of people" need a robot that can find cups and
+people in an image. Downloading and running a detector such as YOLO takes a few lines, but putting
+it on a robot means tidying overlapping boxes (NMS), choosing a score threshold that fits the task
+(precision and recall), and turning a 2D box into a 3D position the robot can move to. The
+post-processing of this lesson is used as it is in the grasping pipeline of M6 and at the input of
+the vision-language-action models of M10.
+
 ## Concepts
 
 ### What a CNN detector takes in and puts out
@@ -142,6 +151,30 @@ recall, and plot the curve. (2) Explain how the result changes when the NMS
 threshold is set to 0.3 and to 0.8. (3) Build an array of depth values inside a
 box (with some zeros standing for failed measurements) and write a median-based 3D
 position estimator.
+
+```expected
+1. Results by score threshold (NMS threshold 0.5, two ground-truth objects):
+
+   | Score threshold | Boxes kept | Precision | Recall |
+   | --- | --- | --- | --- |
+   | up to 0.30 | 0, 3, 4 | 0.67 | 1.0 |
+   | 0.31 – 0.88 | 0, 3 | 1.0 | 1.0 |
+   | 0.89 – 0.92 | 0 | 1.0 | 0.5 |
+   | above 0.92 | none | (undefined) | 0.0 |
+
+   Raising the threshold first removes the false detection (box 4, score 0.30) and precision rises;
+   raising it further removes correct detections too and recall falls.
+2. Box 0 has an IoU of 0.857 with box 1 and 0.754 with box 2. NMS thresholds of 0.3 and 0.5 are both
+   below these, so the result is the same (boxes 0, 3, 4). At 0.8 box 2 (IoU 0.754) survives, the
+   same cup gets two boxes and precision drops to 0.5. A threshold that is too low, on the other
+   hand, deletes the boxes of different objects that stand close together.
+3. Suppose the depths inside the box are `[1.19, 1.21, 0, 1.2, 1.22, 0, 0, 1.18, 1.2, 3.5]`. The
+   median of the non-zero values is 1.20 m. The mean of everything is 1.07 m (dragged by the failed
+   readings, 0) and the mean of the non-zero values is 1.53 m (dragged by the background at 3.5 m
+   that fell inside the box); both are wrong. Back-projecting the centre of box 0, (150, 160), with
+   a depth of 1.20 m gives (−0.34, −0.16, 1.20) m in camera coordinates. The function should return
+   `None` when no value is valid.
+```
 
 ## Self-check questions
 

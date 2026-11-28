@@ -258,7 +258,7 @@ $(-(0,0,1)\times(-2,0,0) + (0,0,3))\cdot 2 = ((0,2,0)+(0,0,3))\cdot2 = (0,4,6)$.
 ## Paper reading
 
 **Three must-read papers.** Write a one-page note per paper against the ten fixed questions
-(the lesson standard in the research-track design notes, §5).
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`).
 
 1. **Featherstone, "A beginner's guide to 6-D vectors", part 1 (2010, IEEE RAM)** —
    role: `standard`. <https://doi.org/10.1109/MRA.2010.937853>

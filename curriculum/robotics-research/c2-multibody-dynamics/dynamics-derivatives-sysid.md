@@ -101,7 +101,7 @@ $M = \sum_k J_k^\top I_kJ_k$, 그리고 공간 관성의 블록 구조(앞 모�
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 — `lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 — `f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (관성 매개변수에 대한 선형성) [D2]** — 공간 관성은
   $$
@@ -448,7 +448,7 @@ $\mathcal{N}$ 으로 번역하고, 저자들이 **물리적 일관성**을 다�
 **필독 3편** (권장 1편). 1986·1990·2018·2018 — **식별**(선형 회귀), **최소 매개변수**(구조),
 **일관성**(볼록 제약), **미분**(계산) 네 축이다. 네 편을 읽고 "모델을 얻는 문제가 1986년부터
 무엇이 해결되고 무엇이 남았는가"를 한 단락으로 정리하는 것이 이 레슨의 읽기 목표다. 각 논문에
-아래 고정 질문 10개로 1페이지 노트를 쓴다(`lesson-standard.md` §5). 3-pass 로 읽고 3번째
+아래 고정 질문 10개로 1페이지 노트를 쓴다(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고 3번째
 패스에서 질문 4·5·7 을 집중 공략한다.
 
 1. **Atkeson, An & Hollerbach, "Estimation of Inertial Parameters of Manipulator Loads and
@@ -664,7 +664,7 @@ $a_g = (0,0,0,\,0,0,-9.81)$ 을 쓴다.
 ## 개념 점검
 
 `rc quiz c2-dynamics-derivatives-sysid` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는
-위 문제 세트와 재현 과제다(`lesson-standard.md` §4).
+위 문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c2-dynamics-derivatives-sysid-quiz

@@ -180,6 +180,14 @@ jobs:
             # The browser talks to the app over plain http, so the session cookie cannot be Secure.
             cookie_secure: "0"
             e2e_auth: "1"
+          # The flows that depend on a mailed link (verification, password reset), followed
+          # in a browser with a mail sink in place of a mailbox. Its own leg: with mail
+          # available sign-up and the profile say different things than the journey expects.
+          - suite: mail
+            specs: mail
+            auth_mode: server
+            cookie_secure: "0"
+            e2e_auth: "1"
     env:
       RC_API_BASE_URL: http://127.0.0.1:8000
     steps:
@@ -204,6 +212,18 @@ jobs:
         working-directory: web
         run: npx playwright install --with-deps chromium
 
+      # Every message the API sends lands in a file the suite reads (scripts/dev/smtp_sink.py).
+      - name: Start the mail sink (mail)
+        if: matrix.suite == 'mail'
+        run: |
+          python3 scripts/dev/smtp_sink.py --port 2525 --out "$RUNNER_TEMP/outbox.jsonl" &
+          {
+            echo "RC_SMTP_HOST=127.0.0.1"
+            echo "RC_SMTP_PORT=2525"
+            echo "RC_SMTP_STARTTLS=0"
+            echo "E2E_MAIL_OUTBOX=$RUNNER_TEMP/outbox.jsonl"
+          } >> "$GITHUB_ENV"
+
       - name: Start the API (${{ matrix.auth_mode }} mode)
         env:
           RC_AUTH_MODE: ${{ matrix.auth_mode }}
@@ -225,8 +245,8 @@ jobs:
       # The admin console test needs an admin. A browser cannot create one (the first admin
       # comes from the operator: RC_AUTH_BOOTSTRAP_ADMIN_EMAIL or this command), and this stack
       # has no mail, so the address is promoted unverified.
-      - name: Create an admin account (journey)
-        if: matrix.suite == 'journey'
+      - name: Create an admin account (journey, mail)
+        if: matrix.suite == 'journey' || matrix.suite == 'mail'
         env:
           RC_AUTH_MODE: ${{ matrix.auth_mode }}
           RC_AUTH_SECRET: e2e-${{ github.run_id }}-${{ matrix.suite }}

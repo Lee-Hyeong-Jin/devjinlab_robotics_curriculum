@@ -58,7 +58,7 @@ and divergence verdict in this lesson is a statement about the spectrum of $A$.*
 
 ## Key results
 
-The bracket gives the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket gives the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (on-policy convergence and the projected Bellman error bound) [D2]** — if $d$ is the
   stationary distribution of $P^\pi$ then $\lVert P^\pi v \rVert_D \le \lVert v\rVert_D$, and
@@ -413,7 +413,7 @@ $\Delta/\sigma \to \infty$ it tends to $0$.
 ## Paper reading
 
 **Four must-reads.** Write a one-page note on each using the ten fixed questions
-(`lesson-standard.md` §5). Read with three passes and attack questions 4, 5, 6 and 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with three passes and attack questions 4, 5, 6 and 7 in the third.
 
 1. **Baird, "Residual algorithms: reinforcement learning with function approximation" (1995, ICML)**
    — role: `seminal`. <https://doi.org/10.1016/B978-1-55860-377-6.50013-X>
@@ -535,7 +535,7 @@ reproduction task where the numbers themselves must match.
 ## Concept check
 
 Run `rc quiz c8-value-based-rl`. The quiz is for **concept checking only**; the real work is the
-problem set and the reproduction task above (`lesson-standard.md` §4).
+problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: where the on-policy assumption enters the proof of
 $\lVert P^\pi v\rVert_D \le \lVert v\rVert_D$; whether Baird's divergence is caused by limited

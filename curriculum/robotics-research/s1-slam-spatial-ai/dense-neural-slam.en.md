@@ -52,7 +52,7 @@ ratio $\mathrm{err}_A\vert_B / \mathrm{err}_A\vert_A$, alongside the **RMS of th
 
 ## Key results
 
-The bracket is the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket is the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (TSDF fusion is a precision-weighted average) [D2]** — if the observations are independent
   with $d_i \sim \mathcal{N}(s, \sigma_i^2)$, the maximum-likelihood estimate is the
@@ -341,7 +341,7 @@ does not count keyframe storage as memory is excellent — that hidden cost is e
 ## Paper reading
 
 **Two must-reads.** Write a one-page note on each, using the ten fixed questions
-(`lesson-standard.md` §5). Read in three passes, and attack questions 4, 5, 6 and 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes, and attack questions 4, 5, 6 and 7 in the third.
 For the full bibliography, including the recommended papers, run `rc papers s1-dense-neural-slam`.
 
 1. **Newcombe, Izadi, Hilliges et al., "KinectFusion: real-time dense surface mapping and tracking"
@@ -373,7 +373,7 @@ scipy only. The input is a generator this lesson specifies; no external data and
 
 > **Stated difference from the blueprint**: the reproduction task in the design is "compare the
 > memory and accuracy of a TSDF reconstruction and a neural SLAM on a small RGB-D sequence" (R3).
-> Training a neural SLAM needs a GPU, so following §6 of the lesson standard the mandatory conditions
+> Training a neural SLAM needs a GPU, so following the "Reproduction tasks" section of lesson `f0-how-to-read-this-track` the mandatory conditions
 > are **four checks decidable on a CPU** and the RGB-D comparison is separated out as the **optional
 > extension (R3)** below. The mandatory conditions target the mathematical difference between the two
 > representations (R1, R3, R4, R5) head on — in particular they expose forgetting as the source of
@@ -463,7 +463,7 @@ where the hidden cost R5 exposes becomes visible.
 ## Concept check
 
 Run `rc quiz s1-dense-neural-slam`. The quiz is for **concept checking only**; the real work is the
-problem set and the reproduction task above (`lesson-standard.md` §4).
+problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: what the one-line TSDF update is with respect to the batch estimate; the factor
 by which the ray-wise signed distance overstates the true one; whether grazing incidence pushes the

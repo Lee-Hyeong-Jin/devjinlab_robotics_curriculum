@@ -171,6 +171,30 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/lessons/{lesson_id}/figures/{name}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Lesson Figure
+         * @description A figure of a lesson: the file ``figures/<name>`` next to the lesson's Markdown.
+         *
+         *     Only a file a lesson body actually shows is served — the name has to be one of the
+         *     lesson's own image references (in any language), which also keeps every other file of the
+         *     repository out of reach. Sent as an image with a policy that forbids it to run anything.
+         */
+        get: operations["get_lesson_figure_api_v1_lessons__lesson_id__figures__name__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/resources": {
         parameters: {
             query?: never;
@@ -272,6 +296,9 @@ export interface paths {
         /**
          * Get Next
          * @description Lessons whose prerequisites are done: in-progress first, then teaching order.
+         *
+         *     With ``goal``, the answer stays on that learning path (404 when it names neither a goal
+         *     nor a lesson).
          */
         get: operations["get_next_api_v1_progress_next_get"];
         put?: never;
@@ -399,6 +426,29 @@ export interface paths {
          *     so they are now next in the recommended order. They were never blocked (ADR 0015).
          */
         post: operations["done_api_v1_progress_done_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/progress/undone": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Undone
+         * @description Take back a completion made by mistake: the lesson is in progress again.
+         *
+         *     The completion time and the understanding rating are cleared; study time, the note, review
+         *     cards and quiz history stay. 409 when the lesson is not marked done.
+         */
+        post: operations["undone_api_v1_progress_undone_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1282,6 +1332,32 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/telemetry/weberror": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Web Error
+         * @description Record a page the web tier failed to render, so it shows among the failed requests.
+         *
+         *     Stored: the time, the page's path without its query, the error's type and message as the
+         *     web server saw them, and its digest (the reference shown on the error screen and written
+         *     in the web server's log). Nothing about the reader.
+         *
+         *     403 unless the caller is the web tier; 404 when monitoring is off.
+         */
+        post: operations["web_error_api_v1_telemetry_weberror_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1744,6 +1820,11 @@ export interface components {
              * @description Modules grouped by level, in course order.
              */
             stages: components["schemas"]["Stage"][];
+            /**
+             * Goals
+             * @description Goal-based learning paths the course defines (empty when it has none).
+             */
+            goals?: components["schemas"]["GoalPath"][];
         };
         /** CourseSummary */
         CourseSummary: {
@@ -1958,6 +2039,38 @@ export interface components {
             /** Email */
             email: string;
         };
+        /**
+         * GoalPath
+         * @description A named learning path: the lessons one goal needs, in teaching order.
+         */
+        GoalPath: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            /**
+             * Target Ids
+             * @description The lessons that reach the goal.
+             */
+            target_ids: string[];
+            /**
+             * Lesson Ids
+             * @description The targets and everything they depend on, in teaching order.
+             */
+            lesson_ids: string[];
+            /**
+             * Lessons
+             * @description The same lessons with what a screen needs to list them.
+             */
+            lessons: components["schemas"]["PathLesson"][];
+            /**
+             * Estimated Minutes
+             * @description Sum over `lesson_ids`.
+             */
+            estimated_minutes: number;
+        };
         /** Growth */
         Growth: {
             /** Users Total */
@@ -2128,6 +2241,13 @@ export interface components {
              * @description Next lesson in course order.
              */
             next_lesson_id: string | null;
+            /** @description Who checked the lesson and when; null when no domain expert has reviewed it yet. */
+            review?: components["schemas"]["LessonReview"] | null;
+            /**
+             * Source Path
+             * @description The lesson's source file in the language served, relative to the repository root (`curriculum/<course>/<module>/<lesson>.md`). For 'suggest an edit' links.
+             */
+            source_path?: string | null;
         };
         /**
          * LessonProblem
@@ -2209,6 +2329,18 @@ export interface components {
              * @description FR-3.2, 1-5
              */
             understanding?: number | null;
+            /** Note */
+            note?: string | null;
+        };
+        /** LessonReview */
+        LessonReview: {
+            /**
+             * Date
+             * Format: date
+             */
+            date: string;
+            /** Reviewer */
+            reviewer: string;
             /** Note */
             note?: string | null;
         };
@@ -2387,6 +2519,11 @@ export interface components {
              * @default ko
              */
             lang: string;
+            /**
+             * Outcome
+             * @description What a learner can do after the module (one sentence), when it states one.
+             */
+            outcome?: string | null;
             /** Lessons */
             lessons: components["schemas"]["LessonSummary"][];
         };
@@ -2440,6 +2577,11 @@ export interface components {
              * @default ko
              */
             lang: string;
+            /**
+             * Outcome
+             * @description What a learner can do after the module (one sentence), when it states one.
+             */
+            outcome?: string | null;
         };
         /** NextLesson */
         NextLesson: {
@@ -2604,6 +2746,20 @@ export interface components {
             current_password: string;
             /** New Password */
             new_password: string;
+        };
+        /**
+         * PathLesson
+         * @description One step of a learning path.
+         */
+        PathLesson: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Module Id */
+            module_id: string;
+            /** Estimated Minutes */
+            estimated_minutes: number;
         };
         /**
          * ProcessReading
@@ -3556,6 +3712,34 @@ export interface components {
             active_users_7d: number;
             /** Active Users 30D */
             active_users_30d: number;
+            /**
+             * Intake Refused
+             * @description Page-view reports refused since the API started because their sender is not a trusted proxy. Steadily above zero means the web tier itself is refused (`RC_API_TRUSTED_PROXIES`) and no visit is being counted.
+             * @default 0
+             */
+            intake_refused: number;
+            /**
+             * Intake Refused At
+             * @description When the latest report was refused.
+             */
+            intake_refused_at?: string | null;
+        };
+        /**
+         * WebErrorIn
+         * @description One page the web tier failed to render.
+         */
+        WebErrorIn: {
+            /** Path */
+            path: string;
+            /**
+             * Digest
+             * @description The reference shown on the error screen.
+             */
+            digest?: string | null;
+            /** Error Type */
+            error_type?: string | null;
+            /** Message */
+            message?: string | null;
         };
         /**
          * WeekStat
@@ -4014,6 +4198,57 @@ export interface operations {
             };
         };
     };
+    get_lesson_figure_api_v1_lessons__lesson_id__figures__name__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lesson_id: string;
+                name: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/svg+xml": unknown;
+                    "image/png": unknown;
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
     list_resources_api_v1_resources_get: {
         parameters: {
             query?: {
@@ -4235,6 +4470,8 @@ export interface operations {
                 course?: string | null;
                 /** @description How many to return. */
                 n?: number;
+                /** @description A goal id or a lesson id: only lessons on the path to it are returned. */
+                goal?: string | null;
             };
             header?: never;
             path?: never;
@@ -4657,6 +4894,75 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DoneResult"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    undone_api_v1_progress_undone_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StartRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LessonProgress"];
                 };
             };
             /** @description Forbidden */
@@ -7514,6 +7820,55 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["PageViewIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    web_error_api_v1_telemetry_weberror_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WebErrorIn"];
             };
         };
         responses: {

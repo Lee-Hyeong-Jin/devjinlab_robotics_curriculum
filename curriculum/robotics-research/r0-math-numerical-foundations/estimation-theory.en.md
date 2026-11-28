@@ -198,7 +198,7 @@ is no violation.
 
 ## Paper reading
 
-**The textbook exception applies** (lesson standard §5). Read the following and write two one-page
+**The textbook exception applies** (the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read the following and write two one-page
 notes (fixed questions 1, 3, 4 and 8).
 
 1. **Barfoot, *State Estimation for Robotics*, ch.2-3** — questions: (a) write how the author

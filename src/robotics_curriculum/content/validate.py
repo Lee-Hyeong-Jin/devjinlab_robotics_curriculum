@@ -39,8 +39,17 @@ from collections.abc import Iterator
 from pathlib import Path
 from urllib.parse import urlsplit
 
+from robotics_curriculum.content.lesson_blocks import (
+    FIGURE_MAX_BYTES,
+    FIGURES_DIRNAME,
+    extract_expected,
+    extract_hints,
+    has_use_case,
+    image_refs,
+    svg_problem,
+)
 from robotics_curriculum.content.loader import ContentError, LoadError, load_courses
-from robotics_curriculum.content.models import Course, Lesson, Paper
+from robotics_curriculum.content.models import ActivityKind, Course, Lesson, Module, Paper
 from robotics_curriculum.content.papers import paper_index
 from robotics_curriculum.content.problem_set import (
     ProblemSetParseError,
@@ -48,6 +57,7 @@ from robotics_curriculum.content.problem_set import (
     shape_advice,
 )
 from robotics_curriculum.content.quiz_block import QuizParseError, parse_quiz
+from robotics_curriculum.i18n import DEFAULT_LANG, translator
 
 
 def validate_course(course: Course) -> list[ContentError]:
@@ -85,6 +95,19 @@ def validate_course(course: Course) -> list[ContentError]:
             errors.extend(_check_problem_sets(lesson, lesson_path))
             errors.extend(_check_translations(lesson))
             errors.extend(_check_meta_translations(lesson, lesson_path))
+            errors.extend(_check_blocks(lesson, lesson_path))
+            errors.extend(_check_unpublished(_lesson_texts(lesson), lesson_path))
+        errors.extend(_check_use_cases(module, module_meta))
+        module_texts = [(f"module '{module.id}'", module.summary)] + [
+            (f"module '{module.id}' ({lang})", translation.summary)
+            for lang, translation in sorted(module.translations.items())
+        ]
+        errors.extend(_check_unpublished(module_texts, module_meta))
+    course_texts = [(f"course '{course.id}'", course.summary)] + [
+        (f"course '{course.id}' ({lang})", translation.summary)
+        for lang, translation in sorted(course.translations.items())
+    ]
+    errors.extend(_check_unpublished(course_texts, course_meta))
 
     # Rule 2: dangling / self prerequisites.
     for lesson in lessons.values():
@@ -101,6 +124,237 @@ def validate_course(course: Course) -> list[ContentError]:
     errors.extend(_find_cycles(lessons, course_dir))
     # Rule 10: the paper registry and the lessons that reference it.
     errors.extend(_check_papers(course, lessons, course_dir))
+    # Rule 11: goals name lessons of this course, once each.
+    errors.extend(_check_goals(course, lessons, course_meta))
+    return errors
+
+
+UNPUBLISHED_MARKERS: tuple[str, ...] = (
+    "research_notes",
+    "lesson-standard.md",
+    "blueprint.md",
+    "조사 보고서",
+    "설계 노트",
+    "research report",
+    "design notes",
+)
+"""Names of working documents that live in the repository but are not part of the course."""
+
+
+def _lesson_texts(lesson: Lesson) -> list[tuple[str, str]]:
+    """``(where, text)`` of everything a reader of the lesson sees, in every language."""
+    texts = [(f"lesson '{lesson.id}'", f"{lesson.summary}\n{lesson.body}")]
+    for lang, translation in sorted(lesson.translations.items()):
+        texts.append(
+            (f"lesson '{lesson.id}' ({lang})", f"{translation.summary or ''}\n{translation.body}")
+        )
+    return texts
+
+
+def _check_unpublished(texts: list[tuple[str, str]], path: Path) -> list[ContentError]:
+    """Rule 19: published text does not send the reader to a document they cannot open.
+
+    The repository keeps research notes and design documents beside the course. The site shows
+    only the course, so a sentence such as "see the research report" leaves a reader with
+    nothing to follow. Say the thing itself, or point at a lesson by its id.
+    """
+    errors: list[ContentError] = []
+    for where, text in texts:
+        lowered = text.lower()
+        found = [marker for marker in UNPUBLISHED_MARKERS if marker in lowered]
+        if found:
+            errors.append(
+                ContentError(
+                    path,
+                    f"{where} refers to a document that is not published with the course "
+                    f"({', '.join(repr(marker) for marker in found)}); state the content or "
+                    f"point at a lesson id instead",
+                )
+            )
+    return errors
+
+
+def _lesson_bodies(lesson: Lesson) -> list[tuple[str, str]]:
+    """``(language, body)`` of the lesson and each of its translations, base language first."""
+    return [(DEFAULT_LANG, lesson.body)] + [
+        (lang, translation.body) for lang, translation in sorted(lesson.translations.items())
+    ]
+
+
+def _check_blocks(lesson: Lesson, path: Path) -> list[ContentError]:
+    """Rules 15 and 16: expected-result blocks and figures (``content.lesson_blocks``).
+
+    15. An ```` ```expected ```` block has text, belongs to a lesson with an exercise, and every
+        language version has the same number of them.
+    18. A ```` ```hint ```` block names its symptom on the first line and says what to do below
+        it; every language version has the same number of them.
+    16. An image has alt text. A local one is ``figures/<name>.svg|png`` next to the lesson, the
+        file exists, is small, and an SVG carries no script or outside reference; every
+        language version shows the same figures.
+    """
+    errors: list[ContentError] = []
+    bodies = _lesson_bodies(lesson)
+    has_exercise = any(activity.kind == ActivityKind.EXERCISE for activity in lesson.activities)
+    expected_counts: dict[str, int] = {}
+    hint_counts: dict[str, int] = {}
+    figures_used: dict[str, list[str]] = {}
+
+    for lang, body in bodies:
+        where = f"lesson '{lesson.id}'" + ("" if lang == DEFAULT_LANG else f" ({lang})")
+        blocks = extract_expected(body)
+        expected_counts[lang] = len(blocks)
+        for index, block in enumerate(blocks, 1):
+            if not block:
+                errors.append(
+                    ContentError(path, f"{where}: expected-result block {index} is empty")
+                )
+        if blocks and not has_exercise:
+            errors.append(
+                ContentError(
+                    path, f"{where} has an expected-result block but no `kind: exercise` activity"
+                )
+            )
+
+        hints = extract_hints(body)
+        hint_counts[lang] = len(hints)
+        for index, hint in enumerate(hints, 1):
+            if not hint.title or not hint.body:
+                errors.append(
+                    ContentError(
+                        path,
+                        f"{where}: hint block {index} needs the symptom on its first line and "
+                        f"what to do below it",
+                    )
+                )
+
+        names: list[str] = []
+        for image in image_refs(body):
+            if not image.alt:
+                errors.append(
+                    ContentError(
+                        path, f"{where}: image '{image.target}' has no alt text (WCAG 2.1 AA)"
+                    )
+                )
+            if not image.is_figure:
+                continue
+            name = image.figure_name
+            if name is None:
+                errors.append(
+                    ContentError(
+                        path,
+                        f"{where}: image '{image.target}' must be `{FIGURES_DIRNAME}/<name>.svg` "
+                        f"or `.png` (lower-case letters, digits and hyphens) next to the lesson",
+                    )
+                )
+                continue
+            names.append(name)
+            if path.parent.is_dir():
+                errors.extend(_check_figure_file(path.parent / FIGURES_DIRNAME / name, where, path))
+        figures_used[lang] = names
+
+    base_count = expected_counts[DEFAULT_LANG]
+    base_figures = sorted(figures_used.get(DEFAULT_LANG, []))
+    for lang, _body in bodies[1:]:
+        if expected_counts[lang] != base_count:
+            errors.append(
+                ContentError(
+                    path,
+                    f"lesson '{lesson.id}': {base_count} expected-result block(s) in the original "
+                    f"but {expected_counts[lang]} in '{lang}'",
+                )
+            )
+        if hint_counts[lang] != hint_counts[DEFAULT_LANG]:
+            errors.append(
+                ContentError(
+                    path,
+                    f"lesson '{lesson.id}': {hint_counts[DEFAULT_LANG]} hint block(s) in the "
+                    f"original but {hint_counts[lang]} in '{lang}'",
+                )
+            )
+        if sorted(figures_used.get(lang, [])) != base_figures:
+            errors.append(
+                ContentError(
+                    path,
+                    f"lesson '{lesson.id}': the '{lang}' version does not show the same figures "
+                    f"as the original ({base_figures})",
+                )
+            )
+    return errors
+
+
+def _check_figure_file(file: Path, where: str, lesson_path: Path) -> list[ContentError]:
+    if not file.is_file():
+        return [ContentError(lesson_path, f"{where}: figure file '{file.name}' does not exist")]
+    data = file.read_bytes()
+    if len(data) > FIGURE_MAX_BYTES:
+        size = len(data) // 1000
+        return [
+            ContentError(
+                lesson_path,
+                f"{where}: figure '{file.name}' is {size} kB (limit {FIGURE_MAX_BYTES // 1000} kB)",
+            )
+        ]
+    if file.suffix == ".svg":
+        problem = svg_problem(data)
+        if problem is not None:
+            return [ContentError(lesson_path, f"{where}: figure '{file.name}' {problem}")]
+    return []
+
+
+def _check_use_cases(module: Module, module_meta: Path) -> list[ContentError]:
+    """Rule 17 (warning): a module that opens some lessons with a use case opens all of them.
+
+    A module that has not adopted the section yet is left alone; one that has is kept complete,
+    so a lesson added later does not quietly go without.
+    """
+    missing: list[str] = []
+    adopted = False
+    for lesson in module.lessons:
+        for lang, body in _lesson_bodies(lesson):
+            if has_use_case(body, lang):
+                adopted = True
+            else:
+                missing.append(lesson.id if lang == DEFAULT_LANG else f"{lesson.id} ({lang})")
+    if not adopted or not missing:
+        return []
+    heading = translator(DEFAULT_LANG)("lesson.use_case")
+    return [
+        ContentError(
+            module_meta,
+            f"module '{module.id}': no '## {heading}' section (where the lesson is used on a "
+            f"real robot) in: {', '.join(missing)}",
+            severity="warning",
+        )
+    ]
+
+
+def _check_goals(
+    course: Course, lessons: dict[str, Lesson], course_meta: Path
+) -> list[ContentError]:
+    """A goal's targets must be lessons of the course; ids are unique; translations match."""
+    errors: list[ContentError] = []
+    seen: set[str] = set()
+    for goal in course.goals:
+        if goal.id in seen:
+            errors.append(ContentError(course_meta, f"duplicate goal id '{goal.id}'"))
+        seen.add(goal.id)
+        for target in goal.targets:
+            if target not in lessons:
+                errors.append(
+                    ContentError(
+                        course_meta,
+                        f"goal '{goal.id}' targets '{target}', not a lesson of this course",
+                    )
+                )
+    for lang, translation in course.translations.items():
+        path = translation.path if translation.path is not None else course_meta
+        for goal_id in translation.goals:
+            if goal_id not in seen:
+                errors.append(
+                    ContentError(
+                        path, f"'{lang}' translates goal '{goal_id}', which does not exist"
+                    )
+                )
     return errors
 
 

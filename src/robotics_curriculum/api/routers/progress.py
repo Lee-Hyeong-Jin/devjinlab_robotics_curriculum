@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 
 from robotics_curriculum.api.deps import (
     Index,
@@ -33,6 +33,7 @@ from robotics_curriculum.api.schemas import (
     StudySession,
     WeekStat,
 )
+from robotics_curriculum.content.paths import PathError, resolve_path
 from robotics_curriculum.learn import dashboard_stats
 from robotics_curriculum.progress import LessonProgress
 
@@ -80,12 +81,29 @@ def get_next(
     progress: Progress,
     course_id: CourseFilter = None,
     n: Annotated[int, Query(ge=1, le=10, description="How many to return.")] = 3,
+    goal: Annotated[
+        str | None,
+        Query(
+            max_length=100,
+            description="A goal id or a lesson id: only lessons on the path to it are returned.",
+        ),
+    ] = None,
 ) -> list[NextLesson]:
-    """Lessons whose prerequisites are done: in-progress first, then teaching order."""
+    """Lessons whose prerequisites are done: in-progress first, then teaching order.
+
+    With ``goal``, the answer stays on that learning path (404 when it names neither a goal
+    nor a lesson).
+    """
     if course_id is not None:
         index.course(course_id)
+    within = None
+    if goal is not None:
+        try:
+            within = resolve_path(index.courses, goal)[1].lesson_ids
+        except PathError as exc:
+            raise HTTPException(404, str(exc)) from None
     with progress.open() as service:
-        lessons = service.next_lessons(course_id, limit=n)
+        lessons = service.next_lessons(course_id, limit=n, within=within)
     return [NextLesson.of(s, lang_var.get()) for s in lessons]
 
 
@@ -142,3 +160,15 @@ def done(body: DoneRequest, index: Index, progress: Progress) -> DoneResult:
             body.lesson_id, understanding=body.understanding, note=body.note
         )
     return DoneResult(progress=saved, unlocked_lesson_ids=[les.id for les in now_recommended])
+
+
+@router.post("/undone", response_model=LessonProgress)
+def undone(body: StartRequest, index: Index, progress: Progress) -> LessonProgress:
+    """Take back a completion made by mistake: the lesson is in progress again.
+
+    The completion time and the understanding rating are cleared; study time, the note, review
+    cards and quiz history stay. 409 when the lesson is not marked done.
+    """
+    index.lesson(body.lesson_id)
+    with progress.open() as service:
+        return service.undo_done(body.lesson_id)

@@ -124,6 +124,12 @@ export default async function ModulePage({ params }: Params) {
         }
       />
 
+      {mod.outcome ? (
+        <p className="text-primary mb-4 max-w-3xl text-sm">
+          <span className="font-semibold">{t('outcomeLabel')}</span> {mod.outcome}
+        </p>
+      ) : null}
+
       <ProgressBar
         className="mb-6 max-w-md"
         value={progress}

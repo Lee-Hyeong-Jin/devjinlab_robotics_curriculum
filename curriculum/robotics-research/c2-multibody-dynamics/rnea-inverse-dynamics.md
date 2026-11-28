@@ -96,7 +96,7 @@ $S_i$ 를 $6\times n_i$ 행렬로 바꾸면 모든 식이 그대로 성립한다
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 — `lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 — `f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (속도 재귀와 공간 야코비안) [D2]** —
   $$
@@ -450,7 +450,7 @@ $10^{-12}$ 이내로 일치 ⓔ 성분 순서와 $f_i$ 의 부호 규약이 docs
 
 **필독 2편.** 한 편은 원전(1980), 한 편은 20년 뒤의 지형도(2000)다. 둘을 **같은 질문지로**
 읽어 "무엇이 그 20년에 바뀌었는지"를 스스로 쓰는 것이 이 레슨의 읽기 목표다. 각 논문에 아래
-고정 질문 10개로 1페이지 노트를 쓴다(`lesson-standard.md` §5). 3-pass 로 읽고 3번째 패스에서
+고정 질문 10개로 1페이지 노트를 쓴다(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고 3번째 패스에서
 질문 4·7·9 를 집중 공략한다.
 
 1. **Luh, Walker & Paul, "On-Line Computational Scheme for Mechanical Manipulators"
@@ -579,7 +579,7 @@ $$
 ## 개념 점검
 
 `rc quiz c2-rnea-inverse-dynamics` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c2-rnea-inverse-dynamics-quiz

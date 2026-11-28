@@ -53,7 +53,7 @@ constraint a **non-smooth** problem, and every difficulty in this lesson comes f
 ## Key results
 
 The bracketed grade is the derivation depth (D0 cited / D1 sketched / D2 full derivation /
-D3 proof — see `lesson-standard.md` §2 in the track design notes).
+D3 proof — see the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (complementarity at three levels) [D2]** — at position level contact is
   $$
@@ -474,7 +474,7 @@ submatrix of $A$ and does not depend on $\mu$ — $\mu$ enters only the cone **c
 problem from the directions of **the integrator**, **solvability** and **convexity**. Reading all
 three and summarising in one paragraph "which assumption of rigid contact each one gave up" is the
 reading goal of this lesson (the answer is in (a), (b), (c) of R3 and in R5). Write a one-page note
-on each with the ten fixed questions below (`lesson-standard.md` §5). Read in three passes and
+on each with the ten fixed questions below (the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes and
 concentrate on questions 4, 7 and 8 in the third pass.
 
 1. **Stewart & Trinkle, "An implicit time-stepping scheme for rigid body dynamics with inelastic
@@ -528,6 +528,8 @@ in the text came from. With one planar contact the LCP can be solved **exactly**
 acceptance criteria can be written at machine precision.
 
 ```python
+import numpy as np
+
 G0 = 9.81
 M_D, R_D = 1.0, 0.2
 I_D = 0.5 * M_D * R_D**2  # uniform disk
@@ -687,7 +689,7 @@ the random seed with `np.random.default_rng(0)`.
 ## Concept check
 
 Run `rc quiz c2-contact-dynamics`. The quiz is for **concept checking only**; the real work is the
-problem set and the reproduction task above (`lesson-standard.md` §4).
+problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: which physical conditions normal complementarity bundles; the grounds on
 which the frictionless velocity-level discretisation always has a solution; the critical friction

@@ -22,12 +22,13 @@ GET. 진행도·노트·퀴즈 기록·리포트·`/me`·`/admin`·모든 쓰기
 | `GET /api/v1/courses`, `/modules/*`, `/lessons/*`, `/resources`, `/search` | 401 (`RC_PUBLIC_CONTENT=1` 이면 200) | ✔ | ✔ | ✔ | `read:progress` |
 | `GET /api/v1/roadmap` (호출자의 진행도를 담는다) | 401 | ✔ | ✔ | ✔ | `read:progress` |
 | `GET /api/v1/progress/*`, `/reports/*` (own data only) | 401 | ✔ | ✔ | ✔ | `read:progress` |
-| `POST /api/v1/progress/start|stop|log|done` (own data only) | 401 | ✔ | ✔ | ✔ | `write:progress` |
+| `POST /api/v1/progress/start|stop|log|done|undone` (own data only) | 401 | ✔ | ✔ | ✔ | `write:progress` |
 | `GET /api/v1/me`, `/me/export` | 401 | ✔ | ✔ | ✔ | `read:progress` |
 | `PATCH /api/v1/me`, `PUT /me/password`, `GET|DELETE /me/sessions*`, `GET|POST|DELETE /me/tokens*`, `GET|DELETE /me/identities*`, `DELETE /me` | 401 | ✔ | ✔ | ✔ | not allowed (session only) |
 | `GET /api/v1/admin/overview`, `/admin/users` (search, filters), `/admin/users/{id}`, `/admin/users/{id}/overview`, `/admin/audit` (filters), `/admin/audit/export` (CSV) | 401 | 403 | 403 | ✔ | `admin` |
 | `GET /api/v1/admin/monitoring/system`, `/traffic`, `/errors`, `/visits`, `/kpi` | 401 | 403 | 403 | ✔ | `admin` |
 | `POST /api/v1/telemetry/pageview` (the web tier reports a page view) | 403 unless the connection comes from a trusted proxy (`RC_API_TRUSTED_PROXIES`); no session involved | | | | not allowed |
+| `POST /api/v1/telemetry/weberror` (the web tier reports a page it failed to render) | 403 unless the connection comes from a trusted proxy (`RC_API_TRUSTED_PROXIES`); no session involved | | | | not allowed |
 | `PATCH /api/v1/admin/users/{id}`, `DELETE /admin/users/{id}/sessions`, `DELETE /admin/users/{id}/tokens`, `POST /admin/users/{id}/password-reset` | 401 | 403 | 403 | ✔ | `admin` (+`write:progress` for the method check) |
 
 Rules enforced on top of the table:

@@ -118,7 +118,7 @@ A3(정책이 모든 행동에 양의 확률을 준다)은 $\log \pi_\theta$ 가 
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (정책 경사 정리) [D3]** — A1–A3 아래
   $$
@@ -439,7 +439,7 @@ $\mathbb{E}[\nabla\log\pi \nabla\log\pi^\top]$ 와 $-\mathbb{E}[\nabla^2\log\pi]
 
 ## 논문 읽기
 
-**필독 3편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`lesson-standard.md` §5).
+**필독 3편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절).
 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Sutton, McAllester, Singh & Mansour, "Policy gradient methods for reinforcement learning
@@ -559,7 +559,7 @@ $$
 ## 개념 점검
 
 `rc quiz c8-policy-gradient` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위 문제
-세트와 재현 과제다(`lesson-standard.md` §4).
+세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c8-policy-gradient-quiz

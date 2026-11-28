@@ -93,7 +93,7 @@ R1 의 핵심이다 — ① 전부 내부자인 표본을 한 번이라도 뽑�
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (반복 수와 실패 확률) [D3]** — $n$ 개 중 $I$ 개가 내부자일 때 비복원 추출로 뽑은
   크기 $m$ 표본이 전부 내부자일 확률은
@@ -405,7 +405,7 @@ $n=80,w=0.4$ → 36, 448. 노드 수는 $n=40\to320$ 에서 250→450, $w=0.6\to
 ## 논문 읽기
 
 **필독 2편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 서지와 권장 논문 전체 목록은 `rc papers c7-robust-fitting-ransac` 로 본다.
 
 1. **Fischler & Bolles, "Random sample consensus" (1981, Communications of the ACM)**
@@ -503,7 +503,7 @@ OpenCV 의 `USAC_MAGSAC` 를 같은 생성기에 돌려 반복 수와 정확도�
 ## 개념 점검
 
 `rc quiz c7-robust-fitting-ransac` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c7-robust-fitting-ransac-quiz

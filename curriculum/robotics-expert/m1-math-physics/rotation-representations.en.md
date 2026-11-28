@@ -18,6 +18,15 @@ there are several ways to write it down as numbers, and each one differs in
 convenience and in the traps it sets. This lesson compares four representations
 and how to convert between them.
 
+## Where you will use this
+
+A drone's attitude, the direction in which a gripper approaches a cup, and the tilt an IMU reports
+are all 3D rotations. ROS 2's `tf2` and its messages pass rotations around as quaternions,
+human-readable configuration and URDF files use roll, pitch and yaw, and the computation itself runs
+on rotation matrices. Mistakes made while moving between the three (angle order, gimbal lock, the
+sign of a quaternion) are the most common attitude bugs on real robots, so the conversion rules of
+this lesson are used from M2 onwards.
+
 ## Concepts
 
 ### Rotation matrix
@@ -64,6 +73,8 @@ It is the default orientation representation in robot middleware, such as ROS 2'
   ROS messages use $(x, y, z, w)$ (scalar last), while textbooks and some libraries
   use $(w, x, y, z)$.
 
+![The reference axes x, y, z drawn together with the axes x′ and y′ obtained by a yaw rotation about z.](figures/rotation-representations-axes.svg)
+
 ## Key formulas
 
 Elementary rotation matrices (rotations about an axis):
@@ -108,6 +119,18 @@ and the axis is $z$, so $q = (0.7071, 0, 0, 0.7071)$ (writing $w$ first).
 **Exercise:** generate 100 random Euler angle triples and round-trip them through
 Euler → quaternion → matrix → Euler. Record when the result differs from the
 original (near gimbal lock, and from angle-range wrapping).
+
+```expected
+Drawing each angle from −180° to 180° with `rng = np.random.default_rng(0)` and going round in ZYX
+order, **45 of the 100** triples come back as different angles. Those 45 are exactly the ones with
+$|\text{pitch}| > 90^\circ$: `as_euler("ZYX")` only returns a middle angle in $[-90^\circ, 90^\circ]$,
+so it writes the same rotation with three other angles. The rotation matrices built from the two
+triples are equal (`np.allclose` gives `True`).
+
+With pitch limited to −89°…89° all 100 agree to within $10^{-13}$ degrees. At a pitch of exactly 90°
+(for example yaw 30°, pitch 90°, roll 20°) SciPy warns "Gimbal lock detected" and returns
+(10°, 90°, 0°): yaw and roll act about the same axis, so only their difference (30° − 20°) survives.
+```
 
 ## Self-check questions
 

@@ -67,6 +67,8 @@ dev = [
     "sqlalchemy>=2.0",
     "testcontainers[postgres]>=4",
     "types-pyyaml>=6.0.12.20261103",
+    "numpy>=2",
+    "scipy>=1.14",
 ]
 
 [build-system]

@@ -49,7 +49,7 @@ the transformation between the two is **not** the identity.
 ## Key results
 
 The bracket is the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (on-manifold Gauss-Newton and retraction invariance) [D3]** — lifting
   $\min_{X\in G} F(X)$ with $F(X) = \tfrac12\sum_k\lVert r_k(X)\rVert^2_{\Sigma_k}$ to the tangent
@@ -459,7 +459,7 @@ $O(\lVert\xi\rVert)$ using $\mathrm{Ad}_{\exp(\xi)} = I + \mathrm{ad}_\xi + O(\x
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read with 3-pass and attack questions 4, 5, 6 and 7 on the third pass.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with 3-pass and attack questions 4, 5, 6 and 7 on the third pass.
 
 1. **Barrau & Bonnabel, "The invariant extended Kalman filter as a stable observer" (2017,
    IEEE T-AC)** — role: `seminal`. <https://arxiv.org/abs/1410.1465> (§II-III)
@@ -682,7 +682,7 @@ RMSE (reference $0.0133$ rad for both).
 ## Concept check
 
 Run `rc quiz c5-manifold-estimation`. The quiz is for **concept checking only**; the real work is
-the problem set and the reproduction task above (`lesson-standard.md` §4).
+the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: what the condition $D\mathcal{R}_X(0) = \mathrm{id}$ in the definition of a
 retraction guarantees; how a left-invariant covariance transforms into the right convention; the

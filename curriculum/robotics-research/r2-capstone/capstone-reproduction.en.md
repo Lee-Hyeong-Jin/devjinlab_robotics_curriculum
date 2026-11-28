@@ -27,7 +27,7 @@ the cause of the failure with evidence**. (b) is not the easier path — "it did
 report, and you must **sort the cause by evidence** into implementation error, assumption
 difference or reporting gap. Establishing a failure's cause is itself a contribution to the field.
 
-The tier is R3 (lesson standard §6): reproduce one or two main results **at reduced scale** and
+The tier is R3 (the "Reproduction tasks" section of lesson `f0-how-to-read-this-track`): reproduce one or two main results **at reduced scale** and
 compare both the trend and the numbers.
 
 Deliverables: **a reproduction report and a reproduction repository**.

@@ -113,7 +113,7 @@ resources:
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (도메인 랜덤화의 암묵적 목적함수) [D2]** — 매 에피소드 시작에 $\xi\sim p$ 를 뽑고 정책이
   $\xi$ 를 **보지 못하면**, 학습이 최적화하는 것은 정확히
@@ -397,7 +397,7 @@ $\max$ 가 커진다. 간극이 0 이 되는 것은 ⓐ $\xi$ 가 관측에서 *
 
 ## 논문 읽기
 
-**필독 3편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`lesson-standard.md` §5).
+**필독 3편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절).
 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Tobin, Fong, Ray, Schneider, Zaremba & Abbeel, "Domain randomization for transferring deep
@@ -539,7 +539,7 @@ $J_\xi(\pi) = \big[(I-\gamma P^\pi)^{-1}r^\pi\big]_S$ 를 선형 해로 계산�
 ## 개념 점검
 
 `rc quiz c8-generalization-sim2real` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c8-generalization-sim2real-quiz

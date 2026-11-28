@@ -97,7 +97,7 @@ papers:
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (분할 공형 예측의 주변 커버리지) [D3]** — 보정 점수 $s_1,\dots,s_n$ 과 시험 점수
   $s_{n+1}$ 이 교환가능하면, **예측기가 무엇이든·분포가 무엇이든**
@@ -453,7 +453,7 @@ $E$ 개, 에피소드당 $T$ 스텝, 스텝 잔차가 "에피소드 공통 성�
 ## 논문 읽기
 
 **필독 2편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 1·4·8 을 집중 공략한다 —
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 1·4·8 을 집중 공략한다 —
 "어떤 가정 아래의 보장인가"가 이 레슨의 전부다.
 
 1. **Angelopoulos & Bates, "A gentle introduction to conformal prediction and distribution-free
@@ -600,7 +600,7 @@ $10^6$ 번 모의해 $\tau \in \{\tau^\star, 0.2, 0.6, 1\}$ 의 비용·중단�
 ## 개념 점검
 
 `rc quiz s4-safety-ood` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위 문제 세트와
-재현 과제다(`lesson-standard.md` §4).
+재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: s4-safety-ood-quiz

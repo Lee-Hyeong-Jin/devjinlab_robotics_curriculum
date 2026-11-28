@@ -143,7 +143,7 @@ papers:
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (장애물 사상의 구조) [D2]** — (A1) 아래
   (a) $\mathcal{C}_{obs}$ 는 닫혀 있고 $\mathcal{C}_{free}$ 는 열려 있다.
@@ -300,7 +300,7 @@ $b_0 = 1$, (4)에서 $b_1 = 2$ — 토러스의 두 생성원이 그대로 남�
 ### R3 — PSPACE-완전성
 
 R3 는 [D2] 결과지만 주장이 "환원이 존재한다"와 "결정 절차가 존재한다"는 **존재 주장**이므로,
-`lesson-standard.md` §3 의 형식(가설·결론 분리 → 전략 → 단계 → 빈틈 → 가설의 필요성)으로 쓴다.
+`f0-how-to-read-this-track` 레슨의 "증명 스케치" 절 의 형식(가설·결론 분리 → 전략 → 단계 → 빈틈 → 가설의 필요성)으로 쓴다.
 
 **가설** H1: 입력에 자유도 $n$ (또는 움직이는 물체 수)이 **포함된다**. H2: $A$ 와 $O$ 가 유리수
 계수 다항식 부등식으로 유한하게 기술된다. H3: 경로에 미분 제약이 없다((A2)).
@@ -416,7 +416,7 @@ $(b_0,\chi)$ 가 바뀌지 않는다 ⓒ 8-이웃으로 바꿔 결과가 달라�
 ## 논문 읽기
 
 **필독 2편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). Keshav 의 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). Keshav 의 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Reif, "Complexity of the mover's problem and generalizations" (1979, FOCS)** — 역할:
    `원전(seminal)`. <https://doi.org/10.1109/SFCS.1979.10> (§2–4)
@@ -512,7 +512,7 @@ $10^{-3}$ 해상도로 재샘플링해 작업공간에서 충돌이 0 건임을 
 ## 개념 점검
 
 `rc quiz c6-cspace-complexity` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c6-cspace-complexity-quiz

@@ -223,3 +223,107 @@ test('dark mode keeps the page readable', async ({ page }) => {
   // The dark token is a near-black; light would be near-white.
   expect(background).not.toBe('rgb(247, 248, 250)')
 })
+
+/**
+ * How large a page's HTML may be, uncompressed (#57). The resource library once reached
+ * 830 KB because it carried the whole catalogue twice; nothing noticed, because nothing
+ * measured. The budgets sit well above today's sizes and far below that.
+ */
+const HTML_BUDGET_BYTES = 350_000
+
+test('public pages stay within their size budget', async ({ page }) => {
+  await page.goto('/roadmap')
+  const lesson = await page.locator('a[href^="/modules/"]').first().getAttribute('href')
+  for (const path of ['/', '/roadmap', '/resources', '/resources?page=2', lesson ?? '/roadmap']) {
+    const response = await page.request.get(path)
+    expect(response.ok(), path).toBe(true)
+    const bytes = (await response.body()).byteLength
+    expect(bytes, `${path} is ${Math.round(bytes / 1024)} KB`).toBeLessThan(HTML_BUDGET_BYTES)
+  }
+})
+
+test('the resource library filters and pages through the address', async ({ page }) => {
+  await page.goto('/resources')
+  const table = page.getByRole('table')
+  // One page of rows, not the whole catalogue.
+  const rows = table.getByRole('row')
+  expect(await rows.count()).toBeLessThanOrEqual(26) // the header plus 25
+  await expect(page.getByRole('status').first()).toContainText(/1–25/)
+
+  // Paging keeps to the address, so a page can be linked to.
+  await page.getByRole('link', { name: /다음 페이지|Next page/ }).click()
+  await page.waitForURL(/page=2/)
+  await expect(page.getByRole('status').first()).toContainText(/26–50/)
+
+  // A kind is a link, and it resets the page.
+  const kinds = page.getByRole('navigation', { name: /종류|Kind/ })
+  await kinds.getByRole('link').nth(1).click()
+  await page.waitForURL(/kind=/)
+  expect(new URL(page.url()).searchParams.has('page')).toBe(false)
+  await expect(kinds.locator('[aria-current="page"]')).toHaveCount(1)
+
+  // Searching keeps the kind and works without JavaScript (a plain GET form).
+  await page.locator('#resource-search').fill('zzzz-no-such-resource')
+  await page.locator('#resource-search').press('Enter')
+  await page.waitForURL(/q=zzzz/)
+  expect(new URL(page.url()).searchParams.has('kind')).toBe(true)
+  await expect(page.getByText(/조건에 맞는 자료가 없습니다|No resource matches/)).toBeVisible()
+  await expect(page.getByRole('table')).toHaveCount(0)
+})
+
+test('a goal narrows the roadmap to the lessons it needs (#52)', async ({ page }) => {
+  await page.goto('/roadmap')
+  const goals = page.getByRole('navigation', { name: /목표로 경로 고르기|Pick a path by goal/ })
+  // "Whole course" is selected until a goal is picked.
+  await expect(goals.locator('[aria-current="page"]')).toHaveText(/전체 코스|Whole course/)
+  await goals.getByRole('link', { name: /움직이는 로봇 제어하기|Make a robot move/ }).click()
+  await page.waitForURL(/goal=mobile-robot/)
+
+  // The path is listed in order, with how much is left, and it is short.
+  const status = page.getByRole('status').filter({ hasText: /레슨 0\/6|0 of 6 lessons/ })
+  await expect(status).toBeVisible()
+  const steps = page.locator(
+    'section[aria-labelledby="goal-heading"] ol > li, #goal-heading ~ div ol > li',
+  )
+  await expect(steps).toHaveCount(6)
+  await expect(steps.first().getByRole('link')).toHaveAttribute(
+    'href',
+    /\/modules\/m1-math-physics\//,
+  )
+  // Modules the goal does not touch say so; they are still links.
+  await expect(
+    page.getByText(/이 목표에는 필요하지 않습니다|Not needed for this goal/).first(),
+  ).toBeVisible()
+  expect(await blockingViolations(page)).toEqual([])
+
+  // An unknown goal is ignored, not an error.
+  const response = await page.goto('/roadmap?goal=no-such-goal')
+  expect(response?.status()).toBe(200)
+  await expect(goals.locator('[aria-current="page"]')).toHaveText(/전체 코스|Whole course/)
+})
+
+test('the site says how the course is written, and each lesson its review status (#61)', async ({
+  page,
+}) => {
+  const response = await page.goto('/about')
+  expect(response?.status()).toBe(200)
+  await expect(
+    page.getByRole('heading', {
+      level: 1,
+      name: /이 강의는 이렇게 만듭니다|How this course is written/,
+    }),
+  ).toBeVisible()
+  await expect(page.getByText(/AI/).first()).toBeVisible()
+  expect(await blockingViolations(page)).toEqual([])
+
+  // A lesson says it has not been reviewed, and links here.
+  await page.goto('/modules/m1-math-physics/m1-vectors-matrices')
+  await expect(
+    page.getByText(/아직 전문가 검토를 받지 않았습니다|not yet been reviewed/),
+  ).toBeVisible()
+  await page
+    .getByRole('link', { name: /강의를 만드는 방법|How this course is written/ })
+    .first()
+    .click()
+  await page.waitForURL(/\/about$/)
+})

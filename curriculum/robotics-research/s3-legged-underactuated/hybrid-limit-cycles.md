@@ -120,7 +120,7 @@ $\gamma = 0.05$ rad 에서 계산했다.
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (푸앵카레 사상과 궤도 안정성) [D3]** — 주기 $T^\star$ 의 궤도가 가드를 **횡단**하면
   ($\nabla h^\top f \ne 0$) 가드 직후의 단면 $\Sigma$ 에서 푸앵카레 사상 $P$ 가 국소적으로
@@ -458,7 +458,7 @@ problems:
 ## 논문 읽기
 
 **필독 3편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Grizzle, Abba & Plestan, "Asymptotically stable walking for biped robots: analysis via
    systems with impulse effects" (2001, IEEE T-AC)** — 역할: `원전(seminal)`.
@@ -545,7 +545,7 @@ $0.58^{20}\approx 10^{-5}$ 배로 줄어들어야 한다(안정성의 독립적 
 ## 개념 점검
 
 `rc quiz s3-hybrid-limit-cycles` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: s3-hybrid-limit-cycles-quiz

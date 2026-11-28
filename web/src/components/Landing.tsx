@@ -59,6 +59,22 @@ export async function Landing() {
     expertHours: roundHours(mainTotals.minutes),
     researchLessons: courseTotals(advanced).lessons,
   })
+  // Three readers land on the same page; each gets a place to start (issue #62).
+  const audiences: Array<[string, string, string, string]> = [
+    [t('whoDeveloperTitle'), t('whoDeveloperBody'), '/roadmap', t('whoDeveloperLink')],
+    [
+      t('whoStudentTitle'),
+      t('whoStudentBody'),
+      advanced ? roadmapPath(advanced.id) : '/roadmap',
+      t('whoStudentLink'),
+    ],
+    [
+      t('whoHobbyistTitle'),
+      t('whoHobbyistBody'),
+      '/roadmap?goal=mobile-robot',
+      t('whoHobbyistLink'),
+    ],
+  ]
   const how: Array<[string, string]> = [
     [t('how1Title'), t('how1Body')],
     [t('how2Title'), t('how2Body')],
@@ -128,7 +144,9 @@ export async function Landing() {
                     >
                       <span className="text-primary font-semibold">{module.title}</span>
                       <span className="text-muted text-sm">
-                        {metaDescription(module.summary, 140)}
+                        {module.outcome
+                          ? t('moduleOutcome', { outcome: module.outcome })
+                          : metaDescription(module.summary, 140)}
                       </span>
                     </Link>
                   </li>
@@ -136,6 +154,30 @@ export async function Landing() {
             </ol>
           </section>
         ) : null}
+
+        <section aria-labelledby="landing-who">
+          <h2 id="landing-who" className="text-primary text-xl font-bold">
+            {t('whoTitle')}
+          </h2>
+          <ul className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-3">
+            {audiences.map(([title, body, href, link]) => (
+              <li
+                key={title}
+                className="bg-surface border-border-default flex flex-col gap-2 rounded-[var(--radius-card)] border p-4"
+              >
+                <h3 className="text-primary font-semibold">{title}</h3>
+                <p className="text-muted flex-1 text-sm">{body}</p>
+                <Link
+                  href={href}
+                  className="text-accent text-sm font-medium underline underline-offset-2"
+                >
+                  {link}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <p className="text-muted mt-3 max-w-3xl text-sm">{t('whoNot')}</p>
+        </section>
 
         <section aria-labelledby="landing-how">
           <h2 id="landing-how" className="text-primary text-xl font-bold">

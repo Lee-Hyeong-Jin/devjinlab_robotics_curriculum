@@ -271,6 +271,29 @@ p.markdown-body {
   padding: 1rem;
   overflow-x: auto;
 }
+/* A code block and its tool row ("Copy", "Download .py"). */
+.markdown-body .code-block {
+  position: relative;
+}
+.markdown-body .code-tools {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+.markdown-body .code-tools button {
+  min-height: 2rem;
+  padding: 0.125rem 0.625rem;
+  border: 1px solid var(--border-default);
+  border-radius: 6px;
+  background: var(--bg-surface);
+  color: var(--text-secondary, var(--text-primary));
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+.markdown-body .code-tools button:hover {
+  background: var(--bg-subtle);
+}
 .markdown-body pre code {
   background: none;
   padding: 0;
@@ -297,6 +320,32 @@ p.markdown-body {
   border: 0;
   border-top: 1px solid var(--border-default);
 }
+/* A folded "expected result" after an exercise (```` ```expected ````). */
+.markdown-body details {
+  margin: 0.75rem 0;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  padding: 0.5rem 0.875rem;
+  background: var(--bg-subtle);
+}
+.markdown-body details > summary {
+  cursor: pointer;
+  font-weight: 600;
+  min-height: 2rem;
+  display: flex;
+  align-items: center;
+}
+.markdown-body details[open] > summary {
+  margin-bottom: 0.5rem;
+}
+/* A lesson figure: drawn on white, so it gets a white card in both themes. */
+.markdown-body img.lesson-figure {
+  display: block;
+  margin: 1rem auto;
+  padding: 0.75rem;
+  background: #ffffff;
+  border: 1px solid var(--border-default);
+}
 .markdown-body img {
   max-width: 100%;
   height: auto;
@@ -312,13 +361,16 @@ p.markdown-body {
 /* A formula needs a font with an OpenType MATH table: that table is what lets a bracket grow to
  * the height of a matrix and places sub- and superscripts. The browser's generic `math` family
  * does not always resolve to one (on Linux it often picks a text font, and the brackets stay
- * one line tall beside a three-row matrix), so the fonts that ship with each platform are named
- * first: Cambria Math on Windows, STIX Two Math on macOS and iOS, the TeX Gyre and Latin Modern
- * families on Linux. No font is downloaded; a device with none of them falls back to `math`. */
+ * one line tall beside a three-row matrix), so the fonts are named. The ones a platform ships
+ * come first and cost nothing: Cambria Math on Windows, the TeX Gyre and Latin Modern families
+ * on Linux. STIX Two Math is the web font this app serves itself (`@fontsource/stix-two-math`,
+ * SIL OFL 1.1, imported in `app/layout.tsx`): a phone usually has no math font at all, and
+ * without it a matrix there kept its one-line brackets (#30). A browser fetches the file only
+ * when a page really renders a formula and none of the earlier families is installed. */
 math {
   font-family:
-    'Cambria Math', 'STIX Two Math', 'Latin Modern Math', 'DejaVu Math TeX Gyre',
-    'TeX Gyre Termes Math', 'Libertinus Math', math;
+    'Cambria Math', 'Latin Modern Math', 'DejaVu Math TeX Gyre', 'TeX Gyre Termes Math',
+    'Libertinus Math', 'STIX Two Math', math;
 }
 /* A display formula sits in a wrapper that scrolls (`lib/markdown/scroll.ts`). A `<math>`
  * element does not scroll its own overflow, and as a block its box is only as wide as the

@@ -1,4 +1,7 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
+import { goalProgress, lessonsOnPath, roadmapHref, selectGoal } from '@/lib/goal-path'
+import { cx } from '@/lib/cx'
 import { getLocale, getTranslations } from 'next-intl/server'
 
 import { Card } from '@/components/Card'
@@ -16,7 +19,7 @@ import { selectedCourseId } from '@/lib/courses'
 import { composeTitle, metaDescription } from '@/lib/seo'
 import { localizedPageSeo } from '@/lib/seo-server'
 import { breadcrumbs, courseSchema } from '@/lib/structured-data'
-import { formatPercent } from '@/lib/format'
+import { formatMinutes, formatPercent } from '@/lib/format'
 import type { LockState } from '@/lib/progress'
 import { doneCount } from '@/lib/progress'
 
@@ -56,7 +59,7 @@ interface TableRow {
 }
 
 interface Props {
-  searchParams: Promise<{ course?: string }>
+  searchParams: Promise<{ course?: string; goal?: string }>
 }
 
 /** Roadmap — stage → module cards plus a text alternative table (AC-WEB.3, AC-A11Y.3). */
@@ -83,6 +86,16 @@ export default async function RoadmapPage({ searchParams }: Props) {
       </>
     )
   }
+
+  // A goal narrows the roadmap to the lessons it needs (`?goal=navigation`, #52).
+  const goals = course?.goals ?? []
+  const goal = selectGoal(goals, params.goal)
+  const states = Object.fromEntries(
+    stages.flatMap((stage) =>
+      stage.modules.flatMap((module) => module.lessons.map((lesson) => [lesson.id, lesson.state])),
+    ),
+  )
+  const onGoal = goal ? goalProgress(goal, states) : null
 
   const rows: TableRow[] = stages.flatMap((stage) =>
     stage.modules.map((module) => ({
@@ -122,6 +135,75 @@ export default async function RoadmapPage({ searchParams }: Props) {
       />
       <CourseTabs courses={courses} selected={courseId} basePath="/roadmap" />
 
+      {goals.length > 0 ? (
+        <Card as="section" className="mb-8" aria-labelledby="goal-heading">
+          <h2 id="goal-heading" className="text-primary font-semibold">
+            {t('goalHeading')}
+          </h2>
+          <p className="text-muted mt-1 mb-3 max-w-3xl text-sm">{t('goalHint')}</p>
+          <nav aria-label={t('goalHeading')}>
+            <ul className="flex flex-wrap gap-2">
+              {[{ id: null, title: t('goalAll') }, ...goals].map((entry) => {
+                const current = (entry.id ?? null) === (goal?.id ?? null)
+                return (
+                  <li key={entry.id ?? 'all'}>
+                    <Link
+                      href={roadmapHref(courseId, defaultCourseId(), entry.id)}
+                      aria-current={current ? 'page' : undefined}
+                      className={cx(
+                        'inline-flex min-h-11 items-center rounded-full border px-3 py-1 text-sm sm:min-h-9',
+                        current
+                          ? 'bg-accent-light border-border-accent text-accent font-medium'
+                          : 'bg-surface border-border-default text-primary hover:bg-subtle',
+                      )}
+                    >
+                      {entry.title}
+                    </Link>
+                  </li>
+                )
+              })}
+            </ul>
+          </nav>
+
+          {goal && onGoal ? (
+            <div className="border-border-default mt-4 border-t pt-4">
+              <p className="text-primary text-sm font-medium">{goal.title}</p>
+              <p className="text-muted mt-1 max-w-3xl text-sm">{goal.summary}</p>
+              <p className="text-primary mt-2 text-sm" role="status">
+                {t('goalProgress', {
+                  done: onGoal.done,
+                  total: onGoal.total,
+                  remaining: formatMinutes(onGoal.remainingMinutes, locale),
+                  time: formatMinutes(goal.estimated_minutes, locale),
+                })}
+              </p>
+              <ol className="mt-3 flex flex-col gap-1">
+                {goal.lessons.map((lesson, index) => {
+                  const state = states[lesson.id] ?? 'available'
+                  return (
+                    <li key={lesson.id} className="flex flex-wrap items-baseline gap-x-3 text-sm">
+                      <span className="text-muted w-6 shrink-0 text-right tabular-nums">
+                        {index + 1}.
+                      </span>
+                      <Link
+                        href={`/modules/${encodeURIComponent(lesson.module_id)}/${encodeURIComponent(lesson.id)}`}
+                        className="text-accent underline underline-offset-2"
+                      >
+                        {lesson.title}
+                      </Link>
+                      <StatusDot state={state} label={tState(state)} />
+                      <span className="text-muted text-xs">
+                        {formatMinutes(lesson.estimated_minutes, locale)}
+                      </span>
+                    </li>
+                  )
+                })}
+              </ol>
+            </div>
+          ) : null}
+        </Card>
+      ) : null}
+
       <div className="flex flex-col gap-8">
         {stages.map((stage, index) => (
           <section key={stage.level || index} aria-labelledby={`stage-${index}`}>
@@ -141,7 +223,27 @@ export default async function RoadmapPage({ searchParams }: Props) {
             </div>
             <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {stage.modules.map((module) => (
-                <li key={module.id}>
+                <li
+                  key={module.id}
+                  // The modules a chosen goal needs are outlined. The others are not dimmed:
+                  // fading them took their text below the contrast minimum, and they stay
+                  // perfectly usable — the line above each card says which is which.
+                  className={
+                    goal && lessonsOnPath(goal, module.id) > 0
+                      ? 'ring-border-accent rounded-[var(--radius-card)] ring-2 ring-offset-2 ring-offset-transparent'
+                      : undefined
+                  }
+                >
+                  {goal ? (
+                    <p className="text-muted mb-1 text-xs">
+                      {lessonsOnPath(goal, module.id) === 0
+                        ? t('goalModuleOff')
+                        : t('goalModuleOn', {
+                            count: lessonsOnPath(goal, module.id),
+                            total: module.lessonsTotal,
+                          })}
+                    </p>
+                  ) : null}
                   <ModuleCard
                     id={module.id}
                     title={module.title}

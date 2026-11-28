@@ -85,7 +85,7 @@ or more stop you**, going back to the lesson named in parentheses is faster.
 ## Key results
 
 The bracket is the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the epipolar constraint and the essential matrix) [D2]** — two normalized image points
   $x_1, x_2$ of the same 3D point satisfy, independently of depth,
@@ -523,7 +523,7 @@ polynomial (real roots, chirality, degeneracy handling) — passes. "There is no
 ## Paper reading
 
 **Two must-reads.** Write a one-page note on each, using the ten fixed questions
-(`lesson-standard.md` §5). Read in three passes, and attack questions 4, 5, 6 and 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes, and attack questions 4, 5, 6 and 7 in the third.
 For the full bibliography, including the recommended papers, run
 `rc papers c7-two-view-geometry` (the course registry
 `curriculum/robotics-research/papers.yaml`, ADR 0014).
@@ -662,7 +662,7 @@ check whether the rotation-error distributions overlap.
 ## Concept check
 
 Run `rc quiz c7-two-view-geometry`. The quiz is for **concept checking only**; the real work is the
-problem set and the reproduction task above (`lesson-standard.md` §4).
+problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: why the eight-point algorithm breaks on a coplanar scene
 ($\operatorname{rank}A = 6$); why Hartley normalisation does nothing for $E$ in normalized

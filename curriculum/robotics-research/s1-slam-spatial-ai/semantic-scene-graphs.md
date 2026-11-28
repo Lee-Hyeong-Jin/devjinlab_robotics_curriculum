@@ -96,7 +96,7 @@ papers:
 ## 핵심 결과
 
 괄호 안은 유도 깊이 등급이다(D0 인용 / D1 골격 / D2 완전 유도 / D3 증명 —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (의미를 더한 연관의 오류 확률) [D2]** — 분리비 $r$ 인 두 객체 사이에서 기하만으로
   고르면 오류 확률이 $\Phi(-r/2)$ 다. 두 객체의 클래스가 다르고 분류기의 정확도가 $q$ 이면,
@@ -410,7 +410,7 @@ $0.9\,\Phi(-2.100) + 0.1\,\Phi(-0.128) = 0.9\times0.0179 + 0.1\times0.4491 = 0.0
 ## 논문 읽기
 
 **필독 2편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 1·5·8 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 1·5·8 을 집중 공략한다.
 
 1. **Salas-Moreno, Newcombe, Strasdat, Kelly & Davison, "SLAM++: simultaneous localisation and
    mapping at the level of objects" (2013, CVPR)** — 역할: `원전(seminal)`.
@@ -579,7 +579,7 @@ $e^{-n\mathcal{C}}$ 와 비교한다(동점은 반으로 센다).
 ## 개념 점검
 
 `rc quiz s1-semantic-scene-graphs` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: s1-semantic-scene-graphs-quiz

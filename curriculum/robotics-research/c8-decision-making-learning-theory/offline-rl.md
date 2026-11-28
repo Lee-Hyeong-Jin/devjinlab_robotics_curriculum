@@ -111,7 +111,7 @@ RL 은 그럴 수 없다. 그런데 `c8-value-based-rl` 의 $\max$ 는 **데이�
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (보수성은 하한을 준다) [D3]** — $\Gamma$ 가 유효한 불확실성 상한이면 $\tilde{T}$ 의 고정점이
   $$
@@ -398,7 +398,7 @@ $t = T-1$ 항은 여전히 $m^T$ 다 — **가장 늦은 보상이 지수 항을
 
 ## 논문 읽기
 
-**필독 3편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`lesson-standard.md` §5).
+**필독 3편.** 각 논문에 고정 질문 10개로 1페이지 노트를 쓴다(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절).
 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 
 1. **Jin, Yang & Wang, "Is pessimism provably efficient for offline RL?" (2021, ICML)** — 역할:
@@ -518,7 +518,7 @@ $\Gamma(s,a) = c\,V_{\max}\sqrt{\log 4 / n(s,a)}$ (방문 없으면 $V_{\max}$)�
 ## 개념 점검
 
 `rc quiz c8-offline-rl` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위 문제 세트와
-재현 과제다(`lesson-standard.md` §4).
+재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c8-offline-rl-quiz

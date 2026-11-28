@@ -12,6 +12,9 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { unified } from 'unified'
 
+import { CodeBlock } from '@/components/CodeBlock'
+
+import { rehypeFigures, remarkExpectedResults, remarkHints } from './lesson-blocks'
 import { normalizeDisplayMath } from './normalize'
 import { lessonSanitizeSchema } from './sanitize'
 import { rehypeFocusableScrollers } from './scroll'
@@ -29,6 +32,8 @@ export interface RenderedMarkdown {
 
 /** Components substituted into the rendered tree. */
 const components = {
+  // A fenced block gets "Copy" and, for Python, "Download .py" (`<CodeBlock>`).
+  pre: CodeBlock,
   a: ({ href, children, ...rest }: { href?: string; children?: ReactNode }) => {
     const external = !!href && /^https?:\/\//.test(href)
     return (
@@ -63,11 +68,25 @@ export interface RenderOptions {
    * own `<h1>`. 1 by default: a body `#` becomes `<h2>`.
    */
   headingOffset?: number
+  /** Label of a folded ```` ```expected ```` block; the lesson page passes a translated one. */
+  expectedLabel?: string
+  /** Label that opens the title of a folded ```` ```hint ```` block. */
+  hintLabel?: string
+  /**
+   * Where `figures/<name>` images are served from (`figureBase(lessonId)`). Without it a
+   * figure cannot load and is left out.
+   */
+  figureBase?: string
 }
 
 export function renderMarkdown(
   markdown: string | undefined,
-  { headingOffset = 1 }: RenderOptions = {},
+  {
+    headingOffset = 1,
+    expectedLabel = 'Expected result',
+    hintLabel = 'If this failed',
+    figureBase,
+  }: RenderOptions = {},
 ): RenderedMarkdown {
   if (!markdown || markdown.trim() === '') return { content: null, headings: [] }
 
@@ -76,11 +95,16 @@ export function renderMarkdown(
     .use(remarkParse)
     .use(remarkMath)
     .use(remarkGfm)
+    .use(remarkExpectedResults(expectedLabel))
+    .use(remarkHints(hintLabel))
     .use(remarkRehype)
     .use(rehypeKatex, { output: 'mathml', throwOnError: false, strict: false })
     .use(rehypeHighlight, { detect: false, ignoreMissing: true })
     .use(rehypeShiftHeadings(headingOffset))
     .use(rehypeSanitize, lessonSanitizeSchema)
+    // After the sanitizer, like the heading ids: the address and class are ours, not the
+    // content's.
+    .use(rehypeFigures(figureBase))
     // After the sanitizer: the ids are generated here from heading text, so they
     // must not pick up its `user-content-` clobber prefix (the "on this page"
     // links target them directly).

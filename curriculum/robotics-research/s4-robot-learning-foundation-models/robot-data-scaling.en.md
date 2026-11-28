@@ -86,7 +86,7 @@ is the central reading skill of this lesson.
 
 ## Key results
 
-The bracket gives the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket gives the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (the form of a scaling law) [D2]** — for least squares on frozen features, assuming a
   Gaussian design and a well-specified model ($y = \phi^\top w_A + \varepsilon$), the expected test
@@ -393,7 +393,7 @@ $N_A\to\infty$, $\gamma^\star\to0$ (the target data alone suffices).
 ## Paper reading
 
 **Two must-reads.** Write a one-page note on each using the ten fixed questions
-(`lesson-standard.md` §5). Read with three passes and attack questions 4, 5, 6 and 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with three passes and attack questions 4, 5, 6 and 7 in the third.
 
 1. **Kaplan, McCandlish, Henighan et al., "Scaling laws for neural language models" (2020, arXiv)**
    — role: `seminal`. <https://arxiv.org/abs/2001.08361> — §1–3 and §6.
@@ -536,7 +536,7 @@ from reproducing. The purpose is to check whether the reduced model's conclusion
 ## Concept check
 
 Run `rc quiz s4-robot-data-scaling`. The quiz is for **concept checking only**; the real work is the
-problem set and the reproduction task above (`lesson-standard.md` §4).
+problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: what the flattening of a log-log curve at large $N$ is showing; whether more
 samples remove the loss a disagreeing mixture creates; when the domain weight $\gamma^\star$

@@ -97,7 +97,7 @@ resources:
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (볼륨 렌더링 적분) [D2]** — 흡수-방출 모형에서 광선에 쌓이는 색은
   $$C = \int_{t_n}^{t_f} T(t)\,\sigma(t)\,c(t)\,dt,
@@ -408,7 +408,7 @@ $-fX/Z^2$ 가 0 이 아니어서 $s_z^2$ 가 들어온다.
 ## 논문 읽기
 
 **필독 2편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 서지와 권장 논문 전체 목록은 `rc papers c7-neural-fields-3dgs` 로 본다.
 
 1. **Mildenhall, Srinivasan, Tancik et al., "NeRF: representing scenes as neural radiance fields
@@ -441,7 +441,7 @@ Tancik et al. 2020(스펙트럼 편향의 NTK 분석).
 
 > **블루프린트와의 차이(명시)**: 설계안의 재현 과제는 "소형 장면에서 NeRF/3DGS 를 학습해
 > 보고된 PSNR 경향(3DGS 가 더 빠름)을 재현"이다. 두 방법의 학습은 모두 GPU 를 요구하고,
-> 레슨 표준 §6 은 GPU 가 필요할 수 있는 과제를 **항상 선택 과제(R4)** 로 두라고 규정한다.
+> `f0-how-to-read-this-track` 레슨의 "재현 과제" 절 은 GPU 가 필요할 수 있는 과제를 **항상 선택 과제(R4)** 로 두라고 규정한다.
 > 그래서 이 레슨은 **필수 조건을 CPU 로 판정 가능한 네 가지**로 두고, PSNR 경향 재현을
 > 아래 **선택 확장(R4)** 으로 분리했다. 필수 조건은 두 방법의 **렌더링 수학**을 정면으로
 > 겨냥한다(R2·R3·R4·R5).
@@ -522,7 +522,7 @@ R4 는 **선택 과제**이고 이 레슨의 통과 조건이 아니다.
 ## 개념 점검
 
 `rc quiz c7-neural-fields-3dgs` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: c7-neural-fields-3dgs-quiz

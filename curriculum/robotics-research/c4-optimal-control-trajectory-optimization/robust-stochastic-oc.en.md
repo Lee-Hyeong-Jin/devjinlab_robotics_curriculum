@@ -71,7 +71,7 @@ Notation:
 ## Key results
 
 The bracket gives the derivation depth (D0 cited / D1 skeleton / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (HJI and the reachable set) [D3]** — the backward reachable tube is the **zero sublevel
   set** of the viscosity solution of the HJI **variational inequality**
@@ -529,7 +529,7 @@ fails.
 ## Paper reading
 
 **Three must-read papers.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read in three passes, and in the third pass concentrate on questions 4,
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes, and in the third pass concentrate on questions 4,
 5, 6 and 7.
 
 1. **Mitchell, Bayen & Tomlin, "A time-dependent Hamilton-Jacobi formulation of reachable sets
@@ -680,7 +680,7 @@ converge).
 ## Concept check
 
 Take it with `rc quiz c4-robust-stochastic-oc`. This quiz is a **concept check only**; the real
-work is the problem set and the reproduction task above (`lesson-standard.md` §4).
+work is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 ## How to study this stage
 

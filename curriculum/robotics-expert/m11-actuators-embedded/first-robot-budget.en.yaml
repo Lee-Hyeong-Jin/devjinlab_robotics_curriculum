@@ -1,0 +1,68 @@
+id: m11-first-robot-budget
+lang: en
+activities:
+  m11-first-robot-budget-reading: Read the lesson and pick a budget tier
+  m11-first-robot-budget-quiz: "Quiz: checking parts and reading experiments"
+resources:
+  "Elements of Robotics (Ben-Ari & Mondada)":
+    note: >-
+      Open access. Chapter 3, reactive behaviour (Braitenberg vehicles), and chapter 5,
+      odometry, can be followed with one small wheeled robot.
+  "Wokwi":
+    note: >-
+      Simulates microcontrollers and circuits in the browser, so firmware can be run before
+      any part is bought.
+  "MicroPython documentation":
+    note: "Programming microcontrollers in Python: an easy step from the examples of this course."
+  "Measurement and Correction of Systematic Odometry Errors in Mobile Robots (Borenstein & Feng, 1996)":
+    note: >-
+      The original paper on UMBmark, the procedure of driving a square to measure and correct
+      errors in wheel diameter and wheelbase.
+quiz:
+  - id: q1
+    prompt: >-
+      What is the first thing to do when running newly written speed-control firmware for the
+      first time?
+    choices:
+      - Run it with the wheels lifted off the ground
+      - Set the gains as high as possible
+      - Discharge the battery completely
+      - Unplug the encoder wires
+    explanation: >-
+      If the encoder direction or the motor polarity is connected the wrong way round, the
+      sign of the feedback flips and it becomes positive feedback: the larger the error, the
+      harder the motor drives. The motor runs away to full speed at once. With the wheels in
+      the air the robot does not leave the desk.
+    concept:
+      front: The safety rule for switching on a control loop for the first time
+      back: 'Lift the wheels - with the sign reversed, positive feedback runs away to full speed'
+  - id: q2
+    prompt: >-
+      Both motors get the same duty and the robot veers left. What is the most fundamental fix?
+    choices:
+      - Multiply the right duty by a correction constant
+      - Close a speed loop on each wheel's encoder
+      - Raise the PWM frequency
+      - Fit a larger battery
+    explanation: >-
+      Two motors turn at speeds a few percent apart for the same duty, and the difference
+      changes with battery voltage, load and temperature. A correction constant is right
+      under one condition only. A speed loop that measures each wheel and brings it to the
+      commanded speed stays right when conditions change.
+    concept:
+      front: Why a robot veers on a straight command, and the fix
+      back: 'The two motors differ - fix it with a speed loop per wheel, not a duty correction'
+  - id: q3
+    prompt: >-
+      If odometry points at the start after one lap of a square, the robot really is at the
+      start.
+    explanation: >-
+      Odometry is an estimate: encoder counts multiplied by the wheel radius and the
+      wheelbase. If the wheels slipped, or those two values are off, odometry says "the
+      start" while the robot is somewhere else. Calibration reduces the difference, and
+      filling in what cannot be removed with other sensors is the localization of M5.
+    concept:
+      front: Odometry and the true position
+      back: >-
+        Odometry is an estimate - off by slip and by errors in the wheel dimensions.
+        Calibrate to reduce it, use other sensors for the rest

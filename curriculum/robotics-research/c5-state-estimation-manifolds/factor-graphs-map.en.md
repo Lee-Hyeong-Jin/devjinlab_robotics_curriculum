@@ -99,7 +99,7 @@ the prerequisite lesson named in parentheses is faster.
 ## Key results
 
 The bracket is the derivation depth (D0 cited / D1 sketched / D2 full derivation / D3 proof —
-`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (MAP = nonlinear least squares) [D3]** — if the noise is additive Gaussian and $\Sigma_k$
   **does not depend on the state**, then
@@ -504,7 +504,7 @@ on many problems".
 ## Paper reading
 
 **Two must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read with 3-pass and attack questions 4, 5, 6 and 7 on the third pass.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read with 3-pass and attack questions 4, 5, 6 and 7 on the third pass.
 
 1. **Dellaert & Kaess, "Factor Graphs for Robot Perception" (2017, Foundations and Trends in
    Robotics)** — role: `survey`. <https://doi.org/10.1561/2300000043> (sections 2-4)
@@ -667,7 +667,7 @@ number of nonzeros in $\Lambda$ (reference 1736 out of 90000) and in its Cholesk
 ## Concept check
 
 Run `rc quiz c5-factor-graphs-map`. The quiz is for **concept checking only**; the real work is
-the problem set and the reproduction task above (`lesson-standard.md` §4).
+the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`).
 
 The five items cover: the extra $\log\det\Sigma(\mathcal{X})$ term that appears when the
 measurement covariance depends on the state; whether the Kalman filter estimate equals the

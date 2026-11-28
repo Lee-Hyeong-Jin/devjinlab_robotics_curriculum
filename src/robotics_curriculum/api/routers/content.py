@@ -3,18 +3,27 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
 
-from robotics_curriculum.api.deps import Index, Progress, allow_public_read, get_principal
+from robotics_curriculum.api.deps import (
+    Index,
+    Progress,
+    State,
+    allow_public_read,
+    get_principal,
+)
 from robotics_curriculum.api.log import lang_var
 from robotics_curriculum.api.problems import problem_responses
 from robotics_curriculum.api.schemas import (
     Course,
     CourseSummary,
+    GoalPath,
     Lesson,
     LessonProblem,
+    LessonReview,
     LessonSummary,
     Module,
     ModuleSummary,
@@ -28,6 +37,7 @@ from robotics_curriculum.api.schemas import (
 from robotics_curriculum.content import Course as CourseModel
 from robotics_curriculum.content import Lesson as LessonModel
 from robotics_curriculum.content import ResourceKind, level_label
+from robotics_curriculum.content.lesson_blocks import FIGURES_DIRNAME, image_refs
 from robotics_curriculum.content.papers import paper_index, resolve_lesson_papers
 from robotics_curriculum.content.problem_set import ProblemSetParseError, parse_problem_sets
 from robotics_curriculum.content.problem_set import resolve_activity as resolve_problem_activity
@@ -36,6 +46,9 @@ from robotics_curriculum.content.sections import extract_study_guide
 
 # Anonymous readers may GET these when RC_PUBLIC_CONTENT=1 (ADR 0016); `/roadmap` opts back
 # out below, because it carries the caller's own progress.
+CURRICULUM_DIRNAME = "curriculum"
+"""Where the content lives in the repository; the prefix of every `source_path`."""
+
 router = APIRouter(
     dependencies=[Depends(allow_public_read)],
     prefix="/api/v1",
@@ -65,7 +78,11 @@ def get_course(course_id: str, index: Index) -> Course:
             label = level_label(module.level, lang) if module.level else None
             stages.append(Stage(level=module.level, level_label=label, modules=[]))
         stages[-1].modules.append(ModuleSummary.of(course, module, lang))
-    return Course(**_summary(course).model_dump(), stages=stages)
+    return Course(
+        **_summary(course).model_dump(),
+        stages=stages,
+        goals=[GoalPath.of(course, goal, lang) for goal in course.goals],
+    )
 
 
 @router.get("/modules/{module_id}", response_model=Module, responses=problem_responses(404))
@@ -81,7 +98,7 @@ def get_module(module_id: str, index: Index) -> Module:
 
 
 @router.get("/lessons/{lesson_id}", response_model=Lesson, responses=problem_responses(404))
-def get_lesson(lesson_id: str, index: Index) -> Lesson:
+def get_lesson(lesson_id: str, index: Index, state: State) -> Lesson:
     """Lesson metadata, Markdown body, resources, and the study-method section.
 
     ``Accept-Language`` picks a translation (``<lesson>.<lang>.md``); a lesson without one
@@ -106,7 +123,61 @@ def get_lesson(lesson_id: str, index: Index) -> Lesson:
         study_method=extract_study_guide(text.body, text.lang),
         prev_lesson_id=order[pos - 1] if pos > 0 else None,
         next_lesson_id=order[pos + 1] if pos + 1 < len(order) else None,
+        review=(
+            LessonReview.model_validate(lesson.review.model_dump())
+            if lesson.review is not None
+            else None
+        ),
+        source_path=_source_path(lesson, text.lang, state.settings.curriculum_dir),
     )
+
+
+FIGURE_TYPES = {".svg": "image/svg+xml", ".png": "image/png"}
+
+
+@router.get(
+    "/lessons/{lesson_id}/figures/{name}",
+    responses={**problem_responses(404), 200: {"content": {"image/svg+xml": {}, "image/png": {}}}},
+    response_class=Response,
+)
+def get_lesson_figure(lesson_id: str, name: str, index: Index) -> Response:
+    """A figure of a lesson: the file ``figures/<name>`` next to the lesson's Markdown.
+
+    Only a file a lesson body actually shows is served — the name has to be one of the
+    lesson's own image references (in any language), which also keeps every other file of the
+    repository out of reach. Sent as an image with a policy that forbids it to run anything.
+    """
+    lesson = index.lesson(lesson_id).lesson
+    bodies = [lesson.body, *(translation.body for translation in lesson.translations.values())]
+    shown = {image.figure_name for body in bodies for image in image_refs(body)}
+    if name not in shown or lesson.path is None:
+        raise HTTPException(404, f"lesson '{lesson_id}' has no figure '{name}'")
+    file = lesson.path.parent / FIGURES_DIRNAME / name
+    media_type = FIGURE_TYPES.get(file.suffix)
+    if media_type is None or not file.is_file():
+        raise HTTPException(404, f"lesson '{lesson_id}' has no figure '{name}'")
+    return Response(
+        content=file.read_bytes(),
+        media_type=media_type,
+        headers={
+            # An SVG opened on its own is a document: it must not be able to script or fetch.
+            "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
+            "X-Content-Type-Options": "nosniff",
+            "Cache-Control": "private, max-age=3600",
+        },
+    )
+
+
+def _source_path(lesson: LessonModel, lang: str, curriculum_dir: Path) -> str | None:
+    """``curriculum/<course>/<module>/<file>`` for the file behind this answer, if it has one."""
+    source = lesson.source_file(lang)
+    if source is None:
+        return None
+    try:
+        relative = source.resolve().relative_to(curriculum_dir.resolve())
+    except ValueError:
+        return None  # not under the curriculum root: nothing a reader could be pointed at
+    return (Path(CURRICULUM_DIRNAME) / relative).as_posix()
 
 
 def _problems(lesson: LessonModel) -> list[LessonProblem]:

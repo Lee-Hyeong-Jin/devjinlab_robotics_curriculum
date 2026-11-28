@@ -91,7 +91,7 @@ RMS**(이 레슨의 생성기에서 0.7896)를 함께 적는다 — 오차가 �
 
 ## 핵심 결과
 
-괄호 안은 유도 깊이 등급이다(`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+괄호 안은 유도 깊이 등급이다(`f0-how-to-read-this-track` 레슨의 "유도 깊이 등급" 절).
 
 - **R1 (TSDF 융합은 정밀도 가중 평균이다) [D2]** — 관측이 독립이고
   $d_i \sim \mathcal{N}(s, \sigma_i^2)$ 이면 최대가능도 추정은 정밀도 가중 평균이고, 그것은
@@ -352,7 +352,7 @@ $\mathrm{err}_B$ 가 올라가는 교환이 보인다 ⓔ "공짜 점증 학습�
 ## 논문 읽기
 
 **필독 2편.** 각 논문에 아래 고정 질문 10개로 1페이지 노트를 쓴다
-(`lesson-standard.md` §5). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
+(`f0-how-to-read-this-track` 레슨의 "논문 읽기" 절). 3-pass 로 읽고, 3번째 패스에서 질문 4·5·6·7 을 집중 공략한다.
 서지와 권장 논문 전체 목록은 `rc papers s1-dense-neural-slam` 로 본다.
 
 1. **Newcombe, Izadi, Hilliges et al., "KinectFusion: real-time dense surface mapping and
@@ -381,7 +381,7 @@ $\mathrm{err}_B$ 가 올라가는 교환이 보인다 ⓔ "공짜 점증 학습�
 입력은 레슨이 제공하는 생성기이고 외부 데이터·GPU 가 필요하지 않다.
 
 > **블루프린트와의 차이(명시)**: 설계안의 재현 과제는 "소형 RGB-D 시퀀스에서 TSDF 재구성과
-> 뉴럴 SLAM 의 메모리-정확도를 비교"(R3)다. 뉴럴 SLAM 학습은 GPU 를 요구하므로, 레슨 표준 §6
+> 뉴럴 SLAM 의 메모리-정확도를 비교"(R3)다. 뉴럴 SLAM 학습은 GPU 를 요구하므로, `f0-how-to-read-this-track` 레슨의 "재현 과제" 절
 > 에 따라 **필수 조건을 CPU 로 판정 가능한 네 가지**로 두고 RGB-D 시퀀스 비교를 아래
 > **선택 확장(R3)** 으로 분리했다. 필수 조건은 두 표현의 수학적 차이(R1·R3·R4·R5)를 정면으로
 > 겨냥한다 — 특히 "메모리-정확도 교환"의 근원이 망각이라는 것을 측정으로 드러낸다.
@@ -457,7 +457,7 @@ $\lambda = 10^{-6}$, 특징은 Fourier $K \in \{8,16\}$ 와 RBF $(32, 0.05), (64
 ## 개념 점검
 
 `rc quiz s1-dense-neural-slam` 로 푼다. 이 퀴즈는 **개념 점검 전용**이고, 실제 과제는 위
-문제 세트와 재현 과제다(`lesson-standard.md` §4).
+문제 세트와 재현 과제다(`f0-how-to-read-this-track` 레슨의 "문제 세트" 절).
 
 ```quiz
 activity: s1-dense-neural-slam-quiz

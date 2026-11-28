@@ -55,7 +55,7 @@ explain the whole second half of this lesson.
 
 ## Key results
 
-The bracket is the derivation depth (`research_notes/연구 트랙 설계/lesson-standard.md` §2).
+The bracket is the derivation depth (the "Derivation depth" section of lesson `f0-how-to-read-this-track`).
 
 - **R1 (condition for full feedback linearisation) [D3]** — a single-input system
   $\dot x = f(x) + g(x)u$ is turned, near $x_0$, into a controllable linear system
@@ -407,7 +407,7 @@ earns extra credit.
 ## Paper reading
 
 **Three must-reads.** Write a one-page note on each using the ten fixed questions below
-(`lesson-standard.md` §5). Read in three passes and attack questions 4, 5, 6, 7 in the third.
+(the "Reading papers" section of lesson `f0-how-to-read-this-track`). Read in three passes and attack questions 4, 5, 6, 7 in the third.
 
 1. **Murray & Sastry, "Nonholonomic motion planning: steering using sinusoids" (1993, IEEE T-AC)**
    — role: `seminal`. <https://doi.org/10.1109/9.277235>
@@ -500,7 +500,7 @@ criterion 3ⓐ (reference terminal error $2\cdot10^{-11}$, $b = 4\pi \approx 12.
 ## Concept check
 
 Take it with `rc quiz c3-feedback-linearization`. The quiz is **for concept checking only**; the
-real work is the problem set and the reproduction task above (`lesson-standard.md` §4). Four
+real work is the problem set and the reproduction task above (the "Problem sets" section of lesson `f0-how-to-read-this-track`). Four
 questions ask: what it means simultaneously that $[g_1,g_2]$ leaves
 $\operatorname{span}\{g_1,g_2\}$; the displacement of $z_3$ over one period of sinusoidal steering;
 whether a small forward distance $d$ is always better; and where the lateral direction is lost in

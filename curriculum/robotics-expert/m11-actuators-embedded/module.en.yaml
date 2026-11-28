@@ -1,0 +1,14 @@
+id: m11-actuators-embedded
+lang: en
+title: "M11 Actuators and embedded basics"
+summary: >-
+  The part that actually moves the robot: the torque-speed behaviour of motors and choosing a
+  gear ratio, drivers and PWM, measuring speed with an encoder and closing the motor speed loop,
+  batteries, regulators and a power budget, and how work is split between a microcontroller and a
+  single-board computer and the buses between them. Taught by reading and NumPy simulation; every
+  exercise can be done without hardware, and the last lesson is an optional build for those who
+  want one.
+outcome: >-
+  choose a motor and gear ratio from requirements, close a motor speed loop on an encoder, draw
+  up a power budget, and decide which code runs on the microcontroller and which on the
+  single-board computer.

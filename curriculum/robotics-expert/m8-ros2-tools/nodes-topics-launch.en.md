@@ -15,7 +15,16 @@ tags: [ros2, rclpy, colcon, workspace, launch, parameters, actions]
 The previous lesson observed the graph from the CLI; this one builds a piece of the graph
 yourself. The goal is not to memorize the rclpy API but to train the eye that, on opening
 someone else's ROS 2 package, immediately finds "where it subscribes, where it computes, and
-where it publishes." The reference-robot code reading of L8.5 puts that eye to work.
+where it publishes." The reference-robot code reading of L8.6 puts that eye to work.
+
+## Where you will use this
+
+Taking in what a sensor driver publishes, computing, and sending out motor commands — which is
+nearly all of a robot's software — is "a node that subscribes, computes and publishes". Putting the
+PID and the path follower of M3 on a real robot means wrapping them in the form this lesson shows.
+Launch files and parameters let the same code run on a simulator and a real robot, or on robot A
+and robot B, with only the settings changed, and they are the first files you read when you open a
+published robot repository.
 
 ## Concepts
 
