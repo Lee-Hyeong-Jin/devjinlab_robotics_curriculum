@@ -125,7 +125,8 @@
     "startTitle": "이제 시작하기",
     "startBody": "로드맵에서 첫 레슨을 열어 보세요.",
     "startLink": "로보틱스 로드맵 열기",
-    "breadcrumb": "공부 방법"
+    "breadcrumb": "공부 방법",
+    "tipExamples": "레슨의 Python 예제는 직접 돌려 보세요. 필요한 것은 Python 과 `pip install numpy scipy` 뿐입니다. 코드 블록의 \"복사\"·\".py 내려받기\" 버튼을 쓰거나, 저장소를 받았다면 `rc example <레슨 id> --run` 으로 한 번에 실행할 수 있습니다. 모든 예제는 변경이 있을 때마다 자동으로 실행해 확인합니다(ROS 2 가 필요한 예제 제외)."
   },
   "seo": {
     "homeTitle": "로보틱스 강의 — 기초부터 연구 수준까지 무료 튜토리얼 | Learn Robotics",
@@ -956,5 +957,10 @@
     "start": "레슨 열기",
     "review": "복습 화면",
     "cli": "CLI:"
+  },
+  "code": {
+    "copy": "복사",
+    "copied": "복사됨",
+    "download": ".py 내려받기"
   }
 }

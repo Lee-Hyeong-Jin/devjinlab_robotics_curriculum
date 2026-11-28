@@ -71,6 +71,8 @@ uv run rc --lang en status                    # messages in English (or RC_LANG=
 uv run rc version
 uv run rc validate            # defaults to ./curriculum
 uv run rc show m1-vectors-matrices        # lesson summary (objectives, prerequisites) + body
+uv run rc example m1-vectors-matrices --run   # run the lesson's Python examples (--out FILE saves a .py)
+uv run rc undone m1-vectors-matrices      # take back a completion made by mistake
 uv run rc resources m1-vectors-matrices   # materials by kind + "이 단계 공부법"; or --module ID / --all
 ```
 

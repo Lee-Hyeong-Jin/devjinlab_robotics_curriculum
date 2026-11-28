@@ -528,6 +528,8 @@ in the text came from. With one planar contact the LCP can be solved **exactly**
 acceptance criteria can be written at machine precision.
 
 ```python
+import numpy as np
+
 G0 = 9.81
 M_D, R_D = 1.0, 0.2
 I_D = 0.5 * M_D * R_D**2  # uniform disk

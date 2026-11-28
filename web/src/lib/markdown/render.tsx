@@ -12,6 +12,8 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { unified } from 'unified'
 
+import { CodeBlock } from '@/components/CodeBlock'
+
 import { normalizeDisplayMath } from './normalize'
 import { lessonSanitizeSchema } from './sanitize'
 import { rehypeFocusableScrollers } from './scroll'
@@ -29,6 +31,8 @@ export interface RenderedMarkdown {
 
 /** Components substituted into the rendered tree. */
 const components = {
+  // A fenced block gets "Copy" and, for Python, "Download .py" (`<CodeBlock>`).
+  pre: CodeBlock,
   a: ({ href, children, ...rest }: { href?: string; children?: ReactNode }) => {
     const external = !!href && /^https?:\/\//.test(href)
     return (

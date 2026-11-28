@@ -510,6 +510,8 @@ code the numbers in the text came from. $M$ and $b$ come from the previous lesso
 break the $10^{-12}$ wall of condition 1).
 
 ```python
+import numpy as np
+
 L = np.array([0.5, 0.4, 0.3])  # link lengths
 MASS = np.array([1.2, 0.9, 0.6])
 

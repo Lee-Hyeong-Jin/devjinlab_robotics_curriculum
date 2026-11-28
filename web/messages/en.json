@@ -125,7 +125,8 @@
     "startTitle": "Start now",
     "startBody": "Open the first lesson from the roadmap.",
     "startLink": "Open the robotics roadmap",
-    "breadcrumb": "Study guide"
+    "breadcrumb": "Study guide",
+    "tipExamples": "Run the Python examples in the lessons yourself. All they need is Python and `pip install numpy scipy`. Use the \"Copy\" and \"Download .py\" buttons on a code block, or, with the repository cloned, `rc example <lesson id> --run` to run a lesson's examples in one go. Every example is executed automatically on each change to the course (except the ones that need ROS 2)."
   },
   "seo": {
     "homeTitle": "Learn Robotics — Free Robotics Tutorials and Courses",
@@ -956,5 +957,10 @@
     "start": "open the lesson",
     "review": "the review screen",
     "cli": "CLI:"
+  },
+  "code": {
+    "copy": "Copy",
+    "copied": "Copied",
+    "download": "Download .py"
   }
 }

@@ -271,6 +271,29 @@ p.markdown-body {
   padding: 1rem;
   overflow-x: auto;
 }
+/* A code block and its tool row ("Copy", "Download .py"). */
+.markdown-body .code-block {
+  position: relative;
+}
+.markdown-body .code-tools {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+.markdown-body .code-tools button {
+  min-height: 2rem;
+  padding: 0.125rem 0.625rem;
+  border: 1px solid var(--border-default);
+  border-radius: 6px;
+  background: var(--bg-surface);
+  color: var(--text-secondary, var(--text-primary));
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+.markdown-body .code-tools button:hover {
+  background: var(--bg-subtle);
+}
 .markdown-body pre code {
   background: none;
   padding: 0;

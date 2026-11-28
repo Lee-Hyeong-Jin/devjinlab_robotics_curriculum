@@ -32,6 +32,12 @@ cli:
   done_line: "완료 {lesson_id} ({title}), 시간 {time}{extra}"
   done_understanding: ", 이해도 {value}"
   undone_line: "완료 취소 {lesson_id} ({title}) — 진행 중으로 되돌렸습니다"
+  example:
+    none: "{lesson_id} 에는 Python 예제가 없습니다."
+    saved: "예제 {count}개를 {path} 에 저장했습니다."
+    running: "── 예제 {index}/{total} 실행 ──"
+    skipped: "── 예제 {index} 건너뜀: {reason} 이(가) 필요합니다 ──"
+    failed: "예제 {index} 이(가) 실패했습니다."
   now_recommended: "  이제 추천 순서에 들어왔습니다: {lesson_id} ({title})"
   next:
     empty: "할 일 없음: 지금 가능한 레슨을 모두 끝냈습니다"

@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Lesson code examples can be run without copying them by hand: `rc example <lesson>` prints
+  them, `--out FILE` saves a `.py`, `--run` executes them; code blocks on the site have "Copy"
+  and "Download .py" buttons. The test suite now executes every Python example of every
+  lesson in both languages, which found and fixed two that did not run (#49).
 - Every lesson page links to "Report a problem" (the content-issue form with the lesson filled
   in) and "Suggest an edit" (the lesson's source file on GitHub), and the footer links to the
   source repository. `RC_REPO_URL` points them at a fork or turns them off; `RC_COMMUNITY_URL`

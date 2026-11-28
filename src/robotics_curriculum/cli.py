@@ -15,6 +15,8 @@ from pydantic import ValidationError
 from robotics_curriculum import __version__
 from robotics_curriculum.api.cli import api_app
 from robotics_curriculum.content import QuizParseError, check, localized_quiz
+from robotics_curriculum.content.example_runner import run_example
+from robotics_curriculum.content.examples import as_script, extract_examples
 from robotics_curriculum.i18n import LANG_ENV, Translator, get_translator
 from robotics_curriculum.learn.quiz import record_quiz_run, run_quiz, select_questions
 from robotics_curriculum.learn.review import (
@@ -386,6 +388,58 @@ def done(
                 title=lesson.localized(_lang(ctx)).title,
             )
         )
+
+
+@app.command()
+def example(
+    ctx: typer.Context,
+    lesson_id: Annotated[str, typer.Argument(help="Lesson id.")],
+    run: Annotated[
+        bool,
+        typer.Option("--run", help="Run the examples with this Python (needs numpy; some scipy)."),
+    ] = False,
+    out: Annotated[
+        Path | None,
+        typer.Option("--out", "-o", help="Write the examples to this .py file instead."),
+    ] = None,
+) -> None:
+    """Print, save or run the Python examples of a lesson.
+
+    Examples that need more than Python, NumPy and SciPy (ROS 2 nodes, for instance) are
+    printed and saved but never run. Exits 1 when a run example fails.
+    """
+    t = _t(ctx)
+    with _service(ctx) as service:
+        lesson = service.lesson(lesson_id)
+        text = lesson.localized(_lang(ctx))
+    examples = extract_examples(text.body)
+    if not examples:
+        typer.echo(t("cli.example.none", lesson_id=lesson_id))
+        return
+    if out is not None:
+        out.write_text(as_script(lesson_id, examples, title=text.title), encoding="utf-8")
+        typer.echo(t("cli.example.saved", count=len(examples), path=str(out)))
+        return
+    if not run:
+        typer.echo(as_script(lesson_id, examples, title=text.title), nl=False)
+        return
+    failed = 0
+    for item in examples:
+        if not item.runnable:
+            reason = item.syntax_error or ", ".join(item.missing)
+            typer.echo(t("cli.example.skipped", index=item.index, reason=reason))
+            failed += item.syntax_error is not None
+            continue
+        typer.echo(t("cli.example.running", index=item.index, total=len(examples)))
+        outcome = run_example(item.code)
+        if outcome.stdout:
+            typer.echo(outcome.stdout, nl=False)
+        if outcome.returncode != 0:
+            failed += 1
+            typer.echo(outcome.stderr, nl=False, err=True)
+            typer.echo(t("cli.example.failed", index=item.index), err=True)
+    if failed:
+        raise typer.Exit(code=1)
 
 
 @app.command("next")

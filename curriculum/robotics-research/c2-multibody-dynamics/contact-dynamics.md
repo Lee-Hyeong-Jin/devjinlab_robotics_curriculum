@@ -531,6 +531,8 @@ Painlevé paradoxes" (1999, Eur. J. Mech. A/Solids)**
 접촉 1개·평면이므로 LCP 를 **정확히** 풀 수 있고, 그래서 수용 기준이 기계 정밀도로 쓰인다.
 
 ```python
+import numpy as np
+
 G0 = 9.81
 M_D, R_D = 1.0, 0.2
 I_D = 0.5 * M_D * R_D**2  # uniform disk

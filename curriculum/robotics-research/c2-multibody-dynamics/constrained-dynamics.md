@@ -500,6 +500,8 @@ $M$, $b$ 는 앞 레슨의 `crba`·`rnea` 를 쓰고, $J$ 와 $\dot J\dot q$ 는
 (유한차분을 쓰면 조건 1 의 $10^{-12}$ 벽을 넘지 못한다).
 
 ```python
+import numpy as np
+
 L = np.array([0.5, 0.4, 0.3])  # link lengths
 MASS = np.array([1.2, 0.9, 0.6])
 
