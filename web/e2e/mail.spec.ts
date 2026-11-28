@@ -139,3 +139,45 @@ test('an operator-sent reset mail leads to the same screen', async ({ page }) =>
   expect((await page.goto(reset))?.status()).toBe(200)
   await expect(page.locator('input[name="passwordConfirm"]')).toBeVisible()
 })
+
+test('a browser still signed in when the password is reset is signed out, not broken (#36)', async ({
+  page,
+  browser,
+}) => {
+  const account = freshAccount()
+  await page.goto('/signup')
+  await page.locator('input[name="email"]').fill(account.email)
+  await page.locator('input[name="password"]').fill(account.password)
+  await page.locator('input[name="passwordConfirm"]').fill(account.password)
+  await page.locator('form button[type="submit"]').click()
+  await page.waitForURL(/\/login/)
+  await latestLink(account.email, 1)
+
+  // This browser stays signed in while the password is reset from somewhere else.
+  await signIn(page, account.email, account.password)
+  await page.waitForURL((url) => !url.pathname.startsWith('/login'), { timeout: 15_000 })
+
+  const elsewhere = await browser.newContext()
+  const other = await elsewhere.newPage()
+  await other.goto('/password/forgot')
+  await other.locator('input[name="email"]').fill(account.email)
+  await other.locator('form button[type="submit"]').click()
+  await expect(other.getByRole('alert').first()).toBeVisible()
+  await other.goto(await latestLink(account.email, 2))
+  await other.locator('input[name="password"]').fill('Another-Horse-Battery-9')
+  await other.locator('input[name="passwordConfirm"]').fill('Another-Horse-Battery-9')
+  await other.locator('form button[type="submit"]').click()
+  await other.waitForURL(/\/login\?reset=1/)
+  await elsewhere.close()
+
+  // The reset ended every session. The first browser is told so and can sign in again;
+  // it does not get an error page.
+  const response = await page.goto('/profile')
+  expect(response?.status()).toBeLessThan(500)
+  await page.waitForURL(/\/login\?/)
+  await expect(page.getByText(/세션이 종료됐습니다|session has ended/)).toBeVisible()
+  await page.locator('input[name="email"]').fill(account.email)
+  await page.locator('input[name="password"]').fill('Another-Horse-Battery-9')
+  await page.locator('form button[type="submit"]').click()
+  await page.waitForURL(/\/profile/)
+})

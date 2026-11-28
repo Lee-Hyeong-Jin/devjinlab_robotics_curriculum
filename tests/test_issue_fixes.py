@@ -193,3 +193,44 @@ def test_issue_35_refused_page_views_are_counted_and_shown(tmp_path: Path) -> No
     )
     assert ok.status_code == 204
     assert admin.get("/api/v1/admin/monitoring/visits").json()["intake_refused"] == 3
+
+
+# -- #36: areas the QA pass could not reach (HTTPS-only behaviour) ------------------------------
+
+
+def test_issue_36_session_cookies_are_secure_and_https_answers_carry_hsts(tmp_path: Path) -> None:
+    """The QA stack ran over plain http, where neither can be observed."""
+    from fastapi.testclient import TestClient
+
+    from robotics_curriculum.api.app import create_app
+    from robotics_curriculum.api.settings import Settings
+    from test_auth import PASSWORD
+
+    def cookies(secure: bool) -> list[str]:
+        settings = Settings(
+            curriculum_dir=CURRICULUM,
+            data_dir=tmp_path / str(secure),
+            auth_mode="server",
+            cookie_secure=secure,
+        )
+        client = TestClient(create_app(settings, clock=lambda: NOW), base_url="https://testserver")
+        client.post("/api/v1/auth/signup", json={"email": "a@example.org", "password": PASSWORD})
+        login = client.post(
+            "/api/v1/auth/login", json={"email": "a@example.org", "password": PASSWORD}
+        )
+        assert login.status_code == 200, login.text
+        # HSTS goes with the Secure cookie: both mean "this deployment is served over HTTPS".
+        assert ("strict-transport-security" in login.headers) is secure
+        if secure:
+            assert "max-age=31536000" in login.headers["strict-transport-security"]
+        return login.headers.get_list("set-cookie")
+
+    secure = cookies(True)  # the default
+    assert len(secure) == 2
+    for cookie in secure:
+        assert "; Secure" in cookie, cookie
+    assert any(c.startswith("sid=") and "HttpOnly" in c and "SameSite=lax" in c for c in secure)
+    # RC_AUTH_COOKIE_SECURE=0 exists for local http runs only, and only then is the flag absent.
+    for cookie in cookies(False):
+        assert "; Secure" not in cookie, cookie
+    assert Settings.from_env({}).cookie_secure is True
