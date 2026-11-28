@@ -17,4 +17,7 @@ paths:
 - 레슨마다 단계별 공부법(어떤 순서로, 무엇을 보고, 어떻게 확인하는지)과 추천 자료(FR-6)를 적는다.
 - 외부 자료(논문, 강의)는 `resources[]`(`kind: paper | dataset | code | notes | …`) 또는 코스
   레지스트리로 연결하고, 본문을 통째로 옮기지 않는다. research_notes/ 의 조사 결과는 출처로 인용한다.
+- 레슨은 도입부 다음에 `## 어디에 쓰는가`(영어 `## Where you will use this`) 절로 실제 로봇에서의 쓰임을 2~4문장 적는다.
+- 연습 과제 바로 뒤에 ` ```expected ` 블록으로 기대 결과를 적는다. 값은 추정하지 말고 실제로 계산한다.
+- 그림은 `scripts/figures/make_figures.py` 로 생성한 `figures/*.svg` 만 쓴다(ADR 0020). 대체 텍스트는 언어별로 필수다.
 - 콘텐츠를 바꾼 뒤 `rc validate` 가 있으면 실행한다.

@@ -18,6 +18,14 @@ as matrices. Later lessons (rotation representations, coordinate transforms,
 kinematics, control) reuse this lesson's notation directly, so concentrate on the
 **geometric meaning** rather than on the arithmetic.
 
+## Where you will use this
+
+Turning a robot arm's joint angles into a hand position, moving an object seen by a camera into the
+robot's own coordinates, and rotating thousands of LiDAR points at once are each one line of matrix
+multiplication. The vector and matrix operations of this lesson come back in the rotations and
+coordinate transforms of M1, the kinematics of M2 and the Kalman filter of M5 (covariance matrices).
+Getting used to "the order of multiplication changes the result" here saves many frame bugs later.
+
 ## Concepts
 
 ### Vectors
@@ -55,6 +63,8 @@ rotate" give different results on a robot.
   **singularities** in the inverse kinematics of M2.
 - Rotation matrices $R$ are special: $R^{-1} = R^T$ and $\det R = 1$. Because
   inverting reduces to transposing, robot software uses this constantly.
+
+![The unit square drawn with parallelogram a (rotated, then scaled) and rectangle b (scaled, then rotated) on top of it. Both shapes have area 2.](figures/vectors-matrices-order.svg)
 
 ## Key formulas
 
@@ -100,6 +110,20 @@ print(np.dot(u, v), np.cross(u, v))  # 0, [0 0 1]
 **Exercise:** extend the code above with `matplotlib` to draw the original square
 together with `a` and `b` so you can see the difference. Then explain the relation
 between $\det S$ and the area after the transformation.
+
+```expected
+The corners come out as follows (three decimals).
+
+| Shape | Corners | What it is |
+| --- | --- | --- |
+| `a = S @ R @ square` | (0, 0), (1.732, 0.5), (0.732, 1.366), (−1, 0.866) | a parallelogram (about 123° at the origin) |
+| `b = R @ S @ square` | (0, 0), (1.732, 1), (1.232, 1.866), (−0.5, 0.866) | a 2×1 rectangle turned by 30° |
+
+Rotating first lets the scaling stretch the tilted sides along x only, which breaks the right angles.
+Scaling first makes a rectangle that is then turned as a whole. Both shapes have area 2, which equals
+$\det S = 2$ (a rotation has $\det R = 1$ and leaves areas alone). In general the area after a linear
+map is the original area times $|\det|$.
+```
 
 ## Self-check questions
 

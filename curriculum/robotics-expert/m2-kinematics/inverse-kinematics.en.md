@@ -19,6 +19,14 @@ and it is the starting point of almost any task that commands a goal pose to an
 arm. Unlike FK, the key point is that a solution may **not exist, may be one of
 several, or may be infinite in number**.
 
+## Where you will use this
+
+People tell a robot "bring your hand to the cup at (x, y, z)"; they do not dictate joint angles. The
+computation in between is inverse kinematics. Pick and place, following a weld seam, and placing the
+foot of a legged robot all solve IK in every control cycle. What this lesson shows — there may be
+several solutions or none, and joint speeds blow up near a singularity — is exactly what you need
+when reading an IK failure from MoveIt 2 in M6.
+
 ## Concepts
 
 ### Existence and number of solutions
@@ -48,6 +56,8 @@ At a pose where $\det J = 0$ there is some direction the end effector cannot mov
 in, and near it IK demands very large joint velocities. A 2-link arm is singular
 at $\theta_2 = 0$ (fully extended) and at $\pi$ (fully folded). Numerical IK
 softens this with damped least squares.
+
+![Two poses that reach the same target (1, 1): one with joint angles (0°, 90°), the other with (90°, −90°).](figures/inverse-kinematics-two-solutions.svg)
 
 ## Key formulas
 
@@ -129,6 +139,27 @@ analytical solutions and verify with FK that the error is below $10^{-9}$.
 guess. (3) Observe what happens when the initial guess has $\theta_2 = 0$, then
 replace `pinv` with damped least squares $J^T(JJ^T + \lambda^2 I)^{-1}$ and
 compare.
+
+```expected
+1. Putting both analytic solutions back through FK gives an error of about $10^{-15}$ m for all 200
+   targets (floating-point precision), far below $10^{-9}$.
+2. For the target (1, 1) the numerical solver goes to the solution on the same elbow side as its
+   starting point.
+
+   | Start [rad] | Converges to | Iterations |
+   | --- | --- | --- |
+   | (0.3, 0.5) | (0°, 90°) | 6 |
+   | (0.3, −0.5) | (90°, −90°) | 7 |
+   | (1.5, −1.0) | (90°, −90°) | 5 |
+
+   The sign of the starting $\theta_2$ decides which solution you get.
+3. $\theta_2 = 0$ is the stretched-out singular pose, where the Jacobian has rank 1. Starting `pinv`
+   from (0.3, 0), the first step is so large that the final angles come out wound several turns, like
+   (−270°, 630°). The position error is 0 and the pose equals (90°, −90°), but a real robot would have
+   thrown its joints to their limits. Damped least squares ($\lambda = 0.1$) limits the step from the
+   same start and settles on (0°, 90°) in 9 iterations. Away from the singularity it costs a
+   few more iterations than `pinv` (8, 11 and 7 from the starts in the table).
+```
 
 ## Self-check questions
 

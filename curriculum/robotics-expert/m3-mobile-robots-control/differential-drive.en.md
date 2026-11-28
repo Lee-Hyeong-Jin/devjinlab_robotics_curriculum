@@ -18,6 +18,14 @@ how wheel speeds become the robot's motion, and how integrating that motion give
 an estimate of pose — the foundation for M3's controllers and for the state
 estimation of M5.
 
+## Where you will use this
+
+Robot vacuum cleaners, warehouse AMRs and the TurtleBot all move on two wheels, left and right. The
+model of this lesson is the formula that turns ROS 2's velocity command `cmd_vel` (linear $v$,
+angular $\omega$) into wheel speeds for the motors, and the odometry that turns encoder readings back
+into a robot position. Localization in M5 uses this model as its "predict" step, and every command
+Nav2 issues in M9 reaches the wheels through it.
+
 ## Concepts
 
 ### State and input
@@ -52,6 +60,8 @@ reckoning)**. Wheel slip, errors in the radius and track width, and integration
 error all keep accumulating, so over long runs the position drifts badly.
 Correcting that drift is the job of the M4 sensors and the state estimation that
 follows.
+
+![A differential-drive robot seen from above. The right wheel is faster than the left, so the robot follows a circle of radius R = v/ω around the instantaneous centre of curvature (ICC) on its left.](figures/differential-drive-icc.svg)
 
 ## Key formulas
 
@@ -112,6 +122,30 @@ flipping the sign of $\omega$ over time. (2) Explain why the circle fails to clo
 when you raise $\Delta t$ to 0.1 s. (3) Assume the true $r$ is 2% smaller than the
 model, compute the wheel speeds, and plot how the gap between the odometry
 estimate and the "true" position grows over time.
+
+```expected
+1. Wheel speeds (10, 5) rad/s give $v = 0.15$ m/s and $\omega = 2$ rad/s: a circle of radius
+   $v/\omega = 0.075$ m, once round in $\pi \approx 3.14$ s. Flipping the sign of $\omega$ every $\pi$ seconds
+   (swapping the two wheel speeds) gives a figure eight, two circles 0.15 m across touching at a point.
+2. Euler integration draws not a circle but a polygon that turns $\omega\Delta t$ per step. With
+   $\Delta t = 0.1$ s that is 11.46° per step, and 360° divided by it is 31.4, not a whole number.
+   After 31 steps the robot has turned 355.2° and is about 6 mm from where it started. With
+   $\Delta t = 0.01$ s it turns 359.8° in 314 steps and the gap shrinks to 0.2 mm. The polygon's radius,
+   $v\Delta t / (2\sin(\omega\Delta t/2)) = 0.0751$ m, is also slightly larger than the circle's.
+3. With wheels 2% smaller, the same wheel speeds really give $v = 0.147$ m/s and $\omega = 1.96$ rad/s
+   while odometry believes 0.15 and 2.0.
+
+   | Time | Position difference | Heading difference |
+   | --- | --- | --- |
+   | 1 s | 3 mm | 2.3° |
+   | 5 s | 15 mm | 11.5° |
+   | 10 s | 30 mm | 22.9° |
+   | 20 s | 58 mm | 45.8° |
+
+   The heading error grows by 2.3° every second without limit. Driving straight (10 s, 1.5 m) the
+   position is off by 2% of the distance, 30 mm. Nothing ever reduces the error, which is why
+   odometry alone cannot be trusted for position.
+```
 
 ## Self-check questions
 

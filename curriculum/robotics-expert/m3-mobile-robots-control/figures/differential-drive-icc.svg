@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 380" width="520" height="380" role="img">
+<title>Differential-drive geometry</title>
+<rect width="520" height="380" fill="#ffffff"/>
+<line x1="66.67" y1="352" x2="66.67" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="144" y1="352" x2="144" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="221.33" y1="352" x2="221.33" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="298.67" y1="352" x2="298.67" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="376" y1="352" x2="376" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="453.33" y1="352" x2="453.33" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="344.64" x2="492" y2="344.64" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="271" x2="492" y2="271" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="197.36" x2="492" y2="197.36" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="123.73" x2="492" y2="123.73" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="50.09" x2="492" y2="50.09" stroke="#e5e7eb" stroke-width="1"/>
+<polyline points="296.58,297.41 297.78,288.29 298.47,279.13 298.66,269.94 298.35,260.76 297.54,251.6 296.24,242.5 294.43,233.47 292.14,224.54 289.36,215.74 286.11,207.09 282.38,198.62 278.2,190.33 273.58,182.27 268.52,174.45 263.04,166.88 257.15,159.6 250.87,152.62 244.23,145.96 237.22,139.64 229.89,133.67 222.23,128.07 214.28,122.86 206.06,118.06 197.58,113.66 188.88,109.69" fill="none" stroke="#6b7280" stroke-width="1.4" stroke-linejoin="round"/>
+<polyline points="250.7,290.81 251.6,283.97 252.12,277.09 252.26,270.2 252.03,263.32 251.43,256.45 250.44,249.62 249.09,242.85 247.37,236.16 245.29,229.56 242.85,223.07 240.05,216.71 236.92,210.5 233.45,204.45 229.65,198.58 225.54,192.91 221.13,187.45 216.42,182.22 211.44,177.22 206.18,172.48 200.68,168 194.94,163.81 188.98,159.9 182.81,156.29 176.46,152.99 169.93,150.02" fill="none" stroke="#cbd5e1" stroke-width="1" stroke-linejoin="round"/>
+<polyline points="342.46,304.01 343.95,292.61 344.82,281.16 345.06,269.67 344.68,258.19 343.66,246.75 342.03,235.37 339.77,224.09 336.91,212.93 333.43,201.93 329.37,191.12 324.71,180.52 319.49,170.17 313.71,160.09 307.38,150.31 300.53,140.85 293.17,131.75 285.33,123.03 277.02,114.7 268.26,106.8 259.09,99.34 249.52,92.34 239.59,85.83 229.31,79.82 218.71,74.32 207.84,69.36" fill="none" stroke="#cbd5e1" stroke-width="1" stroke-linejoin="round"/>
+<circle cx="298.67" cy="271" r="55.68" fill="#f3f4f6" stroke="#1f2933" stroke-width="2" fill-opacity="1"/>
+<polygon points="244.53,294.56 260,294.56 260,247.44 244.53,247.44" fill="#1f2933" stroke="#1f2933" stroke-width="1.5" stroke-linejoin="round" fill-opacity="0.85"/>
+<line x1="252.27" y1="241.55" x2="252.27" y2="205.46" stroke="#1d4ed8" stroke-width="2"/>
+<polygon points="252.27,197.36 255.94,205.58 248.6,205.58" fill="#1d4ed8"/>
+<text x="246.27" y="193.36" fill="#1d4ed8" font-size="12" text-anchor="end" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">r·ω_L</text>
+<text x="252.27" y="315.18" fill="#1f2933" font-size="12" text-anchor="middle" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">L</text>
+<polygon points="337.33,294.56 352.8,294.56 352.8,247.44 337.33,247.44" fill="#1f2933" stroke="#1f2933" stroke-width="1.5" stroke-linejoin="round" fill-opacity="0.85"/>
+<line x1="345.07" y1="241.55" x2="345.07" y2="161.28" stroke="#1d4ed8" stroke-width="2"/>
+<polygon points="345.07,153.18 348.74,161.4 341.4,161.4" fill="#1d4ed8"/>
+<text x="351.07" y="149.18" fill="#1d4ed8" font-size="12" text-anchor="start" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">r·ω_R</text>
+<text x="345.07" y="315.18" fill="#1f2933" font-size="12" text-anchor="middle" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">R</text>
+<line x1="298.67" y1="271" x2="298.67" y2="208.41" stroke="#b91c1c" stroke-width="2.4"/>
+<polygon points="298.67,200.31 302.34,208.53 295,208.53" fill="#b91c1c"/>
+<text x="286.67" y="202.31" fill="#b91c1c" font-size="13" text-anchor="start" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif" font-style="italic">v</text>
+<circle cx="113.07" cy="271" r="5" fill="#b45309"/>
+<text x="105.07" y="291" fill="#b45309" font-size="13" text-anchor="middle" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">ICC</text>
+<line x1="113.07" y1="271" x2="298.67" y2="271" stroke="#b45309" stroke-width="1.2" stroke-dasharray="4 4"/>
+<text x="205.87" y="263" fill="#b45309" font-size="13" text-anchor="middle" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">R = v / ω</text>
+<line x1="252.27" y1="332.85" x2="345.07" y2="332.85" stroke="#6b7280" stroke-width="1"/>
+<text x="298.67" y="348.85" fill="#6b7280" font-size="13" text-anchor="middle" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif" font-style="italic">L</text>
+<polyline points="159.23,266.59 158.95,264.4 158.54,262.22 158.02,260.07 157.39,257.94 156.65,255.85 155.8,253.79 154.85,251.78 153.79,249.82 152.62,247.91 151.36,246.05 150,244.26 148.56,242.54 147.02,240.88 145.39,239.31 143.69,237.81 141.91,236.39" fill="none" stroke="#b45309" stroke-width="1.5" stroke-linejoin="round"/>
+<text x="165.65" y="235.65" fill="#b45309" font-size="13" text-anchor="start" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif" font-style="italic">ω</text>
+<text x="500" y="30" fill="#1f2933" font-size="12" text-anchor="end" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">v = r(ω_R + ω_L)/2</text>
+<text x="500" y="50" fill="#1f2933" font-size="12" text-anchor="end" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">ω = r(ω_R − ω_L)/L</text>
+</svg>

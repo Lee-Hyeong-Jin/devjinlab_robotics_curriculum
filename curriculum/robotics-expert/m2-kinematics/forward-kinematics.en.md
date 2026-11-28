@@ -19,6 +19,14 @@ $T_{0n}$, and its answer is always **unique**. The next lesson, inverse
 kinematics, is the problem of running this function backwards, and the control and
 planning algorithms from M3 onward call FK over and over.
 
+## Where you will use this
+
+"Where is the hand when the joints are turned this far" is the computation arm software does most
+often. A simulator drawing the arm, a collision checker locating the links, and a wrist camera moving
+what it sees into floor coordinates all call forward kinematics. The workspace, which decides
+whether an arm you are buying or designing reaches the end of the shelf, comes from it too. Inverse
+kinematics in the next lesson is this function solved backwards.
+
 ## Concepts
 
 ### Joint space and task space
@@ -44,6 +52,8 @@ $T = e^{[\mathcal{S}_1]\theta_1}\cdots e^{[\mathcal{S}_n]\theta_n}M$. There is n
 need to attach a frame to every link, so there are fewer mistakes to make. The
 result is the same as DH, so this curriculum teaches DH first and leaves PoE to
 the references.
+
+![The workspace of the two-link arm: a ring between radii 0.2 m and 0.8 m, drawn with two poses of the arm inside it.](figures/forward-kinematics-workspace.svg)
 
 ## Key formulas
 
@@ -104,6 +114,19 @@ the 2-link arm, and compare it with the annulus formula above. (2) Add joint
 limits such as $\theta_1 \in [0, 180^\circ]$ and plot how the workspace changes.
 (3) Extend to a 3-link planar arm and confirm that the same point can be reached
 with different values of $\phi$.
+
+```expected
+1. The scatter plot fills a **ring** with inner radius $|L_1 - L_2| = 0.2$ m and outer radius
+   $L_1 + L_2 = 0.8$ m. No point falls inside 0.2 m of the origin. Even on a uniform grid the points
+   crowd near both edges of the ring (the hand hardly moves when $\theta_2$ is near 0° or 180°).
+2. With $\theta_1 \in [0, 180^\circ]$ ($\theta_2$ free) the elbow stays on the upper semicircle. The
+   workspace becomes the upper half of the ring plus two half-discs of radius 0.3 m where the hand
+   dips below the elbow at (±0.5, 0). Nothing with $y < -0.3$ m can be reached.
+3. For a three-link arm with links 0.5, 0.3 and 0.2 m and the target (0.6, 0.4): with
+   $\phi = 0^\circ$ the wrist must be at (0.4, 0.4), with $\phi = 90^\circ$ at (0.6, 0.2). Both wrist
+   positions lie inside the ring of the first two links (0.2–0.8 m), so the same point is reached
+   with different orientations. One joint to spare is what redundancy means.
+```
 
 ## Self-check questions
 

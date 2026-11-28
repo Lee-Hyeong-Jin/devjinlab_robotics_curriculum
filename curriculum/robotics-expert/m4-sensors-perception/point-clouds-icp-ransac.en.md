@@ -20,6 +20,14 @@ the previous one?" (ICP). Both algorithms are used directly in the scan-matching
 SLAM of the intermediate module M5 and in grasp pose estimation at the advanced
 stage.
 
+## Where you will use this
+
+A robot vacuum telling floor from obstacle, a logistics robot finding the top of a pallet, and a
+self-driving car removing the road surface are RANSAC plane detection. LiDAR odometry and
+scan-matching SLAM (M5), and bin picking that fits a 3D scan to a CAD model to locate a part (M6),
+use ICP. PCL and Open3D offer both algorithms as one function each, but without knowing when they
+fail (outlier ratio, initial guess) you cannot trust what they return.
+
 ## Concepts
 
 ### Building a point cloud
@@ -145,6 +153,29 @@ starts to fail, and compare with the formula. (2) Re-estimate the plane by least
 squares on the RANSAC inliers (the smallest singular vector of the SVD is the
 normal). (3) Increase the initial ICP rotation to 10°, 30°, and 60° and record
 whether it converges.
+
+```expected
+1. All three sampled points are inliers with probability $w^3$, so reaching a success probability
+   $p$ needs $N = \log(1-p)/\log(1-w^3)$ iterations. With 450 points, changing the outlier ratio and
+   running 100 times each (success = at least 90% of the floor points found):
+
+   | Outlier ratio | $N$ from the formula ($p$ = 0.99) | 20 iterations | 50 | 100 | 200 |
+   | --- | --- | --- | --- | --- | --- |
+   | 33% (the example) | 13 | 93% | 100% | 100% | 100% |
+   | 60% | 70 | 39% | 71% | 91% | 100% |
+   | 80% | 573 | 6% | 10% | 26% | 40% |
+
+   At 80% outliers the example's 200 iterations succeed less than half the time, in line with the
+   formula: the iterations needed grow as $w^{-3}$.
+2. Subtract the centroid of the inliers and take the SVD: the right singular vector of the smallest
+   singular value is the normal. On the example's data it is about (0.0007, −0.0002, 1.0000), 0.04°
+   from the z axis, and the plane's height is about −0.0003 m. This plane, using every inlier, is
+   more accurate than the RANSAC plane built from three points.
+3. From initial rotations of 10° and 30° ICP recovers the yaw as 10.00° and 30.00° and the
+   translation as (0.1, −0.05, 0) exactly, with an RMS distance of 0. From 60° it stops somewhere
+   wrong, near a yaw of −10° with an RMS distance of about 0.32 m: most nearest-neighbour matches are
+   wrong from the start, and it falls into a local minimum that fits wrong matches to each other.
+```
 
 ## Self-check questions
 

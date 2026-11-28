@@ -20,6 +20,14 @@ straight through to the Kalman filter in the intermediate module M5. The
 one-dimensional Kalman filter is covered properly in M5 alongside the Bayes
 filter.
 
+## Where you will use this
+
+A drone or a balancing robot has to know "how far am I tilted right now" hundreds of times a
+second. An accelerometer jitters and a gyro drifts, so nearly every flight controller and IMU module
+runs the complementary filter of this lesson or an extension of it. A low-pass on encoder speed and a
+moving average on a range sensor go into microcontroller firmware as a few lines each. The trade
+"less noise costs delay" returns in the derivative filter of M3 and the Kalman gain of M5.
+
 ## Concepts
 
 ### Moving average
@@ -139,6 +147,24 @@ curve, and explain why an optimum appears. (2) Overlay $\theta(t)$ with each
 estimate and see the moving average's lag with your own eyes. (3) Make $\tau$ very
 large and very small in the complementary filter and identify which single sensor
 it then behaves like.
+
+```expected
+1. On the example's data the RMS error of the low-pass filter is (the raw accelerometer gives 5.87°):
+
+   | $\tau$ [s] | 0.05 | 0.1 | 0.2 | 0.3 | 0.5 | 1.0 |
+   | --- | --- | --- | --- | --- | --- | --- |
+   | RMS error [deg] | 1.85 | 1.62 | 2.17 | 3.01 | 4.72 | 8.48 |
+
+   The minimum is near $\tau \approx 0.1$ s. A small $\tau$ lets noise through; a large one makes the
+   output lag the signal, and the error grows again. The optimum is where the sum of the two is least.
+2. The moving average (N = 25) appears shifted to the right of the true $\theta(t)$, by
+   $(N-1)\Delta t/2 = 0.12$ s. The low-pass ($\tau$ = 0.2 s) is about 0.2 s late as well. The
+   complementary filter takes fast motion from the gyro and shows no visible delay.
+3. The complementary filter's RMS error is 3.42, 1.25, 0.85, 2.04, 4.96 and 6.85° for $\tau$ = 0.01,
+   0.1, 0.5, 2, 10 and 100 s. A very small $\tau$ amounts to trusting the accelerometer alone, and the
+   estimate jitters (towards the raw 5.87°); a very large one amounts to trusting the integrated gyro
+   alone, and it drifts with the bias (towards the gyro integral's 6.28°).
+```
 
 ## Self-check questions
 

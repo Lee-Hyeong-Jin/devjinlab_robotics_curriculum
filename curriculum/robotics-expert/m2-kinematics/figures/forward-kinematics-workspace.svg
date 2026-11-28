@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 440" width="460" height="440" role="img">
+<title>Workspace of the two-link arm</title>
+<rect width="460" height="440" fill="#ffffff"/>
+<line x1="70.53" y1="412" x2="70.53" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="123.68" y1="412" x2="123.68" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="176.84" y1="412" x2="176.84" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="230" y1="412" x2="230" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="283.16" y1="412" x2="283.16" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="336.32" y1="412" x2="336.32" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="389.47" y1="412" x2="389.47" y2="28" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="371.58" x2="432" y2="371.58" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="321.05" x2="432" y2="321.05" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="270.53" x2="432" y2="270.53" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="220" x2="432" y2="220" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="169.47" x2="432" y2="169.47" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="118.95" x2="432" y2="118.95" stroke="#e5e7eb" stroke-width="1"/>
+<line x1="28" y1="68.42" x2="432" y2="68.42" stroke="#e5e7eb" stroke-width="1"/>
+<circle cx="230" cy="220" r="170.11" fill="#0b7a6b" stroke="#0b7a6b" stroke-width="2" fill-opacity="0.12"/>
+<circle cx="230" cy="220" r="42.53" fill="#ffffff" stroke="#0b7a6b" stroke-width="2" fill-opacity="1"/>
+<line x1="28" y1="220" x2="425.7" y2="220" stroke="#6b7280" stroke-width="1.2"/>
+<polygon points="432,220 425.61,222.85 425.61,217.15" fill="#6b7280"/>
+<line x1="230" y1="412" x2="230" y2="34.3" stroke="#6b7280" stroke-width="1.2"/>
+<polygon points="230,28 232.85,34.39 227.15,34.39" fill="#6b7280"/>
+<text x="432" y="214" fill="#6b7280" font-size="12" text-anchor="end" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif" font-style="italic">x</text>
+<text x="236" y="38" fill="#6b7280" font-size="12" text-anchor="start" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif" font-style="italic">y</text>
+<line x1="123.68" y1="220" x2="123.68" y2="220" stroke="#6b7280" stroke-width="1.5"/>
+<text x="123.68" y="235" fill="#6b7280" font-size="11" text-anchor="middle" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">-0.5</text>
+<line x1="336.32" y1="220" x2="336.32" y2="220" stroke="#6b7280" stroke-width="1.5"/>
+<text x="336.32" y="235" fill="#6b7280" font-size="11" text-anchor="middle" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">0.5</text>
+<text x="224" y="325.05" fill="#6b7280" font-size="11" text-anchor="end" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">-0.5</text>
+<text x="224" y="122.95" fill="#6b7280" font-size="11" text-anchor="end" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">0.5</text>
+<polyline points="230,220 322.07,169.47 338.58,110.91" fill="none" stroke="#1f2933" stroke-width="4" stroke-linejoin="round"/>
+<circle cx="230" cy="220" r="5" fill="#ffffff"/>
+<circle cx="230" cy="220" r="5" fill="none" stroke="#1f2933" stroke-width="2"/>
+<circle cx="322.07" cy="169.47" r="5" fill="#ffffff"/>
+<circle cx="322.07" cy="169.47" r="5" fill="none" stroke="#1f2933" stroke-width="2"/>
+<circle cx="338.58" cy="110.91" r="4" fill="#1f2933"/>
+<polyline points="230,220 130.1,185.44 192.92,174.91" fill="none" stroke="#6b7280" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="230" cy="220" r="5" fill="#ffffff"/>
+<circle cx="230" cy="220" r="5" fill="none" stroke="#6b7280" stroke-width="2"/>
+<circle cx="130.1" cy="185.44" r="5" fill="#ffffff"/>
+<circle cx="130.1" cy="185.44" r="5" fill="none" stroke="#6b7280" stroke-width="2"/>
+<circle cx="192.92" cy="174.91" r="4" fill="#6b7280"/>
+<text x="346.28" y="97.67" fill="#0b7a6b" font-size="12" text-anchor="middle" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">r = a₁ + a₂ = 0.8</text>
+<text x="230" y="276.42" fill="#0b7a6b" font-size="12" text-anchor="middle" font-family="Helvetica, Arial, 'Noto Sans KR', sans-serif">r = |a₁ − a₂| = 0.2</text>
+</svg>

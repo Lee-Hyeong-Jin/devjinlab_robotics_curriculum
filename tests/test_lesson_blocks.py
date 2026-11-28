@@ -166,8 +166,9 @@ def test_validation_of_figures(tmp_path: Path) -> None:
 def test_validation_of_expected_blocks(tmp_path: Path) -> None:
     root = _course_with(tmp_path / "a", "\n```expected\n\n```\n", files={})
     messages = _messages(root)
-    assert any("expected-result block 1 is empty" in m for m in messages)
-    assert any("1 expected-result block(s) in the original but 0 in 'en'" in m for m in messages)
+    # The lesson already carries one answer in each language; the appended block is the second.
+    assert any("expected-result block 2 is empty" in m for m in messages)
+    assert any("2 expected-result block(s) in the original but 1 in 'en'" in m for m in messages)
 
 
 def test_the_api_serves_only_the_figures_a_lesson_shows(tmp_path: Path) -> None:
