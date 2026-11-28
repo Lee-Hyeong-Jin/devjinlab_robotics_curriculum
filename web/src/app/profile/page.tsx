@@ -18,6 +18,7 @@ import { resendVerification } from '@/lib/actions/auth'
 import {
   changePassword,
   createToken,
+  deleteAccount,
   revokeSession,
   revokeToken,
   unlinkIdentity,
@@ -32,7 +33,15 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const SCOPES: Scope[] = ['read:progress', 'write:progress', 'admin']
 
-const SECTIONS = ['account', 'passwordSection', 'sessions', 'identities', 'tokens', 'data'] as const
+const SECTIONS = [
+  'account',
+  'passwordSection',
+  'sessions',
+  'identities',
+  'tokens',
+  'data',
+  'deleteAccount',
+] as const
 
 /**
  * Profile (Figma `23-111`) — `GET/PATCH /me`, `/me/password`, `/me/sessions`,
@@ -397,6 +406,28 @@ export default async function ProfilePage() {
             >
               {t('export')}
             </a>
+          </Card>
+
+          <Card as="section" aria-labelledby="deleteAccount" className="border-danger">
+            <h2 id="deleteAccount" className="text-primary font-semibold">
+              {t('deleteAccount')}
+            </h2>
+            <p className="text-muted mt-1 mb-4 text-sm">{t('deleteHint')}</p>
+            <ActionForm
+              action={deleteAccount}
+              submitLabel={t('deleteSubmit')}
+              pendingLabel={t('deleting')}
+              fields={[
+                {
+                  name: 'deletePassword',
+                  label: t('deletePassword'),
+                  kind: 'password',
+                  autoComplete: 'current-password',
+                  hint: t('deletePasswordHint'),
+                },
+                { name: 'deleteAcknowledge', label: t('deleteAcknowledge'), kind: 'checkbox' },
+              ]}
+            />
           </Card>
         </div>
       </div>

@@ -304,7 +304,8 @@
     "noAccount": "계정이 없으신가요?",
     "signupLink": "회원가입",
     "registeredReady": "가입이 완료됐습니다. 바로 로그인하세요.",
-    "expired": "세션이 종료됐습니다. 다시 로그인하세요."
+    "expired": "세션이 종료됐습니다. 다시 로그인하세요.",
+    "accountDeleted": "계정이 삭제됐습니다. 그동안 이용해 주셔서 감사합니다."
   },
   "signup": {
     "title": "회원가입",
@@ -458,7 +459,17 @@
     "tokenExpiresInvalid": "1~{max} 사이의 정수를 입력하세요. 비우면 만료되지 않습니다.",
     "timezoneInvalid": "알 수 없는 시간대입니다. Asia/Seoul 같은 IANA 이름을 입력하세요.",
     "sessionRevokeConfirm": "이 기기를 로그아웃시킬까요?",
-    "tokenRevokeConfirm": "토큰 \"{name}\" 을(를) 폐기할까요? 되돌릴 수 없고, 이 토큰을 쓰는 프로그램이 즉시 멈춥니다."
+    "tokenRevokeConfirm": "토큰 \"{name}\" 을(를) 폐기할까요? 되돌릴 수 없고, 이 토큰을 쓰는 프로그램이 즉시 멈춥니다.",
+    "deleteAccount": "계정 삭제",
+    "deleteHint": "계정을 삭제하면 진행도, 학습 시간, 복습 카드, 퀴즈 기록이 즉시 지워지고 되돌릴 수 없습니다. 필요하면 먼저 위에서 데이터를 내보내세요. 로그인 기록은 개인을 알 수 없는 형태로만 남습니다.",
+    "deletePassword": "비밀번호",
+    "deletePasswordHint": "본인 확인을 위해 현재 비밀번호를 입력하세요. 외부 로그인만 쓰는 계정은 비워 둡니다.",
+    "deleteAcknowledge": "내 계정과 학습 데이터가 영구히 삭제된다는 것을 이해했습니다.",
+    "deleteAcknowledgeRequired": "삭제하려면 이 항목에 동의해야 합니다.",
+    "deleteSubmit": "계정 삭제",
+    "deleting": "삭제하는 중…",
+    "deletePasswordWrong": "비밀번호가 올바르지 않습니다.",
+    "deleteFailed": "계정을 삭제하지 못했습니다."
   },
   "role": {
     "learner": "학습자",

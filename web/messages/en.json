@@ -304,7 +304,8 @@
     "noAccount": "No account yet?",
     "signupLink": "Sign up",
     "registeredReady": "Your account is ready. Sign in below.",
-    "expired": "Your session has ended. Sign in again."
+    "expired": "Your session has ended. Sign in again.",
+    "accountDeleted": "Your account has been deleted. Thank you for studying with us."
   },
   "signup": {
     "title": "Sign up",
@@ -458,7 +459,17 @@
     "tokenExpiresInvalid": "Enter a whole number from 1 to {max}, or leave it blank for no expiry.",
     "timezoneInvalid": "Unknown time zone. Use an IANA name such as Asia/Seoul.",
     "sessionRevokeConfirm": "Sign this device out?",
-    "tokenRevokeConfirm": "Revoke the token \"{name}\"? This cannot be undone, and anything using it stops working at once."
+    "tokenRevokeConfirm": "Revoke the token \"{name}\"? This cannot be undone, and anything using it stops working at once.",
+    "deleteAccount": "Delete account",
+    "deleteHint": "Deleting your account removes your progress, study time, review cards and quiz history at once, and it cannot be undone. Export your data above first if you want a copy. Sign-in records are kept only in a form that no longer identifies you.",
+    "deletePassword": "Password",
+    "deletePasswordHint": "Enter your current password to confirm it is you. Leave it blank if you only sign in with an external provider.",
+    "deleteAcknowledge": "I understand that my account and learning data will be deleted permanently.",
+    "deleteAcknowledgeRequired": "Tick this box to delete the account.",
+    "deleteSubmit": "Delete account",
+    "deleting": "Deleting…",
+    "deletePasswordWrong": "The password is wrong.",
+    "deleteFailed": "The account could not be deleted."
   },
   "role": {
     "learner": "Learner",

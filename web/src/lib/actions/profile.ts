@@ -170,3 +170,40 @@ export async function revokeToken(_previous: ActionState, form: FormData): Promi
   revalidatePath(PROFILE_PATH)
   return { message: t('tokenRevoked') }
 }
+
+/**
+ * `DELETE /me` — delete the account for good (#32).
+ *
+ * Learning data is removed at once and the account is anonymised; there is no grace period, so
+ * the form asks for the password and an explicit acknowledgement. Afterwards the browser's
+ * session cookie means nothing: it is dropped and the reader lands on the login screen.
+ */
+export async function deleteAccount(_previous: ActionState, form: FormData): Promise<ActionState> {
+  const t = await getTranslations('profile')
+  const password = String(form.get('deletePassword') ?? '')
+  if (form.get('deleteAcknowledge') !== 'on') {
+    return { fields: { deleteAcknowledge: t('deleteAcknowledgeRequired') } }
+  }
+
+  try {
+    await apiDelete(
+      '/api/v1/me',
+      { redirectOnUnauthorized: false },
+      { password: password === '' ? null : password },
+    )
+  } catch (error) {
+    if (isUnauthorized(error)) {
+      if (problemCode(error) !== 'password_required' && !(await getMe())) {
+        redirect(sessionExpiredUrl(PROFILE_PATH))
+      }
+      return { fields: { deletePassword: t('deletePasswordWrong') } }
+    }
+    return toActionState(error, t('deleteFailed'))
+  }
+
+  const { cookies } = await import('next/headers')
+  const jar = await cookies()
+  jar.delete('sid')
+  jar.delete('csrf_token')
+  redirect('/login?deleted=1')
+}

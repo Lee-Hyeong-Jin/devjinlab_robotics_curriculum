@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- The profile has a "Delete account" section: it asks for the password and an explicit
+  acknowledgement, then removes the learning data and signs the browser out (#32). The API
+  could already delete an account; no screen offered it.
 - A completion made by mistake can be undone: "Undo completion" on the lesson screen,
   `rc undone <lesson>` and `POST /api/v1/progress/undone`. The lesson goes back to in progress;
   study time, the note, review cards and quiz history are kept (#39).
