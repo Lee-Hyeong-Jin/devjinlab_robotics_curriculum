@@ -89,6 +89,7 @@ export default async function ProfilePage() {
             hidden={{ sessionId: String(row.id) }}
             label={t('revoke')}
             pendingLabel={t('revoking')}
+            confirm={t('sessionRevokeConfirm')}
           />
         ),
     },
@@ -135,6 +136,8 @@ export default async function ProfilePage() {
           hidden={{ tokenId: String(row.id) }}
           label={t('revokeToken')}
           pendingLabel={t('revokingToken')}
+          // Cannot be undone, and whatever uses the token stops at once (#34).
+          confirm={t('tokenRevokeConfirm', { name: row.name })}
         />
       ),
     },

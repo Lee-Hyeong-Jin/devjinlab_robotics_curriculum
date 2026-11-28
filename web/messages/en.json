@@ -456,7 +456,9 @@
     "passwordSame": "The new password is the same as the current one.",
     "currentPasswordWrong": "The current password is wrong.",
     "tokenExpiresInvalid": "Enter a whole number from 1 to {max}, or leave it blank for no expiry.",
-    "timezoneInvalid": "Unknown time zone. Use an IANA name such as Asia/Seoul."
+    "timezoneInvalid": "Unknown time zone. Use an IANA name such as Asia/Seoul.",
+    "sessionRevokeConfirm": "Sign this device out?",
+    "tokenRevokeConfirm": "Revoke the token \"{name}\"? This cannot be undone, and anything using it stops working at once."
   },
   "role": {
     "learner": "Learner",

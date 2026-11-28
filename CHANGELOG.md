@@ -247,6 +247,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   regress.
 
 ### Changed
+- Revoking a personal access token and signing a device out from the profile ask for
+  confirmation first, like the same actions in the admin console (#34).
 - **English is the service's default language** (ADR 0018). A visitor or a crawler that states
   no language gets the English pages, and the canonical address of every page is the English
   one; the Korean page lives at `?lang=ko`. The site opens in English whatever language the
