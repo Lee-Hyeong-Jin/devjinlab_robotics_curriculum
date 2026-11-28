@@ -319,15 +319,43 @@ class ProgressService:
     def next_lessons(
         self, course_id: str | None = None, limit: int | None = None
     ) -> list[LessonSummary]:
-        """Every not-done lesson, in recommended order.
+        """Every not-done lesson of the learner's courses, in recommended order.
 
-        Nothing is filtered out (ADR 0015): a lesson whose prerequisites are unfinished is
-        ranked lower, not hidden. Order: in progress, then prerequisites done, then the rest —
-        stable, so teaching order (course -> module -> lesson) survives inside each group.
+        Within a course nothing is filtered out (ADR 0015): a lesson whose prerequisites are
+        unfinished is ranked lower, not hidden. Order: in progress, then prerequisites done,
+        then the rest — stable, so teaching order (module -> lesson) survives inside each group.
+
+        Without ``course_id`` the list covers the courses the learner is taking
+        (:meth:`focus_course_ids`), not every course there is. A second course's opening
+        lessons have no prerequisites, so they used to outrank the next lessons of the course
+        actually being studied: somebody halfway through the expert course was told to start
+        the research track's 70-hour calculus guide next week.
         """
-        candidates = [s for s in self.status(course_id) if s.status != "done"]
+        if course_id is None:
+            focus = set(self.focus_course_ids())
+            pool = [s for s in self.status() if s.course.id in focus]
+        else:
+            pool = self.status(course_id)
+        candidates = [s for s in pool if s.status != "done"]
         candidates.sort(key=lambda s: (s.status != "in_progress", not s.recommended))
         return candidates if limit is None else candidates[:limit]
+
+    def focus_course_ids(self) -> list[str]:
+        """The courses this learner is taking: those with any recorded progress.
+
+        Somebody who has not started anything is taking the first course (the default one);
+        somebody who has finished everything they started is offered the remaining courses.
+        """
+        summaries = self.status()
+        started = [s.course.id for s in summaries if s.status != "not_started"]
+        if started:
+            taking = list(dict.fromkeys(started))
+            unfinished = {s.course.id for s in summaries if s.status != "done"}
+            if any(course_id in unfinished for course_id in taking):
+                return taking
+            # Everything started is finished: what is left is the next thing to take.
+            return [c.id for c in self.courses if c.id in unfinished] or taking
+        return [self.courses[0].id] if self.courses else []
 
     def _courses(self, course_id: str | None) -> list[Course]:
         if course_id is None:

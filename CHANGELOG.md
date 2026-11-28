@@ -193,6 +193,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `npm audit` reports nothing for the web lockfile and the allowlist is empty.
 
 ### Fixed
+- "Next lessons" (the weekly report's suggestions, the dashboard, `rc next`) stay inside the
+  courses the learner is taking. A learner on the expert course was being told to start the
+  research track's calculus guide (#31).
 - Two expert-course lessons (`m8-stacks-dev-environment`, `m9-robot-learning-overview`) sent
   readers to internal research notes that are not published on the site.
 - Ending the study timer or signing a device out gave no confirmation, because the button that
