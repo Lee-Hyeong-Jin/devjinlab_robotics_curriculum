@@ -470,6 +470,27 @@ class Module(ContentModel):
         )
 
 
+class Goal(ContentModel):
+    """A named destination in a course: "I want to build a robot that navigates".
+
+    ``targets`` are the lessons that reach the goal. The path to it is those lessons and
+    everything they depend on, in teaching order (:mod:`content.paths`): a learner who picks a
+    goal sees only what it needs, instead of the whole course in one line.
+    """
+
+    id: Id
+    title: str = Field(min_length=1)
+    summary: str = Field(min_length=1)
+    targets: list[Id] = Field(min_length=1, description="Lesson ids that reach the goal.")
+
+
+class GoalText(ContentModel):
+    """A goal's text in another language (``goals: {<id>: {title, summary}}``)."""
+
+    title: str = Field(min_length=1)
+    summary: str = Field(min_length=1)
+
+
 class CourseMeta(ContentModel):
     """Schema of ``course.yaml``."""
 
@@ -477,6 +498,9 @@ class CourseMeta(ContentModel):
     title: str = Field(min_length=1)
     summary: str = Field(min_length=1)
     tags: list[str] = Field(default_factory=list)
+    goals: list[Goal] = Field(
+        default_factory=list, description="Named learning paths through the course."
+    )
     modules: list[str] | None = Field(
         default=None,
         description="module directory names in order; omit to use sorted directory names",
@@ -491,6 +515,9 @@ class CourseTranslation(ContentModel):
     title: str = Field(min_length=1)
     summary: str = Field(min_length=1)
     tags: list[str] | None = None
+    goals: dict[str, GoalText] = Field(
+        default_factory=dict, description="Goal id -> translated title and summary."
+    )
 
     path: Path | None = Field(default=None, exclude=True)
 
@@ -516,8 +543,15 @@ class Course(ContentModel):
     papers: list[Paper] = Field(
         default_factory=list, description="The course's papers.yaml registry, if it has one."
     )
+    goals: list[Goal] = Field(default_factory=list)
     path: Path | None = Field(default=None, exclude=True)
     translations: dict[str, CourseTranslation] = Field(default_factory=dict, exclude=True)
+
+    def localized_goal(self, goal: Goal, lang: str | None = None) -> tuple[str, str]:
+        """``(title, summary)`` of a goal in ``lang``, falling back to the base text."""
+        translation = self.translations.get(lang or "") if lang else None
+        text = translation.goals.get(goal.id) if translation is not None else None
+        return (text.title, text.summary) if text is not None else (goal.title, goal.summary)
 
     def localized(self, lang: str | None = None) -> LocalizedCourse:
         """This course's text in ``lang``, falling back to the language it was written in."""

@@ -32,6 +32,13 @@ cli:
   done_line: "완료 {lesson_id} ({title}), 시간 {time}{extra}"
   done_understanding: ", 이해도 {value}"
   undone_line: "완료 취소 {lesson_id} ({title}) — 진행 중으로 되돌렸습니다"
+  path:
+    no_goals: "이 커리큘럼에는 정의된 목표가 없습니다. 레슨 id 를 주면 그 레슨까지의 경로를 보여 줍니다."
+    header_goal: "목표"
+    header_lessons: "레슨"
+    hint: "경로 보기: rc path <목표>   ·   그 경로 안에서 다음 레슨: rc next --goal <목표>"
+    summary: "{title} — 레슨 {done}/{total} 완료, 남은 시간 {remaining} (전체 {time})"
+    next_hint: "이 경로에서 다음 레슨: rc next --goal {name}"
   example:
     none: "{lesson_id} 에는 Python 예제가 없습니다."
     saved: "예제 {count}개를 {path} 에 저장했습니다."

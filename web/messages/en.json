@@ -170,7 +170,13 @@
     "colProgress": "Progress",
     "empty": "The roadmap could not be loaded.",
     "stageLessons": "{done}/{total} lessons",
-    "courseTitle": "{course} roadmap"
+    "courseTitle": "{course} roadmap",
+    "goalHeading": "Pick a path by goal",
+    "goalHint": "Choose what you want to build and see only the lessons that goal needs, in prerequisite order. You do not have to follow the whole course from the first lesson to the last.",
+    "goalAll": "Whole course",
+    "goalProgress": "{done} of {total} lessons done · {remaining} left (of {time})",
+    "goalModuleOff": "Not needed for this goal",
+    "goalModuleOn": "{count} of {total} lessons needed for this goal"
   },
   "module": {
     "lessons": "Lessons",

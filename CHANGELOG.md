@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Goal-based learning paths: pick a goal on the roadmap ("make a robot move", SLAM, autonomous
+  navigation, robot arms, robot learning) and see only the lessons it needs, in prerequisite
+  order, with the time left. Also `rc path [goal|lesson]`, `rc next --goal`, a `goals` list on
+  the course API answer and `goal` on `GET /progress/next`. Goals are declared in
+  `course.yaml`; the path is computed from the prerequisite graph (#52).
 - Lesson code examples can be run without copying them by hand: `rc example <lesson>` prints
   them, `--out FILE` saves a `.py`, `--run` executes them; code blocks on the site have "Copy"
   and "Download .py" buttons. The test suite now executes every Python example of every

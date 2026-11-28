@@ -32,6 +32,25 @@ curriculum/
 | `summary` | str | O | 한두 문장 요약 |
 | `tags` | list[str] | - | 기본 `[]` |
 | `modules` | list[str] | - | 모듈 디렉터리 이름, 순서대로 |
+| `goals` | list[Goal] | - | 목표별 학습 경로. 기본 `[]` |
+
+### 목표 (`goals`)
+
+코스는 첫 레슨부터 마지막 레슨까지 한 줄이다. 목표("자율주행 로봇을 만들고 싶다")는 그중 일부만
+필요로 한다. 목표는 **도달 레슨**만 적는다. 경로(그 레슨들과, 직접·간접으로 의존하는 모든 레슨을
+교육 순서로 늘어놓은 것)는 선수지식 그래프에서 계산한다(`content/paths.py`).
+
+```yaml
+goals:
+  - id: navigation                # slug, 코스 안에서 유일
+    title: 자율주행 (내비게이션)
+    summary: 지도 위에서 경로를 계획하고 장애물을 피해 목적지까지 가는 로봇.
+    targets: [m6-nav2-architecture-behavior-trees]   # 이 코스의 레슨 id, 1개 이상
+```
+
+번역은 `course.<lang>.yaml` 에 `goals: {<id>: {title, summary}}` 로 둔다(구조인 `targets` 는
+옮기지 않는다). 쓰이는 곳: `rc path [목표|레슨]`, `rc next --goal`, API 의 코스 응답 `goals`
+와 `GET /progress/next?goal=`, 웹 로드맵의 목표 선택(`/roadmap?goal=navigation`).
 
 ## `module.yaml`
 
@@ -319,6 +338,7 @@ problems:
 | 11w | **경고**: 아무 레슨도 참조하지 않는 레지스트리 논문 / 레지스트리 `lessons[]` 가 실제 참조와 다름 | validate |
 | 13 | 본문 ` ```problemset ` 블록이 파싱되고 레슨의 `kind: exercise` 활동을 참조함: 모르는 `type`·`solution_policy`, `numerical` 의 `solution`+`tolerance` 누락, 다른 type 의 `tolerance`, 문항 `id` 중복 | validate |
 | 13w | **경고**: 문항이 4개 미만·8개 초과이거나 유형이 3종 미만 | validate |
+| 14 | 목표(`goals`)의 `id` 가 코스 안에서 유일하고, `targets` 가 모두 그 코스의 레슨이며, 번역 파일의 `goals` 키가 실제 목표다 | validate |
 
 성공 시 `OK: N lessons in M modules`(경고가 있으면 `(N warning(s))` 가 붙는다).
 

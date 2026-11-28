@@ -487,7 +487,11 @@ paths:
       tags:
       - progress
       summary: Get Next
-      description: 'Lessons whose prerequisites are done: in-progress first, then teaching order.'
+      description: |-
+        Lessons whose prerequisites are done: in-progress first, then teaching order.
+
+        With ``goal``, the answer stays on that learning path (404 when it names neither a goal
+        nor a lesson).
       operationId: get_next_api_v1_progress_next_get
       parameters:
       - name: course
@@ -511,6 +515,17 @@ paths:
           default: 3
           title: N
         description: How many to return.
+      - name: goal
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          description: 'A goal id or a lesson id: only lessons on the path to it are returned.'
+          title: Goal
+        description: 'A goal id or a lesson id: only lessons on the path to it are returned.'
       responses:
         '200':
           description: Successful Response
@@ -4139,6 +4154,12 @@ components:
           type: array
           title: Stages
           description: Modules grouped by level, in course order.
+        goals:
+          items:
+            $ref: '#/components/schemas/GoalPath'
+          type: array
+          title: Goals
+          description: Goal-based learning paths the course defines (empty when it has none).
       additionalProperties: false
       type: object
       required:
@@ -4535,6 +4556,51 @@ components:
       required:
       - email
       title: ForgotRequest
+    GoalPath:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        summary:
+          type: string
+          title: Summary
+        target_ids:
+          items:
+            type: string
+          type: array
+          title: Target Ids
+          description: The lessons that reach the goal.
+        lesson_ids:
+          items:
+            type: string
+          type: array
+          title: Lesson Ids
+          description: The targets and everything they depend on, in teaching order.
+        lessons:
+          items:
+            $ref: '#/components/schemas/PathLesson'
+          type: array
+          title: Lessons
+          description: The same lessons with what a screen needs to list them.
+        estimated_minutes:
+          type: integer
+          title: Estimated Minutes
+          description: Sum over `lesson_ids`.
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - title
+      - summary
+      - target_ids
+      - lesson_ids
+      - lessons
+      - estimated_minutes
+      title: GoalPath
+      description: 'A named learning path: the lessons one goal needs, in teaching order.'
     Growth:
       properties:
         users_total:
@@ -5640,6 +5706,29 @@ components:
       - current_password
       - new_password
       title: PasswordChange
+    PathLesson:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        module_id:
+          type: string
+          title: Module Id
+        estimated_minutes:
+          type: integer
+          title: Estimated Minutes
+      additionalProperties: false
+      type: object
+      required:
+      - id
+      - title
+      - module_id
+      - estimated_minutes
+      title: PathLesson
+      description: One step of a learning path.
     ProcessReading:
       properties:
         open_files:

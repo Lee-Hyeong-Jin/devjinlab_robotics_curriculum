@@ -20,6 +20,7 @@ from robotics_curriculum.api.problems import problem_responses
 from robotics_curriculum.api.schemas import (
     Course,
     CourseSummary,
+    GoalPath,
     Lesson,
     LessonProblem,
     LessonSummary,
@@ -75,7 +76,11 @@ def get_course(course_id: str, index: Index) -> Course:
             label = level_label(module.level, lang) if module.level else None
             stages.append(Stage(level=module.level, level_label=label, modules=[]))
         stages[-1].modules.append(ModuleSummary.of(course, module, lang))
-    return Course(**_summary(course).model_dump(), stages=stages)
+    return Course(
+        **_summary(course).model_dump(),
+        stages=stages,
+        goals=[GoalPath.of(course, goal, lang) for goal in course.goals],
+    )
 
 
 @router.get("/modules/{module_id}", response_model=Module, responses=problem_responses(404))

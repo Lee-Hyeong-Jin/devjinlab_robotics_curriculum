@@ -12,3 +12,29 @@ summary: >-
   Advanced (M9-M10): learning-based robotics, system integration and a capstone project.
   The recommended order is M1 -> M2 -> M3 -> M4 -> M8 -> M5 -> M6 -> M7 -> M9 -> M10.
 tags: [robotics, fundamentals]
+goals:
+  mobile-robot:
+    title: Make a robot move
+    summary: >-
+      Model a wheeled robot and make it follow a path with PID. The shortest path here: only
+      what a first moving robot needs.
+  slam:
+    title: Mapping and localization (SLAM)
+    summary: >-
+      From sensor models and filtering through the EKF, particle filters and occupancy grids
+      to graph SLAM.
+  navigation:
+    title: Autonomous navigation
+    summary: >-
+      A robot that plans a route on a map, avoids obstacles and reaches its goal, including
+      localization and the Nav2 architecture.
+  manipulation:
+    title: Robot arms (manipulation)
+    summary: >-
+      From kinematics, the Jacobian and dynamics to trajectory generation, grasping, motion
+      planning and the structure of MoveIt 2.
+  robot-learning:
+    title: Robot learning
+    summary: >-
+      Reinforcement and imitation learning and sim-to-real, up to VLA foundation models and
+      how to evaluate them, with only the foundations they need.

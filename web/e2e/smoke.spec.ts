@@ -270,3 +270,34 @@ test('the resource library filters and pages through the address', async ({ page
   await expect(page.getByText(/조건에 맞는 자료가 없습니다|No resource matches/)).toBeVisible()
   await expect(page.getByRole('table')).toHaveCount(0)
 })
+
+test('a goal narrows the roadmap to the lessons it needs (#52)', async ({ page }) => {
+  await page.goto('/roadmap')
+  const goals = page.getByRole('navigation', { name: /목표로 경로 고르기|Pick a path by goal/ })
+  // "Whole course" is selected until a goal is picked.
+  await expect(goals.locator('[aria-current="page"]')).toHaveText(/전체 코스|Whole course/)
+  await goals.getByRole('link', { name: /움직이는 로봇 제어하기|Make a robot move/ }).click()
+  await page.waitForURL(/goal=mobile-robot/)
+
+  // The path is listed in order, with how much is left, and it is short.
+  const status = page.getByRole('status').filter({ hasText: /레슨 0\/6|0 of 6 lessons/ })
+  await expect(status).toBeVisible()
+  const steps = page.locator(
+    'section[aria-labelledby="goal-heading"] ol > li, #goal-heading ~ div ol > li',
+  )
+  await expect(steps).toHaveCount(6)
+  await expect(steps.first().getByRole('link')).toHaveAttribute(
+    'href',
+    /\/modules\/m1-math-physics\//,
+  )
+  // Modules the goal does not touch say so; they are still links.
+  await expect(
+    page.getByText(/이 목표에는 필요하지 않습니다|Not needed for this goal/).first(),
+  ).toBeVisible()
+  expect(await blockingViolations(page)).toEqual([])
+
+  // An unknown goal is ignored, not an error.
+  const response = await page.goto('/roadmap?goal=no-such-goal')
+  expect(response?.status()).toBe(200)
+  await expect(goals.locator('[aria-current="page"]')).toHaveText(/전체 코스|Whole course/)
+})

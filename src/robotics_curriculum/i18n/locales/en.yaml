@@ -31,6 +31,13 @@ cli:
   done_line: "done {lesson_id} ({title}), time {time}{extra}"
   done_understanding: ", understanding {value}"
   undone_line: "undone {lesson_id} ({title}): back in progress"
+  path:
+    no_goals: "this curriculum defines no goals; give a lesson id to see the path to that lesson"
+    header_goal: "goal"
+    header_lessons: "lessons"
+    hint: "show a path: rc path <goal>   ·   next lesson on it: rc next --goal <goal>"
+    summary: "{title}: {done}/{total} lessons done, {remaining} left (of {time})"
+    next_hint: "next lesson on this path: rc next --goal {name}"
   example:
     none: "{lesson_id} has no Python example."
     saved: "saved {count} example(s) to {path}"

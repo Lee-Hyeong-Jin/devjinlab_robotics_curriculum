@@ -13,6 +13,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from robotics_curriculum import content
 from robotics_curriculum.content import Activity, ResourceKind, level_label
+from robotics_curriculum.content.paths import goal_path
 from robotics_curriculum.i18n import DEFAULT_LANG, get_translator
 from robotics_curriculum.learn import AnswerFeedback, CardView, QuestionView, SubmissionResult
 from robotics_curriculum.learn.stats import StageProgress, WeekStats, stage_label
@@ -241,8 +242,60 @@ class Stage(Schema):
     modules: list[ModuleSummary]
 
 
+class PathLesson(Schema):
+    """One step of a learning path."""
+
+    id: str
+    title: str
+    module_id: str
+    estimated_minutes: int
+
+
+class GoalPath(Schema):
+    """A named learning path: the lessons one goal needs, in teaching order."""
+
+    id: str
+    title: str
+    summary: str
+    target_ids: list[str] = Field(description="The lessons that reach the goal.")
+    lesson_ids: list[str] = Field(
+        description="The targets and everything they depend on, in teaching order."
+    )
+    lessons: list[PathLesson] = Field(
+        description="The same lessons with what a screen needs to list them."
+    )
+    estimated_minutes: int = Field(description="Sum over `lesson_ids`.")
+
+    @classmethod
+    def of(cls, course: content.Course, goal: content.models.Goal, lang: str | None) -> GoalPath:
+        found = goal_path(course, goal)
+        title, summary = course.localized_goal(goal, lang)
+        module_of = {lesson.id: module.id for module in course.modules for lesson in module.lessons}
+        return cls(
+            id=goal.id,
+            title=title,
+            summary=summary,
+            target_ids=list(found.targets),
+            lesson_ids=list(found.lesson_ids),
+            lessons=[
+                PathLesson(
+                    id=lesson.id,
+                    title=lesson.localized(lang).title,
+                    module_id=module_of[lesson.id],
+                    estimated_minutes=lesson.estimated_minutes,
+                )
+                for lesson in found.lessons
+            ],
+            estimated_minutes=found.total_minutes,
+        )
+
+
 class Course(CourseSummary):
     stages: list[Stage] = Field(description="Modules grouped by level, in course order.")
+    goals: list[GoalPath] = Field(
+        default_factory=list,
+        description="Goal-based learning paths the course defines (empty when it has none).",
+    )
 
 
 class ResourceRef(Resource):

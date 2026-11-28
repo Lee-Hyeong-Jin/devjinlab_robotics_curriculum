@@ -272,6 +272,9 @@ export interface paths {
         /**
          * Get Next
          * @description Lessons whose prerequisites are done: in-progress first, then teaching order.
+         *
+         *     With ``goal``, the answer stays on that learning path (404 when it names neither a goal
+         *     nor a lesson).
          */
         get: operations["get_next_api_v1_progress_next_get"];
         put?: never;
@@ -1793,6 +1796,11 @@ export interface components {
              * @description Modules grouped by level, in course order.
              */
             stages: components["schemas"]["Stage"][];
+            /**
+             * Goals
+             * @description Goal-based learning paths the course defines (empty when it has none).
+             */
+            goals?: components["schemas"]["GoalPath"][];
         };
         /** CourseSummary */
         CourseSummary: {
@@ -2006,6 +2014,38 @@ export interface components {
         ForgotRequest: {
             /** Email */
             email: string;
+        };
+        /**
+         * GoalPath
+         * @description A named learning path: the lessons one goal needs, in teaching order.
+         */
+        GoalPath: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Summary */
+            summary: string;
+            /**
+             * Target Ids
+             * @description The lessons that reach the goal.
+             */
+            target_ids: string[];
+            /**
+             * Lesson Ids
+             * @description The targets and everything they depend on, in teaching order.
+             */
+            lesson_ids: string[];
+            /**
+             * Lessons
+             * @description The same lessons with what a screen needs to list them.
+             */
+            lessons: components["schemas"]["PathLesson"][];
+            /**
+             * Estimated Minutes
+             * @description Sum over `lesson_ids`.
+             */
+            estimated_minutes: number;
         };
         /** Growth */
         Growth: {
@@ -2658,6 +2698,20 @@ export interface components {
             current_password: string;
             /** New Password */
             new_password: string;
+        };
+        /**
+         * PathLesson
+         * @description One step of a learning path.
+         */
+        PathLesson: {
+            /** Id */
+            id: string;
+            /** Title */
+            title: string;
+            /** Module Id */
+            module_id: string;
+            /** Estimated Minutes */
+            estimated_minutes: number;
         };
         /**
          * ProcessReading
@@ -4317,6 +4371,8 @@ export interface operations {
                 course?: string | null;
                 /** @description How many to return. */
                 n?: number;
+                /** @description A goal id or a lesson id: only lessons on the path to it are returned. */
+                goal?: string | null;
             };
             header?: never;
             path?: never;

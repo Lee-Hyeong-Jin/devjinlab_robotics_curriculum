@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import os
 import re
-from collections.abc import Callable
+from collections.abc import Callable, Collection
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -342,7 +342,11 @@ class ProgressService:
         return result
 
     def next_lessons(
-        self, course_id: str | None = None, limit: int | None = None
+        self,
+        course_id: str | None = None,
+        limit: int | None = None,
+        *,
+        within: Collection[str] | None = None,
     ) -> list[LessonSummary]:
         """Every not-done lesson of the learner's courses, in recommended order.
 
@@ -351,7 +355,9 @@ class ProgressService:
         then the rest — stable, so teaching order (module -> lesson) survives inside each group.
 
         Without ``course_id`` the list covers the courses the learner is taking
-        (:meth:`focus_course_ids`), not every course there is. A second course's opening
+        (:meth:`focus_course_ids`), not every course there is. ``within`` narrows the list to
+        the given lesson ids instead (a learning path), whatever course they are in. A second
+        course's opening
         lessons have no prerequisites, so they used to outrank the next lessons of the course
         actually being studied: somebody halfway through the expert course was told to start
         the research track's 70-hour calculus guide next week.
@@ -361,6 +367,10 @@ class ProgressService:
             pool = [s for s in self.status() if s.course.id in focus]
         else:
             pool = self.status(course_id)
+        if within is not None:
+            # A learning path (`content.paths`): recommendations stay inside it.
+            allowed = set(within)
+            pool = [s for s in self.status() if s.lesson.id in allowed]
         candidates = [s for s in pool if s.status != "done"]
         candidates.sort(key=lambda s: (s.status != "in_progress", not s.recommended))
         return candidates if limit is None else candidates[:limit]

@@ -101,6 +101,38 @@ def validate_course(course: Course) -> list[ContentError]:
     errors.extend(_find_cycles(lessons, course_dir))
     # Rule 10: the paper registry and the lessons that reference it.
     errors.extend(_check_papers(course, lessons, course_dir))
+    # Rule 11: goals name lessons of this course, once each.
+    errors.extend(_check_goals(course, lessons, course_meta))
+    return errors
+
+
+def _check_goals(
+    course: Course, lessons: dict[str, Lesson], course_meta: Path
+) -> list[ContentError]:
+    """A goal's targets must be lessons of the course; ids are unique; translations match."""
+    errors: list[ContentError] = []
+    seen: set[str] = set()
+    for goal in course.goals:
+        if goal.id in seen:
+            errors.append(ContentError(course_meta, f"duplicate goal id '{goal.id}'"))
+        seen.add(goal.id)
+        for target in goal.targets:
+            if target not in lessons:
+                errors.append(
+                    ContentError(
+                        course_meta,
+                        f"goal '{goal.id}' targets '{target}', not a lesson of this course",
+                    )
+                )
+    for lang, translation in course.translations.items():
+        path = translation.path if translation.path is not None else course_meta
+        for goal_id in translation.goals:
+            if goal_id not in seen:
+                errors.append(
+                    ContentError(
+                        path, f"'{lang}' translates goal '{goal_id}', which does not exist"
+                    )
+                )
     return errors
 
 

@@ -474,6 +474,7 @@ def _load_course(course_dir: Path, errors: _Collector) -> Course | None:
         tags=meta.tags,
         modules=modules,
         papers=papers,
+        goals=meta.goals,
         path=course_dir,
         translations=translations,
     )
