@@ -88,8 +88,17 @@ stop code that only works on your own machine.
 ### Simulators in one line
 
 Gazebo (Harmonic is the Jazzy pairing, bridged by `ros_gz`), Webots, and MuJoCo are the main
-ones. This platform does not cover simulator practice, so see the simulator section of the
-research report for a comparison.
+ones. This platform does not cover simulator practice. To choose one, start from the one-line
+guide below and then read each project's own documentation.
+
+- **[Gazebo](https://gazebosim.org/docs):** the most tightly integrated with ROS 2. The default
+  choice for a mobile robot with sensors (LiDAR, camera, IMU) and for trying Nav2 or
+  `ros2_control`.
+- **[Webots](https://cyberbotics.com/doc/guide/index):** one install brings robot models, example
+  worlds and an editor. It runs on Windows, macOS and Linux, which makes it an easy first
+  simulator.
+- **[MuJoCo](https://mujoco.readthedocs.io/):** fast dynamics with contact. Widely used in
+  control and reinforcement-learning research (M9), and usable from Python alone, without ROS.
 
 ## Example
 

@@ -1,18 +1,44 @@
-# devjin_robotics_curriculum
+# Learn Robotics — devjinlab robotics curriculum
 
-로보틱스 커리큘럼 및 학습 보조 플랫폼 — Markdown/YAML 콘텐츠 + `rc` CLI (Phase 1, Python only).
+**Study it online: <https://learnrobotics.devjinlab.com>** (free, English and Korean)
 
-An open-source curriculum and learning-assist platform for becoming a robotics engineer. A
-staged robotics expert course (foundation, intermediate, advanced) is written as Markdown
-lessons with YAML front matter, each carrying prerequisites, objectives, curated resources, and
-a "how to study this stage" section. The `rc` command-line tool validates the content, tracks
-your progress and study time locally, recommends the next lesson from the prerequisite graph,
-writes weekly and per-module reports, and builds an offline static study site with a dashboard,
-roadmap, and resource library.
+로보틱스 커리큘럼 및 학습 보조 플랫폼 — 기초부터 연구 수준까지의 로보틱스 강의(한국어·영어)와,
+진행도·퀴즈·복습을 관리하는 `rc` CLI · API 서버 · 웹 프론트엔드.
+
+An open-source robotics curriculum and the platform that serves it. The content is Markdown
+lessons with YAML front matter; each lesson carries prerequisites, objectives, curated
+resources, a quiz and a "how to study this stage" section.
+
+| Course | For | Size |
+|---|---|---|
+| **Robotics Expert Course** (`robotics-expert`) | Learning robotics for the first time: maths, kinematics, control, perception, ROS 2, SLAM, navigation, manipulation, robot learning, system integration | 10 modules |
+| **Researcher track** (`robotics-research`) | Preparing for graduate-level research: theory modules, paper reading and reproduction tasks | 17 modules |
+
+Module and lesson lists, and the translation status, are in
+[curriculum/README.md](curriculum/README.md).
+
+## Where to start
+
+- **I want to learn.** Open the [site](https://learnrobotics.devjinlab.com) — every lesson is
+  free to read, and an account keeps your progress, quiz results and review cards. To study
+  offline instead, clone this repository and use the `rc` CLI ([Setup](#setup), [Run](#run)):
+  it tracks progress in a local SQLite file and builds an offline static site.
+- **I want to run it for a study group or a team.** See
+  [Server mode](#server-mode-accounts-api-web): one compose file starts PostgreSQL, the API and
+  the web frontend.
+- **I want to contribute.** Fixing or translating a lesson needs no knowledge of the code; see
+  [CONTRIBUTING.md](CONTRIBUTING.md). To report a mistake in a lesson, open a
+  [content issue](https://github.com/Lee-Hyeong-Jin/devjinlab_robotics_curriculum/issues/new?template=content_issue.yml).
+
+## What the platform does
+
+The `rc` command-line tool validates the content, tracks your progress and study time,
+recommends the next lesson from the prerequisite graph, runs quizzes and spaced-repetition
+review, writes weekly and per-module reports, and builds an offline static study site with a
+dashboard, roadmap and resource library (local mode).
 
 Server mode adds a FastAPI server, accounts (local passwords or OIDC), PostgreSQL, and a Next.js
-web frontend on top of the same core library, for a study group or a team that wants to
-self-host. `harness/roadmap.yaml` tracks what is done and what is next.
+web frontend on top of the same core library. `harness/roadmap.yaml` records what has shipped.
 
 ## Architecture at a glance
 

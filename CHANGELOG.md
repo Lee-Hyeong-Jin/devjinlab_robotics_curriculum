@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- README opens with the live site (<https://learnrobotics.devjinlab.com>), the two courses and
+  three entry points — learn, self-host, contribute — instead of the Phase 1 description.
+- `CONTRIBUTING.md` explains how to translate a lesson, and the issue chooser links the site and
+  private security reporting.
+- The simulator note in `m8-stacks-dev-environment` now says what Gazebo, Webots and MuJoCo are
+  each suited to, with links to their documentation.
 - Monitoring for operators at `/admin/monitoring` (P3-2, ADR 0017, RUNBOOK §8.4):
   - **API traffic**: requests, success rate, latency p50/p95/p99, Apdex, an error budget against
     a 99.9% availability target, and the busiest, slowest and failing routes, over 24 hours,
@@ -183,6 +189,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `npm audit` reports nothing for the web lockfile and the allowlist is empty.
 
 ### Fixed
+- Two expert-course lessons (`m8-stacks-dev-environment`, `m9-robot-learning-overview`) sent
+  readers to internal research notes that are not published on the site.
 - Ending the study timer or signing a device out gave no confirmation, because the button that
   would have shown it was gone. Such confirmations now appear in a status region at the bottom
   of the page.
