@@ -239,6 +239,17 @@ class Visits(Schema):
     by_locale: dict[str, int]
     active_users_7d: int = Field(description="Accounts that signed in during the last 7 days.")
     active_users_30d: int
+    intake_refused: int = Field(
+        default=0,
+        description=(
+            "Page-view reports refused since the API started because their sender is not a "
+            "trusted proxy. Steadily above zero means the web tier itself is refused "
+            "(`RC_API_TRUSTED_PROXIES`) and no visit is being counted."
+        ),
+    )
+    intake_refused_at: datetime | None = Field(
+        default=None, description="When the latest report was refused."
+    )
 
 
 # -- product KPIs --------------------------------------------------------------------------
@@ -304,3 +315,14 @@ class PageViewIn(Schema):
     locale: str = Field(default="ko", max_length=8)
     referrer: str | None = Field(default=None, max_length=2000)
     signed_in: bool = False
+
+
+class WebErrorIn(Schema):
+    """One page the web tier failed to render."""
+
+    path: str = Field(max_length=500)
+    digest: str | None = Field(
+        default=None, max_length=64, description="The reference shown on the error screen."
+    )
+    error_type: str | None = Field(default=None, max_length=100)
+    message: str | None = Field(default=None, max_length=1000)

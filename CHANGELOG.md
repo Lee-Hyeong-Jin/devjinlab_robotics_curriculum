@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Monitoring shows pages the web server failed to render (method `WEB` in the failed-request
+  list, with the reference number from the error screen) and warns when page-view reports are
+  being refused because the web server is missing from `RC_API_TRUSTED_PROXIES` (#35).
 - The profile has a "Delete account" section: it asks for the password and an explicit
   acknowledgement, then removes the learning data and signs the browser out (#32). The API
   could already delete an account; no screen offered it.

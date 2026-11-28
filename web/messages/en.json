@@ -791,7 +791,9 @@
     "colVisits": "Visits",
     "byLocale": "Views by language",
     "otherPages": "(other)",
-    "sensorsAll": "Show all {count} temperature sensors"
+    "sensorsAll": "Show all {count} temperature sensors",
+    "intakeRefused": "{count, plural, one {# page-view report was} other {# page-view reports were}} refused (latest: {at}). If this keeps growing, the web server is not listed as a trusted proxy and no visit is being counted: add its address to RC_API_TRUSTED_PROXIES on the API.",
+    "failuresWebHint": "Rows with the method WEB are pages the web server failed to render. The value in the request-id column is the reference shown on the error screen; search the web container log for it."
   },
   "userStatus": {
     "active": "Active",

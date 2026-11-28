@@ -124,3 +124,72 @@ def test_issue_39_api_and_cli(tmp_path: Path) -> None:
     assert "back in progress" in result.output
     again = CliRunner().invoke(cli_app, [*base, "undone", lesson])
     assert again.exit_code != 0
+
+
+# -- #35: the monitoring screen saw neither web-tier failures nor refused page views -----------
+
+
+def _monitoring_app(tmp_path: Path):  # type: ignore[no-untyped-def]
+    from fastapi.testclient import TestClient
+
+    from robotics_curriculum.api.app import create_app
+    from robotics_curriculum.api.settings import Settings
+    from robotics_curriculum.auth.service import AuthConfig, Context
+    from test_auth import ADMIN, PASSWORD
+
+    settings = Settings(curriculum_dir=CURRICULUM, data_dir=tmp_path, auth_mode="server")
+    app = create_app(
+        settings, clock=lambda: NOW, auth_config=AuthConfig(bootstrap_admin_email=ADMIN)
+    )
+    anon = TestClient(app, base_url="https://testserver")
+    anon.post("/api/v1/auth/signup", json={"email": ADMIN, "password": PASSWORD})
+    app.state.rc.auth.promote_admin(ADMIN, Context(), force=True)
+    admin = TestClient(app, base_url="https://testserver")
+    login = admin.post("/api/v1/auth/login", json={"email": ADMIN, "password": PASSWORD})
+    admin.headers["X-CSRF-Token"] = login.json()["csrf_token"]
+    web = TestClient(app, base_url="https://testserver", client=("127.0.0.1", 50000))
+    outsider = TestClient(app, base_url="https://testserver", client=("203.0.113.9", 50000))
+    return app, admin, web, outsider
+
+
+def test_issue_35_a_page_the_web_failed_to_render_is_listed(tmp_path: Path) -> None:
+    _app, admin, web, outsider = _monitoring_app(tmp_path)
+    report = {
+        "path": "/modules/m1-math-physics/m1-vectors-matrices?secret=1",
+        "digest": "2457749570",
+        "error_type": "ApiError",
+        "message": "GET /api/v1/me → 401",
+    }
+    # Only the web tier may report; anybody else could fill the list with noise.
+    assert outsider.post("/api/v1/telemetry/weberror", json=report).status_code == 403
+    assert web.post("/api/v1/telemetry/weberror", json=report).status_code == 204
+
+    page = admin.get("/api/v1/admin/monitoring/errors").json()
+    assert page["total_24h"] == 1
+    row = page["items"][0]
+    assert (row["method"], row["status"]) == ("WEB", 500)
+    # The query string is not stored, and the digest is the key to the web server's log.
+    assert row["path"] == "/modules/m1-math-physics/m1-vectors-matrices"
+    assert row["request_id"] == "2457749570"
+    assert (row["error_type"], row["error_message"]) == ("ApiError", "GET /api/v1/me → 401")
+
+
+def test_issue_35_refused_page_views_are_counted_and_shown(tmp_path: Path) -> None:
+    _app, admin, web, outsider = _monitoring_app(tmp_path)
+    visits = admin.get("/api/v1/admin/monitoring/visits").json()
+    assert (visits["intake_refused"], visits["intake_refused_at"]) == (0, None)
+
+    for _ in range(3):
+        assert outsider.post("/api/v1/telemetry/pageview", json={"path": "/"}).status_code == 403
+    visits = admin.get("/api/v1/admin/monitoring/visits").json()
+    assert visits["intake_refused"] == 3
+    assert visits["intake_refused_at"] is not None
+
+    # An accepted report is not a refusal.
+    ok = web.post(
+        "/api/v1/telemetry/pageview",
+        json={"path": "/"},
+        headers={"User-Agent": "Mozilla/5.0 Chrome/130", "X-Forwarded-For": "198.51.100.7"},
+    )
+    assert ok.status_code == 204
+    assert admin.get("/api/v1/admin/monitoring/visits").json()["intake_refused"] == 3

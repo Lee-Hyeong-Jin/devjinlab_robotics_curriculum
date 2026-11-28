@@ -19,6 +19,7 @@ from robotics_curriculum.ops.traffic import (
     BUCKET_COUNT,
     hour_bucket,
     latency_bucket,
+    normalize_path,
     status_class,
 )
 from robotics_curriculum.timezone import default_timezone, local_day
@@ -27,6 +28,8 @@ logger = logging.getLogger("robotics_curriculum.api")
 
 ERROR_MESSAGE_LIMIT = 500
 PATH_LIMIT = 200
+WEB_METHOD = "WEB"
+"""Method recorded for a page the web tier failed to render (not an HTTP method)."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -65,6 +68,9 @@ class Recorder:
         self._buffer: dict[StatKey, StatDelta] = {}
         self._last_flush = clock()
         self._last_purge: datetime | None = None
+        self.intake_refused = 0
+        """Page-view reports refused since this process started (see :meth:`note_refused`)."""
+        self.intake_refused_at: datetime | None = None
 
     # -- recording -------------------------------------------------------------------------
 
@@ -112,6 +118,44 @@ class Recorder:
         except Exception:
             # The request already failed; failing to note it must not hide the first error.
             logger.exception("could not record a failed request")
+
+    def record_web_error(
+        self, *, path: str, digest: str | None, error_type: str | None, message: str | None
+    ) -> None:
+        """Keep one page the web tier failed to render.
+
+        The API only sees its own requests, so a page that fails in the web server was
+        invisible here: every page could be answering 500 while this log stayed empty. It is
+        stored beside the API's failures with the method ``WEB``; the digest, which is the key
+        to the error in the web server's log, takes the place of the request id.
+        """
+        clean = path.split("?", 1)[0][:PATH_LIMIT]
+        try:
+            self.store.add_request_error(
+                at=self.clock(),
+                method=WEB_METHOD,
+                route=normalize_path(clean),
+                path=clean,
+                status=500,
+                duration_ms=0.0,
+                request_id=(digest or None) and str(digest)[:64],
+                user_id=None,
+                error_type=(error_type or None) and str(error_type)[:100],
+                error_message=(message or None) and str(message)[:ERROR_MESSAGE_LIMIT],
+            )
+        except Exception:
+            logger.exception("could not record a failed page render")
+
+    def note_refused(self) -> None:
+        """Count a page-view report that was refused because its sender is not trusted.
+
+        One or two are somebody probing the endpoint. A steady stream means the web tier itself
+        is being refused (``RC_API_TRUSTED_PROXIES`` does not name it), in which case no visit
+        is counted at all and the visit figures read zero for a reason nothing else shows.
+        """
+        with self._lock:
+            self.intake_refused += 1
+            self.intake_refused_at = self.clock()
 
     # -- flushing --------------------------------------------------------------------------
 

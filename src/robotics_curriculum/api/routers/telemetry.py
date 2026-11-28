@@ -13,7 +13,7 @@ from fastapi import APIRouter, HTTPException, Request, Response, status
 
 from robotics_curriculum.api.clientip import client_address
 from robotics_curriculum.api.deps import State
-from robotics_curriculum.api.ops_schemas import PageViewIn
+from robotics_curriculum.api.ops_schemas import PageViewIn, WebErrorIn
 from robotics_curriculum.api.problems import problem_responses
 from robotics_curriculum.ops.traffic import is_bot, normalize_path, referrer_host, visitor_hash
 
@@ -47,6 +47,7 @@ def page_view(body: PageViewIn, request: Request, state: State) -> Response:
     if state.ops is None:
         raise HTTPException(404, "monitoring is not enabled on this server")
     if not _from_trusted_proxy(request, state):
+        state.ops.note_refused()
         raise HTTPException(403, "page views are accepted from the web tier only")
     # A visit belongs to the day it is in the service's zone, not to the UTC day.
     day = state.local_now().date()
@@ -67,5 +68,25 @@ def page_view(body: PageViewIn, request: Request, state: State) -> Response:
         # Automated clients are counted as views, never as people.
         visitor=None if bot else visitor_hash(state.visit_key, day, address, user_agent),
         referrer=None if bot else referrer_host(body.referrer, [own_host] if own_host else []),
+    )
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.post("/weberror", status_code=status.HTTP_204_NO_CONTENT)
+def web_error(body: WebErrorIn, request: Request, state: State) -> Response:
+    """Record a page the web tier failed to render, so it shows among the failed requests.
+
+    Stored: the time, the page's path without its query, the error's type and message as the
+    web server saw them, and its digest (the reference shown on the error screen and written
+    in the web server's log). Nothing about the reader.
+
+    403 unless the caller is the web tier; 404 when monitoring is off.
+    """
+    if state.ops is None:
+        raise HTTPException(404, "monitoring is not enabled on this server")
+    if not _from_trusted_proxy(request, state):
+        raise HTTPException(403, "render failures are accepted from the web tier only")
+    state.ops.record_web_error(
+        path=body.path, digest=body.digest, error_type=body.error_type, message=body.message
     )
     return Response(status_code=status.HTTP_204_NO_CONTENT)

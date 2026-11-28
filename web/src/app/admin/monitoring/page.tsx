@@ -789,6 +789,7 @@ export default async function MonitoringPage({ searchParams }: Props) {
           {t('errorsTitle')}
         </h2>
         <p className="text-muted mb-1 max-w-3xl text-sm">{t('errorsHint')}</p>
+        <p className="text-muted mb-1 max-w-3xl text-sm">{t('failuresWebHint')}</p>
         <p className="text-primary mb-3 text-sm font-medium" role="status">
           {t('errorsCount24h', { count: errors.total_24h })}
         </p>
@@ -831,6 +832,14 @@ export default async function MonitoringPage({ searchParams }: Props) {
           />
         </div>
         <p className="text-muted mb-3 max-w-3xl text-sm">{t('visitsHint', { zone })}</p>
+        {visits.intake_refused > 0 ? (
+          <p role="alert" className="text-warning mb-3 max-w-3xl text-sm">
+            {t('intakeRefused', {
+              count: visits.intake_refused,
+              at: formatDateTime(visits.intake_refused_at, locale),
+            })}
+          </p>
+        ) : null}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatTile
             label={t('views')}

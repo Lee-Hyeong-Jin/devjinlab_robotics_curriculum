@@ -1305,6 +1305,32 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/telemetry/weberror": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Web Error
+         * @description Record a page the web tier failed to render, so it shows among the failed requests.
+         *
+         *     Stored: the time, the page's path without its query, the error's type and message as the
+         *     web server saw them, and its digest (the reference shown on the error screen and written
+         *     in the web server's log). Nothing about the reader.
+         *
+         *     403 unless the caller is the web tier; 404 when monitoring is off.
+         */
+        post: operations["web_error_api_v1_telemetry_weberror_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -3579,6 +3605,34 @@ export interface components {
             active_users_7d: number;
             /** Active Users 30D */
             active_users_30d: number;
+            /**
+             * Intake Refused
+             * @description Page-view reports refused since the API started because their sender is not a trusted proxy. Steadily above zero means the web tier itself is refused (`RC_API_TRUSTED_PROXIES`) and no visit is being counted.
+             * @default 0
+             */
+            intake_refused: number;
+            /**
+             * Intake Refused At
+             * @description When the latest report was refused.
+             */
+            intake_refused_at?: string | null;
+        };
+        /**
+         * WebErrorIn
+         * @description One page the web tier failed to render.
+         */
+        WebErrorIn: {
+            /** Path */
+            path: string;
+            /**
+             * Digest
+             * @description The reference shown on the error screen.
+             */
+            digest?: string | null;
+            /** Error Type */
+            error_type?: string | null;
+            /** Message */
+            message?: string | null;
         };
         /**
          * WeekStat
@@ -7606,6 +7660,55 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["PageViewIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+            /** @description Unprocessable Content */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["Problem"];
+                };
+            };
+        };
+    };
+    web_error_api_v1_telemetry_weberror_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WebErrorIn"];
             };
         };
         responses: {
