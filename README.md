@@ -11,7 +11,7 @@ resources, a quiz and a "how to study this stage" section.
 
 | Course | For | Size |
 |---|---|---|
-| **Robotics Expert Course** (`robotics-expert`) | Learning robotics for the first time: maths, kinematics, control, perception, ROS 2, SLAM, navigation, manipulation, robot learning, system integration | 10 modules |
+| **Robotics Expert Course** (`robotics-expert`) | Learning robotics for the first time: maths, kinematics, control, perception, ROS 2, SLAM, navigation, manipulation, robot learning, system integration, plus motors, power and embedded basics | 11 modules |
 | **Researcher track** (`robotics-research`) | Preparing for graduate-level research: theory modules, paper reading and reproduction tasks | 17 modules |
 
 Module and lesson lists, and the translation status, are in

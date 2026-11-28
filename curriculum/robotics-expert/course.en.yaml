@@ -3,14 +3,15 @@ id: robotics-expert
 lang: en
 title: Robotics Expert Course
 summary: >-
-  A single ten-module course that takes you from the foundations to expert-level robotics
+  A single eleven-module course that takes you from the foundations to expert-level robotics
   along a staged path.
-  Foundation (M1-M4): maths and physics, robot kinematics, mobile robots and control,
-  sensing and perception.
+  Foundation (M1-M4, M11): maths and physics, robot kinematics, mobile robots and control,
+  actuators and embedded basics, sensing and perception.
   Intermediate (M8, M5-M7): an overview of ROS 2 and its tooling first, then state
   estimation and SLAM, navigation and path planning, manipulation and motion planning.
   Advanced (M9-M10): learning-based robotics, system integration and a capstone project.
-  The recommended order is M1 -> M2 -> M3 -> M4 -> M8 -> M5 -> M6 -> M7 -> M9 -> M10.
+  The recommended order is M1 -> M2 -> M3 -> M11 -> M4 -> M8 -> M5 -> M6 -> M7 -> M9 -> M10
+  (M11 was added later, hence its number).
 tags: [robotics, fundamentals]
 goals:
   mobile-robot:
@@ -18,6 +19,12 @@ goals:
     summary: >-
       Model a wheeled robot and make it follow a path with PID. The shortest path here: only
       what a first moving robot needs.
+  first-robot:
+    title: Build a first robot (hardware)
+    summary: >-
+      Add motors, drivers, encoders, power and a microcontroller to the control of a wheeled
+      robot, as far as building a real differential-drive robot on a small budget and closing
+      its speed loops.
   slam:
     title: Mapping and localization (SLAM)
     summary: >-

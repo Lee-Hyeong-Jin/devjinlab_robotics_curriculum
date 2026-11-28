@@ -1,0 +1,56 @@
+id: m11-drivers-pwm
+lang: en
+activities:
+  m11-drivers-pwm-reading: Read the lesson
+  m11-drivers-pwm-quiz: "Quiz: the H-bridge and PWM"
+  m11-drivers-pwm-exercise: Compute PWM current ripple and a current limit
+resources:
+  "Modern Robotics, 8.9절 Actuation, Gearing, and Friction (Lynch & Park)":
+    title: "Modern Robotics, section 8.9: Actuation, Gearing, and Friction (Lynch & Park)"
+    note: "The electrical equation of a motor (resistance, inductance, back-EMF) and what the amplifier does."
+  "SimpleFOC documentation — FOC theory":
+    note: >-
+      Documentation of an open-source FOC library. Commutation of a BLDC motor and the
+      difference between six-step and FOC, with pictures.
+  "Elements of Robotics (Ben-Ari & Mondada)":
+    note: "Open access. How a robot that takes motor power as its command behaves."
+quiz:
+  - id: q1
+    prompt: >-
+      What average voltage does a motor see when driven from a 12 V supply at a PWM duty of 25%?
+    choices:
+      - 3 V
+      - 9 V
+      - 12 V
+      - 0.25 V
+    explanation: >-
+      The average voltage is the duty times the supply voltage: $0.25 \times 12 = 3$ V. The
+      motor's inductance averages the current, so the motor turns as if 3 V were applied.
+    concept:
+      front: Average voltage of PWM
+      back: 'Duty times supply voltage. 12 V at 25% gives 3 V'
+  - id: q2
+    prompt: >-
+      When choosing a driver, which value of the motor do you compare with the driver's
+      current rating?
+    choices:
+      - The no-load current
+      - The stall current (V/R)
+      - The no-load speed
+      - The gear ratio
+    explanation: >-
+      On starting, on hitting something and on a sudden reversal a motor draws close to its
+      stall current. Either the driver withstands that current or a current limit keeps it
+      from flowing. The no-load current is the smallest current and is no guide.
+    concept:
+      front: What a driver's current rating is compared with
+      back: 'The stall current V/R - the largest current, drawn on starting and on a collision'
+  - id: q3
+    prompt: >-
+      Raising the PWM frequency increases the current ripple.
+    explanation: >-
+      The ripple is $V D(1-D)/(L f)$, inversely proportional to the frequency. A higher
+      frequency reduces ripple and noise, at the cost of more switching loss.
+    concept:
+      front: PWM frequency and current ripple
+      back: 'Ripple goes as 1/f. Higher frequency: less ripple and noise, more switching loss'

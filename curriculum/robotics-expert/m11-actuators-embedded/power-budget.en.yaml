@@ -1,0 +1,66 @@
+id: m11-power-budget
+lang: en
+activities:
+  m11-power-budget-reading: Read the lesson
+  m11-power-budget-quiz: "Quiz: batteries, regulators and brown-outs"
+  m11-power-budget-exercise: Redo the power budget
+resources:
+  "Battery University":
+    note: >-
+      Free articles on the properties of each battery chemistry, discharge curves, C-rate,
+      charging and storage.
+  "Raspberry Pi hardware documentation":
+    note: >-
+      The power requirements of a single-board computer (voltage tolerance, recommended
+      current) and what its under-voltage warning means.
+  "Elements of Robotics (Ben-Ari & Mondada)":
+    note: "Open access. Chapter 1 surveys the parts of a robot."
+quiz:
+  - id: q1
+    prompt: >-
+      The microcontroller restarts the moment the motors are switched on. What is the most
+      likely cause?
+    choices:
+      - The motors' large starting current pulled the supply voltage down for a moment (a brown-out)
+      - The program has an infinite loop
+      - The PWM frequency is too high
+      - The encoder resolution is too low
+    explanation: >-
+      At the moment of starting, a motor draws close to its stall current. The voltage dropped
+      across the battery's internal resistance and the wiring takes the logic supply below its
+      minimum, and the under-voltage detector restarts the chip. A separate logic supply and a
+      large capacitor close to the driver are the first remedies.
+    concept:
+      front: Why the board restarts when the motors start
+      back: >-
+        A brown-out - the starting current pulls the voltage down. Separate logic supply,
+        bulk capacitor, soft start
+  - id: q2
+    prompt: >-
+      What sets the current rating a regulator needs?
+    choices:
+      - The sum of the average currents of the loads on its rail
+      - The sum of the peak currents of the loads on its rail
+      - The battery capacity
+      - The motor's no-load current
+    explanation: >-
+      Average current decides the runtime; peak current decides what a part must withstand.
+      If the regulator cannot hold its voltage at the peak, everything on that rail is
+      affected at that moment.
+    concept:
+      front: What average and peak are for in a power budget
+      back: 'Average gives the runtime; peak gives regulator and battery ratings and the sag'
+  - id: q3
+    prompt: >-
+      When the motors and the logic have separate supplies, it is better not to connect the
+      grounds (GND) of the two.
+    explanation: >-
+      Signal voltages are measured against ground, so without a common ground the driver
+      cannot read the microcontroller's signals. Always connect the grounds, but split the
+      paths at one point at the battery so that the large motor current does not flow through
+      the signal ground wire.
+    concept:
+      front: Common ground
+      back: >-
+        Connect every ground; but split the motor-current path from the signal path at one
+        point (star ground)

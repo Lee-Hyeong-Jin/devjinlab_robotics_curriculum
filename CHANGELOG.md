@@ -8,6 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- A new foundation module, **M11 Actuators and embedded basics** (six lessons, Korean and
+  English): kinds of motor and choosing a gear ratio, drivers and PWM, encoders and the motor
+  speed loop under the M3 heading loop, batteries and a power budget, microcontroller versus
+  single-board computer and the buses between them, and an optional lesson on building a first
+  robot in three budget tiers. Every exercise runs on NumPy without hardware. A new goal on the
+  roadmap, "Build a first robot", leads there (#63, #53).
+- "Software basics to check before ROS 2" in M8: how far you need the shell, Git, a C++ build
+  with CMake, Python packaging and networking, with a self-check and one free resource each.
+  The FAQ's prerequisites answer mentions it (#64).
+- M8 has a small Docker recipe for ROS 2 Jazzy that was run before it was written down, a
+  distribution table (release, Ubuntu, end of support, last reviewed), a statement of which
+  parts of the course need ROS 2 installed (only M8 and some capstone tasks) and when a hobby
+  project is better off without ROS; the study guide says the same (#51).
+- Lessons can carry folded "If this failed" hints (a ```` ```hint ```` block: the symptom on
+  the first line, what to check below). M8 uses them for the failures newcomers report most:
+  `ros2: command not found`, a built package that is not found, nodes that do not see each
+  other across containers or WSL2, and GUI windows that do not open (#64, #51).
 - Every foundation lesson (M1–M4, Korean and English) opens with "Where you will use this":
   where the topic turns up on a real robot and in later modules (#59). Each exercise is
   followed by a collapsed "Expected result" with computed values, tables and what the plot

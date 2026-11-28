@@ -1,0 +1,57 @@
+id: m11-encoders-speed-loop
+lang: en
+activities:
+  m11-encoders-speed-loop-reading: Read the lesson
+  m11-encoders-speed-loop-quiz: "Quiz: encoder resolution and cascade control"
+  m11-encoders-speed-loop-exercise: Experiment with a speed loop that has quantization, saturation and supply sag
+resources:
+  "Feedback Systems: An Introduction for Scientists and Engineers, 2nd ed. (Åström & Murray)":
+    note: "Free PDF. Chapter 11, PID control (integral windup, cascade), and the idea of feedback in chapter 1."
+  "DC Motor Speed: PID Controller Design (Control Tutorials for MATLAB and Simulink)":
+    note: "Compares the P, PI and PID responses of a DC motor speed loop step by step."
+  "Elements of Robotics (Ben-Ari & Mondada)":
+    note: "Open access. Chapter 5, robotic motion and odometry (wheel encoders)."
+quiz:
+  - id: q1
+    prompt: >-
+      A quadrature encoder with a PPR of 11 sits on the motor shaft and the gear ratio is 50.
+      Counting all four edges, how many counts per wheel revolution?
+    choices:
+      - '2200'
+      - '550'
+      - '44'
+      - '1100'
+    explanation: >-
+      $4 \times 11 \times 50 = 2200$. Counting four times means counting the rising and
+      falling edges of both channels A and B, and since the encoder is on the motor shaft the
+      gear ratio multiplies it again.
+    concept:
+      front: Encoder counts per wheel revolution
+      back: '4 × PPR × gear ratio (with the encoder on the motor shaft)'
+  - id: q2
+    prompt: >-
+      What happens when the window of a count-based speed measurement is lengthened from 1 ms
+      to 10 ms?
+    choices:
+      - The resolution becomes ten times finer and the measurement delay grows
+      - The resolution becomes ten times coarser and the measurement delay shrinks
+      - Neither the resolution nor the delay changes
+      - Both the resolution and the delay improve
+    explanation: >-
+      The resolution is $2\pi/(\text{CPR}\,T_w)$, so ten times the window is ten times finer.
+      But what is measured is the average speed over the window, which is late by $T_w/2$ on
+      average. It is the trade between noise and delay.
+    concept:
+      front: Window length of a count-based speed measurement
+      back: 'Longer window: finer resolution, more delay (half the window)'
+  - id: q3
+    prompt: >-
+      If the output of a speed loop is saturated at a duty of 1.0 and the speed is still below
+      the target, raising the integral gain fixes it.
+    explanation: >-
+      Saturation means the supply voltage is not enough. The controller is already giving all
+      it can, and no gain changes that. Change the motor, the gear ratio or the battery
+      voltage, or lower the target. A higher integral gain only makes windup worse.
+    concept:
+      front: A speed loop saturated and short of its target
+      back: 'Not a gain problem but too little voltage or torque - look at the motor, gears and battery'

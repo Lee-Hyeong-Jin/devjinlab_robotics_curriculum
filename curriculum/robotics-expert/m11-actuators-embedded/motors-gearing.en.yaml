@@ -1,0 +1,68 @@
+id: m11-motors-gearing
+lang: en
+activities:
+  m11-motors-gearing-reading: Read the lesson
+  m11-motors-gearing-quiz: "Quiz: the torque-speed curve and gear ratios"
+  m11-motors-gearing-exercise: Choose a motor and gear ratio from requirements
+resources:
+  "Modern Robotics, 8.9절 Actuation, Gearing, and Friction (Lynch & Park)":
+    title: "Modern Robotics, section 8.9: Actuation, Gearing, and Friction (Lynch & Park)"
+    note: >-
+      The DC motor model, the torque-speed curve and the apparent inertia of a geared motor.
+      The book PDF and lecture videos are free.
+  "Elements of Robotics (Ben-Ari & Mondada)":
+    note: >-
+      Open access. Chapters 1-5 cover sensors, motors and the motion of wheeled robots in
+      plain terms.
+  "DC Motor Speed: System Modeling (Control Tutorials for MATLAB and Simulink)":
+    note: >-
+      Derives this lesson's motor equations as a transfer function. Free material from the
+      University of Michigan.
+quiz:
+  - id: q1
+    prompt: >-
+      A brushed DC motor has a constant voltage across it and you hold the shaft still. What
+      happens?
+    choices:
+      - The back-EMF drops to zero, the current reaches its maximum (V/R) and the motor heats up
+      - The current drops to zero, so it is safe
+      - The speed is zero, so the torque is zero too
+      - The voltage falls by itself
+    explanation: >-
+      In $V = Ri + k_e\omega$, $\omega = 0$ removes the back-EMF and the current rises to its
+      maximum, $V/R$. The torque is at its maximum too (the stall torque), but all the
+      electrical energy turns into heat, and the winding burns if this lasts. The driver has
+      to survive this current as well.
+    concept:
+      front: A DC motor at stall
+      back: >-
+        Back-EMF 0, so the current is V/R, the maximum; maximum torque, all of it heat -
+        watch the driver and the motor
+  - id: q2
+    prompt: >-
+      The gear ratio is changed from 30 to 60 (same efficiency). What changes at the wheel?
+    choices:
+      - Maximum torque doubles, top speed halves
+      - Maximum torque doubles, top speed doubles
+      - Maximum torque halves, top speed doubles
+      - Neither changes
+    explanation: >-
+      A gearbox does not add power ($\tau\omega$); it trades speed for torque. With
+      $\tau_{out} = N\eta\tau_m$ and $\omega_{out} = \omega_m/N$, doubling the ratio doubles
+      the torque and halves the speed.
+    concept:
+      front: 'What a gear ratio N does'
+      back: 'Torque times N·η, speed divided by N - power is traded, not gained'
+  - id: q3
+    prompt: >-
+      A DC motor is most efficient at the point where it delivers half its stall torque.
+    explanation: >-
+      Half the stall torque (at half the no-load speed) is where mechanical power is greatest,
+      and the efficiency there is 50%. Efficiency is high at small torque, near the no-load
+      speed. That is why the continuous operating point is kept at or below 20-30% of the
+      stall torque.
+    concept:
+      front: Maximum power point and efficiency of a DC motor
+      back: >-
+        Maximum power is τs·ω0/4 at ω0/2, at 50% efficiency; high efficiency is at low
+        torque and high speed

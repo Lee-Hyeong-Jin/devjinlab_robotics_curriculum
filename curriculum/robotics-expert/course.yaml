@@ -1,16 +1,17 @@
 id: robotics-expert
 title: 로보틱스 전문가 코스
 summary: >-
-  기초→중급→고급의 단계적 경로로 로보틱스 전문가를 기르는 단일 코스(10개 모듈).
-  기초(M1–M4): 수학·물리, 로봇 운동학, 이동 로봇·제어, 센서·인식 기초.
+  기초→중급→고급의 단계적 경로로 로보틱스 전문가를 기르는 단일 코스(11개 모듈).
+  기초(M1–M4, M11): 수학·물리, 로봇 운동학, 이동 로봇·제어, 액추에이터·임베디드 기초, 센서·인식 기초.
   중급(M8, M5–M7): ROS 2·도구 개요로 시작해 상태 추정·SLAM, 내비게이션·경로 계획, 매니퓰레이션·동작 계획.
   고급(M9–M10): 학습 기반 로보틱스, 시스템 통합·캡스톤 프로젝트.
-  권장 순서는 M1→M2→M3→M4→M8→M5→M6→M7→M9→M10 이다.
+  권장 순서는 M1→M2→M3→M11→M4→M8→M5→M6→M7→M9→M10 이다. M11 은 나중에 추가되어 번호가 뒤에 있다.
 tags: [robotics, fundamentals]
 modules:
   - m1-math-physics
   - m2-kinematics
   - m3-mobile-robots-control
+  - m11-actuators-embedded
   - m4-sensors-perception
   - m8-ros2-tools
   - m5-state-estimation-slam
@@ -24,6 +25,10 @@ goals:
     title: 움직이는 로봇 제어하기
     summary: 바퀴 로봇의 운동 모델을 세우고 PID 로 경로를 따라가게 한다. 가장 짧은 경로로, 첫 로봇을 움직이는 데 필요한 것만 담았다.
     targets: [m3-path-following]
+  - id: first-robot
+    title: 첫 로봇 직접 만들기 (하드웨어)
+    summary: 바퀴 로봇의 제어에 모터·드라이버·엔코더·전원·마이크로컨트롤러를 더해, 적은 예산으로 실제 차동 구동 로봇을 만들고 속도 루프를 닫는 데까지 간다.
+    targets: [m11-first-robot-budget]
   - id: slam
     title: 지도를 만들고 위치 추정하기 (SLAM)
     summary: 센서 모델과 필터에서 시작해 EKF·파티클 필터·점유 격자를 거쳐 그래프 SLAM 까지 간다.

@@ -1,0 +1,64 @@
+id: m11-microcontrollers-buses
+lang: en
+activities:
+  m11-microcontrollers-buses-reading: Read the lesson
+  m11-microcontrollers-buses-quiz: "Quiz: splitting the work and choosing a bus"
+  m11-microcontrollers-buses-exercise: Work out throughput, error detection and a watchdog for a serial frame
+resources:
+  "micro-ROS":
+    note: >-
+      Official documentation of the project that puts a microcontroller into the ROS 2
+      graph. Read the Overview and First micro-ROS Application.
+  "ros2_control documentation":
+    note: >-
+      The structure of a hardware interface, the place on the single-board computer that
+      talks to the microcontroller.
+  "Arduino documentation — Learn":
+    note: "Introductory articles that explain the wiring and basic use of UART, I2C and SPI with pictures."
+quiz:
+  - id: q1
+    prompt: >-
+      Which of these belongs on the microcontroller?
+    choices:
+      - Counting encoder pulses and the 1 kHz motor speed loop
+      - Detecting objects in camera images
+      - Building a SLAM map
+      - Global path planning
+    explanation: >-
+      A missed encoder count, or a speed loop that is now and then tens of milliseconds late,
+      is a problem at once. Work that must happen within a fixed time every time goes on the
+      MCU, which runs steadily off a timer interrupt. The other three are heavy and tolerate
+      being a little late, which suits the single-board computer.
+    concept:
+      front: The rule for splitting work between MCU and SBC
+      back: >-
+        What must happen within a fixed time every time (encoders, speed loop, safety stop)
+        goes on the MCU; what is heavy and may be a little late goes on the SBC
+  - id: q2
+    prompt: >-
+      In a robot arm carrying motor currents you want to connect six joint drivers over a long
+      cable. Which bus fits best?
+    choices:
+      - I2C
+      - SPI
+      - CAN
+      - A separate UART per device
+    explanation: >-
+      CAN is differential and so resists noise, carries many nodes on two wires, and works
+      over tens of metres. I2C and SPI are for short distances on a board, and UART is
+      point-to-point, needing wires of its own for each device.
+    concept:
+      front: When to use CAN
+      back: >-
+        Many devices on a long cable in a noisy place - differential signalling, many
+        nodes, priority by message ID
+  - id: q3
+    prompt: >-
+      With a checksum in the frame, the receiving side needs no watchdog (timeout).
+    explanation: >-
+      A checksum only lets you discard a broken frame. It says nothing when no frame arrives
+      at all (a cable pulled out, a program that stopped). A watchdog that stops the motors
+      when no valid command has come for a set time is needed as well.
+    concept:
+      front: What a checksum and a watchdog are each for
+      back: 'Checksum: drop broken data. Watchdog: stop when no data comes. Both are needed'

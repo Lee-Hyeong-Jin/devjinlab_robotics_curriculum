@@ -29,6 +29,22 @@ Nav2 와 Isaac Lab 대체 URL 은 리서처 세션(robotics-learning-research)�
 
 유료 강의·도서 판매 페이지(Udemy, Packt)와 MathWorks 는 자동 요청을 거부하는 것으로 보인다. 브라우저로 열어 살아 있는지 사람이 확인해야 한다.
 
+## 2026-11-28 추가분 (M11, `m8-software-prerequisites`)
+
+새 레슨 7개의 자료 링크 21개를 `curl -L`(브라우저 User-Agent)로 점검했다. 18개가 200, 3개가 확인 필요다.
+
+| url | 상태 | 레슨 |
+|---|---|---|
+| <https://ctms.engin.umich.edu/CTMS/index.php?example=MotorSpeed&section=SystemModeling> | 403 (봇 차단 추정 — 브라우저 수동 확인 필요) | m11-motors-gearing |
+| <https://ctms.engin.umich.edu/CTMS/index.php?example=MotorSpeed&section=ControlPID> | 403 (봇 차단 추정 — 브라우저 수동 확인 필요) | m11-encoders-speed-loop |
+| <https://www.raspberrypi.com/documentation/computers/raspberry-pi.html> | 403 (봇 차단 추정 — 브라우저 수동 확인 필요) | m11-power-budget |
+
+200 으로 확인한 것: missing.csail.mit.edu, git-scm.com/book (ko, en), cmake.org 튜토리얼, docs.ros.org
+(ament_cmake, About domain ID), packaging.python.org, docs.docker.com/engine/network,
+hades.mech.northwestern.edu(Modern Robotics), link.springer.com(Elements of Robotics),
+docs.simplefoc.com/foc_theory, fbswiki.org, batteryuniversity.com, micro.ros.org, control.ros.org,
+docs.arduino.cc/learn, wokwi.com, docs.micropython.org.
+
 ## 전체 목록
 
 | url | 상태 | 레슨 |

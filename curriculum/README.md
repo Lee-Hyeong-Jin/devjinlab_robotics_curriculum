@@ -9,7 +9,7 @@ organized as Course (Track) > Module > Lesson > Activity.
 
 Courses:
 
-- `robotics-expert/` — 로보틱스 전문가 코스 (기초→중급→고급, 10개 모듈).
+- `robotics-expert/` — 로보틱스 전문가 코스 (기초→중급→고급, 11개 모듈).
 - `robotics-research/` — 로보틱스 연구원 트랙 (연구 수준, 17개 모듈 105 레슨).
 
 ### robotics-expert 모듈

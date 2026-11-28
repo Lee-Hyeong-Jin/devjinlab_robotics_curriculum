@@ -1,4 +1,4 @@
-"""What every foundation lesson (M1-M4) must carry: use case, expected result, figure.
+"""What every foundation lesson (M1-M4, M11) must carry: use case, expected result, figure.
 
 GitHub #59 (where the lesson is used), #48 (what a correct exercise gives) and #60 (figures).
 The rules in ``rc validate`` check the shape of these blocks; this file checks that the
@@ -15,7 +15,7 @@ import pytest
 
 from robotics_curriculum.content import load_course
 from robotics_curriculum.content.lesson_blocks import extract_expected, has_use_case, image_refs
-from robotics_curriculum.content.models import Lesson
+from robotics_curriculum.content.models import ActivityKind, Lesson
 
 ROOT = Path(__file__).resolve().parents[1]
 FOUNDATION = (
@@ -23,7 +23,9 @@ FOUNDATION = (
     "m2-kinematics",
     "m3-mobile-robots-control",
     "m4-sensors-perception",
+    "m11-actuators-embedded",
 )
+USE_CASE_ONLY = ("m8-ros2-tools",)
 WITH_FIGURES = FOUNDATION[:3]
 
 
@@ -51,8 +53,32 @@ def test_foundation_lesson_says_where_it_is_used_and_what_the_exercise_gives(
     for lang, body in bodies.items():
         assert has_use_case(body, lang), f"{lesson.id} ({lang}) has no use-case section"
         blocks = extract_expected(body)
+        if not any(activity.kind == ActivityKind.EXERCISE for activity in lesson.activities):
+            assert not blocks  # a lesson without an exercise (the optional build) has no answer
+            continue
         assert blocks, f"{lesson.id} ({lang}) has no expected-result block"
         assert all(len(block) > 200 for block in blocks), f"{lesson.id} ({lang}): a thin answer"
+
+
+@pytest.mark.parametrize("lesson", _lessons(USE_CASE_ONLY), ids=lambda lesson: lesson.id)
+def test_ros2_module_lesson_says_where_it_is_used(lesson: Lesson) -> None:
+    for lang, body in _bodies(lesson).items():
+        assert has_use_case(body, lang), f"{lesson.id} ({lang}) has no use-case section"
+
+
+def test_the_actuators_module_branches_off_without_blocking_the_course() -> None:
+    """#63, #53: the module adds lessons; only the capstone hardware lesson builds on it."""
+    course = load_course(ROOT / "curriculum" / "robotics-expert")
+    lessons = [lesson for module in course.modules for lesson in module.lessons]
+    dependants = {
+        lesson.id
+        for lesson in lessons
+        if not lesson.id.startswith("m11-")
+        and any(prerequisite.startswith("m11-") for prerequisite in lesson.prerequisites)
+    }
+    assert dependants == {"m10-hardware-selection-integration"}
+    # Nothing at all requires the optional build.
+    assert not [x.id for x in lessons if "m11-first-robot-budget" in x.prerequisites]
 
 
 @pytest.mark.parametrize("lesson", _lessons(WITH_FIGURES), ids=lambda lesson: lesson.id)

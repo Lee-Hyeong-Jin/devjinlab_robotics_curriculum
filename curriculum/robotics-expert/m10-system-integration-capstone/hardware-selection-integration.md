@@ -6,7 +6,7 @@ objectives:
   - NFR(속도·정확도·주기·예산)에서 센서 사양(범위·분해능·주기)과 모터 사양(토크·속도·인코더)을 역산할 수 있다.
   - 상위 제어기(SBC)와 하위 제어기(MCU)의 역할 분담과, 그 사이 통신 방식을 근거를 들어 선택할 수 있다.
   - 부품별 전류를 합산해 배터리 용량·런타임·전압 레일을 설계하고, BOM 총액을 예산과 대조할 수 있다.
-prerequisites: [m10-system-architecture-requirements, m4-sensor-models, m3-differential-drive]
+prerequisites: [m10-system-architecture-requirements, m4-sensor-models, m3-differential-drive, m11-microcontrollers-buses]
 difficulty: 4
 estimated_minutes: 120
 tags: [hardware, bom, sensors, actuators, power, communication, budget]

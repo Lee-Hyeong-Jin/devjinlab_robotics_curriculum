@@ -1,0 +1,16 @@
+id: m11-actuators-embedded
+title: M11 액추에이터·임베디드 기초
+summary: >-
+  로봇을 실제로 움직이는 부분을 다룬다. 모터의 토크-속도 특성과 기어비 고르기, 드라이버와 PWM, 엔코더로 속도를 재고
+  모터 속도 루프를 닫는 법, 배터리·레귤레이터·전원 예산, 마이크로컨트롤러와 보드 컴퓨터의 역할 분담과 통신 버스를
+  읽기와 NumPy 시뮬레이션으로 익힌다. 모든 연습은 하드웨어 없이 할 수 있고, 마지막 레슨은 직접 만들어 보려는 사람을 위한 선택 과제다.
+outcome: >-
+  요구 조건에서 모터와 기어비를 고르고, 엔코더로 모터 속도 루프를 닫고, 전원 예산을 세우고, 어떤 코드를 마이크로컨트롤러와 보드 컴퓨터 중 어디에서 돌릴지 정할 수 있다.
+level: 기초
+lessons:
+  - motors-gearing
+  - drivers-pwm
+  - encoders-speed-loop
+  - power-budget
+  - microcontrollers-buses
+  - first-robot-budget
