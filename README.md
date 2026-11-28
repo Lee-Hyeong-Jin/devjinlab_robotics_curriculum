@@ -32,10 +32,12 @@ Module and lesson lists, and the translation status, are in
 
 ## Community
 
-- **Ask a question, find a study partner, or show what you built:** GitHub Discussions is the
-  place for it, once the maintainer has switched it on for this repository (tracked in #54).
-  Until then, open an [issue](https://github.com/Lee-Hyeong-Jin/devjinlab_robotics_curriculum/issues/new)
-  — a question is a fine issue, in English or Korean.
+- **Ask a question or find a study partner:** open a
+  [question](https://github.com/Lee-Hyeong-Jin/devjinlab_robotics_curriculum/issues/new?template=question.yml)
+  — stuck on a lesson, unsure where to start, or looking for people to study with. English or
+  Korean, and nobody expects you to have searched everything first. The footer of every page on
+  the site links to the same form. (If GitHub Discussions is switched on for this repository
+  later, questions move there.)
 - **Found a mistake in a lesson?** Every lesson page on the site has "Report a problem" and
   "Suggest an edit" links; or open a
   [content issue](https://github.com/Lee-Hyeong-Jin/devjinlab_robotics_curriculum/issues/new?template=content_issue.yml)

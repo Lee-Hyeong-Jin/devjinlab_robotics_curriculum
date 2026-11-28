@@ -1,0 +1,36 @@
+name: Question or study group
+description: Stuck on a lesson, unsure where to start, or looking for people to study with.
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        A question is a fine issue here, in English or Korean. Nobody is expected to have
+        searched everything first. If your question is about a mistake in a lesson, the
+        "Content issue" form gets it fixed faster.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What is this about?
+      options:
+        - I am stuck on a lesson or an exercise
+        - I do not know where to start or what to study next
+        - Setting up my environment (Python, ROS 2, Docker)
+        - Looking for study partners
+        - Something else
+    validations:
+      required: true
+  - type: input
+    id: lesson
+    attributes:
+      label: Lesson (if any)
+      description: For example `m3-pid-control`, or the address of the page.
+  - type: textarea
+    id: details
+    attributes:
+      label: Your question
+      description: >-
+        What you tried, what you expected and what happened. For a study group: what you want
+        to study, your time zone and the language you prefer.
+    validations:
+      required: true

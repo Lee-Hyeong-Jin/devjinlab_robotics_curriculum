@@ -62,9 +62,15 @@ describe('repository links (#54)', () => {
     }
   })
 
-  it('offers a community link only when a deployment names a place that exists', () => {
+  it('leads to the question form unless a deployment names its own place', () => {
     delete process.env.RC_COMMUNITY_URL
+    delete process.env.RC_REPO_URL
+    expect(communityUrl()).toBe(`${DEFAULT_REPOSITORY_URL}/issues/new?template=question.yml`)
+    process.env.RC_REPO_URL = 'https://github.com/o/fork'
+    expect(communityUrl()).toBe('https://github.com/o/fork/issues/new?template=question.yml')
+    process.env.RC_REPO_URL = 'off'
     expect(communityUrl()).toBeNull()
+    delete process.env.RC_REPO_URL
     process.env.RC_COMMUNITY_URL = 'https://github.com/o/r/discussions'
     expect(communityUrl()).toBe('https://github.com/o/r/discussions')
     process.env.RC_COMMUNITY_URL = 'http://insecure.example/forum'

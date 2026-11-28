@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- A place to ask: a "Question or study group" issue form, and the "Questions and study groups"
+  link in the footer of every page now opens it by default (`RC_COMMUNITY_URL` still points it
+  elsewhere, for instance at GitHub Discussions once that is switched on) (#54).
 - The research track opens with "How to read this track": the derivation-depth grades, the
   format of proof sketches, the problem types and what is published as their solution, the ten
   fixed questions for reading a paper, and the reproduction tiers. Lessons used to cite these

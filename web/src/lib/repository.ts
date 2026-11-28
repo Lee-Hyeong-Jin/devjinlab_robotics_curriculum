@@ -54,16 +54,23 @@ export function lessonEditUrl(
   return `${repository}/edit/${EDIT_BRANCH}/${sourcePath}`
 }
 
+/** The question form (`.github/ISSUE_TEMPLATE/question.yml`). */
+const QUESTION_TEMPLATE = 'question.yml'
+
 /**
- * Where readers ask questions and find study partners (`RC_COMMUNITY_URL`), or `null`.
+ * Where readers ask questions and find study partners, or `null`.
  *
- * There is no default: the link must lead somewhere that exists. This project's place is
- * GitHub Discussions, which a repository owner has to switch on first; until a deployment
- * names its place, the site offers no such link rather than one that answers 404.
+ * `RC_COMMUNITY_URL` names the place when a deployment has one (a forum, GitHub Discussions).
+ * Without it the link opens the repository's question form, which exists wherever the
+ * repository does, so the site always offers a way to ask. A value that is not an https
+ * address, or `RC_REPO_URL=off` with nothing else set, leaves no link rather than a broken one.
  */
 export function communityUrl(): string | null {
   const raw = process.env.RC_COMMUNITY_URL?.trim()
-  if (!raw) return null
+  if (!raw) {
+    const repository = repositoryUrl()
+    return repository === null ? null : `${repository}/issues/new?template=${QUESTION_TEMPLATE}`
+  }
   try {
     const url = new URL(raw)
     return url.protocol === 'https:' ? url.toString() : null
