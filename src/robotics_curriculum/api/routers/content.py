@@ -3,11 +3,18 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query
 
-from robotics_curriculum.api.deps import Index, Progress, allow_public_read, get_principal
+from robotics_curriculum.api.deps import (
+    Index,
+    Progress,
+    State,
+    allow_public_read,
+    get_principal,
+)
 from robotics_curriculum.api.log import lang_var
 from robotics_curriculum.api.problems import problem_responses
 from robotics_curriculum.api.schemas import (
@@ -36,6 +43,9 @@ from robotics_curriculum.content.sections import extract_study_guide
 
 # Anonymous readers may GET these when RC_PUBLIC_CONTENT=1 (ADR 0016); `/roadmap` opts back
 # out below, because it carries the caller's own progress.
+CURRICULUM_DIRNAME = "curriculum"
+"""Where the content lives in the repository; the prefix of every `source_path`."""
+
 router = APIRouter(
     dependencies=[Depends(allow_public_read)],
     prefix="/api/v1",
@@ -81,7 +91,7 @@ def get_module(module_id: str, index: Index) -> Module:
 
 
 @router.get("/lessons/{lesson_id}", response_model=Lesson, responses=problem_responses(404))
-def get_lesson(lesson_id: str, index: Index) -> Lesson:
+def get_lesson(lesson_id: str, index: Index, state: State) -> Lesson:
     """Lesson metadata, Markdown body, resources, and the study-method section.
 
     ``Accept-Language`` picks a translation (``<lesson>.<lang>.md``); a lesson without one
@@ -106,7 +116,20 @@ def get_lesson(lesson_id: str, index: Index) -> Lesson:
         study_method=extract_study_guide(text.body, text.lang),
         prev_lesson_id=order[pos - 1] if pos > 0 else None,
         next_lesson_id=order[pos + 1] if pos + 1 < len(order) else None,
+        source_path=_source_path(lesson, text.lang, state.settings.curriculum_dir),
     )
+
+
+def _source_path(lesson: LessonModel, lang: str, curriculum_dir: Path) -> str | None:
+    """``curriculum/<course>/<module>/<file>`` for the file behind this answer, if it has one."""
+    source = lesson.source_file(lang)
+    if source is None:
+        return None
+    try:
+        relative = source.resolve().relative_to(curriculum_dir.resolve())
+    except ValueError:
+        return None  # not under the curriculum root: nothing a reader could be pointed at
+    return (Path(CURRICULUM_DIRNAME) / relative).as_posix()
 
 
 def _problems(lesson: LessonModel) -> list[LessonProblem]:

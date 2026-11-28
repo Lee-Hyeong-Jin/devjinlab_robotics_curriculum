@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Every lesson page links to "Report a problem" (the content-issue form with the lesson filled
+  in) and "Suggest an edit" (the lesson's source file on GitHub), and the footer links to the
+  source repository. `RC_REPO_URL` points them at a fork or turns them off; `RC_COMMUNITY_URL`
+  adds a "questions and study groups" link (#54).
 - Monitoring shows pages the web server failed to render (method `WEB` in the failed-request
   list, with the reference number from the error screen) and warns when page-view reports are
   being refused because the web server is missing from `RC_API_TRUSTED_PROXIES` (#35).

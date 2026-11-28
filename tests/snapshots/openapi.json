@@ -7227,6 +7227,18 @@
             ],
             "title": "Next Lesson Id",
             "description": "Next lesson in course order."
+          },
+          "source_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Path",
+            "description": "The lesson's source file in the language served, relative to the repository root (`curriculum/<course>/<module>/<lesson>.md`). For 'suggest an edit' links."
           }
         },
         "additionalProperties": false,

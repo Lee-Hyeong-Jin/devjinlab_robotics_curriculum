@@ -391,6 +391,18 @@ class Lesson(ContentModel):
         """``[ko, en, ...]``: the base language first, then the translations, sorted."""
         return [DEFAULT_LANG, *sorted(self.translations)]
 
+    def source_file(self, lang: str | None = None) -> Path | None:
+        """The file a reader of this lesson in ``lang`` is reading: where a fix would go.
+
+        ``<lesson>.<lang>.md`` when that translation exists, otherwise the base file. ``None``
+        for a lesson that was not loaded from disk.
+        """
+        if self.path is None:
+            return None
+        if lang and lang in self.translations:
+            return self.path.with_name(f"{self.path.stem}.{lang}.md")
+        return self.path
+
 
 class ModuleMeta(ContentModel):
     """Schema of ``module.yaml``."""

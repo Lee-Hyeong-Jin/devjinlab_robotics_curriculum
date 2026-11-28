@@ -234,3 +234,27 @@ def test_issue_36_session_cookies_are_secure_and_https_answers_carry_hsts(tmp_pa
     for cookie in cookies(False):
         assert "; Secure" not in cookie, cookie
     assert Settings.from_env({}).cookie_secure is True
+
+
+# -- #54: a lesson page could not point at the file to fix --------------------------------------
+
+
+def test_issue_54_a_lesson_names_its_source_file_in_the_language_served(tmp_path: Path) -> None:
+    from fastapi.testclient import TestClient
+
+    from robotics_curriculum.api.app import create_app
+    from robotics_curriculum.api.settings import Settings
+
+    client = TestClient(
+        create_app(Settings(curriculum_dir=CURRICULUM, data_dir=tmp_path), clock=lambda: NOW)
+    )
+    english = client.get("/api/v1/lessons/m1-vectors-matrices").json()
+    korean = client.get("/api/v1/lessons/m1-vectors-matrices?lang=ko").json()
+    assert (
+        english["source_path"]
+        == "curriculum/robotics-expert/m1-math-physics/vectors-matrices.en.md"
+    )
+    assert korean["source_path"] == "curriculum/robotics-expert/m1-math-physics/vectors-matrices.md"
+    # Both are files that exist in the repository.
+    for lesson in (english, korean):
+        assert (ROOT / lesson["source_path"]).is_file()

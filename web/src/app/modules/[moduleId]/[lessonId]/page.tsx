@@ -25,6 +25,7 @@ import {
 import type { Lesson, Module } from '@/lib/api/types'
 import { formatMinutes } from '@/lib/format'
 import { webCliHints } from '@/lib/markdown/cli-hints-server'
+import { lessonEditUrl, lessonIssueUrl, repositoryUrl } from '@/lib/repository'
 import { renderInlineMarkdown, renderMarkdown } from '@/lib/markdown/render'
 import { stripLessonSections } from '@/lib/markdown/sections'
 import { composeTitle, metaDescription, plainText } from '@/lib/seo'
@@ -116,6 +117,9 @@ export default async function LessonPage({ params }: Params) {
     }),
   )
   const studyMethod = renderMarkdown(lesson.study_method ?? undefined)
+  // "Report a problem" and "suggest an edit" lead to the repository the lesson is written in.
+  const repository = repositoryUrl()
+  const editUrl = repository ? lessonEditUrl(repository, lesson.source_path) : null
   const siblings = mod?.lessons ?? []
   const lessonPath = `/modules/${encodeURIComponent(moduleId)}/${encodeURIComponent(lessonId)}`
   // Advice, not a gate: every lesson is reachable regardless (ADR 0015). `GET /progress/status`
@@ -229,6 +233,30 @@ export default async function LessonPage({ params }: Params) {
               {body.content}
             </MarkdownBody>
           </Card>
+
+          {repository ? (
+            <p className="text-muted flex flex-wrap gap-x-5 gap-y-1 text-sm">
+              <span>{t('feedbackPrompt')}</span>
+              <a
+                href={lessonIssueUrl(repository, lesson.id, lesson.title)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent underline underline-offset-2"
+              >
+                {t('reportProblem')}
+              </a>
+              {editUrl ? (
+                <a
+                  href={editUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-accent underline underline-offset-2"
+                >
+                  {t('suggestEdit')}
+                </a>
+              ) : null}
+            </p>
+          ) : null}
 
           {problems.length > 0 ? (
             <Card as="section" aria-labelledby="problem-set-heading">

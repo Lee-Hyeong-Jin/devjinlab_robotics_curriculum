@@ -148,7 +148,9 @@
     "guide": "How to learn robotics",
     "resources": "Resources",
     "tagline": "Free robotics tutorials, from the basics to research level.",
-    "license": "Code Apache-2.0 · Content CC BY 4.0"
+    "license": "Code Apache-2.0 · Content CC BY 4.0",
+    "source": "Source on GitHub",
+    "community": "Questions and study groups"
   },
   "course": {
     "switcher": "Course",
@@ -195,7 +197,10 @@
     "difficulty": "Difficulty {level}/5",
     "prerequisites": "Prerequisites",
     "prereqPendingTitle": "Recommended first",
-    "prereqPendingBody": "These lessons make this one easier. They are not required — you can carry on here."
+    "prereqPendingBody": "These lessons make this one easier. They are not required — you can carry on here.",
+    "feedbackPrompt": "Found a mistake in this lesson?",
+    "reportProblem": "Report a problem",
+    "suggestEdit": "Suggest an edit (GitHub)"
   },
   "resources": {
     "title": "Resources",

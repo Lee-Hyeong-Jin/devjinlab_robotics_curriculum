@@ -2177,6 +2177,11 @@ export interface components {
              * @description Next lesson in course order.
              */
             next_lesson_id: string | null;
+            /**
+             * Source Path
+             * @description The lesson's source file in the language served, relative to the repository root (`curriculum/<course>/<module>/<lesson>.md`). For 'suggest an edit' links.
+             */
+            source_path?: string | null;
         };
         /**
          * LessonProblem

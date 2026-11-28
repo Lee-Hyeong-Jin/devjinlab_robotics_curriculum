@@ -164,6 +164,13 @@ class Lesson(LessonSummary):
     )
     prev_lesson_id: str | None = Field(description="Previous lesson in course order.")
     next_lesson_id: str | None = Field(description="Next lesson in course order.")
+    source_path: str | None = Field(
+        default=None,
+        description=(
+            "The lesson's source file in the language served, relative to the repository "
+            "root (`curriculum/<course>/<module>/<lesson>.md`). For 'suggest an edit' links."
+        ),
+    )
 
 
 class ModuleSummary(Schema):
